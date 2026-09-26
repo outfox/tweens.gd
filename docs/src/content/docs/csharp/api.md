@@ -38,7 +38,7 @@ examples, and the definitions themselves are listed under
 The built-in `Tweens.*` definitions are `readonly record struct` values with
 nullable `From`/`To` endpoints, timing, and typed callbacks. Store them in readonly
 fields and vary a copy when starting playback (see
-[reusable definitions](/concepts/definitions/)):
+[reusable definitions](/csharp/definitions/)):
 
 ```csharp title="Trail.cs"
 public partial class Trail : PathFollow2D
@@ -63,10 +63,10 @@ retain the final value unless `Fill` is explicitly changed.
 
 | Configuration | Reference |
 | --- | --- |
-| `Duration`, `Delay`, `Offset`, `Repeats`, `UsePingPong`, `PingPongInterval`, `RepeatInterval`, `Fill` | [Timing and loops](/concepts/timing/) |
-| `Ease`, `Skew`, `EaseFunction`, `Curve` | [Easing](/concepts/easing/) |
-| `ProcessMode`, `UseUnscaledTime` | [Process and physics](/concepts/timing/#process-and-physics) |
-| `PauseMode`, `SuppressCallbacksWhenTargetInvalid` | [Lifetime and ownership](/concepts/lifetime/) |
+| `Duration`, `Delay`, `Offset`, `Repeats`, `UsePingPong`, `PingPongInterval`, `RepeatInterval`, `Fill` | [Timing and loops](/csharp/timing/) |
+| `Ease`, `Skew`, `EaseFunction`, `Curve` | [Easing](/csharp/easing/) |
+| `ProcessMode`, `UseUnscaledTime` | [Process and physics](/csharp/timing/#process-and-physics) |
+| `PauseMode`, `SuppressCallbacksWhenTargetInvalid` | [Lifetime and ownership](/csharp/lifetime/) |
 | `OnAdd`, `OnStart`, `OnUpdate`, `OnEnd`, `OnCancel`, `OnFinally` | [Callbacks](/csharp/playback/#callbacks) |
 
 Callbacks receive the `TweenInstance<TTarget, TValue>` handle; `OnUpdate` also

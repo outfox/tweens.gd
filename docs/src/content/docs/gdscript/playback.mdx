@@ -1,0 +1,122 @@
+---
+title: Control and completion
+description: Use the handle to pause, resume, or cancel a tween and find out why it ended. Also covers callbacks, errors, and threading in GDScript.
+---
+
+import PlaybackRemote from '../../../components/PlaybackRemote.astro';
+
+Every start returns a handle. Use it to pause, resume, or cancel playback, and
+await its `wait()` to learn why playback stopped.
+
+Snippets run in a node script function with an in-tree `Sprite2D` named `sprite`,
+and assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")`.
+
+## Pause, resume, cancel
+
+<PlaybackRemote lang="gdscript" />
+
+Handles are `TweensGdHandle` objects. `is_paused` reports the pause state and
+can be assigned too. Cancelling keeps the latest value. To cancel every tween a
+node owns, call `Tweens.cancel_tweens(node)`; pass `true` as the second argument
+to include descendants.
+
+The handle also exposes `state`, `progress`, `value`, `target`, `is_terminal`,
+`is_settled`, `completion_reason`, and `error`. `progress` is the position within
+the current leg, and runs backwards on the return leg of a ping-pong.
+
+## Why it ended
+
+`wait()` returns a `Tweens.Reason` value. Any number of callers can await it, and
+a call after playback has ended returns the same reason at once.
+
+| Reason | Meaning |
+| --- | --- |
+| `COMPLETED` | Reached its natural end |
+| `CANCELLED` | `cancel()` was called |
+| `TARGET_FREED` | The target was freed or queued for deletion |
+| `OWNER_EXITED` | The owner left the scene tree |
+| `RUNNER_DISPOSED` | The runner, tree, or manual scheduler shut down |
+| `FAILED` | The start was rejected or playback detected an error; see `error` |
+
+Continue a sequence only on `COMPLETED`, as
+[groups and sequences](/gdscript/sequences/) shows. Removing or reparenting a
+node ends the tweens it owns immediately, even while they're paused. Godot emits
+tree exit before it invalidates a node freed with `free()`, so that case may
+report `OWNER_EXITED`.
+
+:::caution[Await `wait()`, not `ended`]
+The handle's `ended(reason)` signal fires once. Awaiting it after it has fired,
+or on a handle whose start was rejected, waits forever. `wait()` returns the
+stored reason in both cases.
+:::
+
+## Cancel a wait, not the tween
+
+`wait()` accepts a `Tweens.Cancellation`. Cancelling it ends only that wait,
+which returns `WAIT_CANCELLED`; other waiters and playback continue unless you
+call `cancel()`.
+
+```gdscript
+var movement := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
+var cancellation := Tweens.Cancellation.new()
+get_tree().create_timer(0.25).timeout.connect(cancellation.cancel)
+if await movement.wait(cancellation) == Tweens.Reason.WAIT_CANCELLED:
+	# This wait was cancelled. Stop playback too if that is your policy.
+	movement.cancel()
+```
+
+`WAIT_CANCELLED` belongs to the wait alone; it never becomes a handle's
+`completion_reason`. If playback had already ended, the wait returns that reason
+even when the token is cancelled. Groups accept the same token.
+
+## Callbacks
+
+Definitions accept Callables in these fields. They run synchronously, in this
+order:
+
+1. `on_add(handle)` when the tween is added.
+2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
+   it during the delay.
+3. `on_start(handle)` once, when playback begins.
+4. `on_update(handle, value)` once per eligible frame with the sampled value,
+   plus once more when completion restores the initial value.
+5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
+   stops early.
+6. `on_finally(handle)` in every case, including failures.
+
+The handle's terminal state is visible inside terminal callbacks, and `wait()`
+resumes after them. A long frame doesn't replay the callbacks of skipped cycles.
+Tweens created in `on_update` begin on the next update, while tweens created in
+`on_end` continue the finished tween's timeline exactly.
+
+:::caution[Don't `await` inside callbacks]
+Callbacks must return before playback continues. Put anything that awaits in a
+separate coroutine that awaits `wait()`.
+:::
+
+## Errors
+
+GDScript has no exceptions to throw, so failures are reported as data. A tween
+that detects a problem ends with `FAILED`, and `handle.error` holds the message;
+several detected problems are joined with newlines. `on_finally` still runs, and
+other tweens keep playing. The automatic runner also reports the message to
+Godot's error log.
+
+A rejected start, such as a freed target, a target outside the tree, or an
+invalid definition, doesn't return `null`. It returns a handle that has already
+settled with `FAILED`. It schedules no work and runs no callbacks, its `target`
+and `value` are `null`, and `pause()`, `resume()`, `cancel()`, and `wait()` stay
+safe to call.
+
+:::caution[Script errors aren't caught]
+tweens.gd detects invalid configuration, stale Callables, non-numeric or
+non-finite easing, and non-finite interpolation. An error inside your own
+callback or property setter stays an ordinary Godot script error, and isn't
+guaranteed to become `FAILED`.
+:::
+
+## Stay on the main thread
+
+Create and control tweens, and await `wait()`, on Godot's main thread. A call
+from another thread reports an error and does nothing: starts return a handle
+that has already failed, and `wait()` returns `FAILED`.

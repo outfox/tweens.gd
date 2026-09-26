@@ -1,4 +1,4 @@
-// Easing math ported from csharp/src/Easing/Easing.cs (adapted from unity-tweens, MIT).
+// Easing math from csharp/src/Easing/Easing.cs, which follows unity-tweens (MIT; see THIRD-PARTY-NOTICES.md).
 // The docs animate with the same curves the library ships.
 
 const A = 1.70158;
@@ -18,6 +18,7 @@ const bounceOut = (t: number) => {
 
 export const EASES = {
 	Linear: (t: number) => t,
+	// Hermite smoothstep and Perlin's smootherstep: symmetric, no overshoot, zero speed at both ends.
 	SmoothStep: (t: number) => t * t * (3 - 2 * t),
 	SmootherStep: (t: number) => t * t * t * (t * (6 * t - 15) + 10),
 	SineIn: (t: number) => 1 - Math.cos((t * Math.PI) / 2),
@@ -64,9 +65,6 @@ export const EASES = {
 	BounceIn: (t: number) => 1 - bounceOut(1 - t),
 	BounceOut: bounceOut,
 	BounceInOut: (t: number) => (t < 0.5 ? (1 - bounceOut(1 - 2 * t)) / 2 : (1 + bounceOut(2 * t - 1)) / 2),
-	// Hermite smoothstep and Perlin's smootherstep: symmetric, no overshoot, zero speed at both ends.
-	SmoothStep: (t: number) => t * t * (3 - 2 * t),
-	SmootherStep: (t: number) => t * t * t * (t * (6 * t - 15) + 10),
 } as const;
 
 export type EaseName = keyof typeof EASES;

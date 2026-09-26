@@ -326,6 +326,9 @@ func _waits_and_validation() -> void:
 		invalid.cancel()
 	var rejected := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, -1.0))
 	check(await T.group([rejected]).wait() == T.Reason.FAILED, "group of rejected handles is immediately awaitable")
+	if OS.has_feature("web"):
+		scheduler.dispose()
+		return # Worker-thread rejection is covered on desktop; the Web preset is single-threaded.
 	_host.failures.append_array(_host._collector.take_errors())
 	var worker := Thread.new()
 	worker.start(func(): return T.group([survivor]))

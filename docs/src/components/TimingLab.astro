@@ -1,5 +1,12 @@
 ---
-// Interactive timeline for the timing rules on concepts/timing. Defaults match the page's 2.7 s example.
+// Interactive timeline for the timing rules on the timing pages. Defaults match the page's 2.7 s example.
+import { field, type Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+const f = (name: string) => field(lang, name);
 const MAX_LOOPS = 4;
 const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 ---
@@ -37,12 +44,12 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 	</div>
 
 	<div class="controls">
-		<label class="tw-field"><span><code>Delay</code> <output data-out="delay"></output></span><input type="range" min="0" max="1" step="0.1" value="0" data-in="delay" /></label>
-		<label class="tw-field"><span><code>Duration</code> <output data-out="duration"></output></span><input type="range" min="0.1" max="1.5" step="0.1" value="0.5" data-in="duration" /></label>
-		<label class="tw-field"><span><code>Repeats</code> <output data-out="repeats"></output></span><input type="range" min="0" max={MAX_LOOPS - 1} step="1" value="1" data-in="repeats" /></label>
-		<label class="tw-field"><span><code>PingPongInterval</code> <output data-out="turn"></output></span><input type="range" min="0" max="1" step="0.1" value="0.2" data-in="turn" /></label>
-		<label class="tw-field"><span><code>RepeatInterval</code> <output data-out="repeat"></output></span><input type="range" min="0" max="1" step="0.1" value="0.3" data-in="repeat" /></label>
-		<label class="check"><input type="checkbox" checked data-in="pingpong" /> <code>UsePingPong</code></label>
+		<label class="tw-field"><span><code>{f('Delay')}</code> <output data-out="delay"></output></span><input type="range" min="0" max="1" step="0.1" value="0" data-in="delay" /></label>
+		<label class="tw-field"><span><code>{f('Duration')}</code> <output data-out="duration"></output></span><input type="range" min="0.1" max="1.5" step="0.1" value="0.5" data-in="duration" /></label>
+		<label class="tw-field"><span><code>{f('Repeats')}</code> <output data-out="repeats"></output></span><input type="range" min="0" max={MAX_LOOPS - 1} step="1" value="1" data-in="repeats" /></label>
+		<label class="tw-field"><span><code>{f('PingPongInterval')}</code> <output data-out="turn"></output></span><input type="range" min="0" max="1" step="0.1" value="0.2" data-in="turn" /></label>
+		<label class="tw-field"><span><code>{f('RepeatInterval')}</code> <output data-out="repeat"></output></span><input type="range" min="0" max="1" step="0.1" value="0.3" data-in="repeat" /></label>
+		<label class="check"><input type="checkbox" checked data-in="pingpong" /> <code>{f('UsePingPong')}</code></label>
 	</div>
 </div>
 
@@ -124,9 +131,10 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 			});
 
 			const cycleLen = o.duration * (o.pingpong ? 2 : 1) + (o.pingpong ? o.turn : 0);
+			const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 			$('[data-formula]').innerHTML =
-				`<code>Delay</code> ${fmt(o.delay)} + ${o.loops} × ${fmt(cycleLen)} s cycle` +
-				(o.loops > 1 ? ` + ${o.loops - 1} × ${fmt(o.repeat)} s repeat` : '') +
+				`${fmt(o.delay)} s delay + ${plural(o.loops, 'cycle', 'cycles')} × ${fmt(cycleLen)} s` +
+				(o.loops > 1 ? ` + ${plural(o.loops - 1, 'repeat interval', 'repeat intervals')} × ${fmt(o.repeat)} s` : '') +
 				` = <b>${fmt(total)} s</b>`;
 			timeline.setAttribute('aria-valuemax', fmt(total));
 			if (time > total) time = 0;

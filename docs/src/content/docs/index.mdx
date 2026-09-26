@@ -6,13 +6,13 @@ heroDescription: An alternative tweening library for Godot. <br/> C# and an expe
 facts:
   - text: C# · .NET 10 · Godot 4.7.2
   - text: GDScript experimental
-    link: /gdscript/
+    link: /gdscript/installation/
 hero:
   title: tweens.gd
   tagline: What if writing tweens didn't suck?
   actions:
-    - text: Get started
-      link: /csharp/installation/
+    - text: Choose your language
+      link: '#choose-a-language'
       icon: right-arrow
     - text: Join our Discord
       link: https://discord.gg/3UXVHnmEwd
@@ -23,14 +23,20 @@ hero:
 ---
 
 import Compare from '../../components/Compare.astro';
+import Doors from '../../components/Doors.astro';
+import Lang from '../../components/Lang.astro';
 import Moves from '../../components/Moves.astro';
 import Path from '../../components/Path.astro';
 import ReauthorDemo from '../../components/ReauthorDemo.astro';
+
+<Doors />
 
 ## Define, start, await
 
 A tween is a value you define once. Starting it on a node returns a handle, and
 awaiting the handle tells you how the tween ended.
+
+<Lang only="csharp">
 
 <Moves>
 
@@ -55,16 +61,56 @@ if (await movement.End == Reason.Completed)
 
 </Moves>
 
+</Lang>
+
+<Lang only="gdscript">
+
+<Moves>
+
+```gdscript {"1":1-2} {"2":4} {"3":5-6}
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6)
+arrive.ease = Tweens.Ease.CUBIC_OUT
+
+var movement := Tweens.play(sprite, arrive)
+if await movement.wait() == Tweens.Reason.COMPLETED:
+	print("Arrived")
+```
+
+1. **Define** the motion. The helper names the property and checks the node's
+   class; endpoint, duration, and easing sit on the definition.
+2. **Start** it on a node. It begins wherever the node is and returns a handle.
+3. **Await** `wait()` to learn how it ended: completed, cancelled, or cut short
+   because the node left the tree.
+
+</Moves>
+
+</Lang>
+
 ## Reuse a definition
+
+<Lang only="csharp">
 
 The coin, gem, and sprite below all start the same `Pop` definition. Change its
 ease or duration, and each of them uses the new values the next time it starts.
 
 <ReauthorDemo />
 
+</Lang>
+
+<Lang only="gdscript">
+
+The coin, gem, and sprite below all start the same `pop` definition. Change its
+ease or duration, and each of them uses the new values the next time it starts.
+
+<ReauthorDemo lang="gdscript" />
+
+</Lang>
+
 ## Compared with Godot's Tween
 
 The same move, written with Godot's built-in `Tween` and with tweens.gd:
+
+<Lang only="csharp">
 
 <Compare>
 
@@ -92,10 +138,45 @@ if (await movement.End == Reason.Completed)
 | --- | --- | --- |
 | Property | A string path and a `Variant`; mistakes surface at runtime | A typed method; the compiler checks the property and value |
 | Easing | A `TransitionType` plus an `EaseType` | One `EaseType`, such as `CubicOut` |
-| Reuse | Build a new `Tween` for each animation | [Store a definition](/concepts/definitions/) and start it on any node |
+| Reuse | Build a new `Tween` for each animation | [Store a definition](/csharp/definitions/) and start it on any node |
 | Ending | `Finished` fires on completion only | `End` settles with a `Reason`: completed, cancelled, owner left the tree |
 
+</Lang>
+
+<Lang only="gdscript">
+
+<Compare>
+
+```gdscript title="Godot's Tween"
+var tween := sprite.create_tween()
+tween.tween_property(sprite, "position", Vector2(400, 180), 0.6) \
+	.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+await tween.finished
+print("Arrived")
+```
+
+```gdscript title="tweens.gd"
+var move := Tweens.position_2d(Vector2(400, 180), 0.6)
+move.ease = Tweens.Ease.CUBIC_OUT
+var movement := Tweens.play(sprite, move)
+if await movement.wait() == Tweens.Reason.COMPLETED:
+	print("Arrived")
+```
+
+</Compare>
+
+|  | Godot's Tween | tweens.gd |
+| --- | --- | --- |
+| Property | A string path; a wrong name or value type fails when the tween runs | A named helper such as `position_2d`; the node class and value type are checked when the tween starts |
+| Easing | A `TRANS_*` transition plus an `EASE_*` direction | One `Tweens.Ease` constant, such as `CUBIC_OUT` |
+| Reuse | Build a new `Tween` for each animation | [Store a definition](/gdscript/definitions/) and start it on any node |
+| Ending | `finished` fires on completion only | `wait()` returns a `Tweens.Reason`: completed, cancelled, owner left the tree |
+
+</Lang>
+
 ## Learn it in five steps
+
+<Lang only="csharp">
 
 <Path>
 
@@ -103,7 +184,7 @@ if (await movement.End == Reason.Completed)
    Add the C# library to your Godot project.
 2. [Your first tween](/csharp/quickstart/)
    Move a sprite, then fade it out.
-3. [Definitions](/concepts/definitions/)
+3. [Definitions](/csharp/definitions/)
    Name motion once and reuse it everywhere.
 4. [Sequences](/csharp/sequences/)
    Chain, group, and stagger steps.
@@ -111,3 +192,24 @@ if (await movement.End == Reason.Completed)
    Pause, cancel, and handle every ending.
 
 </Path>
+
+</Lang>
+
+<Lang only="gdscript">
+
+<Path>
+
+1. [Install](/gdscript/installation/)
+   Copy the addon into your Godot project.
+2. [Your first tween](/gdscript/quickstart/)
+   Move a sprite, then fade it out.
+3. [Definitions](/gdscript/definitions/)
+   Name motion once and reuse it everywhere.
+4. [Groups & sequences](/gdscript/sequences/)
+   Chain, group, and stagger steps.
+5. [Control & completion](/gdscript/playback/)
+   Pause, cancel, and handle every ending.
+
+</Path>
+
+</Lang>

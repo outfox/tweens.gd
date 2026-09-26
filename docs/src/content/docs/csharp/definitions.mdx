@@ -3,8 +3,8 @@ title: Reusable definitions
 description: Keep motion in fields, share timing and easing with TweenOptions, vary single starts with `with`, and build steps from methods.
 ---
 
-import DefinitionStamp from '../../../components/DefinitionStamp.astro';
 import Moves from '../../../components/Moves.astro';
+import VaryStart from '../../../components/VaryStart.astro';
 
 A definition is a value that describes one motion. You write it once and start
 it on any number of nodes. Each start takes its own copy, so when you change the
@@ -122,10 +122,11 @@ carry over to the next:
 
 `with` works on `TweenOptions` too, as in `Snappy with { Ease = EaseType.CubicOut }`.
 
-Try it below: start the sprite, change `To`, then start the label. The sprite's
-playback keeps the value it started with.
+Try it below. **Appear** starts `Pop` on six coins, each with its own delay.
+**Collect** lifts each coin 40 pixels from where it sits. Clear `Fill` and press
+**Appear** again to see waiting coins flash at full size.
 
-<DefinitionStamp />
+<VaryStart />
 
 ## Build steps from methods
 

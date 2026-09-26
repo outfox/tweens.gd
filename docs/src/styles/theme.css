@@ -146,15 +146,15 @@ h4,
 	font-family: var(--tw-font-display);
 	letter-spacing: -0.02em;
 }
-.sl-markdown-content :is(h2, h3, h4) {
+.sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
 	font-weight: 720;
 	font-stretch: 92%;
 	text-wrap: balance;
 }
-.sl-markdown-content h2 {
+.sl-markdown-content h2:not(:where(.not-content *)) {
 	margin-top: 2.75em;
 }
-.sl-markdown-content :is(h2, h3) + * {
+.sl-markdown-content :is(h2, h3):not(:where(.not-content *)) + * {
 	margin-top: 0.75rem;
 }
 
@@ -247,6 +247,59 @@ h4,
 	background-size: 100% 100%;
 }
 
+/* On phones each row stacks into a block: the first cell leads, the others carry their column header
+   (data-label, set in astro.config.mjs), so no column ends up offscreen or squeezed to a word per line. */
+@media (max-width: 40rem) {
+	.sl-markdown-content .table-wrap {
+		width: auto;
+		min-width: 0;
+		overflow: visible;
+	}
+	.sl-markdown-content :is(table, tbody, tr, td) {
+		display: block;
+	}
+	.sl-markdown-content thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+	.sl-markdown-content :is(tbody, tr) {
+		margin: 0;
+	}
+	.sl-markdown-content tbody tr {
+		padding: 0.75rem 0.9rem;
+		border-bottom: 1px solid color-mix(in oklab, var(--tw-outline) 60%, transparent);
+	}
+	.sl-markdown-content tbody tr:last-child {
+		border-bottom: 0;
+	}
+	.sl-markdown-content td {
+		padding: 0;
+		border: 0;
+	}
+	.sl-markdown-content td:first-child {
+		color: var(--sl-color-white);
+		font-weight: 600;
+	}
+	.sl-markdown-content td + td {
+		margin-top: 0.45rem;
+	}
+	.sl-markdown-content td:empty {
+		display: none;
+	}
+	.sl-markdown-content td[data-label]:not(:first-child)::before {
+		content: attr(data-label);
+		display: block;
+		font-family: var(--tw-font-display);
+		font-size: var(--sl-text-2xs);
+		font-weight: 650;
+		letter-spacing: 0.02em;
+		color: var(--tw-muted);
+	}
+}
+
 /* Pages without a sidebar have no mobile menu, so their header keeps the social links at every width. */
 @media (max-width: 50rem) {
 	:root:not([data-has-sidebar]) .header .right-group {
@@ -288,7 +341,7 @@ h4,
 .sidebar-content {
 	--sl-sidebar-item-padding-inline: 0.75rem;
 }
-.sidebar-content a {
+.sidebar-content a:not([data-lang-choice]) {
 	position: relative;
 	border-radius: 0.6rem;
 	transition:
@@ -296,20 +349,20 @@ h4,
 		background-color 0.2s,
 		color 0.2s;
 }
-.sidebar-content a:hover {
+.sidebar-content a:not([data-lang-choice]):hover {
 	translate: 4px 0;
 	background: color-mix(in oklab, var(--tw-raised) 70%, transparent);
 	color: var(--sl-color-white);
 }
-.sidebar-content a[aria-current='page'],
-.sidebar-content a[aria-current='page']:hover {
+.sidebar-content a:not([data-lang-choice])[aria-current='page'],
+.sidebar-content a:not([data-lang-choice])[aria-current='page']:hover {
 	background: var(--tw-selected);
 	color: var(--sl-color-white);
 	font-weight: 650;
 	padding-inline-start: 1.6rem;
 	translate: 0 0;
 }
-.sidebar-content a[aria-current='page']::before {
+.sidebar-content a:not([data-lang-choice])[aria-current='page']::before {
 	content: '';
 	position: absolute;
 	left: 0.65rem;
@@ -541,4 +594,20 @@ kbd {
 	background: color-mix(in oklab, var(--tw-amber) 18%, transparent);
 	border-color: color-mix(in oklab, var(--tw-amber) 55%, transparent);
 	color: var(--tw-amber-ink);
+}
+
+/* Language-specific blocks on shared pages (Lang.astro). The wrapper steps out of layout, so its children keep the
+   prose measure and breakout widths they would have as direct children of the content. */
+[data-lang-only] {
+	display: contents;
+}
+:root:not([data-lang='gdscript']) [data-lang-only='gdscript'],
+:root[data-lang='gdscript'] [data-lang-only='csharp'] {
+	display: none;
+}
+.sl-markdown-content > [data-lang-only] > :not(.expressive-code, .table-wrap, .tw-widget, .tw-wide, starlight-tabs) {
+	max-width: var(--tw-measure);
+}
+.sl-markdown-content > [data-lang-only] > :first-child {
+	margin-top: 1rem;
 }

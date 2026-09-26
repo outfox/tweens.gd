@@ -1,0 +1,83 @@
+---
+title: Lifetime and ownership
+description: Who a tween belongs to, when it stops by itself, how pausing works, and how resource tweens are scoped.
+---
+
+import OwnershipDemo from '../../../components/OwnershipDemo.astro';
+
+A node owns the tweens started on it. When the node leaves the scene tree, its
+tweens stop by themselves, so you rarely need cleanup code.
+
+Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and run
+on Godot's main thread in a method of an in-tree node.
+
+## Target and owner
+
+The **target** receives values, and the **owner** decides when playback stops. For
+a node tween, the node is both. Resource tweens, such as material tweens, take a
+separate owner as the third argument of `Tweens.play()`: an in-tree node, or the
+`SceneTree`, which binds playback to the tree's root node.
+
+## Nodes
+
+Start node tweens from `_ready()` or later, while the node is inside the tree. A
+node target always uses its own lifetime, so passing a different owner for it is
+rejected.
+
+- Leaving the tree cancels the node's tweens at once, including removal and
+  reparenting that exits the tree.
+- A freed or queued-for-deletion target is never written again.
+- An owner that exits still settles the handle, even while its tween is paused.
+  Calling `free()` directly can report `OWNER_EXITED` rather than `TARGET_FREED`,
+  because Godot emits the tree exit before it invalidates the node.
+
+`Tweens.cancel_tweens(node)` cancels the tweens a node owns, and
+`Tweens.cancel_tweens(node, true)` extends that to its descendants. It doesn't reach
+manual schedulers you created yourself.
+
+## Pausing
+
+With the default pause mode, a tween pauses when its owner stops processing:
+
+| `pause_mode` | Behavior |
+| --- | --- |
+| `Tweens.Pause.BOUND` (default) | Follow `owner.can_process()` |
+| `Tweens.Pause.SCENE_TREE` | Follow tree pause only |
+| `Tweens.Pause.ALWAYS` | Ignore owner and tree pause |
+
+Pausing the handle always stops it, even with `ALWAYS`. A node's
+`set_process(false)` doesn't pause its tweens, because `can_process()` depends on
+the node's `process_mode` and the tree's pause state. Tree-scoped playback is owned
+by the root node, so `BOUND` follows tree pause there.
+
+<OwnershipDemo lang="gdscript" />
+
+## Resources
+
+Animating a material changes the resource itself, so every node sharing it sees
+the change. Playback never duplicates, reassigns, or frees your resource.
+
+Automatic playback of a resource needs an owner; without one, `Tweens.play()`
+rejects the start. Give it a node to stop it when that node leaves the tree. A tween
+scoped to the tree keeps running when a mesh is removed or gets a new material,
+because it still targets the original resource. Tree teardown stops it. See
+[material lifetimes](/gdscript/materials/#choose-the-playback-lifetime).
+
+## How playback ends
+
+Completion, cancellation, owner exit, target destruction, and runner teardown all
+settle the handle with a reason, and `await handle.wait()` returns it.
+Cancelling isn't an error, so `wait()` returns `Tweens.Reason.CANCELLED` like any
+other reason. See [control and completion](/gdscript/playback/) for the full list.
+
+GDScript has no exceptions to throw. Detected problems, such as invalid
+configuration, a stale Callable, a non-finite ease or interpolation, or an error
+string returned by a custom adapter, end the tween with `Tweens.Reason.FAILED` and
+leave the message in `handle.error`. Arbitrary script errors inside callbacks and
+property setters remain Godot script errors. `suppress_callbacks_when_target_invalid`
+skips callbacks for an invalid target or owner while still settling the handle and
+releasing bindings.
+
+Handles keep their `target` for inspection, so drop handles you no longer need.
+Create and control tweens on Godot's main thread. A manual `Tweens.Scheduler` must
+be driven from the main thread as well.

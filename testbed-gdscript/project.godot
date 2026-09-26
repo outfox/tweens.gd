@@ -7,3 +7,4 @@ run/main_scene="res://main.tscn"
 
 [rendering]
 renderer/rendering_method="gl_compatibility"
+lights_and_shadows/use_physical_light_units=true

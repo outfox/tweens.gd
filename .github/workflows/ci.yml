@@ -64,11 +64,18 @@ jobs:
       - name: Test pure GDScript addon
         timeout-minutes: 2
         run: dotnet run --project testbed-gdscript/host -c Release --no-build --no-restore
+      - name: Check GDScript helper catalog
+        run: node scripts/generate-gdscript.mjs --check
       - name: Test GDScript debug validation
         timeout-minutes: 2
         run: dotnet run --project testbed-gdscript/host -c Debug --no-restore
+      - name: Test GDScript engine restarts
+        timeout-minutes: 2
+        run: dotnet run --project testbed-gdscript/host -c Release --no-build --no-restore -- --lifecycle
       - name: Pack
         run: dotnet pack csharp/tweens.gd.csproj -c Release --no-build --no-restore -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION -o artifacts/packages
+      - name: Pack GDScript addon
+        run: ./scripts/Pack-GDScript.ps1 -Version $env:PACKAGE_VERSION
       - name: Verify package and compile a package consumer
         run: ./.github/scripts/Verify-Package.ps1 -Version $env:PACKAGE_VERSION
       - name: Upload packages
@@ -78,6 +85,7 @@ jobs:
           path: |
             artifacts/packages/*.nupkg
             artifacts/packages/*.snupkg
+            artifacts/packages/tweens.gd-gdscript-*.zip
           if-no-files-found: error
       - name: Upload test results
         if: always()

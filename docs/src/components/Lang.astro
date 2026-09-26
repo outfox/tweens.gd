@@ -1,0 +1,9 @@
+---
+// Content for one language on a shared page; the other language's block is hidden (see theme.css).
+interface Props {
+	only: 'csharp' | 'gdscript';
+}
+const { only } = Astro.props;
+---
+
+<div data-lang-only={only}><slot /></div>

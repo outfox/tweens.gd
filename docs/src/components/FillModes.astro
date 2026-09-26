@@ -1,5 +1,11 @@
 ---
-// Four copies of one tween, differing only in FillMode, per the table on concepts/timing.
+// Four copies of one tween, differing only in their fill mode, per the table on the timing pages.
+import { constant, type Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
 const modes = [
 	{ name: 'RetainFinalValue', delayFrom: false, restore: false },
 	{ name: 'ApplyFromDuringDelay', delayFrom: true, restore: true },
@@ -19,7 +25,7 @@ const modes = [
 		{
 			modes.map((m) => (
 				<div class="row" data-delay-from={String(m.delayFrom)} data-restore={String(m.restore)}>
-					<code class="mode">{m.name}</code>
+					<code class="mode">{lang === 'gdscript' ? constant(m.name) : m.name}</code>
 					<svg viewBox="0 0 300 40" aria-hidden="true">
 						<line class="rail" x1="16" x2="284" y1="20" y2="20" />
 						<line class="tick" x1="16" x2="16" y1="10" y2="30" />

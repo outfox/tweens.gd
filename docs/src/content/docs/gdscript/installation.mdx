@@ -1,0 +1,68 @@
+---
+title: Install
+description: Add the pure GDScript tweens.gd addon to a Godot project by copying its directory or unpacking a locally built ZIP.
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+tweens.gd for GDScript is a pure GDScript addon. You copy one directory into your
+project; there is no plugin to activate, no autoload, and no .NET runtime or
+GDExtension to install.
+
+:::note[Experimental]
+The GDScript API may still change. It has been validated on 2dog/Godot 4.7.2 in
+Debug and Release, with real OpenGL rendering, on the standard Godot 4.7.2 engine,
+in a Windows release export, and in a single-threaded Web/WASM release export in
+Edge. Other engine versions, browsers, and devices have not been validated.
+[Compatibility](/compatibility/) lists the details.
+:::
+
+## Add the addon
+
+The addon isn't published to the Asset Library yet. Take it from a clone of the
+repository, either as a directory or as a ZIP you build yourself.
+
+<Tabs>
+<TabItem label="Copy the directory">
+
+Copy the repository's `addons/tweens_gd/` directory into your project's `addons/`
+directory, so the entry script sits at `res://addons/tweens_gd/tweens.gd`. Copy
+the whole directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
+
+</TabItem>
+<TabItem label="Addon ZIP">
+
+<Steps>
+
+1. From the repository root, build the ZIP. The version defaults to the C#
+   package's version:
+
+   ```powershell
+   ./scripts/Pack-GDScript.ps1
+   ```
+
+   This writes `artifacts/packages/tweens.gd-gdscript-0.1.0.zip`.
+
+2. Unpack it into your project's root directory. Its entries already start with
+   `addons/tweens_gd/`.
+
+</Steps>
+
+</TabItem>
+</Tabs>
+
+## Load it from a script
+
+Preload the entry script under a constant. The examples in these docs call it
+`Tweens`:
+
+```gdscript
+const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+```
+
+The editor also registers the entry script as the global class `TweensGd`, so
+`TweensGd.play(...)` works without the constant once the editor has scanned the
+project. The explicit preload works before the editor has generated its global
+class cache, for example in a fresh checkout or a headless run.
+
+Then write [your first tween](/gdscript/quickstart/).

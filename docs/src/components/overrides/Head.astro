@@ -9,4 +9,17 @@ const fonts = [display, body, mono];
 ---
 
 <Default />
+<!-- Language pages set the language and remember it; shared pages use the remembered one (C# by default).
+     Runs before first paint so language-specific blocks never flash. -->
+<script is:inline>
+	(() => {
+		const track = location.pathname.match(/^\/(csharp|gdscript)(\/|$)/)?.[1];
+		let lang = track;
+		try {
+			if (track) localStorage.setItem('tweens-lang', track);
+			else lang = localStorage.getItem('tweens-lang');
+		} catch {}
+		document.documentElement.dataset.lang = lang === 'gdscript' ? 'gdscript' : 'csharp';
+	})();
+</script>
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}

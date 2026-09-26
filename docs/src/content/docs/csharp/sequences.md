@@ -130,7 +130,7 @@ sequence can resume against a paused or freed scene.
 
 Repeat a whole sequence with an ordinary loop that ends when a step doesn't
 complete. To repeat a single tween, set `Repeats` instead, as described in
-[timing](/concepts/timing/).
+[timing](/csharp/timing/).
 
 ```csharp
 while (await sprite.TweenPositionY(120, 0.4).End == Reason.Completed

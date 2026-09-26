@@ -9,6 +9,8 @@ signal ended(reason: int)
 const Types = preload("types.gd")
 const Handle = preload("handle.gd")
 const Carry = preload("carry.gd")
+const Cancellation = preload("cancellation.gd")
+const Awaiting = preload("awaiting.gd")
 
 var members: Array[Handle]:
 	get: return _members.duplicate()
@@ -75,9 +77,10 @@ func cancel() -> void:
 	if not _main_thread(): return
 	for member in _members: member.cancel()
 
-func wait() -> int:
+func wait(cancellation: Cancellation = null) -> int:
 	if not _main_thread(): return Types.Reason.FAILED
 	if is_settled: return completion_reason
+	if cancellation != null: return await Awaiting.wait_for(self, cancellation)
 	return await ended
 
 func _main_thread() -> bool:

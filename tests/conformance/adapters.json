@@ -1,0 +1,3299 @@
+[
+  {
+    "csharp": "AnimatedSprite2DFrame",
+    "name": "animated_sprite_2d_frame",
+    "target": "AnimatedSprite2D",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "frame"
+    ]
+  },
+  {
+    "csharp": "AnimatedSprite2DSpeedScale",
+    "name": "animated_sprite_2d_speed_scale",
+    "target": "AnimatedSprite2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "AnimatedSprite3DFrame",
+    "name": "animated_sprite_3d_frame",
+    "target": "AnimatedSprite3D",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "frame"
+    ]
+  },
+  {
+    "csharp": "AnimatedSprite3DSpeedScale",
+    "name": "animated_sprite_3d_speed_scale",
+    "target": "AnimatedSprite3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "AnimationPlayerSpeedScale",
+    "name": "animation_player_speed_scale",
+    "target": "AnimationPlayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "AudioPitchScale",
+    "name": "audio_pitch_scale",
+    "target": "AudioStreamPlayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pitch_scale"
+    ]
+  },
+  {
+    "csharp": "AudioPitchScale2D",
+    "name": "audio_pitch_scale_2d",
+    "target": "AudioStreamPlayer2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pitch_scale"
+    ]
+  },
+  {
+    "csharp": "AudioPitchScale3D",
+    "name": "audio_pitch_scale_3d",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pitch_scale"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer2DAttenuation",
+    "name": "audio_stream_player_2d_attenuation",
+    "target": "AudioStreamPlayer2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "attenuation"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer2DMaxDistance",
+    "name": "audio_stream_player_2d_max_distance",
+    "target": "AudioStreamPlayer2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "max_distance"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer2DPanningStrength",
+    "name": "audio_stream_player_2d_panning_strength",
+    "target": "AudioStreamPlayer2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "panning_strength"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DAttenuationFilterCutoffHz",
+    "name": "audio_stream_player_3d_attenuation_filter_cutoff_hz",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "attenuation_filter_cutoff_hz"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DAttenuationFilterDb",
+    "name": "audio_stream_player_3d_attenuation_filter_db",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "attenuation_filter_db"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DEmissionAngleDegrees",
+    "name": "audio_stream_player_3d_emission_angle_degrees",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_angle_degrees"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DEmissionAngleFilterAttenuationDb",
+    "name": "audio_stream_player_3d_emission_angle_filter_attenuation_db",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_angle_filter_attenuation_db"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DMaxDistance",
+    "name": "audio_stream_player_3d_max_distance",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "max_distance"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DPanningStrength",
+    "name": "audio_stream_player_3d_panning_strength",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "panning_strength"
+    ]
+  },
+  {
+    "csharp": "AudioStreamPlayer3DUnitSize",
+    "name": "audio_stream_player_3d_unit_size",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "unit_size"
+    ]
+  },
+  {
+    "csharp": "AudioVolumeDb",
+    "name": "audio_volume_db",
+    "target": "AudioStreamPlayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "volume_db"
+    ]
+  },
+  {
+    "csharp": "AudioVolumeDb2D",
+    "name": "audio_volume_db_2d",
+    "target": "AudioStreamPlayer2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "volume_db"
+    ]
+  },
+  {
+    "csharp": "AudioVolumeDb3D",
+    "name": "audio_volume_db_3d",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "volume_db"
+    ]
+  },
+  {
+    "csharp": "AudioVolumeLinear",
+    "name": "audio_volume_linear",
+    "target": "AudioStreamPlayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "volume_linear"
+    ]
+  },
+  {
+    "csharp": "AudioVolumeLinear2D",
+    "name": "audio_volume_linear_2d",
+    "target": "AudioStreamPlayer2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "volume_linear"
+    ]
+  },
+  {
+    "csharp": "AudioVolumeLinear3D",
+    "name": "audio_volume_linear_3d",
+    "target": "AudioStreamPlayer3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "volume_linear"
+    ]
+  },
+  {
+    "csharp": "Camera2DOffset",
+    "name": "camera_2d_offset",
+    "target": "Camera2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "Camera2DOffsetX",
+    "name": "camera_2d_offset_x",
+    "target": "Camera2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "Camera2DOffsetY",
+    "name": "camera_2d_offset_y",
+    "target": "Camera2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "Camera2DZoom",
+    "name": "camera_2d_zoom",
+    "target": "Camera2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "zoom"
+    ]
+  },
+  {
+    "csharp": "Camera2DZoomX",
+    "name": "camera_2d_zoom_x",
+    "target": "Camera2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "zoom:x"
+    ]
+  },
+  {
+    "csharp": "Camera2DZoomY",
+    "name": "camera_2d_zoom_y",
+    "target": "Camera2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "zoom:y"
+    ]
+  },
+  {
+    "csharp": "Camera3DFar",
+    "name": "camera_3d_far",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "far"
+    ]
+  },
+  {
+    "csharp": "Camera3DFov",
+    "name": "camera_3d_fov",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "fov"
+    ]
+  },
+  {
+    "csharp": "Camera3DFrustumOffset",
+    "name": "camera_3d_frustum_offset",
+    "target": "Camera3D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "frustum_offset"
+    ]
+  },
+  {
+    "csharp": "Camera3DFrustumOffsetX",
+    "name": "camera_3d_frustum_offset_x",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "frustum_offset:x"
+    ]
+  },
+  {
+    "csharp": "Camera3DFrustumOffsetY",
+    "name": "camera_3d_frustum_offset_y",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "frustum_offset:y"
+    ]
+  },
+  {
+    "csharp": "Camera3DHOffset",
+    "name": "camera_3d_h_offset",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "h_offset"
+    ]
+  },
+  {
+    "csharp": "Camera3DNear",
+    "name": "camera_3d_near",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "near"
+    ]
+  },
+  {
+    "csharp": "Camera3DSize",
+    "name": "camera_3d_size",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size"
+    ]
+  },
+  {
+    "csharp": "Camera3DVOffset",
+    "name": "camera_3d_v_offset",
+    "target": "Camera3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "v_offset"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerOffset",
+    "name": "canvas_layer_offset",
+    "target": "CanvasLayer",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerOffsetX",
+    "name": "canvas_layer_offset_x",
+    "target": "CanvasLayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerOffsetY",
+    "name": "canvas_layer_offset_y",
+    "target": "CanvasLayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerRotation",
+    "name": "canvas_layer_rotation",
+    "target": "CanvasLayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "rotation"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerScale",
+    "name": "canvas_layer_scale",
+    "target": "CanvasLayer",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "scale"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerScaleX",
+    "name": "canvas_layer_scale_x",
+    "target": "CanvasLayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:x"
+    ]
+  },
+  {
+    "csharp": "CanvasLayerScaleY",
+    "name": "canvas_layer_scale_y",
+    "target": "CanvasLayer",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:y"
+    ]
+  },
+  {
+    "csharp": "CanvasModulateColor",
+    "name": "canvas_modulate_color",
+    "target": "CanvasModulate",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "color"
+    ]
+  },
+  {
+    "csharp": "CanvasModulateColorAlpha",
+    "name": "canvas_modulate_color_alpha",
+    "target": "CanvasModulate",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "color:a"
+    ]
+  },
+  {
+    "csharp": "ColorRectColor",
+    "name": "color_rect_color",
+    "target": "ColorRect",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "color"
+    ]
+  },
+  {
+    "csharp": "ColorRectColorAlpha",
+    "name": "color_rect_color_alpha",
+    "target": "ColorRect",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "color:a"
+    ]
+  },
+  {
+    "csharp": "Color",
+    "name": "color_value",
+    "target": "Node",
+    "type": "Color",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "ControlAnchorBottom",
+    "name": "control_anchor_bottom",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "anchor_bottom"
+    ]
+  },
+  {
+    "csharp": "ControlAnchorLeft",
+    "name": "control_anchor_left",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "anchor_left"
+    ]
+  },
+  {
+    "csharp": "ControlAnchorMax",
+    "name": "control_anchor_max",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "compound",
+    "paths": [
+      "anchor_right",
+      "anchor_bottom"
+    ]
+  },
+  {
+    "csharp": "ControlAnchorMin",
+    "name": "control_anchor_min",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "compound",
+    "paths": [
+      "anchor_left",
+      "anchor_top"
+    ]
+  },
+  {
+    "csharp": "ControlAnchorRight",
+    "name": "control_anchor_right",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "anchor_right"
+    ]
+  },
+  {
+    "csharp": "ControlAnchorTop",
+    "name": "control_anchor_top",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "anchor_top"
+    ]
+  },
+  {
+    "csharp": "ControlCustomMaximumSize",
+    "name": "control_custom_maximum_size",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "custom_maximum_size"
+    ]
+  },
+  {
+    "csharp": "ControlCustomMaximumSizeX",
+    "name": "control_custom_maximum_size_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "custom_maximum_size:x"
+    ]
+  },
+  {
+    "csharp": "ControlCustomMaximumSizeY",
+    "name": "control_custom_maximum_size_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "custom_maximum_size:y"
+    ]
+  },
+  {
+    "csharp": "ControlCustomMinimumSize",
+    "name": "control_custom_minimum_size",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "custom_minimum_size"
+    ]
+  },
+  {
+    "csharp": "ControlCustomMinimumSizeX",
+    "name": "control_custom_minimum_size_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "custom_minimum_size:x"
+    ]
+  },
+  {
+    "csharp": "ControlCustomMinimumSizeY",
+    "name": "control_custom_minimum_size_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "custom_minimum_size:y"
+    ]
+  },
+  {
+    "csharp": "ControlGlobalPosition",
+    "name": "control_global_position",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "global_position"
+    ]
+  },
+  {
+    "csharp": "ControlGlobalPositionX",
+    "name": "control_global_position_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:x"
+    ]
+  },
+  {
+    "csharp": "ControlGlobalPositionY",
+    "name": "control_global_position_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:y"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetBottom",
+    "name": "control_offset_bottom",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_bottom"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetLeft",
+    "name": "control_offset_left",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_left"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetRight",
+    "name": "control_offset_right",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_right"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTop",
+    "name": "control_offset_top",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_top"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPivot",
+    "name": "control_offset_transform_pivot",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset_transform_pivot"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPivotRatio",
+    "name": "control_offset_transform_pivot_ratio",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset_transform_pivot_ratio"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPivotRatioX",
+    "name": "control_offset_transform_pivot_ratio_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_pivot_ratio:x"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPivotRatioY",
+    "name": "control_offset_transform_pivot_ratio_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_pivot_ratio:y"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPivotX",
+    "name": "control_offset_transform_pivot_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_pivot:x"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPivotY",
+    "name": "control_offset_transform_pivot_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_pivot:y"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPosition",
+    "name": "control_offset_transform_position",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset_transform_position"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPositionRatio",
+    "name": "control_offset_transform_position_ratio",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset_transform_position_ratio"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPositionRatioX",
+    "name": "control_offset_transform_position_ratio_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_position_ratio:x"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPositionRatioY",
+    "name": "control_offset_transform_position_ratio_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_position_ratio:y"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPositionX",
+    "name": "control_offset_transform_position_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_position:x"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformPositionY",
+    "name": "control_offset_transform_position_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_position:y"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformRotation",
+    "name": "control_offset_transform_rotation",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_rotation"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformScale",
+    "name": "control_offset_transform_scale",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset_transform_scale"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformScaleX",
+    "name": "control_offset_transform_scale_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_scale:x"
+    ]
+  },
+  {
+    "csharp": "ControlOffsetTransformScaleY",
+    "name": "control_offset_transform_scale_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset_transform_scale:y"
+    ]
+  },
+  {
+    "csharp": "ControlOffsets",
+    "name": "control_offsets",
+    "target": "Control",
+    "type": "Vector4",
+    "kind": "compound",
+    "paths": [
+      "offset_left",
+      "offset_top",
+      "offset_right",
+      "offset_bottom"
+    ]
+  },
+  {
+    "csharp": "ControlPivotOffset",
+    "name": "control_pivot_offset",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "pivot_offset"
+    ]
+  },
+  {
+    "csharp": "ControlPivotOffsetRatio",
+    "name": "control_pivot_offset_ratio",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "pivot_offset_ratio"
+    ]
+  },
+  {
+    "csharp": "ControlPivotOffsetRatioX",
+    "name": "control_pivot_offset_ratio_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pivot_offset_ratio:x"
+    ]
+  },
+  {
+    "csharp": "ControlPivotOffsetRatioY",
+    "name": "control_pivot_offset_ratio_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pivot_offset_ratio:y"
+    ]
+  },
+  {
+    "csharp": "ControlPivotOffsetX",
+    "name": "control_pivot_offset_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pivot_offset:x"
+    ]
+  },
+  {
+    "csharp": "ControlPivotOffsetY",
+    "name": "control_pivot_offset_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pivot_offset:y"
+    ]
+  },
+  {
+    "csharp": "ControlPosition",
+    "name": "control_position",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "position"
+    ]
+  },
+  {
+    "csharp": "ControlPositionX",
+    "name": "control_position_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:x"
+    ]
+  },
+  {
+    "csharp": "ControlPositionY",
+    "name": "control_position_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:y"
+    ]
+  },
+  {
+    "csharp": "ControlRotation",
+    "name": "control_rotation",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "rotation"
+    ]
+  },
+  {
+    "csharp": "ControlScale",
+    "name": "control_scale",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "scale"
+    ]
+  },
+  {
+    "csharp": "ControlScaleX",
+    "name": "control_scale_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:x"
+    ]
+  },
+  {
+    "csharp": "ControlScaleY",
+    "name": "control_scale_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:y"
+    ]
+  },
+  {
+    "csharp": "ControlSize",
+    "name": "control_size",
+    "target": "Control",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "size"
+    ]
+  },
+  {
+    "csharp": "ControlSizeFlagsStretchRatio",
+    "name": "control_size_flags_stretch_ratio",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size_flags_stretch_ratio"
+    ]
+  },
+  {
+    "csharp": "ControlSizeX",
+    "name": "control_size_x",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:x"
+    ]
+  },
+  {
+    "csharp": "ControlSizeY",
+    "name": "control_size_y",
+    "target": "Control",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DColor",
+    "name": "cpu_particles_2d_color",
+    "target": "CPUParticles2D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "color"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DColorAlpha",
+    "name": "cpu_particles_2d_color_alpha",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "color:a"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DDirection",
+    "name": "cpu_particles_2d_direction",
+    "target": "CPUParticles2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "direction"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DDirectionX",
+    "name": "cpu_particles_2d_direction_x",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "direction:x"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DDirectionY",
+    "name": "cpu_particles_2d_direction_y",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "direction:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DEmissionRectExtents",
+    "name": "cpu_particles_2d_emission_rect_extents",
+    "target": "CPUParticles2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "emission_rect_extents"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DEmissionRectExtentsX",
+    "name": "cpu_particles_2d_emission_rect_extents_x",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_rect_extents:x"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DEmissionRectExtentsY",
+    "name": "cpu_particles_2d_emission_rect_extents_y",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_rect_extents:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DEmissionSphereRadius",
+    "name": "cpu_particles_2d_emission_sphere_radius",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_sphere_radius"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DExplosiveness",
+    "name": "cpu_particles_2d_explosiveness",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "explosiveness"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DGravity",
+    "name": "cpu_particles_2d_gravity",
+    "target": "CPUParticles2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "gravity"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DGravityX",
+    "name": "cpu_particles_2d_gravity_x",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "gravity:x"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DGravityY",
+    "name": "cpu_particles_2d_gravity_y",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "gravity:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DLifetime",
+    "name": "cpu_particles_2d_lifetime",
+    "target": "CPUParticles2D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "lifetime"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DRandomness",
+    "name": "cpu_particles_2d_randomness",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "randomness"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DSpeedScale",
+    "name": "cpu_particles_2d_speed_scale",
+    "target": "CPUParticles2D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "CpuParticles2DSpread",
+    "name": "cpu_particles_2d_spread",
+    "target": "CPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spread"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DColor",
+    "name": "cpu_particles_3d_color",
+    "target": "CPUParticles3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "color"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DColorAlpha",
+    "name": "cpu_particles_3d_color_alpha",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "color:a"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DDirection",
+    "name": "cpu_particles_3d_direction",
+    "target": "CPUParticles3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "direction"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DDirectionX",
+    "name": "cpu_particles_3d_direction_x",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "direction:x"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DDirectionY",
+    "name": "cpu_particles_3d_direction_y",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "direction:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DDirectionZ",
+    "name": "cpu_particles_3d_direction_z",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "direction:z"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DEmissionBoxExtents",
+    "name": "cpu_particles_3d_emission_box_extents",
+    "target": "CPUParticles3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "emission_box_extents"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DEmissionBoxExtentsX",
+    "name": "cpu_particles_3d_emission_box_extents_x",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_box_extents:x"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DEmissionBoxExtentsY",
+    "name": "cpu_particles_3d_emission_box_extents_y",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_box_extents:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DEmissionBoxExtentsZ",
+    "name": "cpu_particles_3d_emission_box_extents_z",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_box_extents:z"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DEmissionSphereRadius",
+    "name": "cpu_particles_3d_emission_sphere_radius",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_sphere_radius"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DExplosiveness",
+    "name": "cpu_particles_3d_explosiveness",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "explosiveness"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DGravity",
+    "name": "cpu_particles_3d_gravity",
+    "target": "CPUParticles3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "gravity"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DGravityX",
+    "name": "cpu_particles_3d_gravity_x",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "gravity:x"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DGravityY",
+    "name": "cpu_particles_3d_gravity_y",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "gravity:y"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DGravityZ",
+    "name": "cpu_particles_3d_gravity_z",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "gravity:z"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DLifetime",
+    "name": "cpu_particles_3d_lifetime",
+    "target": "CPUParticles3D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "lifetime"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DRandomness",
+    "name": "cpu_particles_3d_randomness",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "randomness"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DSpeedScale",
+    "name": "cpu_particles_3d_speed_scale",
+    "target": "CPUParticles3D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "CpuParticles3DSpread",
+    "name": "cpu_particles_3d_spread",
+    "target": "CPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spread"
+    ]
+  },
+  {
+    "csharp": "DecalEmissionEnergy",
+    "name": "decal_emission_energy",
+    "target": "Decal",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_energy"
+    ]
+  },
+  {
+    "csharp": "DecalModulate",
+    "name": "decal_modulate",
+    "target": "Decal",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "modulate"
+    ]
+  },
+  {
+    "csharp": "DecalModulateAlpha",
+    "name": "decal_modulate_alpha",
+    "target": "Decal",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "modulate:a"
+    ]
+  },
+  {
+    "csharp": "DecalSize",
+    "name": "decal_size",
+    "target": "Decal",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "size"
+    ]
+  },
+  {
+    "csharp": "DecalSizeX",
+    "name": "decal_size_x",
+    "target": "Decal",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:x"
+    ]
+  },
+  {
+    "csharp": "DecalSizeY",
+    "name": "decal_size_y",
+    "target": "Decal",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:y"
+    ]
+  },
+  {
+    "csharp": "DecalSizeZ",
+    "name": "decal_size_z",
+    "target": "Decal",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:z"
+    ]
+  },
+  {
+    "csharp": "Double",
+    "name": "double_value",
+    "target": "Node",
+    "type": "double",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "Float",
+    "name": "float_value",
+    "target": "Node",
+    "type": "float",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "FogVolumeSize",
+    "name": "fog_volume_size",
+    "target": "FogVolume",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "size"
+    ]
+  },
+  {
+    "csharp": "FogVolumeSizeX",
+    "name": "fog_volume_size_x",
+    "target": "FogVolume",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:x"
+    ]
+  },
+  {
+    "csharp": "FogVolumeSizeY",
+    "name": "fog_volume_size_y",
+    "target": "FogVolume",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:y"
+    ]
+  },
+  {
+    "csharp": "FogVolumeSizeZ",
+    "name": "fog_volume_size_z",
+    "target": "FogVolume",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "size:z"
+    ]
+  },
+  {
+    "csharp": "GeometryInstance3DTransparency",
+    "name": "geometry_instance_3d_transparency",
+    "target": "GeometryInstance3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "transparency"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition2D",
+    "name": "global_position_2d",
+    "target": "Node2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "global_position"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition2DX",
+    "name": "global_position_2d_x",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:x"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition2DY",
+    "name": "global_position_2d_y",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:y"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition3D",
+    "name": "global_position_3d",
+    "target": "Node3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "global_position"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition3DX",
+    "name": "global_position_3d_x",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:x"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition3DY",
+    "name": "global_position_3d_y",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:y"
+    ]
+  },
+  {
+    "csharp": "GlobalPosition3DZ",
+    "name": "global_position_3d_z",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_position:z"
+    ]
+  },
+  {
+    "csharp": "GlobalQuaternion3D",
+    "name": "global_quaternion_3d",
+    "target": "Node3D",
+    "type": "Quaternion",
+    "kind": "global_quaternion",
+    "paths": []
+  },
+  {
+    "csharp": "GlobalRotation2D",
+    "name": "global_rotation_2d",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_rotation"
+    ]
+  },
+  {
+    "csharp": "GlobalRotation3D",
+    "name": "global_rotation_3d",
+    "target": "Node3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "global_rotation"
+    ]
+  },
+  {
+    "csharp": "GlobalRotation3DX",
+    "name": "global_rotation_3d_x",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_rotation:x"
+    ]
+  },
+  {
+    "csharp": "GlobalRotation3DY",
+    "name": "global_rotation_3d_y",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_rotation:y"
+    ]
+  },
+  {
+    "csharp": "GlobalRotation3DZ",
+    "name": "global_rotation_3d_z",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_rotation:z"
+    ]
+  },
+  {
+    "csharp": "GlobalScale2D",
+    "name": "global_scale_2d",
+    "target": "Node2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "global_scale"
+    ]
+  },
+  {
+    "csharp": "GlobalScale2DX",
+    "name": "global_scale_2d_x",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_scale:x"
+    ]
+  },
+  {
+    "csharp": "GlobalScale2DY",
+    "name": "global_scale_2d_y",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_scale:y"
+    ]
+  },
+  {
+    "csharp": "GlobalSkew2D",
+    "name": "global_skew_2d",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "global_skew"
+    ]
+  },
+  {
+    "csharp": "GpuParticles2DAmountRatio",
+    "name": "gpu_particles_2d_amount_ratio",
+    "target": "GPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "amount_ratio"
+    ]
+  },
+  {
+    "csharp": "GpuParticles2DExplosiveness",
+    "name": "gpu_particles_2d_explosiveness",
+    "target": "GPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "explosiveness"
+    ]
+  },
+  {
+    "csharp": "GpuParticles2DLifetime",
+    "name": "gpu_particles_2d_lifetime",
+    "target": "GPUParticles2D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "lifetime"
+    ]
+  },
+  {
+    "csharp": "GpuParticles2DRandomness",
+    "name": "gpu_particles_2d_randomness",
+    "target": "GPUParticles2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "randomness"
+    ]
+  },
+  {
+    "csharp": "GpuParticles2DSpeedScale",
+    "name": "gpu_particles_2d_speed_scale",
+    "target": "GPUParticles2D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "GpuParticles3DAmountRatio",
+    "name": "gpu_particles_3d_amount_ratio",
+    "target": "GPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "amount_ratio"
+    ]
+  },
+  {
+    "csharp": "GpuParticles3DExplosiveness",
+    "name": "gpu_particles_3d_explosiveness",
+    "target": "GPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "explosiveness"
+    ]
+  },
+  {
+    "csharp": "GpuParticles3DLifetime",
+    "name": "gpu_particles_3d_lifetime",
+    "target": "GPUParticles3D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "lifetime"
+    ]
+  },
+  {
+    "csharp": "GpuParticles3DRandomness",
+    "name": "gpu_particles_3d_randomness",
+    "target": "GPUParticles3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "randomness"
+    ]
+  },
+  {
+    "csharp": "GpuParticles3DSpeedScale",
+    "name": "gpu_particles_3d_speed_scale",
+    "target": "GPUParticles3D",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "speed_scale"
+    ]
+  },
+  {
+    "csharp": "Label3DModulate",
+    "name": "label_3d_modulate",
+    "target": "Label3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "modulate"
+    ]
+  },
+  {
+    "csharp": "Label3DModulateAlpha",
+    "name": "label_3d_modulate_alpha",
+    "target": "Label3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "modulate:a"
+    ]
+  },
+  {
+    "csharp": "Label3DOffset",
+    "name": "label_3d_offset",
+    "target": "Label3D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "Label3DOffsetX",
+    "name": "label_3d_offset_x",
+    "target": "Label3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "Label3DOffsetY",
+    "name": "label_3d_offset_y",
+    "target": "Label3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "Label3DOutlineModulate",
+    "name": "label_3d_outline_modulate",
+    "target": "Label3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "outline_modulate"
+    ]
+  },
+  {
+    "csharp": "Label3DOutlineModulateAlpha",
+    "name": "label_3d_outline_modulate_alpha",
+    "target": "Label3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "outline_modulate:a"
+    ]
+  },
+  {
+    "csharp": "Label3DPixelSize",
+    "name": "label_3d_pixel_size",
+    "target": "Label3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pixel_size"
+    ]
+  },
+  {
+    "csharp": "LabelVisibleCharacters",
+    "name": "label_visible_characters",
+    "target": "Label",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "visible_characters"
+    ]
+  },
+  {
+    "csharp": "LabelVisibleRatio",
+    "name": "label_visible_ratio",
+    "target": "Label",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "visible_ratio"
+    ]
+  },
+  {
+    "csharp": "Light2DShadowColor",
+    "name": "light_2d_shadow_color",
+    "target": "Light2D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "shadow_color"
+    ]
+  },
+  {
+    "csharp": "Light2DShadowColorAlpha",
+    "name": "light_2d_shadow_color_alpha",
+    "target": "Light2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "shadow_color:a"
+    ]
+  },
+  {
+    "csharp": "Light3DLightIndirectEnergy",
+    "name": "light_3d_light_indirect_energy",
+    "target": "Light3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "light_indirect_energy"
+    ]
+  },
+  {
+    "csharp": "Light3DLightTemperature",
+    "name": "light_3d_light_temperature",
+    "target": "Light3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "light_temperature"
+    ]
+  },
+  {
+    "csharp": "Light3DLightVolumetricFogEnergy",
+    "name": "light_3d_light_volumetric_fog_energy",
+    "target": "Light3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "light_volumetric_fog_energy"
+    ]
+  },
+  {
+    "csharp": "Light3DShadowOpacity",
+    "name": "light_3d_shadow_opacity",
+    "target": "Light3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "shadow_opacity"
+    ]
+  },
+  {
+    "csharp": "LightColor2D",
+    "name": "light_color_2d",
+    "target": "Light2D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "color"
+    ]
+  },
+  {
+    "csharp": "LightColor3D",
+    "name": "light_color_3d",
+    "target": "Light3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "light_color"
+    ]
+  },
+  {
+    "csharp": "LightEnergy2D",
+    "name": "light_energy_2d",
+    "target": "Light2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "energy"
+    ]
+  },
+  {
+    "csharp": "LightEnergy3D",
+    "name": "light_energy_3d",
+    "target": "Light3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "light_energy"
+    ]
+  },
+  {
+    "csharp": "Line2DDefaultColor",
+    "name": "line_2d_default_color",
+    "target": "Line2D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "default_color"
+    ]
+  },
+  {
+    "csharp": "Line2DDefaultColorAlpha",
+    "name": "line_2d_default_color_alpha",
+    "target": "Line2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "default_color:a"
+    ]
+  },
+  {
+    "csharp": "Line2DWidth",
+    "name": "line_2d_width",
+    "target": "Line2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "width"
+    ]
+  },
+  {
+    "csharp": "MaterialAlbedoAlpha",
+    "name": "material_albedo_alpha",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "albedo_color:a"
+    ]
+  },
+  {
+    "csharp": "MaterialAlbedoColor",
+    "name": "material_albedo_color",
+    "target": "BaseMaterial3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "albedo_color"
+    ]
+  },
+  {
+    "csharp": "MaterialEmission",
+    "name": "material_emission",
+    "target": "BaseMaterial3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "emission"
+    ]
+  },
+  {
+    "csharp": "MaterialEmissionEnergyMultiplier",
+    "name": "material_emission_energy_multiplier",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_energy_multiplier"
+    ]
+  },
+  {
+    "csharp": "MaterialEmissionIntensity",
+    "name": "material_emission_intensity",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "emission_intensity"
+    ]
+  },
+  {
+    "csharp": "MaterialMetallic",
+    "name": "material_metallic",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "metallic"
+    ]
+  },
+  {
+    "csharp": "MaterialMetallicSpecular",
+    "name": "material_metallic_specular",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "metallic_specular"
+    ]
+  },
+  {
+    "csharp": "MaterialNormalScale",
+    "name": "material_normal_scale",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "normal_scale"
+    ]
+  },
+  {
+    "csharp": "MaterialRoughness",
+    "name": "material_roughness",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "roughness"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1Offset",
+    "name": "material_uv1_offset",
+    "target": "BaseMaterial3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "uv1_offset"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1OffsetX",
+    "name": "material_uv1_offset_x",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv1_offset:x"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1OffsetY",
+    "name": "material_uv1_offset_y",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv1_offset:y"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1OffsetZ",
+    "name": "material_uv1_offset_z",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv1_offset:z"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1Scale",
+    "name": "material_uv1_scale",
+    "target": "BaseMaterial3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "uv1_scale"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1ScaleX",
+    "name": "material_uv1_scale_x",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv1_scale:x"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1ScaleY",
+    "name": "material_uv1_scale_y",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv1_scale:y"
+    ]
+  },
+  {
+    "csharp": "MaterialUv1ScaleZ",
+    "name": "material_uv1_scale_z",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv1_scale:z"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2Offset",
+    "name": "material_uv2_offset",
+    "target": "BaseMaterial3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "uv2_offset"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2OffsetX",
+    "name": "material_uv2_offset_x",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv2_offset:x"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2OffsetY",
+    "name": "material_uv2_offset_y",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv2_offset:y"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2OffsetZ",
+    "name": "material_uv2_offset_z",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv2_offset:z"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2Scale",
+    "name": "material_uv2_scale",
+    "target": "BaseMaterial3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "uv2_scale"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2ScaleX",
+    "name": "material_uv2_scale_x",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv2_scale:x"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2ScaleY",
+    "name": "material_uv2_scale_y",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv2_scale:y"
+    ]
+  },
+  {
+    "csharp": "MaterialUV2ScaleZ",
+    "name": "material_uv2_scale_z",
+    "target": "BaseMaterial3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "uv2_scale:z"
+    ]
+  },
+  {
+    "csharp": "Modulate",
+    "name": "modulate",
+    "target": "CanvasItem",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "modulate"
+    ]
+  },
+  {
+    "csharp": "ModulateAlpha",
+    "name": "modulate_alpha",
+    "target": "CanvasItem",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "modulate:a"
+    ]
+  },
+  {
+    "csharp": "OmniLight3DOmniAttenuation",
+    "name": "omni_light_3d_omni_attenuation",
+    "target": "OmniLight3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "omni_attenuation"
+    ]
+  },
+  {
+    "csharp": "OmniRange",
+    "name": "omni_range",
+    "target": "OmniLight3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "omni_range"
+    ]
+  },
+  {
+    "csharp": "Parallax2DAutoscroll",
+    "name": "parallax_2d_autoscroll",
+    "target": "Parallax2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "autoscroll"
+    ]
+  },
+  {
+    "csharp": "Parallax2DAutoscrollX",
+    "name": "parallax_2d_autoscroll_x",
+    "target": "Parallax2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "autoscroll:x"
+    ]
+  },
+  {
+    "csharp": "Parallax2DAutoscrollY",
+    "name": "parallax_2d_autoscroll_y",
+    "target": "Parallax2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "autoscroll:y"
+    ]
+  },
+  {
+    "csharp": "Parallax2DScrollOffset",
+    "name": "parallax_2d_scroll_offset",
+    "target": "Parallax2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "scroll_offset"
+    ]
+  },
+  {
+    "csharp": "Parallax2DScrollOffsetX",
+    "name": "parallax_2d_scroll_offset_x",
+    "target": "Parallax2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scroll_offset:x"
+    ]
+  },
+  {
+    "csharp": "Parallax2DScrollOffsetY",
+    "name": "parallax_2d_scroll_offset_y",
+    "target": "Parallax2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scroll_offset:y"
+    ]
+  },
+  {
+    "csharp": "Parallax2DScrollScale",
+    "name": "parallax_2d_scroll_scale",
+    "target": "Parallax2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "scroll_scale"
+    ]
+  },
+  {
+    "csharp": "Parallax2DScrollScaleX",
+    "name": "parallax_2d_scroll_scale_x",
+    "target": "Parallax2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scroll_scale:x"
+    ]
+  },
+  {
+    "csharp": "Parallax2DScrollScaleY",
+    "name": "parallax_2d_scroll_scale_y",
+    "target": "Parallax2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scroll_scale:y"
+    ]
+  },
+  {
+    "csharp": "PathFollow2DHOffset",
+    "name": "path_follow_2d_h_offset",
+    "target": "PathFollow2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "h_offset"
+    ]
+  },
+  {
+    "csharp": "PathFollow2DProgress",
+    "name": "path_follow_2d_progress",
+    "target": "PathFollow2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "progress"
+    ]
+  },
+  {
+    "csharp": "PathFollow2DProgressRatio",
+    "name": "path_follow_2d_progress_ratio",
+    "target": "PathFollow2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "progress_ratio"
+    ]
+  },
+  {
+    "csharp": "PathFollow2DVOffset",
+    "name": "path_follow_2d_v_offset",
+    "target": "PathFollow2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "v_offset"
+    ]
+  },
+  {
+    "csharp": "PathFollow3DHOffset",
+    "name": "path_follow_3d_h_offset",
+    "target": "PathFollow3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "h_offset"
+    ]
+  },
+  {
+    "csharp": "PathFollow3DProgress",
+    "name": "path_follow_3d_progress",
+    "target": "PathFollow3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "progress"
+    ]
+  },
+  {
+    "csharp": "PathFollow3DProgressRatio",
+    "name": "path_follow_3d_progress_ratio",
+    "target": "PathFollow3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "progress_ratio"
+    ]
+  },
+  {
+    "csharp": "PathFollow3DVOffset",
+    "name": "path_follow_3d_v_offset",
+    "target": "PathFollow3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "v_offset"
+    ]
+  },
+  {
+    "csharp": "PointLight2DHeight",
+    "name": "point_light_2d_height",
+    "target": "PointLight2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "height"
+    ]
+  },
+  {
+    "csharp": "PointLight2DOffset",
+    "name": "point_light_2d_offset",
+    "target": "PointLight2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "PointLight2DOffsetX",
+    "name": "point_light_2d_offset_x",
+    "target": "PointLight2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "PointLight2DOffsetY",
+    "name": "point_light_2d_offset_y",
+    "target": "PointLight2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "PointLight2DTextureScale",
+    "name": "point_light_2d_texture_scale",
+    "target": "PointLight2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_scale"
+    ]
+  },
+  {
+    "csharp": "Polygon2DColor",
+    "name": "polygon_2d_color",
+    "target": "Polygon2D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "color"
+    ]
+  },
+  {
+    "csharp": "Polygon2DColorAlpha",
+    "name": "polygon_2d_color_alpha",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "color:a"
+    ]
+  },
+  {
+    "csharp": "Polygon2DOffset",
+    "name": "polygon_2d_offset",
+    "target": "Polygon2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "Polygon2DOffsetX",
+    "name": "polygon_2d_offset_x",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "Polygon2DOffsetY",
+    "name": "polygon_2d_offset_y",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureOffset",
+    "name": "polygon_2d_texture_offset",
+    "target": "Polygon2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "texture_offset"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureOffsetX",
+    "name": "polygon_2d_texture_offset_x",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_offset:x"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureOffsetY",
+    "name": "polygon_2d_texture_offset_y",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_offset:y"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureRotation",
+    "name": "polygon_2d_texture_rotation",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_rotation"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureScale",
+    "name": "polygon_2d_texture_scale",
+    "target": "Polygon2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "texture_scale"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureScaleX",
+    "name": "polygon_2d_texture_scale_x",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_scale:x"
+    ]
+  },
+  {
+    "csharp": "Polygon2DTextureScaleY",
+    "name": "polygon_2d_texture_scale_y",
+    "target": "Polygon2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_scale:y"
+    ]
+  },
+  {
+    "csharp": "Position2D",
+    "name": "position_2d",
+    "target": "Node2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "position"
+    ]
+  },
+  {
+    "csharp": "Position2DX",
+    "name": "position_2d_x",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:x"
+    ]
+  },
+  {
+    "csharp": "Position2DY",
+    "name": "position_2d_y",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:y"
+    ]
+  },
+  {
+    "csharp": "Position3D",
+    "name": "position_3d",
+    "target": "Node3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "position"
+    ]
+  },
+  {
+    "csharp": "Position3DX",
+    "name": "position_3d_x",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:x"
+    ]
+  },
+  {
+    "csharp": "Position3DY",
+    "name": "position_3d_y",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:y"
+    ]
+  },
+  {
+    "csharp": "Position3DZ",
+    "name": "position_3d_z",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "position:z"
+    ]
+  },
+  {
+    "csharp": "Quaternion3D",
+    "name": "quaternion_3d",
+    "target": "Node3D",
+    "type": "Quaternion",
+    "kind": "property",
+    "paths": [
+      "quaternion"
+    ]
+  },
+  {
+    "csharp": "Quaternion",
+    "name": "quaternion_value",
+    "target": "Node",
+    "type": "Quaternion",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "RangeValue",
+    "name": "range_value",
+    "target": "Range",
+    "type": "double",
+    "kind": "property",
+    "paths": [
+      "value"
+    ]
+  },
+  {
+    "csharp": "Rect2",
+    "name": "rect2_value",
+    "target": "Node",
+    "type": "Rect2",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "RichTextLabelVisibleCharacters",
+    "name": "rich_text_label_visible_characters",
+    "target": "RichTextLabel",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "visible_characters"
+    ]
+  },
+  {
+    "csharp": "RichTextLabelVisibleRatio",
+    "name": "rich_text_label_visible_ratio",
+    "target": "RichTextLabel",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "visible_ratio"
+    ]
+  },
+  {
+    "csharp": "Rotation2D",
+    "name": "rotation_2d",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "rotation"
+    ]
+  },
+  {
+    "csharp": "Rotation3D",
+    "name": "rotation_3d",
+    "target": "Node3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "rotation"
+    ]
+  },
+  {
+    "csharp": "Rotation3DX",
+    "name": "rotation_3d_x",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "rotation:x"
+    ]
+  },
+  {
+    "csharp": "Rotation3DY",
+    "name": "rotation_3d_y",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "rotation:y"
+    ]
+  },
+  {
+    "csharp": "Rotation3DZ",
+    "name": "rotation_3d_z",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "rotation:z"
+    ]
+  },
+  {
+    "csharp": "Scale2D",
+    "name": "scale_2d",
+    "target": "Node2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "scale"
+    ]
+  },
+  {
+    "csharp": "Scale2DX",
+    "name": "scale_2d_x",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:x"
+    ]
+  },
+  {
+    "csharp": "Scale2DY",
+    "name": "scale_2d_y",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:y"
+    ]
+  },
+  {
+    "csharp": "Scale3D",
+    "name": "scale_3d",
+    "target": "Node3D",
+    "type": "Vector3",
+    "kind": "property",
+    "paths": [
+      "scale"
+    ]
+  },
+  {
+    "csharp": "Scale3DX",
+    "name": "scale_3d_x",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:x"
+    ]
+  },
+  {
+    "csharp": "Scale3DY",
+    "name": "scale_3d_y",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:y"
+    ]
+  },
+  {
+    "csharp": "Scale3DZ",
+    "name": "scale_3d_z",
+    "target": "Node3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "scale:z"
+    ]
+  },
+  {
+    "csharp": "ScrollContainerScrollHorizontal",
+    "name": "scroll_container_scroll_horizontal",
+    "target": "ScrollContainer",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "scroll_horizontal"
+    ]
+  },
+  {
+    "csharp": "ScrollContainerScrollVertical",
+    "name": "scroll_container_scroll_vertical",
+    "target": "ScrollContainer",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "scroll_vertical"
+    ]
+  },
+  {
+    "csharp": "SelfModulate",
+    "name": "self_modulate",
+    "target": "CanvasItem",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "self_modulate"
+    ]
+  },
+  {
+    "csharp": "SelfModulateAlpha",
+    "name": "self_modulate_alpha",
+    "target": "CanvasItem",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "self_modulate:a"
+    ]
+  },
+  {
+    "csharp": "Skew2D",
+    "name": "skew_2d",
+    "target": "Node2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "skew"
+    ]
+  },
+  {
+    "csharp": "SpotAngle",
+    "name": "spot_angle",
+    "target": "SpotLight3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spot_angle"
+    ]
+  },
+  {
+    "csharp": "SpotLight3DSpotAngleAttenuation",
+    "name": "spot_light_3d_spot_angle_attenuation",
+    "target": "SpotLight3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spot_angle_attenuation"
+    ]
+  },
+  {
+    "csharp": "SpotLight3DSpotAttenuation",
+    "name": "spot_light_3d_spot_attenuation",
+    "target": "SpotLight3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spot_attenuation"
+    ]
+  },
+  {
+    "csharp": "SpotRange",
+    "name": "spot_range",
+    "target": "SpotLight3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spot_range"
+    ]
+  },
+  {
+    "csharp": "SpringArm3DSpringLength",
+    "name": "spring_arm_3d_spring_length",
+    "target": "SpringArm3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "spring_length"
+    ]
+  },
+  {
+    "csharp": "Sprite2DFrame",
+    "name": "sprite_2d_frame",
+    "target": "Sprite2D",
+    "type": "int",
+    "kind": "property",
+    "paths": [
+      "frame"
+    ]
+  },
+  {
+    "csharp": "Sprite2DOffset",
+    "name": "sprite_2d_offset",
+    "target": "Sprite2D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "Sprite2DOffsetX",
+    "name": "sprite_2d_offset_x",
+    "target": "Sprite2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "Sprite2DOffsetY",
+    "name": "sprite_2d_offset_y",
+    "target": "Sprite2D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "Sprite2DRegionRect",
+    "name": "sprite_2d_region_rect",
+    "target": "Sprite2D",
+    "type": "Rect2",
+    "kind": "property",
+    "paths": [
+      "region_rect"
+    ]
+  },
+  {
+    "csharp": "SpriteBase3DModulate",
+    "name": "sprite_base_3d_modulate",
+    "target": "SpriteBase3D",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "modulate"
+    ]
+  },
+  {
+    "csharp": "SpriteBase3DModulateAlpha",
+    "name": "sprite_base_3d_modulate_alpha",
+    "target": "SpriteBase3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "modulate:a"
+    ]
+  },
+  {
+    "csharp": "SpriteBase3DOffset",
+    "name": "sprite_base_3d_offset",
+    "target": "SpriteBase3D",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "offset"
+    ]
+  },
+  {
+    "csharp": "SpriteBase3DOffsetX",
+    "name": "sprite_base_3d_offset_x",
+    "target": "SpriteBase3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:x"
+    ]
+  },
+  {
+    "csharp": "SpriteBase3DOffsetY",
+    "name": "sprite_base_3d_offset_y",
+    "target": "SpriteBase3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "offset:y"
+    ]
+  },
+  {
+    "csharp": "SpriteBase3DPixelSize",
+    "name": "sprite_base_3d_pixel_size",
+    "target": "SpriteBase3D",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "pixel_size"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarRadialCenterOffset",
+    "name": "texture_progress_bar_radial_center_offset",
+    "target": "TextureProgressBar",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "radial_center_offset"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarRadialCenterOffsetX",
+    "name": "texture_progress_bar_radial_center_offset_x",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "radial_center_offset:x"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarRadialCenterOffsetY",
+    "name": "texture_progress_bar_radial_center_offset_y",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "radial_center_offset:y"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarRadialFillDegrees",
+    "name": "texture_progress_bar_radial_fill_degrees",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "radial_fill_degrees"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarRadialInitialAngle",
+    "name": "texture_progress_bar_radial_initial_angle",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "radial_initial_angle"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTextureProgressOffset",
+    "name": "texture_progress_bar_texture_progress_offset",
+    "target": "TextureProgressBar",
+    "type": "Vector2",
+    "kind": "property",
+    "paths": [
+      "texture_progress_offset"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTextureProgressOffsetX",
+    "name": "texture_progress_bar_texture_progress_offset_x",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_progress_offset:x"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTextureProgressOffsetY",
+    "name": "texture_progress_bar_texture_progress_offset_y",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "texture_progress_offset:y"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTintOver",
+    "name": "texture_progress_bar_tint_over",
+    "target": "TextureProgressBar",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "tint_over"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTintOverAlpha",
+    "name": "texture_progress_bar_tint_over_alpha",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "tint_over:a"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTintProgress",
+    "name": "texture_progress_bar_tint_progress",
+    "target": "TextureProgressBar",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "tint_progress"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTintProgressAlpha",
+    "name": "texture_progress_bar_tint_progress_alpha",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "tint_progress:a"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTintUnder",
+    "name": "texture_progress_bar_tint_under",
+    "target": "TextureProgressBar",
+    "type": "Color",
+    "kind": "property",
+    "paths": [
+      "tint_under"
+    ]
+  },
+  {
+    "csharp": "TextureProgressBarTintUnderAlpha",
+    "name": "texture_progress_bar_tint_under_alpha",
+    "target": "TextureProgressBar",
+    "type": "float",
+    "kind": "property",
+    "paths": [
+      "tint_under:a"
+    ]
+  },
+  {
+    "csharp": "Vector2",
+    "name": "vector2_value",
+    "target": "Node",
+    "type": "Vector2",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "Vector3",
+    "name": "vector3_value",
+    "target": "Node",
+    "type": "Vector3",
+    "kind": "value",
+    "paths": []
+  },
+  {
+    "csharp": "Vector4",
+    "name": "vector4_value",
+    "target": "Node",
+    "type": "Vector4",
+    "kind": "value",
+    "paths": []
+  }
+]

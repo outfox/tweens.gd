@@ -1,46 +1,53 @@
 ---
 import SectionArt, { type Section } from '../SectionArt.astro';
+import { LANGS, PATH, slugOf, trackOf } from '../../tracks.mjs';
 
 const PAGE_TITLE_ID = '_top'; // Starlight's skip-link target
-
 const { id, entry } = Astro.locals.starlightRoute;
 const title = entry.data.title;
-
-// One drawing per sidebar group, so the art tells readers which stretch of the path they are on.
-const groups: [Section, string[]][] = [
-	['dock', ['csharp/installation', 'csharp/quickstart']],
-	['hop', ['concepts/definitions', 'csharp/sequences', 'csharp/playback']],
-	['curve', ['concepts/easing', 'concepts/timing', 'concepts/lifetime']],
-	['catalog', ['csharp/materials', 'csharp/shaders', 'csharp/custom-tweens', 'csharp/api', 'csharp/nodes', 'compatibility']],
-	['sketch', ['gdscript']],
-];
-const section = groups.find(([, ids]) => ids.includes(id))?.[0];
-
+const lang = trackOf(id) as keyof typeof LANGS | undefined;
+const language = lang && LANGS[lang];
+// One drawing per stretch of the learning path, the same in both languages; shared pages use the catalog drawing.
+const slug = lang ? slugOf(id) : undefined;
+const section = (PATH.find((g) => g.pages.some((p) => p.slug === slug))?.art ??
+	(id === 'compatibility' || id === 'acknowledgements' ? 'catalog' : undefined)) as Section | undefined;
+// Search results list both languages' twins, so their titles carry the language.
+const searchTitle = language ? `title:${title} (${language.label})` : undefined;
 // Letters are split so a hover can ripple through them like a staggered tween list.
 let i = 0;
 const words = title.split(' ').map((word) => [...word].map((ch) => ({ ch, i: i++ })));
 ---
 
 <div class="title-row">
-	<h1 id={PAGE_TITLE_ID}>
-		<span class="sr-only">{title}</span>
-		<span class="letters" aria-hidden="true">
-			{
-				words.map((letters, w) => (
-					<>
-						{w > 0 && ' '}
-						<span class="word">
-							{letters.map(({ ch, i }) => (
-								<span class="ch" style={`--i:${i}`}>
-									{ch}
-								</span>
-							))}
-						</span>
-					</>
-				))
-			}
-		</span>
-	</h1>
+	<div class="heading">
+		{
+			language && (
+				<p class="lang-tag">
+					<span>{language.label}</span>
+					{language.status && <span class="status">{language.status}</span>}
+				</p>
+			)
+		}
+		<h1 id={PAGE_TITLE_ID} data-pagefind-meta={searchTitle}>
+			<span class="sr-only">{title}</span>
+			<span class="letters" aria-hidden="true">
+				{
+					words.map((letters, w) => (
+						<>
+							{w > 0 && ' '}
+							<span class="word">
+								{letters.map(({ ch, i }) => (
+									<span class="ch" style={`--i:${i}`}>
+										{ch}
+									</span>
+								))}
+							</span>
+						</>
+					))
+				}
+			</span>
+		</h1>
+	</div>
 	{
 		section && (
 			<div class="art">
@@ -67,6 +74,22 @@ const words = title.split(' ').map((word) => [...word].map((ch) => ({ ch, i: i++
 		letter-spacing: -0.03em;
 		color: var(--sl-color-white);
 		text-wrap: balance;
+	}
+	.lang-tag {
+		display: flex;
+		gap: 0.4rem;
+		margin: 0 0 0.6rem;
+		font: 650 var(--sl-text-xs) / 1 var(--sl-font-mono);
+	}
+	.lang-tag span {
+		padding: 0.3rem 0.6rem;
+		border-radius: 999px;
+		background: var(--tw-selected);
+		color: var(--tw-mint-ink);
+	}
+	.lang-tag .status {
+		background: color-mix(in oklab, var(--tw-amber) 18%, transparent);
+		color: var(--tw-amber-ink);
 	}
 	.word {
 		display: inline-block;

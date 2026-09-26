@@ -1,5 +1,11 @@
 ---
 import { curvePath, type EaseName } from '../scripts/motion';
+import type { Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
 
 const families = ['Sine', 'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Circ', 'Back', 'Elastic', 'Bounce'];
 const variants = ['In', 'Out', 'InOut'] as const;
@@ -17,7 +23,7 @@ const TILE_PAD = 14;
 const ghosts = Array.from({ length: 11 }, (_, i) => i);
 ---
 
-<div class="tw-widget ep not-content" data-easing-playground>
+<div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
 	<div class="preview">
 		<div class="graph">
 			<svg viewBox="0 0 320 200" aria-hidden="true">
@@ -39,7 +45,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 			</svg>
 		</div>
 		<div class="side">
-			<p class="name"><span class="ns">EaseType.</span><span data-name>BackOut</span></p>
+			<p class="name"><span class="ns">{lang === 'gdscript' ? 'Tweens.Ease.' : 'EaseType.'}</span><span data-name>{lang === 'gdscript' ? 'BACK_OUT' : 'BackOut'}</span></p>
 			<p class="hint">Onion-skin rings mark equal slices of time, so the ball moves fast where they spread out and slow where they bunch up. The dashed zones show where an ease goes past an endpoint.</p>
 			<label class="tw-field">
 				<span>Duration <output data-duration-out>0.8 s</output></span>
@@ -105,6 +111,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 
 <script>
 	import { EASES, type EaseName, curvePath, tween, onceVisible, type TweenHandle } from '../scripts/motion';
+	import { constant, langOf } from '../scripts/lang';
 
 	const TILE_H = 64;
 	const TILE_PAD = 14;
@@ -117,6 +124,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 		const ball = $<SVGGElement>('[data-ball]');
 		const ghosts = [...root.querySelectorAll<SVGCircleElement>('.ghost')];
 		const nameOut = $<HTMLElement>('[data-name]');
+		const lang = langOf(root);
 		const announce = $<HTMLElement>('[data-announce]');
 		const duration = $<HTMLInputElement>('[data-duration]');
 		const durationOut = $<HTMLOutputElement>('[data-duration-out]');
@@ -154,7 +162,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 
 		const select = (name: EaseName, run = true) => {
 			selected = name;
-			nameOut.textContent = name;
+			nameOut.textContent = lang === 'gdscript' ? constant(name) : name;
 			announce.textContent = `${name} selected`;
 			curve.setAttribute('d', curvePath(name, 320, 200, 50));
 			curve.animate([{ opacity: 0.2 }, { opacity: 1 }], { duration: 300 });

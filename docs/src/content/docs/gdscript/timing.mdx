@@ -1,0 +1,93 @@
+---
+title: Timing and loops
+description: Duration, delay, repeats, ping-pong, fill modes, and what happens on long frames.
+---
+
+import TimingLab from '../../../components/TimingLab.astro';
+import FillModes from '../../../components/FillModes.astro';
+
+A tween waits out its delay, plays a forward leg, and optionally returns and
+repeats. Most tweens only need `duration`, `delay`, and an ease. Everything else
+here is for loops and edge cases.
+
+Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and run
+on Godot's main thread in a method of an in-tree node.
+
+## Loop forever
+
+For idle motion such as bobbing or pulsing, use one definition that ping-pongs
+forever. It stops by itself when `sprite` leaves the tree:
+
+```gdscript
+var bob := Tweens.position_2d_y(sprite.position.y - 8.0, 0.8)
+bob.ease = Tweens.Ease.SINE_IN_OUT
+bob.use_ping_pong = true
+bob.repeats = Tweens.INFINITE
+Tweens.play(sprite, bob)
+```
+
+## Timing fields
+
+All times are in seconds, as GDScript `float` values.
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `duration` | `0.0` | Seconds per leg. Zero completes on the first eligible update. |
+| `delay` | `0.0` | Initial wait before the first leg. |
+| `repeats` | `0` | Cycles after the first. `Tweens.INFINITE` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
+| `use_ping_pong` | `false` | A forward and a backward leg form one cycle. |
+| `ping_pong_interval` | `0.0` | Wait at the far endpoint before returning. |
+| `repeat_interval` | `0.0` | Wait between cycles, never after the last one. |
+| `offset` | `0.0` | Start this many seconds into the first forward leg, between zero and `duration`. The delay still comes first. |
+
+The helper factories set `duration` from their second argument, as in
+`Tweens.position_2d_y(to, 0.8)`; set the other fields on the returned definition.
+
+For example, `duration = 0.5`, `use_ping_pong = true`, `ping_pong_interval = 0.2`,
+`repeat_interval = 0.3`, and `repeats = 1` take 2.7 seconds: two 1.2-second cycles
+and one 0.3-second gap. Drag the timeline to see each phase:
+
+<TimingLab lang="gdscript" />
+
+Negative and non-finite values reject the start, and `Tweens.play()` returns an
+already-settled handle whose `wait()` reports `Tweens.Reason.FAILED`. A long frame
+advances to the correct phase, even across several cycles, without losing time at
+boundaries, but it doesn't replay the callbacks of the cycles it skipped.
+
+## Fill and restoration
+
+`fill` decides what the property shows before the tween starts and after it ends.
+
+| `Tweens.Fill` | During the initial delay | On natural completion |
+| --- | --- | --- |
+| `RETAIN_FINAL_VALUE` (default) | Leave the property alone | Keep the final value |
+| `APPLY_FROM_DURING_DELAY` | Apply the from value | Restore the captured initial value |
+| `BOTH` | Apply the from value | Keep the final value |
+| `NONE` | Leave the property alone | Restore the captured initial value |
+
+Use `BOTH` for staggered entrances, so items that are still waiting show their
+`from_value` instead of their final one.
+
+<FillModes lang="gdscript" />
+
+A ping-pong tween ends at its starting endpoint, so that endpoint is its final
+value. Cancelling always keeps the latest value, whatever the fill mode. Shader
+restoration also preserves whether an explicit override existed (see
+[shader uniforms](/gdscript/shaders/)).
+
+## Process and physics
+
+`process_mode` defaults to `Tweens.Process.PROCESS`. Choose
+`Tweens.Process.PHYSICS` to update with physics instead. The automatic runner uses
+process and physics priority `1000`, so it runs after nodes with default priority.
+
+`use_unscaled_time = true` ignores `Engine.time_scale`. Process updates then use
+monotonic engine ticks, and physics updates use `1 / Engine.physics_ticks_per_second`
+per tick, which is simulation time rather than wall-clock time during catch-up.
+Neither field changes pause or ownership rules.
+
+## Progress
+
+A handle's `progress` is the current leg's position from 0 to 1, before easing. It
+runs backwards during a ping-pong return, and it isn't the fraction of all cycles
+completed.

@@ -11,11 +11,51 @@ internal static class Program
         var outputIndex = Array.IndexOf(args, "--benchmark-output");
         var benchmarkOutput = outputIndex >= 0 && outputIndex + 1 < args.Length
             ? Path.GetFullPath(args[outputIndex + 1]) : null;
-        using var engine = new twodog.Engine("gdscript.2dog", args: ["--headless", "--fixed-fps", "60"]);
+        var directory = Directory.GetCurrentDirectory();
+        var cycles = args.Contains("--lifecycle") || args.Contains("--restart-probe") ? 3 : 1;
+        if (cycles == 1) return Run(args, benchmarkOutput);
+        for (var cycle = 0; cycle < cycles; cycle++)
+        {
+            Directory.SetCurrentDirectory(directory);
+            var result = 1;
+            var thread = new Thread(() => result = Run(args, benchmarkOutput));
+            if (OperatingSystem.IsWindows()) thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            if (result != 0) return result;
+        }
+        return 0;
+    }
+
+    private static int Run(string[] args, string? benchmarkOutput)
+    {
+        var engineArgs = args.Contains("--rendering")
+            ? new[] { "--rendering-method", "gl_compatibility", "--audio-driver", "Dummy", "--minimized", "--resolution", "64x64", "--fixed-fps", "60" }
+            : new[] { "--headless", "--fixed-fps", "60" };
+        if (args.Contains("--restart-probe")) engineArgs = [.. engineArgs, "res://restart_probe.tscn"];
+        using var engine = new twodog.Engine("gdscript.2dog", args: engineArgs);
         engine.Start();
+        try { return RunTests(engine, args, benchmarkOutput); }
+        finally
+        {
+            // Finalize wrappers while their engine is alive; never let a later engine reuse their native addresses.
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+
+    private static int RunTests(twodog.Engine engine, string[] args, string? benchmarkOutput)
+    {
+        if (args.Contains("--restart-probe"))
+        {
+            using var method = new StringName("ping");
+            var result = engine.Tree.CurrentScene.Call(method).AsInt32();
+            Console.WriteLine($"GDScript restart probe: {result}");
+            return result == 42 ? 0 : 1;
+        }
         foreach (var source in Directory.EnumerateFiles(ProjectSettings.GlobalizePath("res://addons/tweens_gd"), "*.gd"))
         {
-            var script = ResourceLoader.Load<GDScript>($"res://addons/tweens_gd/{Path.GetFileName(source)}");
+            using var script = ResourceLoader.Load<GDScript>($"res://addons/tweens_gd/{Path.GetFileName(source)}");
             if (script is null || !script.CanInstantiate())
             {
                 Console.Error.WriteLine($"GDScript failed to compile: {source}");
@@ -28,7 +68,9 @@ internal static class Program
             Console.Error.WriteLine("GDScript suite failed to load (check parser errors above).");
             return 1;
         }
-        tests.Call("run_tests");
+        using var runTests = new StringName("run_tests");
+        tests.Set("trace_runs", args.Contains("--lifecycle"));
+        tests.Call(runTests);
         for (var frame = 0; frame < 120 && !tests.Get("finished").AsBool(); frame++)
             engine.Iteration();
         if (!tests.Get("finished").AsBool())
@@ -36,7 +78,7 @@ internal static class Program
             Console.Error.WriteLine("GDScript suite did not finish within 120 frames.");
             return 1;
         }
-        var failures = tests.Get("failures").AsGodotArray();
+        using var failures = tests.Get("failures").AsGodotArray();
         foreach (var failure in failures) Console.Error.WriteLine(failure.AsString());
         Console.WriteLine($"GDScript: {tests.Get("checks").AsInt32()} checks, {failures.Count} failures.");
         if (args.Contains("--benchmark") && failures.Count == 0)

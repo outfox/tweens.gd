@@ -7,8 +7,12 @@ const Playback = preload("res://addons/tweens_gd/playback.gd")
 const ErrorCollector = preload("error_collector.gd")
 const Benchmark = preload("benchmark.gd")
 const GroupTests = preload("group_tests.gd")
+const AdapterTests = preload("adapter_tests.gd")
+const ShaderTests = preload("shader_tests.gd")
+const CoordinationTests = preload("coordination_tests.gd")
 
 var finished := false
+var trace_runs := false
 var checks := 0
 var failures: Array[String] = []
 var _collector := ErrorCollector.new()
@@ -34,7 +38,7 @@ class ResourceProbe extends RefCounted:
 			return 0.0
 
 func _ready() -> void:
-	if "--run-tests" in OS.get_cmdline_user_args(): _run_standalone.call_deferred()
+	if OS.has_feature("tweens_test_export") or "--run-tests" in OS.get_cmdline_user_args(): _run_standalone.call_deferred()
 
 func _run_standalone() -> void:
 	get_tree().create_timer(20.0).timeout.connect(func():
@@ -44,6 +48,9 @@ func _run_standalone() -> void:
 	await run_tests()
 	for failure in failures: printerr(failure)
 	print("GDScript: %d checks, %d failures." % [checks, failures.size()])
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("window.tweensTestResult = " + JSON.stringify({"checks": checks, "failures": failures}) + ";", true)
+		return
 	get_tree().quit(0 if failures.is_empty() else 1)
 
 func benchmark() -> String:
@@ -62,12 +69,18 @@ func near(actual: float, expected: float, message: String) -> void:
 	check(absf(actual - expected) <= 0.000001, "%s: got %s, expected %s" % [message, actual, expected])
 
 func run_tests() -> void:
+	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
 	for test in [_conformance, _validation, _snapshots_and_fill, _interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
+		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
+	if trace_runs: print("suite: groups and adapters")
 	await _await_and_carry()
 	check(await GroupTests.new().run(self) == true, "group suite returned normally")
+	check(AdapterTests.new().run(self), "adapter suite returned normally")
+	check(await ShaderTests.new().run(self), "shader suite returned normally")
+	check(await CoordinationTests.new().run(self), "coordination suite returned normally")
 	await _automatic_runner()
 	await _rejected_starts()
 	failures.append_array(_collector.take_errors())
@@ -130,6 +143,7 @@ func _validation() -> bool:
 	return true
 
 func _snapshots_and_fill() -> bool:
+	if trace_runs: print("snapshots: nodes")
 	var scheduler := T.Scheduler.new()
 	var first := Node2D.new()
 	var second := Node2D.new()
@@ -138,15 +152,18 @@ func _snapshots_and_fill() -> bool:
 	first.position.x = 2.0
 	second.position.x = 4.0
 	var definition := T.property(^"position:x", 10.0, 1.0)
+	if trace_runs: print("snapshots: add")
 	var a := scheduler.add(first, definition)
 	var b := scheduler.add(second, definition)
 	definition.to_value = 100.0
 	definition.duration = 100.0
+	if trace_runs: print("snapshots: update")
 	scheduler.update(0.5)
 	near(first.position.x, 6.0, "first captures own initial value")
 	near(second.position.x, 7.0, "second captures own initial value")
 	a.cancel()
 	b.cancel()
+	if trace_runs: print("snapshots: fill")
 	var updates: Array = []
 	var fill := T.property(^"position:x", 20.0, 1.0)
 	fill.delay = 0.5
@@ -158,6 +175,7 @@ func _snapshots_and_fill() -> bool:
 	scheduler.update(1.5)
 	check(updates == [1.0, 20.0, 6.0], "completion samples endpoint then restores captured value")
 	check(filled.completion_reason == T.Reason.COMPLETED, "fill completes")
+	if trace_runs: print("snapshots: curve")
 	var curve := Curve.new()
 	curve.add_point(Vector2(0.0, 0.0))
 	curve.add_point(Vector2(1.0, 1.0))
@@ -572,6 +590,7 @@ func _rejected_starts() -> void:
 	check(await closing.wait() == T.Reason.FAILED, "closing tree needs no future tick to settle rejection")
 	check(not get_tree().has_meta(T.Runner.META_KEY), "closing tree rejection creates no runner")
 	# The API rejects worker-thread use before touching scene state, but still returns a handle.
+	if OS.has_feature("web"): return # The export deliberately disables thread support.
 	var worker := Thread.new()
 	var from_worker := _expected_rejection(func():
 		worker.start(func(): return T.play(null, null))

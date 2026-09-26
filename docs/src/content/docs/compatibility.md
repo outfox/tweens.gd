@@ -4,12 +4,12 @@ description: Implementation status, engine requirements, and validated targets f
 ---
 
 The C# library works with .NET 10 and Godot 4.7.2 .NET today. The GDScript addon
-has an experimental pure GDScript core.
+is an experimental pure GDScript implementation of the same model.
 
 | Implementation | Availability | Requirements |
 | --- | --- | --- |
 | C# | Implemented; project reference and local NuGet package supported | .NET 10, GodotSharp 4.7.2, matching engine |
-| GDScript addon | Experimental core available from source | Tested on 2dog/Godot 4.7.2; no .NET/native extension dependency; exports pending validation |
+| GDScript addon | Experimental; available from source or as a locally built ZIP | Godot 4.7.2; no .NET or native extension dependency |
 
 The C# package ID and namespace are both `tweens.gd`. The local development
 version is `0.1.0`, which hasn't been published to nuget.org.
@@ -39,10 +39,16 @@ emission, normal maps, and particle modes before animating them. Shader default
 lookup needs a working renderer, which a dummy headless renderer may not supply.
 See [materials](/csharp/materials/) and [shader uniforms](/csharp/shaders/).
 
-## GDScript availability
+## GDScript validation
 
-The addon is implemented in pure GDScript for projects without .NET. Windows
-headless conformance tests run real GDScript through the pinned 2dog engine.
-Standard Godot exports, older versions, mobile and Web/WASM remain unvalidated.
-The initial API covers core playback and generic properties; full adapter and
-group parity is still in progress. See the [GDScript guide](/gdscript/).
+The addon is pure GDScript and needs no .NET runtime, autoload, or GDExtension.
+
+| Area | Current status |
+| --- | --- |
+| Engine | 2dog/Godot 4.7.2 in Debug and Release, and the standard Godot 4.7.2 editor build |
+| Rendering | Real OpenGL rendering, including shader uniform defaults and output |
+| Exports | A Windows release export and a single-threaded Web/WASM release export, tested in Edge |
+| Other engines, browsers, and devices | Not validated |
+| Throughput | High tween counts need further optimization; no supported count or frame budget is promised |
+
+The addon's differences from C# are listed in the [GDScript Core API](/gdscript/api/).

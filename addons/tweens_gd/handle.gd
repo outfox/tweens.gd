@@ -12,6 +12,9 @@ const Playback = preload("playback.gd")
 const Easing = preload("easing.gd")
 const Interpolation = preload("interpolation.gd")
 const Carry = preload("carry.gd")
+const Adapter = preload("adapter.gd")
+const Cancellation = preload("cancellation.gd")
+const Awaiting = preload("awaiting.gd")
 
 var target: Object:
 	get: return _target
@@ -38,6 +41,7 @@ var _owner: Node
 var _tree: SceneTree
 var _scheduler: WeakRef
 var _options: Definition
+var _adapter: Adapter
 var _clock: Playback
 var _initial: Variant
 var _from: Variant
@@ -76,6 +80,8 @@ func _init(scheduler: RefCounted, target_object: Object, options: Definition,
 	_target_is_owner = target_object == lifetime_owner
 	_tree = tree
 	_options = options
+	_adapter = options.adapter
+	if _adapter != null: _adapter._captured_type = typeof(initial)
 	_clock = Playback.new(options)
 	_initial = initial
 	_value = initial
@@ -94,9 +100,10 @@ func resume() -> void:
 func cancel() -> void:
 	if _main_thread(): _finish(Types.Reason.CANCELLED)
 
-func wait() -> int:
+func wait(cancellation: Cancellation = null) -> int:
 	if not _main_thread(): return Types.Reason.FAILED
 	if _settled: return _reason
+	if cancellation != null: return await Awaiting.wait_for(self, cancellation)
 	return await ended
 
 func _main_thread() -> bool:
@@ -144,18 +151,35 @@ func _advance_inner(delta: float) -> void:
 	if (weight_type != TYPE_FLOAT and weight_type != TYPE_INT) or not is_finite(float(weight)):
 		_fail("Easing must return a finite number.")
 		return
-	var sample: Variant = Interpolation.interpolate(_from, _to, weight, typeof(_initial))
-	if not Interpolation.finite(sample):
-		_fail("Interpolation produced a non-finite value.")
-		return
+	var sample: Variant
+	if _adapter != null:
+		sample = _adapter.interpolate(_from, _to, weight)
+		if not _check_target(): return
+		var sample_error := _adapter.validate_value(sample)
+		if not _check_target(): return
+		if not sample_error.is_empty() or not Interpolation.compatible(_initial, sample):
+			_fail(sample_error if not sample_error.is_empty() else "Interpolation changed the value type.")
+			return
+	else:
+		sample = Interpolation.interpolate(_from, _to, weight, typeof(_initial))
+		if not Interpolation.finite(sample):
+			_fail("Interpolation produced a non-finite value.")
+			return
 	_apply(sample)
 	if is_terminal or not _clock.completed: return
-	if not _options.fill & Types.Fill.RETAIN_FINAL_VALUE: _apply(_initial)
+	if not _options.fill & Types.Fill.RETAIN_FINAL_VALUE: _apply(_initial, true)
 	if not is_terminal: _finish(Types.Reason.COMPLETED)
 
-func _apply(sample: Variant) -> void:
+func _apply(sample: Variant, restoring: bool = false) -> void:
 	# Callers have checked lifetimes after every preceding user callback.
-	if not _options.property.is_empty():
+	if _adapter != null:
+		var write_error := _adapter.restore(_target, sample) if restoring else _adapter.write(_target, sample)
+		if not write_error.is_empty():
+			_fail(write_error)
+			return
+		_value = sample
+		if not _check_target(): return
+	elif not _options.property.is_empty():
 		_target.set_indexed(_options.property, sample)
 		_value = sample
 		# Script setters may cancel or free the target.
@@ -198,7 +222,7 @@ func _invoke(callback: Callable, args: Array = []) -> void:
 
 func _fail(message: String) -> void:
 	if _settled: return
-	_error = message
+	_error = message if _error.is_empty() else _error + "\n" + message
 	if is_terminal:
 		_state = Types.State.FAULTED
 		_reason = Types.Reason.FAILED
@@ -232,6 +256,12 @@ func _end_operation() -> void:
 
 func _settle() -> void:
 	if _settled: return
+	# Wait until reentrant setters/interpolators have returned before releasing bindings.
+	if _adapter != null:
+		var adapter := _adapter
+		_adapter = null
+		var cleanup := adapter.release()
+		if not cleanup.is_empty(): _fail(cleanup)
 	_settled = true
 	var scheduler = _scheduler.get_ref()
 	if not _error.is_empty() and scheduler != null: scheduler._report(_error)

@@ -28,7 +28,7 @@ typed configure callback runs synchronously before playback starts and may overr
 Configuration errors propagate before playback is added. For reusable definitions,
 use `target.Tween(new Definition { ... })`. Both forms return a
 `TweenInstance<TTarget, TValue>` handle with pause, cancel, and completion support,
-and the same [owner lifetime](/concepts/lifetime/).
+and the same [owner lifetime](/csharp/lifetime/).
 
 Extensions on a base class work on every node derived from it. `Node2D` and
 `Node3D` carry the transforms, `CanvasItem` the 2D modulation, `Control` the layout,

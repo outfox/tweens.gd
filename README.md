@@ -1,11 +1,11 @@
 # tweens.gd
 
-Tween libraries for Godot, inspired by Jeffrey Lanters' **unity-tweens**. A typed C# NuGet package and an experimental pure GDScript addon.
+Tween libraries for Godot: a typed C# NuGet package and an experimental pure GDScript addon.
 
 | Project | Location | Status |
 | --- | --- | --- |
 | C# NuGet package `tweens.gd` | `csharp/` | Implemented; examples below |
-| GDScript Godot addon | [addons/tweens_gd/](addons/tweens_gd/README.md) | Core API implemented in pure GDScript; full parity and exports pending |
+| GDScript Godot addon | [addons/tweens_gd/](addons/tweens_gd/README.md) | Pure GDScript core, groups, full helper catalog, custom adapters and shaders; Windows/Web exports tested |
 | Public documentation | [docs/](docs/README.md) | C# guides/reference and GDScript status; deployment pending |
 
 Internal working documents live in the gitignored `docs-internal/` directory. The following documentation describes the C# implementation.
@@ -220,11 +220,9 @@ Value tweens are owned by a Node and deliver results through `OnUpdate`. Their o
 
 For deterministic tests or non-node managed targets, use `TweenScheduler.Add(target, definition)` and `Update(delta, unscaledDelta, mode)`. The scheduler must be driven/disposed on its creating thread. Adding actual Nodes still requires Godot's main thread and an in-tree owner. Dispose manual schedulers to release their work. Automatic `CancelTweens` operates on the per-tree runner, not separately created manual schedulers.
 
-## Differences from unity-tweens
+## Scope
 
-The reusable definition/instance design and easing math are retained. Properties use PascalCase and Godot types. `Repeats` counts cycles after the first, with `TweenOptions.Infinite` replacing a separate flag. Fill flags describe behavior instead of retaining upstream's reversed Forwards/Backwards terminology. Native `Nullable<T>` replaces the custom nullable wrapper. Timing carries remaining delta across phase boundaries, zero duration is explicit, and terminal callbacks are idempotent.
-
-Unity coroutine APIs, the editor inspector, component lookup, and Unity-specific audio spatial-blend/priority/reverb/pan controls are not ported. Sequence DSLs, automatic overwrite arbitration, and pooling are deferred. Global quaternion rotation is available through `Tweens.GlobalQuaternion3D` / `TweenGlobalQuaternion`; it follows Godot global-rotation scale/shear semantics. Use async composition and custom property definitions where appropriate.
+Sequence DSLs, automatic overwrite arbitration, and pooling are not implemented; compose sequences with `async`/`await` and groups. Global quaternion rotation is available through `Tweens.GlobalQuaternion3D` / `TweenGlobalQuaternion`; it follows Godot global-rotation scale/shear semantics.
 
 ## Validation and known limits
 
@@ -244,4 +242,6 @@ dotnet run --project testbed/testbed.2dog -- --snapshot artifacts/demo.png --ren
 dotnet run --project testbed/testbed.2dog -- --headless --quit-after 12 --restart-check
 ```
 
-The math and API inspiration are attributed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), including the original MIT notice.
+## Acknowledgements
+
+tweens.gd was inspired by Jeffrey Lanters' [unity-tweens](https://github.com/jeffreylanters/unity-tweens), whose reusable definition/instance model shaped its first design. The code has since been rewritten around Godot and is no longer a port. The easing functions still follow unity-tweens' implementation, so its MIT notice is kept in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and in the addon's copy.

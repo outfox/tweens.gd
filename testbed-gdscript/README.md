@@ -8,6 +8,8 @@ From the repository root:
 ```powershell
 dotnet run --project testbed-gdscript/host -c Release
 dotnet run --project testbed-gdscript/host -c Debug
+dotnet run --project testbed-gdscript/host -c Debug -- --rendering
+dotnet run --project testbed-gdscript/host -c Release -- --lifecycle
 dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release
 ```
 
@@ -18,6 +20,20 @@ Shared timing, easing and group completion/overshoot fixtures also run through t
 C# implementation in the library test suite. Group tests additionally cover shared
 controls, overlapping groups, already-settled/rejected members, cancellation during
 callbacks, owner/target lifetime, mixed clocks, error aggregation and reference cleanup.
+The generated catalog exercises every concrete C# property/value adapter against
+native Godot properties. Custom adapters, multi-starts, cancellable waits and shader
+metadata/bindings have dedicated suites. `--rendering` opens a minimized OpenGL
+window and also checks shader defaults, instance uniforms and a rendered pixel.
+`--lifecycle` runs the full suite through three engine starts/stops in one process.
+
+The addon copies Curve points, tangents, bounds and bake resolution explicitly.
+The pinned 2dog 4.7.2.91 build crashes on `Curve.duplicate()` after an engine restart;
+`dotnet run --project testbed-gdscript/host -c Release -- --restart-probe` preserves
+the small no-addon reproduction in `restart_probe.gd` (this diagnostic intentionally
+reproduces the native crash and is not a passing CI test). The addon workaround is
+covered by the regular and restart suites.
+The announced 4.7.2.92 restart fixes are awaiting package availability; this
+validation remains pinned to .91 until the new package can be tested.
 
 To use an installed standard Godot executable instead:
 
@@ -26,10 +42,36 @@ To use an installed standard Godot executable instead:
 godot --headless --path testbed-gdscript -- --run-tests
 ```
 
-This path is provided for follow-up validation; the initial local validation used
-the pinned 2dog engine. The project can also be opened in the Godot editor; use
+Standard non-.NET Godot 4.7.2 is also validated. The project can be opened in the Godot editor; use
 `--run-tests` in the run arguments. No editor import/cache is needed by the 2dog
 test path because scripts explicitly preload their dependencies.
+
+## Export and packaging validation
+
+The committed Windows/Web test presets use matching official templates under
+`artifacts/godot-templates/`. Export with the installed standard Godot editor:
+
+```powershell
+./scripts/Get-GodotTemplates.ps1
+./scripts/Export-GDScriptTests.ps1 -Godot C:/Tools/godot/Godot_v4.7.2-stable_win64_console.exe
+npm.cmd install --prefix artifacts/browser-test --no-audit --no-fund playwright-core@1.56.1
+node scripts/test-gdscript-web.mjs
+./scripts/Pack-GDScript.ps1
+```
+
+Template downloads are verified against the official SHA512 list. The export
+script builds both release exports and runs the Windows executable headlessly.
+The Web harness starts a temporary localhost server and isolated headless Edge,
+runs the exported suite, records its result, and closes both. Set `GDSCRIPT_BROWSER`
+to another installed Playwright Chromium channel to test it. Browser worker-thread
+rejection tests are skipped because this preset deliberately disables threads;
+core, group, catalog, custom-adapter and rendering tests still run.
+
+Local validation used Godot 4.7.2 and Edge 154 on Windows. Wider browser/device
+coverage and performance budgets remain separate follow-ups. No benchmark rerun is
+part of the parity work. The addon ZIP contains only `addons/tweens_gd/`, including
+source, the helper catalog and licenses. CI checks generated files and uploads the
+ZIP beside the C# packages for the existing release workflow.
 
 ## Baseline benchmark
 

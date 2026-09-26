@@ -40,8 +40,9 @@ Create and control tweens on Godot's main thread.
 ## Documentation
 
 The experimental pure GDScript addon lives separately in `addons/tweens_gd/` and is not included in this package.
-Guides, concepts, and the API reference live at [tweens.gd](https://tweens.gd).
+Guides and the API reference live at [tweens.gd/csharp](https://tweens.gd/csharp/installation/).
 The site's source is in the [repository](https://github.com/outfox/tweens.gd/tree/main/docs).
 
-MIT licensed. Easing math and API inspiration come from Jeffrey Lanters'
-unity-tweens; the package includes the license and third-party notices.
+MIT licensed. tweens.gd was inspired by Jeffrey Lanters' unity-tweens; its easing
+functions still follow that implementation, so the package includes the unity-tweens
+MIT notice alongside its own license.

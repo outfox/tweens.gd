@@ -1,5 +1,6 @@
 ---
 import { LinkButton } from '@astrojs/starlight/components';
+import { constant } from '../../scripts/lang';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, actions = [] } = data.hero || {};
@@ -69,9 +70,16 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 
 	<figure class="stage" data-stage>
 		<figcaption class="code">
-			<span class="t-kw">var</span> <span class="t-var">hop</span> = <span class="t-kw">new</span> <span class="t-ty">Tweens.Position2D</span><br />
-			<span class="indent">{'{'} To = to, Duration = <span class="t-num">0.9</span>, Ease = EaseType.<span class="t-ease" data-ease-label>{eases[0]}</span> {'}'};</span><br />
-			<span class="t-var">sprite</span>.<span class="t-fn">Tween</span>(<span class="t-var">hop</span>);
+			<span data-lang-only="csharp">
+				<span class="t-kw">var</span> <span class="t-var">hop</span> = <span class="t-kw">new</span> <span class="t-ty">Tweens.Position2D</span><br />
+				<span class="indent">{'{'} To = to, Duration = <span class="t-num">0.9</span>, Ease = EaseType.<span class="t-ease" data-ease-label="csharp">{eases[0]}</span> {'}'};</span><br />
+				<span class="t-var">sprite</span>.<span class="t-fn">Tween</span>(<span class="t-var">hop</span>);
+			</span>
+			<span data-lang-only="gdscript">
+				<span class="t-kw">var</span> <span class="t-var">hop</span> := Tweens.<span class="t-fn">position_2d</span>(to, <span class="t-num">0.9</span>)<br />
+				<span class="t-var">hop</span>.ease = Tweens.Ease.<span class="t-ease" data-ease-label="gdscript">{constant(eases[0])}</span><br />
+				Tweens.<span class="t-fn">play</span>(<span class="t-var">sprite</span>, <span class="t-var">hop</span>)
+			</span>
 		</figcaption>
 
 		<svg class="lane" viewBox="0 0 400 84" aria-hidden="true">
@@ -110,7 +118,8 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 			{
 				eases.map((e, i) => (
 					<button type="button" class="pick" data-ease={e} aria-pressed={i === 0 ? 'true' : 'false'}>
-						{e}
+						<span data-lang-only="csharp">{e}</span>
+						<span data-lang-only="gdscript">{constant(e)}</span>
 					</button>
 				))
 			}
@@ -121,6 +130,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 
 <script>
 	import { EASES, type EaseName, loop, reducedMotion } from '../../scripts/motion';
+	import { constant } from '../../scripts/lang';
 
 	// Lane and plot leave room for the largest overshoot among the presets (ElasticOut peaks near 1.37).
 	const FROM = 30;
@@ -142,7 +152,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 
 	for (const stage of document.querySelectorAll<HTMLElement>('[data-stage]')) {
 		const $ = <T extends Element>(s: string) => stage.querySelector<T>(s)!;
-		const label = $<HTMLElement>('[data-ease-label]');
+		const labels = [...stage.querySelectorAll<HTMLElement>('[data-ease-label]')];
 		const ball = $<SVGGElement>('[data-ball]');
 		const squash = $<SVGGElement>('[data-squash]');
 		const ghosts = [...stage.querySelectorAll<SVGCircleElement>('.ghost')];
@@ -165,7 +175,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 
 		const setEase = (i: number) => {
 			index = i;
-			label.textContent = names[i];
+			labels.forEach((l) => (l.textContent = l.dataset.easeLabel === 'gdscript' ? constant(names[i]) : names[i]));
 			curve.setAttribute('d', plotPath(names[i]));
 			picks.forEach((p, k) => p.setAttribute('aria-pressed', String(k === i)));
 			for (const g of ghosts) g.style.opacity = '0';

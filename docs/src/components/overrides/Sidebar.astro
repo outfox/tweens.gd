@@ -1,0 +1,19 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+import LangSwitch from '../LangSwitch.astro';
+---
+
+<!-- On narrow screens the header has no room for the switch, so it leads the menu instead. -->
+<div class="lang md:sl-hidden">
+	<LangSwitch />
+</div>
+<Default />
+
+<style>
+	.lang {
+		margin-bottom: 1rem;
+	}
+	.lang :global(.lang-switch) {
+		width: 100%;
+	}
+</style>

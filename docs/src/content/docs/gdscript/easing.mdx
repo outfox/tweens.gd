@@ -1,0 +1,96 @@
+---
+title: Easing
+description: Pick an ease for each kind of motion, from the 33 built-in functions to Callables and Godot curves.
+---
+
+import EasingPlayground from '../../../components/EasingPlayground.astro';
+
+Easing controls how a tween speeds up and slows down without changing how long it
+takes. The default, `Tweens.Ease.LINEAR`, moves at constant speed, which rarely
+suits characters or UI. Pick an ease for every definition.
+
+Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and run
+on Godot's main thread in a method of an in-tree node.
+
+## Choose an ease
+
+| Motion | Try | Why |
+| --- | --- | --- |
+| Arriving, settling into place | `CUBIC_OUT`, `QUART_OUT` | Starts fast, lands gently |
+| Leaving the screen | `CUBIC_IN`, `QUAD_IN` | Gathers speed on the way out |
+| Moving between two resting spots | `SMOOTHER_STEP`, `SINE_IN_OUT` | Eases out of rest and into rest |
+| A playful pop or emphasis | `BACK_OUT`, `ELASTIC_OUT` | Overshoots, then settles |
+| Dropping onto a surface | `BOUNCE_OUT` | Lands with bounces |
+| Constant motion, such as spinners or progress | `LINEAR` | No acceleration |
+
+`OUT` eases decelerate, `IN` eases accelerate, and `IN_OUT` eases do both.
+`LINEAR`, `SMOOTH_STEP`, and `SMOOTHER_STEP` have no variants. Each of the ten
+families below comes in all three, such as `Tweens.Ease.CUBIC_IN`,
+`Tweens.Ease.CUBIC_OUT`, and `Tweens.Ease.CUBIC_IN_OUT`. Assign the constant to a
+definition's `ease` field:
+
+```gdscript
+var arrive := Tweens.position_2d(Vector2(300, 120), 0.5)
+arrive.ease = Tweens.Ease.CUBIC_OUT
+Tweens.play(sprite, arrive)
+```
+
+## Compare the curves
+
+<EasingPlayground lang="gdscript" />
+
+| Family | Character |
+| --- | --- |
+| `SINE` | Gentle acceleration and deceleration |
+| `QUAD`, `CUBIC`, `QUART`, `QUINT` | Increasingly pronounced polynomial curves |
+| `EXPO` | Strong exponential acceleration and deceleration |
+| `CIRC` | Circular curve |
+| `BACK` | Overshoots an endpoint |
+| `ELASTIC` | Oscillates around an endpoint |
+| `BOUNCE` | Repeated bounces |
+| `SMOOTH_STEP`, `SMOOTHER_STEP` | S-curves that start and stop at zero speed; `SMOOTHER_STEP` also starts and stops with zero acceleration |
+
+Back and elastic weights aren't clamped. Colors and vectors keep the overshoot, but
+native property setters still apply their own limits, for example to alpha or ranges.
+
+## Skew the timing
+
+Set `skew` to feed normalized time through `pow(t, skew)` before the easing
+function. It defaults to `1.0`, which leaves the easing unchanged. Values above `1`
+rear-load the curve; values between `0` and `1` front-load it. For example, at
+`t = 0.25`, a skew of `2.0` passes `0.0625` to the ease, while `0.5` passes `0.5`.
+
+```gdscript
+var movement := Tweens.position_2d(Vector2(300, 120), 0.5)
+movement.ease = Tweens.Ease.CUBIC_OUT
+movement.skew = 2.0
+Tweens.play(sprite, movement)
+```
+
+`skew` must be finite and greater than zero; other values reject the start. It
+applies to built-in eases, `ease_function`, and `curve` samples. Duration and the
+handle's raw `progress` stay unchanged, and ping-pong retraces the same skewed curve
+in reverse. Both time endpoints are preserved. For bounce, elastic, and other
+non-monotonic eases, skew shifts when their features happen; it does not remove
+bounces or overshoot.
+
+## Custom functions and curves
+
+For a shape the built-in eases don't cover, assign a Callable that maps normalized
+progress to a weight:
+
+```gdscript
+var eased := Tweens.position_2d(Vector2(300, 120), 0.5)
+eased.ease_function = func(t: float) -> float: return t * t
+Tweens.play(sprite, eased)
+```
+
+`ease_function` overrides `ease`. A Godot `Curve` assigned to `curve` can override
+`ease` instead. It's sampled with normalized time from 0 to 1, and each start gets
+its own copy of the curve. Set only one of `ease_function` and `curve`; a definition
+with both is rejected.
+
+The Callable runs synchronously on every update. If it becomes invalid or returns
+anything other than a finite number, the tween ends with `Tweens.Reason.FAILED` and
+the message in `handle.error`. A script error raised inside the Callable remains an
+ordinary Godot script error; the addon can't convert it into a failure reason.

@@ -5,8 +5,13 @@ extends RefCounted
 ## Reusable configuration. Each start copies it; null endpoints use the captured value.
 
 const Types = preload("types.gd")
+const Adapter = preload("adapter.gd")
 
 var property: NodePath
+var adapter: Adapter
+## Optional native class/value constraints used by named helpers.
+var target_class: StringName
+var value_type: int = TYPE_NIL
 var from_value: Variant = null
 var to_value: Variant = null
 ## Initial value for callback-only tweens (an empty property path).
@@ -38,6 +43,9 @@ var on_finally: Callable
 func copy() -> TweensGdDefinition:
 	var result := get_script().new() as TweensGdDefinition
 	result.property = property
+	result.adapter = adapter.copy() if adapter != null else null
+	result.target_class = target_class
+	result.value_type = value_type
 	result.from_value = from_value
 	result.to_value = to_value
 	result.initial_value = initial_value
@@ -63,11 +71,26 @@ func copy() -> TweensGdDefinition:
 	result.on_cancel = on_cancel
 	result.on_finally = on_finally
 	if curve != null:
-		result.curve = curve.duplicate() as Curve
+		# Resource.duplicate() crashes after a same-process 2dog 4.7.2.91 restart.
+		# Copy the public curve data explicitly; no native extension is needed.
+		result.curve = Curve.new()
+		result.curve.min_domain = minf(curve.min_domain, 0.0)
+		result.curve.max_domain = maxf(curve.max_domain, 1.0)
+		result.curve.min_domain = curve.min_domain
+		result.curve.max_domain = curve.max_domain
+		result.curve.min_value = minf(curve.min_value, 0.0)
+		result.curve.max_value = maxf(curve.max_value, 1.0)
+		result.curve.min_value = curve.min_value
+		result.curve.max_value = curve.max_value
+		result.curve.bake_resolution = curve.bake_resolution
+		for index in range(curve.point_count):
+			result.curve.add_point(curve.get_point_position(index), curve.get_point_left_tangent(index),
+				curve.get_point_right_tangent(index), curve.get_point_left_mode(index), curve.get_point_right_mode(index))
 	return result
 
 ## Returns an empty string on success. No partial playback is created on failure.
 func validate() -> String:
+	if adapter != null and not property.is_empty(): return "Choose either an adapter or a property path."
 	for seconds in [duration, delay, offset, ping_pong_interval, repeat_interval]:
 		if not is_finite(seconds) or seconds < 0.0:
 			return "Timing must be finite and nonnegative."

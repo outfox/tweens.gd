@@ -1,13 +1,15 @@
 # tweens.gd for GDScript
 
-An initial, pure GDScript implementation of reusable tween definitions and
+An experimental, pure GDScript implementation of reusable tween definitions and
 independent playback handles. Copy this entire `tweens_gd` directory into your
 project's `addons/` directory. No plugin activation, autoload, .NET runtime or
 GDExtension is required.
 
-The API is experimental. It has been tested headlessly on Windows with the
-repository's pinned 2dog/Godot 4.7.2 engine. Standard Godot exports, older engine
-versions and Web/WASM have not yet been validated.
+The API is experimental. Validation covers 2dog/Godot 4.7.2 in Debug and Release,
+real OpenGL rendering, the installed standard Godot 4.7.2 engine, a Windows release
+export and a single-threaded Web/WASM release export in Edge. Other engines,
+browsers and devices have not been validated. A distributable ZIP can be built
+with `./scripts/Pack-GDScript.ps1` from the repository root.
 
 ## Start and await
 
@@ -35,7 +37,7 @@ configuration. Curves are duplicated; Callables and their captured objects are
 shared references. Subclass-specific fields are not copied automatically.
 
 Node targets must be inside the tree and use their own lifetime. Resource/Object
-targets require an explicit in-tree owner for automatic playback:
+targets require an explicit in-tree owner or SceneTree for automatic playback:
 
 ```gdscript
 var fade := Tweens.property(^"modulate:a", 0.0, 0.3)
@@ -48,7 +50,32 @@ Tweens.cancel_tweens(sprite, true) # Include descendant owners.
 
 var roughness := Tweens.property(^"roughness", 0.2, 0.5)
 var material_handle := Tweens.play(material, roughness, mesh_instance)
+var tree_handle := Tweens.play(material, roughness, get_tree())
 ```
+
+## Named helpers
+
+All 331 concrete C# property/value adapters have corresponding factories, including
+transforms and components, Control layout, drawing, lights, cameras, audio, particles,
+paths, materials and discrete properties. See [the complete catalog](CATALOG.md).
+Helpers return the same reusable definition type and validate the native target
+class and captured value type before playback:
+
+```gdscript
+var move := Tweens.position_2d(Vector2(400, 180), 0.6)
+move.ease = Tweens.Ease.CUBIC_OUT
+var fade := Tweens.modulate_alpha(0.0, 0.3)
+var together := Tweens.play_all(sprite, [move, fade])
+await together.wait()
+```
+
+Factory arguments are `(to = null, seconds = 0.0)`. Null endpoints capture the
+initial value. `float_value`, `double_value`, `vector2_value`, `vector3_value`,
+`vector4_value`, `color_value`, `quaternion_value` and `rect2_value` provide named
+callback-only definitions; GDScript represents both float and double as `float`.
+`play_all()` / manual `scheduler.add_all()` start definitions on one target and
+return a group. A rejected start cancels preceding siblings and stops further
+starts. Invalid array entries are rejected before starting any definitions.
 
 ## Properties and values
 
@@ -76,9 +103,9 @@ limits. Colors/vectors preserve easing overshoot. Engine setters can clamp value
 
 Component writes read the other components at application time. Concurrent
 tweens write in insertion order. Resource properties modify the supplied resource,
-including when it is shared. Generic property paths provide access to Node2D,
-Node3D, Control and ordinary material properties; dedicated typed adapters and
-shader-uniform restoration are not implemented yet.
+including when it is shared. Generic property paths and named helpers provide
+access to Node2D, Node3D, Control and ordinary material properties. Shader-uniform
+restoration is available through the shader helpers below.
 
 ## Timing configuration
 
@@ -148,7 +175,82 @@ in a separate coroutine awaiting `wait()`. GDScript cannot catch arbitrary scrip
 errors as C# exceptions. Invalid configuration, stale Callables, nonnumeric/nonfinite
 easing and nonfinite interpolation are detected; arbitrary errors inside callbacks
 or custom property setters remain Godot script errors, with no promised conversion
-to `FAILED`. There is no per-wait cancellation token or C# task parity.
+to `FAILED`. C# exception-task behavior cannot be reproduced for arbitrary script errors.
+
+Individual waits can be cancelled without stopping playback:
+
+```gdscript
+var cancellation := Tweens.Cancellation.new()
+get_tree().create_timer(0.25).timeout.connect(cancellation.cancel)
+var reason := await handle.wait(cancellation)
+if reason == Tweens.Reason.WAIT_CANCELLED:
+	print("Stopped waiting; playback continues")
+```
+
+Groups accept the same optional token. Other waiters are unaffected. Already-settled
+playback returns its actual reason even if the token is cancelled. `WAIT_CANCELLED`
+is a wait result only; it never becomes a handle/group completion reason.
+
+## Custom adapters
+
+Use Callables for custom storage, with optional interpolation and value validation:
+
+```gdscript
+var intensity := Tweens.custom(
+	func(target): return target.get_meta(&"intensity", 0.0),
+	func(target, value): target.set_meta(&"intensity", value),
+	1.0, 0.5)
+var handle := Tweens.play(self, intensity)
+```
+
+The optional fifth argument is `interpolator(from, to, weight)`. The sixth is
+`validator(value)`, returning an empty string on success or a diagnostic on failure.
+Override both to support additional Variant value types. A setter can return a
+diagnostic string to fail playback; a void return means success.
+Default interpolation follows the captured storage type: float storage keeps
+fractional samples with integer endpoints, and integer storage rounds samples.
+
+For resource bindings, extend `Tweens.Adapter` and assign an instance to
+`definition.adapter`. Override `read(target)`, `write(target, value)`, and optionally
+`prepare(target)`, `restore(target, initial)`, `release()`, `interpolate(from, to, weight)`
+and `validate_value(value)`. All hooks except read/interpolate return an error string,
+empty on success. Constructors must accept no arguments. `copy()` creates a new
+adapter and shallow-copies script fields; override it when configuration needs a
+different copy policy. Arrays, resources and captured objects remain shared unless
+explicitly duplicated. Initialize private playback state in `prepare()`.
+
+Each start owns its adapter snapshot. Preparation precedes the initial read;
+restoration runs on natural non-retaining completion; release runs after callbacks
+and before waiters resume, including after failed preparation. Reentrant cancellation
+waits for active setters/interpolators to return before release. Multiple detected
+failures are retained in `handle.error`. Arbitrary GDScript runtime errors still
+cannot be caught; use the hook error returns for recoverable failures.
+
+## Shader uniforms
+
+```gdscript
+var dissolve := Tweens.shader_parameter(&"dissolve", 1.0, 0.5)
+dissolve.fill = Tweens.Fill.NONE
+var material_tween := Tweens.play(shader_material, dissolve, self)
+var pulse := Tweens.play(mesh, Tweens.instance_shader_parameter(&"pulse", 1.0, 0.5))
+```
+
+Material uniforms target a `ShaderMaterial`. Instance uniforms target `CanvasItem`
+or `GeometryInstance3D` and must be declared with `instance uniform`. Supported
+uniform types are float, int, Vector2/3/4 and Color. Endpoints must match uniform
+metadata exactly; Color and Vector4 are distinct. Shader integers use signed 32-bit
+limits and saturating interpolation. Names and bindings are captured per start.
+
+Missing uniforms, incompatible types and nonfinite values fail before registration.
+An absent override captures the declared default, which requires a working renderer.
+Natural completion without `RETAIN_FINAL_VALUE` restores the original explicit
+override or removes the new override if none existed. Cancellation keeps the last
+sample. Shared material uniforms affect every user of that material.
+
+Changes to a tracked shader, mesh, effective material, overlay or next pass fail the
+next write/restore with `FAILED`. Inherited CanvasItem materials are tracked too.
+Metadata is checked at start; binding identity and shader change signals are checked
+during playback. Shader subscriptions are released on every termination path.
 
 ## Groups
 
@@ -223,6 +325,8 @@ desktop microbenchmark. See its README for commands. Performance at high tween
 counts needs further work; this implementation is not advertised as equivalent
 to the built-in native Tween's throughput.
 
-Next slices: typed property conveniences, custom adapters, shader uniforms,
-broader conformance and rendering coverage, constrained-device/web benchmarks,
-export validation and distributable packages. The addon remains pure GDScript.
+Remaining language differences: no automatic conversion of arbitrary GDScript errors
+to C# exception tasks, runtime target/value checks in place of C# generics, and
+GDScript's numeric representations. Wider browser/device coverage and performance
+profiling remain future work; the accepted 1,000-tween baseline has not been retuned.
+The addon remains pure GDScript.

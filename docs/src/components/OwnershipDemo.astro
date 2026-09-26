@@ -1,8 +1,17 @@
 ---
-// Owner exit and pause policy, acted out on a tiny scene tree (concepts/lifetime).
+// Owner exit and pause policy, acted out on a tiny scene tree (the lifetime pages).
+import { constant, type Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+const gd = lang === 'gdscript';
+const modes = ['Bound', 'SceneTree', 'Always'];
+const modeLabel = (m: string) => (gd ? constant(m) : m);
 ---
 
-<div class="tw-widget od not-content" data-ownership>
+<div class="tw-widget od not-content" data-ownership data-code-lang={lang}>
 	<div class="scene">
 		<ul class="tree" aria-label="Scene tree">
 			<li class="node root"><span class="n">root</span> <span class="tag" data-paused-tag>paused</span></li>
@@ -19,16 +28,21 @@
 
 	<div class="status">
 		<span class="tw-chip state" data-state>Playing</span>
-		<span class="tw-chip">End <b data-reason>pending…</b></span>
+		<span class="tw-chip">{gd ? 'wait()' : 'End'} <b data-reason>pending…</b></span>
 	</div>
 
 	<div class="controls">
 		<label class="tw-field">
-			<span><code>TweenPauseMode</code></span>
+			<span><code>{gd ? 'pause_mode' : 'PauseMode'}</code></span>
 			<select data-mode>
-				<option value="Bound" selected>Bound (default)</option>
-				<option value="SceneTree">SceneTree</option>
-				<option value="Always">Always</option>
+				{
+					modes.map((m, i) => (
+						<option value={m} selected={i === 0}>
+							{modeLabel(m)}
+							{i === 0 && ' (default)'}
+						</option>
+					))
+				}
 			</select>
 		</label>
 		<div class="buttons">
@@ -44,6 +58,7 @@
 	import { animate, loop } from '../scripts/motion';
 
 	for (const root of document.querySelectorAll<HTMLElement>('[data-ownership]')) {
+		const gd = root.dataset.codeLang === 'gdscript';
 		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
 		const sprite = $<SVGGElement>('[data-sprite]');
 		const owner = $<HTMLElement>('[data-owner]');
@@ -82,8 +97,9 @@
 			exited = true;
 			owner.classList.add('is-gone');
 			root.classList.add('is-exited');
-			reasonOut.textContent = 'OwnerExited';
-			announce.textContent = 'Sprite2D left the tree. The tween stopped and End settled with OwnerExited.';
+			const reason = gd ? 'OWNER_EXITED' : 'OwnerExited';
+			reasonOut.textContent = reason;
+			announce.textContent = `Sprite2D left the tree. The tween stopped and ${gd ? 'wait() returned' : 'End settled with'} ${reason}.`;
 			sync();
 		});
 		$('[data-act="reset"]').addEventListener('click', () => {
@@ -118,7 +134,7 @@
 	}
 	@media (min-width: 36rem) {
 		.scene {
-			grid-template-columns: 13rem 1fr;
+			grid-template-columns: 15rem 1fr;
 		}
 	}
 	.tree {
@@ -157,6 +173,7 @@
 		opacity: 0;
 	}
 	.tag {
+		white-space: nowrap;
 		font-size: 0.64rem;
 		padding: 0 0.4rem;
 		border-radius: 1rem;

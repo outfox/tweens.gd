@@ -1,0 +1,81 @@
+---
+title: Helper catalog
+description: Named GDScript helpers for node, material, and callback-value tweens, with their targets, value types, and C# counterparts.
+---
+
+import GdCatalog from '../../../components/GdCatalog.astro';
+
+The addon has a named helper for every concrete property and value definition in the
+C# catalog. Each helper returns an ordinary reusable definition that already knows its
+target class, property, and value type, so a start checks them before any value is
+written.
+
+## Usage
+
+```gdscript
+# sprite: Sprite2D, camera: Camera2D, label: Label; all inside the tree.
+var move := Tweens.position_2d(Vector2(300, 120), 0.5)
+move.ease = Tweens.Ease.CUBIC_OUT
+var movement := Tweens.play(sprite, move)
+var fade := Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.2))
+var zoom := Tweens.play(camera, Tweens.camera_2d_zoom(Vector2(2, 2), 0.4))
+
+var reveal := Tweens.label_visible_ratio(1.0, 1.5)
+reveal.from_value = 0.0
+Tweens.play(label, reveal)
+
+await Tweens.group([movement, fade]).wait()
+```
+
+Every helper takes `(to = null, seconds = 0.0)`. A `null` endpoint captures the
+property's current value when the tween starts. The returned definition exposes the
+same fields as one made with `Tweens.property()`, including `from_value`, timing,
+easing, and callbacks; set them before calling `play()`. See
+[definitions](/gdscript/definitions/) for reuse and copies, and
+[lifetime and ownership](/gdscript/lifetime/) for how playback ends with its node.
+
+`Tweens.play_all(target, [first, second])` starts several helpers on one target and
+returns a [group](/gdscript/sequences/).
+
+:::caution[Checked at start, not at parse time]
+GDScript has no generic types, so a helper can be passed any target. `play()` checks
+the target's class and the captured value's type when playback starts. A mismatch
+returns a handle already settled with `Tweens.Reason.FAILED` and logs the reason; see
+[control and completion](/gdscript/playback/).
+:::
+
+A helper that targets a base class works on every node derived from it: `Node2D` and
+`Node3D` carry the transforms, `CanvasItem` the 2D modulation, `Control` the layout,
+`SpriteBase3D` the 3D sprite appearance, `GeometryInstance3D` the transparency, and
+`Range` the value. `BaseMaterial3D` helpers target a material; start them with an
+owner, as described in [materials](/gdscript/materials/).
+
+## Helpers by target class
+
+Helper names follow the C# definition names in snake case. Names ending in `_x`,
+`_y`, `_z`, or `_alpha` write one component and read the others at write time. The
+table below is generated from the addon's `CATALOG.md`.
+
+<GdCatalog />
+
+## Units and engine constraints
+
+- Rotation, skew, and texture rotation use radians. Camera field of view, light and
+  emission angles, and radial progress angles use degrees. Ratios use the native
+  property range; positions, sizes, paths, and offsets use the Godot units of each
+  property.
+- GDScript represents both `float` and `double` as `float`. `double_value` exists to
+  match the C# catalog.
+- Integer properties, such as sprite frames, `visible_characters`, and scroll
+  positions, interpolate continuously and round to nearest with ties away from zero.
+  GDScript saturates at signed 64-bit limits, where C# uses 32-bit limits. Native
+  constraints still apply: set up sprite frames and animations, and scrollable
+  content, before tweening them.
+- Colors and vectors keep easing overshoot. Engine setters can clamp values.
+- `Control` minimum and maximum sizes and containers still apply. The offset
+  transform helpers require `offset_transform_enabled` on the control.
+- Path helpers require a `PathFollow2D` or `PathFollow3D` under a matching `Path2D` or
+  `Path3D` with a nonempty curve. The node still controls looping and wrapping.
+- Setting a property doesn't enable a rendering feature or create a resource.
+  Renderer support and sorting limitations are Godot's.
+- For shader uniforms, see [shader uniforms](/gdscript/shaders/).

@@ -1,0 +1,96 @@
+---
+// C# | GDScript. On a language page each option links to the same page in that language's path.
+// On a shared page it switches the language the page's examples use and remembers it (see Head.astro).
+import { LANGS, firstSlug, slugOf, trackOf } from '../tracks.mjs';
+
+const { id } = Astro.locals.starlightRoute;
+const track = trackOf(id);
+const slug = track ? slugOf(id) : firstSlug;
+---
+
+<nav class="lang-switch" aria-label="Language" data-lang-switch data-shared={track ? undefined : ''}>
+	{
+		Object.entries(LANGS).map(([lang, { label }]) => (
+			<a href={`/${lang}/${slug}/`} data-lang-choice={lang} aria-current={track === lang ? 'page' : undefined}>
+				{label}
+			</a>
+		))
+	}
+</nav>
+
+<script>
+	const KEY = 'tweens-lang';
+	for (const nav of document.querySelectorAll<HTMLElement>('[data-lang-switch][data-shared]')) {
+		const choices = [...nav.querySelectorAll<HTMLAnchorElement>('[data-lang-choice]')];
+		const sync = () =>
+			choices.forEach((a) => a.setAttribute('aria-pressed', String(a.dataset.langChoice === document.documentElement.dataset.lang)));
+		choices.forEach((a) => {
+			a.setAttribute('role', 'button');
+			a.addEventListener('click', (event) => {
+				event.preventDefault();
+				document.documentElement.dataset.lang = a.dataset.langChoice;
+				try {
+					localStorage.setItem(KEY, a.dataset.langChoice!);
+				} catch {}
+				document.dispatchEvent(new CustomEvent('tweens:lang'));
+			});
+		});
+		document.addEventListener('tweens:lang', sync);
+		sync();
+	}
+</script>
+
+<style>
+	/* Two equal cells with one indicator that slides to the chosen language. */
+	.lang-switch {
+		position: relative;
+		display: inline-grid;
+		grid-template-columns: 1fr 1fr;
+		padding: 3px;
+		border: 1px solid var(--tw-outline);
+		border-radius: 999px;
+		background: var(--tw-stage);
+		font: 650 var(--sl-text-xs) var(--sl-font);
+		white-space: nowrap;
+	}
+	.lang-switch::before {
+		content: '';
+		position: absolute;
+		inset: 3px auto 3px 3px;
+		width: calc(50% - 3px);
+		border-radius: 999px;
+		background: var(--tw-mint);
+		transition: translate 0.45s var(--ease-back-out);
+	}
+	:global(:root[data-theme='light']) .lang-switch::before {
+		background: var(--tw-mint-ink);
+	}
+	:global(:root[data-lang='gdscript']) .lang-switch::before {
+		translate: 100% 0;
+	}
+	a {
+		position: relative;
+		padding: 0.3rem 0.8rem;
+		border-radius: 999px;
+		color: var(--tw-muted);
+		text-align: center;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+	a:hover {
+		color: var(--sl-color-white);
+	}
+	:global(:root:not([data-lang='gdscript'])) a[data-lang-choice='csharp'],
+	:global(:root[data-lang='gdscript']) a[data-lang-choice='gdscript'] {
+		color: var(--tw-on-accent);
+	}
+	a:focus-visible {
+		outline: 2px solid var(--tw-mint);
+		outline-offset: 2px;
+	}
+	@media (pointer: coarse) {
+		a {
+			padding-block: 0.55rem;
+		}
+	}
+</style>

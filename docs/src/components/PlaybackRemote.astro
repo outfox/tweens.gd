@@ -1,13 +1,29 @@
 ---
-// A toy handle mirroring TweenInstance: pause, resume, cancel, and an End that settles once.
+// A toy handle mirroring TweenInstance / TweensGdHandle: pause, resume, cancel, and an end that settles once.
+import type { Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
 ---
 
-<div class="tw-widget pr not-content" data-playback-remote>
-	<pre class="code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement = sprite.<span class="fn">TweenPosition</span>(to, <span class="num">2.4</span>);</span>
+<div class="tw-widget pr not-content" data-playback-remote data-code-lang={lang}>
+	{
+		lang === 'gdscript' ? (
+			<pre class="code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement := Tweens.<span class="fn">play</span>(sprite, Tweens.<span class="fn">position_2d</span>(to, <span class="num">2.4</span>))</span>
+<span data-line="pause">movement.<span class="fn">pause</span>()</span>
+<span data-line="resume">movement.<span class="fn">resume</span>()</span>
+<span data-line="cancel">movement.<span class="fn">cancel</span>()</span>
+<span data-line="await"><span class="kw">var</span> reason := <span class="kw">await</span> movement.<span class="fn">wait</span>() <span class="cm"># <span data-reason>pending…</span></span></span></pre>
+		) : (
+			<pre class="code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement = sprite.<span class="fn">TweenPosition</span>(to, <span class="num">2.4</span>);</span>
 <span data-line="pause">movement.<span class="fn">Pause</span>();</span>
 <span data-line="resume">movement.<span class="fn">Resume</span>();</span>
 <span data-line="cancel">movement.<span class="fn">Cancel</span>();</span>
 <span data-line="await"><span class="kw">var</span> reason = <span class="kw">await</span> movement.End; <span class="cm">// <span data-reason>pending…</span></span></span></pre>
+		)
+	}
 
 	<svg class="lane" viewBox="0 0 400 64" aria-hidden="true">
 		<line class="rail" x1="24" x2="376" y1="32" y2="32"></line>
@@ -38,6 +54,7 @@
 
 <script>
 	import { EASES, animate, loop, reducedMotion } from '../scripts/motion';
+	import { langOf, member } from '../scripts/lang';
 
 	const DURATION = 2.4;
 	type State = 'Ready' | 'Playing' | 'Paused' | 'Completed' | 'Cancelled';
@@ -51,6 +68,7 @@
 		const reasonOut = $<HTMLElement>('[data-reason]');
 		const announce = $<HTMLElement>('[data-announce]');
 		const btn = (a: string) => $<HTMLButtonElement>(`[data-act="${a}"]`);
+		const lang = langOf(root);
 
 		let state: State = 'Ready';
 		let elapsed = 0;
@@ -82,10 +100,10 @@
 			badge.classList.toggle('is-on', next === 'Paused');
 			root.dataset.state = next;
 			if (next === 'Completed' || next === 'Cancelled') {
-				reasonOut.textContent = `Reason.${next}`;
+				reasonOut.textContent = lang === 'gdscript' ? member(lang, '', 'Reason', next) : `Reason.${next}`;
 				reasonOut.parentElement!.classList.add('is-settled');
 				highlight('await');
-				announce.textContent = `End settled with ${next}.`;
+				announce.textContent = lang === 'gdscript' ? `wait() returned ${next}.` : `End settled with ${next}.`;
 			} else if (next === 'Playing' && elapsed === 0) {
 				reasonOut.textContent = 'pending…';
 				reasonOut.parentElement!.classList.remove('is-settled');
