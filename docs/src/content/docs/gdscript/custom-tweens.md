@@ -32,8 +32,25 @@ transparent black, or identity. GDScript represents both float and double as
 ## Script properties
 
 `Tweens.property(path, to, seconds)` reads and writes any property the target
-exposes, including script variables, so a plain object needs no adapter. This
-complete example animates a script object with a manually driven scheduler:
+exposes, including script variables, so a plain script needs no adapter:
+
+```gdscript title="health_bar.gd"
+extends Node2D
+
+const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+
+var fill := 1.0
+
+static var drain := Tweens.property(^"fill", null, 0.4, Tweens.Ease.SMOOTHER_STEP)
+
+func set_health(fraction: float) -> void:
+	Tweens.play(self, drain.with_to(fraction))
+```
+
+## Drive a scheduler yourself
+
+To animate an object that isn't a node, such as a model in a test, add it to a
+`Tweens.Scheduler` and advance it yourself:
 
 ```gdscript title="meter_example.gd"
 extends RefCounted
@@ -68,8 +85,7 @@ and `active_count` inspect and control its work. `Tweens.cancel_tweens()` only
 cancels automatically scheduled tweens and doesn't reach separate manual
 schedulers.
 
-For a script property on a `Node`, pass its definition to `Tweens.play(node,
-definition)` to use automatic scheduling instead.
+The [scheduler reference](/gdscript/api/scheduler/) lists its members.
 
 ## Custom storage with Callables
 
@@ -93,12 +109,18 @@ The optional `interpolator(from, to, weight)` replaces the built-in interpolatio
 and the optional `validator(value)` returns an empty string on success or a
 message on failure. Supply both to animate Variant types beyond the built-in ones.
 
+`by_value`, factors, and deltas ([variations](/gdscript/variations/)) work with
+int, float, vector, `Color`, `Quaternion`, and `Rect2` values, whether the value
+comes from a property path, `Tweens.custom()`, or an adapter.
+
 ## Adapters with bindings
 
 For per-playback bindings, extend `Tweens.Adapter` and assign an instance to the
 definition's `adapter` field. Override `read(target)` and `write(target, value)`,
 and optionally `prepare(target)`, `restore(target, initial)`, `release()`,
-`interpolate(from, to, weight)`, and `validate_value(value)`:
+`interpolate(from, to, weight)`, and `validate_value(value)`. A script's
+`extends` line needs a path or a global class, so name the adapter script by its
+path, or by `TweensGdAdapter` once the editor has built its class cache:
 
 ```gdscript
 class_name MetaAdapter

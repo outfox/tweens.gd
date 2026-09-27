@@ -110,7 +110,9 @@ starts from wherever the property is when the tween plays.
 
 ## Wait between steps
 
-A callback value tween on any in-tree node makes a wait that follows the same
+`TweenFloat` starts a [callback value](/csharp/custom-tweens/#callback-values)
+tween, which writes no property, so `TweenFloat(1, 0.5)` is a half-second wait.
+The `1` is the value it would report, and unused here. The wait follows the same
 pause, time scale, and lifetime rules as the animation around it:
 
 ```csharp

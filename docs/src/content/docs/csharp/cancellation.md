@@ -38,7 +38,6 @@ too. Use the guarded form above for interruptible sequences.
 
 ## Why it ended
 
-
 `End` is a shared `Task<Reason>`. Any number of callers can await it, even after
 playback has ended.
 
@@ -50,7 +49,8 @@ playback has ended.
 | `OwnerExited` | The owner left the scene tree |
 | `RunnerDisposed` | The runner, tree, or manual scheduler shut down |
 
-Checking the reason lets a sequence stop when playback is interrupted. Godot emits tree exit before it invalidates a node freed with
+Removing or reparenting a node ends the tweens it owns immediately, even while
+they're paused. Godot emits tree exit before it invalidates a node freed with
 `Free()`, so that case may report `OwnerExited`. `QueueFree()` reports
 `TargetFreed` for a node that owns its own tween.
 
@@ -89,6 +89,5 @@ while (await sprite.TweenPositionY(120, 0.4) == Reason.Completed
 {
 }
 ```
-
 
 For callback failures and exceptions, see [errors](/csharp/playback/#errors).

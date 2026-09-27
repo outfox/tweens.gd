@@ -4,6 +4,7 @@ description: Derive variants from one definition. Factors and deltas scale and s
 ---
 
 import Moves from '../../../components/Moves.astro';
+import VariationLab from '../../../components/VariationLab.astro';
 
 Games rarely need a motion in just one version. A heavy hit kicks harder than a
 light one, and an enemy that spawns pops in from nothing. Instead of copying a
@@ -53,6 +54,12 @@ public partial class Enemy : Sprite2D
 Change `Recoil` to kick 16 pixels, or to ease with `CubicOut`, and every hit and
 crit follows. `Recoil with { By = -24 }` would also kick harder, but it replaces
 the value, so that variant no longer follows `Recoil`.
+
+Try it below. **Hit** starts a variant scaled by the damage, and **Crit** starts
+the critical one. Move **Recoil kick** to tune the shared definition, and every
+variant follows.
+
+<VariationLab />
 
 ## Factors and deltas
 

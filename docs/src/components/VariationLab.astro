@@ -1,0 +1,446 @@
+---
+// The Recoil example from the Variations page, played with the library's QuadOut and skew math. Each start is a
+// variant of one shared definition: FactorBy and FactorDuration scale it with the damage, Skew reshapes its pacing,
+// and tuning the definition's own kick moves every variant with it.
+import type { Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+const gd = lang === 'gdscript';
+---
+
+<div class="tw-widget vl not-content" data-variation-lab data-code-lang={lang}>
+	<div class="play">
+		<div class="stage" aria-hidden="true">
+			<span class="rail"></span>
+			<span class="mark kick" data-kick-mark><span data-kick-label>24 px</span></span>
+			<span class="mark rest"></span>
+			<span class="enemy" data-enemy></span>
+			<span class="scale" data-scale>Drawn at 3×</span>
+		</div>
+		<figure class="curve">
+			<svg viewBox="0 0 200 120" role="img" aria-label="Eased offset over one leg of the recoil">
+				<path class="grid" d="M0 110 H200 M0 10 H200"></path>
+				<path class="base" data-base-curve></path>
+				<path class="skewed" data-curve></path>
+				<circle class="head" r="5" data-head cx="0" cy="110"></circle>
+			</svg>
+			<figcaption>Offset over one leg: <span class="swatch base"></span> <code>QuadOut</code> <span class="swatch skewed"></span> with this start's skew</figcaption>
+		</figure>
+	</div>
+
+	<div class="code">
+		<div class="pane">
+			<p class="pane-label">The shared definition</p>
+			{
+				gd ? (
+					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num">0.1</span>,
+    Tweens.Ease.QUAD_OUT).<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>).<span class="fn">with_ping_pong</span>()</pre>
+				) : (
+					<pre><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DX</span> Recoil = <span class="kw">new</span>()
+{'{'}
+    By = <span class="num" data-base-by>-12</span>,
+    Duration = <span class="num">0.1</span>,
+    Ease = EaseType.QuadOut,
+    UsePingPong = <span class="kw">true</span>,
+{'}'};</pre>
+				)
+			}
+		</div>
+		<div class="pane">
+			<p class="pane-label">This start</p>
+			{
+				gd ? (
+					<pre data-call-hit>Tweens.<span class="fn">play</span>(self, recoil
+    .<span class="fn">with_factor_by</span>(<span class="num" data-factor-by>2.0</span>)
+    .<span class="fn">with_factor_duration</span>(<span class="num" data-factor-duration>1.2</span>)
+    .<span class="fn">with_skew</span>(<span class="num" data-skew-out>1.0</span>))</pre>
+				) : (
+					<pre data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
+{'{'}
+    FactorBy = <span class="num" data-factor-by>2</span>,
+    FactorDuration = <span class="num" data-factor-duration>1.2</span>,
+    Skew = <span class="num" data-skew-out>1</span>,
+{'}'});</pre>
+				)
+			}
+			{
+				gd ? (
+					<pre data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil
+    .<span class="fn">with_factor_by</span>(<span class="num">3.0</span>)
+    .<span class="fn">with_skew</span>(<span class="num">0.5</span>))</pre>
+				) : (
+					<pre data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
+    {'{'} FactorBy = <span class="num">3</span>, Skew = <span class="num">0.5</span> {'}'});</pre>
+				)
+			}
+			<p class="result" data-result>Kicks 24 px, 0.12 s each way</p>
+		</div>
+	</div>
+
+	<div class="controls">
+		<div class="buttons">
+			<button type="button" class="tw-btn is-primary" data-hit>Hit</button>
+			<button type="button" class="tw-btn" data-crit>Crit</button>
+		</div>
+		<label class="tw-field">
+			<span>Damage <output data-damage-label>20</output></span>
+			<input type="range" min="0" max="50" step="5" value="20" data-damage />
+		</label>
+		<label class="tw-field">
+			<span>{gd ? 'skew' : 'Skew'} <output data-skew-label>1.00</output></span>
+			<input type="range" min="0" max="1" step="0.01" value="0.5" data-skew />
+		</label>
+		<label class="tw-field">
+			<span>Recoil kick <output data-base-label>12 px</output></span>
+			<input type="range" min="6" max="20" step="1" value="12" data-base />
+		</label>
+		<label class="slow">
+			<input type="checkbox" checked data-slow />
+			Slow motion
+		</label>
+	</div>
+	<p class="sr-only" aria-live="polite" data-announce></p>
+</div>
+
+<script>
+	import { EASES, reducedMotion } from '../scripts/motion';
+	import { langOf } from '../scripts/lang';
+
+	const DURATION = 0.1;
+	const SLOW = 8;
+	const W = 200;
+	const H = 120;
+	const PAD = 10;
+
+	// The skew slider maps 0..1 onto 0.25..4 exponentially, so 0.5 sits at 1 and both directions get equal travel.
+	const skewOf = (v: number) => Math.pow(4, 2 * v - 1);
+	const weight = (progress: number, skew: number) => EASES.QuadOut(Math.pow(Math.min(1, Math.max(0, progress)), skew));
+	const path = (skew: number) => {
+		let d = '';
+		for (let i = 0; i <= 80; i++) {
+			const t = i / 80;
+			d += `${i ? 'L' : 'M'}${(t * W).toFixed(1)} ${(H - PAD - weight(t, skew) * (H - 2 * PAD)).toFixed(1)}`;
+		}
+		return d;
+	};
+	const fmt = (n: number, digits: number) => String(Number(n.toFixed(digits)));
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-variation-lab]')) {
+		const q = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+		const all = (s: string) => [...root.querySelectorAll<HTMLElement>(s)];
+		const gd = langOf(root) === 'gdscript';
+		const stage = q<HTMLElement>('.stage');
+		const scaleNote = q<HTMLElement>('[data-scale]');
+		const enemy = q<HTMLElement>('[data-enemy]');
+		const kickMark = q<HTMLElement>('[data-kick-mark]');
+		const kickLabel = q<HTMLElement>('[data-kick-label]');
+		const curve = q<SVGPathElement>('[data-curve]');
+		const head = q<SVGCircleElement>('[data-head]');
+		const damageIn = q<HTMLInputElement>('[data-damage]');
+		const skewIn = q<HTMLInputElement>('[data-skew]');
+		const baseIn = q<HTMLInputElement>('[data-base]');
+		const slowIn = q<HTMLInputElement>('[data-slow]');
+		const hitCall = q<HTMLElement>('[data-call-hit]');
+		const critCall = q<HTMLElement>('[data-call-crit]');
+		const result = q<HTMLElement>('[data-result]');
+		const announce = q<HTMLElement>('[data-announce]');
+		q<SVGPathElement>('[data-base-curve]').setAttribute('d', path(1));
+
+		let crit = false;
+		let raf = 0;
+
+		// The variant each button starts, computed as the library does at start: factor × value + delta.
+		const variant = () => {
+			const base = -Number(baseIn.value);
+			const damage = Number(damageIn.value);
+			const factorBy = crit ? 3 : damage / 10;
+			const factorDuration = crit ? 1 : 1 + damage / 100;
+			const skew = crit ? 0.5 : skewOf(Number(skewIn.value));
+			return { base, damage, factorBy, factorDuration, skew, by: factorBy * base, duration: factorDuration * DURATION };
+		};
+
+		// Real kicks are a few dozen pixels, so the stage draws them larger: up to 3×, as far as the widest kick fits.
+		const zoom = () => Math.max(1, Math.min(3, (stage.clientWidth - 96) / 100));
+
+		const place = (offset: number, progress: number, skew: number) => {
+			enemy.style.translate = `${offset * zoom()}px 0`;
+			head.setAttribute('cx', (progress * W).toFixed(1));
+			head.setAttribute('cy', (H - PAD - weight(progress, skew) * (H - 2 * PAD)).toFixed(1));
+		};
+
+		const sync = () => {
+			const v = variant();
+			const damage = Number(damageIn.value);
+			q<HTMLOutputElement>('[data-damage-label]').textContent = String(damage);
+			q<HTMLOutputElement>('[data-skew-label]').textContent = skewOf(Number(skewIn.value)).toFixed(2);
+			q<HTMLOutputElement>('[data-base-label]').textContent = `${baseIn.value} px`;
+			all('[data-base-by]').forEach((el) => (el.textContent = gd ? v.base.toFixed(1) : String(v.base)));
+			all('[data-factor-by]').forEach((el) => (el.textContent = gd ? (damage / 10).toFixed(1) : fmt(damage / 10, 1)));
+			all('[data-factor-duration]').forEach((el) => (el.textContent = fmt(1 + damage / 100, 2)));
+			all('[data-skew-out]').forEach((el) => {
+				const s = skewOf(Number(skewIn.value));
+				el.textContent = gd ? s.toFixed(2) : fmt(s, 2);
+			});
+			hitCall.hidden = crit;
+			critCall.hidden = !crit;
+			curve.setAttribute('d', path(v.skew));
+			const z = zoom();
+			kickMark.style.setProperty('--kick', `${v.by * z}px`);
+			scaleNote.textContent = `Drawn at ${fmt(z, 1)}×`;
+			kickLabel.textContent = `${fmt(Math.abs(v.by), 1)} px`;
+			result.textContent = `Kicks ${fmt(Math.abs(v.by), 1)} px, ${fmt(v.duration, 3)} s each way`;
+			return v;
+		};
+
+		const play = (asCrit: boolean) => {
+			crit = asCrit;
+			cancelAnimationFrame(raf);
+			const v = sync();
+			announce.textContent = `${asCrit ? 'Crit' : `Hit for ${v.damage} damage`}: kicks ${fmt(Math.abs(v.by), 1)} pixels, ${fmt(v.duration, 3)} seconds each way, skew ${fmt(v.skew, 2)}.`;
+			if (reducedMotion()) {
+				place(v.by, 1, v.skew);
+				return;
+			}
+			const leg = v.duration * (slowIn.checked ? SLOW : 1) * 1000;
+			const start = performance.now();
+			const frame = (now: number) => {
+				// Ping-pong: the return leg retraces the same skewed curve backwards.
+				const t = (now - start) / leg;
+				const progress = t <= 1 ? t : 2 - t;
+				place(v.by * weight(progress, v.skew), Math.max(0, progress), v.skew);
+				if (t < 2) raf = requestAnimationFrame(frame);
+				else place(0, 0, v.skew);
+			};
+			raf = requestAnimationFrame(frame);
+		};
+
+		q<HTMLButtonElement>('[data-hit]').addEventListener('click', () => play(false));
+		q<HTMLButtonElement>('[data-crit]').addEventListener('click', () => play(true));
+		for (const input of [damageIn, skewIn, baseIn])
+			input.addEventListener('input', () => {
+				crit = false;
+				sync();
+			});
+		new ResizeObserver(() => sync()).observe(stage);
+	}
+</script>
+
+<style>
+	.vl {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.25rem;
+		padding: 1.25rem;
+	}
+	.play {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+		gap: 0.75rem;
+	}
+
+	/* Stage: the enemy rests at the right; the dashed mark shows where this start's kick reaches. */
+	.stage {
+		position: relative;
+		min-height: 9rem;
+		border-radius: 0.8rem;
+		background:
+			linear-gradient(90deg, var(--tw-grid) 1px, transparent 1px) 0 0 / 36px 100%,
+			var(--tw-surface);
+		overflow: hidden;
+	}
+	.scale {
+		position: absolute;
+		left: 0.75rem;
+		bottom: 0.6rem;
+		font-size: var(--sl-text-2xs);
+		color: var(--tw-muted);
+	}
+	.rail {
+		position: absolute;
+		inset-inline: 1rem;
+		top: calc(50% + 1.4rem);
+		height: 2px;
+		border-radius: 1px;
+		background: var(--tw-outline);
+	}
+	.enemy,
+	.mark {
+		position: absolute;
+		top: 50%;
+		right: 3rem;
+	}
+	.enemy {
+		width: 2.4rem;
+		height: 2.4rem;
+		margin: -1.2rem -1.2rem 0 0;
+		border-radius: 0.7rem;
+		background: radial-gradient(circle at 32% 28%, #fff6 0 14%, transparent 36%), var(--tw-rose);
+		box-shadow: inset 0 0 0 3px color-mix(in oklab, var(--tw-rose) 65%, #000);
+	}
+	.mark {
+		height: 3.4rem;
+		margin-top: -1.7rem;
+		border-left: 2px dashed var(--tw-track);
+	}
+	.rest {
+		opacity: 0.6;
+	}
+	.kick {
+		translate: var(--kick, 0) 0;
+		border-left-color: var(--tw-mint);
+		transition: translate 0.45s var(--ease-back-out);
+	}
+	.kick span {
+		position: absolute;
+		top: -1.5rem;
+		left: 0;
+		translate: -50% 0;
+		padding: 0.05rem 0.45rem;
+		border-radius: 999px;
+		background: var(--tw-selected);
+		color: var(--sl-color-white);
+		font: 600 0.7rem var(--sl-font-mono);
+		white-space: nowrap;
+	}
+
+	/* Curve: normalized time left to right, eased offset bottom to top. */
+	.curve {
+		display: grid;
+		gap: 0.4rem;
+		margin: 0;
+		padding: 0.75rem;
+		border-radius: 0.8rem;
+		background: var(--tw-surface);
+	}
+	.curve svg {
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+	.grid {
+		stroke: var(--tw-grid);
+		stroke-width: 1;
+		fill: none;
+	}
+	.base,
+	.skewed {
+		fill: none;
+		stroke-width: 2.5;
+		stroke-linecap: round;
+	}
+	.base {
+		stroke: var(--tw-outline);
+		stroke-dasharray: 4 5;
+	}
+	.skewed {
+		stroke: var(--tw-mint);
+	}
+	.head {
+		fill: var(--tw-bg);
+		stroke: var(--tw-mint);
+		stroke-width: 2.5;
+	}
+	.curve figcaption {
+		font-size: var(--sl-text-xs);
+		color: var(--tw-muted);
+	}
+	.curve figcaption code {
+		font-size: 0.95em;
+		background: none;
+		color: var(--tw-soft);
+	}
+	.swatch {
+		display: inline-block;
+		width: 1.1rem;
+		height: 0;
+		margin-left: 0.4rem;
+		vertical-align: middle;
+		border-top: 2.5px solid var(--tw-mint);
+	}
+	.swatch.base {
+		border-top: 2.5px dashed var(--tw-outline);
+	}
+
+	.code {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+		gap: 0.75rem;
+	}
+	.pane {
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		min-width: 0;
+	}
+	.pane-label,
+	.result {
+		margin: 0 0 0.35rem;
+		font-size: var(--sl-text-xs);
+		color: var(--tw-muted);
+	}
+	.result {
+		margin: 0.5rem 0 0;
+		color: var(--tw-soft);
+		font-weight: 600;
+	}
+	.code pre {
+		margin: 0;
+		padding: 0.8rem 0.9rem;
+		border-radius: 0.7rem;
+		background: color-mix(in oklab, var(--tw-bg) 75%, transparent);
+		border: 1px solid color-mix(in oklab, var(--tw-outline) 60%, transparent);
+		font: 0.76rem/1.7 var(--sl-font-mono);
+		color: var(--sl-color-white);
+		overflow-x: auto;
+	}
+	.code pre[hidden] {
+		display: none;
+	}
+	.kw {
+		color: var(--tw-blue-ink);
+	}
+	.ty {
+		color: var(--tw-mint-ink);
+	}
+	.fn {
+		color: var(--tw-amber-ink);
+	}
+	.num {
+		color: var(--tw-amber-ink);
+		font-weight: 700;
+	}
+
+	.controls {
+		display: grid;
+		grid-template-columns: auto repeat(3, minmax(0, 1fr)) auto;
+		align-items: end;
+		gap: 0.75rem 1.25rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--tw-outline);
+	}
+	@media (max-width: 44rem) {
+		.controls {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	.buttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+	.slow {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 2.25rem;
+		cursor: pointer;
+		color: var(--tw-soft);
+		white-space: nowrap;
+	}
+	.slow input {
+		width: 1.1rem;
+		height: 1.1rem;
+		margin: 0;
+	}
+</style>

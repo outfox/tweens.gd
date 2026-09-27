@@ -27,9 +27,31 @@ arrives through `OnUpdate`. The eight value definitions are `Tweens.Float`,
 `Tweens.Double`, `Tweens.Vector2`, `Tweens.Vector3`, `Tweens.Vector4`,
 `Tweens.Color`, `Tweens.Quaternion`, and `Tweens.Rect2`.
 
-## Custom managed properties
+## Custom properties
 
-This complete example animates a managed object with a manually driven scheduler:
+`Tweens.Property<TTarget, TValue>` animates anything you can read and write with a
+getter and a setter, such as a plain C# property on a node:
+
+```csharp title="HealthBar.cs"
+public partial class HealthBar : Node2D
+{
+    public float Fill { get; set; } = 1;
+
+    static readonly Tweens.Property<HealthBar, float> Drain = new(
+        bar => bar.Fill, (bar, value) => bar.Fill = value, Interpolators.Float,
+        duration: 0.4, ease: EaseType.SmootherStep);
+
+    public void SetHealth(float fraction) => this.Tween(Drain with { To = fraction });
+}
+```
+
+It starts like any other definition, owned by the node it animates. Captured
+objects stay shared between starts.
+
+## Drive a scheduler yourself
+
+To animate an object that isn't a node, such as a model in a test, add it to a
+`TweenScheduler` and advance it yourself:
 
 ```csharp title="MeterExample.cs"
 using tweens.gd;
@@ -68,21 +90,36 @@ settle any remaining work. A manual scheduler with no owner has no tree pause
 policy. Native targets still require Godot's main thread, and nodes must have an
 in-tree owner.
 
-For a custom property on a `Node`, pass its definition to `node.Tween(definition)`
-to use automatic scheduling instead. `CancelTweens` only cancels automatically
-scheduled tweens and doesn't reach separate manual schedulers.
+`CancelTweens` only cancels automatically scheduled tweens and doesn't reach a
+separate manual scheduler. The [scheduler reference](/csharp/api/scheduler/) lists
+its members.
 
 ## Custom definitions and bindings
 
 Derive from `TweenDefinition<TTarget, TValue>` and implement the protected `Read`,
 `Write`, and `Interpolate` methods. `TTarget` is a reference type and `TValue` is a
 value type. The `Interpolators` helpers cover the built-in numeric and vector
-types.
+types:
 
-`By` works with int, float, double, vector, `Color`, `Quaternion`, and `Rect2`
-values. It reads the property back on every frame, so override
-`ReadsWrittenValue` to return `false` if `Read` doesn't return what `Write`
-stored; `By` is then added to the start value instead.
+```csharp title="UniformZoomTween.cs"
+// Tweens a camera's zoom as one number, keeping X and Y equal.
+public sealed class UniformZoomTween : TweenDefinition<Camera2D, float>
+{
+    protected override float Read(Camera2D target) => target.Zoom.X;
+    protected override void Write(Camera2D target, float value) => target.Zoom = new Vector2(value, value);
+    protected override float Interpolate(float from, float to, float weight) => Interpolators.Float(from, to, weight);
+}
+```
+
+```csharp
+_ = camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = EaseType.SmootherStep });
+```
+
+`By`, factors, and deltas ([variations](/csharp/variations/)) work with int,
+float, double, vector, `Color`, `Quaternion`, and `Rect2` values. `By` reads the
+property back on every frame, so override `ReadsWrittenValue` to return `false`
+if `Read` doesn't return what `Write` stored; `By` is then added to the start
+value instead.
 
 For per-playback bindings, override `Prepare`, `Restore`, and `Release`.
 `Prepare` runs on the playback's private definition snapshot, before its initial

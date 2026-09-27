@@ -12,52 +12,56 @@ thread with configured materials and an in-tree `MeshInstance3D` named `mesh`.
 
 ## Choose the playback lifetime
 
+A material is a resource, not a node, so it has no place in the tree that could
+end its tweens. Each tween on it takes that lifetime from the scene tree or from
+an owner node:
+
 ```csharp
-// In a Node method; material/shared are StandardMaterial3D, mesh is an in-tree MeshInstance3D.
-// Shared resource, with playback scoped to this SceneTree.
+// material and shared are StandardMaterial3D; mesh is an in-tree MeshInstance3D.
+// Scoped to the scene tree.
 var fade = material.TweenAlbedoAlpha(0, 0.5, GetTree());
 
-// Same resource semantics, but stop when this node leaves the tree.
+// Stops when mesh leaves the tree.
 var roughness = material.TweenRoughness(0.2f, 1, mesh);
 
-// Tree context with an optional owner and ordinary tween options.
+// Shorthand methods take the usual configure callback after the tree or owner.
 var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(),
-    options => options.Ease = EaseType.CubicOut, owner: mesh);
+    options => options.Ease = EaseType.CubicOut);
 
-// Reusable definitions work with either context.
+// One definition works with either lifetime.
 var definition = new Tweens.MaterialRoughness(0.5f, 1);
 _ = material.Tween(definition, GetTree());
 _ = material.Tween(definition, mesh);
-_ = mesh.Tween(material, definition);
+_ = mesh.Tween(material, definition); // The same as the line above, owner first.
 ```
 
+| Lifetime | Stops early when | Pause follows |
+| --- | --- | --- |
+| `GetTree()` | The tree shuts down: `RunnerDisposed` | Tree pause |
+| An owner node | The owner leaves the tree: `OwnerExited` | `owner.CanProcess()` with the default `Bound` mode, or tree pause with `SceneTree` |
+
+`TweenPauseMode.Always` ignores both, and pausing the handle always stops it.
+Either way, a tween on a disposed resource ends with `TargetFreed`.
+
 A tree-scoped tween keeps running when a mesh is removed or gets a different
-material, because it retains the resource you originally supplied. A tween with an
-owner cancels with `OwnerExited` when the owner leaves the tree.
-`owner.CancelTweens()` cancels only that owner's automatic tweens, material tweens
-included, and optionally its descendants' tweens. Other owners and tree-scoped
-tweens are unaffected.
+material, because it holds the resource you supplied. `owner.CancelTweens()`
+cancels that owner's tweens, material tweens included, and
+`includeChildren: true` adds its descendants'. Cleanup releases playback bindings
+but never the resources you supplied. See
+[lifetime and ownership](/csharp/lifetime/) for the full rules.
 
-Tweens on a disposed resource cancel with `TargetFreed`, even while paused.
-Runner or tree teardown settles pending work with `RunnerDisposed`. Cleanup
-releases playback bindings but never the resources you supplied, and handles
-retain their `Target` for inspection.
+### Manual scheduling
 
-With no owner, the `Bound` and `SceneTree` pause modes both follow tree pause.
-With an owner, `Bound` follows `owner.CanProcess()` and `SceneTree` still follows
-tree pause. `Always` ignores both, although pausing the handle always stops
-advancement. All access to native resources has to happen on Godot's main thread.
-
-For manual scheduling, call `scheduler.Add(material, definition)` or
-`scheduler.Add(material, definition, owner)`. Without an owner, a manual scheduler
-has no tree pause policy. Dispose the scheduler when you're finished with it.
+Call `scheduler.Add(material, definition)`, or pass an owner as the third
+argument. Without an owner, a manual scheduler has no tree pause to follow.
+Dispose the scheduler when you're finished with it.
 
 ## Built-in material properties
 
 All 25 adapters target `BaseMaterial3D`, so they work with both
 `StandardMaterial3D` and `OrmMaterial3D`.
 
-| Property | Definition | Convenience method |
+| Property | Definition | Shorthand method |
 | --- | --- | --- |
 | Albedo color | Tweens.MaterialAlbedoColor | TweenAlbedoColor |
 | Albedo alpha | Tweens.MaterialAlbedoAlpha | TweenAlbedoAlpha |
@@ -97,6 +101,5 @@ mesh.MaterialOverride = unique;
 _ = unique.TweenAlbedoColor(Colors.Red, 1, mesh);
 _ = unique.TweenRoughness(0.2f, 1, mesh);
 ```
-
 
 Continue with [shader uniforms](/csharp/shaders/) for shared and per-instance parameters.

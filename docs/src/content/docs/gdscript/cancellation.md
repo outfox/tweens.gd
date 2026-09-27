@@ -38,7 +38,6 @@ too. Use the guarded form above for interruptible sequences.
 
 ## Why it ended
 
-
 `await movement.end` returns a `Tweens.Reason` value. Any number of callers can await it, and
 an await after playback has ended returns the same reason at once.
 
@@ -52,10 +51,10 @@ an await after playback has ended returns the same reason at once.
 | `FAILED` | The start was rejected or playback detected an error; see `error` |
 | `WAIT_CANCELLED` | Only from `wait()`: its cancellation token was cancelled, and playback continues |
 
-Checking the reason lets a sequence stop when playback is interrupted. Removing or reparenting a
-node ends the tweens it owns immediately, even while they're paused. Godot emits
-tree exit before it invalidates a node freed with `free()`, so that case may
-report `OWNER_EXITED`.
+Removing or reparenting a node ends the tweens it owns immediately, even while
+they're paused. Godot emits tree exit before it invalidates a node freed with
+`free()`, so that case may report `OWNER_EXITED`. `queue_free()` reports
+`TARGET_FREED` for a node that owns its own tween.
 
 ## Cancel a wait, not the tween
 
@@ -91,6 +90,5 @@ while true:
 	if await Tweens.play(sprite, down).end != Tweens.Reason.COMPLETED:
 		break
 ```
-
 
 For callback failures and script errors, see [errors](/gdscript/playback/#errors).

@@ -121,8 +121,11 @@ which starts from wherever the property is when the tween plays.
 
 ## Wait between steps
 
-A callback-only tween on any in-tree node makes a wait that follows the same
-pause, time scale, and lifetime rules as the animation around it:
+`Tweens.float_value()` makes a [callback-only](/gdscript/custom-tweens/#callback-values)
+tween, which writes no property, so `Tweens.float_value(1.0, 0.5)` is a
+half-second wait. The `1.0` is the value it would report, and unused here. The
+wait follows the same pause, time scale, and lifetime rules as the animation
+around it:
 
 ```gdscript
 await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).end

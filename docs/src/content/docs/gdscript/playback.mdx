@@ -43,19 +43,28 @@ don't cache the signal for later, because signals do not replay.
 
 Use `ended.connect(callback)` for a signal subscription to a running tween.
 Use `await movement.end` for a wait that also works after completion.
-The existing `wait()` coroutine still works; `wait(token)` adds wait cancellation.
+`movement.wait()` returns the same reason as `end`; pass it a `Tweens.Cancellation` to
+[cancel only the wait](/gdscript/cancellation/#cancel-a-wait-not-the-tween).
 
 ## Callbacks
 
-Definitions accept Callables in these fields. They run synchronously, in this
-order:
+Definitions accept Callables in these fields. Set them on a shared definition,
+or on one start with `with_*()`:
+
+```gdscript
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
+Tweens.play(sprite, arrive.with_on_start(func(_h): print("Moving")) \
+	.with_on_end(func(_h): print("Arrived")))
+```
+
+They run synchronously, in this order:
 
 1. `on_add(handle)` when the tween is added.
 2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
    it during the delay.
 3. `on_start(handle)` once, when the delay ends and playback begins.
 4. `on_update(handle, value)` once per eligible frame with the sampled value,
-   plus once more when completion restores the initial value.
+   plus once more when completion [restores the initial value](/gdscript/timing/#fill-and-restoration).
 5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
    stops early.
 6. `on_finally(handle)` in every case, including failures.

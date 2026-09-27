@@ -16,7 +16,7 @@ The C# package ID and namespace are both `tweens.gd`. The local development
 version is `0.1.0`, which hasn't been published to nuget.org.
 [Install](/csharp/installation/) it from source or from a locally packed package.
 
-## C# engine and platform support
+## C# support
 
 | Area | Current status |
 | --- | --- |
@@ -33,23 +33,24 @@ Your application supplies the engine. Use a Godot .NET engine that matches the
 GodotSharp bindings. The library depends only on GodotSharp; its source generator
 is a private build dependency.
 
-## Rendering requirements
-
-Changing a property doesn't enable a rendering feature. Configure transparency,
-emission, normal maps, and particle modes before animating them. Shader default
-lookup needs a working renderer, which a dummy headless renderer may not supply.
-See [materials](/csharp/materials/) and [shader uniforms](/csharp/shaders/).
-
-## GDScript validation
+## GDScript support
 
 The addon is pure GDScript and needs no .NET runtime, autoload, or GDExtension.
 
 | Area | Current status |
 | --- | --- |
-| Engine | 2dog/Godot 4.7.2 in Debug and Release, and the standard Godot 4.7.2 editor build |
+| Engine | Godot 4.7.2 in Debug and Release through 2dog, the embedded Godot host the tests run in, and the standard Godot 4.7.2 editor build |
 | Rendering | Real OpenGL rendering, including shader uniform defaults and output |
 | Exports | A Windows release export and a single-threaded Web/WASM release export, tested in Edge |
 | Other engines, browsers, and devices | Not validated |
 | Throughput | High tween counts need further optimization; no supported count or frame budget is promised |
 
-The addon's differences from C# are listed in the [GDScript Core API](/gdscript/api/).
+The addon's differences from C# are listed in the [GDScript Core API](/gdscript/api/#differences-from-c).
+
+## Rendering requirements
+
+Changing a property doesn't enable a rendering feature. Configure transparency,
+emission, normal maps, and particle modes before animating them. Shader default
+lookup needs a working renderer, which a dummy headless renderer may not supply.
+See materials ([C#](/csharp/materials/), [GDScript](/gdscript/materials/)) and
+shader uniforms ([C#](/csharp/shaders/), [GDScript](/gdscript/shaders/)).

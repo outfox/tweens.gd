@@ -42,13 +42,25 @@ the handle and avoid C#'s unawaited-call warning.
 
 ## Callbacks
 
-Definitions accept typed callbacks. They run in this order:
+Definitions accept typed callbacks. Set them on a shared definition, or on one
+start with `with`:
+
+```csharp
+var arrive = new Tweens.Position2D(new Vector2(400, 180), 0.6, EaseType.CubicOut);
+_ = sprite.Tween(arrive with
+{
+    OnStart = _ => GD.Print("Moving"),
+    OnEnd = _ => GD.Print("Arrived"),
+});
+```
+
+They run in this order:
 
 1. `OnAdd` when the tween is added.
 2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
 3. `OnStart` once, when the delay ends and playback begins.
 4. `OnUpdate` once per eligible frame with the sampled value, plus once more when
-   completion restores the initial value.
+   completion [restores the initial value](/csharp/timing/#fill-and-restoration).
 5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.
 6. `OnFinally` in every case, including faults.
 

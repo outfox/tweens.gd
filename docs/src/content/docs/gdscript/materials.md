@@ -13,20 +13,21 @@ in-tree `MeshInstance3D` named `mesh`.
 
 ## Choose the playback lifetime
 
-A material is a resource, not a node, so `Tweens.play()` needs an owner as its
-third argument:
+A material is a resource, not a node, so it has no place in the tree that could
+end its tweens. `Tweens.play()` takes that lifetime as its third argument: the
+scene tree or an owner node. Without one, automatic playback is rejected and the
+handle reports `FAILED`.
 
 ```gdscript
 # material and shared are StandardMaterial3D; mesh is an in-tree MeshInstance3D.
-# Shared resource, with playback scoped to this SceneTree.
+# Scoped to the scene tree.
 var fade := Tweens.play(material, Tweens.material_albedo_alpha(0.0, 0.5), get_tree())
 
-# Same resource semantics, but stop when this node leaves the tree.
+# Stops when mesh leaves the tree.
 var roughness := Tweens.play(material, Tweens.material_roughness(0.2, 1.0), mesh)
 
-# Definitions carry the ordinary timing and easing fields.
-var emission := Tweens.material_emission_energy_multiplier(3.0, 1.0)
-emission.ease = Tweens.Ease.CUBIC_OUT
+# Helpers take the ordinary timing and easing arguments.
+var emission := Tweens.material_emission_energy_multiplier(3.0, 1.0, Tweens.Ease.CUBIC_OUT)
 Tweens.play(material, emission, mesh)
 
 # One definition works with either lifetime.
@@ -35,30 +36,27 @@ Tweens.play(material, smooth, get_tree())
 Tweens.play(material, smooth, mesh)
 ```
 
-Passing `get_tree()` binds playback to the tree's root node. A tree-scoped tween
-keeps running when a mesh is removed or gets a different material, because it
-retains the resource you originally supplied. A tween with a node owner ends with
-`Tweens.Reason.OWNER_EXITED` when that owner leaves the tree. Without any owner,
-automatic playback is rejected, and the returned handle reports `FAILED`.
+| Lifetime | Stops early when | Pause follows |
+| --- | --- | --- |
+| `get_tree()` | The tree shuts down: `RUNNER_DISPOSED` | Tree pause |
+| An owner node | The owner leaves the tree: `OWNER_EXITED` | `owner.can_process()` with the default `BOUND` mode, or tree pause with `SCENE_TREE` |
 
-`Tweens.cancel_tweens(owner)` cancels only that owner's automatic tweens, material
-tweens included, and `Tweens.cancel_tweens(owner, true)` adds its descendants'
-tweens. Other owners are unaffected. Tree-scoped tweens belong to the root node.
+`Tweens.Pause.ALWAYS` ignores both, and pausing the handle always stops it.
+Either way, a tween on a freed resource ends with `TARGET_FREED`.
 
-Tweens on a freed resource end with `TARGET_FREED`, even while paused. Runner or
-tree teardown settles pending work with `RUNNER_DISPOSED`. Cleanup releases
-playback bindings but never the resources you supplied, and handles retain their
-`target` for inspection.
+A tree-scoped tween keeps running when a mesh is removed or gets a different
+material, because it holds the resource you supplied. Passing `get_tree()` binds
+playback to the tree's root node, so `Tweens.cancel_tweens(get_tree().root)`
+cancels it. `Tweens.cancel_tweens(owner)` cancels that owner's tweens, material
+tweens included, and `Tweens.cancel_tweens(owner, true)` adds its descendants'.
+Cleanup releases playback bindings but never the resources you supplied. See
+[lifetime and ownership](/gdscript/lifetime/) for the full rules.
 
-With a node owner, `Tweens.Pause.BOUND` follows `owner.can_process()` and
-`SCENE_TREE` follows tree pause. Tree-scoped playback follows tree pause with
-either mode. `ALWAYS` ignores both, although pausing the handle always stops
-advancement. All access to native resources has to happen on Godot's main thread.
+### Manual scheduling
 
-For manual scheduling, call `scheduler.add(material, definition)` or
-`scheduler.add(material, definition, owner)` on a `Tweens.Scheduler`. Without an
-owner, a manual scheduler has no tree pause policy. Call `dispose()` on the
-scheduler when you're finished with it.
+Call `scheduler.add(material, definition)` on a `Tweens.Scheduler`, or pass an
+owner as the third argument. Without an owner, a manual scheduler has no tree
+pause to follow. Call `dispose()` on the scheduler when you're finished with it.
 
 ## Built-in material properties
 

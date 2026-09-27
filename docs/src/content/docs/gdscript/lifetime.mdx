@@ -39,11 +39,11 @@ manual schedulers you created yourself.
 
 With the default pause mode, a tween pauses when its owner stops processing:
 
-| `pause_mode` | Behavior |
-| --- | --- |
-| `Tweens.Pause.BOUND` (default) | Follow `owner.can_process()` |
-| `Tweens.Pause.SCENE_TREE` | Follow tree pause only |
-| `Tweens.Pause.ALWAYS` | Ignore owner and tree pause |
+| `pause_mode` | With an owner | Without an owner, bound to a tree |
+| --- | --- | --- |
+| `Tweens.Pause.BOUND` (default) | Follow `owner.can_process()` | Follow tree pause |
+| `Tweens.Pause.SCENE_TREE` | Follow tree pause only | Follow tree pause |
+| `Tweens.Pause.ALWAYS` | Ignore owner and tree pause | Ignore tree pause |
 
 Pausing the handle always stops it, even with `ALWAYS`. A node's
 `set_process(false)` doesn't pause its tweens, because `can_process()` depends on
