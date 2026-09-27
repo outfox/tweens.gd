@@ -39,7 +39,7 @@ foreach ($page in Get-ChildItem (Join-Path $docsRoot 'src/content/docs') -Recurs
 $imports
 public partial class DocumentationExample$exampleCount : Node
 {
-    public async Task Run(Sprite2D sprite, Label label, Camera2D camera,
+    public async Task Run(Sprite2D sprite, Sprite2D sprite1, Sprite2D sprite2, Label label, Camera2D camera,
         StandardMaterial3D material, StandardMaterial3D shared,
         MeshInstance3D mesh, ShaderMaterial shaderMaterial, Node owner,
         CancellationToken cancellationToken)

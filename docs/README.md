@@ -53,6 +53,9 @@ pages are shared; the sidebar lists all but the overview, which the site title l
   Pitfalls go in `:::caution` asides so they stand out from the main flow.
 - Annotated examples use Expressive Code line-marker labels (`{"1":3-7}`) inside `<Moves>`,
   whose numbered notes match the labels.
+- Separate a definition from its start with a blank line, as in the define, start, await examples.
+- Comparisons with Godot's `Tween` go in `<Compare>`, Godot first. Where reuse is the point, start one
+  definition on `sprite1` and `sprite2`. `<Variants>` switches between versions of one example.
 - Write each twin in its own language's idioms. Where the languages behave differently,
   say so on that page rather than sharing prose that fits neither.
 - C# snippets state their prerequisites; GDScript pages state the `preload` they assume.

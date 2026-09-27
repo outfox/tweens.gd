@@ -5,6 +5,7 @@ description: Duration, delay, repeats, ping-pong, fill modes, and what happens o
 
 import TimingLab from '../../../components/TimingLab.astro';
 import FillModes from '../../../components/FillModes.astro';
+import Compare from '../../../components/Compare.astro';
 
 A tween waits out its delay, plays a forward leg, and optionally returns and
 repeats. Most tweens only need `duration`, `delay`, and an ease. Everything else
@@ -15,16 +16,38 @@ on Godot's main thread in a method of an in-tree node.
 
 ## Loop forever
 
-For idle motion such as bobbing or pulsing, use one definition that ping-pongs
-forever. It stops by itself when `sprite` leaves the tree:
+For idle motion such as pulsing or bobbing, start one definition that
+ping-pongs forever. Each tween stops by itself when its node leaves the tree.
+Godot's `Tween` has no ping-pong, so it tweens back as a second step, and each
+node needs its own:
 
-```gdscript
-var bob := Tweens.position_2d_y(sprite.position.y - 8.0, 0.8)
-bob.ease = Tweens.Ease.SINE_IN_OUT
-bob.use_ping_pong = true
-bob.repeats = Tweens.INFINITE
-Tweens.play(sprite, bob)
+<Compare>
+
+```gdscript title="Godot's Tween"
+var big := Vector2(1.1, 1.1)
+
+var tween1 := sprite1.create_tween().set_loops()
+tween1.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+tween1.tween_property(sprite1, "scale", big, 0.8)
+tween1.tween_property(sprite1, "scale", Vector2.ONE, 0.8)
+
+var tween2 := sprite2.create_tween().set_loops()
+tween2.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+tween2.tween_property(sprite2, "scale", big, 0.8)
+tween2.tween_property(sprite2, "scale", Vector2.ONE, 0.8)
 ```
+
+```gdscript title="tweens.gd"
+var pulse := Tweens.scale_2d(Vector2(1.1, 1.1), 0.8)
+pulse.ease = Tweens.Ease.SINE_IN_OUT
+pulse.use_ping_pong = true
+pulse.repeats = Tweens.INFINITE
+
+Tweens.play(sprite1, pulse)
+Tweens.play(sprite2, pulse)
+```
+
+</Compare>
 
 ## Timing fields
 

@@ -5,6 +5,7 @@ description: Duration, delay, repeats, ping-pong, fill modes, and what happens o
 
 import TimingLab from '../../../components/TimingLab.astro';
 import FillModes from '../../../components/FillModes.astro';
+import Compare from '../../../components/Compare.astro';
 
 A tween waits out its delay, plays a forward leg, and optionally returns and
 repeats. Most tweens only need `Duration`, `Delay`, and an ease. Everything else
@@ -12,20 +13,44 @@ here is for loops and edge cases.
 
 ## Loop forever
 
-For idle motion such as bobbing or pulsing, use one definition that ping-pongs
-forever. It stops by itself when `sprite` leaves the tree:
+For idle motion such as pulsing or bobbing, start one definition that
+ping-pongs forever. Each tween stops by itself when its node leaves the tree.
+Godot's `Tween` has no ping-pong, so it tweens back as a second step, and each
+node needs its own:
 
-```csharp
-var bob = new Tweens.Position2DY
+<Compare>
+
+```csharp title="Godot's Tween"
+var big = new Vector2(1.1f, 1.1f);
+
+var tween1 = sprite1.CreateTween().SetLoops()
+    .SetTrans(Tween.TransitionType.Sine)
+    .SetEase(Tween.EaseType.InOut);
+tween1.TweenProperty(sprite1, "scale", big, 0.8);
+tween1.TweenProperty(sprite1, "scale", Vector2.One, 0.8);
+
+var tween2 = sprite2.CreateTween().SetLoops()
+    .SetTrans(Tween.TransitionType.Sine)
+    .SetEase(Tween.EaseType.InOut);
+tween2.TweenProperty(sprite2, "scale", big, 0.8);
+tween2.TweenProperty(sprite2, "scale", Vector2.One, 0.8);
+```
+
+```csharp title="tweens.gd"
+var pulse = new Tweens.Scale2D
 {
-    To = sprite.Position.Y - 8,
+    To = new Vector2(1.1f, 1.1f),
     Duration = 0.8,
     Ease = EaseType.SineInOut,
     UsePingPong = true,
     Repeats = TweenOptions.Infinite,
 };
-_ = sprite.Tween(bob);
+
+_ = sprite1.Tween(pulse);
+_ = sprite2.Tween(pulse);
 ```
+
+</Compare>
 
 ## Timing options
 

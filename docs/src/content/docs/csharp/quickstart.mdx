@@ -4,6 +4,7 @@ description: Write a script that moves a sprite and fades it out, and learn to d
 ---
 
 import { Steps } from '@astrojs/starlight/components';
+import Compare from '../../../components/Compare.astro';
 import Moves from '../../../components/Moves.astro';
 
 Move a sprite, then fade it out once it arrives. Along the way you define a
@@ -83,7 +84,41 @@ descendants own, call `sprite.CancelTweens(includeChildren: true)`.
 
 ## Make it reusable
 
-`arrive` lives inside `_Ready`, so nothing else can use it. Move it to a field
-and compute the endpoint for each start with `with`, and other nodes can start
-the same motion. The next page, [definitions](/csharp/definitions/), shows
-how.
+A definition isn't tied to a node, so one `arrive` can start on any number of
+sprites. A Godot `Tween` is built for one node and can't be reused, so each
+sprite needs its own:
+
+<Compare>
+
+```csharp title="Godot's Tween"
+var target = new Vector2(400, 180);
+
+var tween1 = sprite1.CreateTween();
+tween1.TweenProperty(sprite1, "position", target, 0.6)
+    .SetTrans(Tween.TransitionType.Cubic)
+    .SetEase(Tween.EaseType.Out);
+
+var tween2 = sprite2.CreateTween();
+tween2.TweenProperty(sprite2, "position", target, 0.6)
+    .SetTrans(Tween.TransitionType.Cubic)
+    .SetEase(Tween.EaseType.Out);
+```
+
+```csharp title="tweens.gd"
+var arrive = new Tweens.Position2D
+{
+    To = new Vector2(400, 180),
+    Duration = 0.6,
+    Ease = EaseType.CubicOut,
+};
+
+_ = sprite1.Tween(arrive);
+_ = sprite2.Tween(arrive);
+```
+
+</Compare>
+
+In the script above, `arrive` lives inside `_Ready`, so nothing else can use
+it. Move it to a field and compute the endpoint for each start with `with`, and
+other nodes can start the same motion. The next page,
+[definitions](/csharp/definitions/), shows how.

@@ -27,6 +27,7 @@ import Lang from '../../components/Lang.astro';
 import Moves from '../../components/Moves.astro';
 import Path from '../../components/Path.astro';
 import ReauthorDemo from '../../components/ReauthorDemo.astro';
+import Variants from '../../components/Variants.astro';
 
 <Doors />
 
@@ -111,6 +112,8 @@ The same move, written with Godot's built-in `Tween` and with tweens.gd:
 
 <Lang only="csharp">
 
+<Variants labels={['One sprite', 'Two sprites']}>
+
 <Compare>
 
 ```csharp title="Godot's Tween"
@@ -119,6 +122,7 @@ var tween = sprite.CreateTween();
 tween.TweenProperty(sprite, "position", target, 0.6)
     .SetTrans(Tween.TransitionType.Cubic)
     .SetEase(Tween.EaseType.Out);
+
 await ToSignal(tween, Tween.SignalName.Finished);
 GD.Print("Arrived");
 ```
@@ -127,48 +131,122 @@ GD.Print("Arrived");
 var target = new Vector2(400, 180);
 var movement = sprite.TweenPosition(target, 0.6,
     options => options.Ease = EaseType.CubicOut);
+
 await movement;
 GD.Print("Arrived");
 ```
 
 </Compare>
 
+<Compare>
+
+```csharp title="Godot's Tween"
+var target = new Vector2(400, 180);
+
+var tween1 = sprite1.CreateTween();
+tween1.TweenProperty(sprite1, "position", target, 0.6)
+    .SetTrans(Tween.TransitionType.Cubic)
+    .SetEase(Tween.EaseType.Out);
+
+var tween2 = sprite2.CreateTween();
+tween2.TweenProperty(sprite2, "position", target, 0.6)
+    .SetTrans(Tween.TransitionType.Cubic)
+    .SetEase(Tween.EaseType.Out);
+
+await ToSignal(tween2, Tween.SignalName.Finished);
+GD.Print("Arrived");
+```
+
+```csharp title="tweens.gd"
+var arrive = new Tweens.Position2D
+{
+    To = new Vector2(400, 180),
+    Duration = 0.6,
+    Ease = EaseType.CubicOut,
+};
+
+_ = sprite1.Tween(arrive);
+var movement = sprite2.Tween(arrive);
+await movement;
+GD.Print("Arrived");
+```
+
+</Compare>
+
+</Variants>
+
 |  | Godot's Tween | tweens.gd |
 | --- | --- | --- |
 | Property | A string path and a `Variant`; mistakes surface at runtime | A typed method; the compiler checks the property and value |
 | Easing | A `TransitionType` plus an `EaseType` | One `EaseType`, such as `CubicOut` |
-| Reuse | Build a new `Tween` for each animation | [Store a definition](/csharp/definitions/) and start it on any node |
+| Reuse | Build a new `Tween` for each node and each replay | [Store a definition](/csharp/definitions/) and start it on any node |
 | Ending | `Finished` fires on completion only | `End` settles with a `Reason`: completed, cancelled, owner left the tree |
 
 </Lang>
 
 <Lang only="gdscript">
 
+<Variants labels={['One sprite', 'Two sprites']}>
+
 <Compare>
 
 ```gdscript title="Godot's Tween"
+var target := Vector2(400, 180)
 var tween := sprite.create_tween()
-tween.tween_property(sprite, "position", Vector2(400, 180), 0.6) \
-	.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween.tween_property(sprite, "position", target, 0.6)
+
 await tween.finished
 print("Arrived")
 ```
 
 ```gdscript title="tweens.gd"
-var move := Tweens.position_2d(Vector2(400, 180), 0.6)
-move.ease = Tweens.Ease.CUBIC_OUT
-var movement := Tweens.play(sprite, move)
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6)
+arrive.ease = Tweens.Ease.CUBIC_OUT
+
+var movement := Tweens.play(sprite, arrive)
 await movement.end
 print("Arrived")
 ```
 
 </Compare>
 
+<Compare>
+
+```gdscript title="Godot's Tween"
+var target := Vector2(400, 180)
+
+var tween1 := sprite1.create_tween()
+tween1.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween1.tween_property(sprite1, "position", target, 0.6)
+
+var tween2 := sprite2.create_tween()
+tween2.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween2.tween_property(sprite2, "position", target, 0.6)
+
+await tween2.finished
+print("Arrived")
+```
+
+```gdscript title="tweens.gd"
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6)
+arrive.ease = Tweens.Ease.CUBIC_OUT
+
+Tweens.play(sprite1, arrive)
+var movement := Tweens.play(sprite2, arrive)
+await movement.end
+print("Arrived")
+```
+
+</Compare>
+
+</Variants>
+
 |  | Godot's Tween | tweens.gd |
 | --- | --- | --- |
 | Property | A string path; a wrong name or value type fails when the tween runs | A named helper such as `position_2d`; the node class and value type are checked when the tween starts |
 | Easing | A `TRANS_*` transition plus an `EASE_*` direction | One `Tweens.Ease` constant, such as `CUBIC_OUT` |
-| Reuse | Build a new `Tween` for each animation | [Store a definition](/gdscript/definitions/) and start it on any node |
+| Reuse | Build a new `Tween` for each node and each replay | [Store a definition](/gdscript/definitions/) and start it on any node |
 | Ending | `finished` fires on completion only | `await movement.end` returns a `Tweens.Reason`: completed, cancelled, owner left the tree |
 
 </Lang>

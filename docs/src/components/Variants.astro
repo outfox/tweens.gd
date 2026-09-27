@@ -1,0 +1,103 @@
+---
+// Versions of one example, shown one at a time and picked with a switch. Each child of the slot is one version.
+// Variants with the same labels switch together, such as a shared page's C# and GDScript copies.
+interface Props {
+	labels: string[];
+	label?: string;
+}
+const { labels, label = 'Example' } = Astro.props;
+---
+
+<div class="variants tw-wide" data-variants={labels.join('|')} style={`--n: ${labels.length}; --i: 0`}>
+	<div class="switch" role="group" aria-label={label}>
+		{
+			labels.map((text, i) => (
+				<button type="button" data-variant={i} aria-pressed={String(i === 0)}>
+					{text}
+				</button>
+			))
+		}
+	</div>
+	<div class="panels"><slot /></div>
+</div>
+
+<script>
+	const show = (key: string, index: number) => {
+		for (const root of document.querySelectorAll<HTMLElement>(`[data-variants="${CSS.escape(key)}"]`)) {
+			root.style.setProperty('--i', String(index));
+			root.querySelectorAll('[data-variant]').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
+			[...root.querySelector('.panels')!.children].forEach((panel, i) => panel.toggleAttribute('hidden', i !== index));
+			root.dataset.ready = '';
+		}
+	};
+	for (const root of document.querySelectorAll<HTMLElement>('[data-variants]')) {
+		root.addEventListener('click', (event) => {
+			const button = (event.target as Element).closest<HTMLElement>('[data-variant]');
+			if (button) show(root.dataset.variants!, Number(button.dataset.variant));
+		});
+	}
+</script>
+
+<style>
+	.variants {
+		margin-top: 1.5rem;
+	}
+	/* Equal cells with one indicator that slides to the chosen version, like the language switch. */
+	.switch {
+		position: relative;
+		display: inline-grid;
+		grid-template-columns: repeat(var(--n), 1fr);
+		padding: 3px;
+		border: 1px solid var(--tw-outline);
+		border-radius: 999px;
+		background: var(--tw-stage);
+		font: 650 var(--sl-text-xs) var(--sl-font);
+		white-space: nowrap;
+	}
+	.switch::before {
+		content: '';
+		position: absolute;
+		inset: 3px auto 3px 3px;
+		width: calc((100% - 6px) / var(--n));
+		border-radius: 999px;
+		background: var(--tw-mint);
+		translate: calc(var(--i) * 100%) 0;
+		transition: translate 0.45s var(--ease-back-out);
+	}
+	:global(:root[data-theme='light']) .switch::before {
+		background: var(--tw-mint-ink);
+	}
+	button {
+		all: unset;
+		position: relative;
+		padding: 0.3rem 0.9rem;
+		border-radius: 999px;
+		color: var(--tw-muted);
+		text-align: center;
+		cursor: pointer;
+		transition: color 0.2s;
+	}
+	button:hover {
+		color: var(--sl-color-white);
+	}
+	button[aria-pressed='true'] {
+		color: var(--tw-on-accent);
+	}
+	button:focus-visible {
+		outline: 2px solid var(--tw-mint);
+		outline-offset: 2px;
+	}
+	@media (pointer: coarse) {
+		button {
+			padding-block: 0.55rem;
+		}
+	}
+	.variants .panels > :global(*) {
+		margin-top: 1rem;
+	}
+	/* Before the script runs, only the first version shows. */
+	.variants:not([data-ready]) .panels > :global(:not(:first-child)),
+	.panels > :global([hidden]) {
+		display: none;
+	}
+</style>
