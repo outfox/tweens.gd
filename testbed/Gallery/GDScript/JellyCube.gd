@@ -51,3 +51,12 @@ func land() -> void:
 		Tweens.play(targets.camera, vertical),
 		Tweens.play(targets.camera, horizontal),
 	]).wait()
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition
+
+func shake(progress: float) -> float:
+	return sin(progress * 42.0) * (1.0 - progress) * (1.0 - progress)

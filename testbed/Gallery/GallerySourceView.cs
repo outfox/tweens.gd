@@ -79,7 +79,7 @@ public partial class GallerySourceView : VBoxContainer
         setup = GallerySource.ForSetup(effect);
         files.SetItemText(0, language == GalleryLanguage.CSharp ? "Animation" : "Animation · GDScript");
         files.SetItemText(1, language == GalleryLanguage.CSharp ? "Scene & playback" : "Shared scene · C#");
-        files.SetItemText(2, language == GalleryLanguage.CSharp ? "Playback helpers" : "Playback helpers · GDScript");
+        files.SetItemText(2, language == GalleryLanguage.CSharp ? "Playback helpers" : "Gallery host · GDScript");
         files.SetItemText(3, language == GalleryLanguage.CSharp ? "Scene helpers" : "Shared scene helpers · C#");
         files.SetItemText(4, language == GalleryLanguage.CSharp ? "Palette" : "Shared palette · C#");
         files.SetItemText(5, language == GalleryLanguage.CSharp ? "Node helpers" : "Shared node helpers · C#");

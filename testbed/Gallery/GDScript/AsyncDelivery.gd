@@ -22,3 +22,9 @@ func report(step: int, text: String) -> void:
 		handles.append(Tweens.play(targets.steps[i], Tweens.polygon_2d_color(MINT if i <= step else OUTLINE, 0.2)))
 	handles.append(Tweens.play(targets.steps[step], options(Tweens.scale_2d(Vector2.ONE, 0.5), Tweens.Ease.ELASTIC_OUT, Vector2(2, 2))))
 	await Tweens.group(handles).wait()
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition

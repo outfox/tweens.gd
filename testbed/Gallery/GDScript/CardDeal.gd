@@ -97,3 +97,12 @@ func toss() -> bool:
 		handles.append(Tweens.play(card, options(Tweens.position_2d(Vector2((i - 2) * 30, -170), 0.45 * tempo), Tweens.Ease.BACK_IN, null, i * 0.04 * tempo)))
 		handles.append(Tweens.play(card, options(Tweens.rotation_2d((i - 2) * 0.4, 0.45 * tempo), Tweens.Ease.BACK_IN, null, i * 0.04 * tempo)))
 	return await Tweens.group(handles).wait() == Tweens.Reason.COMPLETED
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition
+
+func wait(seconds_to_wait: float) -> bool:
+	return await Tweens.play(stage, Tweens.value(0.0, 1.0, seconds_to_wait)).wait() == Tweens.Reason.COMPLETED

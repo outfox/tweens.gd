@@ -14,3 +14,18 @@ func animate() -> void:
 		Tweens.play(targets.beacon, pulse),
 		Tweens.play(targets.beacon, fade),
 	]).wait()
+
+func cycle(definition, delay: float = 0.0):
+	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.use_ping_pong = true
+	definition.repeats = Tweens.INFINITE
+	definition.repeat_interval = 0.25
+	definition.ping_pong_interval = 0.15
+	definition.delay = delay
+	return definition
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition

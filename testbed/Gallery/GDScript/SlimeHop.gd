@@ -70,3 +70,9 @@ func splash(x: float) -> void:
 		handles.append(Tweens.play(drop, options(Tweens.position_2d(landing, 0.4 * tempo), Tweens.Ease.QUART_OUT)))
 		handles.append(Tweens.play(drop, options(Tweens.modulate_alpha(0.0, 0.4 * tempo), Tweens.Ease.CUBIC_IN, 1.0)))
 	await Tweens.group(handles).wait()
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition

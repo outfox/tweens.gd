@@ -33,9 +33,12 @@ Each example has a C# scene file, a C# `.Animation.cs` file, and a GDScript file
 the GDScript animation. No reflection or C# tween calls implement GDScript motion.
 
 Animation sources are embedded in the build. GDScript mode compiles and runs the
-embedded animation text displayed by the viewer. Its shared helpers are in
-`Gallery/GDScript/GalleryAnimation.gd`; scene and playback helpers are available
-from the source viewer's file menu. New examples need both implementations.
+embedded animation text displayed by the viewer. Each GDScript example includes
+the animation utilities it uses (`cycle`, `options`, `wait`, and `shake`), intentionally
+duplicated so their behavior is visible in the same file. The shared lifecycle and
+scene bindings remain in `Gallery/GDScript/GalleryAnimation.gd`, available as
+**Gallery host · GDScript** in the source viewer's file menu. New examples need both
+implementations and should include any animation utilities they use.
 
 ## Validation and known differences
 

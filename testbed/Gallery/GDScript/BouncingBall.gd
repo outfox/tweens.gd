@@ -63,3 +63,9 @@ func kick_up_dust(x: float) -> void:
 		handles.append(Tweens.play(dust, options(Tweens.position_2d(landing, 0.45 * tempo), Tweens.Ease.QUART_OUT)))
 		handles.append(Tweens.play(dust, options(Tweens.modulate_alpha(0.0, 0.45 * tempo), Tweens.Ease.QUAD_IN, 0.9)))
 	await Tweens.group(handles).wait()
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition

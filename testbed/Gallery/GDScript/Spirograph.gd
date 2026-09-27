@@ -35,3 +35,12 @@ func extend(trail: Line2D, tip: Vector2) -> void:
 	trail.add_point(tip)
 	while trail.get_point_count() > TRAIL_LENGTH:
 		trail.remove_point(0)
+
+func cycle(definition, delay: float = 0.0):
+	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.use_ping_pong = true
+	definition.repeats = Tweens.INFINITE
+	definition.repeat_interval = 0.25
+	definition.ping_pong_interval = 0.15
+	definition.delay = delay
+	return definition

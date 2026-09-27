@@ -76,3 +76,15 @@ func add_to_score() -> void:
 		Tweens.play(stage, roll),
 		Tweens.play(targets.score, options(Tweens.control_scale(Vector2.ONE, 0.6 * tempo), Tweens.Ease.ELASTIC_OUT, Vector2(1.45, 1.45))),
 	]).wait()
+
+func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+	definition.ease = easing
+	definition.from_value = from
+	definition.delay = delay
+	return definition
+
+func wait(seconds_to_wait: float) -> bool:
+	return await Tweens.play(stage, Tweens.value(0.0, 1.0, seconds_to_wait)).wait() == Tweens.Reason.COMPLETED
+
+func shake(progress: float) -> float:
+	return sin(progress * 42.0) * (1.0 - progress) * (1.0 - progress)

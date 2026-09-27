@@ -10,3 +10,12 @@ func animate() -> void:
 		Tweens.play(targets.particles, cycle(Tweens.cpu_particles_2d_color(AMBER, seconds))),
 		Tweens.play(targets.particles, cycle(Tweens.position_2d_y(-30.0, seconds))),
 	]).wait()
+
+func cycle(definition, delay: float = 0.0):
+	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.use_ping_pong = true
+	definition.repeats = Tweens.INFINITE
+	definition.repeat_interval = 0.25
+	definition.ping_pong_interval = 0.15
+	definition.delay = delay
+	return definition
