@@ -1,5 +1,5 @@
 ---
-// Six coins share one Pop and one Lift definition; each start passes its own copy (C# `with`, GDScript `copy()`).
+// Six coins share one Pop and one Lift definition; each start passes its own copy (C# `with`, GDScript `with_*()`).
 // The strip under the stage shows the value each coin's copy received; the shared definitions never change.
 import type { Lang } from '../scripts/lang';
 
@@ -37,9 +37,9 @@ const coins = [100, 80, 92, 70, 86, 104];
 			<p class="pane-label">{gd ? 'The shared definition' : 'The field'}</p>
 			{
 				gd ? (
-					<pre data-field-pop><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(<span class="kw">null</span>, <span class="num">0.25</span>)
+					<pre data-field-pop><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(<span class="kw">null</span>, <span class="num">0.25</span>,
+    Tweens.Ease.BACK_OUT)
 pop.from_value = Vector2.ZERO
-pop.ease = Tweens.Ease.BACK_OUT
 <span class="fill" data-fill-line data-on="pop.fill = Tweens.Fill.BOTH" data-off="# fill left at its default">pop.fill = Tweens.Fill.BOTH</span></pre>
 				) : (
 					<pre data-field-pop><span class="kw">static readonly</span> <span class="ty">Tweens.Scale2D</span> Pop = <span class="kw">new</span>()
@@ -52,8 +52,8 @@ pop.ease = Tweens.Ease.BACK_OUT
 			}
 			{
 				gd ? (
-					<pre data-field-lift hidden><span class="kw">var</span> lift := Tweens.<span class="fn">position_2d_y</span>(<span class="kw">null</span>, <span class="num">0.25</span>)
-lift.ease = Tweens.Ease.BACK_OUT</pre>
+					<pre data-field-lift hidden><span class="kw">var</span> lift := Tweens.<span class="fn">position_2d_y</span>(<span class="kw">null</span>, <span class="num">0.25</span>,
+    Tweens.Ease.BACK_OUT)</pre>
 				) : (
 					<pre data-field-lift hidden><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DY</span> Lift =
     <span class="kw">new</span>() {'{'} Options = Snappy {'}'};</pre>
@@ -64,9 +64,8 @@ lift.ease = Tweens.Ease.BACK_OUT</pre>
 			<p class="pane-label">Each start</p>
 			{
 				gd ? (
-					<pre data-call-pop><span class="kw">var</span> start := pop.<span class="fn">copy</span>()
-start.delay = i * <span class="num" data-step-out>0.12</span>
-Tweens.<span class="fn">play</span>(coins[i], start)</pre>
+					<pre data-call-pop>Tweens.<span class="fn">play</span>(coins[i],
+    pop.<span class="fn">with_delay</span>(i * <span class="num" data-step-out>0.12</span>))</pre>
 				) : (
 					<pre data-call-pop>coins[i].<span class="fn">Tween</span>(Pop <span class="kw">with</span>
     {'{'} Delay = i * <span class="num" data-step-out>0.12</span> {'}'});</pre>
@@ -74,8 +73,7 @@ Tweens.<span class="fn">play</span>(coins[i], start)</pre>
 			}
 			{
 				gd ? (
-					<pre data-call-lift hidden><span class="kw">var</span> up := lift.<span class="fn">copy</span>()
-up.to_value = coin.position.y - <span class="num">40</span>
+					<pre data-call-lift hidden><span class="kw">var</span> up := lift.<span class="fn">with_to</span>(coin.position.y - <span class="num">40</span>)
 Tweens.<span class="fn">play_all</span>(coin, [up, fade])</pre>
 				) : (
 					<pre data-call-lift hidden>coin.<span class="fn">Tween</span>(Lift <span class="kw">with</span>

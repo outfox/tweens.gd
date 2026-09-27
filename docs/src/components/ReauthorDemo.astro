@@ -21,9 +21,9 @@ const sites = [
 	<div class="def">
 		{
 			gd ? (
-				<pre class="code" aria-label="Definition"><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(Vector2.ONE, <span class="val" data-duration-out>0.6</span>)
-pop.from_value = Vector2.ZERO
-pop.ease = Tweens.Ease.<span class="val" data-ease-out>ELASTIC_OUT</span></pre>
+				<pre class="code" aria-label="Definition"><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(Vector2.ONE, <span class="val" data-duration-out>0.6</span>,
+    Tweens.Ease.<span class="val" data-ease-out>ELASTIC_OUT</span>)
+pop.from_value = Vector2.ZERO</pre>
 			) : (
 				<pre class="code" aria-label="Definition"><span class="kw">static readonly</span> <span class="ty">Tweens.Scale2D</span> Pop = <span class="kw">new</span>()
 {'{'}

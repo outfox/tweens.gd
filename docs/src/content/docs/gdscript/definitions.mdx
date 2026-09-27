@@ -1,6 +1,6 @@
 ---
 title: Reusable definitions
-description: Keep motion in shared definitions, share timing and easing with a helper function, vary single starts with copy(), and build steps from functions.
+description: Keep motion in shared definitions, share timing and easing with a helper function, vary single starts with with_ methods, and build steps from functions.
 ---
 
 import Moves from '../../../components/Moves.astro';
@@ -20,7 +20,7 @@ A coin pops in, then rises and fades when collected:
 
 <Moves>
 
-```gdscript title="coin.gd" {"1":5-8} {"2":10-18} {"3":20-23} {"4":25-28}
+```gdscript title="coin.gd" {"1":5-8} {"2":10-13} {"3":15-16} {"4":18-20}
 extends Sprite2D
 
 const Tweens = preload("res://addons/tweens_gd/tweens.gd")
@@ -30,24 +30,16 @@ static func snappy(definition: Tweens.Definition) -> Tweens.Definition:
 	definition.ease = Tweens.Ease.BACK_OUT
 	return definition
 
-static var pop := _pop()
+static var pop := snappy(Tweens.scale_2d()) \
+	.with_from(Vector2.ZERO).with_fill(Tweens.Fill.BOTH)
 static var fade := snappy(Tweens.modulate_alpha(0.0))
 static var lift := snappy(Tweens.position_2d_y())
 
-static func _pop() -> Tweens.Definition:
-	var definition := snappy(Tweens.scale_2d())
-	definition.from_value = Vector2.ZERO
-	definition.fill = Tweens.Fill.BOTH
-	return definition
-
 func appear(delay: float) -> void:
-	var start := pop.copy()
-	start.delay = delay
-	Tweens.play(self, start)
+	Tweens.play(self, pop.with_delay(delay))
 
 func collect() -> void:
-	var up := lift.copy()
-	up.to_value = position.y - 40.0
+	var up := lift.with_to(position.y - 40.0)
 	await Tweens.play_all(self, [up, fade]).end
 ```
 
@@ -55,7 +47,7 @@ func collect() -> void:
    in one place.
 2. **Keep definitions in static variables.** Each name says what the motion is
    for. `pop` and `lift` each leave out an endpoint.
-3. **Vary a start.** Each call to `appear` copies `pop` and sets its own delay,
+3. **Vary a start.** `pop.with_delay(delay)` returns a copy with its own delay,
    and `pop` itself never changes.
 4. **Build steps from functions.** `collect` plays two tweens as one step and
    waits for it to end.
@@ -73,13 +65,16 @@ changes how the whole coin moves.
 To override one setting, change it after the shared function has run:
 
 ```gdscript
-var slow_pop := snappy(Tweens.scale_2d())
-slow_pop.duration = 0.6
+var slow_pop := snappy(Tweens.scale_2d()).with_duration(0.6)
 ```
+
+A definition that shares its timing with nothing else can take it from the
+helper instead: `Tweens.modulate_alpha(0.0, 0.25, Tweens.Ease.BACK_OUT)`.
 
 :::caution[Order matters]
 - Call the shared function first. It assigns every field it sets, so a value
-  you set before calling it is replaced.
+  you set before calling it is replaced, including a duration or easing passed
+  to the helper.
 - Static variables initialize top to bottom. A static variable that reads
   another one must be declared after it.
 :::
@@ -89,19 +84,19 @@ slow_pop.duration = 0.6
 Declare shared definitions as `static var`. A static variable belongs to the
 script, not to one node, so a single `pop` serves every coin in the level, and
 each start takes its own snapshot of it. The variable name tells a reader what
-the motion is for and the builder function shows how it moves, so adjusting the
+the motion is for and its initializer shows how it moves, so adjusting the
 motion means editing one place.
 
 Definitions are mutable objects, unlike C#'s immutable values. Anything that
 holds a reference to `pop` can change it for every later start, so treat shared
 definitions as read-only after setup and vary single starts with
-[copies](#vary-a-start-with-copy).
+[copies](#vary-a-start-with-with_).
 
 ## Leave out `from_value` or `to_value`
 
 An endpoint left at `null` is read from the property when the tween starts.
-Every named helper takes `(to = null, seconds = 0.0)`, so its `to_value` is
-`null` until you pass one.
+Every named helper takes `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
+delay = 0.0)`, so its `to_value` is `null` until you pass one.
 
 - Leave out `from_value` to start wherever the node is. `lift` rises from the
   coin's current height.
@@ -114,21 +109,26 @@ so their `null` endpoints use `initial_value` instead: the `from` you pass to
 `Tweens.value()`, or zero, transparent black, or identity for the named value
 helpers.
 
-## Vary a start with `copy()`
+## Vary a start with `with_*()`
 
-`copy()` returns a new definition with the same settings. Change the copy and
-start it; the shared definition stays as declared, so a delay or target you set
-for one start doesn't carry over to the next:
+Each `with_*()` method returns a copy of the definition with one setting
+changed, like C#'s `with`. Start the copy; the shared definition stays as
+declared, so a delay or target you set for one start doesn't carry over to the
+next:
 
-- `pop.copy()` with its own `delay` staggers coins that share one definition.
-  `pop` sets `fill = Tweens.Fill.BOTH`, which applies `from_value` during the
-  delay, so waiting coins stay hidden instead of flashing at full size.
-- `lift.copy()` with `to_value = position.y - 40.0` computes a target from this
-  coin's position.
+- `pop.with_delay(delay)` staggers coins that share one definition. `pop` sets
+  `fill = Tweens.Fill.BOTH`, which applies `from_value` during the delay, so
+  waiting coins stay hidden instead of flashing at full size.
+- `lift.with_to(position.y - 40.0)` computes a target from this coin's position.
+
+There is one method per setting, named after its field: `with_from()`,
+`with_to()`, `with_duration()`, `with_delay()`, `with_ease()`, `with_fill()`,
+`with_repeats()`, `with_ping_pong()`, and so on. They chain, as in
+`pop.with_delay(0.1).with_duration(0.4)`. `copy()` returns an unchanged copy.
 
 Setting a field on the shared definition and starting it also works, because
 `Tweens.play()` snapshots it. The new value then stays on the definition for every
-later start, which is the mistake `copy()` avoids.
+later start, which is the mistake `with_*()` avoids.
 
 Try it below. **Appear** starts `pop` on six coins, each with its own delay.
 **Collect** lifts each coin 40 pixels from where it sits. Clear `fill` and press
@@ -145,19 +145,8 @@ extends Node2D
 
 const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
-static var wobble := _wobble()
-static var burst := _burst()
-
-static func _wobble() -> Tweens.Definition:
-	var definition := Tweens.rotation_2d(0.15, 0.08)
-	definition.use_ping_pong = true
-	definition.repeats = 2
-	return definition
-
-static func _burst() -> Tweens.Definition:
-	var definition := Tweens.scale_2d(Vector2(1.3, 1.3), 0.2)
-	definition.ease = Tweens.Ease.BACK_OUT
-	return definition
+static var wobble := Tweens.rotation_2d(0.15, 0.08).with_ping_pong().with_repeats(2)
+static var burst := Tweens.scale_2d(Vector2(1.3, 1.3), 0.2, Tweens.Ease.BACK_OUT)
 
 func open() -> void:
 	await Tweens.play(self, wobble).end
@@ -191,7 +180,8 @@ target instead.
 Starting a definition snapshots its configuration and captures the property's
 current value. Later changes to the definition never reach running playback.
 Callables and the objects they capture stay shared, but `curve` resources are
-duplicated for each start. Each `copy()` creates a new definition object.
+duplicated for each start. Each `copy()` and `with_*()` call creates a new
+definition object.
 
 ## When tweens compete
 

@@ -42,18 +42,31 @@ the first rejected start and cancels the definitions it already started.
 
 | Factory | Returns | Purpose |
 | --- | --- | --- |
-| `Tweens.property(path, to, seconds = 0.0)` | `TweensGdDefinition` | Tween a property or component path such as `^"position:x"` |
-| `Tweens.value(from, to, seconds = 0.0)` | `TweensGdDefinition` | Deliver values to `on_update` without writing a property |
+| `Tweens.property(path, to, seconds = 0.0, easing = LINEAR, delay = 0.0)` | `TweensGdDefinition` | Tween a property or component path such as `^"position:x"` |
+| `Tweens.value(from, to, seconds = 0.0, easing = LINEAR, delay = 0.0)` | `TweensGdDefinition` | Deliver values to `on_update` without writing a property |
 | `Tweens.custom(getter, setter, to, seconds = 0.0, interpolator = Callable(), validator = Callable())` | `TweensGdDefinition` | Read and write custom storage through Callables |
-| `Tweens.shader_parameter(parameter, to = null, seconds = 0.0)` | `TweensGdDefinition` | Tween a `ShaderMaterial` uniform |
-| `Tweens.instance_shader_parameter(parameter, to = null, seconds = 0.0)` | `TweensGdDefinition` | Tween an `instance uniform` on a `CanvasItem` or `GeometryInstance3D` |
-| `Tweens.position_2d(to = null, seconds = 0.0)` and the other named helpers | `TweensGdDefinition` | Tween a known property with target and value checks; see the [helper catalog](/gdscript/nodes/) |
+| `Tweens.shader_parameter(parameter, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | `TweensGdDefinition` | Tween a `ShaderMaterial` uniform |
+| `Tweens.instance_shader_parameter(parameter, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | `TweensGdDefinition` | Tween an `instance uniform` on a `CanvasItem` or `GeometryInstance3D` |
+| `Tweens.position_2d(to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` and the other named helpers | `TweensGdDefinition` | Tween a known property with target and value checks; see the [helper catalog](/gdscript/nodes/) |
+
+`easing` is a `Tweens.Ease` constant, such as `Tweens.Ease.CUBIC_OUT`.
 
 ## Definitions
 
 A `TweensGdDefinition` is a mutable object. Each start snapshots its configuration,
 so changing a definition affects only later starts. `definition.copy()` returns a
-separate definition; see [definitions](/gdscript/definitions/).
+separate definition, and each `with_*()` method returns a copy with one field
+changed, such as `with_delay(0.2)` or `with_ping_pong()`; see
+[definitions](/gdscript/definitions/#vary-a-start-with-with_).
+
+| Method | Sets |
+| --- | --- |
+| `with_from(value)`, `with_to(value)`, `with_initial_value(value)` | `from_value`, `to_value`, `initial_value` |
+| `with_duration(seconds)`, `with_delay(seconds)`, `with_offset(seconds)` | The timing field of the same name |
+| `with_repeats(count)`, `with_ping_pong(enabled = true)`, `with_ping_pong_interval(seconds)`, `with_repeat_interval(seconds)`, `with_fill(mode)` | `repeats`, `use_ping_pong`, and the other loop fields |
+| `with_ease(easing)`, `with_skew(exponent)`, `with_ease_function(function)`, `with_curve(curve)` | The easing field of the same name |
+| `with_process_mode(mode)`, `with_pause_mode(mode)`, `with_unscaled_time(enabled = true)`, `with_suppress_callbacks_when_target_invalid(enabled = true)` | The mode fields, `use_unscaled_time`, and callback suppression |
+| `with_on_add(callback)` through `with_on_finally(callback)` | The callback field of the same name |
 
 | Fields | Reference |
 | --- | --- |

@@ -24,19 +24,19 @@ const Reason = Types.Reason
 const Ease = Types.Ease
 
 ## Configure once, then play the definition on any compatible target.
-static func property(path: NodePath, to: Variant, seconds: float = 0.0) -> Definition:
-	var definition := Definition.new()
+static func property(path: NodePath, to: Variant, seconds: float = 0.0, easing: Types.Ease = Types.Ease.LINEAR,
+		delay: float = 0.0) -> Definition:
+	var definition := _timed(Definition.new(), seconds, easing, delay)
 	definition.property = path
 	definition.to_value = to
-	definition.duration = seconds
 	return definition
 
-static func value(from: Variant, to: Variant, seconds: float = 0.0) -> Definition:
-	var definition := Definition.new()
+static func value(from: Variant, to: Variant, seconds: float = 0.0, easing: Types.Ease = Types.Ease.LINEAR,
+		delay: float = 0.0) -> Definition:
+	var definition := _timed(Definition.new(), seconds, easing, delay)
 	definition.initial_value = from
 	definition.from_value = from
 	definition.to_value = to
-	definition.duration = seconds
 	return definition
 
 ## Callables receive (target), (target, value), and optionally (from, to, weight).
@@ -65,17 +65,18 @@ static func play_all(target: Variant, definitions: Variant, owner: Variant = nul
 		if handles.back().completion_reason == Reason.FAILED: break
 	return Group.of(handles)
 
-static func shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0) -> Definition:
-	var definition := Definition.new()
+static func shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0,
+		easing: Types.Ease = Types.Ease.LINEAR, delay: float = 0.0) -> Definition:
+	var definition := _timed(Definition.new(), seconds, easing, delay)
 	var adapter := ShaderAdapter.new()
 	adapter.parameter = parameter
 	definition.adapter = adapter
 	definition.to_value = to
-	definition.duration = seconds
 	return definition
 
-static func instance_shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0) -> Definition:
-	var definition := shader_parameter(parameter, to, seconds)
+static func instance_shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0,
+		easing: Types.Ease = Types.Ease.LINEAR, delay: float = 0.0) -> Definition:
+	var definition := shader_parameter(parameter, to, seconds, easing, delay)
 	definition.adapter.instance_uniform = true
 	return definition
 
@@ -101,6 +102,12 @@ static func play(target: Variant, definition: Definition, owner: Variant = null)
 ## Groups existing playback handles; interrupted members cancel their siblings.
 static func group(members: Variant) -> Group:
 	return Group.of(members)
+
+static func _timed(definition: Definition, seconds: float, easing: int, delay: float) -> Definition:
+	definition.duration = seconds
+	definition.ease = easing
+	definition.delay = delay
+	return definition
 
 static func _reject(message: String) -> Handle:
 	push_error("tweens.gd: " + message)

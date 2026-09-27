@@ -26,12 +26,11 @@ on Godot's main thread in a method of an in-tree node.
 `OUT` eases decelerate, `IN` eases accelerate, and `IN_OUT` eases do both.
 `LINEAR`, `SMOOTH_STEP`, and `SMOOTHER_STEP` have no variants. Each of the ten
 families below comes in all three, such as `Tweens.Ease.CUBIC_IN`,
-`Tweens.Ease.CUBIC_OUT`, and `Tweens.Ease.CUBIC_IN_OUT`. Assign the constant to a
-definition's `ease` field:
+`Tweens.Ease.CUBIC_OUT`, and `Tweens.Ease.CUBIC_IN_OUT`. Pass the constant after
+the duration, or assign it to a definition's `ease` field:
 
 ```gdscript
-var arrive := Tweens.position_2d(Vector2(300, 120), 0.5)
-arrive.ease = Tweens.Ease.CUBIC_OUT
+var arrive := Tweens.position_2d(Vector2(300, 120), 0.5, Tweens.Ease.CUBIC_OUT)
 Tweens.play(sprite, arrive)
 ```
 
@@ -61,8 +60,7 @@ rear-load the curve; values between `0` and `1` front-load it. For example, at
 `t = 0.25`, a skew of `2.0` passes `0.0625` to the ease, while `0.5` passes `0.5`.
 
 ```gdscript
-var movement := Tweens.position_2d(Vector2(300, 120), 0.5)
-movement.ease = Tweens.Ease.CUBIC_OUT
+var movement := Tweens.position_2d(Vector2(300, 120), 0.5, Tweens.Ease.CUBIC_OUT)
 movement.skew = 2.0
 Tweens.play(sprite, movement)
 ```

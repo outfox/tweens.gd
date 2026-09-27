@@ -20,22 +20,38 @@ extends Node2D
 const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 func _ready() -> void:
-	var move := Tweens.property(^"position", Vector2(400, 180), 0.6)
-	move.ease = Tweens.Ease.CUBIC_OUT
-	var movement := Tweens.play(self, move)
-	await movement.end
+	var move := Tweens.property(^"position", Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
+	await Tweens.play(self, move).end
 	print("Movement ended")
 ```
 
 `TweensGd` is also registered as a global class in the editor. Explicit preloads
 work before the editor has generated a global class cache.
 
-`property(path, to, seconds)` and `value(from, to, seconds)` create mutable
-`TweensGdDefinition` objects. `play(target, definition, owner = null)` snapshots
-the configuration and always returns a `TweensGdHandle`. Change a definition for future
-starts without changing existing playback; `definition.copy()` creates a separate
-configuration. Curves are duplicated; Callables and their captured objects are
-shared references. Subclass-specific fields are not copied automatically.
+`property(path, to, seconds, easing, delay)` and `value(from, to, seconds, easing, delay)`
+create mutable `TweensGdDefinition` objects; everything after `to` is optional.
+`play(target, definition, owner = null)` snapshots the configuration and always
+returns a `TweensGdHandle`. Change a definition for future starts without changing
+existing playback; `definition.copy()` creates a separate configuration. Curves are
+duplicated; Callables and their captured objects are shared references.
+Subclass-specific fields are not copied automatically.
+
+Each `with_*()` method returns a copy with one field changed, like C#'s `with`,
+so a shared definition can vary a single start:
+
+```gdscript
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
+Tweens.play(first, arrive)
+Tweens.play(second, arrive.with_duration(0.8))
+Tweens.play(third, arrive.with_delay(0.2).with_duration(1.0))
+```
+
+There is one per configuration field: `with_from`, `with_to`, `with_initial_value`,
+`with_duration`, `with_delay`, `with_offset`, `with_repeats`, `with_ping_pong`,
+`with_ping_pong_interval`, `with_repeat_interval`, `with_fill`, `with_ease`,
+`with_skew`, `with_ease_function`, `with_curve`, `with_process_mode`,
+`with_pause_mode`, `with_unscaled_time`, `with_suppress_callbacks_when_target_invalid`,
+and `with_on_add` through `with_on_finally`.
 
 Node targets must be inside the tree and use their own lifetime. Resource/Object
 targets require an explicit in-tree owner or SceneTree for automatic playback:
@@ -63,15 +79,14 @@ Helpers return the same reusable definition type and validate the native target
 class and captured value type before playback:
 
 ```gdscript
-var move := Tweens.position_2d(Vector2(400, 180), 0.6)
-move.ease = Tweens.Ease.CUBIC_OUT
+var move := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
 var fade := Tweens.modulate_alpha(0.0, 0.3)
 var together := Tweens.play_all(sprite, [move, fade])
 await together.end
 ```
 
-Factory arguments are `(to = null, seconds = 0.0)`. Null endpoints capture the
-initial value. `float_value`, `double_value`, `vector2_value`, `vector3_value`,
+Factory arguments are `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
+delay = 0.0)`. Null endpoints capture the initial value. `float_value`, `double_value`, `vector2_value`, `vector3_value`,
 `vector4_value`, `color_value`, `quaternion_value` and `rect2_value` provide named
 callback-only definitions; GDScript represents both float and double as `float`.
 `play_all()` / manual `scheduler.add_all()` start definitions on one target and

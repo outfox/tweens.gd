@@ -14,23 +14,21 @@ written.
 
 ```gdscript
 # sprite: Sprite2D, camera: Camera2D, label: Label; all inside the tree.
-var move := Tweens.position_2d(Vector2(300, 120), 0.5)
-move.ease = Tweens.Ease.CUBIC_OUT
+var move := Tweens.position_2d(Vector2(300, 120), 0.5, Tweens.Ease.CUBIC_OUT)
 var movement := Tweens.play(sprite, move)
 var fade := Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.2))
 var zoom := Tweens.play(camera, Tweens.camera_2d_zoom(Vector2(2, 2), 0.4))
 
-var reveal := Tweens.label_visible_ratio(1.0, 1.5)
-reveal.from_value = 0.0
-Tweens.play(label, reveal)
+Tweens.play(label, Tweens.label_visible_ratio(1.0, 1.5).with_from(0.0))
 
 await Tweens.group([movement, fade]).end
 ```
 
-Every helper takes `(to = null, seconds = 0.0)`. A `null` endpoint captures the
-property's current value when the tween starts. The returned definition exposes the
-same fields as one made with `Tweens.property()`, including `from_value`, timing,
-easing, and callbacks; set them before calling `play()`. See
+Every helper takes `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
+delay = 0.0)`. A `null` endpoint captures the property's current value when the
+tween starts. The returned definition exposes the same fields as one made with
+`Tweens.property()`, including `from_value`, timing, easing, and callbacks; set
+them before calling `play()`, or vary a shared one with `with_*()` copies. See
 [definitions](/gdscript/definitions/) for reuse and copies, and
 [lifetime and ownership](/gdscript/lifetime/) for how playback ends with its node.
 

@@ -1,8 +1,9 @@
 # GDScript helper catalog
 
 Generated from the C# property catalog. Each helper returns a reusable definition:
-`Tweens.position_2d(destination, seconds)`. All helpers accept `(to = null, seconds = 0.0)`;
-null captures the current value. Native target and value types are checked at start.
+`Tweens.position_2d(destination, seconds, Tweens.Ease.CUBIC_OUT)`. All helpers accept
+`(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.
+Native target and value types are checked at start.
 
 | Helper | C# definition | Target | Value |
 | --- | --- | --- | --- |

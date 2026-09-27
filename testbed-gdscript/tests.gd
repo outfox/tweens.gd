@@ -71,7 +71,7 @@ func near(actual: float, expected: float, message: String) -> void:
 func run_tests() -> void:
 	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
-	for test in [_conformance, _validation, _snapshots_and_fill, _interpolation,
+	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
@@ -191,6 +191,62 @@ func _snapshots_and_fill() -> bool:
 	var d := scheduler.add(self, skew)
 	scheduler.update(0.5)
 	near(d.value, 0.25, "skew precedes easing")
+	scheduler.dispose()
+	first.free()
+	second.free()
+	return true
+
+func _factories_and_with() -> bool:
+	var plain := T.position_2d()
+	check(plain.to_value == null and plain.duration == 0.0 and plain.ease == T.Ease.LINEAR and plain.delay == 0.0,
+		"helper defaults")
+	for definition in [T.position_2d(Vector2(4, 2), 0.5, T.Ease.CUBIC_OUT, 0.25),
+			T.property(^"position", Vector2(4, 2), 0.5, T.Ease.CUBIC_OUT, 0.25),
+			T.shader_parameter(&"amount", Vector2(4, 2), 0.5, T.Ease.CUBIC_OUT, 0.25),
+			T.instance_shader_parameter(&"amount", Vector2(4, 2), 0.5, T.Ease.CUBIC_OUT, 0.25)]:
+		check(definition.to_value == Vector2(4, 2) and definition.duration == 0.5 and definition.ease == T.Ease.CUBIC_OUT
+			and definition.delay == 0.25, "factory takes to, seconds, easing and delay")
+	var counter := T.value(1.0, 2.0, 0.5, T.Ease.CUBIC_OUT, 0.25)
+	check(counter.from_value == 1.0 and counter.initial_value == 1.0 and counter.ease == T.Ease.CUBIC_OUT
+		and counter.delay == 0.25, "value factory takes easing and delay")
+
+	var base := T.value(0.0, 1.0, 1.0)
+	base.target_class = &"Kept"
+	var curve := Curve.new()
+	var callback := func(_h): pass
+	for case in [["with_from", 2.0, "from_value"], ["with_to", 3.0, "to_value"],
+			["with_initial_value", 4.0, "initial_value"], ["with_duration", 2.0, "duration"],
+			["with_delay", 0.5, "delay"], ["with_offset", 0.25, "offset"], ["with_repeats", 3, "repeats"],
+			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
+			["with_repeat_interval", 0.2, "repeat_interval"], ["with_fill", T.Fill.BOTH, "fill"],
+			["with_ease", T.Ease.BACK_OUT, "ease"], ["with_skew", 2.0, "skew"],
+			["with_ease_function", callback, "ease_function"], ["with_curve", curve, "curve"],
+			["with_process_mode", T.Process.PHYSICS, "process_mode"], ["with_pause_mode", T.Pause.ALWAYS, "pause_mode"],
+			["with_unscaled_time", true, "use_unscaled_time"],
+			["with_suppress_callbacks_when_target_invalid", true, "suppress_callbacks_when_target_invalid"],
+			["with_on_add", callback, "on_add"], ["with_on_start", callback, "on_start"],
+			["with_on_update", callback, "on_update"], ["with_on_end", callback, "on_end"],
+			["with_on_cancel", callback, "on_cancel"], ["with_on_finally", callback, "on_finally"]]:
+		var before: Variant = base.get(case[2])
+		var changed: T.Definition = base.call(case[0], case[1])
+		check(changed != base and changed.get(case[2]) == case[1] and changed.target_class == &"Kept",
+			case[0] + " returns a changed copy")
+		check(base.get(case[2]) == before, case[0] + " leaves the original unchanged")
+	var chained := base.with_delay(0.5).with_to(3.0)
+	check(chained.delay == 0.5 and chained.to_value == 3.0 and base.delay == 0.0 and base.to_value == 1.0,
+		"with_ calls chain on copies")
+
+	var scheduler := T.Scheduler.new()
+	var first := Node2D.new()
+	var second := Node2D.new()
+	add_child(first)
+	add_child(second)
+	var move := T.position_2d_x(10.0, 1.0)
+	scheduler.add(first, move)
+	scheduler.add(second, move.with_duration(2.0))
+	scheduler.update(0.5)
+	near(first.position.x, 5.0, "shared definition keeps its duration")
+	near(second.position.x, 2.5, "with_duration varies one start")
 	scheduler.dispose()
 	first.free()
 	second.free()

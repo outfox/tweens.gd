@@ -23,7 +23,7 @@ dissolve.fill = Tweens.Fill.NONE
 Tweens.play(shader_material, dissolve, get_tree())
 ```
 
-`Tweens.shader_parameter(name, to = null, seconds = 0.0)` targets a
+`Tweens.shader_parameter(name, to = null, seconds = 0.0, easing, delay)` targets a
 `ShaderMaterial`. As with other resources, pass an owner node or the `SceneTree` as
 the third argument of `Tweens.play()`. The material is shared as usual, so every
 node using it sees the change. Uniform names are case-sensitive and captured when

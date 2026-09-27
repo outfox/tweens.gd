@@ -88,6 +88,40 @@ func copy() -> TweensGdDefinition:
 				curve.get_point_right_tangent(index), curve.get_point_left_mode(index), curve.get_point_right_mode(index))
 	return result
 
+## Like C#'s `with`: each returns a copy with one setting changed and leaves this definition as it is,
+## so a shared definition can vary one start. Chain them: `pop.with_delay(0.1).with_to(target)`.
+func with_from(value: Variant) -> TweensGdDefinition: return _with(&"from_value", value)
+func with_to(value: Variant) -> TweensGdDefinition: return _with(&"to_value", value)
+func with_initial_value(value: Variant) -> TweensGdDefinition: return _with(&"initial_value", value)
+func with_duration(seconds: float) -> TweensGdDefinition: return _with(&"duration", seconds)
+func with_delay(seconds: float) -> TweensGdDefinition: return _with(&"delay", seconds)
+func with_offset(seconds: float) -> TweensGdDefinition: return _with(&"offset", seconds)
+func with_repeats(count: int) -> TweensGdDefinition: return _with(&"repeats", count)
+func with_ping_pong(enabled: bool = true) -> TweensGdDefinition: return _with(&"use_ping_pong", enabled)
+func with_ping_pong_interval(seconds: float) -> TweensGdDefinition: return _with(&"ping_pong_interval", seconds)
+func with_repeat_interval(seconds: float) -> TweensGdDefinition: return _with(&"repeat_interval", seconds)
+func with_fill(mode: Types.Fill) -> TweensGdDefinition: return _with(&"fill", mode)
+func with_ease(easing: Types.Ease) -> TweensGdDefinition: return _with(&"ease", easing)
+func with_skew(exponent: float) -> TweensGdDefinition: return _with(&"skew", exponent)
+func with_ease_function(function: Callable) -> TweensGdDefinition: return _with(&"ease_function", function)
+func with_curve(shape: Curve) -> TweensGdDefinition: return _with(&"curve", shape)
+func with_process_mode(mode: Types.Process) -> TweensGdDefinition: return _with(&"process_mode", mode)
+func with_pause_mode(mode: Types.Pause) -> TweensGdDefinition: return _with(&"pause_mode", mode)
+func with_unscaled_time(enabled: bool = true) -> TweensGdDefinition: return _with(&"use_unscaled_time", enabled)
+func with_suppress_callbacks_when_target_invalid(enabled: bool = true) -> TweensGdDefinition:
+	return _with(&"suppress_callbacks_when_target_invalid", enabled)
+func with_on_add(callback: Callable) -> TweensGdDefinition: return _with(&"on_add", callback)
+func with_on_start(callback: Callable) -> TweensGdDefinition: return _with(&"on_start", callback)
+func with_on_update(callback: Callable) -> TweensGdDefinition: return _with(&"on_update", callback)
+func with_on_end(callback: Callable) -> TweensGdDefinition: return _with(&"on_end", callback)
+func with_on_cancel(callback: Callable) -> TweensGdDefinition: return _with(&"on_cancel", callback)
+func with_on_finally(callback: Callable) -> TweensGdDefinition: return _with(&"on_finally", callback)
+
+func _with(field: StringName, value: Variant) -> TweensGdDefinition:
+	var result := copy()
+	result.set(field, value)
+	return result
+
 ## Returns an empty string on success. No partial playback is created on failure.
 func validate() -> String:
 	if adapter != null and not property.is_empty(): return "Choose either an adapter or a property path."

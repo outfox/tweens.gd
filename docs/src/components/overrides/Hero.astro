@@ -76,8 +76,8 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 				<span class="t-var">sprite</span>.<span class="t-fn">Tween</span>(<span class="t-var">hop</span>);
 			</span>
 			<span data-lang-only="gdscript">
-				<span class="t-kw">var</span> <span class="t-var">hop</span> := Tweens.<span class="t-fn">position_2d</span>(to, <span class="t-num">0.9</span>)<br />
-				<span class="t-var">hop</span>.ease = Tweens.Ease.<span class="t-ease" data-ease-label="gdscript">{constant(eases[0])}</span><br />
+				<span class="t-kw">var</span> <span class="t-var">hop</span> := Tweens.<span class="t-fn">position_2d</span>(to, <span class="t-num">0.9</span>,<br />
+				<span class="indent">Tweens.Ease.<span class="t-ease" data-ease-label="gdscript">{constant(eases[0])}</span>)</span><br />
 				Tweens.<span class="t-fn">play</span>(<span class="t-var">sprite</span>, <span class="t-var">hop</span>)
 			</span>
 		</figcaption>

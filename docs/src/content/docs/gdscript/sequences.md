@@ -76,29 +76,23 @@ slightly wrong start time. See [timing between steps](#timing-between-steps).
 ## Stagger with delay
 
 `delay` offsets tweens inside one step, exact to the frame. Give each start a
-copy of one definition with its own delay to fade in a whole menu, one item
-after another:
+copy of one definition with its own delay, from `with_delay()`, to fade in a
+whole menu, one item after another:
 
 ```gdscript title="menu.gd"
 extends VBoxContainer
 
 const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
-static var fade_in := _fade_in()
-
-static func _fade_in() -> Tweens.Definition:
-	var definition := Tweens.modulate_alpha(null, 0.3)
-	definition.from_value = 0.0
-	definition.fill = Tweens.Fill.BOTH
-	return definition
+static var fade_in := Tweens.modulate_alpha(null, 0.3) \
+	.with_from(0.0).with_fill(Tweens.Fill.BOTH)
 
 func reveal() -> void:
 	var reveals := []
 	for item in get_children():
 		if item is Control:
-			var start := fade_in.copy()
-			start.delay = reveals.size() * 0.05
-			reveals.append(Tweens.play(item, start))
+			var delay := reveals.size() * 0.05
+			reveals.append(Tweens.play(item, fade_in.with_delay(delay)))
 	if reveals.is_empty():
 		return
 	await Tweens.group(reveals).end
