@@ -52,7 +52,7 @@ or a message describing the first problem.
 Every definition has the same fields, listed by role:
 
 - [Endpoints and variations](/gdscript/api/endpoints/): `from_value`, `to_value`,
-  `by_value`, and the factors, deltas, and skew that derive variants.
+  `by_value`, and the factors, deltas, and skew/weks that derive variants.
 - [Timing and easing](/gdscript/api/timing/): `duration`, `delay`, `repeats`,
   `fill`, `ease`, and the rest of the timeline.
 - [Modes and callbacks](/gdscript/api/modes/): process, time scale, and pause

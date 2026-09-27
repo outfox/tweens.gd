@@ -1,6 +1,6 @@
 ---
 // The Recoil example from the Variations page, played with the library's QuadOut and skew math. Each start is a
-// variant of one shared definition: FactorBy and FactorDuration scale it with the damage, Skew reshapes its pacing,
+// variant of one shared definition: FactorBy and FactorDuration scale it with the damage, Skew and Weks reshape each leg,
 // and tuning the definition's own kick moves every variant with it.
 import type { Lang } from '../scripts/lang';
 
@@ -21,13 +21,14 @@ const gd = lang === 'gdscript';
 			<span class="scale" data-scale>Drawn at 3×</span>
 		</div>
 		<figure class="curve">
-			<svg viewBox="0 0 200 120" role="img" aria-label="Eased offset over one leg of the recoil">
+			<svg viewBox="0 0 200 120" role="img" aria-label="Eased offset over the outward and return legs of the recoil">
 				<path class="grid" d="M0 110 H200 M0 10 H200"></path>
 				<path class="base" data-base-curve></path>
 				<path class="skewed" data-curve></path>
+				<path class="return" data-return-curve></path>
 				<circle class="head" r="5" data-head cx="0" cy="110"></circle>
 			</svg>
-			<figcaption>Offset over one leg: <span class="swatch base"></span> <code>QuadOut</code> <span class="swatch skewed"></span> with this start's skew</figcaption>
+			<figcaption>Offset over time, outward then return: <span class="swatch base"></span> <code>QuadOut</code> <span class="swatch skewed"></span> {gd ? 'skew' : 'Skew'} <span class="swatch return"></span> {gd ? 'weks' : 'Weks'}</figcaption>
 		</figure>
 	</div>
 
@@ -59,13 +60,15 @@ const gd = lang === 'gdscript';
 						<pre data-call-hit>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
     .<span class="fn">with_factor_by</span>(<span class="num" data-factor-by>2.0</span>) <span class="cont">\</span>
     .<span class="fn">with_factor_duration</span>(<span class="num" data-factor-duration>1.2</span>) <span class="cont">\</span>
-    .<span class="fn">with_skew</span>(<span class="num" data-skew-out>1.0</span>))</pre>
+    .<span class="fn">with_skew</span>(<span class="num" data-skew-out>1.0</span>) <span class="cont">\</span>
+    .<span class="fn">with_weks</span>(<span class="num" data-weks-out>1.0</span>))</pre>
 					) : (
 						<pre data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-factor-by>2</span>,
     FactorDuration = <span class="num" data-factor-duration>1.2</span>,
     Skew = <span class="num" data-skew-out>1</span>,
+    Weks = <span class="num" data-weks-out>1</span>,
 {'}'});</pre>
 					)
 				}
@@ -73,12 +76,14 @@ const gd = lang === 'gdscript';
 					gd ? (
 						<pre data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
     .<span class="fn">with_factor_by</span>(<span class="num" data-crit-by>3.0</span>) <span class="cont">\</span>
-    .<span class="fn">with_skew</span>(<span class="num" data-crit-skew>0.50</span>))</pre>
+    .<span class="fn">with_skew</span>(<span class="num" data-crit-skew>0.50</span>) <span class="cont">\</span>
+    .<span class="fn">with_weks</span>(<span class="num" data-crit-weks>0.5</span>))</pre>
 					) : (
 						<pre data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-crit-by>3</span>,
     Skew = <span class="num" data-crit-skew>0.5</span>,
+    Weks = <span class="num" data-crit-weks>0.5</span>,
 {'}'});</pre>
 					)
 				}
@@ -98,6 +103,10 @@ const gd = lang === 'gdscript';
 				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">1.00</output></span>
 				<input type="range" min="0" max="1" step="0.01" value="0.5" data-in="skew" />
 			</label>
+			<label class="tw-field">
+				<span>{gd ? 'weks' : 'Weks'} <output data-out="weks">1.00</output></span>
+				<input type="range" min="0" max="1" step="0.01" value="0.5" data-in="weks" />
+			</label>
 		</div>
 		<div class="variant" data-variant="crit">
 			<button type="button" class="tw-btn" data-play>Crit</button>
@@ -108,6 +117,10 @@ const gd = lang === 'gdscript';
 			<label class="tw-field">
 				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">0.50</output></span>
 				<input type="range" min="0" max="1" step="0.01" value="0.25" data-in="skew" />
+			</label>
+			<label class="tw-field">
+				<span>{gd ? 'weks' : 'Weks'} <output data-out="weks">0.50</output></span>
+				<input type="range" min="0" max="1" step="0.01" value="0.25" data-in="weks" />
 			</label>
 		</div>
 		<div class="shared">
@@ -140,11 +153,12 @@ const gd = lang === 'gdscript';
 	// The skew slider maps 0..1 onto 0.25..4 exponentially, so 0.5 sits at 1 and both directions get equal travel.
 	const skewOf = (v: number) => Math.pow(4, 2 * v - 1);
 	const weight = (progress: number, skew: number) => EASES.QuadOut(Math.pow(Math.min(1, Math.max(0, progress)), skew));
-	const path = (skew: number) => {
+	const path = (skew: number, returning = false) => {
 		let d = '';
 		for (let i = 0; i <= 80; i++) {
 			const t = i / 80;
-			d += `${i ? 'L' : 'M'}${(t * W).toFixed(1)} ${(H - PAD - weight(t, skew) * (H - 2 * PAD)).toFixed(1)}`;
+			const progress = returning ? 1 - t : t;
+			d += `${i ? 'L' : 'M'}${((t + (returning ? 1 : 0)) * W / 2).toFixed(1)} ${(H - PAD - weight(progress, skew) * (H - 2 * PAD)).toFixed(1)}`;
 		}
 		return d;
 	};
@@ -160,6 +174,7 @@ const gd = lang === 'gdscript';
 		const kickMark = q<HTMLElement>('[data-kick-mark]');
 		const kickLabel = q<HTMLElement>('[data-kick-label]');
 		const curve = q<SVGPathElement>('[data-curve]');
+		const returnCurve = q<SVGPathElement>('[data-return-curve]');
 		const head = q<SVGCircleElement>('[data-head]');
 		const baseIn = q<HTMLInputElement>('[data-base]');
 		const durationIn = q<HTMLInputElement>('[data-duration]');
@@ -168,7 +183,7 @@ const gd = lang === 'gdscript';
 		const critCall = q<HTMLElement>('[data-call-crit]');
 		const result = q<HTMLElement>('[data-result]');
 		const announce = q<HTMLElement>('[data-announce]');
-		q<SVGPathElement>('[data-base-curve]').setAttribute('d', path(1));
+		q<SVGPathElement>('[data-base-curve]').setAttribute('d', path(1) + ' ' + path(1, true));
 
 		// One row per variant, each with its own button and sliders.
 		type Name = 'hit' | 'crit';
@@ -188,18 +203,19 @@ const gd = lang === 'gdscript';
 		const variant = (name: Name) => {
 			const base = -Number(baseIn.value);
 			const skew = skewOf(Number(rows[name].input('skew').value));
+			const weks = skewOf(Number(rows[name].input('weks').value));
 			const damage = Number(rows.hit.input('damage').value);
 			const factorBy = name === 'hit' ? damage / 10 : Number(rows.crit.input('factor').value);
 			const factorDuration = name === 'hit' ? 1 + damage / 100 : 1;
-			return { base, damage, factorBy, factorDuration, skew, by: factorBy * base, duration: factorDuration * Number(durationIn.value) };
+			return { base, damage, factorBy, factorDuration, skew, weks, by: factorBy * base, duration: factorDuration * Number(durationIn.value) };
 		};
 
 		// Real kicks are a few dozen pixels, so the stage draws them larger: up to 3×, as far as the widest kick fits.
 		const zoom = () => Math.max(1, Math.min(3, (stage.clientWidth - 96) / 100));
 
-		const place = (offset: number, progress: number, skew: number) => {
+		const place = (offset: number, progress: number, skew: number, returning = false) => {
 			enemy.style.translate = `${offset * zoom()}px 0`;
-			head.setAttribute('cx', (progress * W).toFixed(1));
+			head.setAttribute('cx', ((returning ? 2 - progress : progress) * W / 2).toFixed(1));
 			head.setAttribute('cy', (H - PAD - weight(progress, skew) * (H - 2 * PAD)).toFixed(1));
 		};
 
@@ -209,8 +225,10 @@ const gd = lang === 'gdscript';
 			const v = active === 'hit' ? hit : crit;
 			rows.hit.output('damage').textContent = String(hit.damage);
 			rows.hit.output('skew').textContent = hit.skew.toFixed(2);
+			rows.hit.output('weks').textContent = hit.weks.toFixed(2);
 			rows.crit.output('factor').textContent = fmt(crit.factorBy, 1);
 			rows.crit.output('skew').textContent = crit.skew.toFixed(2);
+			rows.crit.output('weks').textContent = crit.weks.toFixed(2);
 			q<HTMLOutputElement>('[data-base-label]').textContent = `${baseIn.value} px`;
 			q<HTMLOutputElement>('[data-duration-label]').textContent = `${durationIn.value} s`;
 			all('[data-base-duration]').forEach((el) => (el.textContent = durationIn.value));
@@ -219,8 +237,10 @@ const gd = lang === 'gdscript';
 			all('[data-factor-by]').forEach((el) => (el.textContent = number(hit.factorBy, 1)));
 			all('[data-factor-duration]').forEach((el) => (el.textContent = fmt(hit.factorDuration, 2)));
 			all('[data-skew-out]').forEach((el) => (el.textContent = number(hit.skew, 2)));
+			all('[data-weks-out]').forEach((el) => (el.textContent = number(hit.weks, 2)));
 			all('[data-crit-by]').forEach((el) => (el.textContent = number(crit.factorBy, 1)));
 			all('[data-crit-skew]').forEach((el) => (el.textContent = number(crit.skew, 2)));
+			all('[data-crit-weks]').forEach((el) => (el.textContent = number(crit.weks, 2)));
 			hitCall.hidden = active !== 'hit';
 			critCall.hidden = active !== 'crit';
 			for (const name of names) {
@@ -228,6 +248,7 @@ const gd = lang === 'gdscript';
 				rows[name].button.classList.toggle('is-primary', name === active);
 			}
 			curve.setAttribute('d', path(v.skew));
+			returnCurve.setAttribute('d', path(v.weks, true));
 			const z = zoom();
 			kickMark.style.setProperty('--kick', `${v.by * z}px`);
 			scaleNote.textContent = `Drawn at ${fmt(z, 1)}×`;
@@ -242,7 +263,7 @@ const gd = lang === 'gdscript';
 			cancelAnimationFrame(raf);
 			const v = sync();
 			const what = name === 'hit' ? `Hit for ${v.damage} damage` : 'Crit';
-			announce.textContent = `${what}: kicks ${fmt(Math.abs(v.by), 1)} pixels, ${fmt(v.duration, 3)} seconds each way, skew ${fmt(v.skew, 2)}.`;
+			announce.textContent = `${what}: kicks ${fmt(Math.abs(v.by), 1)} pixels, ${fmt(v.duration, 3)} seconds each way, skew ${fmt(v.skew, 2)}, weks ${fmt(v.weks, 2)}.`;
 			if (reducedMotion()) {
 				place(v.by, 1, v.skew);
 				return;
@@ -250,12 +271,14 @@ const gd = lang === 'gdscript';
 			const leg = v.duration * (slowIn.checked ? SLOW : 1) * 1000;
 			const start = performance.now();
 			const frame = (now: number) => {
-				// Ping-pong: the return leg retraces the same skewed curve backwards.
+				// Ping-pong: each leg uses its own exponent before the same ease.
 				const t = (now - start) / leg;
-				const progress = t <= 1 ? t : 2 - t;
-				place(v.by * weight(progress, v.skew), Math.max(0, progress), v.skew);
+				const returning = t > 1;
+				const progress = Math.max(0, returning ? 2 - t : t);
+				const exponent = returning ? v.weks : v.skew;
+				place(v.by * weight(progress, exponent), progress, exponent, returning);
 				if (t < 2) raf = requestAnimationFrame(frame);
-				else place(0, 0, v.skew);
+				else place(0, 0, v.weks, true);
 			};
 			raf = requestAnimationFrame(frame);
 		};
@@ -372,7 +395,8 @@ const gd = lang === 'gdscript';
 		fill: none;
 	}
 	.base,
-	.skewed {
+	.skewed,
+	.return {
 		fill: none;
 		stroke-width: 2.5;
 		stroke-linecap: round;
@@ -383,6 +407,12 @@ const gd = lang === 'gdscript';
 	}
 	.skewed {
 		stroke: var(--tw-mint);
+	}
+	.return {
+		stroke: var(--tw-amber);
+	}
+	.swatch.return {
+		border-color: var(--tw-amber);
 	}
 	.head {
 		fill: var(--tw-bg);
@@ -481,7 +511,7 @@ const gd = lang === 'gdscript';
 	.variant,
 	.shared {
 		display: grid;
-		grid-template-columns: 5.5rem repeat(2, minmax(0, 1fr));
+		grid-template-columns: 5.5rem repeat(3, minmax(0, 1fr));
 		align-items: end;
 		gap: 0.75rem 1.25rem;
 		padding: 0.6rem 0.75rem;

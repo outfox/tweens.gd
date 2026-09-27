@@ -1,6 +1,6 @@
 ---
 title: Endpoints and variations
-description: Where a tween starts and ends, the relative By offset, and the factors, deltas, and skew that derive variants.
+description: Where a tween starts and ends, the relative By offset, and the factors, deltas, and skew/weks that derive variants.
 ---
 
 Where a tween starts and ends, and how a variant derives from those values.
@@ -31,4 +31,5 @@ when the tween starts, each value becomes factor × value + delta. See
 | `delta_duration` | `float` | `0.0` | Then add these seconds |
 | `factor_delay` | `float` | `1.0` | Multiply `delay` |
 | `delta_delay` | `float` | `0.0` | Then add these seconds, as in a per-start stagger |
-| `skew` | `float` | `1.0` | Raise normalized time to this power before easing: above 1 starts slower, below 1 faster |
+| `skew` | `float` | `1.0` | Forward progress exponent before easing: above 1 starts slower, below 1 faster |
+| `weks` | `float` | `1.0` | Independent exponent for descending ping-pong return progress before easing; set equal to `skew` to retrace |

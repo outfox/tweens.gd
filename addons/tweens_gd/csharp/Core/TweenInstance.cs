@@ -295,7 +295,8 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 if (!CheckTarget()) return;
             }
             var time = Math.Clamp(Progress, 0, 1);
-            if (definition!.Skew != 1) time = (float)Math.Pow(time, definition.Skew);
+            var exponent = Clock.Returning ? definition!.Weks : definition!.Skew;
+            if (exponent != 1) time = (float)Math.Pow(time, exponent);
             var weight = ease!(time);
             if (!float.IsFinite(weight)) throw new InvalidOperationException("Easing returned a non-finite value.");
             if (!CheckTarget()) return;

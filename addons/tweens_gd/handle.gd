@@ -157,7 +157,8 @@ func _advance_inner(delta: float) -> void:
 			_invoke(_options.on_start)
 			if not _check_target(): return
 	var time := clampf(_clock.progress, 0.0, 1.0)
-	if _options.skew != 1.0: time = pow(time, _options.skew)
+	var exponent := _options.weks if _clock.returning else _options.skew
+	if exponent != 1.0: time = pow(time, exponent)
 	var weight: Variant
 	if _options.curve != null:
 		weight = _options.curve.sample(time)

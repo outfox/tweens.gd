@@ -42,7 +42,10 @@ var ping_pong_interval: float = 0.0
 var repeat_interval: float = 0.0
 var fill: int = Types.Fill.RETAIN_FINAL_VALUE
 var ease: int = Types.Ease.LINEAR
+## Positive finite exponent for forward progress, applied before easing.
 var skew: float = 1.0
+## Positive finite exponent for descending ping-pong return progress, independent of skew.
+var weks: float = 1.0
 var ease_function: Callable
 var curve: Curve
 var process_mode: int = Types.Process.PROCESS
@@ -87,6 +90,7 @@ func copy() -> TweensGdDefinition:
 	result.fill = fill
 	result.ease = ease
 	result.skew = skew
+	result.weks = weks
 	result.ease_function = ease_function
 	result.process_mode = process_mode
 	result.pause_mode = pause_mode
@@ -142,6 +146,7 @@ func with_repeat_interval(seconds: float) -> TweensGdDefinition: return _with(&"
 func with_fill(mode: Types.Fill) -> TweensGdDefinition: return _with(&"fill", mode)
 func with_ease(easing: Types.Ease) -> TweensGdDefinition: return _with(&"ease", easing)
 func with_skew(exponent: float) -> TweensGdDefinition: return _with(&"skew", exponent)
+func with_weks(exponent: float) -> TweensGdDefinition: return _with(&"weks", exponent)
 func with_ease_function(function: Callable) -> TweensGdDefinition: return _with(&"ease_function", function)
 func with_curve(shape: Curve) -> TweensGdDefinition: return _with(&"curve", shape)
 func with_process_mode(mode: Types.Process) -> TweensGdDefinition: return _with(&"process_mode", mode)
@@ -177,6 +182,7 @@ func validate() -> String:
 	if offset > seconds: return "Offset must not exceed duration."
 	if repeats < Types.INFINITE: return "Repeats must be -1 or nonnegative."
 	if not is_finite(skew) or skew <= 0.0: return "Skew must be finite and positive."
+	if not is_finite(weks) or weks <= 0.0: return "Weks must be finite and positive."
 	if not Types.Ease.values().has(ease): return "Unknown easing function."
 	if not Types.Process.values().has(process_mode) or not Types.Pause.values().has(pause_mode):
 		return "Unknown process or pause mode."

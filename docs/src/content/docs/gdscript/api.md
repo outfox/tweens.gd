@@ -41,7 +41,7 @@ stops at the first rejected start and cancels the definitions it already started
 | Page | What it lists |
 | --- | --- |
 | [Creating definitions](/gdscript/api/definitions/) | The factories and named helpers, and the `with_*()` methods |
-| [Endpoints and variations](/gdscript/api/endpoints/) | `from_value`, `to_value`, `by_value`, and the factors, deltas, and skew that derive variants |
+| [Endpoints and variations](/gdscript/api/endpoints/) | `from_value`, `to_value`, `by_value`, and the factors, deltas, and skew/weks that derive variants |
 | [Timing and easing](/gdscript/api/timing/) | `duration`, `delay`, `repeats`, ping-pong, `fill`, and the easing fields |
 | [Modes and callbacks](/gdscript/api/modes/) | Process, time scale, and pause modes, and `on_add` through `on_finally` |
 | [Constants](/gdscript/api/enums/) | Every value of `Tweens.Fill`, `State`, `Reason`, and the modes |

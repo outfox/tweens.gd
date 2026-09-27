@@ -8,6 +8,8 @@ const Definition = preload("definition.gd")
 const MAX_TIME := 1.7976931348623157e308
 
 var progress: float = 0.0
+## True on the ping-pong return leg and its final hold.
+var returning: bool = false
 var started: bool = false
 var completed: bool = false
 var overshoot: float = 0.0
@@ -40,6 +42,7 @@ func advance(delta: float) -> void:
 	started = true
 	var time := minf(MAX_TIME, elapsed - _delay + _offset)
 	if time >= _total:
+		returning = _ping_pong
 		progress = 0.0 if _ping_pong else 1.0
 		cycle = _repeats
 		overshoot = time - _total
@@ -52,6 +55,7 @@ func advance(delta: float) -> void:
 		local = _span
 		cycle -= 1.0
 	state = Types.State.PLAYING
+	returning = _ping_pong and local > _duration and local >= _duration + _turn
 	if _duration > 0.0 and local <= _duration:
 		progress = local / _duration
 	elif not _ping_pong:

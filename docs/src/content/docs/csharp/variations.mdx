@@ -1,6 +1,6 @@
 ---
 title: Variations
-description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and Skew changes its pacing.
+description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and Skew and Weks change each leg's pacing.
 ---
 
 import Moves from '../../../components/Moves.astro';
@@ -37,7 +37,7 @@ public partial class Enemy : Sprite2D
         FactorDuration = 1 + damage / 100,
     });
 
-    public void Crit() => this.Tween(Recoil with { FactorBy = 3, Skew = 0.5 });
+    public void Crit() => this.Tween(Recoil with { FactorBy = 3, Skew = 0.5, Weks = 0.5 });
 }
 ```
 
@@ -47,7 +47,7 @@ public partial class Enemy : Sprite2D
    `FactorDuration` stretches the timing. A 20-damage hit kicks 24 pixels and
    takes 0.24 seconds each way.
 3. **Change the pacing.** `Skew = 0.5` front-loads the same ease, so a critical
-   hit lands sooner.
+   hit lands sooner. `Weks = 0.5` keeps it near the far endpoint longer before returning.
 
 </Moves>
 
@@ -56,7 +56,8 @@ crit follows. `Recoil with { By = -24 }` would also kick harder, but it replaces
 the value, so that variant no longer follows `Recoil`.
 
 Try it below. Each row starts one variant with its own sliders: **Hit** scales
-with the damage, and **Crit** uses its own factor and skew. The curve and code
+with the damage, and **Crit** uses its own factor. Each start has separate outward
+and return pacing controls. The curve and code
 show the row you used last. **Recoil kick** and **Recoil duration** tune the shared
 definition, and both variants follow.
 
@@ -126,13 +127,26 @@ var movement = sprite.Tween(new Tweens.Position2D
     Duration = 0.5,
     Ease = EaseType.CubicOut,
     Skew = 2,
+    Weks = 0.5,
+    UsePingPong = true,
 });
 ```
 
-`Skew` applies to built-in eases, `EaseFunction`, and Godot `Curve` samples. The
-duration and the handle's raw `Progress` stay unchanged, and a ping-pong return
-retraces the same skewed curve. For bounce, elastic, and other eases that aren't
-monotonic, skew shifts when their bounces and overshoot happen but keeps them.
+`Skew` controls the outward leg; `Weks` controls the ping-pong return.
+Both default independently to `1`. On return, raw progress `t` runs from
+1 down to 0, and the ease receives `pow(t, Weks)`. For example, with
+`Weks = 2`, halfway back the ease receives 0.25. Above 1 moves the return
+earlier along the reversed curve; below 1 keeps it near the far endpoint longer.
+`Weks` has no effect on forward-only tweens.
+
+Both exponents apply to built-in eases, `EaseFunction`, and `Curve` samples.
+Duration, intervals, and the handle's raw `Progress` stay unchanged. For
+bounce, elastic, and other eases that aren't monotonic, the exponents shift when
+their bounces and overshoot happen but keep them.
+
+**Migration:** previously, `Skew` also shaped the return. Set
+`Weks` equal to `Skew` to preserve that behavior and retrace the same
+curve. Leave `Weks` at `1` for the unmodified return ease.
 
 ## Rules
 
@@ -145,5 +159,5 @@ monotonic, skew shifts when their bounces and overshoot happen but keeps them.
 - Adjusting `From` fixes the start of a `By` tween, as an explicit `From` does.
 - The adjusted duration and delay must not be negative, and `Offset` must fit
   within the adjusted duration.
-- Factors, `DeltaDuration`, `DeltaDelay`, and `Skew` must be finite, and `Skew` must be
-  greater than zero. Invalid values reject the start.
+- Factors, `DeltaDuration`, `DeltaDelay`, `Skew`, and `Weks` must be finite.
+  Both exponents must be greater than zero, even without ping-pong. Invalid values reject the start.

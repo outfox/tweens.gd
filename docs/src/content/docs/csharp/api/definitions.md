@@ -37,7 +37,7 @@ Set anything else in an initializer after the arguments:
 
 `TweenOptions` is a readonly record struct that holds the
 [timing, easing](/csharp/api/timing/), and [mode](/csharp/api/modes/) members,
-plus `Skew`, `FactorDuration`, and `DeltaDuration`. Assign it to a
+plus `Skew`, `Weks`, `FactorDuration`, and `DeltaDuration`. Assign it to a
 definition's `Options`, or pass it to a shorthand method. A definition's flat
 members, such as `Duration`, read and write that same value, so assign `Options`
 first in an initializer: a later `Options` assignment replaces every timing
@@ -55,7 +55,7 @@ property operations or per-playback bindings.
 Every definition has the same members, listed by role:
 
 - [Endpoints and variations](/csharp/api/endpoints/): `From`, `To`, `By`, and the
-  factors, deltas, and skew that derive variants.
+  factors, deltas, and Skew/Weks that derive variants.
 - [Timing and easing](/csharp/api/timing/): `Duration`, `Delay`, `Repeats`, `Fill`,
   `Ease`, and the rest of the timeline.
 - [Modes and callbacks](/csharp/api/modes/): process, time scale, and pause modes,

@@ -77,7 +77,7 @@ func run_tests() -> void:
 	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
 	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _relative, _adjustments,
-			_interpolation,
+			_leg_exponents, _interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
@@ -133,6 +133,13 @@ func _validation() -> bool:
 		var definition := T.value(0.0, 1.0, 1.0)
 		definition.set(pair[0], pair[1])
 		check(scheduler.add(target, definition).completion_reason == T.Reason.FAILED, "reject " + pair[0])
+	for field in ["skew", "weks"]:
+		for invalid in [0.0, -1.0, INF, -INF, NAN]:
+			var probe := ResourceProbe.new()
+			probe.when_read = func(): check(false, "invalid exponent must not read target")
+			var definition := T.property(^"amount", 1.0, 1.0)
+			definition.set(field, invalid)
+			check(scheduler.add(probe, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
 	var zero := T.value(0.0, 1.0)
 	zero.repeats = T.INFINITE
 	check(scheduler.add(target, zero).completion_reason == T.Reason.FAILED, "reject zero infinite timeline")
@@ -203,8 +210,69 @@ func _snapshots_and_fill() -> bool:
 	second.free()
 	return true
 
+func _leg_exponents() -> bool:
+	for exponents in [[1.0, 1.0, 0.25, 0.25], [2.0, 2.0, 0.0625, 0.0625],
+			[0.5, 0.5, 0.5, 0.5], [2.0, 1.0, 0.0625, 0.25],
+			[1.0, 2.0, 0.25, 0.0625], [2.0, 0.5, 0.0625, 0.5]]:
+		for easing in ["linear", "quad", "custom", "curve"]:
+			var scheduler := T.Scheduler.new()
+			var definition := T.value(0.0, 1.0, 1.0).with_ping_pong().with_skew(exponents[0]).with_weks(exponents[1])
+			var curve := Curve.new()
+			curve.add_point(Vector2.ZERO)
+			curve.add_point(Vector2(0.5, 0.8))
+			curve.add_point(Vector2.ONE)
+			if easing == "quad": definition.ease = T.Ease.QUAD_OUT
+			elif easing == "custom": definition.ease_function = func(t): return t + 1.0
+			elif easing == "curve": definition.curve = curve
+			var expected_curve := [curve.sample(exponents[2]), curve.sample(exponents[3])]
+			var handle := scheduler.add(self, definition)
+			definition.skew = 3.0
+			definition.weks = 3.0
+			curve.clear_points()
+			for index in range(2):
+				scheduler.update(0.25 if index == 0 else 1.5)
+				var t: float = exponents[2 + index]
+				var expected := t
+				if easing == "quad": expected = 1.0 - (1.0 - t) * (1.0 - t)
+				elif easing == "custom": expected = t + 1.0
+				elif easing == "curve": expected = expected_curve[index]
+				near(handle.progress, 0.25, "raw progress is unchanged")
+				near(handle.value, expected, "leg exponent precedes " + easing)
+			scheduler.update(0.25)
+			near(handle.value, 1.0 if easing == "custom" else 0.0, "return endpoint")
+			check(handle.completion_reason == T.Reason.COMPLETED, "ping-pong completes")
+			scheduler.dispose()
+	for relative in [false, true]:
+		var scheduler := T.Scheduler.new()
+		var definition := T.value(0.0, null if relative else 1.0, 1.0).with_ping_pong().with_skew(2.0).with_weks(0.5)
+		if relative: definition.by_value = 1.0
+		definition.delay = 0.5
+		definition.offset = 0.25
+		definition.ping_pong_interval = 0.5
+		definition.repeat_interval = 0.5
+		definition.repeats = 2
+		var handle := scheduler.add(self, definition)
+		for sample in [[0.25, 0.0], [0.25, 0.0625], [0.875, 1.0], [1.125, 0.5],
+				[0.25, 0.0], [0.25, 0.0], [0.25, 0.0], [0.25, 0.0625],
+				[2.0, 0.5], [3.0, 0.5], [0.25, 0.0]]:
+			scheduler.update(sample[0])
+			near(handle.value, sample[1], "leg selection through intervals, repeats and jumps")
+		check(handle.completion_reason == T.Reason.COMPLETED, "repeats complete")
+		scheduler.dispose()
+	var scheduler := T.Scheduler.new()
+	var forward := scheduler.add(self, T.value(0.0, 1.0, 1.0).with_repeats(2).with_skew(2.0).with_weks(0.5))
+	scheduler.update(1.25)
+	near(forward.value, 0.0625, "weks does not affect forward repeats")
+	for ping_pong in [false, true]:
+		var instant := scheduler.add(self, T.value(0.0, 1.0).with_ping_pong(ping_pong).with_skew(0.5).with_weks(2.0))
+		scheduler.update(0.0)
+		near(instant.value, 0.0 if ping_pong else 1.0, "zero-duration endpoint")
+	scheduler.dispose()
+	return true
+
 func _factories_and_with() -> bool:
 	var plain := T.position_2d()
+	check(plain.skew == 1.0 and plain.weks == 1.0, "independent identity exponents")
 	check(plain.to_value == null and plain.duration == 0.0 and plain.ease == T.Ease.LINEAR and plain.delay == 0.0,
 		"helper defaults")
 	for definition in [T.position_2d(Vector2(4, 2), 0.5, T.Ease.CUBIC_OUT, 0.25),
@@ -232,6 +300,7 @@ func _factories_and_with() -> bool:
 			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
 			["with_repeat_interval", 0.2, "repeat_interval"], ["with_fill", T.Fill.BOTH, "fill"],
 			["with_ease", T.Ease.BACK_OUT, "ease"], ["with_skew", 2.0, "skew"],
+			["with_weks", 0.5, "weks"],
 			["with_ease_function", callback, "ease_function"], ["with_curve", curve, "curve"],
 			["with_process_mode", T.Process.PHYSICS, "process_mode"], ["with_pause_mode", T.Pause.ALWAYS, "pause_mode"],
 			["with_unscaled_time", true, "use_unscaled_time"],

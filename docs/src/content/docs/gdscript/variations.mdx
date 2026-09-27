@@ -1,6 +1,6 @@
 ---
 title: Variations
-description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and skew changes its pacing.
+description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and skew and weks change each leg's pacing.
 ---
 
 import Moves from '../../../components/Moves.astro';
@@ -31,7 +31,7 @@ func hit(damage: float) -> void:
 		.with_factor_duration(1.0 + damage / 100.0))
 
 func crit() -> void:
-	Tweens.play(self, recoil.with_factor_by(3.0).with_skew(0.5))
+	Tweens.play(self, recoil.with_factor_by(3.0).with_skew(0.5).with_weks(0.5))
 ```
 
 1. **Define the motion once.** `recoil` kicks the enemy 12 pixels back and
@@ -40,7 +40,7 @@ func crit() -> void:
    `with_factor_duration()` stretches the timing. A 20-damage hit kicks 24 pixels
    and takes 0.24 seconds each way.
 3. **Change the pacing.** `with_skew(0.5)` front-loads the same ease, so a
-   critical hit lands sooner.
+   critical hit lands sooner. `with_weks(0.5)` keeps it near the far endpoint longer before returning.
 
 </Moves>
 
@@ -49,7 +49,8 @@ crit follows. `recoil.with_by(-24.0)` would also kick harder, but it replaces th
 value, so that variant no longer follows `recoil`.
 
 Try it below. Each row starts one variant with its own sliders: **Hit** scales
-with the damage, and **Crit** uses its own factor and skew. The curve and code
+with the damage, and **Crit** uses its own factor. Each start has separate outward
+and return pacing controls. The curve and code
 show the row you used last. **Recoil kick** and **Recoil duration** tune the shared
 definition, and both variants follow.
 
@@ -111,13 +112,24 @@ time `t` becomes `pow(t, skew)` before the ease sees it:
 
 ```gdscript
 var movement := Tweens.position_2d(Vector2(300, 120), 0.5, Tweens.Ease.CUBIC_OUT)
-Tweens.play(sprite, movement.with_skew(2.0))
+Tweens.play(sprite, movement.with_ping_pong().with_skew(2.0).with_weks(0.5))
 ```
 
-`skew` applies to built-in eases, `ease_function`, and `curve` samples. The
-duration and the handle's raw `progress` stay unchanged, and a ping-pong return
-retraces the same skewed curve. For bounce, elastic, and other eases that aren't
-monotonic, skew shifts when their bounces and overshoot happen but keeps them.
+`skew` controls the outward leg; `weks` controls the ping-pong return.
+Both default independently to `1.0`. On return, raw progress `t` runs from
+1 down to 0, and the ease receives `pow(t, weks)`. For example, with
+`weks = 2`, halfway back the ease receives 0.25. Above 1 moves the return
+earlier along the reversed curve; below 1 keeps it near the far endpoint longer.
+`weks` has no effect on forward-only tweens.
+
+Both exponents apply to built-in eases, `ease_function`, and `curve` samples.
+Duration, intervals, and the handle's raw `progress` stay unchanged. For
+bounce, elastic, and other eases that aren't monotonic, the exponents shift when
+their bounces and overshoot happen but keep them.
+
+**Migration:** previously, `skew` also shaped the return. Set
+`weks` equal to `skew` to preserve that behavior and retrace the same
+curve. Leave `weks` at `1.0` for the unmodified return ease.
 
 ## Rules
 
@@ -131,5 +143,5 @@ monotonic, skew shifts when their bounces and overshoot happen but keeps them.
   `from_value` does.
 - The adjusted duration and delay must not be negative, and `offset` must fit
   within the adjusted duration.
-- Factors, deltas and `skew` must be finite; `skew` must also be greater than
-  zero. Invalid values reject the start.
+- Factors, deltas, `skew`, and `weks` must be finite. Both exponents must be
+  greater than zero, even without ping-pong. Invalid values reject the start.

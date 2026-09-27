@@ -61,7 +61,7 @@ Tweens.play(third, arrive.with_delay(0.2).with_duration(1.0))
 There is one per configuration field: `with_from`, `with_to`, `with_initial_value`,
 `with_duration`, `with_delay`, `with_offset`, `with_repeats`, `with_ping_pong`,
 `with_ping_pong_interval`, `with_repeat_interval`, `with_fill`, `with_ease`,
-`with_skew`, `with_ease_function`, `with_curve`, `with_process_mode`,
+`with_skew`, `with_weks`, `with_ease_function`, `with_curve`, `with_process_mode`,
 `with_pause_mode`, `with_unscaled_time`, `with_suppress_callbacks_when_target_invalid`,
 and `with_on_add` through `with_on_finally`.
 
@@ -151,7 +151,8 @@ restoration is available through the shader helpers below.
 | `ping_pong_interval` | `0.0`; wait at the far endpoint before returning |
 | `repeat_interval` | `0.0`; wait between cycles, never after the last |
 | `ease` | `Tweens.Ease.LINEAR`; 33 functions matching the C# catalog |
-| `skew` | `1.0`; positive exponent applied to normalized time before easing |
+| `skew` | `1.0`; positive finite forward progress exponent before easing |
+| `weks` | `1.0`; independent positive finite exponent for descending ping-pong return progress before easing; set equal to `skew` to preserve the previous retracing behavior |
 | `ease_function` / `curve` | Optional synchronous Callable or duplicated Curve; choose one |
 | `fill` | `Tweens.Fill.RETAIN_FINAL_VALUE`; also `NONE`, `APPLY_FROM_DURING_DELAY`, `BOTH` |
 | `process_mode` | `Tweens.Process.PROCESS`; `PHYSICS` uses physics updates |

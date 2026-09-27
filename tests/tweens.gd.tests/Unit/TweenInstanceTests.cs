@@ -8,22 +8,26 @@ namespace tweens.gd.Tests.Unit;
 public class TweenInstanceTests
 {
     [Theory]
-    [InlineData(1, 0.25f)]
-    [InlineData(2, 0.0625f)]
-    [InlineData(0.5, 0.5f)]
-    public void SkewWarpsTimeBeforeEasingAndRetracesItDuringPingPong(double skew, float quarterTime)
+    [InlineData(1, 1, 0.25f, 0.25f)]
+    [InlineData(2, 2, 0.0625f, 0.0625f)]
+    [InlineData(0.5, 0.5, 0.5f, 0.5f)]
+    [InlineData(2, 1, 0.0625f, 0.25f)]
+    [InlineData(1, 2, 0.25f, 0.0625f)]
+    [InlineData(2, 0.5, 0.0625f, 0.5f)]
+    public void SkewAndWeksWarpEachLegBeforeEasing(double skew, double weks, float quarterTime, float returnTime)
     {
         using var scheduler = new TweenScheduler();
         var linear = new Box();
         var eased = new Box();
         var custom = new Box();
-        var definition = new PlainTween { To = 1, Duration = 1, Skew = skew, UsePingPong = true };
+        var definition = new PlainTween { To = 1, Duration = 1, Skew = skew, Weks = weks, UsePingPong = true };
         var tween = scheduler.Add(linear, definition);
         definition.Ease = EaseType.QuadOut;
         scheduler.Add(eased, definition);
         definition.EaseFunction = static t => t + 1;
         scheduler.Add(custom, definition);
         definition.Skew = 3; // Active playbacks keep their captured exponent.
+        definition.Weks = 3;
 
         scheduler.Update(0);
         Assert.Equal(0, linear.Value);
@@ -40,9 +44,9 @@ public class TweenInstanceTests
         Assert.Equal(2, custom.Value);
         scheduler.Update(0.75);
         Assert.Equal(0.25f, tween.Progress);
-        Assert.Equal(quarterTime, linear.Value);
-        Assert.Equal(1 - (1 - quarterTime) * (1 - quarterTime), eased.Value);
-        Assert.Equal(1 + quarterTime, custom.Value);
+        Assert.Equal(returnTime, linear.Value);
+        Assert.Equal(1 - (1 - returnTime) * (1 - returnTime), eased.Value);
+        Assert.Equal(1 + returnTime, custom.Value);
         scheduler.Update(0.25);
         Assert.Equal(0, linear.Value);
         Assert.Equal(0, eased.Value);
@@ -64,6 +68,10 @@ public class TweenInstanceTests
             new ProbeTween { Skew = skew, Reader = _ => throw new Exception("Must not read") }));
         Assert.Equal("Skew", error.ParamName);
         Assert.Equal(3, box.Value);
+        error = Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box,
+            new ProbeTween { Weks = skew, Reader = _ => throw new Exception("Must not read") }));
+        Assert.Equal("Weks", error.ParamName);
+        Assert.Equal(3, box.Value);
     }
 
     [Theory]
@@ -73,10 +81,48 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new PlainTween { To = 1, Skew = 0.5, UsePingPong = pingPong });
+        var tween = scheduler.Add(box, new PlainTween { To = 1, Skew = 0.5, Weks = 2, UsePingPong = pingPong });
         scheduler.Update(0);
         Assert.Equal(expected, box.Value);
         Assert.Equal(Reason.Completed, tween.CompletionReason);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void LegExponentsSurviveIntervalsRepeatsAndLargeSteps(bool relative)
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box();
+        var tween = scheduler.Add(box, new PlainTween
+        {
+            To = relative ? null : 1, By = relative ? 1 : null,
+            Duration = 1, Delay = 0.5, Offset = 0.25,
+            UsePingPong = true, PingPongInterval = 0.5, RepeatInterval = 0.5, Repeats = 2,
+            Skew = 2, Weks = 0.5,
+        });
+        foreach (var (delta, expected) in new (double, float)[]
+        {
+            (0.25, 0), (0.25, 0.0625f), (0.875, 1), // delay, offset, turn hold
+            (1.125, 0.5f), (0.25, 0), (0.25, 0), (0.25, 0), // return and repeat hold/boundary
+            (0.25, 0.0625f), (2, 0.5f), // next forward and a jump to return
+            (3, 0.5f), (0.25, 0), // skip a repeat boundary, then finish
+        })
+        {
+            scheduler.Update(delta);
+            Assert.Equal(expected, box.Value);
+        }
+        Assert.Equal(Reason.Completed, tween.CompletionReason);
+    }
+
+    [Fact]
+    public void WeksDoesNotAffectForwardOnlyRepeats()
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box();
+        scheduler.Add(box, new PlainTween { To = 1, Duration = 1, Repeats = 2, Skew = 2, Weks = 0.5 });
+        scheduler.Update(1.25);
+        Assert.Equal(0.0625f, box.Value);
     }
 
     [Fact]

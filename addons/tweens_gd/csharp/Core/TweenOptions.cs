@@ -54,8 +54,11 @@ public readonly record struct TweenOptions
     public FillMode Fill { get => fill ^ FillMode.RetainFinalValue; init => fill = value ^ FillMode.RetainFinalValue; }
     public EaseType Ease { get; init; }
     private readonly double? skew;
-    /// <summary>Positive finite exponent applied to normalized time before easing. Defaults to 1 (identity).</summary>
+    /// <summary>Positive finite exponent applied to forward normalized time before easing. Defaults to 1 (identity).</summary>
     public double Skew { get => skew ?? 1; init => skew = value == 1 ? null : value; }
+    private readonly double? weks;
+    /// <summary>Positive finite exponent applied to descending ping-pong progress before easing. Defaults to 1, independently of Skew.</summary>
+    public double Weks { get => weks ?? 1; init => weks = value == 1 ? null : value; }
     public Func<float, float>? EaseFunction { get; init; }
     public Godot.Curve? Curve { get; init; }
     public TweenProcessMode ProcessMode { get; init; }
@@ -79,6 +82,7 @@ public readonly record struct TweenOptions
         target.Fill = Fill;
         target.Ease = Ease;
         target.Skew = Skew;
+        target.Weks = Weks;
         target.EaseFunction = EaseFunction;
         target.Curve = Curve;
         target.ProcessMode = ProcessMode;
@@ -110,8 +114,10 @@ public class TweenOptionsBuilder
     public bool UseUnscaledTime { get; set; }
     public FillMode Fill { get; set; } = FillMode.RetainFinalValue;
     public EaseType Ease { get; set; }
-    /// <summary>Positive finite exponent applied to normalized time before easing. Defaults to 1 (identity).</summary>
+    /// <inheritdoc cref="TweenOptions.Skew"/>
     public double Skew { get; set; } = 1;
+    /// <inheritdoc cref="TweenOptions.Weks"/>
+    public double Weks { get; set; } = 1;
     public Func<float, float>? EaseFunction { get; set; }
     public Godot.Curve? Curve { get; set; }
     public TweenProcessMode ProcessMode { get; set; }
@@ -135,6 +141,7 @@ public class TweenOptionsBuilder
         Fill = Fill,
         Ease = Ease,
         Skew = Skew,
+        Weks = Weks,
         EaseFunction = EaseFunction,
         Curve = Curve,
         ProcessMode = ProcessMode,
@@ -150,6 +157,8 @@ internal sealed class Playback
     private readonly int repeats;
     private double elapsed;
     internal float Progress { get; private set; }
+    /// <summary>True on the ping-pong return leg and its final hold.</summary>
+    internal bool Returning { get; private set; }
     /// <summary>Index of the current cycle; relative tweens add one full offset per cycle before it.</summary>
     internal double Cycle { get; private set; }
     internal bool Started { get; private set; }
@@ -175,6 +184,8 @@ internal sealed class Playback
         offset = Nonnegative(options.Offset, nameof(options.Offset));
         if (!double.IsFinite(options.Skew) || options.Skew <= 0)
             throw new ArgumentOutOfRangeException(nameof(options.Skew), "Skew must be finite and greater than zero.");
+        if (!double.IsFinite(options.Weks) || options.Weks <= 0)
+            throw new ArgumentOutOfRangeException(nameof(options.Weks), "Weks must be finite and greater than zero.");
         if (offset > duration) throw new ArgumentOutOfRangeException(nameof(options.Offset));
         if (options.Repeats < TweenOptions.Infinite) throw new ArgumentOutOfRangeException(nameof(options.Repeats));
         if (!Enum.IsDefined(options.ProcessMode) || !Enum.IsDefined(options.PauseMode) ||
@@ -210,6 +221,7 @@ internal sealed class Playback
         var time = Math.Min(double.MaxValue, elapsed - delay + offset);
         if (time >= total)
         {
+            Returning = pingPong;
             Progress = pingPong ? 0 : 1;
             Cycle = repeats;
             Overshoot = time - total;
@@ -226,6 +238,7 @@ internal sealed class Playback
             Cycle--;
         }
         State = TweenState.Playing;
+        Returning = pingPong && local > duration && local >= duration + turn;
         if (duration > 0 && local <= duration)
             Progress = (float)(local / duration);
         else if (!pingPong)

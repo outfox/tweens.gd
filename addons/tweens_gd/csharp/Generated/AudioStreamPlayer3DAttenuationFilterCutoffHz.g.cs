@@ -27,6 +27,7 @@ public readonly record struct AudioStreamPlayer3DAttenuationFilterCutoffHz : ITw
     public global::tweens.gd.FillMode @Fill { get => Options.@Fill; init => Options = Options with { @Fill = value }; }
     public global::tweens.gd.EaseType @Ease { get => Options.@Ease; init => Options = Options with { @Ease = value }; }
     public double @Skew { get => Options.@Skew; init => Options = Options with { @Skew = value }; }
+    public double @Weks { get => Options.@Weks; init => Options = Options with { @Weks = value }; }
     public global::System.Func<float, float>? @EaseFunction { get => Options.@EaseFunction; init => Options = Options with { @EaseFunction = value }; }
     public global::Godot.Curve? @Curve { get => Options.@Curve; init => Options = Options with { @Curve = value }; }
     public global::tweens.gd.TweenProcessMode @ProcessMode { get => Options.@ProcessMode; init => Options = Options with { @ProcessMode = value }; }
