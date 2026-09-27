@@ -24,7 +24,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <Version>0.1.0</Version>
+        <Version>0.1.0-pre</Version>
         <!-- This assembly contains code-created nodes, not res:// scene scripts. -->
         <GodotDisabledSourceGenerators>ScriptPathAttribute</GodotDisabledSourceGenerators>
     </PropertyGroup>
