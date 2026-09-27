@@ -14,7 +14,7 @@ using Godot;
 using tweens.gd;
 
 // From _Ready or later, with the target in the tree.
-await sprite.Tween(new Tweens.Position2D(new Vector2(400, 180), 0.6));
+await sprite.Tween(new Tweens.Position2D(new Vector2(400, 180), 0.6)).End;
 ```
 
 Use `using tweens.gd;` for extension methods and `Tweens.*` for reusable,

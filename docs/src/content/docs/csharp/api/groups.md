@@ -27,7 +27,6 @@ control and await members of a [handle](/csharp/api/handles/), but no `State` or
 
 | Member | Type | Meaning |
 | --- | --- | --- |
-| `GetAwaiter()` | `TaskAwaiter<Reason>` | Lets you write `await group` |
 | `End` | `Task<Reason>` | Completes when every member completes |
 | `IsTerminal` | `bool` | True once the group has ended |
 | `CompletionReason` | `Reason?` | `Completed`, or the reason of the first member that stopped early |

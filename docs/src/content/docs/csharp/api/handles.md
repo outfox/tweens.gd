@@ -5,7 +5,7 @@ description: The members of TweenInstance and Group, the handles that starting p
 
 Starting one definition returns a `TweenInstance<TTarget, TValue>` handle.
 Starting several, or grouping running tweens with `Group.Of`, returns a
-[`Group`](/csharp/api/groups/). Both can be awaited directly.
+[`Group`](/csharp/api/groups/). Await either handle's `End` task to wait for playback.
 
 The non-generic base class `TweenInstance` has every handle member below except
 `Target` and `Value`, so handles with different type arguments fit in one
@@ -36,12 +36,11 @@ Pause is separate from `State`: there's no `Paused` state. See
 
 | Member | Type | Meaning |
 | --- | --- | --- |
-| `GetAwaiter()` | `TaskAwaiter<Reason>` | Lets you write `await movement`, with the same result and faults as `End` |
 | `End` | `Task<Reason>` | Shared completion that any number of callers can await, even after it ended |
 | `AwaitDecommissionAsync(token)` | `Task<Reason>` | Wait with a token that cancels only the wait, not playback |
 
-To coordinate async work, `await movement` instead of polling `State`. Keep `End`
-for APIs that need a `Task<Reason>`. [Why it ended](/csharp/cancellation/#why-it-ended)
+To coordinate async work, `await movement.End` instead of polling `State`. You can
+also pass `End` to APIs that need a `Task<Reason>`. [Why it ended](/csharp/cancellation/#why-it-ended)
 describes each `Reason`.
 
 ## Target and value
@@ -50,4 +49,3 @@ describes each `Reason`.
 | --- | --- | --- |
 | `Target` | `TTarget` | The object the tween animates |
 | `Value` | `TValue` | The value read at start, then the latest value written |
-

@@ -12,6 +12,7 @@ $libraryProject = [System.Security.SecurityElement]::Escape((Join-Path $repoRoot
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <NoWarn>CS1998</NoWarn>
+    <WarningsAsErrors>CS4014</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="$libraryProject" /></ItemGroup>
 </Project>

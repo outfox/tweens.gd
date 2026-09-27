@@ -33,7 +33,7 @@ var movement = sprite.Tween(new Tweens.Position2D
     Ease = EaseType.CubicOut,
 });
 
-await movement;
+await movement.End;
 GD.Print("Movement ended");
 ```
 

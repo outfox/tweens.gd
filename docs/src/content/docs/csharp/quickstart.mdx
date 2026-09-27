@@ -1,6 +1,6 @@
 ---
 title: Your first tween
-description: Write a script that moves a sprite and fades it out, and learn to define, start, and await a tween.
+description: Write a script that moves a sprite and fades it out, and learn to define, start, and await a tween's End task.
 ---
 
 import { Steps } from '@astrojs/starlight/components';
@@ -8,7 +8,7 @@ import Compare from '../../../components/Compare.astro';
 import Moves from '../../../components/Moves.astro';
 
 Move a sprite, then fade it out once it arrives. Along the way you define a
-tween, start it on the sprite, and await it before continuing.
+tween, start it on the sprite, and await its `End` task before continuing.
 
 <Steps>
 
@@ -41,9 +41,9 @@ public partial class MoveAndFade : Sprite2D
         };
 
         var movement = this.Tween(arrive);
-        await movement;
+        await movement.End;
 
-        await this.TweenModulateAlpha(0, 0.3);
+        await this.TweenModulateAlpha(0, 0.3).End;
     }
 }
 ```
@@ -54,7 +54,7 @@ public partial class MoveAndFade : Sprite2D
    name with a Godot type, such as `Vector2`, and the prefix tells them apart.
 2. **Start.** `this.Tween(arrive)` starts playback and returns a handle. The
    first tween sets up its own runner, so there's no autoload to add.
-3. **Await.** `await movement` waits until playback ends. Here we ignore the
+3. **Await.** `await movement.End` waits until playback ends. Here we ignore the
    returned reason and continue with the fade.
 4. **Shorthand.** `TweenModulateAlpha(0, 0.3)` builds and starts a definition in
    one call, which is handy for one-off motion. If you start the same motion in
@@ -112,8 +112,8 @@ var arrive = new Tweens.Position2D
     Ease = EaseType.CubicOut,
 };
 
-_ = sprite1.Tween(arrive);
-_ = sprite2.Tween(arrive);
+sprite1.Tween(arrive);
+sprite2.Tween(arrive);
 ```
 
 </Compare>

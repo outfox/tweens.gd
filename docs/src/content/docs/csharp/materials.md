@@ -30,9 +30,9 @@ var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(),
 
 // One definition works with either lifetime.
 var definition = new Tweens.MaterialRoughness(0.5f, 1);
-_ = material.Tween(definition, GetTree());
-_ = material.Tween(definition, mesh);
-_ = mesh.Tween(material, definition); // The same as the line above, owner first.
+material.Tween(definition, GetTree());
+material.Tween(definition, mesh);
+mesh.Tween(material, definition); // The same as the line above, owner first.
 ```
 
 | Lifetime | Stops early when | Pause follows |
@@ -81,8 +81,8 @@ once during scene setup, assign the duplicate, and use that for later tweens:
 ```csharp
 var unique = (StandardMaterial3D)shared.Duplicate();
 mesh.MaterialOverride = unique;
-_ = unique.TweenAlbedoColor(Colors.Red, 1, mesh);
-_ = unique.TweenRoughness(0.2f, 1, mesh);
+unique.TweenAlbedoColor(Colors.Red, 1, mesh);
+unique.TweenRoughness(0.2f, 1, mesh);
 ```
 
 Continue with [shader uniforms](/csharp/shaders/) for shared and per-instance parameters.

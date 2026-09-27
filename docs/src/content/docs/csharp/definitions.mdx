@@ -47,7 +47,7 @@ public partial class Coin : Sprite2D
     public async Task Collect()
     {
         var step = this.Tween(Lift with { To = Position.Y - 40 }, Fade);
-        await step;
+        await step.End;
     }
 }
 ```
@@ -76,7 +76,7 @@ options too:
 ```csharp
 var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
 var slowPop = new Tweens.Scale2D { Options = snappy, Duration = 0.6 };
-_ = sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
+sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
 ```
 
 A definition that shares its timing with nothing else can take it from the
@@ -190,8 +190,8 @@ public partial class Chest : Node2D
 
     public async Task Open()
     {
-        await this.Tween(Wobble);
-        await this.Tween(Burst);
+        await this.Tween(Wobble).End;
+        await this.Tween(Burst).End;
     }
 }
 ```

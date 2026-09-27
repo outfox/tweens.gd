@@ -112,7 +112,7 @@ public sealed class UniformZoomTween : TweenDefinition<Camera2D, float>
 ```
 
 ```csharp
-_ = camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = EaseType.SmootherStep });
+camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = EaseType.SmootherStep });
 ```
 
 `By`, factors, and deltas ([variations](/csharp/variations/)) work with int,

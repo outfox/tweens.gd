@@ -8,10 +8,10 @@ steps together as a group, and add delays between them.
 
 | Goal | Tool |
 | --- | --- |
-| Run B after A | `await a`, then start B |
-| Run A and B together | `node.Tween(a, b)` for definitions, or `Group.Of(handleA, handleB)` for tweens already playing; then await the group |
+| Run B after A | `await a.End`, then start B |
+| Run A and B together | `node.Tween(a, b)` for definitions, or `Group.Of(handleA, handleB)` for tweens already playing; then await the group's `End` |
 | Offset tweens within a step | `Delay` on different targets or properties |
-| Wait between steps | `await node.TweenFloat(1, seconds)` |
+| Wait between steps | `await node.TweenFloat(1, seconds).End` |
 | Stop the sequence | [Cancel and check the result](/csharp/cancellation/) |
 
 Snippets run in an async Node method with in-tree `sprite` (`Sprite2D`) and
@@ -23,9 +23,9 @@ implicit usings for `System`, `System.Linq`, and `System.Threading.Tasks`.
 Await each tween before starting the next:
 
 ```csharp
-await sprite.TweenPosition(new Vector2(400, 180), 0.6);
-await sprite.TweenScale(new Vector2(1.2f, 1.2f), 0.2);
-await sprite.TweenModulateAlpha(0, 0.3);
+await sprite.TweenPosition(new Vector2(400, 180), 0.6).End;
+await sprite.TweenScale(new Vector2(1.2f, 1.2f), 0.2).End;
+await sprite.TweenModulateAlpha(0, 0.3).End;
 ```
 
 Each step reads its omitted `From` when you start it, so it continues from wherever
@@ -44,14 +44,14 @@ types:
 ```csharp
 var grow = new Tweens.Scale2D(new Vector2(1.2f, 1.2f), 0.2);
 var dim = new Tweens.ModulateAlpha(0.5f, 0.2);
-await sprite.Tween(grow, dim);
+await sprite.Tween(grow, dim).End;
 ```
 
 Group tweens that are already playing, on any targets, with `Group.Of`:
 
 ```csharp
 var step = Group.Of(sprite.TweenPosition(new Vector2(400, 180), 0.6), label.TweenModulateAlpha(0, 0.6));
-await step;
+await step.End;
 ```
 
 A group completes when every member completes. If one member stops early
@@ -84,7 +84,7 @@ public partial class Menu : VBoxContainer
     {
         var items = GetChildren().OfType<Control>();
         var reveals = items.Select((item, i) => item.Tween(FadeIn with { Delay = i * 0.05 }));
-        if (items.Any()) await Group.Of([.. reveals]);
+        if (items.Any()) await Group.Of([.. reveals]).End;
     }
 }
 ```
@@ -99,8 +99,8 @@ and snaps the property back to it:
 
 ```csharp
 // Wrong: the second tween captured From = the start position, not (400, 180).
-_ = sprite.TweenPosition(new Vector2(400, 180), 0.6);
-_ = sprite.TweenPosition(new Vector2(400, 0), 0.4, options => options.Delay = 0.6);
+sprite.TweenPosition(new Vector2(400, 180), 0.6);
+sprite.TweenPosition(new Vector2(400, 0), 0.4, options => options.Delay = 0.6);
 ```
 
 Await the first tween instead, give the delayed tween an explicit `From`, or
@@ -116,9 +116,9 @@ The `1` is the value it would report, and unused here. The wait follows the same
 pause, time scale, and lifetime rules as the animation around it:
 
 ```csharp
-await sprite.TweenPosition(new Vector2(400, 180), 0.6);
-await sprite.TweenFloat(1, 0.5);
-await sprite.TweenPosition(new Vector2(40, 180), 0.6);
+await sprite.TweenPosition(new Vector2(400, 180), 0.6).End;
+await sprite.TweenFloat(1, 0.5).End;
+await sprite.TweenPosition(new Vector2(40, 180), 0.6).End;
 ```
 
 :::caution[Avoid `Task.Delay`]
@@ -168,7 +168,7 @@ comes from the member that finished last.
 
 The handover applies when all of these hold:
 
-- You await the tween or group directly (or its `End` task). With `Task.WhenAll`, the
+- You await the tween's or group's `End` task. With `Task.WhenAll`, the
   time comes from whichever member the scheduler settled last, which isn't
   necessarily the last to finish.
 - The next tweens start before the sequence awaits anything else.

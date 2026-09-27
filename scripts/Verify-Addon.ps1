@@ -57,11 +57,11 @@ public partial class Consumer : Node2D
     public async System.Threading.Tasks.Task Animate()
     {
         var move = new Tweens.Position2D(new Vector2(100, 50), 0.25);
-        await this.Tween(move with { Delay = 0.1 });
+        await this.Tween(move with { Delay = 0.1 }).End;
         var custom = new Tweens.Property<Node2D, float>(
             node => node.Rotation, (node, value) => node.Rotation = value,
             Interpolators.Float) { To = 1, Duration = 0.1 };
-        await this.Tween(custom);
+        await this.Tween(custom).End;
     }
 }
 '@ | Set-Content (Join-Path $consumer 'Consumer.cs')

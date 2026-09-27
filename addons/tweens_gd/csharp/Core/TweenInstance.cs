@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Godot;
-using System.Runtime.CompilerServices;
 
 namespace tweens.gd;
 
@@ -61,9 +60,6 @@ public abstract class TweenInstance
             return completion.Task;
         }
     }
-
-    /// <summary>Awaits this playback directly, with the same result and faults as End.</summary>
-    public TaskAwaiter<Reason> GetAwaiter() => End.GetAwaiter();
 
     internal TweenInstance(TweenScheduler scheduler, TweenOptionsBuilder options, Node? owner, GodotObject? nativeTarget, SceneTree? tree)
     {

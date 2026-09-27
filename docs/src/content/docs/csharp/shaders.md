@@ -14,8 +14,8 @@ in-tree MeshInstance3D and Sprite2D nodes using the declared shaders.
 
 ```csharp
 // shader: uniform float dissolve = 0.25;
-_ = shaderMaterial.TweenShaderParameter("dissolve", 1f, 0.5, GetTree());
-_ = shaderMaterial.TweenShaderParameter("dissolve", 1f, 0.5, mesh);
+shaderMaterial.TweenShaderParameter("dissolve", 1f, 0.5, GetTree());
+shaderMaterial.TweenShaderParameter("dissolve", 1f, 0.5, mesh);
 
 var definition = new Tweens.ShaderParameter<float>("dissolve")
 {
@@ -23,7 +23,7 @@ var definition = new Tweens.ShaderParameter<float>("dissolve")
     Duration = 0.5,
     Fill = FillMode.None,
 };
-_ = shaderMaterial.Tween(definition, GetTree());
+shaderMaterial.Tween(definition, GetTree());
 ```
 
 The material is shared as usual, so every node using it sees the change. Uniform
@@ -69,8 +69,8 @@ need independent values:
 
 ```csharp
 // shader: instance uniform float pulse = 0.25;
-_ = mesh.TweenInstanceShaderParameter("pulse", 1f, 0.5);
-_ = sprite.TweenInstanceShaderParameter("pulse", 0f, 0.5);
+mesh.TweenInstanceShaderParameter("pulse", 1f, 0.5);
+sprite.TweenInstanceShaderParameter("pulse", 0f, 0.5);
 ```
 
 These methods target `GeometryInstance3D` and `CanvasItem` respectively and follow

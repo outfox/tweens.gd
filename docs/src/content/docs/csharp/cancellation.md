@@ -26,14 +26,14 @@ arrival. This also prevents the next step from using a target that has been free
 
 ```csharp
 var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);
-if (await movement != Reason.Completed)
+if (await movement.End != Reason.Completed)
     return;
 
 GD.Print("Arrived");
-await sprite.TweenModulateAlpha(0, 0.3);
+await sprite.TweenModulateAlpha(0, 0.3).End;
 ```
 
-A bare `await movement;` deliberately ignores this distinction: it resumes after cancellation
+A bare `await movement.End;` deliberately ignores this distinction: it resumes after cancellation
 too. Use the guarded form above for interruptible sequences.
 
 ## Why it ended
@@ -84,8 +84,8 @@ complete. To repeat a single tween, set `Repeats` instead, as described in
 [timing](/csharp/timing/).
 
 ```csharp
-while (await sprite.TweenPositionY(120, 0.4) == Reason.Completed
-       && await sprite.TweenPositionY(180, 0.4) == Reason.Completed)
+while (await sprite.TweenPositionY(120, 0.4).End == Reason.Completed
+       && await sprite.TweenPositionY(180, 0.4).End == Reason.Completed)
 {
 }
 ```

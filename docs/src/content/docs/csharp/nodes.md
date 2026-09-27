@@ -29,7 +29,7 @@ var movement = sprite.TweenPosition(new Vector2(300, 120), 0.5,
 var fade = sprite.TweenModulateAlpha(0, 0.2);
 var zoom = camera.TweenZoom(new Vector2(2, 2), 0.4);
 var reveal = label.TweenVisibleRatio(1, 1.5, options => options.From = 0);
-await Group.Of(movement, fade);
+await Group.Of(movement, fade).End;
 ```
 
 Each shorthand method, such as `TweenPosition`, takes `(to, duration, configure = null)`

@@ -5,7 +5,7 @@ using tweens.gd.Tests.Support;
 
 namespace tweens.gd.Tests.Unit;
 
-public class DirectAwaitTests
+public class EndAwaitTests
 {
     [Theory]
     [InlineData(false)]
@@ -18,8 +18,8 @@ public class DirectAwaitTests
         {
             var tween = scheduler.Add(new Box(), new PlainTween { Duration = 1 });
             var group = Group.Of(tween);
-            static async Task<Reason> WaitTween(TweenInstance value) => await value;
-            static async Task<Reason> WaitGroup(Group value) => await value;
+            static async Task<Reason> WaitTween(TweenInstance value) => await value.End;
+            static async Task<Reason> WaitGroup(Group value) => await value.End;
             first = WaitTween(tween);
             second = WaitTween(tween);
             together = WaitGroup(group);
@@ -29,11 +29,10 @@ public class DirectAwaitTests
             else scheduler.Update(1);
 
             // Late awaits complete synchronously on the scheduler's creating thread.
-            Assert.True(tween.GetAwaiter().IsCompleted);
-            Assert.True(group.GetAwaiter().IsCompleted);
-            Assert.Equal(expected, await tween);
-            Assert.Equal(expected, await group);
+            Assert.True(tween.End.IsCompleted);
+            Assert.True(group.End.IsCompleted);
             Assert.Equal(expected, await tween.End);
+            Assert.Equal(expected, await group.End);
         }
         // xUnit may resume pending waiters on another worker. No scheduler access follows.
         Assert.Equal(expected, await first);
@@ -42,7 +41,7 @@ public class DirectAwaitTests
     }
 
     [Fact]
-    public async Task DirectAwaitPropagatesTweenAndGroupFaults()
+    public async Task EndAwaitPropagatesTweenAndGroupFaults()
     {
         var error = new FormatException("callback failed");
         Task pendingTween, pendingGroup, lateTween, lateGroup;
@@ -50,8 +49,8 @@ public class DirectAwaitTests
         {
             var tween = scheduler.Add(new Box(), new PlainTween { OnStart = _ => throw error });
             var group = Group.Of(tween);
-            async Task WaitTween() { await tween; }
-            async Task WaitGroup() { await group; }
+            async Task WaitTween() { await tween.End; }
+            async Task WaitGroup() { await group.End; }
             pendingTween = WaitTween();
             pendingGroup = WaitGroup();
             scheduler.Update(0);
@@ -67,7 +66,7 @@ public class DirectAwaitTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void DirectAwaitPreservesInlineSequenceTiming(bool grouped)
+    public void EndAwaitPreservesInlineSequenceTiming(bool grouped)
     {
         using var scheduler = new TweenScheduler();
         var next = new Box();
@@ -87,9 +86,9 @@ public class DirectAwaitTests
 
         async Task Continue()
         {
-            if (grouped) await Group.Of(first);
-            else await first;
-            _ = scheduler.Add(next, new PlainTween { To = 1, Duration = 1 });
+            if (grouped) await Group.Of(first).End;
+            else await first.End;
+            scheduler.Add(next, new PlainTween { To = 1, Duration = 1 });
         }
     }
 }

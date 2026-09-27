@@ -99,7 +99,7 @@ var target = new Vector2(400, 180);
 var movement = sprite.TweenPosition(target, 0.6,
     options => options.Ease = EaseType.CubicOut);
 
-await movement;
+await movement.End;
 GD.Print("Arrived");
 ```
 
@@ -134,9 +134,9 @@ var target = new Vector2(400, 180);
 var arrive = new Tweens.Position2D(target, 0.6,
     EaseType.CubicOut);
 
-_ = sprite1.Tween(arrive);
-_ = sprite2.Tween(arrive with { Duration = 0.8 });
-await sprite3.Tween(arrive with { Duration = 1.0 });
+sprite1.Tween(arrive);
+sprite2.Tween(arrive with { Duration = 0.8 });
+await sprite3.Tween(arrive with { Duration = 1.0 }).End;
 GD.Print("Arrived");
 ```
 
@@ -242,7 +242,7 @@ Every property in the [catalog](/csharp/nodes/) has a shorthand method that star
 a tween in one call:
 
 ```csharp
-await sprite.TweenPosition(new Vector2(400, 180), 0.6);
+await sprite.TweenPosition(new Vector2(400, 180), 0.6).End;
 ```
 
 ### Configurators
@@ -251,10 +251,10 @@ A configure callback adjusts one call. A shared `TweenOptions` value gives sever
 calls the same timing and easing:
 
 ```csharp
-_ = sprite.TweenScale(Vector2.One, 0.25, options => options.From = Vector2.Zero);
+sprite.TweenScale(Vector2.One, 0.25, options => options.From = Vector2.Zero);
 
 var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
-_ = label.TweenModulateAlpha(1, 0.25, snappy);
+label.TweenModulateAlpha(1, 0.25, snappy);
 ```
 
 ### Definitions
@@ -273,7 +273,7 @@ var arrive = new Tweens.Position2D
 };
 
 var movement = sprite.Tween(arrive);
-await movement;
+await movement.End;
 GD.Print("Arrived");
 ```
 
