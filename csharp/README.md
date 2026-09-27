@@ -8,8 +8,12 @@ Targets .NET 10 and GodotSharp 4.7.2. Your application supplies a matching Godot
 engine; the package depends only on GodotSharp. Other engine versions and
 trimmed/AOT/web exports have not been validated.
 
+The default installation is the unified Godot addon, which includes C# sources
+and prepared definitions alongside GDScript. This NuGet package is an optional
+installation method for experienced C# users.
+
 ```xml
-<PackageReference Include="tweens.gd" Version="0.1.0" />
+<PackageReference Include="tweens.gd" Version="0.1.0-pre" />
 ```
 
 ```csharp
@@ -40,7 +44,10 @@ Create and control tweens on Godot's main thread.
 
 ## Documentation
 
-The beta pure GDScript addon lives separately in `addons/tweens_gd/` and is not included in this package.
+The unified addon lives in `addons/tweens_gd/`. This NuGet package contains only
+the compiled C# implementation. If you also install the addon for GDScript, add
+`<Compile Remove="addons/tweens_gd/csharp/**/*.cs" />` to an `ItemGroup` in your
+game's project file to avoid compiling duplicate types.
 Guides and the API reference live at [tweens.gd/csharp](https://tweens.gd/csharp/installation/).
 The site's source is in the [repository](https://github.com/outfox/tweens.gd/tree/main/docs).
 

@@ -11,7 +11,7 @@ start it on any number of nodes. Each start takes a snapshot of it, so when you
 change the definition, the next start picks up the change and tweens already
 playing don't.
 
-Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and
+Examples assume the global `Tweens` class and
 run on Godot's main thread, on nodes inside the tree.
 
 ## A complete example
@@ -20,10 +20,8 @@ A coin pops in, then rises and fades when collected:
 
 <Moves>
 
-```gdscript title="coin.gd" {"1":5-8} {"2":10-13} {"3":15-16} {"4":18-20}
+```gdscript title="coin.gd" {"1":3-6} {"2":8-11} {"3":13-14} {"4":16-18}
 extends Sprite2D
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 static func snappy(definition: Tweens.Definition) -> Tweens.Definition:
 	definition.duration = 0.25
@@ -117,8 +115,6 @@ is:
 ```gdscript title="crate.gd"
 extends Node2D
 
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
-
 static var nudge := Tweens.position_2d(null, 0.2, Tweens.Ease.CUBIC_OUT) \
 	.with_by(Vector2(16, 0))
 
@@ -183,8 +179,6 @@ Wrap named motion in a coroutine. Await each tween to put the steps in order:
 
 ```gdscript title="chest.gd"
 extends Node2D
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 static var wobble := Tweens.rotation_2d(0.15, 0.08).with_ping_pong().with_repeats(2)
 static var burst := Tweens.scale_2d(Vector2(1.3, 1.3), 0.2, Tweens.Ease.BACK_OUT)

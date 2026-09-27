@@ -7,7 +7,7 @@ const { title = data.title, tagline, actions = [] } = data.hero || {};
 const facts = data.facts ?? [];
 
 const [name, ext] = title.split('.');
-const eases = ['BackOut', 'SmootherStep', 'ElasticOut', 'SmoothStep', 'BounceOut'];
+const eases = ['BackOut', 'SmoothStep', 'SmootherStep', 'ElasticOut', 'BounceOut'];
 const ghosts = Array.from({ length: 11 }, (_, i) => i);
 ---
 

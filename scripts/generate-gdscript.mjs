@@ -15,8 +15,8 @@ const types = { float: 'FLOAT', double: 'FLOAT', int: 'INT', Vector2: 'VECTOR2',
 const defaults = { float: '0.0', double: '0.0', Vector2: 'Vector2.ZERO', Vector3: 'Vector3.ZERO',
   Vector4: 'Vector4.ZERO', Color: 'Color(0, 0, 0, 0)', Quaternion: 'Quaternion.IDENTITY', Rect2: 'Rect2()' };
 const entries = [];
-for (const file of fs.readdirSync(path.join(root, 'csharp/src/Tweens')).filter(f => f.endsWith('.cs')).sort()) {
-  const source = fs.readFileSync(path.join(root, 'csharp/src/Tweens', file), 'utf8');
+for (const file of fs.readdirSync(path.join(root, 'addons/tweens_gd/csharp/Tweens')).filter(f => f.endsWith('.cs')).sort()) {
+  const source = fs.readFileSync(path.join(root, 'addons/tweens_gd/csharp/Tweens', file), 'utf8');
   const matches = [...source.matchAll(/public sealed class (\w+)Tween\(\) : PropertyTween<([\w.]+), (\w+)>\(\s*static [a-z_] => ([\s\S]*?), static \([\s\S]*?Interpolators\.(\w+)\)(?:;|\s*\{)/g)];
   const expected = [...source.matchAll(/: PropertyTween</g)].length;
   if (matches.length !== expected) throw new Error(`Unrecognized adapter syntax in ${file}: ${matches.length}/${expected}`);

@@ -1,6 +1,6 @@
 # Structured definition generation
 
-The property adapters in `src/Tweens/` also serve as the mutable builders for
+The property adapters in `addons/tweens_gd/csharp/Tweens/` also serve as the mutable builders for
 convenience methods. The [Roslyn incremental generator](../../csharp.generators/StructuredDefinitionGenerator.cs)
 discovers those adapters and the public configuration properties in
 `TweenOptionsBuilder` using C# symbols, then produces the readonly record structs
@@ -17,12 +17,23 @@ adapter or changing configuration properties, build from the repository root:
 dotnet build csharp/tweens.gd.csproj
 ```
 
-Generated files are compiler outputs and are not checked in. To inspect them on
-disk, build with `-p:EmitCompilerGeneratedFiles=true`; the default output is under
-`csharp/obj/<configuration>/net10.0/generated/`. The generator is referenced only
-as a build-time analyzer and is not shipped as a package dependency. Package
-consumers receive the compiled definitions. CI builds the generator and library,
-and tests check generation and coverage of every built-in adapter.
+NuGet consumers receive compiled definitions. The unified Godot addon instead
+ships ordinary C# files in `addons/tweens_gd/csharp/Generated/`, so addon consumers
+need no tweens.gd analyzer or package reference. Regenerate and commit these files
+after changing adapters or options:
+
+```powershell
+./scripts/Generate-CSharpAddon.ps1
+```
+
+`./scripts/Generate-CSharpAddon.ps1 -Check` verifies freshness without writing
+the addon. It rebuilds with `EmitCompilerGeneratedFiles` into a fresh temporary
+directory and selects only `StructuredDefinitionGenerator` output. Godot's own
+generated glue is deliberately excluded; each consumer's Godot SDK generates
+that for its assembly. `Pack-Addon.ps1` runs this check before packaging.
+The generator remains a private build dependency of the NuGet project. That
+project excludes the prepared files and generates its own definitions from
+the same addon sources. See [release instructions](../../RELEASING.md).
 
 Runtime binding state stays in the private per-playback class instance. A
 structured definition creates that instance directly; a mutable class definition

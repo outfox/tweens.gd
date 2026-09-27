@@ -6,14 +6,8 @@ description: The functions that start GDScript playback, and where the rest of t
 This page lists the functions that start playback. The pages after it list every
 field of the definitions you start and every member of the handles you get back.
 
-Preload the addon's entry script, or use its global class name `TweensGd` once the
-editor has generated the global class cache:
-
-```gdscript
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
-```
-
-The examples on this site use the `Tweens` constant. The classes it returns are
+Use the addon's global class `Tweens` once the editor has imported the addon;
+no preload is needed. The classes it returns are
 also registered globally: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`,
 `TweensGdScheduler`, `TweensGdAdapter`, and `TweensGdCancellation`. Use the API
 on Godot's main thread.

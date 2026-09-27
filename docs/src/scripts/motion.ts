@@ -1,4 +1,4 @@
-// Easing math from csharp/src/Easing/Easing.cs, which follows unity-tweens (MIT; see THIRD-PARTY-NOTICES.md).
+// Easing math from addons/tweens_gd/csharp/Easing/Easing.cs, which follows unity-tweens (MIT; see THIRD-PARTY-NOTICES.md).
 // The docs animate with the same curves the library ships.
 
 const A = 1.70158;

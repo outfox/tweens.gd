@@ -1,23 +1,30 @@
-# tweens.gd for GDScript
+# tweens.gd — C# and GDScript addon
 
-A beta, pure GDScript implementation of reusable tween definitions and
-independent playback handles. Copy this entire `tweens_gd` directory into your
-project's `addons/` directory. No plugin activation, autoload, .NET runtime or
-GDExtension is required.
+A beta library of reusable tween definitions and independent playback handles.
+Copy this entire `tweens_gd` directory into your project's `addons/` directory.
+Both languages are included in the same Godot Asset Store package. No plugin
+activation or autoload is required.
+
+**C#:** use a Godot .NET 4.7.2 project targeting .NET 10. The normal project build
+compiles `csharp/`, including the prepared definitions in `csharp/Generated/`.
+No NuGet package or tweens.gd analyzer is needed. See the [C# quickstart](csharp/README.md),
+including the optional NuGet route for experienced users.
+
+**GDScript:** the runtime is pure GDScript and requires neither .NET nor a
+GDExtension. The bundled C# files can remain in a GDScript-only project.
+The rest of this guide describes the GDScript API.
 
 Both C# and GDScript support are in beta; APIs may change. Validation covers
 2dog/Godot 4.7.2 in Debug and Release,
 real OpenGL rendering, the installed standard Godot 4.7.2 engine, a Windows release
 export and a single-threaded Web/WASM release export in Edge. Other engines,
 browsers and devices have not been validated. A distributable ZIP can be built
-with `./scripts/Pack-GDScript.ps1` from the repository root.
+with `./scripts/Pack-Addon.ps1` from the repository root.
 
 ## Start and await
 
 ```gdscript
 extends Node2D
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 func _ready() -> void:
 	var move := Tweens.property(^"position", Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
@@ -25,8 +32,9 @@ func _ready() -> void:
 	print("Movement ended")
 ```
 
-`TweensGd` is also registered as a global class in the editor. Explicit preloads
-work before the editor has generated a global class cache.
+`Tweens` is registered as a global class in the editor; no preload is needed. Let the editor
+finish importing the addon before running it. For a fresh headless checkout,
+run `godot --headless --editor --import` once to populate the script-class cache.
 
 `property(path, to, seconds, easing, delay)` and `value(from, to, seconds, easing, delay)`
 create mutable `TweensGdDefinition` objects; everything after `to` is optional.
@@ -355,4 +363,4 @@ Remaining language differences: no automatic conversion of arbitrary GDScript er
 to C# exception tasks, runtime target/value checks in place of C# generics, and
 GDScript's numeric representations. Wider browser/device coverage and performance
 profiling remain future work; the accepted 1,000-tween baseline has not been retuned.
-The addon remains pure GDScript.
+The GDScript runtime remains independent of the bundled C# implementation.

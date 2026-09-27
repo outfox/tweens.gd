@@ -7,7 +7,7 @@ Material tweens write directly to the resource you supply. If several nodes shar
 that resource, all of them see the change. Playback never clones, reassigns, or
 frees your material, shader, textures, or mesh.
 
-The snippets assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and
+The snippets assume the global `Tweens` class and
 run in a Node method on Godot's main thread, with configured materials and an
 in-tree `MeshInstance3D` named `mesh`.
 

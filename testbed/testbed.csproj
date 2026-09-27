@@ -15,6 +15,7 @@
         <DefaultItemExcludes>$(DefaultItemExcludes);testbed.2dog/**;testbed.tests/**</DefaultItemExcludes>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Remove="addons/tweens_gd/csharp/**/*.cs" />
         <ProjectReference Include="../csharp/tweens.gd.csproj" />
         <!-- Ship the exact compiled examples, including in trimmed/web exports. -->
         <EmbeddedResource Include="Gallery/**/*.cs" LogicalName="GallerySource/%(RecursiveDir)%(Filename)%(Extension)" />

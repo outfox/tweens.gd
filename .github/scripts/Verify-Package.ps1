@@ -45,10 +45,16 @@ try {
 # Build against the packed artifact, without a project reference or the testbed.
 $consumer = Join-Path $PSScriptRoot '../../artifacts/package-consumer'
 New-Item $consumer -ItemType Directory -Force | Out-Null
+# Also exercise the documented mixed install: GDScript addon plus C# NuGet.
+$addon = Join-Path $packageDirectory "tweens.gd-$Version.zip"
+[System.IO.Compression.ZipFile]::ExtractToDirectory($addon, $consumer, $true)
 @"
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
-  <ItemGroup><PackageReference Include="tweens.gd" Version="[$Version]" /></ItemGroup>
+  <ItemGroup>
+    <Compile Remove="addons/tweens_gd/csharp/**/*.cs" />
+    <PackageReference Include="tweens.gd" Version="[$Version]" />
+  </ItemGroup>
 </Project>
 "@ | Set-Content (Join-Path $consumer 'Consumer.csproj')
 @'

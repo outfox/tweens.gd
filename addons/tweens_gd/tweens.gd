@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Moritz Voss
-class_name TweensGd
+class_name Tweens
 extends "catalog.gd"
 ## Pure GDScript entry point. No editor plugin, autoload or native extension needed.
 

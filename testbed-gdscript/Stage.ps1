@@ -5,7 +5,6 @@ $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $addonDestination = Join-Path $PSScriptRoot 'addons/tweens_gd'
 $fixtureDestination = Join-Path $PSScriptRoot 'conformance'
 New-Item -ItemType Directory -Path $addonDestination, $fixtureDestination -Force | Out-Null
-Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'addons/tweens_gd') -File |
-    Copy-Item -Destination $addonDestination -Force
+Copy-Item -Path (Join-Path $repositoryRoot 'addons/tweens_gd/*') -Destination $addonDestination -Recurse -Force
 Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'tests/conformance') -Filter '*.json' -File |
     Copy-Item -Destination $fixtureDestination -Force

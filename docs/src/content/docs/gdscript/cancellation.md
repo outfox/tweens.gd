@@ -8,7 +8,7 @@ Check it when the next action requires the tween to have reached its destination
 or when cancelling an animation must stop the rest of a sequence.
 
 Examples run in a node script function with an in-tree `Sprite2D` named `sprite`
-and `const Tweens = preload("res://addons/tweens_gd/tweens.gd")`.
+and the global `Tweens` class.
 
 ## Cancel playback
 

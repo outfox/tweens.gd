@@ -25,10 +25,8 @@ tween, start it on the sprite, and await it before continuing.
 
 <Moves>
 
-```gdscript title="move_and_fade.gd" {"1":6-7} {"2":9} {"3":10} {"4":12}
+```gdscript title="move_and_fade.gd" {"1":4-5} {"2":7} {"3":8} {"4":10}
 extends Sprite2D
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 func _ready() -> void:
 	var target := position + Vector2(240, 0)

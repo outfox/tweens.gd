@@ -11,7 +11,7 @@ light one, and an enemy that spawns pops in from nothing. Instead of copying a
 definition and editing its numbers, start a variant of it. The variant stays
 tied to the definition, so when you tune the definition, every variant follows.
 
-Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and
+Examples assume the global `Tweens` class and
 run on Godot's main thread, on nodes inside the tree.
 
 ## A complete example
@@ -20,10 +20,8 @@ An enemy recoils when hit, harder and longer for more damage:
 
 <Moves>
 
-```gdscript title="enemy.gd" {"1":5-6} {"2":8-10} {"3":12-13}
+```gdscript title="enemy.gd" {"1":3-4} {"2":6-8} {"3":10-11}
 extends Sprite2D
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 static var recoil := Tweens.position_2d_x(null, 0.1, Tweens.Ease.QUAD_OUT) \
 	.with_by(-12.0).with_ping_pong()
@@ -84,8 +82,6 @@ is:
 
 ```gdscript title="heart.gd"
 extends Sprite2D
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 static var beat := Tweens.scale_2d(null, 0.15, Tweens.Ease.SMOOTHER_STEP) \
 	.with_factor_to(1.2).with_ping_pong()

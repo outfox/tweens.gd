@@ -4,16 +4,16 @@ description: Implementation status, engine requirements, and validated targets f
 ---
 
 Both C# and GDScript support are in beta. The C# library targets .NET 10 and
-Godot 4.7.2 .NET; the pure GDScript addon implements the same reusable-definition
-model without a .NET dependency. APIs may change during beta.
+Godot 4.7.2 .NET; the independent GDScript runtime implements the same reusable-definition
+model without a .NET dependency. Both ship in one addon. APIs may change during beta.
 
 | Implementation | Availability | Requirements |
 | --- | --- | --- |
-| C# | Beta; project reference and local NuGet package supported | .NET 10, GodotSharp 4.7.2, matching engine |
+| C# | Beta; addon source install, optional project reference or NuGet | .NET 10, GodotSharp 4.7.2, matching engine |
 | GDScript addon | Beta; available from source or as a locally built ZIP | Godot 4.7.2; no .NET or native extension dependency |
 
 The C# package ID and namespace are both `tweens.gd`. The local development
-version is `0.1.0`, which hasn't been published to nuget.org.
+version is `0.1.0-pre`.
 [Install](/csharp/installation/) it from source or from a locally packed package.
 
 ## C# support
@@ -35,7 +35,8 @@ is a private build dependency.
 
 ## GDScript support
 
-The addon is pure GDScript and needs no .NET runtime, autoload, or GDExtension.
+The GDScript runtime needs no .NET runtime, autoload, or GDExtension, even though
+the same addon also includes C# sources.
 
 | Area | Current status |
 | --- | --- |

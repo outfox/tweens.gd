@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 extends RefCounted
 ## Shared gallery lifecycle and scene bindings. Animation helpers live in each example.
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 const MINT = Color("#79deb4")
 const AMBER = Color("#f2bc74")
 const BLUE = Color("#8caaff")

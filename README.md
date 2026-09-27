@@ -1,13 +1,14 @@
 # tweens.gd
 
-Tween libraries for Godot with beta support for C# and GDScript: a typed C# NuGet package and a pure GDScript addon.
+One Godot addon with beta support for C# and GDScript. Both implementations ship
+as source in `addons/tweens_gd/`; NuGet is an optional C# installation method.
 
 Both implementations are approaching their first release. APIs may change during beta.
 
 | Project | Location | Status |
 | --- | --- | --- |
-| C# NuGet package `tweens.gd` | `csharp/` | Beta; project reference and local NuGet package; examples below |
-| GDScript Godot addon | [addons/tweens_gd/](addons/tweens_gd/README.md) | Beta; source and local ZIP; core, groups, full helper catalog, custom adapters and shaders; Windows/Web exports tested |
+| Godot addon (C# and GDScript) | [addons/tweens_gd/](addons/tweens_gd/README.md) | Beta; source and unified ZIP for the Godot Asset Store |
+| Optional C# NuGet package `tweens.gd` | `csharp/` | Builds the same addon sources; project reference also supported |
 | Public documentation | [docs/](docs/README.md) | Parallel C# and GDScript guides/reference at [tweens.gd](https://tweens.gd); automatic deployment through statichost.eu |
 
 Internal working documents live in the gitignored `docs-internal/` directory. The following documentation describes the C# implementation.
@@ -43,7 +44,15 @@ dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj
 
 ## Use the library
 
-Add a project reference to `csharp/tweens.gd.csproj` (as the testbed does), or consume a locally built package:
+Copy `addons/tweens_gd/` into a Godot .NET project targeting .NET 10. Its normal
+build includes all C# sources and prepared definitions; no tweens.gd analyzer or
+package reference is needed. Build the unified addon ZIP with
+`./scripts/Pack-Addon.ps1`; see [release instructions](RELEASING.md).
+
+Experienced C# users can instead reference `csharp/tweens.gd.csproj` (as the
+testbed does), or consume a locally built NuGet package. When keeping the addon
+for GDScript, [exclude its C# sources](addons/tweens_gd/csharp/README.md#optional-nuget-installation)
+to avoid duplicate types.
 
 ```powershell
 dotnet pack csharp/tweens.gd.csproj -c Release -o artifacts/packages
@@ -231,8 +240,9 @@ Sequence DSLs, automatic overwrite arbitration, and pooling are not implemented;
 GitHub Actions builds and tests the solution, gates library coverage, verifies the
 `tweens.gd` NuGet package, checks the GDScript helper catalog and engine restarts,
 and uploads both package formats. Version tags create GitHub releases with NuGet
-package, symbol and GDScript addon ZIP downloads. Maintainer release instructions and NuGet
-trusted-publishing setup are kept locally in `docs-internal/RELEASING.md`.
+package, symbol and unified addon ZIP downloads. See [RELEASING.md](RELEASING.md)
+for packaging, verification and updating the existing Godot Asset Store listing.
+Private NuGet trusted-publishing setup remains in `docs-internal/RELEASING.md`.
 
 Tests cover deterministic playback, easing and overshoot, callback mutation/faults, snapshots, async completion, main-thread continuation, node lifetime/pause, adapter families, the demo, and scheduler steady-state allocations. Material tests cover shared-resource ownership, disposal and all property/context overloads. Run `dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true` separately for shader contracts and rendered pixel checks (requires graphics/display). The desktop testbed has also been rendered with the OpenGL compatibility renderer. The library is packaged independently of its testbed and the gitignored Unity reference.
 

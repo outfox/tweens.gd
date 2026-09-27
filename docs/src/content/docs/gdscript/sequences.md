@@ -16,7 +16,7 @@ next, play steps together as a group, and add delays between them.
 
 Snippets run in a node script function with in-tree `sprite` (`Sprite2D`) and
 `label` (`Label`) nodes, and assume
-`const Tweens = preload("res://addons/tweens_gd/tweens.gd")`.
+the global `Tweens` class.
 
 ## One step after another
 
@@ -81,8 +81,6 @@ whole menu, one item after another:
 
 ```gdscript title="menu.gd"
 extends VBoxContainer
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 static var fade_in := Tweens.modulate_alpha(null, 0.3) \
 	.with_from(0.0).with_fill(Tweens.Fill.BOTH)

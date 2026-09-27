@@ -1,13 +1,13 @@
 ---
 title: Install
-description: Add the pure GDScript tweens.gd addon to a Godot project by copying its directory or unpacking a locally built ZIP.
+description: Install the unified tweens.gd addon and use its independent GDScript runtime without .NET.
 ---
 
 import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
-tweens.gd for GDScript is a pure GDScript addon. You copy one directory into your
-project; there is no plugin to activate, no autoload, and no .NET runtime or
-GDExtension to install.
+tweens.gd includes both C# and GDScript in one addon. Its GDScript runtime is
+independent: there is no plugin to activate, no autoload, and no .NET runtime or
+GDExtension to install. The bundled C# files can stay in a GDScript-only project.
 
 :::note[Beta]
 The GDScript API may change during beta. [Compatibility](/compatibility/) lists
@@ -16,8 +16,9 @@ what has been validated.
 
 ## Add the addon
 
-The addon isn't published to the Asset Library yet. Take it from a clone of the
-repository, either as a directory or as a ZIP you build yourself.
+The unified package is prepared for the [Godot Asset Store](https://store.godotengine.org/).
+Until a public version is available, take it from a clone of the repository,
+either as a directory or as a ZIP you build yourself.
 
 <Tabs>
 <TabItem label="Copy the directory">
@@ -35,10 +36,10 @@ the whole directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
    package's version:
 
    ```powershell
-   ./scripts/Pack-GDScript.ps1
+   ./scripts/Pack-Addon.ps1
    ```
 
-   This writes `artifacts/packages/tweens.gd-gdscript-0.1.0.zip`.
+   This writes `artifacts/packages/tweens.gd-0.1.0-pre.zip`, including both languages.
 
 2. Unpack it into your project's root directory. Its entries already start with
    `addons/tweens_gd/`.
@@ -50,16 +51,15 @@ the whole directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
 
 ## Load it from a script
 
-Preload the entry script under a constant. The examples in these docs call it
-`Tweens`:
+The entry script registers the global class `Tweens`. Use it directly, with no
+preload or autoload:
 
 ```gdscript
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+await Tweens.play(self, Tweens.position_2d(Vector2(100, 50), 0.3)).end
 ```
 
-The editor also registers the entry script as the global class `TweensGd`, so
-`TweensGd.play(...)` works without the constant once the editor has scanned the
-project. The explicit preload works before the editor has generated its global
-class cache, for example in a fresh checkout or a headless run.
+Let the editor finish importing before running the project. For a fresh
+headless checkout, run `godot --headless --editor --import` once to populate the
+script-class cache used by the addon's internal types.
 
 Then write [your first tween](/gdscript/quickstart/).

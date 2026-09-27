@@ -8,7 +8,7 @@ a property path, or a custom adapter. `Tweens.custom()` takes Callables for read
 and writing a value; subclasses of `Tweens.Adapter` add preparation and cleanup
 hooks for bindings that need them.
 
-The examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and
+The examples assume the global `Tweens` class and
 run on Godot's main thread in a method of an in-tree node.
 
 ## Callback values
@@ -37,8 +37,6 @@ exposes, including script variables, so a plain script needs no adapter:
 ```gdscript title="health_bar.gd"
 extends Node2D
 
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
-
 var fill := 1.0
 
 static var drain := Tweens.property(^"fill", null, 0.4, Tweens.Ease.SMOOTHER_STEP)
@@ -54,8 +52,6 @@ To animate an object that isn't a node, such as a model in a test, add it to a
 
 ```gdscript title="meter_example.gd"
 extends RefCounted
-
-const Tweens = preload("res://addons/tweens_gd/tweens.gd")
 
 class Meter:
 	var value := 0.0

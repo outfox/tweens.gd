@@ -8,7 +8,7 @@ import OwnershipDemo from '../../../components/OwnershipDemo.astro';
 A node owns the tweens started on it. When the node leaves the scene tree, its
 tweens stop by themselves, so you rarely need cleanup code.
 
-Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and run
+Examples assume the global `Tweens` class and run
 on Godot's main thread in a method of an in-tree node.
 
 ## Target and owner

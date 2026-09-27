@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <Configurations>Debug;Editor;Release</Configurations>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsTrimmable>true</IsTrimmable>
         <RootNamespace>tweens.gd</RootNamespace>
@@ -28,6 +28,11 @@
         <!-- This assembly contains code-created nodes, not res:// scene scripts. -->
         <GodotDisabledSourceGenerators>ScriptPathAttribute</GodotDisabledSourceGenerators>
     </PropertyGroup>
+    <ItemGroup>
+        <!-- The addon owns the sources. NuGet builds regenerate definitions with Roslyn. -->
+        <Compile Include="../addons/tweens_gd/csharp/**/*.cs"
+                 Exclude="../addons/tweens_gd/csharp/Generated/**/*.cs" />
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../csharp.generators/tweens.gd.Generators.csproj"
                           OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />

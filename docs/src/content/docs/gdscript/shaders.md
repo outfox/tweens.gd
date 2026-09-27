@@ -6,7 +6,7 @@ description: Material and per-instance uniforms, binding validation, defaults, a
 Animate shader uniforms by name, either on a shared `ShaderMaterial` or per node
 with instance uniforms. Names and types are checked before playback starts.
 
-The examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and
+The examples assume the global `Tweens` class and
 run in a Node method on the main thread. `shader_material` is a configured
 ShaderMaterial. `mesh` and `sprite` are in-tree MeshInstance3D and Sprite2D nodes
 using the declared shaders.
