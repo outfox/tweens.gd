@@ -36,7 +36,7 @@ const gd = lang === 'gdscript';
 			<p class="pane-label">The shared definition</p>
 			{
 				gd ? (
-					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num">0.1</span>,
+					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num" data-base-duration>0.2</span>,
     Tweens.Ease.QUAD_OUT) <span class="cont">\</span>
     .<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>) <span class="cont">\</span>
     .<span class="fn">with_ping_pong</span>()</pre>
@@ -44,7 +44,7 @@ const gd = lang === 'gdscript';
 					<pre><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DX</span> Recoil = <span class="kw">new</span>()
 {'{'}
     By = <span class="num" data-base-by>-12</span>,
-    Duration = <span class="num">0.1</span>,
+    Duration = <span class="num" data-base-duration>0.2</span>,
     Ease = EaseType.QuadOut,
     UsePingPong = <span class="kw">true</span>,
 {'}'};</pre>
@@ -83,7 +83,7 @@ const gd = lang === 'gdscript';
 					)
 				}
 			</div>
-			<p class="result" data-result>Kicks 24 px, 0.12 s each way</p>
+			<p class="result" data-result>Kicks 24 px, 0.24 s each way</p>
 		</div>
 	</div>
 
@@ -115,6 +115,10 @@ const gd = lang === 'gdscript';
 				<span>Recoil kick, shared by both <output data-base-label>12 px</output></span>
 				<input type="range" min="6" max="20" step="1" value="12" data-base />
 			</label>
+			<label class="tw-field">
+				<span>Recoil duration, shared by both <output data-duration-label>0.2 s</output></span>
+				<input type="range" min="0.1" max="0.5" step="0.01" value="0.2" data-duration />
+			</label>
 			<label class="slow">
 				<input type="checkbox" data-slow />
 				Slow motion
@@ -128,7 +132,6 @@ const gd = lang === 'gdscript';
 	import { EASES, reducedMotion } from '../scripts/motion';
 	import { langOf } from '../scripts/lang';
 
-	const DURATION = 0.1;
 	const SLOW = 8;
 	const W = 200;
 	const H = 120;
@@ -159,6 +162,7 @@ const gd = lang === 'gdscript';
 		const curve = q<SVGPathElement>('[data-curve]');
 		const head = q<SVGCircleElement>('[data-head]');
 		const baseIn = q<HTMLInputElement>('[data-base]');
+		const durationIn = q<HTMLInputElement>('[data-duration]');
 		const slowIn = q<HTMLInputElement>('[data-slow]');
 		const hitCall = q<HTMLElement>('[data-call-hit]');
 		const critCall = q<HTMLElement>('[data-call-crit]');
@@ -187,7 +191,7 @@ const gd = lang === 'gdscript';
 			const damage = Number(rows.hit.input('damage').value);
 			const factorBy = name === 'hit' ? damage / 10 : Number(rows.crit.input('factor').value);
 			const factorDuration = name === 'hit' ? 1 + damage / 100 : 1;
-			return { base, damage, factorBy, factorDuration, skew, by: factorBy * base, duration: factorDuration * DURATION };
+			return { base, damage, factorBy, factorDuration, skew, by: factorBy * base, duration: factorDuration * Number(durationIn.value) };
 		};
 
 		// Real kicks are a few dozen pixels, so the stage draws them larger: up to 3×, as far as the widest kick fits.
@@ -208,6 +212,8 @@ const gd = lang === 'gdscript';
 			rows.crit.output('factor').textContent = fmt(crit.factorBy, 1);
 			rows.crit.output('skew').textContent = crit.skew.toFixed(2);
 			q<HTMLOutputElement>('[data-base-label]').textContent = `${baseIn.value} px`;
+			q<HTMLOutputElement>('[data-duration-label]').textContent = `${durationIn.value} s`;
+			all('[data-base-duration]').forEach((el) => (el.textContent = durationIn.value));
 			const number = (n: number, digits: number) => (gd ? n.toFixed(digits) : fmt(n, digits));
 			all('[data-base-by]').forEach((el) => (el.textContent = gd ? v.base.toFixed(1) : String(v.base)));
 			all('[data-factor-by]').forEach((el) => (el.textContent = number(hit.factorBy, 1)));
@@ -263,6 +269,7 @@ const gd = lang === 'gdscript';
 				});
 		}
 		baseIn.addEventListener('input', () => sync());
+		durationIn.addEventListener('input', () => sync());
 		new ResizeObserver(() => sync()).observe(stage);
 	}
 </script>
@@ -488,7 +495,7 @@ const gd = lang === 'gdscript';
 		justify-content: center;
 	}
 	.shared {
-		grid-template-columns: minmax(0, 2fr) auto;
+		grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
 		padding-top: 0.9rem;
 	}
 	@media (max-width: 44rem) {

@@ -26,7 +26,7 @@ public partial class Enemy : Sprite2D
     static readonly Tweens.Position2DX Recoil = new()
     {
         By = -12,
-        Duration = 0.1,
+        Duration = 0.2,
         Ease = EaseType.QuadOut,
         UsePingPong = true,
     };
@@ -45,7 +45,7 @@ public partial class Enemy : Sprite2D
    returns.
 2. **Scale it per hit.** `FactorBy` scales the kick with the damage, and
    `FactorDuration` stretches the timing. A 20-damage hit kicks 24 pixels and
-   takes 0.12 seconds each way.
+   takes 0.24 seconds each way.
 3. **Change the pacing.** `Skew = 0.5` front-loads the same ease, so a critical
    hit lands sooner.
 
@@ -57,8 +57,8 @@ the value, so that variant no longer follows `Recoil`.
 
 Try it below. Each row starts one variant with its own sliders: **Hit** scales
 with the damage, and **Crit** uses its own factor and skew. The curve and code
-show the row you used last. **Recoil kick** tunes the shared definition, and both
-variants follow.
+show the row you used last. **Recoil kick** and **Recoil duration** tune the shared
+definition, and both variants follow.
 
 <VariationLab />
 
