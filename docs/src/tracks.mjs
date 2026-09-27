@@ -55,9 +55,9 @@ export const PATH = [
 	},
 ];
 
-/** Pages that belong to neither language. */
+/** Pages that belong to neither language, listed under Project. The overview is reached from the site title. */
 export const SHARED = [
-	{ slug: '', label: 'Overview' },
+	{ slug: 'faq', label: 'FAQ' },
 	{ slug: 'compatibility', label: 'Compatibility' },
 	{ slug: 'acknowledgements', label: 'Acknowledgements' },
 ];

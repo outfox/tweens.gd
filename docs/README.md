@@ -30,8 +30,8 @@ starter-template text. Preview the production build when checking search.
 The site has two parallel learning paths with the same page slugs: `csharp/<slug>` and
 `gdscript/<slug>`. `src/tracks.mjs` lists the path once; `astro.config.mjs` builds the
 sidebar from it, and `src/routeData.ts` shows each page only its own language's path, with
-prev/next following that path. The overview, compatibility, and acknowledgements pages
-are shared.
+prev/next following that path. The overview, FAQ, compatibility, and acknowledgements
+pages are shared; the sidebar lists all but the overview, which the site title links to.
 
 - Add a page to both paths at the same slug and register it once in `src/tracks.mjs`.
   A language can relabel a page there (`gdscript: 'Groups & sequences'`).

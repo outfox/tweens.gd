@@ -10,7 +10,7 @@ const language = lang && LANGS[lang];
 // One drawing per stretch of the learning path, the same in both languages; shared pages use the catalog drawing.
 const slug = lang ? slugOf(id) : undefined;
 const section = (PATH.find((g) => g.pages.some((p) => p.slug === slug))?.art ??
-	(id === 'compatibility' || id === 'acknowledgements' ? 'catalog' : undefined)) as Section | undefined;
+	(['faq', 'compatibility', 'acknowledgements'].includes(id) ? 'catalog' : undefined)) as Section | undefined;
 // Search results list both languages' twins, so their titles carry the language.
 const searchTitle = language ? `title:${title} (${language.label})` : undefined;
 // Letters are split so a hover can ripple through them like a staggered tween list.

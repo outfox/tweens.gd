@@ -49,7 +49,7 @@ var arrive = new Tweens.Position2D
 
 var movement = sprite.Tween(arrive);
 await movement;
-GD.Print("Movement ended");
+GD.Print("Arrived");
 ```
 
 1. **Define** the motion. Property, endpoint, duration, and easing sit together
@@ -72,7 +72,7 @@ arrive.ease = Tweens.Ease.CUBIC_OUT
 
 var movement := Tweens.play(sprite, arrive)
 await movement.end
-print("Movement ended")
+print("Arrived")
 ```
 
 1. **Define** the motion. The helper names the property and checks the node's
@@ -128,7 +128,7 @@ var target = new Vector2(400, 180);
 var movement = sprite.TweenPosition(target, 0.6,
     options => options.Ease = EaseType.CubicOut);
 await movement;
-GD.Print("Movement ended");
+GD.Print("Arrived");
 ```
 
 </Compare>
@@ -159,7 +159,7 @@ var move := Tweens.position_2d(Vector2(400, 180), 0.6)
 move.ease = Tweens.Ease.CUBIC_OUT
 var movement := Tweens.play(sprite, move)
 await movement.end
-print("Movement ended")
+print("Arrived")
 ```
 
 </Compare>
