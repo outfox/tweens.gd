@@ -14,6 +14,9 @@ var target_class: StringName
 var value_type: int = TYPE_NIL
 var from_value: Variant = null
 var to_value: Variant = null
+## A relative offset instead of to_value, added on top of other changes to the property while it plays.
+## With from_value it is added to that start once. Each repeat adds it again.
+var by_value: Variant = null
 ## Initial value for callback-only tweens (an empty property path).
 var initial_value: Variant = 0.0
 var duration: float = 0.0
@@ -48,6 +51,7 @@ func copy() -> TweensGdDefinition:
 	result.value_type = value_type
 	result.from_value = from_value
 	result.to_value = to_value
+	result.by_value = by_value
 	result.initial_value = initial_value
 	result.duration = duration
 	result.delay = delay
@@ -92,6 +96,7 @@ func copy() -> TweensGdDefinition:
 ## so a shared definition can vary one start. Chain them: `pop.with_delay(0.1).with_to(target)`.
 func with_from(value: Variant) -> TweensGdDefinition: return _with(&"from_value", value)
 func with_to(value: Variant) -> TweensGdDefinition: return _with(&"to_value", value)
+func with_by(value: Variant) -> TweensGdDefinition: return _with(&"by_value", value)
 func with_initial_value(value: Variant) -> TweensGdDefinition: return _with(&"initial_value", value)
 func with_duration(seconds: float) -> TweensGdDefinition: return _with(&"duration", seconds)
 func with_delay(seconds: float) -> TweensGdDefinition: return _with(&"delay", seconds)
@@ -125,6 +130,7 @@ func _with(field: StringName, value: Variant) -> TweensGdDefinition:
 ## Returns an empty string on success. No partial playback is created on failure.
 func validate() -> String:
 	if adapter != null and not property.is_empty(): return "Choose either an adapter or a property path."
+	if to_value != null and by_value != null: return "Choose either to_value or by_value."
 	for seconds in [duration, delay, offset, ping_pong_interval, repeat_interval]:
 		if not is_finite(seconds) or seconds < 0.0:
 			return "Timing must be finite and nonnegative."

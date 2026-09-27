@@ -52,6 +52,14 @@ var _initial: Variant
 var _from: Variant
 var _to: Variant
 var _value: Variant
+# A by_value tween writes origin + applied. Following tweens move origin along with outside changes to the property.
+var _relative: bool = false
+var _follows: bool = false
+var _ping_pong: bool = false
+var _by: Variant
+var _zero: Variant
+var _origin: Variant
+var _applied: Variant
 var _state: int = Types.State.DELAYED
 var _reason: int = -1
 var _error: String = ""
@@ -92,6 +100,15 @@ func _init(scheduler: RefCounted, target_object: Object, options: Definition,
 	_value = initial
 	_from = initial if options.from_value == null else options.from_value
 	_to = initial if options.to_value == null else options.to_value
+	if options.by_value != null:
+		_relative = true
+		# Callback-only definitions have nothing to read back, so they add to the captured start.
+		_follows = options.from_value == null and (_adapter != null or not options.property.is_empty())
+		_ping_pong = options.use_ping_pong
+		_by = options.by_value
+		_zero = Interpolation.zero(typeof(initial))
+		_origin = _from
+		_applied = _zero
 	_mode = options.process_mode
 	_pause_mode = options.pause_mode
 	_unscaled = options.use_unscaled_time
@@ -157,23 +174,54 @@ func _advance_inner(delta: float) -> void:
 		_fail("Easing must return a finite number.")
 		return
 	var sample: Variant
-	if _adapter != null:
-		sample = _adapter.interpolate(_from, _to, weight)
+	if _relative:
+		# Everything by_value has added so far: one offset per finished cycle, unless ping-pong brought it back.
+		if not _follow(): return
+		var offset: Variant = _interpolate(_zero, _by, weight)
 		if not _check_target(): return
+		var cycles: Variant = _zero
+		if not _ping_pong and _clock.cycle > 0.0:
+			cycles = _interpolate(_zero, _by, _clock.cycle)
+			if not _check_target(): return
+		if not Interpolation.compatible(_initial, offset) or not Interpolation.compatible(_initial, cycles):
+			_fail("Interpolation changed the value type.")
+			return
+		_applied = Interpolation.add(cycles, offset)
+		sample = Interpolation.add(_origin, _applied)
+	else:
+		sample = _interpolate(_from, _to, weight)
+		if not _check_target(): return
+	if _adapter != null:
 		var sample_error := _adapter.validate_value(sample)
 		if not _check_target(): return
 		if not sample_error.is_empty() or not Interpolation.compatible(_initial, sample):
 			_fail(sample_error if not sample_error.is_empty() else "Interpolation changed the value type.")
 			return
-	else:
-		sample = Interpolation.interpolate(_from, _to, weight, typeof(_initial))
-		if not Interpolation.finite(sample):
-			_fail("Interpolation produced a non-finite value.")
-			return
+	elif not Interpolation.finite(sample):
+		_fail("Interpolation produced a non-finite value.")
+		return
 	_apply(sample)
 	if is_terminal or not _clock.completed: return
-	if not _options.fill & Types.Fill.RETAIN_FINAL_VALUE: _apply(_initial, true)
+	if not _options.fill & Types.Fill.RETAIN_FINAL_VALUE:
+		# A following by_value tween takes only its own offset back out.
+		if not _follow(): return
+		_apply(_origin if _follows else _initial, true)
 	if not is_terminal: _finish(Types.Reason.COMPLETED)
+
+func _interpolate(from: Variant, to: Variant, weight: float) -> Variant:
+	if _adapter != null: return _adapter.interpolate(from, to, weight)
+	return Interpolation.interpolate(from, to, weight, typeof(_initial))
+
+## A value other than the last one written means something else changed the property; keep that change.
+func _follow() -> bool:
+	if not _follows: return true
+	var current: Variant = _adapter.read(_target) if _adapter != null else _target.get_indexed(_options.property)
+	if not _check_target(): return false
+	if not Interpolation.compatible(_initial, current):
+		_fail("The property no longer holds a value of its captured type.")
+		return false
+	if current != _value: _origin = Interpolation.remove(current, _applied)
+	return true
 
 func _apply(sample: Variant, restoring: bool = false) -> void:
 	# Callers have checked lifetimes after every preceding user callback.

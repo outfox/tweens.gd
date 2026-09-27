@@ -29,9 +29,11 @@ GD.Print("Movement ended");
 ```
 
 The first tween installs a runner automatically. No autoload is required.
-Definitions are readonly record structs in the root `Tweens` namespace. Store a
+Definitions are readonly record structs in the root `Tweens` namespace. Their
+constructors take `(to, duration, ease, delay)`, all optional. Store a
 definition in a readonly field and use `definition with { Delay = 0.2 }` to vary
-a copy for one playback. `TweenOptions` is an immutable value too; mutable
+a copy for one playback. Set `By` instead of `To` for relative motion that
+keeps other changes to the property. `TweenOptions` is an immutable value too; mutable
 convenience configurators use `TweenOptionsBuilder`. Playback supports pause/resume,
 cancellation, delays, loops, ping-pong, easing, and node lifetime handling.
 Create and control tweens on Godot's main thread.

@@ -61,6 +61,27 @@ public class ShaderParameterTests(HeadlessFixture godot)
     }
 
     [Fact]
+    public void RelativePlaybackAddsToTheUniformAndTakesItsOffsetBackOut()
+    {
+        using var scope = new SceneScope(godot);
+        using var scheduler = new TweenScheduler();
+        var material = Material(scope);
+        material.SetShaderParameter("scalar", 0.25f);
+        scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { By = 0.5f, Duration = 1 });
+        scheduler.Update(0.5);
+        Assert.Equal(0.5f, material.GetShaderParameter("scalar").AsSingle());
+        material.SetShaderParameter("scalar", 1f);
+        scheduler.Update(0.5);
+        Assert.Equal(1.25f, material.GetShaderParameter("scalar").AsSingle());
+
+        scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { By = -1, Duration = 1, Fill = FillMode.None });
+        scheduler.Update(0.5);
+        Assert.Equal(0.75f, material.GetShaderParameter("scalar").AsSingle());
+        scheduler.Update(0.5);
+        Assert.Equal(1.25f, material.GetShaderParameter("scalar").AsSingle());
+    }
+
+    [Fact]
     public void ConvenienceOverloadsBindTreeOrOwner()
     {
         using var scope = new SceneScope(godot);
@@ -95,6 +116,7 @@ public class ShaderParameterTests(HeadlessFixture godot)
         Assert.Throws<NotSupportedException>(() => scheduler.Add(material, new Tweens.ShaderParameter<Quaternion>("scalar")));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { From = float.NaN }));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { To = float.NaN }));
+        Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { By = float.NaN }));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("missing")));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<Vector2>("scalar")));
         Assert.Throws<ArgumentException>(() => scheduler.Add(scope.Track(new ShaderMaterial()), new Tweens.ShaderParameter<float>("scalar")));

@@ -61,7 +61,9 @@ func add(target: Variant, definition: Definition, owner: Variant = null) -> Hand
 	if snapshot.adapter == null and not Interpolation.supported(initial): return _reject("The property is missing or its value type is unsupported.")
 	if snapshot.value_type != TYPE_NIL and typeof(initial) != snapshot.value_type:
 		return _reject("The captured value does not match the definition's value type.", snapshot)
-	for endpoint in [initial, snapshot.from_value, snapshot.to_value]:
+	if snapshot.by_value != null and Interpolation.zero(typeof(initial)) == null:
+		return _reject("by_value needs an int, float, vector, Color, Quaternion or Rect2 value.", snapshot)
+	for endpoint in [initial, snapshot.from_value, snapshot.to_value, snapshot.by_value]:
 		if endpoint == null and initial != null: continue
 		if snapshot.adapter != null:
 			var value_error := snapshot.adapter.validate_value(endpoint)

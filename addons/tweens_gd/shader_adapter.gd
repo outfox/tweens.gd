@@ -7,6 +7,7 @@ var parameter: StringName
 var instance_uniform := false
 var _uniform_type := TYPE_NIL
 var _had_override := false
+var _read := false
 var _changed := false
 var _mesh: Mesh
 var _slots: Array = []
@@ -62,8 +63,10 @@ func read(target: Object) -> Variant:
 			return RenderingServer.canvas_item_get_instance_shader_parameter_default_value(target.get_canvas_item(), parameter)
 		return RenderingServer.instance_geometry_get_shader_parameter_default_value(target.get_instance(), parameter)
 	var value: Variant = target.get_shader_parameter(parameter)
-	_had_override = value != null
-	return value if _had_override else RenderingServer.shader_get_parameter_default(target.shader.get_rid(), parameter)
+	# Only the first read captures whether an override existed; later reads see this tween's writes.
+	if not _read: _had_override = value != null
+	_read = true
+	return value if value != null else RenderingServer.shader_get_parameter_default(target.shader.get_rid(), parameter)
 
 func validate_value(value: Variant) -> String:
 	if typeof(value) != _uniform_type:

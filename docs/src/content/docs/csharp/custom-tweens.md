@@ -79,6 +79,11 @@ Derive from `TweenDefinition<TTarget, TValue>` and implement the protected `Read
 value type. The `Interpolators` helpers cover the built-in numeric and vector
 types.
 
+`By` works with int, float, double, vector, `Color`, `Quaternion`, and `Rect2`
+values. It reads the property back on every frame, so override
+`ReadsWrittenValue` to return `false` if `Read` doesn't return what `Write`
+stored; `By` is then added to the start value instead.
+
 For per-playback bindings, override `Prepare`, `Restore`, and `Release`.
 `Prepare` runs on the playback's private definition snapshot, before its initial
 read. `Restore` may write back a property value or remove an override instead.

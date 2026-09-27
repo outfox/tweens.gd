@@ -48,11 +48,17 @@ public class StructuredDefinitionTests
 
     [Theory]
     [MemberData(nameof(Definitions))]
-    public void EveryPropertyRoundTripsIntoTheIndependentPlayback(Type definition)
+    public void EveryPropertyRoundTripsIntoTheIndependentPlayback(Type definition) => Run(nameof(Verify), definition);
+
+    [Theory]
+    [MemberData(nameof(Definitions))]
+    public void EveryConstructorTakesTheEndpointAndTiming(Type definition) => Run(nameof(VerifyConstructor), definition);
+
+    private static void Run(string check, Type definition)
     {
         try
         {
-            typeof(StructuredDefinitionTests).GetMethod(nameof(Verify), BindingFlags.NonPublic | BindingFlags.Static)!
+            typeof(StructuredDefinitionTests).GetMethod(check, BindingFlags.NonPublic | BindingFlags.Static)!
                 .MakeGenericMethod(Close(definition), Contract(Close(definition)).GetGenericArguments()[0],
                     Contract(Close(definition)).GetGenericArguments()[1])
                 .Invoke(null, []);
@@ -61,6 +67,39 @@ public class StructuredDefinitionTests
         {
             ExceptionDispatchInfo.Capture(error.InnerException).Throw();
         }
+    }
+
+    // Shader and custom definitions lead with their binding; omitted arguments take their defaults.
+    private static TDefinition Create<TDefinition>(params object?[] arguments)
+    {
+        var constructor = typeof(TDefinition).GetConstructors().Single();
+        object?[] binding = constructor.GetParameters().Length switch
+        {
+            5 => ["amount"],
+            7 => [(Func<Box, float>)(b => b.Value), (Action<Box, float>)((b, v) => b.Value = v),
+                (Func<float, float, float, float>)Interpolators.Float],
+            _ => [],
+        };
+        return (TDefinition)constructor.Invoke([.. binding, .. arguments, .. Enumerable.Repeat(Type.Missing, 4 - arguments.Length)]);
+    }
+
+    private static object? Get<TDefinition>(TDefinition definition, string property)
+        => typeof(TDefinition).GetProperty(property)!.GetValue(definition);
+
+    private static void VerifyConstructor<TDefinition, TTarget, TValue>()
+        where TDefinition : struct, ITweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
+    {
+        var to = Sample<TValue>(0.75f);
+        var given = Create<TDefinition>(to, 1.25, EaseType.QuadIn, 0.5);
+        Assert.Equal(to, Get(given, "To"));
+        Assert.Null(Get(given, "From"));
+        Assert.Equal(new TweenOptions { Duration = 1.25, Ease = EaseType.QuadIn, Delay = 0.5 }, Get(given, "Options"));
+
+        var omitted = Create<TDefinition>();
+        Assert.Null(Get(omitted, "To"));
+        Assert.Equal(new TweenOptions(), Get(omitted, "Options"));
+        if (typeof(TDefinition).GetConstructors().Single().GetParameters().Length == 4)
+            Assert.Equal(new TDefinition(), omitted);
     }
 
     private static Type Close(Type definition) => definition.IsGenericTypeDefinition
@@ -73,12 +112,7 @@ public class StructuredDefinitionTests
     private static void Verify<TDefinition, TTarget, TValue>()
         where TDefinition : struct, ITweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
     {
-        object boxed = typeof(TDefinition).GetConstructors().Any(constructor => constructor.GetParameters().Length == 3)
-            ? Activator.CreateInstance(typeof(TDefinition), (Func<Box, float>)(b => b.Value),
-                (Action<Box, float>)((b, v) => b.Value = v), (Func<float, float, float, float>)Interpolators.Float)!
-            : typeof(TDefinition).GetConstructor([typeof(string)]) is { } named
-                ? named.Invoke(["amount"])
-                : new TDefinition();
+        object boxed = Create<TDefinition>();
 
         // Assign through the init accessors, then read everything back.
         var expected = new Dictionary<string, object?>();
@@ -89,6 +123,7 @@ public class StructuredDefinitionTests
                 "Options" => null,
                 "From" => Sample<TValue>(0.25f),
                 "To" => Sample<TValue>(0.75f),
+                "By" => Sample<TValue>(0.5f),
                 "Parameter" => "uniform",
                 _ when OptionValues.TryGetValue(property.Name, out var option) => option,
                 _ when Callbacks.Contains(property.Name) => Expression.Lambda(property.PropertyType,
@@ -113,6 +148,7 @@ public class StructuredDefinitionTests
         Assert.Equal(options, playback.ToOptions());
         Assert.Equal(expected["From"], playback.From);
         Assert.Equal(expected["To"], playback.To);
+        Assert.Equal(expected["By"], playback.By);
         foreach (var callback in Callbacks)
             Assert.Same(expected[callback], playback.GetType().GetProperty(callback)!.GetValue(playback));
         if (expected.TryGetValue("Parameter", out var parameter))
@@ -138,11 +174,20 @@ public class StructuredDefinitionTests
     }
 
     private readonly Tweens.Property<Box, float> movement = new(
-        static target => target.Value, static (target, value) => target.Value = value, Interpolators.Float)
+        static target => target.Value, static (target, value) => target.Value = value, Interpolators.Float, 10, 1);
+
+    [Fact]
+    public void ConstructorArgumentsMatchTheirInitializers()
     {
-        To = 10,
-        Duration = 1,
-    };
+        Assert.Equal(new Tweens.Position2D { To = new Vector2(4, 2), Duration = 0.5, Ease = EaseType.CubicOut, Delay = 0.25 },
+            new Tweens.Position2D(new Vector2(4, 2), 0.5, EaseType.CubicOut, 0.25));
+        Assert.Equal(new Tweens.ModulateAlpha { Duration = 0.3 }, new Tweens.ModulateAlpha(duration: 0.3));
+        Assert.Equal(new Tweens.ShaderParameter<float>("amount") { To = 1, Delay = 0.1 },
+            new Tweens.ShaderParameter<float>("amount", 1, delay: 0.1));
+        Assert.Equal(10, movement.To);
+        Assert.Equal(1, movement.Duration);
+        Assert.Equal(FillMode.RetainFinalValue, new Tweens.Scale2D(Vector2.One, 0.2).Fill);
+    }
 
     [Fact]
     public void ReusableDefinitionsVaryWithWithExpressions()

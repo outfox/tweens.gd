@@ -114,7 +114,9 @@ rise.delay = 0.6
 Tweens.play(sprite, rise)
 ```
 
-Await the first tween instead, or give the delayed tween an explicit `from_value`.
+Await the first tween instead, give the delayed tween an explicit `from_value`,
+or move it with [`by_value`](/gdscript/definitions/#move-by-an-offset-with-by_value),
+which starts from wherever the property is when the tween plays.
 :::
 
 ## Wait between steps

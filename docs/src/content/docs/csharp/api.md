@@ -36,7 +36,8 @@ examples, and the definitions themselves are listed under
 ## Definitions
 
 The built-in `Tweens.*` definitions are `readonly record struct` values with
-nullable `From`/`To` endpoints, timing, and typed callbacks. Store them in readonly
+nullable `From`/`To` endpoints, a relative [`By`](/csharp/definitions/#move-by-an-offset-with-by)
+offset, timing, and typed callbacks. Store them in readonly
 fields and vary a copy when starting playback (see
 [reusable definitions](/csharp/definitions/)):
 
@@ -49,6 +50,19 @@ public partial class Trail : PathFollow2D
         this.Tween(Offset with { Duration = seconds, Delay = delay });
 }
 ```
+
+Each definition's constructor takes the endpoint and common timing. Every
+argument after the binding is optional:
+
+| Constructor | Arguments |
+| --- | --- |
+| `new Tweens.Position2D(to, duration, ease, delay)` and the other catalog definitions | `To`, `Duration`, `Ease`, `Delay` |
+| `new Tweens.ShaderParameter<TValue>(parameter, to, duration, ease, delay)` and the instance uniform definitions | The uniform name, then the same four |
+| `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations, then the same four |
+
+An omitted `to` is read at start, and the timing defaults to zero and
+`EaseType.Linear`. Set anything else in an initializer after the arguments:
+`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`.
 
 `TweenOptions` is also a readonly record struct. It holds shared timing and can
 be passed to a convenience method or assigned to a definition's `Options`.

@@ -114,8 +114,11 @@ internal sealed class Playback
 {
     private readonly double duration, delay, turn, offset, span, total;
     private readonly bool pingPong;
+    private readonly int repeats;
     private double elapsed;
     internal float Progress { get; private set; }
+    /// <summary>Index of the current cycle; relative tweens add one full offset per cycle before it.</summary>
+    internal double Cycle { get; private set; }
     internal bool Started { get; private set; }
     internal bool Completed { get; private set; }
     /// <summary>Time past the end of the timeline in the completing update.</summary>
@@ -137,6 +140,7 @@ internal sealed class Playback
             (options.Fill & ~FillMode.Both) != 0)
             throw new ArgumentException("Invalid tween mode.", nameof(options));
         pingPong = options.UsePingPong;
+        repeats = options.Repeats;
         var infinite = options.Repeats == TweenOptions.Infinite;
         span = duration + (pingPong ? turn + duration : 0) + repeat;
         // Double arithmetic keeps int.MaxValue repeats from overflowing.
@@ -166,14 +170,20 @@ internal sealed class Playback
         if (time >= total)
         {
             Progress = pingPong ? 0 : 1;
+            Cycle = repeats;
             Overshoot = time - total;
             Completed = true;
             State = TweenState.Completed;
             return;
         }
         var local = time % span;
+        Cycle = Math.Round((time - local) / span);
         // At a cycle boundary, display the previous endpoint before restarting.
-        if (local == 0 && time > 0) local = span;
+        if (local == 0 && time > 0)
+        {
+            local = span;
+            Cycle--;
+        }
         State = TweenState.Playing;
         if (duration > 0 && local <= duration)
             Progress = (float)(local / duration);

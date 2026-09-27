@@ -86,7 +86,9 @@ await together.end
 ```
 
 Factory arguments are `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
-delay = 0.0)`. Null endpoints capture the initial value. `float_value`, `double_value`, `vector2_value`, `vector3_value`,
+delay = 0.0)`. Null endpoints capture the initial value. Set `by_value` (or call
+`with_by()`) instead of `to_value` for relative motion that keeps other changes to
+the property; each repeat adds it again. `float_value`, `double_value`, `vector2_value`, `vector3_value`,
 `vector4_value`, `color_value`, `quaternion_value` and `rect2_value` provide named
 callback-only definitions; GDScript represents both float and double as `float`.
 `play_all()` / manual `scheduler.add_all()` start definitions on one target and

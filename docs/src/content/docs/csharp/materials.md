@@ -25,7 +25,7 @@ var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(),
     d => d.Ease = EaseType.CubicOut, owner: mesh);
 
 // Reusable definitions work with either context.
-var definition = new Tweens.MaterialRoughness { To = 0.5f, Duration = 1 };
+var definition = new Tweens.MaterialRoughness(0.5f, 1);
 _ = material.Tween(definition, GetTree());
 _ = material.Tween(definition, mesh);
 _ = mesh.Tween(material, definition);

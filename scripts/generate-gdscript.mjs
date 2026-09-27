@@ -17,7 +17,7 @@ const defaults = { float: '0.0', double: '0.0', Vector2: 'Vector2.ZERO', Vector3
 const entries = [];
 for (const file of fs.readdirSync(path.join(root, 'csharp/src/Tweens')).filter(f => f.endsWith('.cs')).sort()) {
   const source = fs.readFileSync(path.join(root, 'csharp/src/Tweens', file), 'utf8');
-  const matches = [...source.matchAll(/public sealed class (\w+)Tween\(\) : PropertyTween<([\w.]+), (\w+)>\(\s*static [a-z_] => ([\s\S]*?), static \([\s\S]*?Interpolators\.(\w+)\);/g)];
+  const matches = [...source.matchAll(/public sealed class (\w+)Tween\(\) : PropertyTween<([\w.]+), (\w+)>\(\s*static [a-z_] => ([\s\S]*?), static \([\s\S]*?Interpolators\.(\w+)\)(?:;|\s*\{)/g)];
   const expected = [...source.matchAll(/: PropertyTween</g)].length;
   if (matches.length !== expected) throw new Error(`Unrecognized adapter syntax in ${file}: ${matches.length}/${expected}`);
   for (const [, csharp, rawTarget, type, getter] of matches) {

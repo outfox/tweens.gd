@@ -42,8 +42,8 @@ A group plays tweens as one step. Start several definitions on one node with
 types:
 
 ```csharp
-var grow = new Tweens.Scale2D { To = new Vector2(1.2f, 1.2f), Duration = 0.2 };
-var dim = new Tweens.ModulateAlpha { To = 0.5f, Duration = 0.2 };
+var grow = new Tweens.Scale2D(new Vector2(1.2f, 1.2f), 0.2);
+var dim = new Tweens.ModulateAlpha(0.5f, 0.2);
 await sprite.Tween(grow, dim);
 ```
 
@@ -103,7 +103,9 @@ _ = sprite.TweenPosition(new Vector2(400, 180), 0.6);
 _ = sprite.TweenPosition(new Vector2(400, 0), 0.4, options => options.Delay = 0.6);
 ```
 
-Await the first tween instead, or give the delayed tween an explicit `From`.
+Await the first tween instead, give the delayed tween an explicit `From`, or
+move it with [`By`](/csharp/definitions/#move-by-an-offset-with-by), which
+starts from wherever the property is when the tween plays.
 :::
 
 ## Wait between steps

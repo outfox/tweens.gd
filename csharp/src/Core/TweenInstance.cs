@@ -202,7 +202,10 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     private TweenDefinition<TTarget, TValue>? definition;
     private Func<float, float>? ease;
     private Curve? curve;
-    private readonly TValue initial, from, to;
+    private readonly TValue initial, from, to, by;
+    // A By tween writes origin + applied. Following tweens move origin along with outside changes to the property.
+    private readonly bool relative, follows, pingPong;
+    private TValue origin, applied;
     private bool started;
     public TTarget Target { get; }
     public TValue Value { get; private set; }
@@ -217,6 +220,9 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         {
             if (definition.Curve is not null && definition.EaseFunction is not null)
                 throw new ArgumentException("Specify either Curve or EaseFunction, not both.", nameof(source));
+            if (definition.By is not null && definition.To is not null)
+                throw new ArgumentException("Specify either To or By, not both.", nameof(source));
+            if (definition.By is not null && !Offsets<TValue>.Supported) throw Offsets<TValue>.Unsupported();
             definition.PrepareTarget(target);
             if (InvalidTargetOrOwner)
                 throw new ArgumentException("The target or owner became invalid during tween preparation.", nameof(target));
@@ -224,6 +230,12 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
             Value = initial;
             from = definition.From ?? initial;
             to = definition.To ?? initial;
+            if (definition.By is { } offset)
+            {
+                (relative, by, origin, applied) = (true, offset, from, Offsets<TValue>.Zero);
+                follows = definition.From is null && definition.FollowsTarget;
+                pingPong = definition.UsePingPong;
+            }
             ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease);
             if (definition.Curve is not null)
             {
@@ -272,7 +284,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
             var weight = ease!(time);
             if (!float.IsFinite(weight)) throw new InvalidOperationException("Easing returned a non-finite value.");
             if (!CheckTarget()) return;
-            var value = definition!.InterpolateValue(from, to, weight);
+            var value = relative ? Offset(weight) : definition!.InterpolateValue(from, to, weight);
             if (!CheckTarget()) return;
             Apply(value);
             if (!CheckTarget() || !Clock.Completed) return;
@@ -291,12 +303,35 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         if (CheckTarget()) definition!.OnUpdate?.Invoke(this, value);
     }
 
+    // Everything By has added so far: one offset per finished cycle, unless ping-pong brought it back, plus this one.
+    private TValue Offset(float weight)
+    {
+        Follow();
+        var offset = definition!.InterpolateValue(Offsets<TValue>.Zero, by, weight);
+        if (!pingPong && Clock.Cycle > 0)
+            offset = Offsets<TValue>.Add(definition.InterpolateValue(Offsets<TValue>.Zero, by, (float)Clock.Cycle), offset);
+        applied = offset;
+        return Offsets<TValue>.Add(origin, offset);
+    }
+
+    // A value other than the last one written means something else changed the property; keep that change.
+    private void Follow()
+    {
+        if (!follows) return;
+        var current = definition!.ReadValue(Target);
+        if (!EqualityComparer<TValue>.Default.Equals(current, Value)) origin = Offsets<TValue>.Remove(current, applied);
+    }
+
     private void RestoreInitial()
     {
         if (!CheckTarget()) return;
-        definition!.RestoreValue(Target, initial);
-        Value = initial;
-        if (CheckTarget()) definition.OnUpdate?.Invoke(this, initial);
+        // A following By tween takes only its own offset back out.
+        Follow();
+        if (!CheckTarget()) return;
+        var value = follows ? origin : initial;
+        definition!.RestoreValue(Target, value);
+        Value = value;
+        if (CheckTarget()) definition.OnUpdate?.Invoke(this, value);
     }
 
     protected override void InvokeTerminal(Reason reason, bool faulted)

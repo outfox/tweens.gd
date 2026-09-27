@@ -12,7 +12,7 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
     public string Parameter { get; set; } = parameter;
     private StringName? name;
     private ShaderWatch? watch;
-    private bool hadOverride;
+    private bool? hadOverride;
 
     protected override void Prepare(ShaderMaterial target)
     {
@@ -20,6 +20,7 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
         _ = ShaderValues<TValue>.Type;
         if (From is { } from) ShaderValues<TValue>.Validate(from);
         if (To is { } to) ShaderValues<TValue>.Validate(to);
+        if (By is { } by) ShaderValues<TValue>.Validate(by);
         name = new StringName(Parameter);
         var shader = target.Shader;
         watch = new ShaderWatch(shader);
@@ -40,8 +41,9 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
     {
         watch!.Validate(target.Shader);
         using var value = target.GetShaderParameter(name!);
-        hadOverride = value.VariantType != Variant.Type.Nil;
-        if (hadOverride) return ShaderValues<TValue>.Read(value);
+        // Only the first read captures whether the material had an override; later reads see this tween's writes.
+        hadOverride ??= value.VariantType != Variant.Type.Nil;
+        if (value.VariantType != Variant.Type.Nil) return ShaderValues<TValue>.Read(value);
         using var defaultValue = RenderingServer.ShaderGetParameterDefault(target.Shader.GetRid(), name!);
         return ShaderValues<TValue>.Read(defaultValue);
     }
@@ -54,7 +56,7 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
     protected override void Restore(ShaderMaterial target, TValue initial)
     {
         watch!.Validate(target.Shader);
-        if (hadOverride) Write(target, initial);
+        if (hadOverride == true) Write(target, initial);
         else target.SetShaderParameter(name!, default);
     }
     protected override TValue Interpolate(TValue from, TValue to, float weight)

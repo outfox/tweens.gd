@@ -25,6 +25,9 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
 
     public TValue? From { get; set; }
     public TValue? To { get; set; }
+    /// <summary>A relative offset instead of <see cref="To"/>, added on top of other changes to the property while
+    /// it plays. With <see cref="From"/> it is added to that start once. Each repeat adds it again.</summary>
+    public TValue? By { get; set; }
     public Action<TweenInstance<TTarget, TValue>>? OnAdd { get; set; }
     public Action<TweenInstance<TTarget, TValue>>? OnStart { get; set; }
     public Action<TweenInstance<TTarget, TValue>, TValue>? OnUpdate { get; set; }
@@ -42,8 +45,12 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     protected virtual void Restore(TTarget target, TValue initial) => Write(target, initial);
     /// <summary>Release only resources owned by this playback snapshot, including after failed preparation.</summary>
     protected virtual void Release() { }
+    /// <summary>Whether Read returns what Write stored. If not, <see cref="By"/> is added to the captured start
+    /// instead of to the current value.</summary>
+    protected virtual bool ReadsWrittenValue => true;
 
     internal void PrepareTarget(TTarget target) => Prepare(target);
+    internal bool FollowsTarget => ReadsWrittenValue;
     internal void RestoreValue(TTarget target, TValue initial) => Restore(target, initial);
     internal void ReleaseSnapshot() => Release();
 

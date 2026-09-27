@@ -42,6 +42,38 @@ public class GDScriptConformanceTests
     }
 
     [Fact]
+    public void SharedRelativeFixturesMatchCSharp()
+    {
+        using var data = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "conformance", "relative.json")));
+        var tolerance = data.RootElement.GetProperty("tolerance").GetDouble();
+        foreach (var test in data.RootElement.GetProperty("cases").EnumerateArray())
+        {
+            var o = test.GetProperty("options");
+            double Number(string key) => o.TryGetProperty(key, out var value) ? value.GetDouble() : 0;
+            using var scheduler = new TweenScheduler();
+            var box = new Box { Value = test.GetProperty("start").GetSingle() };
+            scheduler.Add(box, new PlainTween
+            {
+                From = test.TryGetProperty("from", out var from) ? from.GetSingle() : null,
+                By = test.GetProperty("by").GetSingle(),
+                Duration = Number("duration"), Delay = Number("delay"), Repeats = (int)Number("repeats"),
+                RepeatInterval = Number("repeat_interval"),
+                UsePingPong = o.TryGetProperty("use_ping_pong", out var ping) && ping.GetBoolean(),
+                Fill = o.TryGetProperty("fill", out var fill) ? (FillMode)fill.GetInt32() : FillMode.RetainFinalValue,
+            });
+            foreach (var sample in test.GetProperty("samples").EnumerateArray())
+            {
+                // A "set" sample changes the property from outside the tween.
+                if (sample.TryGetProperty("set", out var set)) box.Value = set.GetSingle();
+                else scheduler.Update(sample.GetProperty("delta").GetDouble());
+                if (sample.TryGetProperty("value", out var value))
+                    Assert.True(Math.Abs(box.Value - value.GetDouble()) <= tolerance,
+                        $"{test.GetProperty("name").GetString()}: {box.Value}, expected {value.GetDouble()}");
+            }
+        }
+    }
+
+    [Fact]
     public void SharedTimelineAndEasingFixturesMatchCSharp()
     {
         using var data = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "conformance", "timelines.json")));
@@ -66,6 +98,7 @@ public class GDScriptConformanceTests
                 Assert.Equal(sample.GetProperty("state").GetInt32(), (int)clock.State);
                 if (sample.TryGetProperty("overshoot", out var overshoot))
                     Assert.InRange(Math.Abs(clock.Overshoot - overshoot.GetDouble()), 0, tolerance);
+                if (sample.TryGetProperty("cycle", out var cycle)) Assert.Equal(cycle.GetDouble(), clock.Cycle);
             }
         }
         foreach (var sample in data.RootElement.GetProperty("easing").EnumerateArray())

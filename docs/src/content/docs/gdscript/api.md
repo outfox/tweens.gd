@@ -61,7 +61,7 @@ changed, such as `with_delay(0.2)` or `with_ping_pong()`; see
 
 | Method | Sets |
 | --- | --- |
-| `with_from(value)`, `with_to(value)`, `with_initial_value(value)` | `from_value`, `to_value`, `initial_value` |
+| `with_from(value)`, `with_to(value)`, `with_by(value)`, `with_initial_value(value)` | `from_value`, `to_value`, `by_value`, `initial_value` |
 | `with_duration(seconds)`, `with_delay(seconds)`, `with_offset(seconds)` | The timing field of the same name |
 | `with_repeats(count)`, `with_ping_pong(enabled = true)`, `with_ping_pong_interval(seconds)`, `with_repeat_interval(seconds)`, `with_fill(mode)` | `repeats`, `use_ping_pong`, and the other loop fields |
 | `with_ease(easing)`, `with_skew(exponent)`, `with_ease_function(function)`, `with_curve(curve)` | The easing field of the same name |
@@ -71,6 +71,7 @@ changed, such as `with_delay(0.2)` or `with_ping_pong()`; see
 | Fields | Reference |
 | --- | --- |
 | `from_value`, `to_value` (`null` captures the current value), `initial_value` | [Definitions](/gdscript/definitions/) |
+| `by_value`, a relative offset instead of `to_value` | [Move by an offset](/gdscript/definitions/#move-by-an-offset-with-by_value) |
 | `duration`, `delay`, `offset`, `repeats`, `use_ping_pong`, `ping_pong_interval`, `repeat_interval`, `fill` | [Timing and loops](/gdscript/timing/) |
 | `ease`, `skew`, `ease_function`, `curve` | [Easing](/gdscript/easing/) |
 | `process_mode`, `use_unscaled_time` | [Timing and loops](/gdscript/timing/) |

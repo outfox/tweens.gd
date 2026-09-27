@@ -1,0 +1,25 @@
+{
+  "tolerance": 0.000001,
+  "cases": [
+    {"name":"adds to the current value", "start":2, "by":4, "options":{"duration":1}, "samples":[
+      {"delta":0.5,"value":4}, {"delta":0.5,"value":6}]},
+    {"name":"keeps outside changes", "start":0, "by":10, "options":{"duration":1}, "samples":[
+      {"delta":0.5,"value":5}, {"set":100}, {"delta":0.25,"value":102.5}, {"delta":0.25,"value":105}]},
+    {"name":"repeats accumulate", "start":0, "by":10, "options":{"duration":1,"repeats":2}, "samples":[
+      {"delta":1,"value":10}, {"delta":0.5,"value":15}, {"delta":1.5,"value":30}]},
+    {"name":"a large step counts every cycle", "start":0, "by":10, "options":{"duration":1,"repeats":3}, "samples":[
+      {"delta":2.5,"value":25}, {"delta":5,"value":40}]},
+    {"name":"ping-pong comes back each cycle", "start":1, "by":2, "options":{"duration":1,"use_ping_pong":true,"repeats":1}, "samples":[
+      {"delta":1,"value":3}, {"delta":1,"value":1}, {"delta":0.5,"value":2}, {"delta":1.5,"value":1}]},
+    {"name":"repeat interval holds the offset", "start":0, "by":4, "options":{"duration":1,"repeat_interval":1,"repeats":1}, "samples":[
+      {"delta":1.5,"value":4}, {"delta":0.75,"value":5}, {"delta":0.75,"value":8}]},
+    {"name":"from fixes the start", "start":0, "from":20, "by":10, "options":{"duration":1}, "samples":[
+      {"delta":0.5,"value":25}, {"set":100}, {"delta":0.5,"value":30}]},
+    {"name":"non-retaining fill takes the offset back out", "start":0, "by":10, "options":{"duration":1,"fill":0}, "samples":[
+      {"delta":0.5,"value":5}, {"set":50}, {"delta":0.5,"value":45}]},
+    {"name":"non-retaining fill with from restores the captured value", "start":3, "from":20, "by":10, "options":{"duration":1,"fill":0}, "samples":[
+      {"delta":0.5,"value":25}, {"delta":0.5,"value":3}]},
+    {"name":"a delay leaves the value until start", "start":3, "by":4, "options":{"duration":1,"delay":1,"fill":3}, "samples":[
+      {"delta":0.5,"value":3}, {"delta":1,"value":5}]}
+  ]
+}

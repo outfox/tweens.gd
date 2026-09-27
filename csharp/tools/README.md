@@ -4,8 +4,11 @@ The property adapters in `src/Tweens/` also serve as the mutable builders for
 convenience methods. The [Roslyn incremental generator](../../csharp.generators/StructuredDefinitionGenerator.cs)
 discovers those adapters and the public configuration properties in
 `TweenOptionsBuilder` using C# symbols, then produces the readonly record structs
-in the `Tweens` namespace. Shader and custom-property definitions use explicit
-templates in the same generator.
+in the `Tweens` namespace. Each gets a constructor taking `to` and then
+`Duration`, `Ease` and `Delay` when the builder declares them, all optional.
+Shader and custom-property definitions use explicit templates in the same
+generator, and their constructors lead with the uniform name or property
+operations.
 
 Generation runs automatically during builds and in the IDE. After adding an
 adapter or changing configuration properties, build from the repository root:

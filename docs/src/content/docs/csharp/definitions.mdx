@@ -78,9 +78,14 @@ var slowPop = new Tweens.Scale2D { Options = snappy, Duration = 0.6 };
 _ = sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
 ```
 
+A definition that shares its timing with nothing else can take it from the
+constructor instead: `new Tweens.ModulateAlpha(0, 0.25, EaseType.BackOut)`. The
+arguments are `(to, duration, ease, delay)`, and all of them are optional.
+
 :::caution[Order matters]
 - Put `Options` first in an initializer. Assigning it replaces every timing
-  setting listed before it.
+  setting listed before it, including a duration or ease passed to the
+  constructor.
 - Declare shared options above the static definitions that use them. Static
   fields initialize top to bottom, so a definition declared first copies empty
   options.
@@ -109,6 +114,40 @@ Set both only when the motion must span fixed values. Callback value tweens such
 as `Tweens.Float` have no property to read, so their omitted endpoints fall back
 to zero, transparent black, or identity.
 
+## Move by an offset with `By`
+
+Set `By` instead of `To` to move relative to wherever the property is:
+
+```csharp title="Crate.cs"
+public partial class Crate : Node2D
+{
+    static readonly Tweens.Position2D Nudge = new()
+    {
+        By = new Vector2(16, 0),
+        Duration = 0.2,
+        Ease = EaseType.CubicOut,
+    };
+
+    public void Push() => this.Tween(Nudge);
+}
+```
+
+`By` is added to the property's current value on every frame, so other changes
+to the property are kept. Two quick pushes move the crate 32 pixels, even while
+the first is still playing. Physics and your own code can move the crate at the
+same time.
+
+- Set `To` or `By`, not both. A `To` tween on the same property still sets it
+  outright.
+- With `From`, the tween runs from `From` to `From` plus `By`, like a `To` tween.
+- Each repeat adds `By` again, so `Repeats = 2` moves three times as far. A
+  ping-pong cycle comes back to where it started.
+- A `Fill` that doesn't retain the final value takes the offset back out at the
+  end, and keeps other changes.
+- A quaternion offset rotates about the node's own axes, so the tween ends at
+  `start * By`.
+- Callback value tweens such as `Tweens.Float` add `By` to their start value.
+
 ## Vary a start with `with`
 
 `with` copies a definition and changes only the properties you list. The field
@@ -135,19 +174,12 @@ Wrap named motion in an async method. Await each tween to put the steps in order
 ```csharp title="Chest.cs"
 public partial class Chest : Node2D
 {
-    static readonly Tweens.Rotation2D Wobble = new()
+    static readonly Tweens.Rotation2D Wobble = new(0.15f, 0.08)
     {
-        To = 0.15f,
-        Duration = 0.08,
         UsePingPong = true,
         Repeats = 2,
     };
-    static readonly Tweens.Scale2D Burst = new()
-    {
-        To = new Vector2(1.3f, 1.3f),
-        Duration = 0.2,
-        Ease = EaseType.BackOut,
-    };
+    static readonly Tweens.Scale2D Burst = new(new Vector2(1.3f, 1.3f), 0.2, EaseType.BackOut);
 
     public async Task Open()
     {
@@ -173,7 +205,7 @@ kind of handle.
 | --- | --- | --- |
 | Call | `sprite.Tween(new Tweens.Position2D { ... })` | `sprite.TweenPosition(to, 0.5)` |
 | Best for | Motion you name, reuse, or tune | One-off motion next to game logic |
-| Configure with | An initializer and `with` | A callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
+| Configure with | Constructor arguments, an initializer, and `with` | A callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
 
 A shorthand call's duration argument wins over the duration in a `TweenOptions`
 value. Reusable configure callbacks take a `TweenOptionsBuilder`.

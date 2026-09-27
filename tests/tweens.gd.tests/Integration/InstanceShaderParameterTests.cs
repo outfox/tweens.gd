@@ -99,7 +99,10 @@ public class InstanceShaderParameterTests(HeadlessFixture godot)
         Rejects<ArgumentException>("amount", float.NaN);
         Rejects<NotSupportedException>("amount", vector: true);
         if (node is CanvasItem item)
+        {
             Assert.Throws<ArgumentException>(() => scheduler.Add(item, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { To = float.NaN }));
+            Assert.Throws<ArgumentException>(() => scheduler.Add(item, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { By = float.NaN }));
+        }
         Assert.Equal(0, scheduler.ActiveCount);
     }
 

@@ -11,6 +11,8 @@ var progress: float = 0.0
 var started: bool = false
 var completed: bool = false
 var overshoot: float = 0.0
+## Index of the current cycle; relative tweens add one full offset per cycle before it.
+var cycle: float = 0.0
 var state: int = Types.State.DELAYED
 var elapsed: float = 0.0
 var _duration: float
@@ -20,6 +22,7 @@ var _offset: float
 var _span: float
 var _total: float
 var _ping_pong: bool
+var _repeats: int
 
 func _init(options: Definition) -> void:
 	_duration = options.duration
@@ -27,6 +30,7 @@ func _init(options: Definition) -> void:
 	_turn = options.ping_pong_interval
 	_offset = options.offset
 	_ping_pong = options.use_ping_pong
+	_repeats = options.repeats
 	_span = _duration + (_turn + _duration if _ping_pong else 0.0) + options.repeat_interval
 	_total = INF if options.repeats == Types.INFINITE else _span * (float(options.repeats) + 1.0) - options.repeat_interval
 
@@ -37,12 +41,16 @@ func advance(delta: float) -> void:
 	var time := minf(MAX_TIME, elapsed - _delay + _offset)
 	if time >= _total:
 		progress = 0.0 if _ping_pong else 1.0
+		cycle = _repeats
 		overshoot = time - _total
 		completed = true
 		state = Types.State.COMPLETED
 		return
 	var local := fmod(time, _span)
-	if local == 0.0 and time > 0.0: local = _span
+	cycle = roundf((time - local) / _span)
+	if local == 0.0 and time > 0.0:
+		local = _span
+		cycle -= 1.0
 	state = Types.State.PLAYING
 	if _duration > 0.0 and local <= _duration:
 		progress = local / _duration

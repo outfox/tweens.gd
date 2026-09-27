@@ -109,6 +109,40 @@ so their `null` endpoints use `initial_value` instead: the `from` you pass to
 `Tweens.value()`, or zero, transparent black, or identity for the named value
 helpers.
 
+## Move by an offset with `by_value`
+
+Set `by_value` instead of `to_value` to move relative to wherever the property
+is:
+
+```gdscript title="crate.gd"
+extends Node2D
+
+const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+
+static var nudge := Tweens.position_2d(null, 0.2, Tweens.Ease.CUBIC_OUT) \
+	.with_by(Vector2(16, 0))
+
+func push() -> void:
+	Tweens.play(self, nudge)
+```
+
+`by_value` is added to the property's current value on every frame, so other
+changes to the property are kept. Two quick pushes move the crate 32 pixels,
+even while the first is still playing. Physics and your own code can move the
+crate at the same time.
+
+- Set `to_value` or `by_value`, not both. A `to_value` tween on the same
+  property still sets it outright.
+- With `from_value`, the tween runs from `from_value` to `from_value` plus
+  `by_value`, like a `to_value` tween.
+- Each repeat adds `by_value` again, so `repeats = 2` moves three times as far.
+  A ping-pong cycle comes back to where it started.
+- A `fill` that doesn't retain the final value takes the offset back out at the
+  end, and keeps other changes.
+- A quaternion offset rotates about the node's own axes, so the tween ends at
+  `start * by_value`.
+- Callback-only definitions add `by_value` to `initial_value`.
+
 ## Vary a start with `with_*()`
 
 Each `with_*()` method returns a copy of the definition with one setting

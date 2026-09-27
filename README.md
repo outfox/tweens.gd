@@ -71,7 +71,7 @@ The first tween installs one internal runner under the SceneTree root through de
 ### Reuse and control
 
 ```csharp
-var fade = new Tweens.ModulateAlpha { To = 0, Duration = 0.3 };
+var fade = new Tweens.ModulateAlpha(0, 0.3);
 var first = sprite.Tween(fade);
 var second = label.Tween(fade with { Delay = 0.15 });
 first.Pause();
@@ -80,7 +80,7 @@ second.Cancel();
 sprite.CancelTweens(includeChildren: true);
 ```
 
-Built-in definitions are readonly record structs in the root `Tweens` namespace. A `with` expression copies the configuration and changes only the listed properties; the original remains available for reuse. Each start captures its own initial property value and owns its playback state. Omitted `From`/`To` use that captured value. Delegates and the objects they capture remain shared references. Godot Curves are duplicated for each playback.
+Built-in definitions are readonly record structs in the root `Tweens` namespace. Their constructors take `(to, duration, ease, delay)`, all optional; set anything else in an initializer. A `with` expression copies the configuration and changes only the listed properties; the original remains available for reuse. Each start captures its own initial property value and owns its playback state. Omitted `From`/`To` use that captured value. Set `By` instead of `To` to move relative to the current value; it is added on top of other changes to the property while it plays, and each repeat adds it again. Delegates and the objects they capture remain shared references. Godot Curves are duplicated for each playback.
 
 Multiple tweens on the same property are allowed: the last application in insertion order wins. Axis and alpha adapters read the other components at application time so independent component tweens compose correctly.
 
@@ -104,10 +104,10 @@ Handles and groups can be awaited directly: `await movement;` or `await group;`.
 `GetAwaiter()` uses `End`, a lazily allocated, shared `Task<Reason>`. Multiple callers can await it, including after the tween ends. Reasons are `Completed`, `Cancelled`, `TargetFreed`, `OwnerExited`, and `RunnerDisposed`. A direct `Free()` may be observed as `OwnerExited` because Godot emits tree-exit before invalidating the native instance; `QueueFree()` is identified as `TargetFreed`.
 
 ```csharp
-await sprite.Tween(new Tweens.Position2D { To = destination, Duration = 0.5 });
-await sprite.Tween(new Tweens.ModulateAlpha { To = 0, Duration = 0.2 });
+await sprite.Tween(new Tweens.Position2D(destination, 0.5));
+await sprite.Tween(new Tweens.ModulateAlpha(0, 0.2));
 
-await sprite.Tween(new Tweens.Scale2D { To = Vector2.One, Duration = 0.2 }, new Tweens.ModulateAlpha { To = 1, Duration = 0.2 });
+await sprite.Tween(new Tweens.Scale2D(Vector2.One, 0.2), new Tweens.ModulateAlpha(1, 0.2));
 await Group.Of(first, second);
 await first.AwaitDecommissionAsync(cancellationToken);
 ```

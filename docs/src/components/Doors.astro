@@ -10,7 +10,7 @@ const doors = [
 		badge: 'Beta',
 		facts: ['NuGet package', '.NET 10', 'GodotSharp 4.7.2'],
 		status: 'Install it from source or a locally packed NuGet package.',
-		code: `var hop = new Tweens.Position2D\n    { To = target, Duration = 0.6 };\nsprite.Tween(hop);`,
+		code: `var hop = new Tweens.Position2D(target, 0.6);\nsprite.Tween(hop);`,
 		start: '/csharp/installation/',
 		links: [
 			{ text: 'Your first tween', href: '/csharp/quickstart/' },

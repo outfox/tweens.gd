@@ -30,6 +30,11 @@ class PropertyProbe extends Node:
 			if when_read.is_valid(): when_read.call()
 			return amount
 
+class Holder extends RefCounted:
+	var amount := 0.0
+	var count := 0
+	var turn := Quaternion.IDENTITY
+
 class ResourceProbe extends RefCounted:
 	var when_read: Callable
 	var amount: float:
@@ -71,7 +76,7 @@ func near(actual: float, expected: float, message: String) -> void:
 func run_tests() -> void:
 	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
-	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _interpolation,
+	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _relative, _interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
@@ -100,6 +105,7 @@ func _conformance() -> bool:
 			near(clock.progress, sample.progress, test.name)
 			check(clock.state == int(sample.state), test.name + " state")
 			if sample.has("overshoot"): near(clock.overshoot, sample.overshoot, test.name + " overshoot")
+			if sample.has("cycle"): near(clock.cycle, sample.cycle, test.name + " cycle")
 	for sample in data.easing:
 		near(T.Easing.evaluate(int(sample.ease), sample.t), sample.value, "ease %d" % sample.ease)
 	for ease in T.Ease.values():
@@ -214,7 +220,7 @@ func _factories_and_with() -> bool:
 	base.target_class = &"Kept"
 	var curve := Curve.new()
 	var callback := func(_h): pass
-	for case in [["with_from", 2.0, "from_value"], ["with_to", 3.0, "to_value"],
+	for case in [["with_from", 2.0, "from_value"], ["with_to", 3.0, "to_value"], ["with_by", 5.0, "by_value"],
 			["with_initial_value", 4.0, "initial_value"], ["with_duration", 2.0, "duration"],
 			["with_delay", 0.5, "delay"], ["with_offset", 0.25, "offset"], ["with_repeats", 3, "repeats"],
 			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
@@ -250,6 +256,81 @@ func _factories_and_with() -> bool:
 	scheduler.dispose()
 	first.free()
 	second.free()
+	return true
+
+func _relative() -> bool:
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/relative.json"))
+	for test in data.cases:
+		var fixture := T.Scheduler.new()
+		var probe := Holder.new()
+		probe.amount = test.start
+		var definition := T.property(^"amount", null).with_by(float(test.by))
+		for key in test.options: definition.set(key, test.options[key])
+		if test.has("from"): definition.from_value = float(test.from)
+		var started := fixture.add(probe, definition)
+		check(not started.is_terminal, test.name + " starts: " + started.error)
+		for sample in test.samples:
+			# A "set" sample changes the property from outside the tween.
+			if sample.has("set"): probe.amount = sample.set
+			else: fixture.update(sample.delta)
+			if sample.has("value"): near(probe.amount, sample.value, test.name)
+		fixture.dispose()
+
+	var scheduler := T.Scheduler.new()
+	var holder := Holder.new()
+	holder.amount = 1.0
+	scheduler.add(holder, T.property(^"amount", null, 1.0).with_by(10.0))
+	scheduler.add(holder, T.property(^"amount", null, 2.0).with_by(-4.0))
+	scheduler.update(1.0)
+	near(holder.amount, 9.0, "relative tweens on one property add up")
+	scheduler.update(1.0)
+	near(holder.amount, 7.0, "relative tweens end at the sum of their offsets")
+
+	holder.count = 3
+	scheduler.add(holder, T.property(^"count", null, 1.0).with_by(5).with_repeats(1))
+	var counts: Array = []
+	for step in range(4):
+		scheduler.update(0.5)
+		counts.append(holder.count)
+	check(counts == [6, 8, 11, 13], "integer offsets round each step and accumulate: %s" % [counts])
+
+	var start := Quaternion(Vector3.UP, PI / 2.0)
+	var turn := Quaternion(Vector3.RIGHT, PI / 2.0)
+	holder.turn = start
+	scheduler.add(holder, T.property(^"turn", null, 1.0).with_by(turn))
+	scheduler.update(0.5)
+	check(holder.turn.is_equal_approx(start * Quaternion(Vector3.RIGHT, PI / 4.0)), "quaternion offsets rotate about local axes")
+	scheduler.update(0.5)
+	check(holder.turn.is_equal_approx(start * turn) and not holder.turn.is_equal_approx(turn * start), "quaternion offsets end at start * by")
+
+	var samples: Array = []
+	scheduler.add(self, T.float_value(null, 1.0).with_initial_value(2.0).with_by(10.0).with_on_update(func(_h, v): samples.append(v)))
+	scheduler.update(0.5)
+	scheduler.update(0.5)
+	check(samples == [7.0, 12.0], "callback values add to the captured start: %s" % [samples])
+
+	holder.amount = 1.0
+	scheduler.add(holder, T.custom(func(t): return t.amount, func(t, v): t.amount = v, null, 1.0).with_by(2.0))
+	scheduler.update(0.5)
+	holder.amount += 10.0
+	scheduler.update(0.5)
+	near(holder.amount, 13.0, "adapter tweens keep outside changes")
+
+	var node := Node2D.new()
+	add_child(node)
+	node.position = Vector2(1, 2)
+	scheduler.add(node, T.position_2d_x(null, 1.0).with_by(4.0))
+	scheduler.add(node, T.position_2d(null, 1.0).with_by(Vector2(1, 1)))
+	scheduler.update(1.0)
+	check(node.position == Vector2(6, 3), "component and whole-vector offsets combine: %s" % [node.position])
+	node.free()
+
+	for rejected in [T.value(0.0, 1.0, 1.0).with_by(1.0), T.value(0.0, null, 1.0).with_by(Vector2.ONE),
+			T.value(0.0, null, 1.0).with_by(NAN), T.value(Quaternion.IDENTITY, null, 1.0).with_by(Quaternion(0, 0, 0, 0)),
+			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
+				.with_by(Transform2D.IDENTITY)]:
+		check(scheduler.add(holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid by_value")
+	scheduler.dispose()
 	return true
 
 func _interpolation() -> bool:

@@ -23,14 +23,17 @@ public class StructuredGeneratorTests
         using System;
         namespace tweens.gd
         {
+            public enum EaseType { Linear }
             public readonly record struct TweenOptions
             {
+                public EaseType Ease { get; init; }
                 public double Duration { get; init; }
                 public Func<float, float>? EaseFunction { get; init; }
                 internal void CopyTo(TweenOptionsBuilder target) { }
             }
             public class TweenOptionsBuilder
             {
+                public EaseType Ease { get; set; }
                 public double Duration { get; set; }
                 public Func<float, float>? EaseFunction { get; set; }
                 public static int Ignored { get; set; }
@@ -46,6 +49,7 @@ public class StructuredGeneratorTests
             {
                 public TValue? From { get; set; }
                 public TValue? To { get; set; }
+                public TValue? By { get; set; }
                 public Action<TweenInstance<TTarget, TValue>>? OnAdd { get; set; }
                 public Action<TweenInstance<TTarget, TValue>>? OnStart { get; set; }
                 public Action<TweenInstance<TTarget, TValue>, TValue>? OnUpdate { get; set; }
@@ -91,10 +95,15 @@ public class StructuredGeneratorTests
         Assert.Equal("Targets.Widget", contract.TypeArguments[0].ToDisplayString());
         Assert.Equal(SpecialType.System_Single, contract.TypeArguments[1].SpecialType);
         Assert.True(Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("Duration"))).SetMethod!.IsInitOnly);
+        Assert.True(Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("By"))).SetMethod!.IsInitOnly);
         Assert.Empty(definition.GetMembers("Ignored"));
         Assert.Empty(definition.GetMembers("ReadOnly"));
         var ease = Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("EaseFunction")));
         Assert.Equal(NullableAnnotation.Annotated, ease.NullableAnnotation);
+        // Constructor options follow their fixed order, not declaration order, and are all optional.
+        var constructor = Assert.Single(definition.InstanceConstructors, constructor => constructor.Parameters.Length > 0);
+        Assert.Equal(["to", "duration", "ease"], constructor.Parameters.Select(parameter => parameter.Name));
+        Assert.All(constructor.Parameters, parameter => Assert.True(parameter.HasExplicitDefaultValue));
     }
 
     [Fact]
@@ -119,13 +128,16 @@ public class StructuredGeneratorTests
         {
             var type = output.GetTypeByMetadataName("Tweens." + name + "`1")!;
             Assert.True(Assert.Single(type.TypeParameters).HasValueTypeConstraint);
-            Assert.Contains(type.InstanceConstructors, constructor => constructor.Parameters.Length == 1
-                && constructor.Parameters[0].Type.SpecialType == SpecialType.System_String);
+            Assert.Contains(type.InstanceConstructors, constructor => constructor.Parameters.Length == 4
+                && constructor.Parameters[0].Type.SpecialType == SpecialType.System_String
+                && constructor.Parameters.Skip(1).All(parameter => parameter.HasExplicitDefaultValue));
         }
         var property = output.GetTypeByMetadataName("Tweens.Property`2")!;
         Assert.True(property.TypeParameters[0].HasReferenceTypeConstraint);
         Assert.True(property.TypeParameters[1].HasValueTypeConstraint);
-        Assert.Contains(property.InstanceConstructors, constructor => constructor.Parameters.Length == 3);
+        Assert.Contains(property.InstanceConstructors, constructor
+            => constructor.Parameters.Select(parameter => parameter.Name).SequenceEqual(
+                ["getter", "setter", "interpolate", "to", "duration", "ease"]));
     }
 
     [Fact]
@@ -139,6 +151,8 @@ public class StructuredGeneratorTests
         var definition = changed.Output.GetTypeByMetadataName("Tweens.Opacity")!;
         Assert.Single(definition.GetMembers("Delay"));
         Assert.Empty(definition.GetMembers("Duration"));
+        Assert.Contains(definition.InstanceConstructors, constructor
+            => constructor.Parameters.Select(parameter => parameter.Name).SequenceEqual(["to", "ease", "delay"]));
 
         compilation = compilation.RemoveSyntaxTrees(compilation.SyntaxTrees.Last());
         var (_, removed, result) = Run(compilation, changed.Driver);

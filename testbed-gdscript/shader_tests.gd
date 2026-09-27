@@ -47,10 +47,22 @@ func _materials() -> void:
 		scheduler.update(0.5)
 		check(h.completion_reason == T.Reason.COMPLETED and compare._close(entry[1], m.get_shader_parameter(entry[0])), "shader explicit override restored: " + entry[0])
 		check(not watched(m.shader), "shader subscriptions released: " + entry[0])
+	m.set_shader_parameter(&"amount", 0.25)
+	scheduler.add(m, T.shader_parameter(&"amount", null, 1.0).with_by(0.5))
+	scheduler.update(0.5)
+	m.set_shader_parameter(&"amount", 1.0)
+	scheduler.update(0.5)
+	check(is_equal_approx(m.get_shader_parameter(&"amount"), 1.25), "shader by_value keeps outside changes")
+	scheduler.add(m, T.shader_parameter(&"amount", null, 1.0).with_by(-1.0).with_fill(T.Fill.NONE))
+	scheduler.update(0.5)
+	check(is_equal_approx(m.get_shader_parameter(&"amount"), 0.75), "shader by_value moves the override")
+	scheduler.update(0.5)
+	check(is_equal_approx(m.get_shader_parameter(&"amount"), 1.25), "shader by_value takes its offset back out")
 	for invalid in [T.shader_parameter(&"missing", 1.0), T.shader_parameter(&"amount", 1),
 		T.shader_parameter(&"count", 1.0), T.shader_parameter(&"v4", Color.WHITE),
 		T.shader_parameter(&"tint", Vector4.ONE), T.shader_parameter(&"flag", true),
-		T.shader_parameter(&"amount", NAN), T.shader_parameter(&"count", 2147483648)]:
+		T.shader_parameter(&"amount", NAN), T.shader_parameter(&"count", 2147483648),
+		T.shader_parameter(&"amount").with_by(NAN), T.shader_parameter(&"count").with_by(1.0)]:
 		var rejected := scheduler.add(m, invalid)
 		check(rejected.is_settled and rejected.completion_reason == T.Reason.FAILED, "invalid shader definition is rejected")
 		check(not watched(m.shader), "rejected shader preparation cleans up")

@@ -36,6 +36,33 @@ static func interpolate(a: Variant, b: Variant, weight: float, value_type: int) 
 		TYPE_RECT2: return Rect2(a.position.lerp(b.position, weight), a.size.lerp(b.size, weight))
 		_: return a.lerp(b, weight)
 
+## The offset that changes nothing, or null if by_value does not support the type.
+static func zero(value_type: int) -> Variant:
+	match value_type:
+		TYPE_INT: return 0
+		TYPE_FLOAT: return 0.0
+		TYPE_VECTOR2: return Vector2.ZERO
+		TYPE_VECTOR3: return Vector3.ZERO
+		TYPE_VECTOR4: return Vector4.ZERO
+		TYPE_COLOR: return Color(0, 0, 0, 0)
+		TYPE_QUATERNION: return Quaternion.IDENTITY
+		TYPE_RECT2: return Rect2()
+	return null
+
+## Quaternion offsets rotate about the value's own (local) axes.
+static func add(value: Variant, offset: Variant) -> Variant:
+	match typeof(value):
+		TYPE_QUATERNION: return (value.normalized() * offset).normalized()
+		TYPE_RECT2: return Rect2(value.position + offset.position, value.size + offset.size)
+	return value + offset
+
+## The value that add() turns into value with this offset. Offsets are unit rotations from slerp.
+static func remove(value: Variant, offset: Variant) -> Variant:
+	match typeof(value):
+		TYPE_QUATERNION: return (value.normalized() * offset.inverse()).normalized()
+		TYPE_RECT2: return Rect2(value.position - offset.position, value.size - offset.size)
+	return value - offset
+
 ## Restrict paths to properties on the target and value components. Crossing into
 ## another Object would need that object's own lifetime and restoration policy.
 static func read_property(target: Object, path: NodePath) -> Variant:

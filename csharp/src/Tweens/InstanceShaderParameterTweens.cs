@@ -21,6 +21,7 @@ public abstract class InstanceShaderParameterTween<TNode, TValue>(string paramet
         _ = ShaderValues<TValue>.Type;
         if (From is { } from) ShaderValues<TValue>.Validate(from);
         if (To is { } to) ShaderValues<TValue>.Validate(to);
+        if (By is { } by) ShaderValues<TValue>.Validate(by);
         name = new StringName(Parameter);
         watch = new InstanceShaderWatch(target);
         var properties = target.GetPropertyList();

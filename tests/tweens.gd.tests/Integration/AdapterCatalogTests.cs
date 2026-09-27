@@ -81,6 +81,17 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         Values.AssertClose(Values.Interpolate(to, initial, 0.5f), Read(), "while restoring");
         scheduler.Update(0.5);
         Values.AssertClose(to, Read(), "after restoring");
+
+        // By adds to the value the property has now.
+        var relative = Create();
+        relative.By = Offsets<TValue>.Remove((TValue)Values.Perturb(to), to);
+        relative.Duration = 1;
+        scheduler.Add(target, relative);
+        scheduler.Update(0.5);
+        var half = relative.InterpolateValue(Offsets<TValue>.Zero, relative.By.Value, 0.5f);
+        Values.AssertClose(Offsets<TValue>.Add(to, half), Read(), "halfway through a relative tween");
+        scheduler.Update(0.5);
+        Values.AssertClose(Offsets<TValue>.Add(to, relative.By.Value), Read(), "after a relative tween");
     }
 
     [Fact]
@@ -115,5 +126,16 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         Assert.Equal(2, reported.Count);
         Values.AssertClose(Values.Interpolate(start, to, 0.5f), reported[0], adapter.Name);
         Values.AssertClose(to, reported[1], adapter.Name);
+
+        // With nothing to read back, By adds to the captured start.
+        reported.Clear();
+        definition.To = null;
+        definition.By = Offsets<TValue>.Remove(to, start);
+        scheduler.Add(node, definition);
+        scheduler.Update(0.5);
+        scheduler.Update(0.5);
+        Values.AssertClose(Offsets<TValue>.Add(start, definition.InterpolateValue(Offsets<TValue>.Zero, definition.By.Value, 0.5f)),
+            reported[0], adapter.Name);
+        Values.AssertClose(Offsets<TValue>.Add(start, definition.By.Value), reported[1], adapter.Name);
     }
 }
