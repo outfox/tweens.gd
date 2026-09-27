@@ -62,6 +62,27 @@ public class AdjustmentTests
     }
 
     [Fact]
+    public void DelayAdjustmentsShapeTheWaitAndItsFill()
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box();
+        var tween = scheduler.Add(box, new PlainTween { To = 10, Duration = 1, Delay = 1, FactorDelay = 2, DeltaDelay = 0.5 });
+        scheduler.Update(2);
+        Assert.Equal(TweenState.Delayed, tween.State);
+        scheduler.Update(1);
+        Assert.Equal(5, box.Value);
+
+        // A delay that comes only from the delta still applies From while waiting.
+        var filled = new Box { Value = 4 };
+        scheduler.Add(filled, new PlainTween { From = 0, To = 8, Duration = 1, DeltaDelay = 1, Fill = FillMode.Both });
+        Assert.Equal(0, filled.Value);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box, new PlainTween { Delay = 1, DeltaDelay = -2 }));
+        Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box, new PlainTween { Delay = 1, FactorDelay = double.NaN }));
+        Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box, new PlainTween { DeltaDelay = double.PositiveInfinity }));
+    }
+
+    [Fact]
     public void AdjustmentsThatWouldBeIgnoredOrInvalidAreRejected()
     {
         using var scheduler = new TweenScheduler();

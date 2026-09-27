@@ -138,7 +138,7 @@ func _initialize() -> void:
 	if _check_target():
 		if is_instance_valid(_owner): _owner.tree_exiting.connect(_owner_exiting)
 		_invoke(_options.on_add)
-		if _check_target() and _options.delay > 0.0 and _options.fill & Types.Fill.APPLY_FROM_DURING_DELAY:
+		if _check_target() and _options._effective_delay() > 0.0 and _options.fill & Types.Fill.APPLY_FROM_DURING_DELAY:
 			_apply(_from)
 	_end_operation()
 

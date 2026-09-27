@@ -271,7 +271,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         {
             definition!.OnAdd?.Invoke(this);
             if (!CheckTarget()) return;
-            if (definition.Delay > 0 && definition.Fill.HasFlag(FillMode.ApplyFromDuringDelay)) Apply(from);
+            if (Clock.HasDelay && definition.Fill.HasFlag(FillMode.ApplyFromDuringDelay)) Apply(from);
         }
         catch (Exception error) { Finish(Reason.Cancelled, error); }
         finally { EndOperation(); }

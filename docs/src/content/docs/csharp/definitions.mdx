@@ -19,7 +19,7 @@ A coin pops in, then rises and fades when collected:
 
 <Moves>
 
-```csharp title="Coin.cs" {"1":3-7} {"2":9-20} {"3":22} {"4":24-28}
+```csharp title="Coin.cs" {"1":3-7} {"2":9-21} {"3":23} {"4":25-29}
 public partial class Coin : Sprite2D
 {
     static readonly TweenOptions Snappy = new()
@@ -32,6 +32,7 @@ public partial class Coin : Sprite2D
     {
         Options = Snappy,
         From = Vector2.Zero,
+        Delay = 0.5,
         Fill = FillMode.Both,
     };
     static readonly Tweens.ModulateAlpha Fade = new()
@@ -41,7 +42,7 @@ public partial class Coin : Sprite2D
     };
     static readonly Tweens.Position2DY Lift = new() { Options = Snappy };
 
-    public void Appear(double delay) => this.Tween(Pop with { Delay = delay });
+    public void Appear(double stagger) => this.Tween(Pop with { DeltaDelay = stagger });
 
     public async Task Collect()
     {
@@ -55,8 +56,8 @@ public partial class Coin : Sprite2D
    every coin motion.
 2. **Keep definitions in fields.** Each field's name says what the motion is
    for. `Pop` and `Lift` each leave out an endpoint.
-3. **Vary a start.** Each call to `Appear` passes its own delay through `with`,
-   and `Pop` itself never changes.
+3. **Vary a start.** Each call to `Appear` adds its own stagger to `Pop`'s
+   half-second delay through `with`, and `Pop` itself never changes.
 4. **Build steps from methods.** `Collect` plays two tweens as one step and
    waits for it to end.
 
@@ -154,9 +155,11 @@ same time.
 itself stays as declared, so a delay or target you set for one start doesn't
 carry over to the next:
 
-- `Pop with { Delay = delay }` staggers coins that share one definition. Its
-  `Fill = FillMode.Both` applies `From` during the delay, so waiting coins stay
-  hidden instead of flashing at full size.
+- `Pop with { DeltaDelay = stagger }` staggers coins that share one definition.
+  Each coin waits `Pop`'s fixed 0.5 seconds plus its own stagger. `DeltaDelay`
+  adds to `Delay` instead of replacing it, so the half second stays in `Pop`,
+  where one edit retimes every coin. `Fill = FillMode.Both` applies `From` during
+  the delay, so waiting coins stay hidden instead of flashing at full size.
 - `Lift with { To = Position.Y - 40 }` computes a target from this coin's position.
 
 `with` works on `TweenOptions` too, as in `Snappy with { Ease = EaseType.CubicOut }`.
@@ -165,7 +168,7 @@ A value you set with `with` replaces the definition's. To vary it instead, such
 as twice as long or 20% larger, use a factor or delta; see
 [variations](/csharp/variations/).
 
-Try it below. **Appear** starts `Pop` on six coins, each with its own delay.
+Try it below. **Appear** starts `Pop` on six coins, each with its own stagger.
 **Collect** lifts each coin 40 pixels from where it sits. Clear `Fill` and press
 **Appear** again to see waiting coins flash at full size.
 

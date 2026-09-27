@@ -11,7 +11,8 @@ const { section } = Astro.props;
 
 interface Row {
 	helper: string;
-	csharp: string;
+	/** The paths the helper writes; empty for callback-value helpers. */
+	property: string[];
 	target: string;
 	value: string;
 }
@@ -21,8 +22,10 @@ const rows: Row[] = catalog
 	.split('\n')
 	.filter((line) => line.startsWith('|') && !/^\|\s*(Helper|-)/.test(line))
 	.map((line) => {
-		const [helper, csharp, target, value] = line.split('|').slice(1, 5).map(cell);
-		return { helper, csharp, target, value };
+		const cells = line.split('|').slice(1, 5);
+		const [helper, , target, value] = cells.map(cell);
+		const property = [...cells[1].matchAll(/`([^`]+)`/g)].map((match) => match[1]);
+		return { helper, property, target, value };
 	})
 	.filter((row) => row.helper && row.target);
 
@@ -61,7 +64,9 @@ const single = shown.length === 1;
 // Callback-only helpers target any Node; they read better under their own name.
 const heading = (target: string) => (target === 'Node' ? 'Callback values' : target);
 const anchor = (target: string) => heading(target).toLowerCase().replace(/\s+/g, '-');
-const COLUMNS = ['Helper', 'C# definition', 'Value'];
+// Callback-value helpers write no property, so their page drops the column.
+const withProperty = shown.some((target) => byTarget.get(target)!.some((row) => row.property.length > 0));
+const COLUMNS = withProperty ? ['Helper', 'Property', 'Value'] : ['Helper', 'Value'];
 ---
 
 {
@@ -98,13 +103,20 @@ const COLUMNS = ['Helper', 'C# definition', 'Value'];
 					<tbody>
 						{byTarget.get(target)!.map((row) => (
 							<tr>
-								<td data-label={COLUMNS[0]}>
+								<td data-label="Helper">
 									<code>{row.helper}</code>
 								</td>
-								<td data-label={COLUMNS[1]}>
-									<code>{row.csharp}</code>
-								</td>
-								<td data-label={COLUMNS[2]}>{row.value}</td>
+								{withProperty && (
+									<td data-label="Property">
+										{row.property.map((path, i) => (
+											<>
+												{i > 0 && ', '}
+												<code>{path}</code>
+											</>
+										))}
+									</td>
+								)}
+								<td data-label="Value">{row.value}</td>
 							</tr>
 						))}
 					</tbody>

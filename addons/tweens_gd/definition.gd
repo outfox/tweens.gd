@@ -32,6 +32,9 @@ var duration: float = 0.0
 var factor_duration: float = 1.0
 var delta_duration: float = 0.0
 var delay: float = 0.0
+## The tween waits factor_delay * delay + delta_delay.
+var factor_delay: float = 1.0
+var delta_delay: float = 0.0
 var offset: float = 0.0
 var repeats: int = 0
 var use_ping_pong: bool = false
@@ -74,6 +77,8 @@ func copy() -> TweensGdDefinition:
 	result.factor_duration = factor_duration
 	result.delta_duration = delta_duration
 	result.delay = delay
+	result.factor_delay = factor_delay
+	result.delta_delay = delta_delay
 	result.offset = offset
 	result.repeats = repeats
 	result.use_ping_pong = use_ping_pong
@@ -127,6 +132,8 @@ func with_duration(seconds: float) -> TweensGdDefinition: return _with(&"duratio
 func with_factor_duration(factor: float) -> TweensGdDefinition: return _with(&"factor_duration", factor)
 func with_delta_duration(seconds: float) -> TweensGdDefinition: return _with(&"delta_duration", seconds)
 func with_delay(seconds: float) -> TweensGdDefinition: return _with(&"delay", seconds)
+func with_factor_delay(factor: float) -> TweensGdDefinition: return _with(&"factor_delay", factor)
+func with_delta_delay(seconds: float) -> TweensGdDefinition: return _with(&"delta_delay", seconds)
 func with_offset(seconds: float) -> TweensGdDefinition: return _with(&"offset", seconds)
 func with_repeats(count: int) -> TweensGdDefinition: return _with(&"repeats", count)
 func with_ping_pong(enabled: bool = true) -> TweensGdDefinition: return _with(&"use_ping_pong", enabled)
@@ -160,10 +167,11 @@ func validate() -> String:
 	if to_value != null and by_value != null: return "Choose either to_value or by_value."
 	if by_value == null and (factor_by != 1.0 or delta_by != null): return "factor_by and delta_by need a by_value."
 	if by_value != null and (factor_to != 1.0 or delta_to != null): return "factor_to and delta_to do not apply with by_value."
-	for factor in [factor_from, factor_to, factor_by, factor_duration, delta_duration]:
+	for factor in [factor_from, factor_to, factor_by, factor_duration, delta_duration, factor_delay, delta_delay]:
 		if not is_finite(factor): return "Factors and deltas must be finite."
 	var seconds := _effective_duration()
-	for time in [duration, seconds, delay, offset, ping_pong_interval, repeat_interval]:
+	var wait := _effective_delay()
+	for time in [duration, seconds, delay, wait, offset, ping_pong_interval, repeat_interval]:
 		if not is_finite(time) or time < 0.0:
 			return "Timing must be finite and nonnegative."
 	if offset > seconds: return "Offset must not exceed duration."
@@ -177,12 +185,15 @@ func validate() -> String:
 	for callback in [ease_function, on_add, on_start, on_update, on_end, on_cancel, on_finally]:
 		if not callback.is_null() and not callback.is_valid(): return "A configured Callable is invalid."
 	var span := seconds + (seconds + ping_pong_interval if use_ping_pong else 0.0) + repeat_interval
-	if not is_finite(span + delay): return "Timeline is too long."
+	if not is_finite(span + wait): return "Timeline is too long."
 	if repeats == Types.INFINITE:
 		if span == 0.0: return "An infinite tween needs a nonzero cycle duration."
-	elif not is_finite(span * (float(repeats) + 1.0) - repeat_interval + delay):
+	elif not is_finite(span * (float(repeats) + 1.0) - repeat_interval + wait):
 		return "Timeline is too long."
 	return ""
 
 func _effective_duration() -> float:
 	return factor_duration * duration + delta_duration
+
+func _effective_delay() -> float:
+	return factor_delay * delay + delta_delay

@@ -61,6 +61,7 @@ All times are double-precision seconds.
 | `Duration` | `0` | Seconds per leg. Zero completes on the first eligible update. |
 | `FactorDuration`, `DeltaDuration` | `1`, `0` | Scale and shift `Duration` for [variations](/csharp/variations/): the tween lasts `FactorDuration × Duration + DeltaDuration`. |
 | `Delay` | `0` | Initial wait before the first leg. |
+| `FactorDelay`, `DeltaDelay` | `1`, `0` | Scale and shift `Delay` for [variations](/csharp/variations/), such as a stagger: the tween waits `FactorDelay × Delay + DeltaDelay`. |
 | `Repeats` | `0` | Cycles after the first. `TweenOptions.Infinite` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
 | `UsePingPong` | `false` | A forward and a backward leg form one cycle. |
 | `PingPongInterval` | `0` | Wait at the far endpoint before returning. |

@@ -72,10 +72,13 @@ after it:
 | `To` | `FactorTo` × `To` + `DeltaTo` | `1`, none |
 | `By` | `FactorBy` × `By` + `DeltaBy` | `1`, none |
 | `Duration` | `FactorDuration` × `Duration` + `DeltaDuration` | `1`, `0` |
+| `Delay` | `FactorDelay` × `Delay` + `DeltaDelay` | `1`, `0` |
 
 Deltas have the definition's value type, such as `Vector2` for a position.
-`FactorDuration` and `DeltaDuration` are timing options, so a shared
+The duration and delay factors and deltas are timing options, so a shared
 `TweenOptions` can carry them: `options with { FactorDuration = 1.5 }`.
+`DeltaDelay` suits a stagger: `Pop with { DeltaDelay = i * 0.1 }` keeps `Pop`'s
+own delay and adds each item's offset to it.
 
 ## Vary the current value
 
@@ -139,6 +142,7 @@ monotonic, skew shifts when their bounces and overshoot happen but keeps them.
 - `FactorBy` and `DeltaBy` need a `By`. `FactorTo` and `DeltaTo` don't apply to
   a `By` tween. Both combinations are rejected.
 - Adjusting `From` fixes the start of a `By` tween, as an explicit `From` does.
-- The adjusted duration must not be negative, and `Offset` must fit within it.
-- Factors, `DeltaDuration`, and `Skew` must be finite, and `Skew` must be
+- The adjusted duration and delay must not be negative, and `Offset` must fit
+  within the adjusted duration.
+- Factors, `DeltaDuration`, `DeltaDelay`, and `Skew` must be finite, and `Skew` must be
   greater than zero. Invalid values reject the start.

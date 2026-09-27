@@ -29,4 +29,6 @@ when the tween starts, each value becomes factor × value + delta. See
 | `delta_from`, `delta_to`, `delta_by` | `Variant` | `null` | Then add this, in the property's value type; `null` adds nothing |
 | `factor_duration` | `float` | `1.0` | Multiply `duration` |
 | `delta_duration` | `float` | `0.0` | Then add these seconds |
+| `factor_delay` | `float` | `1.0` | Multiply `delay` |
+| `delta_delay` | `float` | `0.0` | Then add these seconds, as in a per-start stagger |
 | `skew` | `float` | `1.0` | Raise normalized time to this power before easing: above 1 starts slower, below 1 faster |

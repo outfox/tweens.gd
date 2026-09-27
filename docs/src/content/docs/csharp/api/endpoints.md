@@ -28,4 +28,6 @@ when the tween starts, each value becomes factor × value + delta. See
 | `DeltaFrom`, `DeltaTo`, `DeltaBy` | `TValue?` | `null` | Then add this; `null` adds nothing |
 | `FactorDuration` | `double` | `1` | Multiply `Duration` |
 | `DeltaDuration` | `double` | `0` | Then add these seconds |
+| `FactorDelay` | `double` | `1` | Multiply `Delay` |
+| `DeltaDelay` | `double` | `0` | Then add these seconds, as in a per-start stagger |
 | `Skew` | `double` | `1` | Raise normalized time to this power before easing: above 1 starts slower, below 1 faster |

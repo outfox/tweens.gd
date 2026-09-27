@@ -67,10 +67,13 @@ after it:
 | `to_value` | `factor_to` × `to_value` + `delta_to` | `1.0`, `null` |
 | `by_value` | `factor_by` × `by_value` + `delta_by` | `1.0`, `null` |
 | `duration` | `factor_duration` × `duration` + `delta_duration` | `1.0`, `0.0` |
+| `delay` | `factor_delay` × `delay` + `delta_delay` | `1.0`, `0.0` |
 
 Deltas have the property's value type, such as `Vector2` for a position; `null`
 adds nothing. Each field has a `with_*()` method, such as `with_factor_to()` or
-`with_delta_duration()`.
+`with_delta_duration()`. `delta_delay` suits a stagger:
+`pop.with_delta_delay(i * 0.1)` keeps `pop`'s own delay and adds each item's
+offset to it.
 
 ## Vary the current value
 
@@ -129,6 +132,7 @@ monotonic, skew shifts when their bounces and overshoot happen but keeps them.
   apply with `by_value`. Both combinations are rejected.
 - Adjusting `from_value` fixes the start of a `by_value` tween, as an explicit
   `from_value` does.
-- The adjusted duration must not be negative, and `offset` must fit within it.
+- The adjusted duration and delay must not be negative, and `offset` must fit
+  within the adjusted duration.
 - Factors, deltas and `skew` must be finite; `skew` must also be greater than
   zero. Invalid values reject the start.

@@ -227,6 +227,7 @@ func _factories_and_with() -> bool:
 			["with_factor_to", 2.0, "factor_to"], ["with_delta_to", 2.5, "delta_to"],
 			["with_factor_by", -1.0, "factor_by"], ["with_delta_by", 3.5, "delta_by"],
 			["with_factor_duration", 3.0, "factor_duration"], ["with_delta_duration", 0.5, "delta_duration"],
+			["with_factor_delay", 2.0, "factor_delay"], ["with_delta_delay", 0.25, "delta_delay"],
 			["with_delay", 0.5, "delay"], ["with_offset", 0.25, "offset"], ["with_repeats", 3, "repeats"],
 			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
 			["with_repeat_interval", 0.2, "repeat_interval"], ["with_fill", T.Fill.BOTH, "fill"],
@@ -367,6 +368,7 @@ func _adjustments() -> bool:
 			T.value(0.0, 1.0, 1.0).with_factor_from(NAN), T.value(0.0, 1.0, 1.0).with_factor_to(INF),
 			T.value(0.0, 1.0, 1.0).with_factor_duration(NAN), T.value(0.0, 1.0, 1.0).with_delta_duration(-2.0),
 			T.value(0.0, 1.0, 1.0).with_factor_duration(0.5).with_offset(0.75),
+			T.value(0.0, 1.0, 1.0).with_delta_delay(-1.0), T.value(0.0, 1.0, 1.0).with_factor_delay(NAN),
 			T.value(0.0, 1.0, 1.0).with_delta_to(Vector2.ONE), T.value(0.0, 1.0, 1.0).with_delta_from(NAN),
 			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
 				.with_factor_to(2.0)]:

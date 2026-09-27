@@ -30,6 +30,11 @@ public readonly record struct TweenOptions
     /// <summary>Added to <see cref="Duration"/> at start, after <see cref="FactorDuration"/>.</summary>
     public double DeltaDuration { get; init; }
     public double Delay { get; init; }
+    private readonly double? factorDelay;
+    /// <summary>Scales <see cref="Delay"/> at start: the tween waits FactorDelay * Delay + DeltaDelay.</summary>
+    public double FactorDelay { get => factorDelay ?? 1; init => factorDelay = value == 1 ? null : value; }
+    /// <summary>Added to <see cref="Delay"/> at start, after <see cref="FactorDelay"/>.</summary>
+    public double DeltaDelay { get; init; }
     public double PingPongInterval { get; init; }
     public double RepeatInterval { get; init; }
     public double Offset { get; init; }
@@ -56,6 +61,8 @@ public readonly record struct TweenOptions
         target.FactorDuration = FactorDuration;
         target.DeltaDuration = DeltaDuration;
         target.Delay = Delay;
+        target.FactorDelay = FactorDelay;
+        target.DeltaDelay = DeltaDelay;
         target.PingPongInterval = PingPongInterval;
         target.RepeatInterval = RepeatInterval;
         target.Offset = Offset;
@@ -84,6 +91,10 @@ public class TweenOptionsBuilder
     /// <inheritdoc cref="TweenOptions.DeltaDuration"/>
     public double DeltaDuration { get; set; }
     public double Delay { get; set; }
+    /// <inheritdoc cref="TweenOptions.FactorDelay"/>
+    public double FactorDelay { get; set; } = 1;
+    /// <inheritdoc cref="TweenOptions.DeltaDelay"/>
+    public double DeltaDelay { get; set; }
     public double PingPongInterval { get; set; }
     public double RepeatInterval { get; set; }
     public double Offset { get; set; }
@@ -106,6 +117,8 @@ public class TweenOptionsBuilder
         FactorDuration = FactorDuration,
         DeltaDuration = DeltaDuration,
         Delay = Delay,
+        FactorDelay = FactorDelay,
+        DeltaDelay = DeltaDelay,
         PingPongInterval = PingPongInterval,
         RepeatInterval = RepeatInterval,
         Offset = Offset,
@@ -137,6 +150,8 @@ internal sealed class Playback
     /// <summary>Time past the end of the timeline in the completing update.</summary>
     internal double Overshoot { get; private set; }
     internal TweenState State { get; private set; } = TweenState.Delayed;
+    /// <summary>Whether the adjusted delay is longer than zero.</summary>
+    internal bool HasDelay => delay > 0;
 
     internal Playback(TweenOptions options)
     {
@@ -144,7 +159,10 @@ internal sealed class Playback
         if (!double.IsFinite(options.FactorDuration)) throw new ArgumentOutOfRangeException(nameof(options.FactorDuration));
         if (!double.IsFinite(options.DeltaDuration)) throw new ArgumentOutOfRangeException(nameof(options.DeltaDuration));
         duration =Nonnegative(options.FactorDuration * options.Duration + options.DeltaDuration, nameof(options.Duration));
-        delay = Nonnegative(options.Delay, nameof(options.Delay));
+        Nonnegative(options.Delay, nameof(options.Delay));
+        if (!double.IsFinite(options.FactorDelay)) throw new ArgumentOutOfRangeException(nameof(options.FactorDelay));
+        if (!double.IsFinite(options.DeltaDelay)) throw new ArgumentOutOfRangeException(nameof(options.DeltaDelay));
+        delay = Nonnegative(options.FactorDelay * options.Delay + options.DeltaDelay, nameof(options.Delay));
         turn = Nonnegative(options.PingPongInterval, nameof(options.PingPongInterval));
         var repeat = Nonnegative(options.RepeatInterval, nameof(options.RepeatInterval));
         offset = Nonnegative(options.Offset, nameof(options.Offset));

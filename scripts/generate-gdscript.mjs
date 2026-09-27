@@ -74,8 +74,14 @@ for (const e of entries) {
   gd += '\treturn definition\n';
 }
 let md = '# GDScript helper catalog\n\nGenerated from the C# property catalog. Each helper returns a reusable definition:\n`Tweens.position_2d(destination, seconds, Tweens.Ease.CUBIC_OUT)`. All helpers accept\n`(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.\nNative target and value types are checked at start.\n\n';
-md += '| Helper | C# definition | Target | Value |\n| --- | --- | --- | --- |\n';
-for (const e of entries) md += `| \`${e.name}\` | \`${e.csharp}\` | ${e.target} | ${e.type === 'double' ? 'float' : e.type} |\n`;
+md += 'Property is the path each helper tweens. Compound helpers write several properties together, and\n';
+md += 'callback-value helpers write none.\n\n';
+// The path a helper writes: its definition's property, or its compound adapter's paths.
+const property = e => e.kind === 'property' ? `\`${e.paths[0]}\``
+  : e.kind === 'compound' ? e.paths.map(p => `\`${p}\``).join(', ')
+  : e.kind === 'global_quaternion' ? '`global_rotation`' : '';
+md += '| Helper | Property | Target | Value |\n| --- | --- | --- | --- |\n';
+for (const e of entries) md += `| \`${e.name}\` | ${property(e)} | ${e.target} | ${e.type === 'double' ? 'float' : e.type} |\n`;
 for (const [file, content] of [['addons/tweens_gd/catalog.gd', gd], ['addons/tweens_gd/CATALOG.md', md],
   ['tests/conformance/adapters.json', JSON.stringify(entries, null, 2) + '\n']]) {
   const filename = path.join(root, file);

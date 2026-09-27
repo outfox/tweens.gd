@@ -64,6 +64,7 @@ public class GDScriptConformanceTests
                 FactorTo = Number("factor_to", 1), DeltaTo = Value(o, "delta_to"),
                 FactorBy = Number("factor_by", 1), DeltaBy = Value(o, "delta_by"),
                 FactorDuration = Number("factor_duration", 1), DeltaDuration = Number("delta_duration"),
+                FactorDelay = Number("factor_delay", 1), DeltaDelay = Number("delta_delay"),
             });
             foreach (var sample in test.GetProperty("samples").EnumerateArray())
             {

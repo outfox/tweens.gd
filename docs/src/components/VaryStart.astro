@@ -40,12 +40,14 @@ const coins = [100, 80, 92, 70, 86, 104];
 					<pre data-field-pop><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(<span class="kw">null</span>, <span class="num">0.25</span>,
     Tweens.Ease.BACK_OUT)
 pop.from_value = Vector2.ZERO
+pop.delay = <span class="num">0.5</span>
 <span class="fill" data-fill-line data-on="pop.fill = Tweens.Fill.BOTH" data-off="# fill left at its default">pop.fill = Tweens.Fill.BOTH</span></pre>
 				) : (
 					<pre data-field-pop><span class="kw">static readonly</span> <span class="ty">Tweens.Scale2D</span> Pop = <span class="kw">new</span>()
 {'{'}
     Options = Snappy,
     From = Vector2.Zero,
+    Delay = <span class="num">0.5</span>,
 <span class="fill" data-fill-line data-on="    Fill = FillMode.Both," data-off="    // Fill left at its default">    Fill = FillMode.Both,</span>
 {'}'};</pre>
 				)
@@ -65,10 +67,10 @@ pop.from_value = Vector2.ZERO
 			{
 				gd ? (
 					<pre data-call-pop>Tweens.<span class="fn">play</span>(coins[i],
-    pop.<span class="fn">with_delay</span>(i * <span class="num" data-step-out>0.12</span>))</pre>
+    pop.<span class="fn">with_delta_delay</span>(i * <span class="num" data-step-out>0.12</span>))</pre>
 				) : (
 					<pre data-call-pop>coins[i].<span class="fn">Tween</span>(Pop <span class="kw">with</span>
-    {'{'} Delay = i * <span class="num" data-step-out>0.12</span> {'}'});</pre>
+    {'{'} DeltaDelay = i * <span class="num" data-step-out>0.12</span> {'}'});</pre>
 				)
 			}
 			{
@@ -89,7 +91,7 @@ Tweens.<span class="fn">play_all</span>(coin, [up, fade])</pre>
 			<button type="button" class="tw-btn" data-collect>Collect</button>
 		</div>
 		<label class="tw-field step">
-			<span>Delay step <output data-step-label>0.12 s</output></span>
+			<span>Stagger step <output data-step-label>0.12 s</output></span>
 			<input type="range" min="0" max="0.3" step="0.02" value="0.12" data-step />
 		</label>
 		<label class="fill-toggle">
@@ -104,8 +106,9 @@ Tweens.<span class="fn">play_all</span>(coin, [up, fade])</pre>
 	import { EASES, lerp, onceVisible, reducedMotion } from '../scripts/motion';
 	import { langOf } from '../scripts/lang';
 
-	// Snappy from the Coin example: 0.25 s, BackOut.
+	// Snappy from the Coin example: 0.25 s, BackOut. Pop waits its own 0.5 s, and each start adds its stagger.
 	const DURATION = 0.25;
+	const DELAY = 0.5;
 	const LIFT = 40;
 
 	type Mode = 'rest' | 'appear' | 'collect';
@@ -140,6 +143,7 @@ Tweens.<span class="fn">play_all</span>(coin, [up, fade])</pre>
 		let startedAt = 0;
 		let raf = 0;
 		// The copies passed to the last start; the fields themselves stay as declared.
+		let staggers: number[] = [];
 		let delays: number[] = [];
 
 		const step = () => Number(stepIn.value);
@@ -204,11 +208,14 @@ Tweens.<span class="fn">play_all</span>(coin, [up, fade])</pre>
 		};
 
 		const appear = () => {
-			delays = slots.map((_, i) => Math.round(i * step() * 100) / 100);
+			staggers = slots.map((_, i) => Math.round(i * step() * 100) / 100);
+			delays = staggers.map((stagger) => DELAY + stagger);
 			show('pop');
-			head.innerHTML = `Each copy&rsquo;s <code>${gd ? 'delay' : 'Delay'}</code>, in seconds`;
-			values.forEach((v, i) => (v.textContent = delays[i].toFixed(2)));
-			announce.textContent = `Pop started on six coins with delays from 0 to ${delays.at(-1)!.toFixed(2)} seconds. The shared Pop definition is unchanged.`;
+			head.innerHTML = gd
+				? 'Each copy&rsquo;s <code>delta_delay</code>, added to <code>delay = 0.5</code>'
+				: 'Each copy&rsquo;s <code>DeltaDelay</code>, added to <code>Delay = 0.5</code>';
+			values.forEach((v, i) => (v.textContent = staggers[i].toFixed(2)));
+			announce.textContent = `Pop started on six coins, waiting from ${delays[0].toFixed(2)} to ${delays.at(-1)!.toFixed(2)} seconds: its own half second plus each stagger. The shared Pop definition is unchanged.`;
 			run('appear');
 		};
 

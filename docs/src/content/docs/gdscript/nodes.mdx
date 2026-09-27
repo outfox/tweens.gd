@@ -1,6 +1,6 @@
 ---
 title: Helper catalog
-description: The named GDScript helpers, grouped into 2D, 3D, UI, material, animation and audio, and callback value pages, with their C# counterparts.
+description: The named GDScript helpers, grouped into 2D, 3D, UI, material, animation and audio, and callback value pages.
 ---
 
 The addon has a named helper for every property and value definition in the C#
@@ -19,9 +19,12 @@ value is written.
 | [Animation and audio](/gdscript/nodes/audio/) | `AnimationPlayer` speed and the audio players' pitch, volume, and range |
 | [Callback values](/gdscript/nodes/values/) | `float_value` and the other helpers that write no property |
 
-Helper names follow the C# definition names in snake case. Names ending in `_x`,
-`_y`, `_z`, or `_alpha` write one component and read the others at write time.
-The pages are generated from the addon's `CATALOG.md`.
+Each page lists the property path a helper tweens, such as `modulate` or
+`position:x`; the same path works with `Tweens.property()`, without the helper's
+class and type checks. Names ending in `_x`, `_y`, `_z`, or `_alpha` write one
+component and read the others at write time. Helper names follow the C#
+definition names in snake case. The pages are generated from the addon's
+`CATALOG.md`.
 
 ## Usage
 

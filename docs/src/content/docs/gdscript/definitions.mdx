@@ -31,12 +31,12 @@ static func snappy(definition: Tweens.Definition) -> Tweens.Definition:
 	return definition
 
 static var pop := snappy(Tweens.scale_2d()) \
-	.with_from(Vector2.ZERO).with_fill(Tweens.Fill.BOTH)
+	.with_from(Vector2.ZERO).with_delay(0.5).with_fill(Tweens.Fill.BOTH)
 static var fade := snappy(Tweens.modulate_alpha(0.0))
 static var lift := snappy(Tweens.position_2d_y())
 
-func appear(delay: float) -> void:
-	Tweens.play(self, pop.with_delay(delay))
+func appear(stagger: float) -> void:
+	Tweens.play(self, pop.with_delta_delay(stagger))
 
 func collect() -> void:
 	var up := lift.with_to(position.y - 40.0)
@@ -47,8 +47,8 @@ func collect() -> void:
    in one place.
 2. **Keep definitions in static variables.** Each name says what the motion is
    for. `pop` and `lift` each leave out an endpoint.
-3. **Vary a start.** `pop.with_delay(delay)` returns a copy with its own delay,
-   and `pop` itself never changes.
+3. **Vary a start.** `pop.with_delta_delay(stagger)` returns a copy that waits
+   `pop`'s half second plus the stagger, and `pop` itself never changes.
 4. **Build steps from functions.** `collect` plays two tweens as one step and
    waits for it to end.
 
@@ -150,9 +150,12 @@ changed, like C#'s `with`. Start the copy; the shared definition stays as
 declared, so a delay or target you set for one start doesn't carry over to the
 next:
 
-- `pop.with_delay(delay)` staggers coins that share one definition. `pop` sets
-  `fill = Tweens.Fill.BOTH`, which applies `from_value` during the delay, so
-  waiting coins stay hidden instead of flashing at full size.
+- `pop.with_delta_delay(stagger)` staggers coins that share one definition. Each
+  coin waits `pop`'s fixed 0.5 seconds plus its own stagger. `delta_delay` adds
+  to `delay` instead of replacing it, so the half second stays in `pop`, where
+  one edit retimes every coin. `pop` sets `fill = Tweens.Fill.BOTH`, which
+  applies `from_value` during the delay, so waiting coins stay hidden instead of
+  flashing at full size.
 - `lift.with_to(position.y - 40.0)` computes a target from this coin's position.
 
 There is one method per setting, named after its field: `with_from()`,
@@ -168,7 +171,7 @@ Setting a field on the shared definition and starting it also works, because
 `Tweens.play()` snapshots it. The new value then stays on the definition for every
 later start, which is the mistake `with_*()` avoids.
 
-Try it below. **Appear** starts `pop` on six coins, each with its own delay.
+Try it below. **Appear** starts `pop` on six coins, each with its own stagger.
 **Collect** lifts each coin 40 pixels from where it sits. Clear `fill` and press
 **Appear** again to see waiting coins flash at full size.
 
