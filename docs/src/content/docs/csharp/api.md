@@ -42,17 +42,18 @@ an owner node that decides when it stops. See [materials](/csharp/materials/).
 
 ## Find a member
 
-- [Definitions](/csharp/api/definitions/): constructors, then every member by
-  role: endpoints, variations, timing, easing, modes, and callbacks. Also
-  `TweenOptions` and the enums.
-- [Handles and groups](/csharp/api/handles/): what starting returns, and how to
-  control it, read its state, and await it.
-- [Scheduler](/csharp/api/scheduler/): `TweenScheduler`, to advance playback
-  yourself.
-- [Custom definitions](/csharp/api/custom/): the members to override,
-  `Interpolators`, and class-based definitions.
-- [Node and value catalog](/csharp/nodes/): every built-in definition and its
-  shorthand method.
+| Page | What it lists |
+| --- | --- |
+| [Creating definitions](/csharp/api/definitions/) | The definition structs, their constructors, and `TweenOptions` |
+| [Endpoints and variations](/csharp/api/endpoints/) | `From`, `To`, `By`, and the factors, deltas, and skew that derive variants |
+| [Timing and easing](/csharp/api/timing/) | `Duration`, `Delay`, `Repeats`, ping-pong, `Fill`, and the easing members |
+| [Modes and callbacks](/csharp/api/modes/) | Process, time scale, and pause modes, and `OnAdd` through `OnFinally` |
+| [Enums](/csharp/api/enums/) | Every value of `FillMode`, `TweenState`, `Reason`, and the modes |
+| [Handles](/csharp/api/handles/) | What starting returns: control it, read its state, await it |
+| [Groups](/csharp/api/groups/) | Several tweens controlled and awaited as one step |
+| [Scheduler](/csharp/api/scheduler/) | `TweenScheduler`, to advance playback yourself |
+| [Custom definitions](/csharp/api/custom/) | The members to override, `Interpolators`, and class-based definitions |
+| [Catalog](/csharp/nodes/) | Every built-in definition and its shorthand method |
 
 ## Differences from GDScript
 

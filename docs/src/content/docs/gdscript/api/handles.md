@@ -4,7 +4,8 @@ description: The members of TweensGdHandle and TweensGdGroup, what starting play
 ---
 
 `Tweens.play()` returns a `TweensGdHandle`. `Tweens.play_all()` and
-`Tweens.group()` return a `TweensGdGroup`. Both have an `end` you can await.
+`Tweens.group()` return a [`TweensGdGroup`](/gdscript/api/groups/). Both have an
+`end` you can await.
 
 ## Control playback
 
@@ -47,20 +48,6 @@ describes each `Tweens.Reason`.
 | `target` | `Object` | The object the tween animates; `null` for a rejected start |
 | `value` | `Variant` | The value read at start, then the latest value written |
 
-## Groups
-
-A `TweensGdGroup` controls several tweens as one step. It has the same control,
-state, and await members as a handle, except `state`, `progress`, `target`, and
-`value`, plus:
-
-| Member | Type | Meaning |
-| --- | --- | --- |
-| `members` | `Array[TweensGdHandle]` | A copy of the grouped handles, without duplicates |
-| `errors` | `Array[String]` | A copy of the members' failure messages |
-
-A group ends after every member ends. If one member stops early, the group
-cancels the others and keeps that member's reason. `is_paused` is true only while
-every active member is paused. See [groups and sequences](/gdscript/sequences/).
 
 ## Cancel a wait
 

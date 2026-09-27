@@ -1,7 +1,13 @@
 ---
-// The GDScript helper catalog, read from the addon's generated CATALOG.md at build time so the page follows the addon.
+// The GDScript helper catalog, read from the addon's generated CATALOG.md at build time so the pages follow the addon.
 // Rows are grouped by target class into the same sections as the C# catalog; unknown classes land under "Other".
+// With a `section`, the component renders that section's page: a class index, then one table per target class.
 import catalog from '../../../addons/tweens_gd/CATALOG.md?raw';
+
+interface Props {
+	section?: string;
+}
+const { section } = Astro.props;
 
 interface Row {
 	helper: string;
@@ -46,7 +52,11 @@ const known = new Set(SECTIONS.flatMap(([, targets]) => targets));
 const others = [...byTarget.keys()].filter((t) => !known.has(t)).sort();
 const sections = [...SECTIONS, ['Other', others] as [string, string[]]]
 	.map(([name, targets]) => [name, targets.filter((t) => byTarget.has(t))] as const)
-	.filter(([, targets]) => targets.length > 0);
+	.filter(([name, targets]) => targets.length > 0 && (!section || name === section));
+const shown = sections.flatMap(([, targets]) => targets);
+const count = shown.reduce((n, t) => n + byTarget.get(t)!.length, 0);
+// A page for one target class needs no index or class heading.
+const single = shown.length === 1;
 
 // Callback-only helpers target any Node; they read better under their own name.
 const heading = (target: string) => (target === 'Node' ? 'Callback values' : target);
@@ -54,56 +64,52 @@ const anchor = (target: string) => heading(target).toLowerCase().replace(/\s+/g,
 const COLUMNS = ['Helper', 'C# definition', 'Value'];
 ---
 
-<ul>
-	{
-		sections.map(([name, targets]) => (
-			<li>
-				{name}:{' '}
-				{targets.map((t, i) => (
-					<>
-						{i > 0 && ' · '}
-						<a href={`#${anchor(t)}`}>{heading(t)}</a>
-					</>
-				))}
-			</li>
-		))
-	}
-</ul>
-
-<p>
-	{rows.length} helpers in {byTarget.size} target classes. Each row pairs a helper with the C# definition it mirrors.
-</p>
+{
+	!single && (
+		<p>
+			{count} helpers:{' '}
+			{shown.map((t, i) => (
+				<>
+					{i > 0 && ' · '}
+					<a href={`#${anchor(t)}`}>{heading(t)}</a>
+				</>
+			))}
+		</p>
+	)
+}
 
 {
-	sections.map(([, targets]) =>
-		targets.map((target) => (
-			<>
-				<h3 id={anchor(target)}>{heading(target)}</h3>
-				<div class="table-wrap">
-					<table>
-						<thead>
-							<tr>
-								{COLUMNS.map((c) => (
-									<th>{c}</th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							{byTarget.get(target)!.map((row) => (
-								<tr>
-									<td data-label={COLUMNS[0]}>
-										<code>{row.helper}</code>
-									</td>
-									<td data-label={COLUMNS[1]}>
-										<code>{row.csharp}</code>
-									</td>
-									<td data-label={COLUMNS[2]}>{row.value}</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+	shown.map((target) => (
+		<>
+			{!single && (
+				<div class="sl-heading-wrapper level-h2">
+					<h2 id={anchor(target)}>{heading(target)}</h2>
 				</div>
-			</>
-		)),
-	)
+			)}
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							{COLUMNS.map((c) => (
+								<th scope="col">{c}</th>
+							))}
+						</tr>
+					</thead>
+					<tbody>
+						{byTarget.get(target)!.map((row) => (
+							<tr>
+								<td data-label={COLUMNS[0]}>
+									<code>{row.helper}</code>
+								</td>
+								<td data-label={COLUMNS[1]}>
+									<code>{row.csharp}</code>
+								</td>
+								<td data-label={COLUMNS[2]}>{row.value}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</>
+	))
 }

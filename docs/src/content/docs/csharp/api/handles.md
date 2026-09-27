@@ -4,8 +4,8 @@ description: The members of TweenInstance and Group, the handles that starting p
 ---
 
 Starting one definition returns a `TweenInstance<TTarget, TValue>` handle.
-Starting several, or grouping running tweens with `Group.Of`, returns a `Group`.
-Both can be awaited directly.
+Starting several, or grouping running tweens with `Group.Of`, returns a
+[`Group`](/csharp/api/groups/). Both can be awaited directly.
 
 The non-generic base class `TweenInstance` has every handle member below except
 `Target` and `Value`, so handles with different type arguments fit in one
@@ -51,18 +51,3 @@ describes each `Reason`.
 | `Target` | `TTarget` | The object the tween animates |
 | `Value` | `TValue` | The value read at start, then the latest value written |
 
-## Groups
-
-A `Group` controls several tweens as one step. It has the same control and await
-members as a handle, and no `State` or `Progress`:
-
-| Member | Type | Meaning |
-| --- | --- | --- |
-| `Group.Of(tweens)` | `Group` | Group tweens that are already playing |
-| `Members` | `IReadOnlyList<TweenInstance>` | The grouped handles |
-| `Pause()`, `Resume()`, `Cancel()`, `IsPaused` | | Act on every member |
-| `IsTerminal`, `CompletionReason`, `Error` | | As on a handle, for the group as a whole |
-| `GetAwaiter()`, `End` | | Await the group; it completes when every member completes |
-
-If one member stops early, the group cancels the others and reports that member's
-reason, or faults. See [sequences](/csharp/sequences/).

@@ -44,17 +44,18 @@ stops at the first rejected start and cancels the definitions it already started
 
 ## Find a member
 
-- [Definitions](/gdscript/api/definitions/): factories and `with_*()` methods,
-  then every field by role: endpoints, variations, timing, easing, modes, and
-  callbacks. Also the constants.
-- [Handles and groups](/gdscript/api/handles/): what starting returns, and how
-  to control it, read its state, and await it.
-- [Scheduler](/gdscript/api/scheduler/): `TweensGdScheduler`, to advance
-  playback yourself.
-- [Adapters](/gdscript/api/custom/): the adapter base class, for custom storage
-  and bindings.
-- [Helper catalog](/gdscript/nodes/): every named helper and the property it
-  animates.
+| Page | What it lists |
+| --- | --- |
+| [Creating definitions](/gdscript/api/definitions/) | The factories and named helpers, and the `with_*()` methods |
+| [Endpoints and variations](/gdscript/api/endpoints/) | `from_value`, `to_value`, `by_value`, and the factors, deltas, and skew that derive variants |
+| [Timing and easing](/gdscript/api/timing/) | `duration`, `delay`, `repeats`, ping-pong, `fill`, and the easing fields |
+| [Modes and callbacks](/gdscript/api/modes/) | Process, time scale, and pause modes, and `on_add` through `on_finally` |
+| [Constants](/gdscript/api/enums/) | Every value of `Tweens.Fill`, `State`, `Reason`, and the modes |
+| [Handles](/gdscript/api/handles/) | What starting returns: control it, read its state, await it, and cancel a wait |
+| [Groups](/gdscript/api/groups/) | Several tweens controlled and awaited as one step |
+| [Scheduler](/gdscript/api/scheduler/) | `TweensGdScheduler`, to advance playback yourself |
+| [Adapters](/gdscript/api/custom/) | The adapter base class, for custom storage and bindings |
+| [Helper catalog](/gdscript/nodes/) | Every named helper and the property it animates |
 
 ## Differences from C#
 

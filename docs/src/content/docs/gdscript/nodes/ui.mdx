@@ -1,0 +1,19 @@
+---
+title: UI controls
+description: Named helpers for Control, Range, Label, and the other UI classes, with their C# counterparts.
+---
+
+import GdCatalog from '../../../../components/GdCatalog.astro';
+
+Helpers for `Control`, `Range`, and the UI classes that derive from them.
+
+Each row pairs a helper with the C# definition it mirrors. Names ending in `_x`,
+`_y`, `_z`, or `_alpha` write one component.
+
+<GdCatalog section="UI" />
+
+## Units and constraints
+
+- `Control` minimum and maximum sizes and containers still apply.
+- The offset transform helpers require `offset_transform_enabled` on the control.
+- Set up scrollable content before tweening a scroll position.

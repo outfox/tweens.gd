@@ -1,0 +1,16 @@
+---
+title: Callback values
+description: The named callback-only helpers, which write no property and deliver each sample to on_update.
+---
+
+import GdCatalog from '../../../../components/GdCatalog.astro';
+
+These target any `Node`, write no property, and deliver each sample to `on_update`. See [callback values](/gdscript/custom-tweens/#callback-values).
+
+<GdCatalog section="Any node" />
+
+## Units and constraints
+
+- GDScript represents both `float` and `double` as `float`. `double_value` exists
+  to match the C# catalog.
+- A `null` endpoint falls back to zero, transparent black, or identity.

@@ -1,0 +1,24 @@
+---
+title: Material properties
+description: Named helpers for BaseMaterial3D properties, for StandardMaterial3D and ORMMaterial3D, with their C# counterparts.
+---
+
+import GdCatalog from '../../../../components/GdCatalog.astro';
+
+Helpers for `BaseMaterial3D`, so they work with both `StandardMaterial3D` and `ORMMaterial3D`.
+
+A material is a resource, so its tweens need a tree or an owner node; see
+[materials](/gdscript/materials/) for how to start them and what each needs
+enabled.
+
+Each row pairs a helper with the C# definition it mirrors. Names ending in `_x`,
+`_y`, `_z`, or `_alpha` write one component.
+
+<GdCatalog section="Materials" />
+
+## Units and constraints
+
+- Each UV helper also has `_x`, `_y`, and `_z` variants. A component write reads
+  the other components at each write, including concurrent edits to them.
+- Tweens don't change rendering modes or flags; enable transparency, emission,
+  and normal maps yourself.

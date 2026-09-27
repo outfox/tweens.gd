@@ -1,14 +1,27 @@
 ---
 title: Helper catalog
-description: Named GDScript helpers for node, material, and callback-value tweens, with their targets, value types, and C# counterparts.
+description: The named GDScript helpers, grouped into 2D, 3D, UI, material, animation and audio, and callback value pages, with their C# counterparts.
 ---
 
-import GdCatalog from '../../../components/GdCatalog.astro';
+The addon has a named helper for every property and value definition in the C#
+catalog. Each helper returns an ordinary reusable definition that already knows
+its target class, property, and value type, so a start checks them before any
+value is written.
 
-The addon has a named helper for every concrete property and value definition in the
-C# catalog. Each helper returns an ordinary reusable definition that already knows its
-target class, property, and value type, so a start checks them before any value is
-written.
+## Find a helper
+
+| Page | What it covers |
+| --- | --- |
+| [2D nodes](/gdscript/nodes/2d/) | `CanvasItem`, `Node2D`, sprites, cameras, particles, lights, lines, paths, and polygons |
+| [3D nodes](/gdscript/nodes/3d/) | `Node3D`, `GeometryInstance3D`, 3D sprites, cameras, particles, decals, fog, lights, and paths |
+| [UI controls](/gdscript/nodes/ui/) | `Control` layout and transforms, `Range`, labels, and progress bars |
+| [Material properties](/gdscript/nodes/materials/) | `BaseMaterial3D` colors, emission, roughness, and UVs |
+| [Animation and audio](/gdscript/nodes/audio/) | `AnimationPlayer` speed and the audio players' pitch, volume, and range |
+| [Callback values](/gdscript/nodes/values/) | `float_value` and the other helpers that write no property |
+
+Helper names follow the C# definition names in snake case. Names ending in `_x`,
+`_y`, `_z`, or `_alpha` write one component and read the others at write time.
+The pages are generated from the addon's `CATALOG.md`.
 
 ## Usage
 
@@ -48,32 +61,19 @@ A helper that targets a base class works on every node derived from it: `Node2D`
 `Range` the value. `BaseMaterial3D` helpers target a material; start them with an
 owner, as described in [materials](/gdscript/materials/).
 
-## Helpers by target class
-
-Helper names follow the C# definition names in snake case. Names ending in `_x`,
-`_y`, `_z`, or `_alpha` write one component and read the others at write time. The
-table below is generated from the addon's `CATALOG.md`.
-
-<GdCatalog />
-
 ## Units and engine constraints
+
+Each group page lists the constraints specific to it. These apply everywhere:
 
 - Rotation, skew, and texture rotation use radians. Camera field of view, light and
   emission angles, and radial progress angles use degrees. Ratios use the native
   property range; positions, sizes, paths, and offsets use the Godot units of each
   property.
-- GDScript represents both `float` and `double` as `float`. `double_value` exists to
-  match the C# catalog.
-- Integer properties, such as sprite frames, `visible_characters`, and scroll
-  positions, interpolate continuously and round to nearest with ties away from zero.
-  GDScript saturates at signed 64-bit limits, where C# uses 32-bit limits. Native
-  constraints still apply: set up sprite frames and animations, and scrollable
-  content, before tweening them.
+- Integer properties, such as sprite frames and `visible_characters`, interpolate
+  continuously and round to nearest with ties away from zero. GDScript saturates
+  at signed 64-bit limits, where C# uses 32-bit limits. Native constraints still
+  apply.
 - Colors and vectors keep easing overshoot. Engine setters can clamp values.
-- `Control` minimum and maximum sizes and containers still apply. The offset
-  transform helpers require `offset_transform_enabled` on the control.
-- Path helpers require a `PathFollow2D` or `PathFollow3D` under a matching `Path2D` or
-  `Path3D` with a nonempty curve. The node still controls looping and wrapping.
 - Setting a property doesn't enable a rendering feature or create a resource.
   Renderer support and sorting limitations are Godot's.
 - For shader uniforms, see [shader uniforms](/gdscript/shaders/).

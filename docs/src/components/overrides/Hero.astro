@@ -71,8 +71,8 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 	<figure class="stage" data-stage>
 		<figcaption class="code">
 			<span data-lang-only="csharp">
-				<span class="t-kw">var</span> <span class="t-var">hop</span> = <span class="t-kw">new</span> <span class="t-ty">Tweens.Position2D</span><br />
-				<span class="indent">{'{'} To = to, Duration = <span class="t-num">0.9</span>, Ease = EaseType.<span class="t-ease" data-ease-label="csharp">{eases[0]}</span> {'}'};</span><br />
+				<span class="t-kw">var</span> <span class="t-var">hop</span> = <span class="t-kw">new</span> <span class="t-ty">Tweens.Position2D</span>(to, <span class="t-num">0.9</span>,<br />
+				<span class="indent">EaseType.<span class="t-ease" data-ease-label="csharp">{eases[0]}</span>);</span><br />
 				<span class="t-var">sprite</span>.<span class="t-fn">Tween</span>(<span class="t-var">hop</span>);
 			</span>
 			<span data-lang-only="gdscript">

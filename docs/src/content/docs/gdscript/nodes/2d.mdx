@@ -1,0 +1,19 @@
+---
+title: 2D nodes
+description: Named helpers for CanvasItem, Node2D, and the 2D node classes, with their C# counterparts.
+---
+
+import GdCatalog from '../../../../components/GdCatalog.astro';
+
+Helpers for `CanvasItem`, `Node2D`, and the 2D node classes.
+
+Each row pairs a helper with the C# definition it mirrors. Names ending in `_x`,
+`_y`, `_z`, or `_alpha` write one component.
+
+<GdCatalog section="2D" />
+
+## Units and constraints
+
+- Path helpers require a `PathFollow2D` under a `Path2D` with a nonempty curve.
+  The node still controls looping and wrapping.
+- Set up sprite frames and animations before tweening a sprite's `frame`.

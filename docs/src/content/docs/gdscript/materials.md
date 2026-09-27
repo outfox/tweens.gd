@@ -61,29 +61,9 @@ pause to follow. Call `dispose()` on the scheduler when you're finished with it.
 ## Built-in material properties
 
 All 25 helpers target `BaseMaterial3D`, so they work with both `StandardMaterial3D`
-and `ORMMaterial3D`. The target class and the captured value type are checked when
-the tween starts.
-
-| Property | Helper |
-| --- | --- |
-| Albedo color | `Tweens.material_albedo_color` |
-| Albedo alpha | `Tweens.material_albedo_alpha` |
-| Metallic | `Tweens.material_metallic` |
-| Specular | `Tweens.material_metallic_specular` |
-| Roughness | `Tweens.material_roughness` |
-| Emission color | `Tweens.material_emission` |
-| Emission multiplier | `Tweens.material_emission_energy_multiplier` |
-| Emission intensity (nits) | `Tweens.material_emission_intensity` |
-| Normal strength | `Tweens.material_normal_scale` |
-| UV1 offset/scale | `Tweens.material_uv1_offset` / `Tweens.material_uv1_scale` |
-| UV2 offset/scale | `Tweens.material_uv2_offset` / `Tweens.material_uv2_scale` |
-
-Each UV helper also has `_x`, `_y`, and `_z` variants, such as
-`Tweens.material_uv1_offset_x`. A component write reads the other components at
-each write, including concurrent edits to them. All helpers take
-`(to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)`, and a null endpoint
-uses the captured value. The
-[helper catalog](/gdscript/nodes/) lists them with the rest.
+and `ORMMaterial3D`. The [material properties](/gdscript/nodes/materials/) page
+lists them. The target class and the captured value type are checked when the
+tween starts.
 
 Other material properties can use a property path, such as
 `Tweens.property(^"rim", 1.0, 0.5)`, played with the same owner argument. A path
