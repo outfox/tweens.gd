@@ -6,20 +6,60 @@ import mono from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin
 
 // Preloading the Latin faces lets first paint use them, so text does not reflow when fonts swap in.
 const fonts = [display, body, mono];
+
+// Browsers with Speculation Rules fetch a page once the pointer rests on its link, into a cache meant for navigations;
+// the others ignore the rules. Prefetch only: a prerender would run this page's scripts before the click.
+// Shared pages' language switches are buttons, not navigations.
+const speculation = {
+	prefetch: [
+		{
+			where: { and: [{ href_matches: '/*' }, { not: { selector_matches: '[data-shared] a, a[download]' } }] },
+			eagerness: 'moderate',
+		},
+	],
+};
 ---
 
 <Default />
+<script type="speculationrules" is:inline set:html={JSON.stringify(speculation)} />
 <!-- Language pages set the language and remember it; shared pages use the remembered one (C# by default).
      Runs before first paint so language-specific blocks never flash. -->
 <script is:inline>
 	(() => {
-		const track = location.pathname.match(/^\/(csharp|gdscript)(\/|$)/)?.[1];
-		let lang = track;
+		const root = document.documentElement;
+		const apply = () => {
+			const track = location.pathname.match(/^\/(csharp|gdscript)(\/|$)/)?.[1];
+			let lang = track;
+			try {
+				if (track) localStorage.setItem('tweens-lang', track);
+				else lang = localStorage.getItem('tweens-lang');
+			} catch {}
+			root.dataset.lang = lang === 'gdscript' ? 'gdscript' : 'csharp';
+		};
+		apply();
+
+		// Arriving from the twin page's language switch (LangSwitch.astro): the switch paints on the previous
+		// language, then slides over. The content and sidebar restore the reader's place from window.__twCarry.
 		try {
-			if (track) localStorage.setItem('tweens-lang', track);
-			else lang = localStorage.getItem('tweens-lang');
+			const carry = JSON.parse(sessionStorage.getItem('tweens-lang-carry') || 'null');
+			sessionStorage.removeItem('tweens-lang-carry');
+			if (carry?.to === location.pathname && Date.now() - carry.at < 15000) {
+				window.__twCarry = carry;
+				if (carry.from !== root.dataset.lang) root.dataset.langFrom = carry.from;
+			}
 		} catch {}
-		document.documentElement.dataset.lang = lang === 'gdscript' ? 'gdscript' : 'csharp';
+		if (root.dataset.langFrom)
+			addEventListener('DOMContentLoaded', () =>
+				requestAnimationFrame(() => requestAnimationFrame(() => delete root.dataset.langFrom)),
+			);
+
+		// A page restored by Back or Forward keeps its old state; bring it up to date with the current choice.
+		addEventListener('pageshow', (event) => {
+			if (!event.persisted) return;
+			apply();
+			delete root.dataset.langFrom;
+			document.dispatchEvent(new CustomEvent('tweens:lang'));
+		});
 	})();
 </script>
 {fonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}

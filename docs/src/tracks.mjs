@@ -3,8 +3,8 @@
 // read it too, so a page and its twin always sit at the same place in each path.
 
 export const LANGS = {
-	csharp: { label: 'C#', long: 'C#' },
-	gdscript: { label: 'GDScript', long: 'GDScript', status: 'Experimental' },
+	csharp: { label: 'C#', long: 'C#', status: 'Beta' },
+	gdscript: { label: 'GDScript', long: 'GDScript', status: 'Beta' },
 };
 
 /** Groups in path order. `art` picks the drawing beside each page title; `gdscript` overrides a label there. */

@@ -4,6 +4,32 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
 
 <Default><slot /></Default>
 
+<!-- Arriving from the twin page's language switch: open at the same section, the same share of the way through it.
+     Sections match by heading id, or by position when both pages have as many headings of that level. -->
+<script is:inline>
+	(() => {
+		const place = window.__twCarry?.place;
+		const content = document.querySelector('.sl-markdown-content');
+		if (!place?.length || !content || location.hash) return;
+		const all = [...content.querySelectorAll('.sl-heading-wrapper > :is(h2, h3)')];
+		const rank = (h) => Number(h.tagName[1]);
+		const top = (el) => el.getBoundingClientRect().top + scrollY;
+		for (const p of place) {
+			const same = all.filter((h) => rank(h) === p.level);
+			const h = same.find((x) => x.id === p.id) ?? (same.length === p.count ? same[p.index] : undefined);
+			if (!h) continue;
+			const next = all.slice(all.indexOf(h) + 1).find((x) => rank(x) <= p.level);
+			const span = (next ? top(next) : content.getBoundingClientRect().bottom + scrollY) - top(h);
+			const line = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+			const y = top(h) - line + p.share * span;
+			scrollTo({ top: y, behavior: 'instant' });
+			// The rest of the page isn't parsed yet and may cap the scroll; finish once it is.
+			if (scrollY < y - 1) addEventListener('DOMContentLoaded', () => scrollTo({ top: y, behavior: 'instant' }));
+			return;
+		}
+	})();
+</script>
+
 <script>
 	import { onceVisible } from '../../scripts/motion';
 

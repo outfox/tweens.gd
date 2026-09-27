@@ -1,6 +1,6 @@
 # tweens.gd public documentation
 
-Astro/Starlight documentation for the C# library and the experimental GDScript addon.
+Astro/Starlight documentation for the beta C# library and beta GDScript addon.
 Content lives in `src/content/docs/`. Internal working documents stay outside this site.
 
 ## Local development
@@ -38,6 +38,9 @@ are shared.
 - The language switch (`LangSwitch.astro`) links each page to its twin. On shared pages it
   sets the remembered language instead, and `<Lang only="csharp|gdscript">` blocks show
   the matching content.
+- Switching opens the twin at the reader's section. Sections match by heading id, or by
+  position when both twins have the same number of `##` (or `###`) headings, so keep a
+  twin's sections in the same order even where their titles differ.
 - Interactive demos are shared. Pass `lang="gdscript"` so their code and labels use
   GDScript names; `src/scripts/lang.ts` maps the C# names.
 - Renamed URLs keep working through `redirects` in `src/tracks.mjs`.

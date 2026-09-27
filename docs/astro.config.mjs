@@ -36,6 +36,10 @@ const tableScroll = {
 export default defineConfig({
 	site: 'https://tweens.gd',
 	redirects,
+	// Starlight turns on Astro's link prefetch by default. Firefox can't reuse those prefetches for pages served
+	// with max-age=0, so each one doubled the request and could hold up the click. Head.astro uses Speculation
+	// Rules instead.
+	prefetch: false,
 	integrations: [
 		tableScroll,
 		starlight({

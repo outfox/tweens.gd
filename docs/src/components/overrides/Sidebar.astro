@@ -8,6 +8,21 @@ import LangSwitch from '../LangSwitch.astro';
 	<LangSwitch />
 </div>
 <Default />
+<!-- Runs after Starlight's own restore, on desktop only as that one does. A language switch keeps the sidebar where
+     the twin page had it, since Starlight keys its saved state to the sidebar's contents. If the current page's link
+     still sits outside the visible part (a deep link, or prev/next on a short screen), it's centered. -->
+<script is:inline>
+	(() => {
+		const pane = document.getElementById('starlight__sidebar');
+		if (!pane || !matchMedia('(min-width: 50em)').matches) return;
+		if (window.__twCarry) pane.scrollTop = window.__twCarry.sidebar;
+		const link = pane.querySelector('a[aria-current="page"]:not([data-lang-choice])');
+		if (!link) return;
+		const p = pane.getBoundingClientRect();
+		const l = link.getBoundingClientRect();
+		if (l.top < p.top || l.bottom > p.bottom) pane.scrollTop += l.top - p.top - (p.height - l.height) / 2;
+	})();
+</script>
 
 <style>
 	.lang {

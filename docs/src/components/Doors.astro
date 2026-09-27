@@ -7,8 +7,9 @@ const doors = [
 	{
 		lang: 'csharp',
 		name: 'C#',
+		badge: 'Beta',
 		facts: ['NuGet package', '.NET 10', 'GodotSharp 4.7.2'],
-		status: 'Pre-release 0.1.0. Install it from source or a locally packed package.',
+		status: 'Install it from source or a locally packed NuGet package.',
 		code: `var hop = new Tweens.Position2D\n    { To = target, Duration = 0.6 };\nsprite.Tween(hop);`,
 		start: '/csharp/installation/',
 		links: [
@@ -19,9 +20,9 @@ const doors = [
 	{
 		lang: 'gdscript',
 		name: 'GDScript',
-		badge: 'Experimental',
-		facts: ['Pure GDScript addon', 'Godot 4.7.2', 'No .NET'],
-		status: 'Experimental. Copy the addon into your project from the repository.',
+		badge: 'Beta',
+		facts: ['Pure GDScript addon', 'Godot 4.7.2'],
+		status: 'Copy the addon from the repository or unpack a locally built ZIP.',
 		code: `var hop := Tweens.position_2d(target, 0.6)\nTweens.play(sprite, hop)`,
 		start: '/gdscript/installation/',
 		links: [

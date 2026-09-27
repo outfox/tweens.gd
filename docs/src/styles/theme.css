@@ -13,8 +13,10 @@
 	--sl-font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 	--tw-font-display: 'Bricolage Grotesque Variable', 'Figtree Variable', system-ui, sans-serif;
 
-	/* The lane runs as wide as code, tables, and demos need; prose inside it keeps a readable measure. */
-	--sl-content-width: 68rem;
+	/* The lane runs as wide as code, tables, and demos need; prose inside it keeps a readable measure.
+	   The header aligns to the docs lane on every page (Header.astro), so it reads the width from here. */
+	--tw-docs-width: 68rem;
+	--sl-content-width: var(--tw-docs-width);
 	--tw-measure: 46rem;
 	--sl-line-height: 1.7;
 	--sl-text-h1: 2.5rem;
@@ -126,6 +128,8 @@ html {
 	accent-color: var(--tw-mint);
 	caret-color: var(--tw-mint);
 	scrollbar-color: var(--tw-outline) transparent;
+	/* Short pages keep the scrollbar's space, so the layout doesn't shift sideways between pages or language twins. */
+	scrollbar-gutter: stable;
 	font-variant-numeric: tabular-nums;
 }
 body {
@@ -311,8 +315,9 @@ h4,
 	}
 }
 
-/* Header: scroll position drawn as a playhead running along the nav's bottom edge. */
-.header {
+/* Header: scroll position drawn as a playhead running along the nav's bottom edge. The blur belongs to the fixed bar
+   only; the header component inside it shares the class name. */
+header.header {
 	backdrop-filter: blur(10px);
 }
 @supports (animation-timeline: scroll()) {
