@@ -12,8 +12,46 @@ func continuation(source, token, scheduler, results: Array) -> void:
 	await source.wait(token)
 	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0)))
 
+func record_end(source, results: Array) -> void:
+	results.append(await source.end)
+
+func continue_end(source, scheduler, results: Array) -> void:
+	await source.end
+	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0)))
+
+func check_end() -> void:
+	var scheduler := T.Scheduler.new()
+	for cancel in [false, true]:
+		var handle := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
+		var group := T.group([handle])
+		var results: Array = []
+		record_end(handle, results)
+		record_end(handle, results)
+		record_end(group, results)
+		host.check(results.is_empty(), "end suspends pending handle and group waiters")
+		if cancel: handle.cancel()
+		else: scheduler.update(0.5)
+		var expected := T.Reason.CANCELLED if cancel else T.Reason.COMPLETED
+		host.check(results == [expected, expected, expected], "end resumes every waiter with the reason")
+		host.check(await handle.end == expected and await group.end == expected, "end returns immediately after settlement")
+		host.check(handle.ended.get_connections().is_empty() and group.ended.get_connections().is_empty(), "end releases completed subscriptions")
+	var rejected := T.Handle.rejected("test rejection")
+	host.check(await rejected.end == T.Reason.FAILED, "rejected start can be awaited through end")
+	var rejected_group := T.Group.new([], "test rejection")
+	host.check(await rejected_group.end == T.Reason.FAILED, "rejected group can be awaited through end")
+	for grouped in [false, true]:
+		var handle := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
+		var after: Array = []
+		continue_end(T.group([handle]) if grouped else handle, scheduler, after)
+		scheduler.update(0.75)
+		scheduler.update(0.0)
+		host.check(after.size() == 1, "end continues a sequence")
+		host.near(after[0].value, 0.25, "end preserves sequence overshoot")
+	scheduler.dispose()
+
 func run(owner: Node) -> bool:
 	host = owner
+	await check_end()
 	var scheduler := T.Scheduler.new()
 	var a := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
 	var group := T.group([a])

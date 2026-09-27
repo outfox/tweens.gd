@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 class_name TweensGdGroup
 extends RefCounted
-## Existing tweens that finish as one step. Await wait(), including after settlement.
+## Existing tweens that finish as one step. Await end, including after settlement.
 
 signal ended(reason: int)
 
@@ -20,6 +20,11 @@ var is_settled: bool:
 	get: return _watcher.settled
 var completion_reason: int:
 	get: return _watcher.reason
+## Await immediately: the ended signal while running, or the stored reason once settled.
+var end: Variant:
+	get:
+		if not _main_thread(): return Types.Reason.FAILED
+		return completion_reason if is_settled else ended
 var error: String:
 	get: return "\n".join(_watcher.errors)
 var errors: Array[String]:
@@ -81,7 +86,7 @@ func wait(cancellation: Cancellation = null) -> int:
 	if not _main_thread(): return Types.Reason.FAILED
 	if is_settled: return completion_reason
 	if cancellation != null: return await Awaiting.wait_for(self, cancellation)
-	return await ended
+	return await end
 
 func _main_thread() -> bool:
 	if OS.get_thread_caller_id() == OS.get_main_thread_id(): return true

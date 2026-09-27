@@ -68,3 +68,8 @@ are shared.
 The public URL is `https://tweens.gd`, set as Astro `site` for canonical URLs and
 the sitemap. Links assume that domain-root deployment. statichost.eu builds and
 deploys the site automatically from a repository webhook; no workflow is needed here.
+
+`public/_headers` sets statichost's response headers. Files whose names carry a content
+hash (Astro's `/_astro/` output, Pagefind's fragments and index chunks) are cached as
+immutable, so a page navigation doesn't revalidate its stylesheets, scripts, and fonts.
+Pages and unhashed files keep statichost's default, revalidated on every request.

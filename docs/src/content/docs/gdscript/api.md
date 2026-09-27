@@ -25,7 +25,7 @@ Godot's main thread.
 | --- | --- | --- |
 | `Tweens.play(target, definition, owner = null)` | `TweensGdHandle` | Start one definition; a node target is its own owner |
 | `Tweens.play_all(target, definitions, owner = null)` | `TweensGdGroup` | Start an array of definitions on one target |
-| `Tweens.group(handles)` | `TweensGdGroup` | Treat running handles as one step with one `wait()` |
+| `Tweens.group(handles)` | `TweensGdGroup` | Treat running handles as one step with one `end` |
 | `Tweens.Group.of(handles)` | `TweensGdGroup` | Same as `Tweens.group()` |
 | `Tweens.cancel_tweens(owner, include_children = false)` | `void` | Cancel the automatic playback this node owns |
 
@@ -35,7 +35,7 @@ has examples.
 
 `play()` and `play_all()` never return `null`. A rejected start returns a handle or
 group that has already settled with `Tweens.Reason.FAILED`, so `await
-Tweens.play(target, definition).wait()` needs no null check. `play_all()` stops at
+Tweens.play(target, definition).end` needs no null check. `play_all()` stops at
 the first rejected start and cancels the definitions it already started.
 
 ## Create definitions
@@ -97,24 +97,25 @@ configuration is valid, or a message describing the first problem.
 | `progress` | `float` | Normalized current-leg progress, before easing |
 | `completion_reason` | `int` | A `Tweens.Reason` value, or `-1` until playback ends |
 | `error` | `String` | Detected failure diagnostics; empty otherwise |
+| `end` | `Variant` | Await immediately: `ended` while running, stored reason after settlement |
 | `wait(cancellation = null)` | `int` | Await the completion reason; returns at once if already settled |
 | `ended(reason)` | signal | Emitted once when playback ends |
 | `target` | `Object` | Original target; `null` for a rejected start |
 | `value` | `Variant` | Value read at start, then the latest value written |
 
 Pause is separate from `state`: there's no paused state. Prefer `await
-handle.wait()` to the `ended` signal, because awaiting the signal after it has
+handle.end` to the `ended` signal, because awaiting the signal after it has
 fired waits forever.
 
 `Tweens.Reason` has `COMPLETED`, `CANCELLED`, `TARGET_FREED`, `OWNER_EXITED`,
 `RUNNER_DISPOSED`, and `FAILED`. `WAIT_CANCELLED` is returned only by a `wait()`
 whose `Tweens.Cancellation` token was cancelled; playback continues.
-[Control and completion](/gdscript/playback/) describes each reason.
+[Cancellation and completion reasons](/gdscript/cancellation/) describes each reason.
 
 ## Groups
 
 `TweensGdGroup` has `pause()`, `resume()`, `cancel()`, `is_paused`,
-`is_terminal`, `is_settled`, `completion_reason`, `error`, `wait(cancellation =
+`is_terminal`, `is_settled`, `completion_reason`, `error`, `end`, `wait(cancellation =
 null)`, and the `ended(reason)` signal, plus:
 
 | Member | Type | Meaning |
@@ -182,11 +183,11 @@ shared fixtures run against both. The remaining differences come from the langua
 
 | Area | C# | GDScript |
 | --- | --- | --- |
-| Failures | `End` faults with an exception; `Error` holds it | `wait()` returns `Tweens.Reason.FAILED`; `error` holds a diagnostic string |
+| Failures | Awaiting faults with an exception; `Error` holds it | Awaiting `end` returns `Tweens.Reason.FAILED`; `error` holds a diagnostic string |
 | Type checks | Generic `TweenInstance<TTarget, TValue>`, checked by the compiler | Target class and value type checked when playback starts |
 | Integer values | Integer adapters saturate at 32-bit limits | Integers saturate at signed 64-bit limits; shader integers stay 32-bit |
 | Script errors | Exceptions from callbacks and setters fault the tween | Detected problems become `FAILED`; arbitrary errors inside callbacks and setters remain Godot script errors |
-| Callbacks | Synchronous | Synchronous; don't `await` inside a callback, await `wait()` from a separate coroutine instead |
+| Callbacks | Synchronous | Synchronous; don't `await` inside a callback, await `end` from a separate coroutine instead |
 
 The addon detects invalid configuration, stale Callables, invalid easing results,
 and nonfinite interpolation. Recoverable failures in custom adapters should be

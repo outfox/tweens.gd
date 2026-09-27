@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 class_name TweensGdHandle
 extends RefCounted
-## A single playback. Await wait(), which also works after playback has ended.
+## A single playback. Await end, including after playback has ended.
 
 signal ended(reason: int)
 
@@ -24,6 +24,11 @@ var completion_reason: int:
 	get: return _reason
 var error: String:
 	get: return _error
+## Await immediately: the ended signal while running, or the stored reason once settled.
+var end: Variant:
+	get:
+		if not _main_thread(): return Types.Reason.FAILED
+		return _reason if _settled else ended
 var value: Variant:
 	get: return _value
 var progress: float:
@@ -104,7 +109,7 @@ func wait(cancellation: Cancellation = null) -> int:
 	if not _main_thread(): return Types.Reason.FAILED
 	if _settled: return _reason
 	if cancellation != null: return await Awaiting.wait_for(self, cancellation)
-	return await ended
+	return await end
 
 func _main_thread() -> bool:
 	if OS.get_thread_caller_id() == OS.get_main_thread_id(): return true

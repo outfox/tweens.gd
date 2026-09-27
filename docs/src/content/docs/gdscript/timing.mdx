@@ -50,7 +50,7 @@ and one 0.3-second gap. Drag the timeline to see each phase:
 <TimingLab lang="gdscript" />
 
 Negative and non-finite values reject the start, and `Tweens.play()` returns an
-already-settled handle whose `wait()` reports `Tweens.Reason.FAILED`. A long frame
+already-settled handle whose `end` reports `Tweens.Reason.FAILED` when awaited. A long frame
 advances to the correct phase, even across several cycles, without losing time at
 boundaries, but it doesn't replay the callbacks of the cycles it skipped.
 

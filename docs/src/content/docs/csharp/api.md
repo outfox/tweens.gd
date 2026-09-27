@@ -89,19 +89,21 @@ handles with different type arguments fit in one collection.
 | `Progress` | `float` | Normalized current-leg progress, before easing |
 | `CompletionReason` | `Reason?` | `null` until playback ends; faults are described by `Error` |
 | `Error` | `Exception?` | Failure retained after faulted playback |
+| `GetAwaiter()` | `TaskAwaiter<Reason>` | Enables `await movement` with the same result and faults as `End` |
 | `End` | `Task<Reason>` | Shared completion that any number of callers can await |
 | `AwaitDecommissionAsync(token)` | `Task<Reason>` | Wait with cancellation that affects only the wait |
 | `Target` | `TTarget` | Original target |
 | `Value` | `TValue` | Value read at start, then the latest value written |
 
 Pause is separate from `State`: there's no `Paused` state. To coordinate async
-work, await completion instead of reading `State`.
+work, `await movement` instead of reading `State`. Groups also support direct
+awaiting. Keep `End` for APIs that require a `Task<Reason>`.
 
 `Reason` has five members: `Completed`, `Cancelled`, `TargetFreed`, `OwnerExited`,
-and `RunnerDisposed`. [Why it ended](/csharp/playback/#why-it-ended) describes each.
+and `RunnerDisposed`. [Why it ended](/csharp/cancellation/#why-it-ended) describes each.
 
 `Group` has `Pause()`, `Resume()`, `Cancel()`, `IsPaused`, `IsTerminal`,
-`CompletionReason`, `Error`, and `End`, plus `Members`, an
+`CompletionReason`, `Error`, `GetAwaiter()`, and `End`, plus `Members`, an
 `IReadOnlyList<TweenInstance>`. It has no `State` or `Progress`. Its `End` reports
 `Completed` when every member completes; otherwise it reports the first reason a
 member stopped for, or faults.

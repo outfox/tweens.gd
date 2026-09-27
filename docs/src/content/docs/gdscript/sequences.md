@@ -4,16 +4,15 @@ description: Chain, group, stagger, wait, loop, and stop multi-step animations w
 ---
 
 A sequence is an ordinary GDScript coroutine. Await each step before starting the
-next, play steps together as a group, and stop as soon as a step doesn't
-complete.
+next, play steps together as a group, and add delays between them.
 
 | Goal | Tool |
 | --- | --- |
-| Run B after A | `await a.wait()`, check the reason, then start B |
-| Run A and B together | `Tweens.play_all(node, [a, b])` or `Tweens.group(handles)`, then `await group.wait()` |
+| Run B after A | `await a.end`, then start B |
+| Run A and B together | `Tweens.play_all(node, [a, b])` or `Tweens.group(handles)`, then `await group.end` |
 | Offset tweens within a step | `delay` on copies for different targets or properties |
-| Wait between steps | `await Tweens.play(node, Tweens.float_value(1.0, seconds)).wait()` |
-| Stop the sequence | Cancel the running step; the reason check ends the function |
+| Wait between steps | `await Tweens.play(node, Tweens.float_value(1.0, seconds)).end` |
+| Stop the sequence | [Cancel and check the result](/gdscript/cancellation/) |
 
 Snippets run in a node script function with in-tree `sprite` (`Sprite2D`) and
 `label` (`Label`) nodes, and assume
@@ -21,20 +20,20 @@ Snippets run in a node script function with in-tree `sprite` (`Sprite2D`) and
 
 ## One step after another
 
-Start the next tween only after the previous one completes, and check the reason.
-A cancelled, freed, or shut-down step also returns from `wait()`, and the
-sequence should usually stop there:
+Await each tween before starting the next:
 
 ```gdscript
-if await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).wait() != Tweens.Reason.COMPLETED:
-	return
-if await Tweens.play(sprite, Tweens.scale_2d(Vector2(1.2, 1.2), 0.2)).wait() != Tweens.Reason.COMPLETED:
-	return
-await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).wait()
+await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).end
+await Tweens.play(sprite, Tweens.scale_2d(Vector2(1.2, 1.2), 0.2)).end
+await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
 ```
 
 Each step reads its `null` `from_value` when it starts, so it continues from
 wherever the previous step left the property.
+
+These examples ignore completion reasons. If interruption should stop the sequence,
+check the result before starting the next step; [cancellation](/gdscript/cancellation/)
+shows that pattern.
 
 ## Steps that run together
 
@@ -44,8 +43,7 @@ A group plays tweens as one step. Start several definitions on one node with
 ```gdscript
 var grow := Tweens.scale_2d(Vector2(1.2, 1.2), 0.2)
 var dim := Tweens.modulate_alpha(0.5, 0.2)
-if await Tweens.play_all(sprite, [grow, dim]).wait() != Tweens.Reason.COMPLETED:
-	return
+await Tweens.play_all(sprite, [grow, dim]).end
 ```
 
 Group tweens that are already playing, on any targets, with `Tweens.group()`.
@@ -56,8 +54,7 @@ var step := Tweens.group([
 	Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)),
 	Tweens.play(label, Tweens.modulate_alpha(0.0, 0.6)),
 ])
-if await step.wait() != Tweens.Reason.COMPLETED:
-	return
+await step.end
 ```
 
 A group completes after every member settles, including its callbacks and
@@ -95,7 +92,7 @@ static func _fade_in() -> Tweens.Definition:
 	definition.fill = Tweens.Fill.BOTH
 	return definition
 
-func reveal() -> bool:
+func reveal() -> void:
 	var reveals := []
 	for item in get_children():
 		if item is Control:
@@ -103,8 +100,8 @@ func reveal() -> bool:
 			start.delay = reveals.size() * 0.05
 			reveals.append(Tweens.play(item, start))
 	if reveals.is_empty():
-		return true
-	return await Tweens.group(reveals).wait() == Tweens.Reason.COMPLETED
+		return
+	await Tweens.group(reveals).end
 ```
 
 `fill = Tweens.Fill.BOTH` applies `from_value` during the delay, so items that
@@ -132,11 +129,9 @@ A callback-only tween on any in-tree node makes a wait that follows the same
 pause, time scale, and lifetime rules as the animation around it:
 
 ```gdscript
-if await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).wait() != Tweens.Reason.COMPLETED:
-	return
-if await Tweens.play(sprite, Tweens.float_value(1.0, 0.5)).wait() != Tweens.Reason.COMPLETED:
-	return # A 0.5-second hold.
-await Tweens.play(sprite, Tweens.position_2d(Vector2(40, 180), 0.6)).wait()
+await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).end
+await Tweens.play(sprite, Tweens.float_value(1.0, 0.5)).end
+await Tweens.play(sprite, Tweens.position_2d(Vector2(40, 180), 0.6)).end
 ```
 
 :::caution[Avoid `create_timer()` for holds]
@@ -145,45 +140,11 @@ default it keeps running while the tree is paused. The sequence can resume
 against a paused or freed scene.
 :::
 
-## Loops
+## Loops and cancellation
 
-Repeat a whole sequence with an ordinary loop that ends when a step doesn't
-complete. To repeat a single tween, set `repeats` instead, as described in
-[timing](/gdscript/timing/).
-
-```gdscript
-var up := Tweens.position_2d_y(120.0, 0.4)
-var down := Tweens.position_2d_y(180.0, 0.4)
-while true:
-	if await Tweens.play(sprite, up).wait() != Tweens.Reason.COMPLETED:
-		break
-	if await Tweens.play(sprite, down).wait() != Tweens.Reason.COMPLETED:
-		break
-```
-
-## Stop a sequence
-
-A sequence stops when its current step ends with a reason other than `COMPLETED`
-and your code returns, so anything that stops the running tweens stops the
-sequence:
-
-- Call `cancel()` on the current handle or group.
-- Call `Tweens.cancel_tweens(owner, true)` on a common ancestor.
-- Free the node, or remove it from the tree. Its tweens end with `TARGET_FREED`
-  or `OWNER_EXITED`.
-
-To stop only your *wait* when something else happens, and decide about playback
-yourself, pass a `Tweens.Cancellation` to `wait()`. A cancelled wait returns
-`WAIT_CANCELLED`, and playback continues:
-
-```gdscript
-var movement := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
-var cancellation := Tweens.Cancellation.new()
-skip_button.pressed.connect(cancellation.cancel)
-if await movement.wait(cancellation) == Tweens.Reason.WAIT_CANCELLED:
-	movement.cancel()
-	return
-```
+For one repeating motion, use `repeats` as described in [timing](/gdscript/timing/).
+To repeat a multi-step sequence or stop it when interrupted, see
+[cancellation and completion reasons](/gdscript/cancellation/).
 
 ## Pause a sequence
 
@@ -205,7 +166,7 @@ while paused. `set_process(false)` alone doesn't pause them.
 A tween that fails ends with `FAILED`, and `handle.error` describes the problem.
 A group containing it fails too, and `group.errors` lists each member's message.
 A start that can't be accepted, such as a target outside the tree, returns a
-handle that has already failed, so `wait()` returns `FAILED` at once instead of
+handle that has already failed, so `await handle.end` returns `FAILED` at once instead of
 the sequence hanging.
 
 :::caution[Script errors aren't caught]
@@ -225,7 +186,7 @@ comes from the member that finished last.
 
 The handover applies when all of these hold:
 
-- You await the handle's or the group's `wait()` before it finishes. A `wait()`
+- You await the handle's or the group's `end` before it finishes. An await
   on a handle that has already finished returns at once and hands over no time,
   which is why awaiting several handles in turn can lose it.
 - The next tweens start before the sequence awaits anything else.

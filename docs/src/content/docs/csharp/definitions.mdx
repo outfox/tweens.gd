@@ -43,10 +43,10 @@ public partial class Coin : Sprite2D
 
     public void Appear(double delay) => this.Tween(Pop with { Delay = delay });
 
-    public async Task<bool> Collect()
+    public async Task Collect()
     {
         var step = this.Tween(Lift with { To = Position.Y - 40 }, Fade);
-        return await step.End == Reason.Completed;
+        await step;
     }
 }
 ```
@@ -58,7 +58,7 @@ public partial class Coin : Sprite2D
 3. **Vary a start.** Each call to `Appear` passes its own delay through `with`,
    and `Pop` itself never changes.
 4. **Build steps from methods.** `Collect` plays two tweens as one step and
-   reports whether it completed.
+   waits for it to end.
 
 </Moves>
 
@@ -75,7 +75,7 @@ options too:
 ```csharp
 var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
 var slowPop = new Tweens.Scale2D { Options = snappy, Duration = 0.6 };
-sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
+_ = sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
 ```
 
 :::caution[Order matters]
@@ -130,8 +130,7 @@ Try it below. **Appear** starts `Pop` on six coins, each with its own delay.
 
 ## Build steps from methods
 
-Wrap each step in a method that returns whether it completed. Callers chain steps
-with `&&`, which stops at the first step that didn't complete:
+Wrap named motion in an async method. Await each tween to put the steps in order:
 
 ```csharp title="Chest.cs"
 public partial class Chest : Node2D
@@ -150,15 +149,20 @@ public partial class Chest : Node2D
         Ease = EaseType.BackOut,
     };
 
-    public async Task<bool> Open() =>
-        await this.Tween(Wobble).End == Reason.Completed
-        && await this.Tween(Burst).End == Reason.Completed;
+    public async Task Open()
+    {
+        await this.Tween(Wobble);
+        await this.Tween(Burst);
+    }
 }
 ```
 
 `node.Tween(first, second)` plays several definitions as one step, as `Collect`
 does above. [Sequences](/csharp/sequences/) covers chaining, staggering, waits,
 and stopping.
+
+For steps that must stop when interrupted, see
+[cancellation and completion reasons](/csharp/cancellation/).
 
 ## Definition or shorthand?
 

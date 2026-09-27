@@ -15,13 +15,13 @@ const { lang = 'csharp' } = Astro.props;
 <span data-line="pause">movement.<span class="fn">pause</span>()</span>
 <span data-line="resume">movement.<span class="fn">resume</span>()</span>
 <span data-line="cancel">movement.<span class="fn">cancel</span>()</span>
-<span data-line="await"><span class="kw">var</span> reason := <span class="kw">await</span> movement.<span class="fn">wait</span>() <span class="cm"># <span data-reason>pending…</span></span></span></pre>
+<span data-line="await"><span class="kw">await</span> movement.end <span class="cm"># <span data-reason>pending…</span></span></span></pre>
 		) : (
 			<pre class="code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement = sprite.<span class="fn">TweenPosition</span>(to, <span class="num">2.4</span>);</span>
 <span data-line="pause">movement.<span class="fn">Pause</span>();</span>
 <span data-line="resume">movement.<span class="fn">Resume</span>();</span>
 <span data-line="cancel">movement.<span class="fn">Cancel</span>();</span>
-<span data-line="await"><span class="kw">var</span> reason = <span class="kw">await</span> movement.End; <span class="cm">// <span data-reason>pending…</span></span></span></pre>
+<span data-line="await"><span class="kw">await</span> movement; <span class="cm">// <span data-reason>pending…</span></span></span></pre>
 		)
 	}
 
@@ -103,7 +103,7 @@ const { lang = 'csharp' } = Astro.props;
 				reasonOut.textContent = lang === 'gdscript' ? member(lang, '', 'Reason', next) : `Reason.${next}`;
 				reasonOut.parentElement!.classList.add('is-settled');
 				highlight('await');
-				announce.textContent = lang === 'gdscript' ? `wait() returned ${next}.` : `End settled with ${next}.`;
+				announce.textContent = `Await resumed: ${next}.`;
 			} else if (next === 'Playing' && elapsed === 0) {
 				reasonOut.textContent = 'pending…';
 				reasonOut.parentElement!.classList.remove('is-settled');

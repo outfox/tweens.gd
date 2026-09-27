@@ -7,7 +7,7 @@ import { Steps } from '@astrojs/starlight/components';
 import Moves from '../../../components/Moves.astro';
 
 Move a sprite, then fade it out once it arrives. Along the way you define a
-tween, start it on the sprite, and await it to find out how it ended.
+tween, start it on the sprite, and await it before continuing.
 
 <Steps>
 
@@ -24,7 +24,7 @@ tween, start it on the sprite, and await it to find out how it ended.
 
 <Moves>
 
-```gdscript title="move_and_fade.gd" {"1":6-7} {"2":9} {"3":10-11} {"4":13}
+```gdscript title="move_and_fade.gd" {"1":6-7} {"2":9} {"3":10} {"4":12}
 extends Sprite2D
 
 const Tweens = preload("res://addons/tweens_gd/tweens.gd")
@@ -34,10 +34,9 @@ func _ready() -> void:
 	arrive.ease = Tweens.Ease.CUBIC_OUT
 
 	var movement := Tweens.play(self, arrive)
-	if await movement.wait() != Tweens.Reason.COMPLETED:
-		return
+	await movement.end
 
-	Tweens.play(self, Tweens.modulate_alpha(0.0, 0.3))
+	await Tweens.play(self, Tweens.modulate_alpha(0.0, 0.3)).end
 ```
 
 1. **Define.** `Tweens.position_2d(to, seconds)` returns a definition for a
@@ -46,10 +45,8 @@ func _ready() -> void:
    `null`, so the tween starts wherever the sprite is.
 2. **Start.** `Tweens.play(self, arrive)` starts playback and returns a handle.
    The first tween sets up its own runner, so there's no autoload to add.
-3. **Await.** `wait()` returns when playback ends and says why. If the sprite
-   was freed or removed, or the tween was cancelled, the reason isn't
-   `COMPLETED` and the function returns. The fade never runs on a node that's
-   gone.
+3. **Await.** `await movement.end` waits until playback ends. Here we ignore the
+   returned reason and continue with the fade.
 4. **One line.** A helper takes the endpoint and duration, so a one-off tween
    is a single call. If you start the same motion in several places or expect to
    adjust it, keep the definition in a variable instead, so its settings live in
@@ -59,6 +56,9 @@ func _ready() -> void:
 
 Start tweens from `_ready()` or later, on a node inside the tree, on Godot's main
 thread.
+
+Await also resumes after cancellation. For an animation that can be interrupted,
+[check the reason before starting the next step](/gdscript/cancellation/).
 
 ## Control it while it plays
 

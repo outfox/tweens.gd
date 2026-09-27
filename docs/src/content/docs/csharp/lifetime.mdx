@@ -56,7 +56,7 @@ it. See [material lifetimes](/csharp/materials/#choose-the-playback-lifetime).
 ## How playback ends
 
 Completion, cancellation, owner exit, target destruction, and runner teardown all
-finish `End` with a [reason](/csharp/playback/#why-it-ended). Cancelling isn't an
+finish `End` with a [reason](/csharp/cancellation/#why-it-ended). Cancelling isn't an
 error, so awaiting `End` returns `Reason.Cancelled` instead of throwing. A failure
 in interpolation, easing, a setter, or a callback faults the tween.
 `SuppressCallbacksWhenTargetInvalid` skips callbacks for an invalid target while

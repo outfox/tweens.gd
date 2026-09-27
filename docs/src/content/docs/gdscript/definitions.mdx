@@ -45,10 +45,10 @@ func appear(delay: float) -> void:
 	start.delay = delay
 	Tweens.play(self, start)
 
-func collect() -> bool:
+func collect() -> void:
 	var up := lift.copy()
 	up.to_value = position.y - 40.0
-	return await Tweens.play_all(self, [up, fade]).wait() == Tweens.Reason.COMPLETED
+	await Tweens.play_all(self, [up, fade]).end
 ```
 
 1. **Share timing.** `snappy` sets the duration and easing of every coin motion
@@ -58,7 +58,7 @@ func collect() -> bool:
 3. **Vary a start.** Each call to `appear` copies `pop` and sets its own delay,
    and `pop` itself never changes.
 4. **Build steps from functions.** `collect` plays two tweens as one step and
-   reports whether it completed.
+   waits for it to end.
 
 </Moves>
 
@@ -138,8 +138,7 @@ Try it below. **Appear** starts `pop` on six coins, each with its own delay.
 
 ## Build steps from functions
 
-Wrap each step in a function that returns whether it completed. Callers chain
-steps with `and`, which stops at the first step that didn't complete:
+Wrap named motion in a coroutine. Await each tween to put the steps in order:
 
 ```gdscript title="chest.gd"
 extends Node2D
@@ -160,15 +159,17 @@ static func _burst() -> Tweens.Definition:
 	definition.ease = Tweens.Ease.BACK_OUT
 	return definition
 
-func open() -> bool:
-	if await Tweens.play(self, wobble).wait() != Tweens.Reason.COMPLETED:
-		return false
-	return await Tweens.play(self, burst).wait() == Tweens.Reason.COMPLETED
+func open() -> void:
+	await Tweens.play(self, wobble).end
+	await Tweens.play(self, burst).end
 ```
 
 `Tweens.play_all(node, [first, second])` plays several definitions on one node as
 one step, as `collect` does above. [Groups and sequences](/gdscript/sequences/)
 covers chaining, staggering, waits, and stopping.
+
+For steps that must stop when interrupted, see
+[cancellation and completion reasons](/gdscript/cancellation/).
 
 ## Helper or property path?
 

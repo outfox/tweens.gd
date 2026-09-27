@@ -96,7 +96,7 @@ public class SequenceTimingTests
         static async Task SequenceAsync(TweenScheduler scheduler, Box earlyTarget, Box lateTarget, Box nextTarget)
         {
             if (await Group.Of(scheduler.Add(lateTarget, Leg(1.15)), scheduler.Add(earlyTarget, Leg(0.59))).End != Reason.Completed) return;
-            scheduler.Add(nextTarget, Leg(1));
+            _ = scheduler.Add(nextTarget, Leg(1));
         }
     }
 
@@ -119,7 +119,7 @@ public class SequenceTimingTests
         {
             if (await scheduler.Add(start, Leg(1)).End != Reason.Completed) return;
             await continuationGate;
-            scheduler.Add(next, Leg(1));
+            _ = scheduler.Add(next, Leg(1));
         }
     }
 
@@ -142,10 +142,10 @@ public class SequenceTimingTests
             if (await scheduler.Add(start, Leg(1)).End != Reason.Completed) return;
             var toPhysics = Leg(1);
             toPhysics.ProcessMode = TweenProcessMode.Physics;
-            scheduler.Add(physicsTarget, toPhysics);
+            _ = scheduler.Add(physicsTarget, toPhysics);
             var toUnscaled = Leg(1);
             toUnscaled.UseUnscaledTime = true;
-            scheduler.Add(unscaledTarget, toUnscaled);
+            _ = scheduler.Add(unscaledTarget, toUnscaled);
         }
     }
 
@@ -187,7 +187,7 @@ public class SequenceTimingTests
             if (await scheduler.Add(start, Leg(1)).End != Reason.Completed) return;
             var delayed = Leg(1);
             delayed.Delay = 0.1;
-            scheduler.Add(next, delayed);
+            _ = scheduler.Add(next, delayed);
         }
     }
 

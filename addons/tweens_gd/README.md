@@ -23,8 +23,8 @@ func _ready() -> void:
 	var move := Tweens.property(^"position", Vector2(400, 180), 0.6)
 	move.ease = Tweens.Ease.CUBIC_OUT
 	var movement := Tweens.play(self, move)
-	if await movement.wait() == Tweens.Reason.COMPLETED:
-		print("Arrived")
+	await movement.end
+	print("Movement ended")
 ```
 
 `TweensGd` is also registered as a global class in the editor. Explicit preloads
@@ -67,7 +67,7 @@ var move := Tweens.position_2d(Vector2(400, 180), 0.6)
 move.ease = Tweens.Ease.CUBIC_OUT
 var fade := Tweens.modulate_alpha(0.0, 0.3)
 var together := Tweens.play_all(sprite, [move, fade])
-await together.wait()
+await together.end
 ```
 
 Factory arguments are `(to = null, seconds = 0.0)`. Null endpoints capture the
@@ -140,18 +140,24 @@ endpoint. Instance pause always wins over tree/owner pause settings. A node's
 
 ## Completion and callbacks
 
-Use `await handle.wait()`. It returns the cached reason immediately if the handle
+Use `await handle.end`. It returns the cached reason immediately if the handle
 has already settled, and supports multiple waiters. `ended(reason)` is a one-shot
 signal; awaiting that raw signal after emission would wait forever.
+
+`end` is a signal-backed property: it returns `ended` while running and the stored
+reason once settled. Read and await it in one expression rather than saving the
+signal for later. You can ignore the result by default; inspect it when the next
+action requires successful completion. The existing `wait()` coroutine remains
+available, with an optional cancellation token.
 
 Reasons: `COMPLETED`, `CANCELLED`, `TARGET_FREED`, `OWNER_EXITED`,
 `RUNNER_DISPOSED`, and `FAILED`. Inspect `handle.error` for a detected failure.
 Invalid starts return an already-settled `FAILED` handle instead of null, so
-`await Tweens.play(target, definition).wait()` is safe without a null check or a
+`await Tweens.play(target, definition).end` is safe without a null check or a
 future tick. Rejected starts schedule no work, retain no target/configuration, and
 run no definition callbacks. Their `value` and `target` are null and `progress` is
 zero. Pause, resume and cancel remain safe; repeated waits return the same reason.
-Rejection diagnostics are still reported to Godot's error log. Use `wait()` rather
+Rejection diagnostics are still reported to Godot's error log. Use `end` rather
 than the raw signal: an already-rejected handle will not emit `ended` later.
 
 Removal/reparenting ends node-owned playback immediately, including while paused.
@@ -165,14 +171,14 @@ end/cancel, finally, then the completion signal. Detected failures run finally.
 Terminal state is visible inside terminal callbacks. Calling cancel repeatedly is
 safe. New tweens created by callbacks first sample on the next eligible update.
 
-Tweens started synchronously inside `on_end` or a resuming `wait()` inherit the
+Tweens started synchronously inside `on_end` or a resuming await of `end` inherit the
 finished tween's overshoot on the same scheduler, process lane and time scale.
 Unrelated starts, late waits on already-finished handles and continuations after
 another awaited signal do not inherit it. Check the reason before starting a next
 step when cancellation should stop a sequence.
 
 Use the API on Godot's main thread. Do not `await` inside callbacks; put sequences
-in a separate coroutine awaiting `wait()`. GDScript cannot catch arbitrary script
+in a separate coroutine awaiting `end`. GDScript cannot catch arbitrary script
 errors as C# exceptions. Invalid configuration, stale Callables, nonnumeric/nonfinite
 easing and nonfinite interpolation are detected; arbitrary errors inside callbacks
 or custom property setters remain Godot script errors, with no promised conversion
@@ -264,8 +270,8 @@ var motion := Tweens.group([
 ])
 motion.pause()
 motion.resume()
-if await motion.wait() == Tweens.Reason.COMPLETED:
-	print("Moved and faded")
+await motion.end
+print("Motion ended")
 ```
 
 `Tweens.Group.of(handles)` is equivalent. A group completes after every member
@@ -273,7 +279,7 @@ settles, including its callbacks and cleanup. When a member stops without comple
 the group cancels its active siblings and keeps that first stop reason. This includes
 already-rejected `FAILED` handles. `group.cancel()` cancels the remaining playback;
 completed members keep their result. The group supports multiple and late waits,
-and emits `ended(reason)` once. Use `wait()` for possibly already-settled groups.
+and emits `ended(reason)` once. Use `end` for possibly already-settled groups.
 
 `is_terminal`, `is_settled`, `completion_reason`, `error` and `errors` expose the
 result. `error` joins detected member diagnostics with newlines; `errors` returns

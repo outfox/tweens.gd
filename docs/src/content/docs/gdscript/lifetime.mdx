@@ -66,8 +66,8 @@ because it still targets the original resource. Tree teardown stops it. See
 ## How playback ends
 
 Completion, cancellation, owner exit, target destruction, and runner teardown all
-settle the handle with a reason, and `await handle.wait()` returns it.
-Cancelling isn't an error, so `wait()` returns `Tweens.Reason.CANCELLED` like any
+settle the handle with a reason, and `await handle.end` returns it.
+Cancelling isn't an error, so awaiting `end` returns `Tweens.Reason.CANCELLED` like any
 other reason. See [control and completion](/gdscript/playback/) for the full list.
 
 GDScript has no exceptions to throw. Detected problems, such as invalid

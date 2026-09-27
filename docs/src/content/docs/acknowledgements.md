@@ -12,7 +12,7 @@ library.
 
 tweens.gd has since been rewritten around Godot. Definitions target Godot nodes,
 resources, and shader uniforms; playback follows node ownership and the scene tree's
-pause and process modes. Completion is awaited through `End` in C# and `wait()` in
+pause and process modes. Await the handle directly in C#, or its `end` in
 GDScript. The timing, fill, repeat, and completion rules are specified and tested
 independently of unity-tweens, and the two libraries no longer share an API.
 

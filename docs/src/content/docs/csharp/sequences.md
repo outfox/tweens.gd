@@ -4,15 +4,15 @@ description: Chain, group, stagger, wait, loop, and stop multi-step animations w
 ---
 
 A sequence is ordinary async C#. Await each step before starting the next, play
-steps together as a group, and stop as soon as a step doesn't complete.
+steps together as a group, and add delays between them.
 
 | Goal | Tool |
 | --- | --- |
-| Run B after A | `await a.End`, check the reason, then start B |
-| Run A and B together | `node.Tween(a, b)` or `Group.Of(a, b)`, then await the group's `End` |
+| Run B after A | `await a`, then start B |
+| Run A and B together | `node.Tween(a, b)` or `Group.Of(a, b)`, then `await group` |
 | Offset tweens within a step | `Delay` on different targets or properties |
-| Wait between steps | `await node.TweenFloat(1, seconds).End` |
-| Stop the sequence | Cancel the running step; the reason check ends the method |
+| Wait between steps | `await node.TweenFloat(1, seconds)` |
+| Stop the sequence | [Cancel and check the result](/csharp/cancellation/) |
 
 Snippets run in an async Node method with in-tree `sprite` (`Sprite2D`) and
 `label` (`Label`) nodes. They assume `using Godot;`, `using tweens.gd;`, and
@@ -20,20 +20,20 @@ implicit usings for `System`, `System.Linq`, and `System.Threading.Tasks`.
 
 ## One step after another
 
-Start the next tween only after the previous one completes, and check the reason.
-A cancelled, freed, or shut-down step also finishes `End`, and the sequence
-should usually stop there:
+Await each tween before starting the next:
 
 ```csharp
-if (await sprite.TweenPosition(new Vector2(400, 180), 0.6).End != Reason.Completed)
-    return;
-if (await sprite.TweenScale(new Vector2(1.2f, 1.2f), 0.2).End != Reason.Completed)
-    return;
-await sprite.TweenModulateAlpha(0, 0.3).End;
+await sprite.TweenPosition(new Vector2(400, 180), 0.6);
+await sprite.TweenScale(new Vector2(1.2f, 1.2f), 0.2);
+await sprite.TweenModulateAlpha(0, 0.3);
 ```
 
 Each step reads its omitted `From` when it starts, so it continues from wherever
 the previous step left the property.
+
+These examples ignore completion reasons. If interruption should stop the sequence,
+check the result before starting the next step; [cancellation](/csharp/cancellation/)
+shows that pattern.
 
 ## Steps that run together
 
@@ -44,16 +44,14 @@ types:
 ```csharp
 var grow = new Tweens.Scale2D { To = new Vector2(1.2f, 1.2f), Duration = 0.2 };
 var dim = new Tweens.ModulateAlpha { To = 0.5f, Duration = 0.2 };
-if (await sprite.Tween(grow, dim).End != Reason.Completed)
-    return;
+await sprite.Tween(grow, dim);
 ```
 
 Group tweens that are already playing, on any targets, with `Group.Of`:
 
 ```csharp
 var step = Group.Of(sprite.TweenPosition(new Vector2(400, 180), 0.6), label.TweenModulateAlpha(0, 0.6));
-if (await step.End != Reason.Completed)
-    return;
+await step;
 ```
 
 A group completes when every member completes. If one member stops early
@@ -82,11 +80,11 @@ public partial class Menu : VBoxContainer
         Fill = FillMode.Both,
     };
 
-    public async Task<bool> Reveal()
+    public async Task Reveal()
     {
         var items = GetChildren().OfType<Control>();
         var reveals = items.Select((item, i) => item.Tween(FadeIn with { Delay = i * 0.05 }));
-        return await Group.Of([.. reveals]).End == Reason.Completed;
+        if (items.Any()) await Group.Of([.. reveals]);
     }
 }
 ```
@@ -101,8 +99,8 @@ and snaps the property back to it:
 
 ```csharp
 // Wrong: the second tween captured From = the start position, not (400, 180).
-sprite.TweenPosition(new Vector2(400, 180), 0.6);
-sprite.TweenPosition(new Vector2(400, 0), 0.4, options => options.Delay = 0.6);
+_ = sprite.TweenPosition(new Vector2(400, 180), 0.6);
+_ = sprite.TweenPosition(new Vector2(400, 0), 0.4, options => options.Delay = 0.6);
 ```
 
 Await the first tween instead, or give the delayed tween an explicit `From`.
@@ -114,11 +112,9 @@ A callback value tween on any in-tree node makes a wait that follows the same
 pause, time scale, and lifetime rules as the animation around it:
 
 ```csharp
-if (await sprite.TweenPosition(new Vector2(400, 180), 0.6).End != Reason.Completed)
-    return;
-if (await sprite.TweenFloat(1, 0.5).End != Reason.Completed)
-    return; // A 0.5-second hold.
-await sprite.TweenPosition(new Vector2(40, 180), 0.6).End;
+await sprite.TweenPosition(new Vector2(400, 180), 0.6);
+await sprite.TweenFloat(1, 0.5);
+await sprite.TweenPosition(new Vector2(40, 180), 0.6);
 ```
 
 :::caution[Avoid `Task.Delay`]
@@ -126,45 +122,11 @@ await sprite.TweenPosition(new Vector2(40, 180), 0.6).End;
 sequence can resume against a paused or freed scene.
 :::
 
-## Loops
+## Loops and cancellation
 
-Repeat a whole sequence with an ordinary loop that ends when a step doesn't
-complete. To repeat a single tween, set `Repeats` instead, as described in
-[timing](/csharp/timing/).
-
-```csharp
-while (await sprite.TweenPositionY(120, 0.4).End == Reason.Completed
-       && await sprite.TweenPositionY(180, 0.4).End == Reason.Completed)
-{
-}
-```
-
-## Stop a sequence
-
-A sequence stops when its current step ends with a reason other than `Completed`
-and your code returns, so anything that stops the running tweens stops the
-sequence:
-
-- Call `Cancel()` on the current tween or group.
-- Call `owner.CancelTweens(includeChildren: true)` on a common ancestor.
-- Free the node, or remove it from the tree. Its tweens end with `TargetFreed`
-  or `OwnerExited`.
-
-To stop only your *wait* when an external token fires, and decide about playback
-yourself, use `AwaitDecommissionAsync`:
-
-```csharp
-var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);
-try
-{
-    await movement.AwaitDecommissionAsync(cancellationToken);
-}
-catch (OperationCanceledException)
-{
-    movement.Cancel();
-    throw;
-}
-```
+For one repeating motion, use `Repeats` as described in [timing](/csharp/timing/).
+To repeat a multi-step sequence or stop it when interrupted, see
+[cancellation and completion reasons](/csharp/cancellation/).
 
 ## Pause a sequence
 
@@ -202,7 +164,7 @@ comes from the member that finished last.
 
 The handover applies when all of these hold:
 
-- You await the tween's or the group's `End` directly. With `Task.WhenAll`, the
+- You await the tween or group directly (or its `End` task). With `Task.WhenAll`, the
   time comes from whichever member the scheduler settled last, which isn't
   necessarily the last to finish.
 - The next tweens start before the sequence awaits anything else.

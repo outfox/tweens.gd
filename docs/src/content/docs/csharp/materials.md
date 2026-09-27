@@ -26,9 +26,9 @@ var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(),
 
 // Reusable definitions work with either context.
 var definition = new Tweens.MaterialRoughness { To = 0.5f, Duration = 1 };
-material.Tween(definition, GetTree());
-material.Tween(definition, mesh);
-mesh.Tween(material, definition);
+_ = material.Tween(definition, GetTree());
+_ = material.Tween(definition, mesh);
+_ = mesh.Tween(material, definition);
 ```
 
 A tree-scoped tween keeps running when a mesh is removed or gets a different
@@ -94,8 +94,8 @@ once during scene setup, assign the duplicate, and use that for later tweens:
 ```csharp
 var unique = (StandardMaterial3D)shared.Duplicate();
 mesh.MaterialOverride = unique;
-unique.TweenAlbedoColor(Colors.Red, 1, mesh);
-unique.TweenRoughness(0.2f, 1, mesh);
+_ = unique.TweenAlbedoColor(Colors.Red, 1, mesh);
+_ = unique.TweenRoughness(0.2f, 1, mesh);
 ```
 
 

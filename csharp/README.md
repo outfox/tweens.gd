@@ -24,9 +24,8 @@ var movement = sprite.Tween(new Tweens.Position2D
     Ease = EaseType.CubicOut,
 });
 
-var reason = await movement.End;
-if (reason == Reason.Completed)
-    GD.Print("Arrived");
+await movement;
+GD.Print("Movement ended");
 ```
 
 The first tween installs a runner automatically. No autoload is required.

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 
+using System.Runtime.CompilerServices;
+
 namespace tweens.gd;
 
 /// <summary>Tweens that play as one step. If one stops without completing, the group cancels the others.</summary>
@@ -39,6 +41,9 @@ public sealed class Group
             return completion.Task;
         }
     }
+
+    /// <summary>Awaits this group directly, with the same result and faults as End.</summary>
+    public TaskAwaiter<Reason> GetAwaiter() => End.GetAwaiter();
 
     private Group(TweenInstance[] members)
     {

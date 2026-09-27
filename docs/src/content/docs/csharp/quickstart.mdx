@@ -7,7 +7,7 @@ import { Steps } from '@astrojs/starlight/components';
 import Moves from '../../../components/Moves.astro';
 
 Move a sprite, then fade it out once it arrives. Along the way you define a
-tween, start it on the sprite, and await it to find out how it ended.
+tween, start it on the sprite, and await it before continuing.
 
 <Steps>
 
@@ -40,9 +40,9 @@ public partial class MoveAndFade : Sprite2D
         };
 
         var movement = this.Tween(arrive);
-        if (await movement.End != Reason.Completed) return;
+        await movement;
 
-        this.TweenModulateAlpha(0, 0.3);
+        await this.TweenModulateAlpha(0, 0.3);
     }
 }
 ```
@@ -53,9 +53,8 @@ public partial class MoveAndFade : Sprite2D
    name with a Godot type, such as `Vector2`, and the prefix tells them apart.
 2. **Start.** `this.Tween(arrive)` starts playback and returns a handle. The
    first tween sets up its own runner, so there's no autoload to add.
-3. **Await.** `End` finishes when playback ends and says why. If the sprite was
-   freed or removed, or the tween was cancelled, the reason isn't `Completed`
-   and the script stops. The fade never runs on a node that's gone.
+3. **Await.** `await movement` waits until playback ends. Here we ignore the
+   returned reason and continue with the fade.
 4. **Shorthand.** `TweenModulateAlpha(0, 0.3)` builds and starts a definition in
    one call, which is handy for one-off motion. If you start the same motion in
    several places or expect to adjust it, write a definition instead, so its
@@ -64,6 +63,9 @@ public partial class MoveAndFade : Sprite2D
 </Moves>
 
 Start tweens from `_Ready` or later, on Godot's main thread.
+
+Await also resumes after cancellation. For an animation that can be interrupted,
+[check the reason before starting the next step](/csharp/cancellation/).
 
 ## Control it while it plays
 

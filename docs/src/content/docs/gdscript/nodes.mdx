@@ -24,7 +24,7 @@ var reveal := Tweens.label_visible_ratio(1.0, 1.5)
 reveal.from_value = 0.0
 Tweens.play(label, reveal)
 
-await Tweens.group([movement, fade]).wait()
+await Tweens.group([movement, fade]).end
 ```
 
 Every helper takes `(to = null, seconds = 0.0)`. A `null` endpoint captures the

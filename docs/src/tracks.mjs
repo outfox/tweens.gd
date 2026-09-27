@@ -24,6 +24,7 @@ export const PATH = [
 			{ slug: 'definitions', label: 'Definitions' },
 			{ slug: 'sequences', label: 'Sequences', gdscript: 'Groups & sequences' },
 			{ slug: 'playback', label: 'Control & completion' },
+			{ slug: 'cancellation', label: 'Cancellation & reasons' },
 		],
 	},
 	{

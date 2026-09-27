@@ -6,7 +6,7 @@ description: Use the handle to pause, resume, or cancel a tween and find out why
 import PlaybackRemote from '../../../components/PlaybackRemote.astro';
 
 Every start returns a handle. Use it to pause, resume, or cancel playback, and
-await its `wait()` to learn why playback stopped.
+await its `end` before continuing.
 
 Snippets run in a node script function with an in-tree `Sprite2D` named `sprite`,
 and assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")`.
@@ -24,50 +24,26 @@ The handle also exposes `state`, `progress`, `value`, `target`, `is_terminal`,
 `is_settled`, `completion_reason`, and `error`. `progress` is the position within
 the current leg, and runs backwards on the return leg of a ping-pong.
 
-## Why it ended
-
-`wait()` returns a `Tweens.Reason` value. Any number of callers can await it, and
-a call after playback has ended returns the same reason at once.
-
-| Reason | Meaning |
-| --- | --- |
-| `COMPLETED` | Reached its natural end |
-| `CANCELLED` | `cancel()` was called |
-| `TARGET_FREED` | The target was freed or queued for deletion |
-| `OWNER_EXITED` | The owner left the scene tree |
-| `RUNNER_DISPOSED` | The runner, tree, or manual scheduler shut down |
-| `FAILED` | The start was rejected or playback detected an error; see `error` |
-
-Continue a sequence only on `COMPLETED`, as
-[groups and sequences](/gdscript/sequences/) shows. Removing or reparenting a
-node ends the tweens it owns immediately, even while they're paused. Godot emits
-tree exit before it invalidates a node freed with `free()`, so that case may
-report `OWNER_EXITED`.
-
-:::caution[Await `wait()`, not `ended`]
-The handle's `ended(reason)` signal fires once. Awaiting it after it has fired,
-or on a handle whose start was rejected, waits forever. `wait()` returns the
-stored reason in both cases.
-:::
-
-## Cancel a wait, not the tween
-
-`wait()` accepts a `Tweens.Cancellation`. Cancelling it ends only that wait,
-which returns `WAIT_CANCELLED`; other waiters and playback continue unless you
-call `cancel()`.
+## Await playback
 
 ```gdscript
 var movement := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
-var cancellation := Tweens.Cancellation.new()
-get_tree().create_timer(0.25).timeout.connect(cancellation.cancel)
-if await movement.wait(cancellation) == Tweens.Reason.WAIT_CANCELLED:
-	# This wait was cancelled. Stop playback too if that is your policy.
-	movement.cancel()
+await movement.end
 ```
 
-`WAIT_CANCELLED` belongs to the wait alone; it never becomes a handle's
-`completion_reason`. If playback had already ended, the wait returns that reason
-even when the token is cancelled. Groups accept the same token.
+Handles and groups expose `end`. You can ignore the returned reason; keep it only
+when your next action depends on how playback ended. See
+[cancellation and completion reasons](/gdscript/cancellation/) for guarded sequences
+and cancelling just one wait.
+
+While running, `end` returns the handle's `ended(reason)` signal. Once settled,
+it returns the stored reason immediately, including when a start was rejected.
+GDScript's `await` handles both forms. Read and await the property in one expression;
+don't cache the signal for later, because signals do not replay.
+
+Use `ended.connect(callback)` for a signal subscription to a running tween.
+Use `await movement.end` for a wait that also works after completion.
+The existing `wait()` coroutine still works; `wait(token)` adds wait cancellation.
 
 ## Callbacks
 
@@ -84,14 +60,14 @@ order:
    stops early.
 6. `on_finally(handle)` in every case, including failures.
 
-The handle's terminal state is visible inside terminal callbacks, and `wait()`
+The handle's terminal state is visible inside terminal callbacks, and awaiting `end`
 resumes after them. A long frame doesn't replay the callbacks of skipped cycles.
 Tweens created in `on_update` begin on the next update, while tweens created in
 `on_end` continue the finished tween's timeline exactly.
 
 :::caution[Don't `await` inside callbacks]
 Callbacks must return before playback continues. Put anything that awaits in a
-separate coroutine that awaits `wait()`.
+separate coroutine that awaits `end`.
 :::
 
 ## Errors
@@ -117,6 +93,6 @@ guaranteed to become `FAILED`.
 
 ## Stay on the main thread
 
-Create and control tweens, and await `wait()`, on Godot's main thread. A call
+Create and control tweens, and await `end`, on Godot's main thread. A call
 from another thread reports an error and does nothing: starts return a handle
 that has already failed, and `wait()` returns `FAILED`.

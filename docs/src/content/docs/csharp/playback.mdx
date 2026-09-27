@@ -6,7 +6,7 @@ description: Use the handle to pause, resume, or cancel a tween and find out why
 import PlaybackRemote from '../../../components/PlaybackRemote.astro';
 
 Every start returns a handle. Use it to pause, resume, or cancel playback, and
-await its `End` to learn why playback stopped.
+await the handle before continuing.
 
 Snippets run in an async Node method with an in-tree `Sprite2D` named `sprite`,
 and assume `using Godot;`, `using tweens.gd;`, and `using System;`.
@@ -19,44 +19,26 @@ Handles are `TweenInstance<TTarget, TValue>`. Their non-generic `TweenInstance`
 base lets you keep different tween types in one collection. Cancelling keeps the
 latest value. To cancel every tween a node owns, call `node.CancelTweens()`.
 
-## Why it ended
-
-`End` is a shared `Task<Reason>`. Any number of callers can await it, even after
-playback has ended.
-
-| Reason | Meaning |
-| --- | --- |
-| `Completed` | Reached its natural end |
-| `Cancelled` | `Cancel()` was called |
-| `TargetFreed` | The target was disposed, freed, or queued for deletion |
-| `OwnerExited` | The owner left the scene tree |
-| `RunnerDisposed` | The runner, tree, or manual scheduler shut down |
-
-Continue a sequence only on `Completed`, as [sequences](/csharp/sequences/)
-shows. Godot emits tree exit before it invalidates a node freed with
-`Free()`, so that case may report `OwnerExited`. `QueueFree()` reports
-`TargetFreed` for a node that owns its own tween.
-
-## Cancel a wait, not the tween
-
-`AwaitDecommissionAsync` waits with a cancellation token. The token cancels only
-that wait: other waiters and playback continue unless you call `Cancel()`.
+## Await playback
 
 ```csharp
 var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);
-try
-{
-    await movement.AwaitDecommissionAsync(cancellationToken);
-}
-catch (OperationCanceledException)
-{
-    // This wait was cancelled. Stop playback too if that is your policy.
-    movement.Cancel();
-}
+await movement;
 ```
 
-Cancelling playback itself never throws `OperationCanceledException`. `End`
-reports `Cancelled` instead.
+Handles and groups are directly awaitable. You can ignore the returned reason;
+keep it only when your next action depends on how playback ended. See
+[cancellation and completion reasons](/csharp/cancellation/) for guarded sequences
+and cancelling just one wait.
+
+`await movement` uses the same shared `Task<Reason>` as `movement.End`, including
+its faults. Any number of callers can await it, even after playback has ended.
+Use `End` when another API needs a task. Direct awaiting uses `GetAwaiter()`;
+there is no implicit conversion to `Task`.
+
+Starting an awaitable tween without waiting is still supported. In an async method,
+write `_ = sprite.TweenPosition(new Vector2(400, 180), 0.6);` to explicitly discard
+the handle and avoid C#'s unawaited-call warning.
 
 ## Callbacks
 
