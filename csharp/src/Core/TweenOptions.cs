@@ -24,6 +24,11 @@ public readonly record struct TweenOptions
     public const int Infinite = -1;
 
     public double Duration { get; init; }
+    private readonly double? factorDuration;
+    /// <summary>Scales <see cref="Duration"/> at start: the tween lasts FactorDuration * Duration + DeltaDuration.</summary>
+    public double FactorDuration { get => factorDuration ?? 1; init => factorDuration = value == 1 ? null : value; }
+    /// <summary>Added to <see cref="Duration"/> at start, after <see cref="FactorDuration"/>.</summary>
+    public double DeltaDuration { get; init; }
     public double Delay { get; init; }
     public double PingPongInterval { get; init; }
     public double RepeatInterval { get; init; }
@@ -48,6 +53,8 @@ public readonly record struct TweenOptions
     internal void CopyTo(TweenOptionsBuilder target)
     {
         target.Duration = Duration;
+        target.FactorDuration = FactorDuration;
+        target.DeltaDuration = DeltaDuration;
         target.Delay = Delay;
         target.PingPongInterval = PingPongInterval;
         target.RepeatInterval = RepeatInterval;
@@ -72,6 +79,10 @@ public class TweenOptionsBuilder
     public const int Infinite = TweenOptions.Infinite;
 
     public double Duration { get; set; }
+    /// <inheritdoc cref="TweenOptions.FactorDuration"/>
+    public double FactorDuration { get; set; } = 1;
+    /// <inheritdoc cref="TweenOptions.DeltaDuration"/>
+    public double DeltaDuration { get; set; }
     public double Delay { get; set; }
     public double PingPongInterval { get; set; }
     public double RepeatInterval { get; set; }
@@ -92,6 +103,8 @@ public class TweenOptionsBuilder
     internal TweenOptions ToOptions() => new()
     {
         Duration = Duration,
+        FactorDuration = FactorDuration,
+        DeltaDuration = DeltaDuration,
         Delay = Delay,
         PingPongInterval = PingPongInterval,
         RepeatInterval = RepeatInterval,
@@ -127,7 +140,10 @@ internal sealed class Playback
 
     internal Playback(TweenOptions options)
     {
-        duration = Nonnegative(options.Duration, nameof(options.Duration));
+        Nonnegative(options.Duration, nameof(options.Duration));
+        if (!double.IsFinite(options.FactorDuration)) throw new ArgumentOutOfRangeException(nameof(options.FactorDuration));
+        if (!double.IsFinite(options.DeltaDuration)) throw new ArgumentOutOfRangeException(nameof(options.DeltaDuration));
+        duration =Nonnegative(options.FactorDuration * options.Duration + options.DeltaDuration, nameof(options.Duration));
         delay = Nonnegative(options.Delay, nameof(options.Delay));
         turn = Nonnegative(options.PingPongInterval, nameof(options.PingPongInterval));
         var repeat = Nonnegative(options.RepeatInterval, nameof(options.RepeatInterval));

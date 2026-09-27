@@ -17,7 +17,7 @@ public class StructuredDefinitionTests
 
     private static readonly Dictionary<string, object?> OptionValues = new()
     {
-        ["Duration"] = 1.25, ["Delay"] = 0.5, ["PingPongInterval"] = 0.25, ["RepeatInterval"] = 0.75,
+        ["Duration"] = 1.25, ["FactorDuration"] = 2.0, ["DeltaDuration"] = 0.25, ["Delay"] = 0.5, ["PingPongInterval"] = 0.25, ["RepeatInterval"] = 0.75,
         ["Offset"] = 0.125, ["Repeats"] = 2, ["UsePingPong"] = true, ["UseUnscaledTime"] = true,
         ["Fill"] = FillMode.None, ["Ease"] = EaseType.QuadIn, ["Skew"] = 2.0, ["EaseFunction"] = Ease, ["Curve"] = null,
         ["ProcessMode"] = TweenProcessMode.Physics, ["PauseMode"] = TweenPauseMode.Always,
@@ -124,6 +124,8 @@ public class StructuredDefinitionTests
                 "From" => Sample<TValue>(0.25f),
                 "To" => Sample<TValue>(0.75f),
                 "By" => Sample<TValue>(0.5f),
+                "DeltaFrom" or "DeltaTo" or "DeltaBy" => Sample<TValue>(0.125f),
+                "FactorFrom" => 0.5, "FactorTo" => 1.5, "FactorBy" => -2.0,
                 "Parameter" => "uniform",
                 _ when OptionValues.TryGetValue(property.Name, out var option) => option,
                 _ when Callbacks.Contains(property.Name) => Expression.Lambda(property.PropertyType,
@@ -149,6 +151,11 @@ public class StructuredDefinitionTests
         Assert.Equal(expected["From"], playback.From);
         Assert.Equal(expected["To"], playback.To);
         Assert.Equal(expected["By"], playback.By);
+        foreach (var endpoint in new[] { "From", "To", "By" })
+        {
+            Assert.Equal(expected["Factor" + endpoint], playback.GetType().GetProperty("Factor" + endpoint)!.GetValue(playback));
+            Assert.Equal(expected["Delta" + endpoint], playback.GetType().GetProperty("Delta" + endpoint)!.GetValue(playback));
+        }
         foreach (var callback in Callbacks)
             Assert.Same(expected[callback], playback.GetType().GetProperty(callback)!.GetValue(playback));
         if (expected.TryGetValue("Parameter", out var parameter))

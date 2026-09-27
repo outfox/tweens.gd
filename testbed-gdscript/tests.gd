@@ -76,7 +76,8 @@ func near(actual: float, expected: float, message: String) -> void:
 func run_tests() -> void:
 	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
-	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _relative, _interpolation,
+	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _relative, _adjustments,
+			_interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
@@ -222,6 +223,10 @@ func _factories_and_with() -> bool:
 	var callback := func(_h): pass
 	for case in [["with_from", 2.0, "from_value"], ["with_to", 3.0, "to_value"], ["with_by", 5.0, "by_value"],
 			["with_initial_value", 4.0, "initial_value"], ["with_duration", 2.0, "duration"],
+			["with_factor_from", 0.5, "factor_from"], ["with_delta_from", 1.5, "delta_from"],
+			["with_factor_to", 2.0, "factor_to"], ["with_delta_to", 2.5, "delta_to"],
+			["with_factor_by", -1.0, "factor_by"], ["with_delta_by", 3.5, "delta_by"],
+			["with_factor_duration", 3.0, "factor_duration"], ["with_delta_duration", 0.5, "delta_duration"],
 			["with_delay", 0.5, "delay"], ["with_offset", 0.25, "offset"], ["with_repeats", 3, "repeats"],
 			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
 			["with_repeat_interval", 0.2, "repeat_interval"], ["with_fill", T.Fill.BOTH, "fill"],
@@ -259,14 +264,15 @@ func _factories_and_with() -> bool:
 	return true
 
 func _relative() -> bool:
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/relative.json"))
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/endpoints.json"))
 	for test in data.cases:
 		var fixture := T.Scheduler.new()
 		var probe := Holder.new()
 		probe.amount = test.start
-		var definition := T.property(^"amount", null).with_by(float(test.by))
+		var definition := T.property(^"amount", null)
+		for key in ["from", "to", "by"]:
+			if test.has(key): definition.set(key + "_value", float(test[key]))
 		for key in test.options: definition.set(key, test.options[key])
-		if test.has("from"): definition.from_value = float(test.from)
 		var started := fixture.add(probe, definition)
 		check(not started.is_terminal, test.name + " starts: " + started.error)
 		for sample in test.samples:
@@ -330,6 +336,41 @@ func _relative() -> bool:
 			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
 				.with_by(Transform2D.IDENTITY)]:
 		check(scheduler.add(holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid by_value")
+	scheduler.dispose()
+	return true
+
+func _adjustments() -> bool:
+	var scheduler := T.Scheduler.new()
+	var holder := Holder.new()
+	var tilt := Quaternion(Vector3.RIGHT, PI / 2.0)
+	holder.turn = Quaternion(Vector3.UP, PI / 2.0)
+	scheduler.add(holder, T.property(^"turn", null, 1.0).with_factor_to(0.5).with_delta_to(tilt))
+	scheduler.update(1.0)
+	check(holder.turn.is_equal_approx(Quaternion(Vector3.UP, PI / 4.0) * tilt),
+		"quaternion factors scale the angle and deltas rotate locally")
+
+	holder.count = 3
+	scheduler.add(holder, T.property(^"count", null, 1.0).with_factor_to(1.5))
+	scheduler.update(1.0)
+	check(holder.count == 5, "integer factors round away from zero: %s" % holder.count)
+
+	# The offset may reach the adjusted duration, past the unadjusted one.
+	holder.amount = 0.0
+	var stretched := T.property(^"amount", 10.0, 1.0).with_factor_duration(2.0).with_delta_duration(1.0).with_offset(1.5)
+	check(stretched.validate().is_empty(), "offset within the adjusted duration")
+	scheduler.add(holder, stretched)
+	scheduler.update(0.0)
+	near(holder.amount, 5.0, "duration adjustments shape the timeline")
+
+	for rejected in [T.value(0.0, 1.0, 1.0).with_factor_by(2.0), T.value(0.0, 1.0, 1.0).with_delta_by(1.0),
+			T.value(0.0, null, 1.0).with_by(1.0).with_factor_to(2.0), T.value(0.0, null, 1.0).with_by(1.0).with_delta_to(1.0),
+			T.value(0.0, 1.0, 1.0).with_factor_from(NAN), T.value(0.0, 1.0, 1.0).with_factor_to(INF),
+			T.value(0.0, 1.0, 1.0).with_factor_duration(NAN), T.value(0.0, 1.0, 1.0).with_delta_duration(-2.0),
+			T.value(0.0, 1.0, 1.0).with_factor_duration(0.5).with_offset(0.75),
+			T.value(0.0, 1.0, 1.0).with_delta_to(Vector2.ONE), T.value(0.0, 1.0, 1.0).with_delta_from(NAN),
+			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
+				.with_factor_to(2.0)]:
+		check(scheduler.add(holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid factors and deltas")
 	scheduler.dispose()
 	return true
 

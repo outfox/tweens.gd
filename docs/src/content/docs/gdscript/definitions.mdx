@@ -143,6 +143,40 @@ crate at the same time.
   `start * by_value`.
 - Callback-only definitions add `by_value` to `initial_value`.
 
+## Scale or shift a value with factors and deltas
+
+`from_value`, `to_value`, and `by_value` each have a factor and a delta. When
+playback starts, the value becomes factor × value + delta. A `null` `from_value`
+or `to_value` uses the captured value, so a factor can make a motion relative
+to it:
+
+```gdscript title="heart.gd"
+extends Sprite2D
+
+const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+
+static var beat := Tweens.scale_2d(null, 0.15).with_factor_to(1.2).with_ping_pong()
+
+func pulse() -> void:
+	Tweens.play(self, beat)
+```
+
+The heart grows to 120% of whatever scale it has and comes back.
+
+- `with_factor_from(0.0)` grows from zero to the current value.
+- `with_delta_from(Vector2(0, 40))` on a position starts 40 pixels lower and
+  rises to where the node is.
+- `nudge.with_factor_by(-1.0)` reverses a shared `by_value` for one start.
+- `factor_duration` and `delta_duration` do the same for `duration`:
+  `beat.with_factor_duration(2.0)` takes twice as long.
+
+Factors default to `1.0` and deltas to `null`, which adds nothing. Each is
+applied once, at start: unlike `by_value`, a `delta_to` doesn't keep changes
+made while the tween plays. For a quaternion, the factor scales the rotation
+angle and the delta rotates about the node's own axes. `factor_by` and
+`delta_by` need a `by_value`, and `factor_to` and `delta_to` don't apply with
+`by_value`.
+
 ## Vary a start with `with_*()`
 
 Each `with_*()` method returns a copy of the definition with one setting

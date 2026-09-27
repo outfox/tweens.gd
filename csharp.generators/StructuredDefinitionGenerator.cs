@@ -20,6 +20,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             | SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
 
     private static readonly string[] Callbacks = { "OnAdd", "OnStart", "OnUpdate", "OnEnd", "OnCancel", "OnFinally" };
+    private static readonly string[] Endpoints = { "From", "To", "By" };
 
     // Constructor arguments after `to`, in this order, like the GDScript helpers' (to, seconds, easing, delay).
     private static readonly string[] ConstructorOptions = { "Duration", "Ease", "Delay" };
@@ -152,6 +153,14 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             .Append("    public ").Append(value).Append("? To { get; init; }\n")
             .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.By\"/>\n")
             .Append("    public ").Append(value).Append("? By { get; init; }\n");
+        // Factors default to 1 in default and new() values too, like TweenOptions.Skew.
+        foreach (var endpoint in Endpoints)
+            source.Append("    private readonly double? factor").Append(endpoint).Append(";\n")
+                .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.Factor").Append(endpoint).Append("\"/>\n")
+                .Append("    public double Factor").Append(endpoint).Append(" { get => factor").Append(endpoint)
+                .Append(" ?? 1; init => factor").Append(endpoint).Append(" = value == 1 ? null : value; }\n")
+                .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.Delta").Append(endpoint).Append("\"/>\n")
+                .Append("    public ").Append(value).Append("? Delta").Append(endpoint).Append(" { get; init; }\n");
         foreach (var callback in Callbacks)
             source.Append("    public Action<").Append(instance).Append(callback == "OnUpdate" ? ", " + value : "")
                 .Append(">? ").Append(callback).Append(" { get; init; }\n");
@@ -184,6 +193,9 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             .Append(kind == DefinitionKind.ShaderParameter ? "(Parameter)"
                 : kind == DefinitionKind.CustomProperty ? "(Getter, Setter, Interpolate)" : "()")
             .Append("\n        {\n            From = From,\n            To = To,\n            By = By,\n");
+        foreach (var endpoint in Endpoints)
+            source.Append("            Factor").Append(endpoint).Append(" = Factor").Append(endpoint).Append(",\n")
+                .Append("            Delta").Append(endpoint).Append(" = Delta").Append(endpoint).Append(",\n");
         foreach (var callback in Callbacks)
             source.Append("            ").Append(callback).Append(" = ").Append(callback).Append(",\n");
         source.Append("        };\n        Options.CopyTo(playback);\n        return playback;\n    }\n}\n");

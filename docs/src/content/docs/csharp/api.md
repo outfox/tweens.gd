@@ -77,7 +77,8 @@ retain the final value unless `Fill` is explicitly changed.
 
 | Configuration | Reference |
 | --- | --- |
-| `Duration`, `Delay`, `Offset`, `Repeats`, `UsePingPong`, `PingPongInterval`, `RepeatInterval`, `Fill` | [Timing and loops](/csharp/timing/) |
+| `FactorFrom`, `DeltaFrom`, `FactorTo`, `DeltaTo`, `FactorBy`, `DeltaBy` | [Factors and deltas](/csharp/definitions/#scale-or-shift-a-value-with-factors-and-deltas) |
+| `Duration`, `FactorDuration`, `DeltaDuration`, `Delay`, `Offset`, `Repeats`, `UsePingPong`, `PingPongInterval`, `RepeatInterval`, `Fill` | [Timing and loops](/csharp/timing/) |
 | `Ease`, `Skew`, `EaseFunction`, `Curve` | [Easing](/csharp/easing/) |
 | `ProcessMode`, `UseUnscaledTime` | [Process and physics](/csharp/timing/#process-and-physics) |
 | `PauseMode`, `SuppressCallbacksWhenTargetInvalid` | [Lifetime and ownership](/csharp/lifetime/) |

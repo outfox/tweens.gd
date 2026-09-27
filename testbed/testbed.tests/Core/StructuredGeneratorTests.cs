@@ -50,6 +50,12 @@ public class StructuredGeneratorTests
                 public TValue? From { get; set; }
                 public TValue? To { get; set; }
                 public TValue? By { get; set; }
+                public double FactorFrom { get; set; }
+                public TValue? DeltaFrom { get; set; }
+                public double FactorTo { get; set; }
+                public TValue? DeltaTo { get; set; }
+                public double FactorBy { get; set; }
+                public TValue? DeltaBy { get; set; }
                 public Action<TweenInstance<TTarget, TValue>>? OnAdd { get; set; }
                 public Action<TweenInstance<TTarget, TValue>>? OnStart { get; set; }
                 public Action<TweenInstance<TTarget, TValue>, TValue>? OnUpdate { get; set; }
@@ -96,6 +102,8 @@ public class StructuredGeneratorTests
         Assert.Equal(SpecialType.System_Single, contract.TypeArguments[1].SpecialType);
         Assert.True(Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("Duration"))).SetMethod!.IsInitOnly);
         Assert.True(Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("By"))).SetMethod!.IsInitOnly);
+        Assert.True(Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("FactorTo"))).SetMethod!.IsInitOnly);
+        Assert.True(Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("DeltaTo"))).SetMethod!.IsInitOnly);
         Assert.Empty(definition.GetMembers("Ignored"));
         Assert.Empty(definition.GetMembers("ReadOnly"));
         var ease = Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("EaseFunction")));

@@ -25,7 +25,7 @@ var _ping_pong: bool
 var _repeats: int
 
 func _init(options: Definition) -> void:
-	_duration = options.duration
+	_duration = options._effective_duration()
 	_delay = options.delay
 	_turn = options.ping_pong_interval
 	_offset = options.offset

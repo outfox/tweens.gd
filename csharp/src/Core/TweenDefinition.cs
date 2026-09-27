@@ -28,6 +28,19 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     /// <summary>A relative offset instead of <see cref="To"/>, added on top of other changes to the property while
     /// it plays. With <see cref="From"/> it is added to that start once. Each repeat adds it again.</summary>
     public TValue? By { get; set; }
+    /// <summary>The start becomes FactorFrom * (From or the captured value) + DeltaFrom, once, when playback starts.
+    /// Factors scale away from zero (a quaternion's rotation angle); deltas add like <see cref="By"/>.</summary>
+    public double FactorFrom { get; set; } = 1;
+    /// <inheritdoc cref="FactorFrom"/>
+    public TValue? DeltaFrom { get; set; }
+    /// <summary>The end becomes FactorTo * (To or the captured value) + DeltaTo, once, when playback starts.</summary>
+    public double FactorTo { get; set; } = 1;
+    /// <inheritdoc cref="FactorTo"/>
+    public TValue? DeltaTo { get; set; }
+    /// <summary>The offset becomes FactorBy * By + DeltaBy, once, when playback starts. Requires <see cref="By"/>.</summary>
+    public double FactorBy { get; set; } = 1;
+    /// <inheritdoc cref="FactorBy"/>
+    public TValue? DeltaBy { get; set; }
     public Action<TweenInstance<TTarget, TValue>>? OnAdd { get; set; }
     public Action<TweenInstance<TTarget, TValue>>? OnStart { get; set; }
     public Action<TweenInstance<TTarget, TValue>, TValue>? OnUpdate { get; set; }

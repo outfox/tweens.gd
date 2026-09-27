@@ -18,9 +18,8 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(Parameter);
         _ = ShaderValues<TValue>.Type;
-        if (From is { } from) ShaderValues<TValue>.Validate(from);
-        if (To is { } to) ShaderValues<TValue>.Validate(to);
-        if (By is { } by) ShaderValues<TValue>.Validate(by);
+        foreach (var value in (ReadOnlySpan<TValue?>)[From, To, By, DeltaFrom, DeltaTo, DeltaBy])
+            if (value is { } set) ShaderValues<TValue>.Validate(set);
         name = new StringName(Parameter);
         var shader = target.Shader;
         watch = new ShaderWatch(shader);

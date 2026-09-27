@@ -61,19 +61,34 @@ func add(target: Variant, definition: Definition, owner: Variant = null) -> Hand
 	if snapshot.adapter == null and not Interpolation.supported(initial): return _reject("The property is missing or its value type is unsupported.")
 	if snapshot.value_type != TYPE_NIL and typeof(initial) != snapshot.value_type:
 		return _reject("The captured value does not match the definition's value type.", snapshot)
-	if snapshot.by_value != null and Interpolation.zero(typeof(initial)) == null:
-		return _reject("by_value needs an int, float, vector, Color, Quaternion or Rect2 value.", snapshot)
-	for endpoint in [initial, snapshot.from_value, snapshot.to_value, snapshot.by_value]:
+	var adjusts := [snapshot.factor_from != 1.0 or snapshot.delta_from != null,
+		snapshot.factor_to != 1.0 or snapshot.delta_to != null, snapshot.factor_by != 1.0 or snapshot.delta_by != null]
+	if (snapshot.by_value != null or adjusts.has(true)) and Interpolation.zero(typeof(initial)) == null:
+		return _reject("by_value, factors and deltas need an int, float, vector, Color, Quaternion or Rect2 value.", snapshot)
+	for endpoint in [initial, snapshot.from_value, snapshot.to_value, snapshot.by_value,
+			snapshot.delta_from, snapshot.delta_to, snapshot.delta_by]:
 		if endpoint == null and initial != null: continue
-		if snapshot.adapter != null:
-			var value_error := snapshot.adapter.validate_value(endpoint)
-			if not value_error.is_empty(): return _reject(value_error, snapshot)
-		elif not Interpolation.finite(endpoint):
-			return _reject("Endpoints must be finite and match the property's value type.")
-		if not Interpolation.compatible(initial, endpoint):
-			return _reject("Endpoints must match the captured value's type.", snapshot)
-		if typeof(endpoint) == TYPE_QUATERNION and endpoint.length_squared() == 0.0:
-			return _reject("Quaternion endpoints must have nonzero length.", snapshot)
+		var endpoint_error := _check_endpoint(snapshot, initial, endpoint)
+		if not endpoint_error.is_empty(): return _reject(endpoint_error, snapshot)
+	# Apply factor * value + delta once. An adjusted endpoint becomes explicit, so an adjusted start is fixed.
+	var fields := [[&"from_value", snapshot.factor_from, snapshot.delta_from],
+		[&"to_value", snapshot.factor_to, snapshot.delta_to], [&"by_value", snapshot.factor_by, snapshot.delta_by]]
+	for index in range(fields.size()):
+		if not adjusts[index]: continue
+		var value: Variant = snapshot.get(fields[index][0])
+		if value == null: value = initial
+		if fields[index][1] != 1.0:
+			var zero: Variant = Interpolation.zero(typeof(initial))
+			if snapshot.adapter != null:
+				snapshot.adapter._captured_type = typeof(initial)
+				value = snapshot.adapter.interpolate(zero, value, fields[index][1])
+			else:
+				value = Interpolation.interpolate(zero, value, fields[index][1], typeof(initial))
+			if not Interpolation.compatible(initial, value): return _reject("A factor changed the value type.", snapshot)
+		if fields[index][2] != null: value = Interpolation.add(value, fields[index][2])
+		var adjusted_error := _check_endpoint(snapshot, initial, value)
+		if not adjusted_error.is_empty(): return _reject(adjusted_error, snapshot)
+		snapshot.set(fields[index][0], value)
 	# Custom validation can reenter and invalidate the target/owner too.
 	if not is_instance_valid(target) or (typeof(owner) != TYPE_NIL and (not is_instance_valid(owner) or not owner.is_inside_tree() or owner.is_queued_for_deletion())):
 		return _reject("The target or owner became invalid during validation.", snapshot)
@@ -154,6 +169,17 @@ func _main_thread() -> bool:
 	if OS.get_thread_caller_id() == OS.get_main_thread_id(): return true
 	push_error("Use tweens.gd on Godot's main thread.")
 	return false
+
+func _check_endpoint(snapshot: Definition, initial: Variant, endpoint: Variant) -> String:
+	if snapshot.adapter != null:
+		var value_error := snapshot.adapter.validate_value(endpoint)
+		if not value_error.is_empty(): return value_error
+	elif not Interpolation.finite(endpoint):
+		return "Endpoints must be finite and match the property's value type."
+	if not Interpolation.compatible(initial, endpoint): return "Endpoints must match the captured value's type."
+	if typeof(endpoint) == TYPE_QUATERNION and endpoint.length_squared() == 0.0:
+		return "Quaternion endpoints must have nonzero length."
+	return ""
 
 func _reject(message: String, snapshot: Definition = null) -> Handle:
 	if snapshot != null and snapshot.adapter != null:

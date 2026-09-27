@@ -1,0 +1,45 @@
+{
+  "tolerance": 0.000001,
+  "cases": [
+    {"name":"adds to the current value", "start":2, "by":4, "options":{"duration":1}, "samples":[
+      {"delta":0.5,"value":4}, {"delta":0.5,"value":6}]},
+    {"name":"keeps outside changes", "start":0, "by":10, "options":{"duration":1}, "samples":[
+      {"delta":0.5,"value":5}, {"set":100}, {"delta":0.25,"value":102.5}, {"delta":0.25,"value":105}]},
+    {"name":"repeats accumulate", "start":0, "by":10, "options":{"duration":1,"repeats":2}, "samples":[
+      {"delta":1,"value":10}, {"delta":0.5,"value":15}, {"delta":1.5,"value":30}]},
+    {"name":"a large step counts every cycle", "start":0, "by":10, "options":{"duration":1,"repeats":3}, "samples":[
+      {"delta":2.5,"value":25}, {"delta":5,"value":40}]},
+    {"name":"ping-pong comes back each cycle", "start":1, "by":2, "options":{"duration":1,"use_ping_pong":true,"repeats":1}, "samples":[
+      {"delta":1,"value":3}, {"delta":1,"value":1}, {"delta":0.5,"value":2}, {"delta":1.5,"value":1}]},
+    {"name":"repeat interval holds the offset", "start":0, "by":4, "options":{"duration":1,"repeat_interval":1,"repeats":1}, "samples":[
+      {"delta":1.5,"value":4}, {"delta":0.75,"value":5}, {"delta":0.75,"value":8}]},
+    {"name":"from fixes the start", "start":0, "from":20, "by":10, "options":{"duration":1}, "samples":[
+      {"delta":0.5,"value":25}, {"set":100}, {"delta":0.5,"value":30}]},
+    {"name":"non-retaining fill takes the offset back out", "start":0, "by":10, "options":{"duration":1,"fill":0}, "samples":[
+      {"delta":0.5,"value":5}, {"set":50}, {"delta":0.5,"value":45}]},
+    {"name":"non-retaining fill with from restores the captured value", "start":3, "from":20, "by":10, "options":{"duration":1,"fill":0}, "samples":[
+      {"delta":0.5,"value":25}, {"delta":0.5,"value":3}]},
+    {"name":"a delay leaves the value until start", "start":3, "by":4, "options":{"duration":1,"delay":1,"fill":3}, "samples":[
+      {"delta":0.5,"value":3}, {"delta":1,"value":5}]},
+    {"name":"factor_to scales the captured value", "start":2, "options":{"duration":1,"factor_to":1.5}, "samples":[
+      {"delta":0.5,"value":2.5}, {"delta":0.5,"value":3}]},
+    {"name":"delta_to offsets the captured value once", "start":2, "options":{"duration":1,"delta_to":4}, "samples":[
+      {"delta":0.5,"value":4}, {"set":10}, {"delta":0.5,"value":6}]},
+    {"name":"to becomes factor times to plus delta", "start":2, "to":10, "options":{"duration":1,"factor_to":0.5,"delta_to":1}, "samples":[
+      {"delta":0.5,"value":4}, {"delta":0.5,"value":6}]},
+    {"name":"factor_from 0 grows from zero", "start":4, "options":{"duration":1,"factor_from":0}, "samples":[
+      {"delta":0.5,"value":2}, {"delta":0.5,"value":4}]},
+    {"name":"delta_from starts beside the captured value", "start":4, "options":{"duration":1,"delta_from":-2}, "samples":[
+      {"delta":0.5,"value":3}, {"delta":0.5,"value":4}]},
+    {"name":"an adjusted start fixes a relative tween", "start":0, "by":10, "options":{"duration":1,"delta_from":5}, "samples":[
+      {"delta":0.5,"value":10}, {"set":100}, {"delta":0.5,"value":15}]},
+    {"name":"by becomes factor times by plus delta", "start":0, "by":10, "options":{"duration":1,"factor_by":-0.5,"delta_by":1}, "samples":[
+      {"delta":0.5,"value":-2}, {"delta":0.5,"value":-4}]},
+    {"name":"duration becomes factor times duration plus delta", "start":0, "to":10, "options":{"duration":1,"factor_duration":2,"delta_duration":2}, "samples":[
+      {"delta":1,"value":2.5}, {"delta":3,"value":10}]},
+    {"name":"a delay fill applies the adjusted start", "start":4, "options":{"duration":1,"delay":1,"fill":3,"factor_from":0.5}, "samples":[
+      {"delta":0,"value":2}, {"delta":1.5,"value":3}]},
+    {"name":"non-retaining fill restores the unadjusted captured value", "start":4, "options":{"duration":1,"fill":0,"factor_to":2}, "samples":[
+      {"delta":0.5,"value":6}, {"delta":0.5,"value":4}]}
+  ]
+}

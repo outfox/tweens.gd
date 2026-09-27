@@ -117,6 +117,7 @@ public class ShaderParameterTests(HeadlessFixture godot)
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { From = float.NaN }));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { To = float.NaN }));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { By = float.NaN }));
+        Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("scalar") { DeltaTo = float.NaN }));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>("missing")));
         Assert.Throws<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<Vector2>("scalar")));
         Assert.Throws<ArgumentException>(() => scheduler.Add(scope.Track(new ShaderMaterial()), new Tweens.ShaderParameter<float>("scalar")));

@@ -222,18 +222,30 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 throw new ArgumentException("Specify either Curve or EaseFunction, not both.", nameof(source));
             if (definition.By is not null && definition.To is not null)
                 throw new ArgumentException("Specify either To or By, not both.", nameof(source));
-            if (definition.By is not null && !Offsets<TValue>.Supported) throw Offsets<TValue>.Unsupported();
+            var adjustsFrom = definition.FactorFrom != 1 || definition.DeltaFrom is not null;
+            var adjustsTo = definition.FactorTo != 1 || definition.DeltaTo is not null;
+            var adjustsBy = definition.FactorBy != 1 || definition.DeltaBy is not null;
+            if (definition.By is null && adjustsBy)
+                throw new ArgumentException("FactorBy and DeltaBy need By.", nameof(source));
+            if (definition.By is not null && adjustsTo)
+                throw new ArgumentException("FactorTo and DeltaTo do not apply to a By tween.", nameof(source));
+            if (!double.IsFinite(definition.FactorFrom) || !double.IsFinite(definition.FactorTo) || !double.IsFinite(definition.FactorBy))
+                throw new ArgumentOutOfRangeException(nameof(source), "Factors must be finite.");
+            if ((definition.By is not null || adjustsFrom || adjustsTo) && !Offsets<TValue>.Supported)
+                throw Offsets<TValue>.Unsupported();
             definition.PrepareTarget(target);
             if (InvalidTargetOrOwner)
                 throw new ArgumentException("The target or owner became invalid during tween preparation.", nameof(target));
             initial = definition.ReadValue(target);
             Value = initial;
-            from = definition.From ?? initial;
-            to = definition.To ?? initial;
+            from = Adjust(definition.From ?? initial, definition.FactorFrom, definition.DeltaFrom);
+            to = Adjust(definition.To ?? initial, definition.FactorTo, definition.DeltaTo);
             if (definition.By is { } offset)
             {
-                (relative, by, origin, applied) = (true, offset, from, Offsets<TValue>.Zero);
-                follows = definition.From is null && definition.FollowsTarget;
+                (relative, by, origin, applied) = (true, Adjust(offset, definition.FactorBy, definition.DeltaBy), from,
+                    Offsets<TValue>.Zero);
+                // An adjusted start is fixed, like an explicit From.
+                follows = definition.From is null && !adjustsFrom && definition.FollowsTarget;
                 pingPong = definition.UsePingPong;
             }
             ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease);
@@ -301,6 +313,13 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         definition!.WriteValue(Target, value);
         Value = value;
         if (CheckTarget()) definition!.OnUpdate?.Invoke(this, value);
+    }
+
+    // factor * value + delta. The factor scales away from zero; for a quaternion that scales its rotation angle.
+    private TValue Adjust(TValue value, double factor, TValue? delta)
+    {
+        if (factor != 1) value = definition!.InterpolateValue(Offsets<TValue>.Zero, value, (float)factor);
+        return delta is { } offset ? Offsets<TValue>.Add(value, offset) : value;
     }
 
     // Everything By has added so far: one offset per finished cycle, unless ping-pong brought it back, plus this one.

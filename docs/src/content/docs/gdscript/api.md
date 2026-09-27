@@ -62,7 +62,8 @@ changed, such as `with_delay(0.2)` or `with_ping_pong()`; see
 | Method | Sets |
 | --- | --- |
 | `with_from(value)`, `with_to(value)`, `with_by(value)`, `with_initial_value(value)` | `from_value`, `to_value`, `by_value`, `initial_value` |
-| `with_duration(seconds)`, `with_delay(seconds)`, `with_offset(seconds)` | The timing field of the same name |
+| `with_factor_from(factor)`, `with_delta_from(value)`, and the same for `to` and `by` | `factor_from`, `delta_from`, and the other factors and deltas |
+| `with_duration(seconds)`, `with_factor_duration(factor)`, `with_delta_duration(seconds)`, `with_delay(seconds)`, `with_offset(seconds)` | The timing field of the same name |
 | `with_repeats(count)`, `with_ping_pong(enabled = true)`, `with_ping_pong_interval(seconds)`, `with_repeat_interval(seconds)`, `with_fill(mode)` | `repeats`, `use_ping_pong`, and the other loop fields |
 | `with_ease(easing)`, `with_skew(exponent)`, `with_ease_function(function)`, `with_curve(curve)` | The easing field of the same name |
 | `with_process_mode(mode)`, `with_pause_mode(mode)`, `with_unscaled_time(enabled = true)`, `with_suppress_callbacks_when_target_invalid(enabled = true)` | The mode fields, `use_unscaled_time`, and callback suppression |
@@ -72,7 +73,8 @@ changed, such as `with_delay(0.2)` or `with_ping_pong()`; see
 | --- | --- |
 | `from_value`, `to_value` (`null` captures the current value), `initial_value` | [Definitions](/gdscript/definitions/) |
 | `by_value`, a relative offset instead of `to_value` | [Move by an offset](/gdscript/definitions/#move-by-an-offset-with-by_value) |
-| `duration`, `delay`, `offset`, `repeats`, `use_ping_pong`, `ping_pong_interval`, `repeat_interval`, `fill` | [Timing and loops](/gdscript/timing/) |
+| `factor_from`, `delta_from`, `factor_to`, `delta_to`, `factor_by`, `delta_by` | [Factors and deltas](/gdscript/definitions/#scale-or-shift-a-value-with-factors-and-deltas) |
+| `duration`, `factor_duration`, `delta_duration`, `delay`, `offset`, `repeats`, `use_ping_pong`, `ping_pong_interval`, `repeat_interval`, `fill` | [Timing and loops](/gdscript/timing/) |
 | `ease`, `skew`, `ease_function`, `curve` | [Easing](/gdscript/easing/) |
 | `process_mode`, `use_unscaled_time` | [Timing and loops](/gdscript/timing/) |
 | `pause_mode`, `suppress_callbacks_when_target_invalid` | [Lifetime and ownership](/gdscript/lifetime/) |

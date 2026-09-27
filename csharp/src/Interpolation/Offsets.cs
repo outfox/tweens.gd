@@ -56,8 +56,8 @@ internal static class Offsets<T> where T : struct
         throw Unsupported();
     }
 
-    internal static NotSupportedException Unsupported() => new(
-        $"By does not support {typeof(T).Name} values. Use int, float, double, a vector, Color, Quaternion or Rect2.");
+    internal static NotSupportedException Unsupported() => new($"By, factors and deltas do not support {typeof(T).Name} "
+        + "values. Use int, float, double, a vector, Color, Quaternion or Rect2.");
 
     private static int Saturate(long value) => (int)Math.Clamp(value, int.MinValue, int.MaxValue);
 

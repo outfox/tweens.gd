@@ -17,9 +17,20 @@ var to_value: Variant = null
 ## A relative offset instead of to_value, added on top of other changes to the property while it plays.
 ## With from_value it is added to that start once. Each repeat adds it again.
 var by_value: Variant = null
+## Applied once at start as factor * value + delta, to the explicit or captured from/to value and to by_value.
+## Factors scale away from zero (a quaternion's rotation angle); deltas add like by_value. A null delta adds nothing.
+var factor_from: float = 1.0
+var delta_from: Variant = null
+var factor_to: float = 1.0
+var delta_to: Variant = null
+var factor_by: float = 1.0
+var delta_by: Variant = null
 ## Initial value for callback-only tweens (an empty property path).
 var initial_value: Variant = 0.0
 var duration: float = 0.0
+## The tween lasts factor_duration * duration + delta_duration.
+var factor_duration: float = 1.0
+var delta_duration: float = 0.0
 var delay: float = 0.0
 var offset: float = 0.0
 var repeats: int = 0
@@ -52,8 +63,16 @@ func copy() -> TweensGdDefinition:
 	result.from_value = from_value
 	result.to_value = to_value
 	result.by_value = by_value
+	result.factor_from = factor_from
+	result.delta_from = delta_from
+	result.factor_to = factor_to
+	result.delta_to = delta_to
+	result.factor_by = factor_by
+	result.delta_by = delta_by
 	result.initial_value = initial_value
 	result.duration = duration
+	result.factor_duration = factor_duration
+	result.delta_duration = delta_duration
 	result.delay = delay
 	result.offset = offset
 	result.repeats = repeats
@@ -98,7 +117,15 @@ func with_from(value: Variant) -> TweensGdDefinition: return _with(&"from_value"
 func with_to(value: Variant) -> TweensGdDefinition: return _with(&"to_value", value)
 func with_by(value: Variant) -> TweensGdDefinition: return _with(&"by_value", value)
 func with_initial_value(value: Variant) -> TweensGdDefinition: return _with(&"initial_value", value)
+func with_factor_from(factor: float) -> TweensGdDefinition: return _with(&"factor_from", factor)
+func with_delta_from(value: Variant) -> TweensGdDefinition: return _with(&"delta_from", value)
+func with_factor_to(factor: float) -> TweensGdDefinition: return _with(&"factor_to", factor)
+func with_delta_to(value: Variant) -> TweensGdDefinition: return _with(&"delta_to", value)
+func with_factor_by(factor: float) -> TweensGdDefinition: return _with(&"factor_by", factor)
+func with_delta_by(value: Variant) -> TweensGdDefinition: return _with(&"delta_by", value)
 func with_duration(seconds: float) -> TweensGdDefinition: return _with(&"duration", seconds)
+func with_factor_duration(factor: float) -> TweensGdDefinition: return _with(&"factor_duration", factor)
+func with_delta_duration(seconds: float) -> TweensGdDefinition: return _with(&"delta_duration", seconds)
 func with_delay(seconds: float) -> TweensGdDefinition: return _with(&"delay", seconds)
 func with_offset(seconds: float) -> TweensGdDefinition: return _with(&"offset", seconds)
 func with_repeats(count: int) -> TweensGdDefinition: return _with(&"repeats", count)
@@ -131,10 +158,15 @@ func _with(field: StringName, value: Variant) -> TweensGdDefinition:
 func validate() -> String:
 	if adapter != null and not property.is_empty(): return "Choose either an adapter or a property path."
 	if to_value != null and by_value != null: return "Choose either to_value or by_value."
-	for seconds in [duration, delay, offset, ping_pong_interval, repeat_interval]:
-		if not is_finite(seconds) or seconds < 0.0:
+	if by_value == null and (factor_by != 1.0 or delta_by != null): return "factor_by and delta_by need a by_value."
+	if by_value != null and (factor_to != 1.0 or delta_to != null): return "factor_to and delta_to do not apply with by_value."
+	for factor in [factor_from, factor_to, factor_by, factor_duration, delta_duration]:
+		if not is_finite(factor): return "Factors and deltas must be finite."
+	var seconds := _effective_duration()
+	for time in [duration, seconds, delay, offset, ping_pong_interval, repeat_interval]:
+		if not is_finite(time) or time < 0.0:
 			return "Timing must be finite and nonnegative."
-	if offset > duration: return "Offset must not exceed duration."
+	if offset > seconds: return "Offset must not exceed duration."
 	if repeats < Types.INFINITE: return "Repeats must be -1 or nonnegative."
 	if not is_finite(skew) or skew <= 0.0: return "Skew must be finite and positive."
 	if not Types.Ease.values().has(ease): return "Unknown easing function."
@@ -144,10 +176,13 @@ func validate() -> String:
 	if curve != null and not ease_function.is_null(): return "Choose either curve or ease_function."
 	for callback in [ease_function, on_add, on_start, on_update, on_end, on_cancel, on_finally]:
 		if not callback.is_null() and not callback.is_valid(): return "A configured Callable is invalid."
-	var span := duration + (duration + ping_pong_interval if use_ping_pong else 0.0) + repeat_interval
+	var span := seconds + (seconds + ping_pong_interval if use_ping_pong else 0.0) + repeat_interval
 	if not is_finite(span + delay): return "Timeline is too long."
 	if repeats == Types.INFINITE:
 		if span == 0.0: return "An infinite tween needs a nonzero cycle duration."
 	elif not is_finite(span * (float(repeats) + 1.0) - repeat_interval + delay):
 		return "Timeline is too long."
 	return ""
+
+func _effective_duration() -> float:
+	return factor_duration * duration + delta_duration

@@ -11,7 +11,7 @@ public class TweenOptionsTests
 
     private static TweenOptions Everything() => new()
     {
-        Duration = 1.5, Delay = 0.25, PingPongInterval = 0.5, RepeatInterval = 0.75, Offset = 0.125, Repeats = 3,
+        Duration = 1.5, FactorDuration = 2, DeltaDuration = -0.5, Delay = 0.25, PingPongInterval = 0.5, RepeatInterval = 0.75, Offset = 0.125, Repeats = 3,
         UsePingPong = true, UseUnscaledTime = true, Fill = FillMode.Both, Ease = EaseType.BounceOut,
         Skew = 2, EaseFunction = Ease, ProcessMode = TweenProcessMode.Physics, PauseMode = TweenPauseMode.Always,
         SuppressCallbacksWhenTargetInvalid = true,
@@ -23,6 +23,9 @@ public class TweenOptionsTests
         Assert.Equal(FillMode.RetainFinalValue, default(TweenOptions).Fill);
         Assert.Equal(FillMode.RetainFinalValue, new TweenOptions().Fill);
         Assert.Equal(default, new TweenOptions());
+        Assert.Equal(1, default(TweenOptions).FactorDuration);
+        Assert.Equal(default, new TweenOptions { FactorDuration = 1 });
+        Assert.Equal(1, new PlainTween().FactorDuration);
         Assert.Equal(FillMode.RetainFinalValue, new PlainTween().Fill);
         Assert.Equal(TweenOptions.Infinite, TweenOptionsBuilder.Infinite);
     }
@@ -45,6 +48,8 @@ public class TweenOptionsTests
         var builder = new PlainTween();
         options.CopyTo(builder);
         Assert.Equal(1.5, builder.Duration);
+        Assert.Equal(2, builder.FactorDuration);
+        Assert.Equal(-0.5, builder.DeltaDuration);
         Assert.Equal(0.25, builder.Delay);
         Assert.Equal(0.5, builder.PingPongInterval);
         Assert.Equal(0.75, builder.RepeatInterval);

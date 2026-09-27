@@ -42,24 +42,28 @@ public class GDScriptConformanceTests
     }
 
     [Fact]
-    public void SharedRelativeFixturesMatchCSharp()
+    public void SharedEndpointFixturesMatchCSharp()
     {
-        using var data = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "conformance", "relative.json")));
+        using var data = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "conformance", "endpoints.json")));
         var tolerance = data.RootElement.GetProperty("tolerance").GetDouble();
         foreach (var test in data.RootElement.GetProperty("cases").EnumerateArray())
         {
             var o = test.GetProperty("options");
-            double Number(string key) => o.TryGetProperty(key, out var value) ? value.GetDouble() : 0;
+            double Number(string key, double fallback = 0) => o.TryGetProperty(key, out var value) ? value.GetDouble() : fallback;
+            float? Value(JsonElement source, string key) => source.TryGetProperty(key, out var value) ? value.GetSingle() : null;
             using var scheduler = new TweenScheduler();
             var box = new Box { Value = test.GetProperty("start").GetSingle() };
             scheduler.Add(box, new PlainTween
             {
-                From = test.TryGetProperty("from", out var from) ? from.GetSingle() : null,
-                By = test.GetProperty("by").GetSingle(),
+                From = Value(test, "from"), To = Value(test, "to"), By = Value(test, "by"),
                 Duration = Number("duration"), Delay = Number("delay"), Repeats = (int)Number("repeats"),
                 RepeatInterval = Number("repeat_interval"),
                 UsePingPong = o.TryGetProperty("use_ping_pong", out var ping) && ping.GetBoolean(),
                 Fill = o.TryGetProperty("fill", out var fill) ? (FillMode)fill.GetInt32() : FillMode.RetainFinalValue,
+                FactorFrom = Number("factor_from", 1), DeltaFrom = Value(o, "delta_from"),
+                FactorTo = Number("factor_to", 1), DeltaTo = Value(o, "delta_to"),
+                FactorBy = Number("factor_by", 1), DeltaBy = Value(o, "delta_by"),
+                FactorDuration = Number("factor_duration", 1), DeltaDuration = Number("delta_duration"),
             });
             foreach (var sample in test.GetProperty("samples").EnumerateArray())
             {
