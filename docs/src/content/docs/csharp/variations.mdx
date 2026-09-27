@@ -55,9 +55,10 @@ Change `Recoil` to kick 16 pixels, or to ease with `CubicOut`, and every hit and
 crit follows. `Recoil with { By = -24 }` would also kick harder, but it replaces
 the value, so that variant no longer follows `Recoil`.
 
-Try it below. **Hit** starts a variant scaled by the damage, and **Crit** starts
-the critical one. Move **Recoil kick** to tune the shared definition, and every
-variant follows.
+Try it below. Each row starts one variant with its own sliders: **Hit** scales
+with the damage, and **Crit** uses its own factor and skew. The curve and code
+show the row you used last. **Recoil kick** tunes the shared definition, and both
+variants follow.
 
 <VariationLab />
 

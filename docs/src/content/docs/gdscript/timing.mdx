@@ -38,7 +38,10 @@ tween2.tween_property(sprite2, "scale", Vector2.ONE, 0.8)
 ```
 
 ```gdscript title="tweens.gd"
-var pulse := Tweens.scale_2d(Vector2(1.1, 1.1), 0.8, Tweens.Ease.SINE_IN_OUT)
+var big := Vector2(1.1, 1.1)
+
+var pulse := Tweens.scale_2d(big, 0.8,
+	Tweens.Ease.SINE_IN_OUT)
 pulse.use_ping_pong = true
 pulse.repeats = Tweens.INFINITE
 

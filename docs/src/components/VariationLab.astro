@@ -37,7 +37,9 @@ const gd = lang === 'gdscript';
 			{
 				gd ? (
 					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num">0.1</span>,
-    Tweens.Ease.QUAD_OUT).<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>).<span class="fn">with_ping_pong</span>()</pre>
+    Tweens.Ease.QUAD_OUT) <span class="cont">\</span>
+    .<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>) <span class="cont">\</span>
+    .<span class="fn">with_ping_pong</span>()</pre>
 				) : (
 					<pre><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DX</span> Recoil = <span class="kw">new</span>()
 {'{'}
@@ -51,56 +53,73 @@ const gd = lang === 'gdscript';
 		</div>
 		<div class="pane">
 			<p class="pane-label">This start</p>
-			{
-				gd ? (
-					<pre data-call-hit>Tweens.<span class="fn">play</span>(self, recoil
-    .<span class="fn">with_factor_by</span>(<span class="num" data-factor-by>2.0</span>)
-    .<span class="fn">with_factor_duration</span>(<span class="num" data-factor-duration>1.2</span>)
+			<div class="calls">
+				{
+					gd ? (
+						<pre data-call-hit>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
+    .<span class="fn">with_factor_by</span>(<span class="num" data-factor-by>2.0</span>) <span class="cont">\</span>
+    .<span class="fn">with_factor_duration</span>(<span class="num" data-factor-duration>1.2</span>) <span class="cont">\</span>
     .<span class="fn">with_skew</span>(<span class="num" data-skew-out>1.0</span>))</pre>
-				) : (
-					<pre data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
+					) : (
+						<pre data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-factor-by>2</span>,
     FactorDuration = <span class="num" data-factor-duration>1.2</span>,
     Skew = <span class="num" data-skew-out>1</span>,
 {'}'});</pre>
-				)
-			}
-			{
-				gd ? (
-					<pre data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil
-    .<span class="fn">with_factor_by</span>(<span class="num">3.0</span>)
-    .<span class="fn">with_skew</span>(<span class="num">0.5</span>))</pre>
-				) : (
-					<pre data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
-    {'{'} FactorBy = <span class="num">3</span>, Skew = <span class="num">0.5</span> {'}'});</pre>
-				)
-			}
+					)
+				}
+				{
+					gd ? (
+						<pre data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
+    .<span class="fn">with_factor_by</span>(<span class="num" data-crit-by>3.0</span>) <span class="cont">\</span>
+    .<span class="fn">with_skew</span>(<span class="num" data-crit-skew>0.50</span>))</pre>
+					) : (
+						<pre data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
+{'{'}
+    FactorBy = <span class="num" data-crit-by>3</span>,
+    Skew = <span class="num" data-crit-skew>0.5</span>,
+{'}'});</pre>
+					)
+				}
+			</div>
 			<p class="result" data-result>Kicks 24 px, 0.12 s each way</p>
 		</div>
 	</div>
 
 	<div class="controls">
-		<div class="buttons">
-			<button type="button" class="tw-btn is-primary" data-hit>Hit</button>
-			<button type="button" class="tw-btn" data-crit>Crit</button>
+		<div class="variant is-active" data-variant="hit">
+			<button type="button" class="tw-btn is-primary" data-play>Hit</button>
+			<label class="tw-field">
+				<span>Damage <output data-out="damage">20</output></span>
+				<input type="range" min="0" max="50" step="5" value="20" data-in="damage" />
+			</label>
+			<label class="tw-field">
+				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">1.00</output></span>
+				<input type="range" min="0" max="1" step="0.01" value="0.5" data-in="skew" />
+			</label>
 		</div>
-		<label class="tw-field">
-			<span>Damage <output data-damage-label>20</output></span>
-			<input type="range" min="0" max="50" step="5" value="20" data-damage />
-		</label>
-		<label class="tw-field">
-			<span>{gd ? 'skew' : 'Skew'} <output data-skew-label>1.00</output></span>
-			<input type="range" min="0" max="1" step="0.01" value="0.5" data-skew />
-		</label>
-		<label class="tw-field">
-			<span>Recoil kick <output data-base-label>12 px</output></span>
-			<input type="range" min="6" max="20" step="1" value="12" data-base />
-		</label>
-		<label class="slow">
-			<input type="checkbox" checked data-slow />
-			Slow motion
-		</label>
+		<div class="variant" data-variant="crit">
+			<button type="button" class="tw-btn" data-play>Crit</button>
+			<label class="tw-field">
+				<span>{gd ? 'factor_by' : 'FactorBy'} <output data-out="factor">3</output></span>
+				<input type="range" min="1" max="6" step="0.5" value="3" data-in="factor" />
+			</label>
+			<label class="tw-field">
+				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">0.50</output></span>
+				<input type="range" min="0" max="1" step="0.01" value="0.25" data-in="skew" />
+			</label>
+		</div>
+		<div class="shared">
+			<label class="tw-field">
+				<span>Recoil kick, shared by both <output data-base-label>12 px</output></span>
+				<input type="range" min="6" max="20" step="1" value="12" data-base />
+			</label>
+			<label class="slow">
+				<input type="checkbox" data-slow />
+				Slow motion
+			</label>
+		</div>
 	</div>
 	<p class="sr-only" aria-live="polite" data-announce></p>
 </div>
@@ -139,8 +158,6 @@ const gd = lang === 'gdscript';
 		const kickLabel = q<HTMLElement>('[data-kick-label]');
 		const curve = q<SVGPathElement>('[data-curve]');
 		const head = q<SVGCircleElement>('[data-head]');
-		const damageIn = q<HTMLInputElement>('[data-damage]');
-		const skewIn = q<HTMLInputElement>('[data-skew]');
 		const baseIn = q<HTMLInputElement>('[data-base]');
 		const slowIn = q<HTMLInputElement>('[data-slow]');
 		const hitCall = q<HTMLElement>('[data-call-hit]');
@@ -149,16 +166,27 @@ const gd = lang === 'gdscript';
 		const announce = q<HTMLElement>('[data-announce]');
 		q<SVGPathElement>('[data-base-curve]').setAttribute('d', path(1));
 
-		let crit = false;
+		// One row per variant, each with its own button and sliders.
+		type Name = 'hit' | 'crit';
+		const names: Name[] = ['hit', 'crit'];
+		const row = (name: Name) => {
+			const el = q<HTMLElement>(`[data-variant="${name}"]`);
+			const input = (key: string) => el.querySelector<HTMLInputElement>(`[data-in="${key}"]`)!;
+			const output = (key: string) => el.querySelector<HTMLOutputElement>(`[data-out="${key}"]`)!;
+			return { el, button: el.querySelector<HTMLButtonElement>('[data-play]')!, input, output };
+		};
+		const rows = { hit: row('hit'), crit: row('crit') };
+		// The variant the curve, marker, and code show: the row last played or adjusted.
+		let active: Name = 'hit';
 		let raf = 0;
 
-		// The variant each button starts, computed as the library does at start: factor × value + delta.
-		const variant = () => {
+		// Each row's variant, computed as the library does at start: factor × value + delta.
+		const variant = (name: Name) => {
 			const base = -Number(baseIn.value);
-			const damage = Number(damageIn.value);
-			const factorBy = crit ? 3 : damage / 10;
-			const factorDuration = crit ? 1 : 1 + damage / 100;
-			const skew = crit ? 0.5 : skewOf(Number(skewIn.value));
+			const skew = skewOf(Number(rows[name].input('skew').value));
+			const damage = Number(rows.hit.input('damage').value);
+			const factorBy = name === 'hit' ? damage / 10 : Number(rows.crit.input('factor').value);
+			const factorDuration = name === 'hit' ? 1 + damage / 100 : 1;
 			return { base, damage, factorBy, factorDuration, skew, by: factorBy * base, duration: factorDuration * DURATION };
 		};
 
@@ -172,34 +200,43 @@ const gd = lang === 'gdscript';
 		};
 
 		const sync = () => {
-			const v = variant();
-			const damage = Number(damageIn.value);
-			q<HTMLOutputElement>('[data-damage-label]').textContent = String(damage);
-			q<HTMLOutputElement>('[data-skew-label]').textContent = skewOf(Number(skewIn.value)).toFixed(2);
+			const hit = variant('hit');
+			const crit = variant('crit');
+			const v = active === 'hit' ? hit : crit;
+			rows.hit.output('damage').textContent = String(hit.damage);
+			rows.hit.output('skew').textContent = hit.skew.toFixed(2);
+			rows.crit.output('factor').textContent = fmt(crit.factorBy, 1);
+			rows.crit.output('skew').textContent = crit.skew.toFixed(2);
 			q<HTMLOutputElement>('[data-base-label]').textContent = `${baseIn.value} px`;
+			const number = (n: number, digits: number) => (gd ? n.toFixed(digits) : fmt(n, digits));
 			all('[data-base-by]').forEach((el) => (el.textContent = gd ? v.base.toFixed(1) : String(v.base)));
-			all('[data-factor-by]').forEach((el) => (el.textContent = gd ? (damage / 10).toFixed(1) : fmt(damage / 10, 1)));
-			all('[data-factor-duration]').forEach((el) => (el.textContent = fmt(1 + damage / 100, 2)));
-			all('[data-skew-out]').forEach((el) => {
-				const s = skewOf(Number(skewIn.value));
-				el.textContent = gd ? s.toFixed(2) : fmt(s, 2);
-			});
-			hitCall.hidden = crit;
-			critCall.hidden = !crit;
+			all('[data-factor-by]').forEach((el) => (el.textContent = number(hit.factorBy, 1)));
+			all('[data-factor-duration]').forEach((el) => (el.textContent = fmt(hit.factorDuration, 2)));
+			all('[data-skew-out]').forEach((el) => (el.textContent = number(hit.skew, 2)));
+			all('[data-crit-by]').forEach((el) => (el.textContent = number(crit.factorBy, 1)));
+			all('[data-crit-skew]').forEach((el) => (el.textContent = number(crit.skew, 2)));
+			hitCall.hidden = active !== 'hit';
+			critCall.hidden = active !== 'crit';
+			for (const name of names) {
+				rows[name].el.classList.toggle('is-active', name === active);
+				rows[name].button.classList.toggle('is-primary', name === active);
+			}
 			curve.setAttribute('d', path(v.skew));
 			const z = zoom();
 			kickMark.style.setProperty('--kick', `${v.by * z}px`);
 			scaleNote.textContent = `Drawn at ${fmt(z, 1)}×`;
 			kickLabel.textContent = `${fmt(Math.abs(v.by), 1)} px`;
-			result.textContent = `Kicks ${fmt(Math.abs(v.by), 1)} px, ${fmt(v.duration, 3)} s each way`;
+			const label = active === 'hit' ? 'Hit' : 'Crit';
+			result.textContent = `${label}: kicks ${fmt(Math.abs(v.by), 1)} px, ${fmt(v.duration, 3)} s each way`;
 			return v;
 		};
 
-		const play = (asCrit: boolean) => {
-			crit = asCrit;
+		const play = (name: Name) => {
+			active = name;
 			cancelAnimationFrame(raf);
 			const v = sync();
-			announce.textContent = `${asCrit ? 'Crit' : `Hit for ${v.damage} damage`}: kicks ${fmt(Math.abs(v.by), 1)} pixels, ${fmt(v.duration, 3)} seconds each way, skew ${fmt(v.skew, 2)}.`;
+			const what = name === 'hit' ? `Hit for ${v.damage} damage` : 'Crit';
+			announce.textContent = `${what}: kicks ${fmt(Math.abs(v.by), 1)} pixels, ${fmt(v.duration, 3)} seconds each way, skew ${fmt(v.skew, 2)}.`;
 			if (reducedMotion()) {
 				place(v.by, 1, v.skew);
 				return;
@@ -217,13 +254,15 @@ const gd = lang === 'gdscript';
 			raf = requestAnimationFrame(frame);
 		};
 
-		q<HTMLButtonElement>('[data-hit]').addEventListener('click', () => play(false));
-		q<HTMLButtonElement>('[data-crit]').addEventListener('click', () => play(true));
-		for (const input of [damageIn, skewIn, baseIn])
-			input.addEventListener('input', () => {
-				crit = false;
-				sync();
-			});
+		for (const name of names) {
+			rows[name].button.addEventListener('click', () => play(name));
+			for (const input of rows[name].el.querySelectorAll('input'))
+				input.addEventListener('input', () => {
+					active = name;
+					sync();
+				});
+		}
+		baseIn.addEventListener('input', () => sync());
 		new ResizeObserver(() => sync()).observe(stage);
 	}
 </script>
@@ -395,8 +434,16 @@ const gd = lang === 'gdscript';
 		color: var(--sl-color-white);
 		overflow-x: auto;
 	}
-	.code pre[hidden] {
-		display: none;
+	/* Both starts share one cell, so the box keeps the taller one's height and nothing below shifts on switching. */
+	.calls {
+		display: grid;
+	}
+	.calls > pre {
+		grid-area: 1 / 1;
+	}
+	.calls > pre[hidden] {
+		display: block;
+		visibility: hidden;
 	}
 	.kw {
 		color: var(--tw-blue-ink);
@@ -411,23 +458,46 @@ const gd = lang === 'gdscript';
 		color: var(--tw-amber-ink);
 		font-weight: 700;
 	}
+	/* GDScript needs the line continuations, but they carry no meaning worth reading. */
+	.cont {
+		color: var(--tw-muted);
+		opacity: 0.6;
+	}
 
+	/* One row per variant, then the shared settings. The active row, the one the curve and code show, is tinted. */
 	.controls {
 		display: grid;
-		grid-template-columns: auto repeat(3, minmax(0, 1fr)) auto;
-		align-items: end;
-		gap: 0.75rem 1.25rem;
+		gap: 0.5rem;
 		padding-top: 1rem;
 		border-top: 1px solid var(--tw-outline);
 	}
+	.variant,
+	.shared {
+		display: grid;
+		grid-template-columns: 5.5rem repeat(2, minmax(0, 1fr));
+		align-items: end;
+		gap: 0.75rem 1.25rem;
+		padding: 0.6rem 0.75rem;
+		border-radius: 0.8rem;
+		transition: background-color 0.25s;
+	}
+	.variant.is-active {
+		background: color-mix(in oklab, var(--tw-mint) 9%, transparent);
+	}
+	.variant .tw-btn {
+		justify-content: center;
+	}
+	.shared {
+		grid-template-columns: minmax(0, 2fr) auto;
+		padding-top: 0.9rem;
+	}
 	@media (max-width: 44rem) {
-		.controls {
+		:is(.variant, .shared) {
 			grid-template-columns: minmax(0, 1fr);
 		}
-	}
-	.buttons {
-		display: flex;
-		gap: 0.5rem;
+		.variant .tw-btn {
+			justify-self: start;
+		}
 	}
 	.slow {
 		display: inline-flex;
