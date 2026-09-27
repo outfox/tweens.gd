@@ -27,5 +27,10 @@ public sealed partial class ParticleStream : GalleryEffect
         Blob(particles, 3, 3, Colors.White);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["particles"] = particles,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

@@ -29,6 +29,8 @@ public partial class TweenDemo : Control
     private VBoxContainer? content;
     private Label durationLabel = null!;
     private HSlider duration = null!;
+    private OptionButton languagePicker = null!;
+    public GalleryLanguage Language { get; private set; }
     private GalleryPage? page;
     private int revision;
 
@@ -82,6 +84,15 @@ public partial class TweenDemo : Control
         header.AddThemeConstantOverride("separation", 24);
         var title = GalleryTheme.Label("tweens.gd / testbed", 22);
         header.AddChild(title);
+        languagePicker = header.Add(new OptionButton
+        {
+            Name = "LanguageSwitch", CustomMinimumSize = new Vector2(160, 34),
+            TooltipText = "Switch the running tween implementation and restart this page",
+        });
+        languagePicker.AddItem("C# · Beta");
+        languagePicker.AddItem("GDScript · Beta");
+        languagePicker.Select((int)Language);
+        languagePicker.ItemSelected += index => SelectLanguage((GalleryLanguage)index);
         var settings = BuildSettings();
         settings.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         header.AddChild(settings);
@@ -171,6 +182,7 @@ public partial class TweenDemo : Control
         for (var i = 0; i < navigation.Count; i++) navigation[i].SetPressedNoSignal(i == index);
 
         page = Pages[index].Create();
+        page.Language = Language;
         page.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         page.SizeFlagsVertical = SizeFlags.ExpandFill;
         content.AddChild(page);
@@ -192,6 +204,15 @@ public partial class TweenDemo : Control
             DestroyPage();
             GD.PushError(error.ToString());
         }
+    }
+
+    public void SelectLanguage(GalleryLanguage language)
+    {
+        if (!Enum.IsDefined(language)) throw new ArgumentOutOfRangeException(nameof(language));
+        if (Language == language) return;
+        Language = language;
+        languagePicker?.Select((int)language);
+        RestartDemo();
     }
 
     public void RestartDemo()

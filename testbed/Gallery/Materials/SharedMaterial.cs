@@ -22,5 +22,10 @@ public sealed partial class SharedMaterial : GalleryEffect
         cube.Rotation = new Vector3(0.3f, 0.5f, 0);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["material"] = material,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

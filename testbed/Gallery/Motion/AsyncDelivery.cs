@@ -31,5 +31,12 @@ public sealed partial class AsyncDelivery : GalleryEffect
         steps = Enumerable.Range(0, 3).Select(i => Blob(view, 5, 5, Palette.Outline, new Vector2(110 + i * 18, -58))).ToArray();
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["courier"] = courier,
+        ["steps"] = new Godot.Collections.Array<Godot.Node>(steps),
+        ["status"] = status,
+    };
+
     protected override void Animate() => Sequence = Deliver();
 }

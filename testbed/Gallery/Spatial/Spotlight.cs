@@ -36,5 +36,10 @@ public sealed partial class Spotlight : GalleryEffect
         Mesh(spot, new SphereMesh { Radius = 0.12f, Height = 0.24f }, bulb);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["spot"] = spot,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

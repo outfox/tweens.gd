@@ -34,5 +34,11 @@ public sealed partial class CameraPan : GalleryEffect
         }
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["camera"] = camera,
+        ["beacon"] = beacon,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

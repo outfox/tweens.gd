@@ -14,6 +14,11 @@ public abstract partial class GalleryEffect
     private const double DefaultSeconds = 1.8;
     protected const EaseType DefaultEase = EaseType.CubicInOut;
     private readonly List<Resource> resources = [];
+    private GalleryGDScript? gdscript;
+    public GalleryLanguage Language { get; private set; }
+
+    /// <summary>Shared scene objects passed to the GDScript animation and comparison tests.</summary>
+    public virtual Godot.Collections.Dictionary SceneTargets => new();
 
     public abstract string Title { get; }
     public abstract string Caption { get; }
@@ -28,8 +33,9 @@ public abstract partial class GalleryEffect
     /// <summary>Timing scale relative to the default leg duration, for choreographed sequences.</summary>
     protected double Tempo => Seconds / DefaultSeconds;
 
-    public void Attach(Control stage)
+    public void Attach(Control stage, GalleryLanguage language = GalleryLanguage.CSharp)
     {
+        Language = language;
         Stage = stage;
         Build();
     }
@@ -37,7 +43,13 @@ public abstract partial class GalleryEffect
     public void Start(double seconds)
     {
         Seconds = seconds;
-        Animate();
+        if (Language == GalleryLanguage.CSharp) Animate();
+        else
+        {
+            gdscript = new GalleryGDScript(GallerySource.ForEffect(this, Language));
+            Sequence = gdscript.Completion;
+            gdscript.Start(Stage, SceneTargets, seconds);
+        }
     }
 
     protected abstract void Build();
@@ -46,6 +58,8 @@ public abstract partial class GalleryEffect
     /// <summary>Called after the page is freed, so no node still references these resources.</summary>
     public void ReleaseResources()
     {
+        gdscript?.Dispose();
+        gdscript = null;
         foreach (var resource in resources) resource.Dispose();
         resources.Clear();
     }

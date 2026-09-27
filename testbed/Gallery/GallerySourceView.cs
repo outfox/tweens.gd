@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Godot;
 namespace testbed;
 
-/// <summary>Read-only, selectable C# source beside the running example.</summary>
+/// <summary>Read-only source for the selected running implementation and its shared scene.</summary>
 public partial class GallerySourceView : VBoxContainer
 {
     private readonly List<Resource> resources = [];
@@ -13,6 +13,8 @@ public partial class GallerySourceView : VBoxContainer
     private OptionButton files = null!;
     private Label path = null!;
     private Button entry = null!, copy = null!;
+    private GalleryLanguage language;
+    private CodeHighlighter csharpHighlighter = null!, gdscriptHighlighter = null!;
     public CodeEdit Code { get; private set; } = null!;
     public GallerySource Source { get; private set; } = null!;
 
@@ -24,10 +26,11 @@ public partial class GallerySourceView : VBoxContainer
         SizeFlagsStretchRatio = 1.35f;
         AddThemeConstantOverride("separation", 8);
 
-        var toolbar = this.Add(new HBoxContainer());
-        files = toolbar.Add(new OptionButton { SizeFlagsHorizontal = SizeFlags.ExpandFill });
+        files = this.Add(new OptionButton { SizeFlagsHorizontal = SizeFlags.ExpandFill });
+        files.AddThemeFontSizeOverride("font_size", 12);
         foreach (var name in new[] { "Animation", "Scene & playback", "Playback helpers", "Scene helpers", "Palette", "Node helpers", "Shader panels" }) files.AddItem(name);
         files.ItemSelected += index => ShowFile((int)index);
+        var toolbar = this.Add(new HBoxContainer());
         copy = toolbar.Add(new Button { Text = "Copy file", TooltipText = "Copy the complete source file" });
         copy.Pressed += () => { DisplayServer.ClipboardSet(Code.Text); copy.Text = "Copied!"; };
         entry = toolbar.Add(new Button { Text = "Tween entry", TooltipText = "Jump to the animation code or its playback entry point" });
@@ -64,13 +67,23 @@ public partial class GallerySourceView : VBoxContainer
         var focus = Own(GalleryTheme.Box(Colors.Transparent, 10, 1, Palette.Mint));
         focus.DrawCenter = false;
         Code.AddThemeStyleboxOverride("focus", focus);
-        Code.SyntaxHighlighter = Own(CreateHighlighter());
+        csharpHighlighter = Own(CreateHighlighter());
+        gdscriptHighlighter = Own(CreateHighlighter(gdscript: true));
+        Code.SyntaxHighlighter = csharpHighlighter;
     }
 
-    public void ShowEffect(GalleryEffect effect)
+    public void ShowEffect(GalleryEffect effect, GalleryLanguage selectedLanguage = GalleryLanguage.CSharp)
     {
-        example = GallerySource.ForEffect(effect);
+        language = selectedLanguage;
+        example = GallerySource.ForEffect(effect, language);
         setup = GallerySource.ForSetup(effect);
+        files.SetItemText(0, language == GalleryLanguage.CSharp ? "Animation" : "Animation · GDScript");
+        files.SetItemText(1, language == GalleryLanguage.CSharp ? "Scene & playback" : "Shared scene · C#");
+        files.SetItemText(2, language == GalleryLanguage.CSharp ? "Playback helpers" : "Playback helpers · GDScript");
+        files.SetItemText(3, language == GalleryLanguage.CSharp ? "Scene helpers" : "Shared scene helpers · C#");
+        files.SetItemText(4, language == GalleryLanguage.CSharp ? "Palette" : "Shared palette · C#");
+        files.SetItemText(5, language == GalleryLanguage.CSharp ? "Node helpers" : "Shared node helpers · C#");
+        files.SetItemText(6, language == GalleryLanguage.CSharp ? "Shader panels" : "Shared shader panels · C#");
         files.Select(0);
         ShowFile(0);
     }
@@ -80,7 +93,7 @@ public partial class GallerySourceView : VBoxContainer
         Source = index switch
         {
             1 => setup,
-            2 => GallerySource.Load("GalleryEffect.cs"),
+            2 => GallerySource.Load(language == GalleryLanguage.CSharp ? "GalleryEffect.cs" : "GalleryAnimation.gd"),
             3 => GallerySource.Load("GalleryEffect.Stage.cs"),
             4 => GallerySource.Load("Palette.cs"),
             5 => GallerySource.Load("NodeExtensions.cs"),
@@ -90,6 +103,7 @@ public partial class GallerySourceView : VBoxContainer
         path.Text = Source.Path;
         path.TooltipText = Source.Path;
         Code.Text = Source.Text;
+        Code.SyntaxHighlighter = Source.Path.EndsWith(".gd", System.StringComparison.Ordinal) ? gdscriptHighlighter : csharpHighlighter;
         Code.Deselect();
         entry.Disabled = Source.TweenLine < 0;
         copy.Text = "Copy file";
@@ -106,14 +120,15 @@ public partial class GallerySourceView : VBoxContainer
         Code.ScrollHorizontal = 0;
     }
 
-    private static CodeHighlighter CreateHighlighter()
+    private static CodeHighlighter CreateHighlighter(bool gdscript = false)
     {
         var highlighter = new CodeHighlighter
         {
             NumberColor = Palette.Mint, SymbolColor = Palette.Muted,
             FunctionColor = Palette.Blue, MemberVariableColor = Palette.Soft,
         };
-        foreach (var word in ("using namespace public private protected internal sealed abstract partial static readonly const " +
+        foreach (var word in ("extends class_name func signal pass elif and or self preload enum match break continue " +
+            "using namespace public private protected internal sealed abstract partial static readonly const " +
             "override virtual async await return if else for foreach while in is not null true false new var void bool byte " +
             "int long float double string object out ref params get set init record struct switch case default try catch throw typeof with yield").Split(' '))
             highlighter.AddKeywordColor(word, new Color("d5a6ef"));
@@ -121,8 +136,8 @@ public partial class GallerySourceView : VBoxContainer
             "Group EaseType TweenState Reason Node Node2D Node3D Control Stage Palette GalleryEffect " +
             "Polygon2D Line2D ShaderMaterial StandardMaterial3D Camera2D Camera3D IEnumerable").Split(' '))
             highlighter.AddKeywordColor(word, Palette.Mint);
-        highlighter.AddColorRegion("//", "", Palette.Muted, true);
-        highlighter.AddColorRegion("/*", "*/", Palette.Muted);
+        highlighter.AddColorRegion(gdscript ? "#" : "//", "", Palette.Muted, true);
+        if (!gdscript) highlighter.AddColorRegion("/*", "*/", Palette.Muted);
         highlighter.AddColorRegion("\"\"\"", "\"\"\"", Palette.Amber);
         highlighter.AddColorRegion("\"", "\"", Palette.Amber);
         highlighter.AddColorRegion("'", "'", Palette.Amber);

@@ -44,5 +44,10 @@ public sealed partial class ScrollingList : GalleryEffect
         return entry;
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["scroll"] = scroll,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

@@ -26,5 +26,11 @@ public sealed partial class TextReveal : GalleryEffect
         });
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["text"] = text,
+        ["underline"] = underline,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

@@ -40,5 +40,15 @@ public sealed partial class JellyCube : GalleryEffect
         Mesh(tumble, new BoxMesh { Size = new Vector3(0.9f, 0.9f, 0.9f) }, jelly);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["feet"] = feet,
+        ["tumble"] = tumble,
+        ["wave"] = wave,
+        ["jelly"] = jelly,
+        ["ripple"] = ripple,
+        ["camera"] = camera,
+    };
+
     protected override void Animate() => Sequence = Repeat(Jump);
 }

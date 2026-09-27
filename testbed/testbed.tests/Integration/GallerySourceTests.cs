@@ -23,6 +23,7 @@ public class GallerySourceTests(HeadlessFixture godot)
         {
             var effect = (GalleryEffect)Activator.CreateInstance(type)!;
             var animation = GallerySource.ForEffect(effect);
+            var gdscript = GallerySource.ForEffect(effect, GalleryLanguage.GDScript);
             var setup = GallerySource.ForSetup(effect);
             Assert.EndsWith(type.Name + ".Animation.cs", animation.Path);
             Assert.EndsWith(type.Name + ".cs", setup.Path);
@@ -32,7 +33,11 @@ public class GallerySourceTests(HeadlessFixture godot)
             Assert.Contains("async Task", animation.Text);
             foreach (var hidden in new[] { "Play(", "Keep(", "TrackTweens(", "Generation", "protected override void Build(", "IEnumerable<TweenInstance>", "yield return" })
                 Assert.DoesNotContain(hidden, animation.Text);
-            foreach (var source in new[] { animation, setup })
+            Assert.EndsWith(type.Name + ".gd", gdscript.Path);
+            Assert.Contains("func animate()", gdscript.Text);
+            Assert.Contains("Tweens.", gdscript.Text);
+            using var compiled = new GalleryGDScript(gdscript);
+            foreach (var source in new[] { animation, setup, gdscript })
                 Assert.Equal(FileAccess.GetFileAsString("res://" + source.Path).Replace("\r\n", "\n"), source.Text);
         }
     }

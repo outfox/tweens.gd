@@ -32,5 +32,11 @@ public sealed partial class PolygonEchoes : GalleryEffect
         });
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["polygon"] = polygon,
+        ["echoes"] = new Godot.Collections.Array<Godot.Node>(echoes),
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

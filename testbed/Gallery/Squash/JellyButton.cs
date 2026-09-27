@@ -42,7 +42,7 @@ public sealed partial class JellyButton : GalleryEffect
         })).ToArray();
 
         button = shaker.Add(BuildButton());
-        button.Pressed += () => _ = Run(Pop());
+        if (Language == GalleryLanguage.CSharp) button.Pressed += () => _ = Run(Pop());
 
         bonus = GalleryTheme.Label($"+{Points}", 22, Palette.Amber);
         bonus.Modulate = Colors.Transparent;
@@ -87,6 +87,16 @@ public sealed partial class JellyButton : GalleryEffect
         (score.OffsetLeft, score.OffsetRight, score.OffsetTop, score.OffsetBottom) = (-64, -14, 6, 42);
         score.PivotOffset = new Vector2(36, 18);
     }
+
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["shaker"] = shaker,
+        ["button"] = button,
+        ["burst"] = burst,
+        ["shards"] = new Godot.Collections.Array<Godot.Node>(shards),
+        ["bonus"] = bonus,
+        ["score"] = score,
+    };
 
     protected override void Animate() => Sequence = Repeat(AutoTap);
 }

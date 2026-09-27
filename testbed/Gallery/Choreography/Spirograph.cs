@@ -12,7 +12,7 @@ public sealed partial class Spirograph : GalleryEffect
     private Polygon2D innerPen = null!, outerPen = null!, sun = null!;
 
     public override string Title => "Spirograph";
-    public override string Caption => "One looping TweenFloat drives both epicycles through OnUpdate.";
+    public override string Caption => "One looping value tween drives both epicycles through its update callback.";
 
     protected override void Build()
     {
@@ -35,6 +35,17 @@ public sealed partial class Spirograph : GalleryEffect
         Width = 5, JointMode = Line2D.LineJointMode.Round, Antialiased = true,
         Gradient = Own(new Gradient { Colors = [color with { A = 0 }, color], Offsets = [0, 1] }),
     });
+
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["innerTrail"] = innerTrail,
+        ["outerTrail"] = outerTrail,
+        ["innerArm"] = innerArm,
+        ["outerArm"] = outerArm,
+        ["innerPen"] = innerPen,
+        ["outerPen"] = outerPen,
+        ["sun"] = sun,
+    };
 
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

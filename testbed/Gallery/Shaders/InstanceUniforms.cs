@@ -21,5 +21,11 @@ public sealed partial class InstanceUniforms : GalleryEffect
         SplitPanel.Caption(view, "INSTANCE A", "INSTANCE B");
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["first"] = first,
+        ["second"] = second,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

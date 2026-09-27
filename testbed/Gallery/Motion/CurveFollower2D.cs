@@ -46,5 +46,12 @@ public sealed partial class CurveFollower2D : GalleryEffect
         Diamond(ship, Vector2.Zero, new Color("c3f5df"), 6);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["leader"] = leader,
+        ["echoes"] = new Godot.Collections.Array<Godot.Node>(echoes),
+        ["ship"] = ship,
+    };
+
     protected override void Animate() => Sequence = Run(FollowPath());
 }

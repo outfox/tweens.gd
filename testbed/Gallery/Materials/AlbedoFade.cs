@@ -23,5 +23,10 @@ public sealed partial class AlbedoFade : GalleryEffect
         Mesh(scene.View, new SphereMesh { Radius = 0.8f, Height = 1.6f }, material);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["material"] = material,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

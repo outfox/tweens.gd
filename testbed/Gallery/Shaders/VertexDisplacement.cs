@@ -31,5 +31,10 @@ public sealed partial class VertexDisplacement : GalleryEffect
         Mesh(scene.View, new SphereMesh { Radius = 0.65f, Height = 1.3f }, material, new Vector3(1, 0, 0));
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["deformed"] = deformed,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

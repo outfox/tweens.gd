@@ -39,5 +39,10 @@ public sealed partial class SquashWave : GalleryEffect
         return bottom.Concat(top).OrderBy(p => MathF.Atan2(p.Y + 18, p.X)).ToArray();
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["pills"] = new Godot.Collections.Array<Godot.Node>(pills),
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

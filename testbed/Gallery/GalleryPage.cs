@@ -22,6 +22,9 @@ public abstract partial class GalleryPage : VBoxContainer
     private Label description = null!;
     private readonly List<Control> frames = [];
 
+    public GalleryLanguage Language { get; set; }
+    public IReadOnlyList<GalleryEffect> Effects => effects;
+
     public int SelectedEffect { get; private set; } = -1;
     public GallerySourceView SourceView => sourceView;
 
@@ -60,7 +63,7 @@ public abstract partial class GalleryPage : VBoxContainer
         for (var i = 0; i < effects.Length; i++)
         {
             examplePicker.AddItem(effects[i].Title);
-            effects[i].Attach(AddCard($"{i + 1:00} / {effects[i].Title}", effects[i].Caption, i));
+            effects[i].Attach(AddCard($"{i + 1:00} / {effects[i].Title}", effects[i].Caption, i), Language);
         }
     }
 
@@ -80,7 +83,7 @@ public abstract partial class GalleryPage : VBoxContainer
             sourceButtons[i].Visible = false;
             FitPreview(frames[i]);
         }
-        sourceView.ShowEffect(effects[index]);
+        sourceView.ShowEffect(effects[index], Language);
     }
 
     public void ShowGallery()
@@ -128,7 +131,7 @@ public abstract partial class GalleryPage : VBoxContainer
         var label = header.Add(GalleryTheme.Label(title, 19));
         label.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         label.TextOverrunBehavior = TextServer.OverrunBehavior.TrimEllipsis;
-        var source = header.Add(new Button { Text = "View C#", TooltipText = "Read the actual source beside this animation" });
+        var source = header.Add(new Button { Text = Language == GalleryLanguage.CSharp ? "View C#" : "View GDScript", TooltipText = "Read the actual source beside this animation" });
         source.AddThemeFontSizeOverride("font_size", 13);
         source.Pressed += () => ShowSource(index);
         sourceButtons.Add(source);

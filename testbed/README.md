@@ -1,0 +1,68 @@
+# tweens.gd testbed
+
+Eight pages and 32 examples run against either the beta C# library or the beta
+GDScript addon. The global language selector changes the running implementation
+and the source shown beside it.
+
+```powershell
+dotnet run --project testbed/testbed.2dog
+dotnet run --project testbed/testbed.2dog -- --gallery-language gdscript
+```
+
+## Compare implementations
+
+- Choose **C# · Beta** or **GDScript · Beta** in the header. Switching rebuilds
+  the current page with fresh initial values and ends the previous playback.
+- The selected page, open example and leg duration survive a language change.
+  Navigation and Restart page keep the selected language.
+- Click **View C#** or **View GDScript** to read the animation that runs. Opening
+  source does not restart playback. Copy file copies the complete selected file.
+- Scene construction is shared C# code, labeled **Shared scene · C#** in GDScript
+  mode. This keeps geometry, materials, resources and initial values identical.
+  Animation, sequencing, callbacks and button interactions use the selected library.
+
+This gallery is a .NET host in either mode. The GDScript addon itself remains pure
+GDScript; `../testbed-gdscript/` is the standalone non-.NET addon/export test project.
+Building the gallery stages the canonical `../addons/tweens_gd/` into its ignored
+`addons/` directory. There is no separately maintained copy of the addon.
+
+## Sources
+
+Each example has a C# scene file, a C# `.Animation.cs` file, and a GDScript file in
+`Gallery/GDScript/`. `SceneTargets` explicitly supplies native scene objects to
+the GDScript animation. No reflection or C# tween calls implement GDScript motion.
+
+Animation sources are embedded in the build. GDScript mode compiles and runs the
+embedded animation text displayed by the viewer. Its shared helpers are in
+`Gallery/GDScript/GalleryAnimation.gd`; scene and playback helpers are available
+from the source viewer's file menu. New examples need both implementations.
+
+## Validation and known differences
+
+```powershell
+dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release
+dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true
+```
+
+Run these suites separately: they build different tests into the same output.
+Headless comparison tests sample both implementations at the same fixed times,
+check finite completion and scene teardown, and exercise global switching,
+rapid selections, source identity and button clicks. Rendering tests run all
+eight pages in both languages, including the four shader examples.
+
+The easing race exposes a numeric difference at Expo/Elastic endpoints: C# uses
+single-precision progress for easing; GDScript uses double precision. A value
+just below an endpoint can round to that endpoint in C# and take a different
+formula branch. The observed difference on this 240-pixel track is about
+0.1171875 pixels. Comparison tests bound this specific case separately; they
+do not change either library's easing behavior. Confetti trajectories are random
+in both languages and are excluded from deterministic trajectory comparisons.
+
+## Capture a page
+
+Page and example indices are zero-based. Shaders need a real renderer.
+
+```powershell
+dotnet run --project testbed/testbed.2dog -- --gallery-language gdscript --gallery-page 7 --gallery-source 0 --snapshot artifacts/gdscript-shader.png --rendering-method gl_compatibility
+dotnet run --project testbed/testbed.2dog -- --gallery-language csharp --gallery-snapshots artifacts/gallery-csharp --rendering-method gl_compatibility --fixed-fps 60
+```

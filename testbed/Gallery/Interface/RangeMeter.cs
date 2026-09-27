@@ -56,5 +56,11 @@ public sealed partial class RangeMeter : GalleryEffect
         });
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["progress"] = progress,
+        ["swatch"] = swatch,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

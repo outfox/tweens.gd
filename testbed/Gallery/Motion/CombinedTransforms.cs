@@ -26,5 +26,11 @@ public sealed partial class CombinedTransforms : GalleryEffect
         Blob(shape, 4, 4, Palette.Amber);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["shape"] = shape,
+        ["shadow"] = shadow,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

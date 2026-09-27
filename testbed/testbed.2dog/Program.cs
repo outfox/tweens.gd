@@ -20,7 +20,7 @@ internal static class Program
     }
 
     private sealed record LaunchOptions(string[] Forwarded, string? Snapshot, string? GallerySnapshots,
-        int GalleryPage, int GallerySource, bool RestartCheck);
+        int GalleryPage, int GallerySource, GalleryLanguage Language, bool RestartCheck);
 
     private static LaunchOptions ParseArguments(string[] args)
     {
@@ -30,6 +30,7 @@ internal static class Program
         string? gallerySnapshots = null;
         var galleryPage = 0;
         var gallerySource = -1;
+        var language = GalleryLanguage.CSharp;
         for (var i = 0; i < args.Length; i++)
         {
             switch (args[i])
@@ -46,6 +47,14 @@ internal static class Program
                 case "--gallery-source" when i + 1 < args.Length:
                     gallerySource = int.Parse(args[++i]);
                     break;
+                case "--gallery-language" when i + 1 < args.Length:
+                    language = args[++i].ToLowerInvariant() switch
+                    {
+                        "csharp" => GalleryLanguage.CSharp,
+                        "gdscript" => GalleryLanguage.GDScript,
+                        _ => throw new ArgumentException("--gallery-language must be csharp or gdscript."),
+                    };
+                    break;
                 case "--restart-check":
                     restartCheck = true;
                     break;
@@ -54,7 +63,7 @@ internal static class Program
                     break;
             }
         }
-        return new LaunchOptions(forwarded.ToArray(), snapshot, gallerySnapshots, galleryPage, gallerySource, restartCheck);
+        return new LaunchOptions(forwarded.ToArray(), snapshot, gallerySnapshots, galleryPage, gallerySource, language, restartCheck);
     }
 
     private static void Run(LaunchOptions options)
@@ -66,6 +75,7 @@ internal static class Program
         PrintStartup(engine.Tree);
 
         var gallery = engine.Tree.CurrentScene as TweenDemo;
+        gallery?.SelectLanguage(options.Language);
         SelectPage(gallery, options.GallerySnapshots is null ? options.GalleryPage : 0, options.GallerySource);
         var capturedPages = 0;
 

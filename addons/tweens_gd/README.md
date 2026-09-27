@@ -1,11 +1,12 @@
 # tweens.gd for GDScript
 
-An experimental, pure GDScript implementation of reusable tween definitions and
+A beta, pure GDScript implementation of reusable tween definitions and
 independent playback handles. Copy this entire `tweens_gd` directory into your
 project's `addons/` directory. No plugin activation, autoload, .NET runtime or
 GDExtension is required.
 
-The API is experimental. Validation covers 2dog/Godot 4.7.2 in Debug and Release,
+Both C# and GDScript support are in beta; APIs may change. Validation covers
+2dog/Godot 4.7.2 in Debug and Release,
 real OpenGL rendering, the installed standard Godot 4.7.2 engine, a Windows release
 export and a single-threaded Web/WASM release export in Edge. Other engines,
 browsers and devices have not been validated. A distributable ZIP can be built

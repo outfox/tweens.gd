@@ -40,5 +40,14 @@ public sealed partial class SlimeHop : GalleryEffect
         .Select(a => new Vector2(MathF.Cos(a) * 36, MathF.Sin(a) * (MathF.Sin(a) > 0 ? 20 : 38)))
         .ToArray();
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["slime"] = slime,
+        ["body"] = body,
+        ["eyes"] = eyes,
+        ["pupils"] = pupils,
+        ["drops"] = new Godot.Collections.Array<Godot.Node>(drops),
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

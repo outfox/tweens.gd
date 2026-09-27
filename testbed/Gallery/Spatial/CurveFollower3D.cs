@@ -50,5 +50,11 @@ public sealed partial class CurveFollower3D : GalleryEffect
     private static PathFollow3D Follower(Path3D path)
         => path.Add(new PathFollow3D { Loop = false, RotationMode = PathFollow3D.RotationModeEnum.None });
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["leader"] = leader,
+        ["echoes"] = new Godot.Collections.Array<Godot.Node>(echoes),
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

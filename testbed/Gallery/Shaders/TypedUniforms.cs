@@ -37,5 +37,10 @@ public sealed partial class TypedUniforms : GalleryEffect
         });
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["material"] = material,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

@@ -24,6 +24,12 @@ public sealed partial class GlowingRibbon : GalleryEffect
         }
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["ribbon"] = ribbon,
+        ["glow"] = glow,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 
     private static Line2D RoundLine(Vector2[] points, Color color, float width) => new()

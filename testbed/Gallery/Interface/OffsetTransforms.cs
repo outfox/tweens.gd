@@ -37,5 +37,10 @@ public sealed partial class OffsetTransforms : GalleryEffect
         return tile;
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["featured"] = featured,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

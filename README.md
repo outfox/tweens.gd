@@ -1,12 +1,14 @@
 # tweens.gd
 
-Tween libraries for Godot: a typed C# NuGet package and an experimental pure GDScript addon.
+Tween libraries for Godot with beta support for C# and GDScript: a typed C# NuGet package and a pure GDScript addon.
+
+Both implementations are approaching their first release. APIs may change during beta.
 
 | Project | Location | Status |
 | --- | --- | --- |
-| C# NuGet package `tweens.gd` | `csharp/` | Implemented; examples below |
-| GDScript Godot addon | [addons/tweens_gd/](addons/tweens_gd/README.md) | Pure GDScript core, groups, full helper catalog, custom adapters and shaders; Windows/Web exports tested |
-| Public documentation | [docs/](docs/README.md) | C# guides/reference and GDScript status; deployment pending |
+| C# NuGet package `tweens.gd` | `csharp/` | Beta; project reference and local NuGet package; examples below |
+| GDScript Godot addon | [addons/tweens_gd/](addons/tweens_gd/README.md) | Beta; source and local ZIP; core, groups, full helper catalog, custom adapters and shaders; Windows/Web exports tested |
+| Public documentation | [docs/](docs/README.md) | Parallel C# and GDScript guides/reference at [tweens.gd](https://tweens.gd); automatic deployment through statichost.eu |
 
 Internal working documents live in the gitignored `docs-internal/` directory. The following documentation describes the C# implementation.
 
@@ -28,7 +30,7 @@ dotnet test testbed/testbed.tests/testbed.tests.csproj
 dotnet run --project testbed/testbed.2dog
 ```
 
-The testbed is an eight-page gallery with 32 examples: squash and stretch, choreography, motion and paths, interface, drawing and particles, a 3D stage, materials, and shaders. Change the duration, restart the current page, or read the animation tasks beside each example. Examples await tweens and groups directly; leaving a page ends its tweens through their node lifetimes. From `testbed/`, `dotnet test` and `dotnet run --project testbed.2dog` also work.
+The testbed is an eight-page gallery with 32 examples: squash and stretch, choreography, motion and paths, interface, drawing and particles, a 3D stage, materials, and shaders. A global **C# / GDScript** selector switches the running tween implementation and its displayed source, rebuilding the current page while preserving the selected example and duration. Both implementations use shared scene setup. Examples await tweens and groups directly; leaving a page ends its tweens through their node lifetimes. See the [testbed guide](testbed/README.md) for comparison tests, known numeric differences, and capture commands. From `testbed/`, `dotnet test` and `dotnet run --project testbed.2dog` also work.
 
 ## Run the library tests
 
@@ -227,8 +229,9 @@ Sequence DSLs, automatic overwrite arbitration, and pooling are not implemented;
 ## Validation and known limits
 
 GitHub Actions builds and tests the solution, gates library coverage, verifies the
-`tweens.gd` NuGet package, and uploads package artifacts. Version tags create GitHub
-releases with package and symbol downloads. Maintainer release instructions and NuGet
+`tweens.gd` NuGet package, checks the GDScript helper catalog and engine restarts,
+and uploads both package formats. Version tags create GitHub releases with NuGet
+package, symbol and GDScript addon ZIP downloads. Maintainer release instructions and NuGet
 trusted-publishing setup are kept locally in `docs-internal/RELEASING.md`.
 
 Tests cover deterministic playback, easing and overshoot, callback mutation/faults, snapshots, async completion, main-thread continuation, node lifetime/pause, adapter families, the demo, and scheduler steady-state allocations. Material tests cover shared-resource ownership, disposal and all property/context overloads. Run `dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true` separately for shader contracts and rendered pixel checks (requires graphics/display). The desktop testbed has also been rendered with the OpenGL compatibility renderer. The library is packaged independently of its testbed and the gitignored Unity reference.

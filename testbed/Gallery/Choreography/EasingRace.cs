@@ -34,5 +34,10 @@ public sealed partial class EasingRace : GalleryEffect
         }).ToArray();
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["racers"] = new Godot.Collections.Array<Godot.Collections.Array<Node>>(System.Linq.Enumerable.Select(racers, lane => new Godot.Collections.Array<Node>(lane))),
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

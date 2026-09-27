@@ -41,5 +41,14 @@ public sealed partial class BouncingBall : GalleryEffect
         Blob(ball, 5, 3.5f, new Color(1, 1, 1, 0.55f), new Vector2(-8, -30)).Rotation = -0.6f;
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["ball"] = ball,
+        ["spin"] = spin,
+        ["shadow"] = shadow,
+        ["ring"] = ring,
+        ["dust"] = new Godot.Collections.Array<Godot.Node>(dust),
+    };
+
     protected override void Animate() => Sequence = Repeat(Bounce);
 }

@@ -23,5 +23,10 @@ public sealed partial class EmissionPulse : GalleryEffect
         torus.RotationDegrees = new Vector3(65, 0, 15);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["material"] = material,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

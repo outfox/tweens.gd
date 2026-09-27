@@ -1,6 +1,6 @@
 # tweens.gd for C#
 
-Typed C# tweens for GodotSharp and 2dog.
+Beta C# support for tweening in GodotSharp and 2dog. APIs may change during beta.
 Reuse tween definitions, control independent playback handles, and compose
 animations with `async`/`await`.
 
@@ -39,7 +39,7 @@ Create and control tweens on Godot's main thread.
 
 ## Documentation
 
-The experimental pure GDScript addon lives separately in `addons/tweens_gd/` and is not included in this package.
+The beta pure GDScript addon lives separately in `addons/tweens_gd/` and is not included in this package.
 Guides and the API reference live at [tweens.gd/csharp](https://tweens.gd/csharp/installation/).
 The site's source is in the [repository](https://github.com/outfox/tweens.gd/tree/main/docs).
 

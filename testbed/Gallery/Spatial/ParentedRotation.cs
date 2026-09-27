@@ -20,5 +20,10 @@ public sealed partial class ParentedRotation : GalleryEffect
         Mesh(parent, new SphereMesh { Radius = 0.16f, Height = 0.32f }, Surface(Palette.Amber), new Vector3(1, 0, 0));
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["cube"] = cube,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

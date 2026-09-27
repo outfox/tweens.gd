@@ -23,5 +23,10 @@ public sealed partial class UvScroll : GalleryEffect
         Mesh(scene.View, new QuadMesh { Size = new Vector2(3.8f, 1.35f) }, material);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["material"] = material,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

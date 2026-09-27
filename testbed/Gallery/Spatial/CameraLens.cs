@@ -24,5 +24,10 @@ public sealed partial class CameraLens : GalleryEffect
         }
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["camera"] = camera,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

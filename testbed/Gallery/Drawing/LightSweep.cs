@@ -36,5 +36,10 @@ public sealed partial class LightSweep : GalleryEffect
         Blob(light, 3, 3, Colors.White);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["light"] = light,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

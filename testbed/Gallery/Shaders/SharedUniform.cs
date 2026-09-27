@@ -20,5 +20,10 @@ public sealed partial class SharedUniform : GalleryEffect
         SplitPanel.Caption(view, "SAME MATERIAL", "SAME VALUE");
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["material"] = material,
+    };
+
     protected override void Animate() => Sequence = Run(AnimateAsync());
 }

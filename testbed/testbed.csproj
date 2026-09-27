@@ -17,6 +17,7 @@
         <ProjectReference Include="../csharp/tweens.gd.csproj" />
         <!-- Ship the exact compiled examples, including in trimmed/web exports. -->
         <EmbeddedResource Include="Gallery/**/*.cs" LogicalName="GallerySource/%(RecursiveDir)%(Filename)%(Extension)" />
+        <EmbeddedResource Include="Gallery/**/*.gd" LogicalName="GallerySource/%(RecursiveDir)%(Filename)%(Extension)" />
         <Content Include="Fonts/OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
     <ItemGroup>
@@ -43,4 +44,10 @@
     <PropertyGroup>
         <DefaultItemExcludes>$(DefaultItemExcludes);testbed.web/**</DefaultItemExcludes>
     </PropertyGroup>
+    <Target Name="StageGDScriptAddon" BeforeTargets="BeforeBuild">
+        <ItemGroup>
+            <GalleryAddon Include="../addons/tweens_gd/**/*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(GalleryAddon)" DestinationFiles="@(GalleryAddon->'addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    </Target>
 </Project>

@@ -54,5 +54,10 @@ public sealed partial class CardDeal : GalleryEffect
         return new PlayingCard(body, back, face);
     }
 
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["deck"] = new Godot.Collections.Array<Godot.Collections.Dictionary>(deck.Select(card => new Godot.Collections.Dictionary { ["body"] = card.Body, ["back"] = card.Back, ["face"] = card.Face })),
+    };
+
     protected override void Animate() => Sequence = Repeat(Deal);
 }
