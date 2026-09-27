@@ -1,14 +1,18 @@
 # tweens.gd — C# and GDScript addon
 
 A beta library of reusable tween definitions and independent playback handles.
-Copy this entire `tweens_gd` directory into your project's `addons/` directory.
-Both languages are included in the same Godot Asset Store package. No plugin
+Download the addon from the
+[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/) (recommended),
+or download the addon ZIP from
+[GitHub releases](https://github.com/outfox/tweens.gd/releases).
+Unpack it into your project root, keeping this entire `addons/tweens_gd/` directory.
+Both languages are included in the same package. No plugin
 activation or autoload is required.
 
 **C#:** use a Godot .NET 4.7.2 project targeting .NET 10. The normal project build
 compiles `csharp/`, including the prepared definitions in `csharp/Generated/`.
 No NuGet package or tweens.gd analyzer is needed. See the [C# quickstart](csharp/README.md),
-including the optional NuGet route for experienced users.
+including the optional NuGet route with `dotnet add package tweens.gd`.
 
 **GDScript:** the runtime is pure GDScript and requires neither .NET nor a
 GDExtension. The bundled C# files can remain in a GDScript-only project.

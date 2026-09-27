@@ -3,11 +3,11 @@ title: Install
 description: Install the unified tweens.gd Godot addon, with NuGet as an optional C# installation method.
 ---
 
-import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 tweens.gd ships C# and GDScript source together in one Godot addon. Copy the addon
-into your Godot .NET project and build normally. NuGet is an optional route for
-experienced C# users.
+into your Godot .NET project and build normally. NuGet is an optional C#
+installation method.
 
 :::note[Beta]
 The C# API may change during beta.
@@ -24,8 +24,15 @@ The addon is the default route. Use one C# implementation in a project.
 <Tabs>
 <TabItem label="Godot addon">
 
-Copy `addons/tweens_gd/` from the repository, or unpack the unified release ZIP
-into your project root. The C# sources live in `addons/tweens_gd/csharp/` and are
+Download the addon from the
+[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/) (recommended).
+You can also download the unified addon ZIP from
+[GitHub releases](https://github.com/outfox/tweens.gd/releases).
+Both downloads include C# and GDScript.
+
+Unpack the addon into your project root, keeping the entire `addons/tweens_gd/`
+directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
+The C# sources live in `addons/tweens_gd/csharp/` and are
 included by the project's normal build. Keep `Generated/`: it contains the
 prepared definitions, so there is no tweens.gd analyzer to install or run.
 Godot's own source generators run normally through your Godot.NET.Sdk.
@@ -34,14 +41,17 @@ Set your project's target framework to `net10.0` if needed. No plugin activation
 autoload or package reference is required. Both languages can coexist; GDScript
 uses its own runtime and entry script.
 
-The package is prepared for the [Godot Asset Store](https://store.godotengine.org/).
-Until a public version is available, use a repository checkout or build the ZIP:
+</TabItem>
+<TabItem label="NuGet">
+
+In your game's project directory, install the C# package from NuGet:
 
 ```powershell
-./scripts/Pack-Addon.ps1
+dotnet add package tweens.gd
 ```
 
-This writes `artifacts/packages/tweens.gd-0.1.0-pre.zip`.
+This installs the compiled C# library. To use GDScript as well, install the addon
+and exclude its bundled C# sources as described below.
 
 </TabItem>
 <TabItem label="Project reference">
@@ -54,41 +64,6 @@ dotnet add path/to/YourGame.csproj reference path/to/tweens.gd/csharp/tweens.gd.
 ```
 
 Godot then builds the library together with your game.
-
-</TabItem>
-<TabItem label="Local NuGet package">
-
-<Steps>
-
-1. From the repository root, pack the library. This writes
-   `tweens.gd.0.1.0-pre.nupkg` and a symbol package:
-
-   ```powershell
-   dotnet pack csharp/tweens.gd.csproj -c Release -o artifacts/packages
-   ```
-
-2. In your game's `NuGet.config`, add the absolute path of that directory next to
-   nuget.org, which supplies GodotSharp:
-
-   ```xml
-   <configuration>
-     <packageSources>
-       <clear />
-       <add key="local-tweens" value="C:/path/to/tweens.gd/artifacts/packages" />
-       <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-     </packageSources>
-   </configuration>
-   ```
-
-3. Reference the package in your game's project file, then run `dotnet restore`:
-
-   ```xml
-   <ItemGroup>
-     <PackageReference Include="tweens.gd" Version="0.1.0-pre" />
-   </ItemGroup>
-   ```
-
-</Steps>
 
 </TabItem>
 </Tabs>

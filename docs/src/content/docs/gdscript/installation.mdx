@@ -3,8 +3,6 @@ title: Install
 description: Install the unified tweens.gd addon and use its independent GDScript runtime without .NET.
 ---
 
-import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
-
 tweens.gd includes both C# and GDScript in one addon. Its GDScript runtime is
 independent: there is no plugin to activate, no autoload, and no .NET runtime or
 GDExtension to install. The bundled C# files can stay in a GDScript-only project.
@@ -16,38 +14,15 @@ what has been validated.
 
 ## Add the addon
 
-The unified package is prepared for the [Godot Asset Store](https://store.godotengine.org/).
-Until a public version is available, take it from a clone of the repository,
-either as a directory or as a ZIP you build yourself.
+Download the addon from the
+[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/) (recommended).
+You can also download the unified addon ZIP from
+[GitHub releases](https://github.com/outfox/tweens.gd/releases).
+Both downloads include C# and GDScript.
 
-<Tabs>
-<TabItem label="Copy the directory">
-
-Copy the repository's `addons/tweens_gd/` directory into your project's `addons/`
-directory, so the entry script sits at `res://addons/tweens_gd/tweens.gd`. Copy
-the whole directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
-
-</TabItem>
-<TabItem label="Addon ZIP">
-
-<Steps>
-
-1. From the repository root, build the ZIP. The version defaults to the C#
-   package's version:
-
-   ```powershell
-   ./scripts/Pack-Addon.ps1
-   ```
-
-   This writes `artifacts/packages/tweens.gd-0.1.0-pre.zip`, including both languages.
-
-2. Unpack it into your project's root directory. Its entries already start with
-   `addons/tweens_gd/`.
-
-</Steps>
-
-</TabItem>
-</Tabs>
+Unpack the addon into your project's root directory, keeping the entire
+`addons/tweens_gd/` directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
+The entry script should be at `res://addons/tweens_gd/tweens.gd`.
 
 ## Load it from a script
 

@@ -8,12 +8,17 @@ Targets .NET 10 and GodotSharp 4.7.2. Your application supplies a matching Godot
 engine; the package depends only on GodotSharp. Other engine versions and
 trimmed/AOT/web exports have not been validated.
 
-The default installation is the unified Godot addon, which includes C# sources
-and prepared definitions alongside GDScript. This NuGet package is an optional
-installation method for experienced C# users.
+The recommended installation is the unified addon from the
+[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/).
+You can also download the addon ZIP from
+[GitHub releases](https://github.com/outfox/tweens.gd/releases).
+Unpack it into your project root, keeping the entire `addons/tweens_gd/`
+directory. It includes C# sources and prepared definitions alongside GDScript.
 
-```xml
-<PackageReference Include="tweens.gd" Version="0.1.0-pre" />
+For C#, you can instead install this NuGet package from your game's project directory:
+
+```powershell
+dotnet add package tweens.gd
 ```
 
 ```csharp
