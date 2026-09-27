@@ -9,7 +9,7 @@ steps together as a group, and add delays between them.
 | Goal | Tool |
 | --- | --- |
 | Run B after A | `await a`, then start B |
-| Run A and B together | `node.Tween(a, b)` or `Group.Of(a, b)`, then `await group` |
+| Run A and B together | `node.Tween(a, b)` for definitions, or `Group.Of(handleA, handleB)` for tweens already playing; then await the group |
 | Offset tweens within a step | `Delay` on different targets or properties |
 | Wait between steps | `await node.TweenFloat(1, seconds)` |
 | Stop the sequence | [Cancel and check the result](/csharp/cancellation/) |
@@ -28,7 +28,7 @@ await sprite.TweenScale(new Vector2(1.2f, 1.2f), 0.2);
 await sprite.TweenModulateAlpha(0, 0.3);
 ```
 
-Each step reads its omitted `From` when it starts, so it continues from wherever
+Each step reads its omitted `From` when you start it, so it continues from wherever
 the previous step left the property.
 
 These examples ignore completion reasons. If interruption should stop the sequence,
@@ -93,7 +93,7 @@ public partial class Menu : VBoxContainer
 waiting stay hidden instead of showing at full opacity first.
 
 :::caution[Stagger different targets, not one property]
-A tween reads its omitted `From` when it's added, not when its delay ends. A
+A tween reads its omitted `From` when you start it, not when its delay ends. A
 delayed tween on the same property starts from the value captured at the start,
 and snaps the property back to it:
 
@@ -135,7 +135,7 @@ To repeat a multi-step sequence or stop it when interrupted, see
 `Pause()` on a tween or group pauses only that step. If your code starts the next
 step while that one is paused, the new tweens play normally. To pause every
 current and future step, pause the node the tweens are bound to. With the default
-`TweenPauseMode.Bound`, tweens follow the node's `CanProcess()`:
+[pause mode](/csharp/lifetime/#pausing), `TweenPauseMode.Bound`, tweens follow the node's `CanProcess()`:
 
 ```csharp
 sprite.ProcessMode = ProcessModeEnum.Disabled; // Pauses every tween bound to sprite.

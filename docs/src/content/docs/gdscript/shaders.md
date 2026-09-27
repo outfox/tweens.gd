@@ -50,8 +50,8 @@ During interpolation, integers saturate at signed 32-bit bounds. Non-finite
 samples fail playback before writing. Textures, resources, arrays, booleans, and
 quaternions aren't supported.
 
-On natural completion without `Tweens.Fill.RETAIN_FINAL_VALUE`, the original
-explicit override is restored, or the new override is removed if none originally
+When a tween ends with a fill mode that doesn't keep the final value (`NONE` or
+`APPLY_FROM_DURING_DELAY`), the original explicit override is restored, or the new override is removed if none originally
 existed. Cancelling keeps the latest sample, as with node tweens. You can reuse a
 definition across materials with different initial values and override states,
 because each start captures its own.

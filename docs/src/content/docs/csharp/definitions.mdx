@@ -148,41 +148,6 @@ same time.
   `start * By`.
 - Callback value tweens such as `Tweens.Float` add `By` to their start value.
 
-## Scale or shift a value with factors and deltas
-
-`From`, `To`, and `By` each have a factor and a delta. When playback starts,
-the value becomes factor × value + delta. An omitted `From` or `To` uses the
-captured value, so a factor can make a motion relative to it:
-
-```csharp title="Heart.cs"
-public partial class Heart : Sprite2D
-{
-    static readonly Tweens.Scale2D Beat = new()
-    {
-        FactorTo = 1.2,
-        Duration = 0.15,
-        UsePingPong = true,
-    };
-
-    public void Pulse() => this.Tween(Beat);
-}
-```
-
-The heart grows to 120% of whatever scale it has and comes back.
-
-- `FactorFrom = 0` grows from zero to the current value.
-- `DeltaFrom = new Vector2(0, 40)` on a position starts 40 pixels lower and
-  rises to where the node is.
-- `Nudge with { FactorBy = -1 }` reverses a shared `By` for one start.
-- `FactorDuration` and `DeltaDuration` do the same for `Duration`:
-  `Beat with { FactorDuration = 2 }` takes twice as long.
-
-Factors default to 1 and deltas to none. Each is applied once, at start: unlike
-`By`, a `DeltaTo` doesn't keep changes made while the tween plays. For a
-quaternion, the factor scales the rotation angle and the delta rotates about
-the node's own axes. `FactorBy` and `DeltaBy` need a `By`, and `FactorTo` and
-`DeltaTo` don't apply to a `By` tween.
-
 ## Vary a start with `with`
 
 `with` copies a definition and changes only the properties you list. The field
@@ -195,6 +160,10 @@ carry over to the next:
 - `Lift with { To = Position.Y - 40 }` computes a target from this coin's position.
 
 `with` works on `TweenOptions` too, as in `Snappy with { Ease = EaseType.CubicOut }`.
+
+A value you set with `with` replaces the definition's. To vary it instead, such
+as twice as long or 20% larger, use a factor or delta; see
+[variations](/csharp/variations/).
 
 Try it below. **Appear** starts `Pop` on six coins, each with its own delay.
 **Collect** lifts each coin 40 pixels from where it sits. Clear `Fill` and press

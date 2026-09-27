@@ -55,7 +55,7 @@ All times are in seconds, as GDScript `float` values.
 | Field | Default | Meaning |
 | --- | --- | --- |
 | `duration` | `0.0` | Seconds per leg. Zero completes on the first eligible update. |
-| `factor_duration`, `delta_duration` | `1.0`, `0.0` | The tween lasts `factor_duration * duration + delta_duration`, which must not be negative. |
+| `factor_duration`, `delta_duration` | `1.0`, `0.0` | Scale and shift `duration` for [variations](/gdscript/variations/): the tween lasts `factor_duration × duration + delta_duration`. |
 | `delay` | `0.0` | Initial wait before the first leg. |
 | `repeats` | `0` | Cycles after the first. `Tweens.INFINITE` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
 | `use_ping_pong` | `false` | A forward and a backward leg form one cycle. |

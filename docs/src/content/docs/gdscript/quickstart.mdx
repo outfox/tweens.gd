@@ -106,6 +106,7 @@ Tweens.play(sprite2, arrive)
 </Compare>
 
 In the script above, `arrive` lives inside `_ready()`, so nothing else can use
-it. Keep it in a variable, and other nodes can start the same motion. To vary
-one start, pass a copy such as `arrive.with_to(target)`. The next page,
+it. Move it to a `static var` and give it `.with_by(Vector2(240, 0))` instead of
+a `to_value`, and any node can start it unchanged: each one moves 240 pixels from
+where it is. The next page,
 [definitions](/gdscript/definitions/), shows how.

@@ -1,0 +1,127 @@
+---
+title: Variations
+description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and skew changes its pacing.
+---
+
+import Moves from '../../../components/Moves.astro';
+
+Games rarely need a motion in just one version. A heavy hit kicks harder than a
+light one, and an enemy that spawns pops in from nothing. Instead of copying a
+definition and editing its numbers, start a variant of it. The variant stays
+tied to the definition, so when you tune the definition, every variant follows.
+
+Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and
+run on Godot's main thread, on nodes inside the tree.
+
+## A complete example
+
+An enemy recoils when hit, harder and longer for more damage:
+
+<Moves>
+
+```gdscript title="enemy.gd" {"1":5-6} {"2":8-10} {"3":12-13}
+extends Sprite2D
+
+const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+
+static var recoil := Tweens.position_2d_x(null, 0.1, Tweens.Ease.QUAD_OUT) \
+	.with_by(-12.0).with_ping_pong()
+
+func hit(damage: float) -> void:
+	Tweens.play(self, recoil.with_factor_by(damage / 10.0) \
+		.with_factor_duration(1.0 + damage / 100.0))
+
+func crit() -> void:
+	Tweens.play(self, recoil.with_factor_by(3.0).with_skew(0.5))
+```
+
+1. **Define the motion once.** `recoil` kicks the enemy 12 pixels back and
+   returns.
+2. **Scale it per hit.** `with_factor_by()` scales the kick with the damage, and
+   `with_factor_duration()` stretches the timing. A 20-damage hit kicks 24 pixels
+   and takes 0.12 seconds each way.
+3. **Change the pacing.** `with_skew(0.5)` front-loads the same ease, so a
+   critical hit lands sooner.
+
+</Moves>
+
+Change `recoil` to kick 16 pixels, or to ease with `CUBIC_OUT`, and every hit and
+crit follows. `recoil.with_by(-24.0)` would also kick harder, but it replaces the
+value, so that variant no longer follows `recoil`.
+
+## Factors and deltas
+
+When a tween starts, each factor multiplies its value and each delta is added
+after it:
+
+| Value | Becomes | Defaults |
+| --- | --- | --- |
+| `from_value` | `factor_from` × `from_value` + `delta_from` | `1.0`, `null` |
+| `to_value` | `factor_to` × `to_value` + `delta_to` | `1.0`, `null` |
+| `by_value` | `factor_by` × `by_value` + `delta_by` | `1.0`, `null` |
+| `duration` | `factor_duration` × `duration` + `delta_duration` | `1.0`, `0.0` |
+
+Deltas have the property's value type, such as `Vector2` for a position; `null`
+adds nothing. Each field has a `with_*()` method, such as `with_factor_to()` or
+`with_delta_duration()`.
+
+## Vary the current value
+
+A `null` `from_value` or `to_value` is read from the property when the tween
+starts. A factor or delta then makes the motion relative to wherever the property
+is:
+
+```gdscript title="heart.gd"
+extends Sprite2D
+
+const Tweens = preload("res://addons/tweens_gd/tweens.gd")
+
+static var beat := Tweens.scale_2d(null, 0.15, Tweens.Ease.SMOOTHER_STEP) \
+	.with_factor_to(1.2).with_ping_pong()
+
+func pulse() -> void:
+	Tweens.play(self, beat)
+```
+
+The heart grows to 120% of whatever scale it has and comes back.
+
+- `with_factor_from(0.0)` grows from zero to the current value.
+- `with_delta_from(Vector2(0, 40))` on a position starts 40 pixels lower and
+  rises to where the node is.
+- `delta_to` works like `by_value`, but only once: it's computed when the tween
+  starts, while `by_value` keeps up with other changes to the property as it
+  plays.
+
+## Change the pacing with `skew`
+
+`skew` reshapes when the motion happens without choosing another ease. Normalized
+time `t` becomes `pow(t, skew)` before the ease sees it:
+
+- `skew` above 1 rear-loads the ease: the motion starts slower and catches up.
+  At a quarter of the duration, a skew of `2.0` passes 0.0625 to the ease.
+- `skew` between 0 and 1 front-loads it: most of the motion happens early.
+- The default, `1.0`, leaves the ease unchanged.
+
+```gdscript
+var movement := Tweens.position_2d(Vector2(300, 120), 0.5, Tweens.Ease.CUBIC_OUT)
+Tweens.play(sprite, movement.with_skew(2.0))
+```
+
+`skew` applies to built-in eases, `ease_function`, and `curve` samples. The
+duration and the handle's raw `progress` stay unchanged, and a ping-pong return
+retraces the same skewed curve. For bounce, elastic, and other eases that aren't
+monotonic, skew shifts when their bounces and overshoot happen but keeps them.
+
+## Rules
+
+- Factors and deltas apply once, when the tween starts. A non-retaining `fill`
+  restores the captured value, not an adjusted one.
+- For a quaternion, the factor scales the rotation angle and the delta rotates
+  about the node's own axes.
+- `factor_by` and `delta_by` need a `by_value`. `factor_to` and `delta_to` don't
+  apply with `by_value`. Both combinations are rejected.
+- Adjusting `from_value` fixes the start of a `by_value` tween, as an explicit
+  `from_value` does.
+- The adjusted duration must not be negative, and `offset` must fit within it.
+- Factors, deltas and `skew` must be finite; `skew` must also be greater than
+  zero. Invalid values reject the start.

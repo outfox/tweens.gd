@@ -46,8 +46,8 @@ halfway away from zero and saturate at Int32 bounds. Non-finite samples fault
 playback before writing. Textures, resources, arrays, booleans, enums and
 quaternion representations aren't supported.
 
-On natural completion without `RetainFinalValue`, the original explicit override
-is restored, or the new override is removed if none originally existed.
+When a tween ends with a fill mode that doesn't keep the final value (`None` or
+`ApplyFromDuringDelay`), the original explicit override is restored, or the new override is removed if none originally existed.
 Cancelling keeps the latest sample, as with node tweens. You can reuse a source
 definition across materials with different initial values and override states.
 
@@ -91,4 +91,4 @@ doesn't assign or reconcile those declarations.
 
 See [ShaderMaterial](https://docs.godotengine.org/en/stable/classes/class_shadermaterial.html), [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html), and [GeometryInstance3D](https://docs.godotengine.org/en/stable/classes/class_geometryinstance3d.html).
 See [compatibility](/compatibility/) for rendering limits and
-[playback and async](/csharp/playback/) for fault handling.
+[control and completion](/csharp/playback/) for fault handling.

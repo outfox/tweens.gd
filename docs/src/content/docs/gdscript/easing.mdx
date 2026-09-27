@@ -52,25 +52,8 @@ Tweens.play(sprite, arrive)
 Back and elastic weights aren't clamped. Colors and vectors keep the overshoot, but
 native property setters still apply their own limits, for example to alpha or ranges.
 
-## Skew the timing
-
-Set `skew` to feed normalized time through `pow(t, skew)` before the easing
-function. It defaults to `1.0`, which leaves the easing unchanged. Values above `1`
-rear-load the curve; values between `0` and `1` front-load it. For example, at
-`t = 0.25`, a skew of `2.0` passes `0.0625` to the ease, while `0.5` passes `0.5`.
-
-```gdscript
-var movement := Tweens.position_2d(Vector2(300, 120), 0.5, Tweens.Ease.CUBIC_OUT)
-movement.skew = 2.0
-Tweens.play(sprite, movement)
-```
-
-`skew` must be finite and greater than zero; other values reject the start. It
-applies to built-in eases, `ease_function`, and `curve` samples. Duration and the
-handle's raw `progress` stay unchanged, and ping-pong retraces the same skewed curve
-in reverse. Both time endpoints are preserved. For bounce, elastic, and other
-non-monotonic eases, skew shifts when their features happen; it does not remove
-bounces or overshoot.
+To start an ease slower or faster without choosing another one, set `skew`; see
+[variations](/gdscript/variations/#change-the-pacing-with-skew).
 
 ## Custom functions and curves
 

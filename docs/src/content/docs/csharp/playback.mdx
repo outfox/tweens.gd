@@ -46,7 +46,7 @@ Definitions accept typed callbacks. They run in this order:
 
 1. `OnAdd` when the tween is added.
 2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
-3. `OnStart` once, when playback begins.
+3. `OnStart` once, when the delay ends and playback begins.
 4. `OnUpdate` once per eligible frame with the sampled value, plus once more when
    completion restores the initial value.
 5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.

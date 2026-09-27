@@ -56,8 +56,10 @@ Checking the reason lets a sequence stop when playback is interrupted. Godot emi
 
 ## Cancel a wait, not the tween
 
-`AwaitDecommissionAsync` waits with a cancellation token. The token cancels only
-that wait: other waiters and playback continue unless you call `Cancel()`.
+`AwaitDecommissionAsync` waits until the tween has ended and been cleaned up,
+like `End`, but also takes a `CancellationToken` from your own code, such as one
+that fires when a menu closes. The token cancels only that wait: other waiters
+and playback continue unless you call `Cancel()`.
 
 ```csharp
 var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);

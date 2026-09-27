@@ -53,7 +53,7 @@ order:
 1. `on_add(handle)` when the tween is added.
 2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
    it during the delay.
-3. `on_start(handle)` once, when playback begins.
+3. `on_start(handle)` once, when the delay ends and playback begins.
 4. `on_update(handle, value)` once per eligible frame with the sampled value,
    plus once more when completion restores the initial value.
 5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback

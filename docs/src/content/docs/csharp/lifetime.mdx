@@ -62,6 +62,6 @@ in interpolation, easing, a setter, or a callback faults the tween.
 `SuppressCallbacksWhenTargetInvalid` skips callbacks for an invalid target while
 still finishing `End` and releasing bindings.
 
-Handles keep their `Target` for inspection, so drop handles you no longer need.
+A handle keeps its target referenced after playback ends, so drop handles you no longer need.
 Create and control tweens on Godot's main thread. A manual scheduler belongs to
 the thread that created it, and native targets still need the main thread.

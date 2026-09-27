@@ -28,7 +28,7 @@ await Tweens.play(sprite, Tweens.scale_2d(Vector2(1.2, 1.2), 0.2)).end
 await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
 ```
 
-Each step reads its `null` `from_value` when it starts, so it continues from
+Each step reads its `null` `from_value` when you start it, so it continues from
 wherever the previous step left the property.
 
 These examples ignore completion reasons. If interruption should stop the sequence,
@@ -102,7 +102,7 @@ func reveal() -> void:
 are still waiting stay hidden instead of showing at full opacity first.
 
 :::caution[Stagger different targets, not one property]
-A tween reads its `null` `from_value` when it starts, not when its delay ends. A
+A tween reads its `null` `from_value` when you start it, not when its delay ends. A
 delayed tween on the same property starts from the value captured at the start,
 and snaps the property back to it:
 
@@ -147,7 +147,7 @@ To repeat a multi-step sequence or stop it when interrupted, see
 `pause()` on a handle or group pauses only that step. If your code starts the
 next step while that one is paused, the new tweens play normally. To pause every
 current and future step, pause the node the tweens are bound to. With the default
-`pause_mode = Tweens.Pause.BOUND`, tweens follow the node's `can_process()`:
+[pause mode](/gdscript/lifetime/#pausing), `Tweens.Pause.BOUND`, tweens follow the node's `can_process()`:
 
 ```gdscript
 sprite.process_mode = Node.PROCESS_MODE_DISABLED # Pauses every tween bound to sprite.

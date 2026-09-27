@@ -24,8 +24,8 @@ arrives through `on_update(handle, value)`. `Tweens.value(from, to, seconds)` wo
 with any supported value type: `float`, `int`, `Vector2`, `Vector3`, `Vector4`,
 `Color`, `Quaternion`, and `Rect2`. The named helpers `float_value`,
 `double_value`, `vector2_value`, `vector3_value`, `vector4_value`, `color_value`,
-`quaternion_value`, and `rect2_value` take `(to = null, seconds = 0.0)` like the
-other helpers and check the value type; their omitted endpoints fall back to zero,
+`quaternion_value`, and `rect2_value` take the same arguments as the other
+helpers and check the value type; their omitted endpoints fall back to zero,
 transparent black, or identity. GDScript represents both float and double as
 `float`.
 
@@ -132,8 +132,8 @@ variables shallowly, so Arrays, resources, and captured objects stay shared unle
 you duplicate them; override `copy()` when configuration needs a different policy.
 Initialize private playback state in `prepare()`.
 
-`prepare()` runs on the start's copy before the initial read. `restore()` runs on
-natural completion without `Tweens.Fill.RETAIN_FINAL_VALUE` and may write back a
+`prepare()` runs on the start's copy before the initial read. `restore()` runs when
+a tween ends with a fill mode that doesn't keep the final value, and may write back a
 value or remove an override instead; by default it calls `write()`. `release()`
 runs after the terminal callbacks and before waiters resume, including after a
 failed preparation, and must release only what that copy owns. If a setter or

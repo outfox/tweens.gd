@@ -83,7 +83,8 @@ the tween starts.
 Each UV helper also has `_x`, `_y`, and `_z` variants, such as
 `Tweens.material_uv1_offset_x`. A component write reads the other components at
 each write, including concurrent edits to them. All helpers take
-`(to = null, seconds = 0.0)`, and a null endpoint uses the captured value. The
+`(to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)`, and a null endpoint
+uses the captured value. The
 [helper catalog](/gdscript/nodes/) lists them with the rest.
 
 Other material properties can use a property path, such as

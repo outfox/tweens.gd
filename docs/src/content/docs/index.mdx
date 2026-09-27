@@ -183,6 +183,7 @@ GD.Print("Arrived");
 | Property | A string path and a `Variant`; mistakes surface at runtime | A typed method; the compiler checks the property and value |
 | Easing | A `TransitionType` plus an `EaseType` | One `EaseType`, such as `CubicOut` |
 | Reuse | Build a new `Tween` for each node and each replay | [Store a definition](/csharp/definitions/) and start it on any node; `with` varies one start |
+| Variants | Copy the tween code and change its numbers | [Scale a shared definition](/csharp/variations/), as in `Recoil with { FactorBy = 2 }`; the variant follows later tuning |
 | Ending | `Finished` fires on completion only | `End` settles with a `Reason`: completed, cancelled, owner left the tree |
 
 </Lang>
@@ -204,8 +205,7 @@ print("Arrived")
 ```
 
 ```gdscript title="tweens.gd"
-var arrive := Tweens.position_2d(Vector2(400, 180), 0.6)
-arrive.ease = Tweens.Ease.CUBIC_OUT
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
 
 await Tweens.play(sprite, arrive).end
 print("Arrived")
@@ -235,8 +235,7 @@ print("Arrived")
 ```
 
 ```gdscript title="tweens.gd"
-var arrive := Tweens.position_2d(Vector2(400, 180), 0.6)
-arrive.ease = Tweens.Ease.CUBIC_OUT
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
 
 Tweens.play(sprite1, arrive)
 Tweens.play(sprite2, arrive.with_duration(0.8))
@@ -253,6 +252,7 @@ print("Arrived")
 | Property | A string path; a wrong name or value type fails when the tween runs | A named helper such as `position_2d`; the node class and value type are checked when the tween starts |
 | Easing | A `TRANS_*` transition plus an `EASE_*` direction | One `Tweens.Ease` constant, such as `CUBIC_OUT` |
 | Reuse | Build a new `Tween` for each node and each replay | [Store a definition](/gdscript/definitions/) and start it on any node; `with_*()` varies one start |
+| Variants | Copy the tween code and change its numbers | [Scale a shared definition](/gdscript/variations/), as in `recoil.with_factor_by(2.0)`; the variant follows later tuning |
 | Ending | `finished` fires on completion only | `await handle.end` returns a `Tweens.Reason`: completed, cancelled, owner left the tree |
 
 </Lang>

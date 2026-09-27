@@ -22,7 +22,7 @@ var roughness = material.TweenRoughness(0.2f, 1, mesh);
 
 // Tree context with an optional owner and ordinary tween options.
 var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(),
-    d => d.Ease = EaseType.CubicOut, owner: mesh);
+    options => options.Ease = EaseType.CubicOut, owner: mesh);
 
 // Reusable definitions work with either context.
 var definition = new Tweens.MaterialRoughness(0.5f, 1);
@@ -73,7 +73,7 @@ All 25 adapters target `BaseMaterial3D`, so they work with both
 
 Each UV property also has X/Y/Z variants, such as `Tweens.MaterialUv1OffsetX` /
 `TweenUv1OffsetX`. A component setter leaves the other components as they are at
-each write, including concurrent edits to them. Every convenience method accepts a
+each write, including concurrent edits to them. Every shorthand method accepts a
 SceneTree or an owner Node, plus an optional configuration callback.
 
 Tweens don't change rendering modes or flags, so enable the features you animate

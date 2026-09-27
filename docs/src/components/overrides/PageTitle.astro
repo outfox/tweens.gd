@@ -1,6 +1,6 @@
 ---
 import SectionArt, { type Section } from '../SectionArt.astro';
-import { LANGS, PATH, slugOf, trackOf } from '../../tracks.mjs';
+import { LANGS, PATH, pagesOf, slugOf, trackOf } from '../../tracks.mjs';
 
 const PAGE_TITLE_ID = '_top'; // Starlight's skip-link target
 const { id, entry } = Astro.locals.starlightRoute;
@@ -9,7 +9,7 @@ const lang = trackOf(id) as keyof typeof LANGS | undefined;
 const language = lang && LANGS[lang];
 // One drawing per stretch of the learning path, the same in both languages; shared pages use the catalog drawing.
 const slug = lang ? slugOf(id) : undefined;
-const section = (PATH.find((g) => g.pages.some((p) => p.slug === slug))?.art ??
+const section = (PATH.find((g) => pagesOf(g).some((p) => p.slug === slug))?.art ??
 	(['faq', 'compatibility', 'acknowledgements'].includes(id) ? 'catalog' : undefined)) as Section | undefined;
 // Search results list both languages' twins, so their titles carry the language.
 const searchTitle = language ? `title:${title} (${language.label})` : undefined;

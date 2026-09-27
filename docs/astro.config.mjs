@@ -8,6 +8,13 @@ import { tweensDark, tweensLight } from './src/styles/code-themes.mjs';
 import { redirects, sidebar } from './src/tracks.mjs';
 
 const elements = (node, tagName) => (node?.children ?? []).filter((c) => c.type === 'element' && c.tagName === tagName);
+const firstCode = (node) =>
+	node.type === 'element' && node.tagName === 'code' ? node : (node.children ?? []).map(firstCode).find(Boolean);
+const anchor = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// API reference tables list one member per row, named in their first column. They render as a member list (theme.css),
+// and each row gets an id from its first code name, so a member can be linked directly.
+const MEMBER_COLUMNS = new Set(['Member', 'Field', 'Method', 'Entry point', 'Constructor', 'Factory', 'Enum', 'Constant']);
 
 // Wraps Markdown tables in a scroll container, so a wide table scrolls inside the content lane instead of spilling past it.
 // Each body cell also gets its column header as data-label, which narrow screens show when they stack rows.
@@ -25,9 +32,21 @@ const tableScroll = {
 							const headers = elements(elements(elements(node, 'thead')[0], 'tr')[0], 'th').map((th) =>
 								ctx.textContent(th).trim(),
 							);
-							for (const tr of elements(elements(node, 'tbody')[0], 'tr'))
-								elements(tr, 'td').forEach((td, i) => headers[i] && ctx.setProperty(td, 'dataLabel', headers[i]));
-							ctx.wrapNode(node, { type: 'element', tagName: 'div', properties: { className: ['table-wrap'] }, children: [] });
+							for (const th of elements(elements(elements(node, 'thead')[0], 'tr')[0], 'th'))
+								ctx.setProperty(th, 'scope', 'col');
+							const members = MEMBER_COLUMNS.has(headers[0]);
+							for (const tr of elements(elements(node, 'tbody')[0], 'tr')) {
+								const cells = elements(tr, 'td');
+								cells.forEach((td, i) => headers[i] && ctx.setProperty(td, 'dataLabel', headers[i]));
+								const name = members && cells[0] && firstCode(cells[0]);
+								if (!name) continue;
+								// The name links to its own row, so a reader can copy a link to one member.
+								const id = anchor(ctx.textContent(name));
+								ctx.setProperty(tr, 'id', id);
+								ctx.wrapNode(name, { type: 'element', tagName: 'a', properties: { href: `#${id}` }, children: [] });
+							}
+							const className = members ? ['table-wrap', 'members'] : ['table-wrap'];
+							ctx.wrapNode(node, { type: 'element', tagName: 'div', properties: { className }, children: [] });
 						},
 					},
 				],

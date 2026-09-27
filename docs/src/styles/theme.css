@@ -304,6 +304,135 @@ h4,
 	}
 }
 
+/* API member lists (the `members` tables, see astro.config.mjs): each member is a key on one track, drawn as the
+   diamond keys of Godot's animation editor. The name leads, its type and default ride beside it, and the meaning
+   follows below. The header row stays for screen readers only. */
+.sl-markdown-content .table-wrap.members {
+	width: auto;
+	min-width: 0;
+	max-width: var(--tw-measure);
+	margin-block: 1.25rem 2.25rem;
+	overflow: visible;
+	border: 0;
+	border-radius: 0;
+}
+.sl-markdown-content .members :is(table, tbody, td) {
+	display: block;
+}
+.sl-markdown-content .members thead {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+}
+.sl-markdown-content .members tbody {
+	position: relative;
+}
+.sl-markdown-content .members tbody::before {
+	content: '';
+	position: absolute;
+	inset-block: 1.35rem;
+	left: 0.55rem;
+	width: 2px;
+	border-radius: 1px;
+	background: linear-gradient(var(--tw-outline), color-mix(in oklab, var(--tw-outline) 35%, transparent));
+}
+.sl-markdown-content .members tbody tr {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.3rem 0.55rem;
+	margin: 0;
+	padding: 0.85rem 1rem 0.95rem 2.25rem;
+	border: 0;
+	border-radius: 0.9rem;
+}
+.sl-markdown-content .members tbody tr::before {
+	content: '';
+	position: absolute;
+	left: 0.28rem;
+	top: 1.18rem;
+	width: 0.6rem;
+	height: 0.6rem;
+	rotate: 45deg;
+	border-radius: 2px;
+	border: 2px solid var(--tw-mint);
+	background: var(--tw-bg);
+	transition:
+		scale 0.45s var(--ease-back-out),
+		rotate 0.6s var(--ease-back-out),
+		background-color 0.2s;
+}
+.sl-markdown-content .members tbody tr:is(:hover, :target)::before {
+	scale: 1.35;
+	rotate: 225deg;
+	background: var(--tw-mint);
+}
+.sl-markdown-content .members tbody tr:target {
+	background: color-mix(in oklab, var(--tw-mint) 11%, transparent);
+}
+.sl-markdown-content .members td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.sl-markdown-content .members td:empty {
+	display: none;
+}
+.sl-markdown-content .members td:first-child {
+	color: var(--tw-muted);
+	font-weight: 400;
+}
+.sl-markdown-content .members td:first-child code {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--sl-color-white);
+	font-size: 0.97rem;
+	font-weight: 650;
+}
+.sl-markdown-content .members td:first-child a {
+	color: inherit;
+	text-decoration-color: transparent;
+}
+.sl-markdown-content .members td:first-child a:hover {
+	text-decoration-color: var(--tw-mint);
+}
+/* Type and default read as a signature line beside the name: muted mono, no pill, the default after an `=`. */
+.sl-markdown-content .members td:not(:first-child, :last-child) {
+	display: inline;
+	font-family: var(--sl-font-mono);
+	font-size: var(--sl-text-xs);
+	color: var(--tw-muted);
+}
+.sl-markdown-content .members td:not(:first-child, :last-child) code {
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--tw-soft);
+	font-size: 1em;
+}
+.sl-markdown-content .members td[data-label]:not(:first-child)::before {
+	content: none;
+}
+.sl-markdown-content .members td[data-label='Default']:not(:first-child)::before {
+	content: '= ';
+	display: inline;
+	font: inherit;
+	letter-spacing: 0;
+	color: var(--tw-muted);
+}
+.sl-markdown-content .members td:last-child:not(:first-child) {
+	flex-basis: 100%;
+	max-width: 68ch;
+	color: var(--tw-soft);
+	font-size: 0.94rem;
+	line-height: 1.6;
+	text-wrap: pretty;
+}
+
 /* Pages without a sidebar have no mobile menu, so their header keeps the social links at every width. */
 @media (max-width: 50rem) {
 	:root:not([data-has-sidebar]) .header .right-group {

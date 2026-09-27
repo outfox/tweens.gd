@@ -50,6 +50,7 @@ an await after playback has ended returns the same reason at once.
 | `OWNER_EXITED` | The owner left the scene tree |
 | `RUNNER_DISPOSED` | The runner, tree, or manual scheduler shut down |
 | `FAILED` | The start was rejected or playback detected an error; see `error` |
+| `WAIT_CANCELLED` | Only from `wait()`: its cancellation token was cancelled, and playback continues |
 
 Checking the reason lets a sequence stop when playback is interrupted. Removing or reparenting a
 node ends the tweens it owns immediately, even while they're paused. Godot emits

@@ -1,0 +1,137 @@
+---
+title: Variations
+description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and Skew changes its pacing.
+---
+
+import Moves from '../../../components/Moves.astro';
+
+Games rarely need a motion in just one version. A heavy hit kicks harder than a
+light one, and an enemy that spawns pops in from nothing. Instead of copying a
+definition and editing its numbers, start a variant of it. The variant stays
+tied to the definition, so when you tune the definition, every variant follows.
+
+Examples assume `using Godot;` and `using tweens.gd;`, and run on Godot's main
+thread.
+
+## A complete example
+
+An enemy recoils when hit, harder and longer for more damage:
+
+<Moves>
+
+```csharp title="Enemy.cs" {"1":3-9} {"2":11-15} {"3":17}
+public partial class Enemy : Sprite2D
+{
+    static readonly Tweens.Position2DX Recoil = new()
+    {
+        By = -12,
+        Duration = 0.1,
+        Ease = EaseType.QuadOut,
+        UsePingPong = true,
+    };
+
+    public void Hit(float damage) => this.Tween(Recoil with
+    {
+        FactorBy = damage / 10,
+        FactorDuration = 1 + damage / 100,
+    });
+
+    public void Crit() => this.Tween(Recoil with { FactorBy = 3, Skew = 0.5 });
+}
+```
+
+1. **Define the motion once.** `Recoil` kicks the enemy 12 pixels back and
+   returns.
+2. **Scale it per hit.** `FactorBy` scales the kick with the damage, and
+   `FactorDuration` stretches the timing. A 20-damage hit kicks 24 pixels and
+   takes 0.12 seconds each way.
+3. **Change the pacing.** `Skew = 0.5` front-loads the same ease, so a critical
+   hit lands sooner.
+
+</Moves>
+
+Change `Recoil` to kick 16 pixels, or to ease with `CubicOut`, and every hit and
+crit follows. `Recoil with { By = -24 }` would also kick harder, but it replaces
+the value, so that variant no longer follows `Recoil`.
+
+## Factors and deltas
+
+When a tween starts, each factor multiplies its value and each delta is added
+after it:
+
+| Value | Becomes | Defaults |
+| --- | --- | --- |
+| `From` | `FactorFrom` × `From` + `DeltaFrom` | `1`, none |
+| `To` | `FactorTo` × `To` + `DeltaTo` | `1`, none |
+| `By` | `FactorBy` × `By` + `DeltaBy` | `1`, none |
+| `Duration` | `FactorDuration` × `Duration` + `DeltaDuration` | `1`, `0` |
+
+Deltas have the definition's value type, such as `Vector2` for a position.
+`FactorDuration` and `DeltaDuration` are timing options, so a shared
+`TweenOptions` can carry them: `options with { FactorDuration = 1.5 }`.
+
+## Vary the current value
+
+An omitted `From` or `To` is read from the property when the tween starts. A
+factor or delta then makes the motion relative to wherever the property is:
+
+```csharp title="Heart.cs"
+public partial class Heart : Sprite2D
+{
+    static readonly Tweens.Scale2D Beat = new()
+    {
+        FactorTo = 1.2,
+        Duration = 0.15,
+        Ease = EaseType.SmootherStep,
+        UsePingPong = true,
+    };
+
+    public void Pulse() => this.Tween(Beat);
+}
+```
+
+The heart grows to 120% of whatever scale it has and comes back.
+
+- `FactorFrom = 0` grows from zero to the current value.
+- `DeltaFrom = new Vector2(0, 40)` on a position starts 40 pixels lower and
+  rises to where the node is.
+- `DeltaTo` works like `By`, but only once: it's computed when the tween starts,
+  while `By` keeps up with other changes to the property as it plays.
+
+## Change the pacing with `Skew`
+
+`Skew` reshapes when the motion happens without choosing another ease. Normalized
+time `t` becomes `t` to the power of `Skew` before the ease sees it:
+
+- `Skew` above 1 rear-loads the ease: the motion starts slower and catches up.
+  At a quarter of the duration, `Skew = 2` passes 0.0625 to the ease.
+- `Skew` between 0 and 1 front-loads it: most of the motion happens early.
+- The default, 1, leaves the ease unchanged.
+
+```csharp
+var movement = sprite.Tween(new Tweens.Position2D
+{
+    To = new Vector2(300, 120),
+    Duration = 0.5,
+    Ease = EaseType.CubicOut,
+    Skew = 2,
+});
+```
+
+`Skew` applies to built-in eases, `EaseFunction`, and Godot `Curve` samples. The
+duration and the handle's raw `Progress` stay unchanged, and a ping-pong return
+retraces the same skewed curve. For bounce, elastic, and other eases that aren't
+monotonic, skew shifts when their bounces and overshoot happen but keeps them.
+
+## Rules
+
+- Factors and deltas apply once, when the tween starts. A non-retaining `Fill`
+  restores the captured value, not an adjusted one.
+- For a quaternion, the factor scales the rotation angle and the delta rotates
+  about the node's own axes.
+- `FactorBy` and `DeltaBy` need a `By`. `FactorTo` and `DeltaTo` don't apply to
+  a `By` tween. Both combinations are rejected.
+- Adjusting `From` fixes the start of a `By` tween, as an explicit `From` does.
+- The adjusted duration must not be negative, and `Offset` must fit within it.
+- Factors, `DeltaDuration`, and `Skew` must be finite, and `Skew` must be
+  greater than zero. Invalid values reject the start.

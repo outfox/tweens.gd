@@ -1,155 +1,69 @@
 ---
 title: Core API
-description: Entry points, reusable definitions, playback handles, scheduler methods, and completion states.
+description: The calls that start C# playback, and where the rest of the core API is listed.
 ---
 
-Look up the core C# API here: the methods that start playback and the types
-they return, what a definition holds, the members of a playback handle, and the
-manual scheduler. For explanations and examples, follow the links to the guides.
+This page lists the calls that start playback. The pages after it list every
+member of the definitions you start and the handles you get back.
 
-`using tweens.gd;` brings in extension methods, timing options, and playback
-handles. Definitions such as `Tweens.PathFollow2DVOffset` live in the root
-`Tweens` namespace, so you don't need an alias or `using Tweens;`.
+`using tweens.gd;` brings in the extension methods, timing options, and handles.
+Definitions such as `Tweens.Position2D` live in the root `Tweens` namespace, so
+they need no `using`.
 
-## Start playback
+## Start on a node
 
 | Entry point | Returns | Purpose |
 | --- | --- | --- |
-| `node.Tween(definition)` | `TweenInstance<TTarget, TValue>` | Animate an in-tree node or deliver callback values |
-| `node.Tween(first, second, ...)` | `Group` | Start several definitions together |
-| `Group.Of(tweens)` | `Group` | Treat running tweens as one step with a shared `End` |
-| `node.TweenProperty(to, duration, configure)` | `TweenInstance<TTarget, TValue>` | Convenience form; replace `Property` with a method from the catalog |
-| `node.TweenProperty(to, duration, options)` | `TweenInstance<TTarget, TValue>` | Convenience form that copies a shared `TweenOptions`; `duration` takes precedence |
-| `resource.Tween(definition, tree)` | `TweenInstance<TResource, TValue>` | Scope resource playback to a `SceneTree` |
-| `resource.Tween(definition, owner)` | `TweenInstance<TResource, TValue>` | Bind resource playback to an owner node |
-| `owner.Tween(resource, definition)` | `TweenInstance<TResource, TValue>` | Owner-first form of resource playback |
-| `node.CancelTweens(includeChildren: false)` | `void` | Cancel automatic tweens owned by this node |
+| `node.Tween(definition)` | `TweenInstance<TTarget, TValue>` | Start one definition on an in-tree node |
+| `node.Tween(first, second, ...)` | `Group` | Start several definitions as one step |
+| `node.TweenPosition(to, duration, configure)` | `TweenInstance<TTarget, TValue>` | Shorthand for one definition; every catalog definition has one, such as `TweenModulateAlpha` |
+| `node.TweenPosition(to, duration, options)` | `TweenInstance<TTarget, TValue>` | Shorthand that copies a shared `TweenOptions`; the `duration` argument wins |
 
 `TTarget` is the class the definition targets, which can be a base class of the
 node: `sprite.TweenPosition(...)` returns `TweenInstance<Node2D, Vector2>`.
 
-Resource convenience methods also take the tree or owner context. Tree-based
-resource overloads accept an optional owner. [Materials](/csharp/materials/) has
-examples, and the definitions themselves are listed under
-[node/value definitions](/csharp/nodes/) and [shader definitions](/csharp/shaders/).
+## Start on a resource
 
-## Definitions
+A material or other resource isn't in the tree, so its playback needs a tree or
+an owner node that decides when it stops. See [materials](/csharp/materials/).
 
-The built-in `Tweens.*` definitions are `readonly record struct` values with
-nullable `From`/`To` endpoints, a relative [`By`](/csharp/definitions/#move-by-an-offset-with-by)
-offset, timing, and typed callbacks. Store them in readonly
-fields and vary a copy when starting playback (see
-[reusable definitions](/csharp/definitions/)):
-
-```csharp title="Trail.cs"
-public partial class Trail : PathFollow2D
-{
-    static readonly Tweens.PathFollow2DVOffset Offset = new() { To = 20 };
-
-    public void Drift(double seconds, double delay) =>
-        this.Tween(Offset with { Duration = seconds, Delay = delay });
-}
-```
-
-Each definition's constructor takes the endpoint and common timing. Every
-argument after the binding is optional:
-
-| Constructor | Arguments |
-| --- | --- |
-| `new Tweens.Position2D(to, duration, ease, delay)` and the other catalog definitions | `To`, `Duration`, `Ease`, `Delay` |
-| `new Tweens.ShaderParameter<TValue>(parameter, to, duration, ease, delay)` and the instance uniform definitions | The uniform name, then the same four |
-| `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations, then the same four |
-
-An omitted `to` is read at start, and the timing defaults to zero and
-`EaseType.Linear`. Set anything else in an initializer after the arguments:
-`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`.
-
-`TweenOptions` is also a readonly record struct. It holds shared timing and can
-be passed to a convenience method or assigned to a definition's `Options`.
-Flat properties such as `Duration` and `Delay` update that same options value.
-Assign `Options` before individual overrides in an initializer: a later
-`Options` assignment replaces all timing settings. Both `new` and `default`
-retain the final value unless `Fill` is explicitly changed.
-
-`ITweenDefinition<TTarget, TValue>` connects definitions to typed playback;
-`ITweenDefinition<TTarget>` supports groups with different value types.
-`TTarget` is a class and `TValue` is a struct.
-
-| Configuration | Reference |
-| --- | --- |
-| `FactorFrom`, `DeltaFrom`, `FactorTo`, `DeltaTo`, `FactorBy`, `DeltaBy` | [Factors and deltas](/csharp/definitions/#scale-or-shift-a-value-with-factors-and-deltas) |
-| `Duration`, `FactorDuration`, `DeltaDuration`, `Delay`, `Offset`, `Repeats`, `UsePingPong`, `PingPongInterval`, `RepeatInterval`, `Fill` | [Timing and loops](/csharp/timing/) |
-| `Ease`, `Skew`, `EaseFunction`, `Curve` | [Easing](/csharp/easing/) |
-| `ProcessMode`, `UseUnscaledTime` | [Process and physics](/csharp/timing/#process-and-physics) |
-| `PauseMode`, `SuppressCallbacksWhenTargetInvalid` | [Lifetime and ownership](/csharp/lifetime/) |
-| `OnAdd`, `OnStart`, `OnUpdate`, `OnEnd`, `OnCancel`, `OnFinally` | [Callbacks](/csharp/playback/#callbacks) |
-
-Callbacks receive the `TweenInstance<TTarget, TValue>` handle; `OnUpdate` also
-receives the sampled `TValue`. See [custom tweens](/csharp/custom-tweens/) to
-implement property operations or per-playback bindings.
-
-## Playback handles
-
-Starting one definition returns a `TweenInstance<TTarget, TValue>`. Its non-generic
-base class, `TweenInstance`, has every member below except `Target` and `Value`, so
-handles with different type arguments fit in one collection.
-
-| Member | Type | Meaning |
+| Entry point | Returns | Purpose |
 | --- | --- | --- |
-| `Pause()`, `Resume()` | `void` | Set or clear explicit pause |
-| `IsPaused` | `bool` | True while explicitly paused; settable |
-| `Cancel()` | `void` | End playback and retain the latest sample |
-| `State` | `TweenState` | `Delayed`, `Playing`, `Interval`, `Completed`, `Cancelled`, or `Faulted` |
-| `IsTerminal` | `bool` | True when completed, cancelled, or faulted |
-| `Progress` | `float` | Normalized current-leg progress, before easing |
-| `CompletionReason` | `Reason?` | `null` until playback ends; faults are described by `Error` |
-| `Error` | `Exception?` | Failure retained after faulted playback |
-| `GetAwaiter()` | `TaskAwaiter<Reason>` | Enables `await movement` with the same result and faults as `End` |
-| `End` | `Task<Reason>` | Shared completion that any number of callers can await |
-| `AwaitDecommissionAsync(token)` | `Task<Reason>` | Wait with cancellation that affects only the wait |
-| `Target` | `TTarget` | Original target |
-| `Value` | `TValue` | Value read at start, then the latest value written |
+| `resource.Tween(definition, tree)` | `TweenInstance<TResource, TValue>` | Follow the scene tree's pause and lifetime |
+| `resource.Tween(definition, owner)` | `TweenInstance<TResource, TValue>` | Stop when the owner node leaves the tree |
+| `owner.Tween(resource, definition)` | `TweenInstance<TResource, TValue>` | The same, written owner first |
 
-Pause is separate from `State`: there's no `Paused` state. To coordinate async
-work, `await movement` instead of reading `State`. Groups also support direct
-awaiting. Keep `End` for APIs that require a `Task<Reason>`.
+## Group and cancel
 
-`Reason` has five members: `Completed`, `Cancelled`, `TargetFreed`, `OwnerExited`,
-and `RunnerDisposed`. [Why it ended](/csharp/cancellation/#why-it-ended) describes each.
-
-`Group` has `Pause()`, `Resume()`, `Cancel()`, `IsPaused`, `IsTerminal`,
-`CompletionReason`, `Error`, `GetAwaiter()`, and `End`, plus `Members`, an
-`IReadOnlyList<TweenInstance>`. It has no `State` or `Progress`. Its `End` reports
-`Completed` when every member completes; otherwise it reports the first reason a
-member stopped for, or faults.
-
-## Manual scheduler
-
-The automatic Godot runner is built on `TweenScheduler`. Create one with
-`new TweenScheduler()` to drive playback yourself.
-
-| Member | Type | Purpose |
+| Entry point | Returns | Purpose |
 | --- | --- | --- |
-| `Add(target, definition)` | `TweenInstance<TTarget, TValue>` | Add playback; a node target becomes its owner |
-| `Add(target, definition, owner)` | `TweenInstance<TTarget, TValue>` | Bind a separate target to an in-tree owner |
-| `Update(delta, unscaledDelta = null, mode = TweenProcessMode.Process)` | `void` | Advance the selected process mode |
-| `ActiveCount` | `int` | Number of nonterminal instances |
-| `CancelAll()` | `void` | Cancel every tween in this scheduler |
-| `UnhandledException` | `event Action<Exception>` | Receive errors after failing tweens are cleaned up |
-| `Dispose()` | `void` | Stop and release remaining playback |
+| `Group.Of(tweens)` | `Group` | Treat tweens that are already playing as one step |
+| `node.CancelTweens(includeChildren: false)` | `void` | Cancel the tweens this node owns |
 
-Create, update, and dispose on the same thread. The scheduler rejects recursive
-updates. Use a manual scheduler for deterministic tests or managed targets;
-ordinary Godot node/resource tweens use the automatic runner.
+## Find a member
 
-## Class-based definitions
+- [Definitions](/csharp/api/definitions/): constructors, then every member by
+  role: endpoints, variations, timing, easing, modes, and callbacks. Also
+  `TweenOptions` and the enums.
+- [Handles and groups](/csharp/api/handles/): what starting returns, and how to
+  control it, read its state, and await it.
+- [Scheduler](/csharp/api/scheduler/): `TweenScheduler`, to advance playback
+  yourself.
+- [Custom definitions](/csharp/api/custom/): the members to override,
+  `Interpolators`, and class-based definitions.
+- [Node and value catalog](/csharp/nodes/): every built-in definition and its
+  shorthand method.
 
-The older `*Tween` classes, such as `Position2DTween`, and custom subclasses of
-`TweenDefinition<TTarget, TValue>` remain supported. They inherit
-`TweenOptionsBuilder`, the mutable form of `TweenOptions`, and are snapshotted on
-start. The built-in classes are hidden from IntelliSense, which offers the
-structured definitions in `Tweens` instead.
+## Differences from GDScript
 
-A convenience method's configure callback still receives a mutable builder:
-`TweenPosition` on a `Node2D` passes a `Position2DTween`. Write shared
-configurator methods against `TweenOptionsBuilder`, not `TweenOptions`.
+Both implementations share their timing, easing, grouping, and lifetime rules,
+and shared fixtures test both. The differences come from the languages:
+
+| Area | C# | GDScript |
+| --- | --- | --- |
+| Definitions | Immutable values, varied with `with` | Mutable objects, varied with `with_*()` copies |
+| Failures | Awaiting faults with an exception; `Error` holds it | Awaiting `end` returns `Tweens.Reason.FAILED`; `error` holds a message |
+| Type checks | Generic `TweenInstance<TTarget, TValue>`, checked by the compiler | Target class and value type checked when playback starts |
+| Integer values | Saturate at 32-bit limits | Saturate at signed 64-bit limits; shader integers stay 32-bit |
+| Script errors | Exceptions from callbacks and setters fault the tween | Detected problems become `FAILED`; other errors in callbacks and setters stay Godot script errors |
+| Callbacks | Synchronous | Synchronous; don't `await` inside one, await `end` from a separate coroutine instead |

@@ -68,7 +68,7 @@ because it still targets the original resource. Tree teardown stops it. See
 Completion, cancellation, owner exit, target destruction, and runner teardown all
 settle the handle with a reason, and `await handle.end` returns it.
 Cancelling isn't an error, so awaiting `end` returns `Tweens.Reason.CANCELLED` like any
-other reason. See [control and completion](/gdscript/playback/) for the full list.
+other reason. See [why it ended](/gdscript/cancellation/#why-it-ended) for the full list.
 
 GDScript has no exceptions to throw. Detected problems, such as invalid
 configuration, a stale Callable, a non-finite ease or interpolation, or an error
@@ -78,6 +78,6 @@ property setters remain Godot script errors. `suppress_callbacks_when_target_inv
 skips callbacks for an invalid target or owner while still settling the handle and
 releasing bindings.
 
-Handles keep their `target` for inspection, so drop handles you no longer need.
+A handle keeps its target referenced after playback ends, so drop handles you no longer need.
 Create and control tweens on Godot's main thread. A manual `Tweens.Scheduler` must
 be driven from the main thread as well.

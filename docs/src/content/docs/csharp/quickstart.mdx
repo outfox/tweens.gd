@@ -119,6 +119,6 @@ _ = sprite2.Tween(arrive);
 </Compare>
 
 In the script above, `arrive` lives inside `_Ready`, so nothing else can use
-it. Move it to a field and compute the endpoint for each start with `with`, and
-other nodes can start the same motion. The next page,
+it. Move it to a field and give it `By = new Vector2(240, 0)` instead of a `To`,
+and any node can start it unchanged: each one moves 240 pixels from where it is. The next page,
 [definitions](/csharp/definitions/), shows how.

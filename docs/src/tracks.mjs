@@ -7,7 +7,8 @@ export const LANGS = {
 	gdscript: { label: 'GDScript', long: 'GDScript', status: 'Beta' },
 };
 
-/** Groups in path order. `art` picks the drawing beside each page title; `gdscript` overrides a label there. */
+/** Groups in path order. `art` picks the drawing beside each page title; `gdscript` overrides a label there.
+ *  An entry with `pages` instead of a `slug` is a nested sidebar group. */
 export const PATH = [
 	{
 		label: 'Start here',
@@ -33,6 +34,7 @@ export const PATH = [
 		pages: [
 			{ slug: 'easing', label: 'Easing' },
 			{ slug: 'timing', label: 'Timing & loops' },
+			{ slug: 'variations', label: 'Variations' },
 			{ slug: 'lifetime', label: 'Lifetime & ownership' },
 		],
 	},
@@ -49,7 +51,16 @@ export const PATH = [
 		label: 'Reference',
 		art: 'catalog',
 		pages: [
-			{ slug: 'api', label: 'Core API' },
+			{
+				label: 'Core API',
+				pages: [
+					{ slug: 'api', label: 'Overview' },
+					{ slug: 'api/definitions', label: 'Definitions' },
+					{ slug: 'api/handles', label: 'Handles & groups' },
+					{ slug: 'api/scheduler', label: 'Scheduler' },
+					{ slug: 'api/custom', label: 'Custom definitions', gdscript: 'Adapters' },
+				],
+			},
 			{ slug: 'nodes', label: 'Node & value catalog', gdscript: 'Helper catalog' },
 		],
 	},
@@ -72,17 +83,24 @@ export function trackOf(idOrPath) {
 /** The page slug within its track, e.g. 'definitions' for 'gdscript/definitions'. */
 export const slugOf = (idOrPath) => idOrPath.replace(/^\/+|\/+$/g, '').split('/').slice(1).join('/');
 
+/** Every page entry of a group, including those in nested groups. */
+export const pagesOf = (group) => group.pages.flatMap((page) => (page.pages ? pagesOf(page) : [page]));
+
 export const firstSlug = PATH[0].pages[0].slug;
+
+const items = (pages, lang) =>
+	pages.map((page) =>
+		page.pages
+			? { label: page[lang] ?? page.label, items: items(page.pages, lang) }
+			: { label: page[lang] ?? page.label, slug: `${lang}/${page.slug}` },
+	);
 
 /** Starlight sidebar config: one top-level group per language, then the shared pages. */
 export const sidebar = () => [
 	...Object.entries(LANGS).map(([lang, { label, status }]) => ({
 		label,
 		...(status && { badge: { text: status, variant: 'note' } }),
-		items: PATH.map((group) => ({
-			label: group.label,
-			items: group.pages.map((page) => ({ label: page[lang] ?? page.label, slug: `${lang}/${page.slug}` })),
-		})),
+		items: PATH.map((group) => ({ label: group.label, items: items(group.pages, lang) })),
 	})),
 	{ label: SHARED_LABEL, items: SHARED.map(({ slug, label }) => ({ label, slug })) },
 ];

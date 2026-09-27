@@ -1,10 +1,10 @@
 ---
 title: Node and value catalog
-description: Typed definitions, convenience methods, units, and Godot property constraints.
+description: Typed definitions, shorthand methods, units, and Godot property constraints.
 ---
 
 The node/value catalog has 306 built-in definitions: 298 for node properties and
-8 that deliver callback values. Each one has a typed convenience extension.
+8 that deliver callback values. Each one has a typed shorthand method.
 Adapters use Godot properties directly, without runtime reflection or string
 property paths.
 
@@ -22,8 +22,8 @@ var reveal = label.TweenVisibleRatio(1, 1.5, options => options.From = 0);
 await Group.Of(movement, fade);
 ```
 
-Signatures are `target.TweenProperty(to, duration, configure = null)`. The optional
-typed configure callback runs synchronously before playback starts and may override
+Each shorthand method, such as `TweenPosition`, takes `(to, duration, configure = null)`
+or `(to, duration, options)`. The optional typed configure callback runs synchronously before playback starts and may override
 `From`, `To`, `Duration`, or any other definition setting, including callbacks.
 Configuration errors propagate before playback is added. For reusable definitions,
 use `target.Tween(new Definition { ... })`. Both forms return a
@@ -49,9 +49,8 @@ Units, value types, and the Godot constraints that still apply are listed under
 - Animation and audio: [AnimationPlayer](#animationplayer) · [AudioStreamPlayer](#audiostreamplayer) · [AudioStreamPlayer2D](#audiostreamplayer2d) · [AudioStreamPlayer3D](#audiostreamplayer3d)
 - Any node: [Callback values](#callback-values)
 
-Each row pairs a definition with its convenience method. Names ending in X, Y,
-Z, or Alpha affect one component. Each method takes the target value, a duration,
-and either an optional configure callback or a `TweenOptions` value.
+Each row pairs a definition with its shorthand method. Names ending in X, Y,
+Z, or Alpha affect one component.
 
 ### CanvasItem
 
