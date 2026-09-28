@@ -6,6 +6,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import { tweensDark, tweensLight } from './src/styles/code-themes.mjs';
 import { redirects, sidebar } from './src/tracks.mjs';
+import { checkSearchUpstream } from './scripts/check-search-upstream.mjs';
 
 const elements = (node, tagName) => (node?.children ?? []).filter((c) => c.type === 'element' && c.tagName === tagName);
 const firstCode = (node) =>
@@ -111,6 +112,10 @@ export default defineConfig({
 		},
 	},
 	integrations: [
+		{
+			name: 'tweens-search-upstream-check',
+			hooks: { 'astro:build:start': checkSearchUpstream },
+		},
 		tableScroll,
 		preloadImports,
 		starlight({
