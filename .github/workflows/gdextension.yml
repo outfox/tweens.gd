@@ -18,20 +18,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { platform: windows, arch: x86_64, os: windows-latest }
-          - { platform: windows, arch: x86_32, os: windows-latest }
-          - { platform: windows, arch: arm64, os: windows-latest }
-          - { platform: linux, arch: x86_64, os: ubuntu-22.04 }
-          - { platform: linux, arch: x86_32, os: ubuntu-22.04 }
-          - { platform: linux, arch: arm64, os: ubuntu-22.04-arm }
-          - { platform: macos, arch: universal, os: macos-latest }
-          - { platform: ios, arch: arm64, os: macos-latest }
-          - { platform: android, arch: arm64, os: ubuntu-22.04 }
-          - { platform: android, arch: arm32, os: ubuntu-22.04 }
-          - { platform: android, arch: x86_64, os: ubuntu-22.04 }
-          - { platform: android, arch: x86_32, os: ubuntu-22.04 }
-          - { platform: web, arch: wasm32, threads: 'yes', os: ubuntu-22.04 }
-          - { platform: web, arch: wasm32, threads: 'no', os: ubuntu-22.04 }
+          - { platform: windows, arch: x86_64, os: blacksmith-4vcpu-windows-2025 }
+          - { platform: windows, arch: x86_32, os: blacksmith-4vcpu-windows-2025 }
+          - { platform: windows, arch: arm64, os: blacksmith-4vcpu-windows-2025 }
+          - { platform: linux, arch: x86_64, os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: linux, arch: x86_32, os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: linux, arch: arm64, os: blacksmith-4vcpu-ubuntu-2404-arm }
+          - { platform: macos, arch: universal, os: blacksmith-6vcpu-macos-latest }
+          - { platform: ios, arch: arm64, os: blacksmith-6vcpu-macos-latest }
+          - { platform: android, arch: arm64, os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: android, arch: arm32, os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: android, arch: x86_64, os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: android, arch: x86_32, os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: web, arch: wasm32, threads: 'yes', os: blacksmith-4vcpu-ubuntu-2404 }
+          - { platform: web, arch: wasm32, threads: 'no', os: blacksmith-4vcpu-ubuntu-2404 }
     env:
       # Web side modules must match the Emscripten version godot-cpp 10 targets.
       EM_VERSION: 4.0.11
@@ -90,8 +90,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { name: Linux, os: ubuntu-22.04, asset: Godot_v4.7.2-stable_linux.x86_64.zip, godot: ./Godot_v4.7.2-stable_linux.x86_64 }
-          - { name: macOS, os: macos-latest, asset: Godot_v4.7.2-stable_macos.universal.zip, godot: ./Godot.app/Contents/MacOS/Godot }
+          - { name: Linux, os: blacksmith-4vcpu-ubuntu-2404, asset: Godot_v4.7.2-stable_linux.x86_64.zip, godot: ./Godot_v4.7.2-stable_linux.x86_64 }
+          - { name: macOS, os: blacksmith-6vcpu-macos-latest, asset: Godot_v4.7.2-stable_macos.universal.zip, godot: ./Godot.app/Contents/MacOS/Godot }
     defaults:
       run:
         shell: bash
