@@ -1,0 +1,26 @@
+<Project DefaultTargets="Coverage">
+  <PropertyGroup>
+    <RepositoryRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))/</RepositoryRoot>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <MinimumLine Condition="'$(MinimumLine)' == ''">99</MinimumLine>
+    <MinimumBranch Condition="'$(MinimumBranch)' == ''">95</MinimumBranch>
+    <ResultsDirectory>$(RepositoryRoot)artifacts/coverage</ResultsDirectory>
+    <RunDirectory>$(ResultsDirectory)/$([System.Guid]::NewGuid())</RunDirectory>
+    <NoBuildArguments Condition="'$(NoBuild)' == 'true'">--no-build --no-restore</NoBuildArguments>
+  </PropertyGroup>
+  <UsingTask TaskName="CheckCoverage" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <Task><Code Type="Class" Language="cs" Source="CheckCoverage.cs" /></Task>
+  </UsingTask>
+  <Target Name="Coverage">
+    <ItemGroup>
+      <Suite Include="Headless;Lifecycle" />
+      <Suite Include="Rendering" Condition="'$(Rendering)' == 'true'" />
+    </ItemGroup>
+    <Exec Command="dotnet test &quot;$(RepositoryRoot)tests/tweens.gd.tests/tweens.gd.tests.csproj&quot; -c $(Configuration) -p:TestSuite=%(Suite.Identity) $(NoBuildArguments) --settings &quot;$(RepositoryRoot)tests/tweens.gd.tests/coverage.runsettings&quot; --collect:&quot;XPlat Code Coverage&quot; --results-directory &quot;$(RunDirectory)/%(Suite.Identity)&quot; --logger &quot;trx;LogFileName=%(Suite.Identity).trx&quot;" />
+    <CallTarget Targets="Report" />
+  </Target>
+  <Target Name="Report">
+    <Error Condition="$(MinimumLine) &lt; 0 Or $(MinimumLine) &gt; 100 Or $(MinimumBranch) &lt; 0 Or $(MinimumBranch) &gt; 100" Text="Coverage thresholds must be between 0 and 100." />
+    <CheckCoverage Directory="$(RunDirectory)" MinimumLine="$(MinimumLine)" MinimumBranch="$(MinimumBranch)" SummaryFile="$(GITHUB_STEP_SUMMARY)" />
+  </Target>
+</Project>

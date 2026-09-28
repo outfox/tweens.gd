@@ -39,25 +39,30 @@ dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release
 dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release
 dotnet run --project testbed-gdscript/host -c Release
 ./scripts/Pack-Addon.ps1 -Version 0.1.0-pre
-./scripts/Verify-Addon.ps1 -Version 0.1.0-pre
 dotnet pack csharp/tweens.gd.csproj -c Release -p:Version=0.1.0-pre -o artifacts/packages
-./.github/scripts/Verify-Package.ps1 -Version 0.1.0-pre
+dotnet msbuild build/Smoke.proj -p:Version=0.1.0-pre
+dotnet msbuild build/Coverage.proj
 ```
 
-`Verify-Addon.ps1` extracts the actual ZIP into a fresh Godot.NET.Sdk project
+`build/Smoke.proj` extracts the actual ZIP into a fresh Godot.NET.Sdk project
 and compiles Debug and Release with warnings treated as errors, implicit imports
-disabled and nullable disabled. Supply `-Godot <standard-console-executable>`
-and `-GodotDotNet <dotnet-console-executable>` to also run independent GDScript
-and C# automatic-playback smoke tests against the extracted addon. Use matching
-Godot 4.7.2 engines. On Windows, `./scripts/Get-GodotEngines.ps1` downloads both
-official engines and verifies their published SHA-512 checksums; CI uses it
-to run both smoke tests on every build. `Verify-Package.ps1` checks NuGet metadata and compiles the
-documented mixed install with the bundled C# sources excluded.
+disabled and nullable disabled. Its 2dog host runs the packaged editor import task,
+then independent GDScript and C# automatic-playback smoke tests in separate processes.
+Missing completion, failed assertions, engine errors and timeouts fail the build.
+No Godot executable download or local editor installation is needed. The target also
+checks NuGet metadata and symbols and compiles the documented mixed install with
+bundled C# sources excluded, a fresh package cache and source mapping to the local package.
+Fixtures live under `tests/smoke/`; all staged consumers live under `artifacts/smoke/`.
+
+`build/Coverage.proj` runs Headless and Lifecycle in separate test processes, merges
+their coverage and enforces 99% line / 95% branch coverage of hand-written sources.
+Generated definitions are reported separately. Use `-p:Rendering=true` to include
+the GPU suite, or `-p:NoBuild=true` after building each selected suite. Reports and
+TRX files are isolated per run under `artifacts/coverage/`.
 
 The output is `artifacts/packages/tweens.gd-<version>.zip`, with paths rooted
 at `addons/tweens_gd/`. It contains both languages, generated definitions, docs
 and licenses, with no binaries, build projects, tools or dependencies to install.
-`Pack-GDScript.ps1` remains a compatibility alias for the unified pack command.
 
 ## Release and Store update
 

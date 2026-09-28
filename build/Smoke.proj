@@ -1,0 +1,38 @@
+<Project DefaultTargets="Verify">
+  <Import Project="../testbed/Directory.Build.props" />
+  <PropertyGroup>
+    <RepositoryRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))/</RepositoryRoot>
+    <PackageDirectory>$(RepositoryRoot)artifacts/packages</PackageDirectory>
+    <!-- A fresh directory also isolates NuGet's package cache from earlier builds of the same version. -->
+    <ConsumerDirectory>$(RepositoryRoot)artifacts/smoke/$([System.Guid]::NewGuid())</ConsumerDirectory>
+  </PropertyGroup>
+  <UsingTask TaskName="VerifyPackages" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <Task>
+      <Code Type="Class" Language="cs" Source="VerifyPackages.cs" />
+    </Task>
+  </UsingTask>
+  <Target Name="Stage">
+    <Error Condition="'$(Version)' == ''" Text="Supply -p:Version matching the packages in artifacts/packages." />
+    <VerifyPackages Directory="$(PackageDirectory)" Version="$(Version)" />
+    <ItemGroup>
+      <AddonFixture Include="../tests/smoke/addon/**/*" />
+      <PackageFixture Include="../tests/smoke/package/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(AddonFixture)" DestinationFiles="@(AddonFixture->'$(ConsumerDirectory)/addon/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(PackageFixture)" DestinationFiles="@(PackageFixture->'$(ConsumerDirectory)/package/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Unzip SourceFiles="$(PackageDirectory)/tweens.gd-$(Version).zip" DestinationFolder="$(ConsumerDirectory)/addon" />
+    <Unzip SourceFiles="$(PackageDirectory)/tweens.gd-$(Version).zip" DestinationFolder="$(ConsumerDirectory)/package" />
+    <XmlPoke XmlInputPath="$(ConsumerDirectory)/package/NuGet.config" Query="/configuration/packageSources/add[@key='local']/@value" Value="$(PackageDirectory)" />
+  </Target>
+  <Target Name="Verify" DependsOnTargets="Stage">
+    <!-- Keep the source-install compilation independent of 2dog and repository build settings. -->
+    <Exec Command="dotnet build &quot;$(ConsumerDirectory)/addon/Consumer.csproj&quot; -c Debug" />
+    <Exec Command="dotnet build &quot;$(ConsumerDirectory)/addon/Consumer.csproj&quot; -c Release" />
+    <!-- 2dog's build target imports with the packaged editor library before either smoke test runs. -->
+    <Exec Command="dotnet build &quot;$(ConsumerDirectory)/addon/host/Smoke.csproj&quot; -c Release -p:TwoDogVersion=$(TwoDogVersion)" />
+    <Exec Command="dotnet run --project &quot;$(ConsumerDirectory)/addon/host/Smoke.csproj&quot; -c Release --no-build --no-restore -- csharp" Timeout="120000" />
+    <Exec Command="dotnet run --project &quot;$(ConsumerDirectory)/addon/host/Smoke.csproj&quot; -c Release --no-build --no-restore -- gdscript" Timeout="120000" />
+    <Exec Command="dotnet restore &quot;$(ConsumerDirectory)/package/Consumer.csproj&quot; -p:Version=$(Version) --configfile &quot;$(ConsumerDirectory)/package/NuGet.config&quot; --packages &quot;$(ConsumerDirectory)/package-cache&quot; --force" />
+    <Exec Command="dotnet build &quot;$(ConsumerDirectory)/package/Consumer.csproj&quot; -c Release -p:Version=$(Version) --no-restore" />
+  </Target>
+</Project>

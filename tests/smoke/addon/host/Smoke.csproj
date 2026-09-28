@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GodotProjectDir>..</GodotProjectDir>
+    <TwoDogRequireImport>true</TwoDogRequireImport>
+    <TwoDogRemoveDuplicateGodotAnalyzers>true</TwoDogRemoveDuplicateGodotAnalyzers>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="2dog.engine" Version="$(TwoDogVersion)" />
+    <ProjectReference Include="../Consumer.csproj" />
+  </ItemGroup>
+</Project>

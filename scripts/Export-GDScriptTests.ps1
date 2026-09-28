@@ -5,7 +5,8 @@ $ErrorActionPreference = 'Stop'
 $repository = Split-Path -Parent $PSScriptRoot
 Push-Location $repository
 try {
-    & ./testbed-gdscript/Stage.ps1
+    dotnet msbuild testbed-gdscript/host/gdscript.2dog.csproj -t:StageGDScript
+    if ($LASTEXITCODE -ne 0) { throw 'GDScript staging failed.' }
     foreach ($template in 'web_release.zip', 'windows_release_x86_64.exe') {
         if (!(Test-Path -LiteralPath "artifacts/godot-templates/$template")) { throw 'Run scripts/Get-GodotTemplates.ps1 first.' }
     }

@@ -14,7 +14,7 @@ dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release
 ```
 
 The host build copies the current addon and shared fixtures into ignored project
-directories. The launcher checks every addon script compiles, runs the tests, and
+directories before 2dog's required MSBuild import. The launcher checks every addon script compiles, runs the tests, and
 exits nonzero for assertions, captured Godot script errors, or a 120-frame timeout.
 Shared timing, easing and group completion/overshoot fixtures also run through the
 C# implementation in the library test suite. Group tests additionally cover shared
@@ -38,13 +38,13 @@ validation remains pinned to .91 until the new package can be tested.
 To use an installed standard Godot executable instead:
 
 ```powershell
-./testbed-gdscript/Stage.ps1
+dotnet msbuild testbed-gdscript/host/gdscript.2dog.csproj -t:StageGDScript
 godot --headless --path testbed-gdscript -- --run-tests
 ```
 
 Standard non-.NET Godot 4.7.2 is also validated. The project can be opened in the Godot editor; use
-`--run-tests` in the run arguments. No editor import/cache is needed by the 2dog
-test path because scripts explicitly preload their dependencies.
+`--run-tests` in the run arguments. The 2dog build imports through its packaged
+editor library; it does not need an installed Godot executable.
 
 ## Export and packaging validation
 
@@ -56,7 +56,7 @@ The committed Windows/Web test presets use matching official templates under
 ./scripts/Export-GDScriptTests.ps1 -Godot C:/Tools/godot/Godot_v4.7.2-stable_win64_console.exe
 npm.cmd install --prefix artifacts/browser-test --no-audit --no-fund playwright-core@1.56.1
 node scripts/test-gdscript-web.mjs
-./scripts/Pack-GDScript.ps1
+./scripts/Pack-Addon.ps1
 ```
 
 Template downloads are verified against the official SHA512 list. The export

@@ -1,21 +1,28 @@
 ---
-title: Concise, reusable tweens for Godot
+title: Hello!
 template: splash
-description: A tweening library for Godot that takes less code to write and read than the built-in Tween, with beta support for C# and GDScript.
-heroDescription: Less code to write and read than Godot's built-in Tween. <br/> Beta support for C# and GDScript.
+description: A tweening library for Godot that takes less code to write and read than, supporting C# and GDScript.
+heroDescription: Less code to write and read. <br/> Lovely new ways to animate.
 facts:
-  - text: C# beta · .NET 10 · Godot 4.7.2
-  - text: GDScript beta · Godot 4.7.2
+  - text: C# (beta) · .NET 10 · Godot 4.7.2
+  - text: GDScript (beta) · Godot 4.7.2
 hero:
   title: tweens.gd
   tagline: What if writing tweens didn't suck?
   actions:
-    - text: Choose your language
+    - text: Choose C#
+      link: '#choose-a-language'
+      icon: right-arrow
+    - text: or GDScript
       link: '#choose-a-language'
       icon: right-arrow
     - text: Join our Discord
       link: https://discord.gg/3UXVHnmEwd
       icon: discord
+      variant: secondary
+    - text: Github
+      link: https://github.com/outfox/tweens.gd
+      icon: github
       variant: secondary
       attrs:
         iconPlacement: start
@@ -31,7 +38,7 @@ import Variants from '../../components/Variants.astro';
 
 <Doors />
 
-## Learn it in five steps
+## Quickstart: 5 Step Tutorial
 
 <Lang only="csharp">
 
@@ -62,7 +69,7 @@ import Variants from '../../components/Variants.astro';
    Move a sprite, then fade it out.
 3. [Definitions](/gdscript/definitions/)
    Name motion once and reuse it everywhere.
-4. [Groups & sequences](/gdscript/sequences/)
+4. [Sequences](/gdscript/sequences/)
    Chain, group, and stagger steps.
 5. [Control & completion](/gdscript/playback/)
    Pause, cancel, and handle every ending.

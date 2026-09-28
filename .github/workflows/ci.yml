@@ -57,7 +57,7 @@ jobs:
       - name: Test
         run: dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release --no-build --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/test-results
       - name: Test library with coverage
-        run: ./tests/Measure-Coverage.ps1 -Configuration Release -NoBuild -MinimumLine 99 -MinimumBranch 95
+        run: dotnet msbuild build/Coverage.proj -p:Configuration=Release -p:NoBuild=true
       - name: Run headless testbed
         timeout-minutes: 2
         run: dotnet run --project testbed/testbed.2dog -c Release --no-build --no-restore -- --headless --quit-after 12
@@ -76,12 +76,9 @@ jobs:
         run: dotnet pack csharp/tweens.gd.csproj -c Release --no-build --no-restore -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION -o artifacts/packages
       - name: Pack unified Godot Asset Store addon
         run: ./scripts/Pack-Addon.ps1 -Version $env:PACKAGE_VERSION
-      - name: Verify addon in a fresh Godot C# project
-        run: |
-          $engines = ./scripts/Get-GodotEngines.ps1
-          ./scripts/Verify-Addon.ps1 -Version $env:PACKAGE_VERSION -Godot $engines.Godot -GodotDotNet $engines.GodotDotNet
-      - name: Verify package and compile a package consumer
-        run: ./.github/scripts/Verify-Package.ps1 -Version $env:PACKAGE_VERSION
+      - name: Verify packages and smoke test the addon with 2dog
+        timeout-minutes: 5
+        run: dotnet msbuild build/Smoke.proj -p:Version=$env:PACKAGE_VERSION
       - name: Upload packages
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -98,6 +95,6 @@ jobs:
           name: test-results
           path: |
             artifacts/test-results/*.trx
-            artifacts/coverage/*.trx
+            artifacts/coverage/**/*.trx
             artifacts/coverage/**/coverage.cobertura.xml
           if-no-files-found: ignore
