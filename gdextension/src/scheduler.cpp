@@ -211,6 +211,8 @@ void TweensGdScheduler::update(double p_delta, double p_unscaled_delta, int64_t 
 	if (!require_main_thread()) {
 		return;
 	}
+	// Signal listeners and tween callbacks may drop the last reference to this scheduler.
+	const Ref<TweensGdScheduler> keep(this);
 	if (disposed) {
 		report_error("The scheduler is disposed.");
 		return;
@@ -227,7 +229,6 @@ void TweensGdScheduler::update(double p_delta, double p_unscaled_delta, int64_t 
 		report_error("Update requires finite nonnegative deltas and a valid process mode.");
 		return;
 	}
-	const Ref<TweensGdScheduler> keep(this);
 	updating = true;
 	ticks[p_mode] += 1;
 	const uint32_t count = instances.size();
@@ -250,6 +251,7 @@ void TweensGdScheduler::cancel_all() {
 	if (!require_main_thread()) {
 		return;
 	}
+	const Ref<TweensGdScheduler> keep(this);
 	const LocalVector<Ref<TweensGdHandle>> snapshot(instances);
 	for (const Ref<TweensGdHandle> &instance : snapshot) {
 		instance->cancel();
@@ -263,6 +265,7 @@ void TweensGdScheduler::cancel_owner(Node *p_owner, bool p_include_children) {
 	if (!require_main_thread() || p_owner == nullptr) {
 		return;
 	}
+	const Ref<TweensGdScheduler> keep(this);
 	const ObjectID owner_id(p_owner->get_instance_id());
 	const LocalVector<Ref<TweensGdHandle>> snapshot(instances);
 	for (const Ref<TweensGdHandle> &instance : snapshot) {

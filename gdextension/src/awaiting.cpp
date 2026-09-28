@@ -23,6 +23,8 @@ void TweensGdCancellation::cancel() {
 		return;
 	}
 	cancelled = true;
+	// Completed waits release their token, possibly the last reference to it.
+	const Ref<TweensGdCancellation> keep(this);
 	emit_signal(names().cancelled);
 	disconnect_all(this, names().cancelled);
 }

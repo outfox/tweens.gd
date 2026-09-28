@@ -221,6 +221,7 @@ void TweensGdGroup::set_paused(bool p_paused) {
 	if (!require_main_thread()) {
 		return;
 	}
+	const Ref<TweensGdGroup> keep(this);
 	for (int64_t index = 0; index < members.size(); index++) {
 		const Ref<TweensGdHandle> member = members[index];
 		if (!member->is_terminal()) {
@@ -233,6 +234,8 @@ void TweensGdGroup::cancel() {
 	if (!require_main_thread()) {
 		return;
 	}
+	// Member callbacks and waiters may drop the last reference to this group.
+	const Ref<TweensGdGroup> keep(this);
 	for (int64_t index = 0; index < members.size(); index++) {
 		const Ref<TweensGdHandle> member = members[index];
 		member->cancel();
@@ -250,6 +253,8 @@ Variant TweensGdGroup::wait(const Ref<TweensGdCancellation> &p_cancellation) {
 }
 
 void TweensGdGroup::on_ended(int64_t p_reason) {
+	// A finishing wait releases the group it kept alive, often the last reference to a temporary group.
+	const Ref<TweensGdGroup> keep(this);
 	emit_signal(names().ended, p_reason);
 	disconnect_all(this, names().ended);
 }
