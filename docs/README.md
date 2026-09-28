@@ -44,6 +44,28 @@ pages are shared; the sidebar lists all but the overview, which the site title l
 - Interactive demos are shared. Pass `lang="gdscript"` so their code and labels use
   GDScript names; `src/scripts/lang.ts` maps the C# names.
 - Renamed URLs keep working through `redirects` in `src/tracks.mjs`.
+- Search includes the selected language's path and shared pages. `Head.astro` tags pages
+  for Pagefind; `overrides/Search.astro` applies the filter and follows `tweens:lang` changes.
+  The search override retains Starlight 0.42.4's UI; every Astro build checks for upstream drift.
+
+## Search override maintenance
+
+Starlight's search component does not expose its Pagefind UI instance, so the language
+filter currently needs a local component override. `scripts/check-search-upstream.mjs`
+checks the installed upstream component against the reviewed source's SHA-256, ignoring
+only CRLF/LF differences. An Astro build hook fails the build if that source changes,
+including when running `astro build` directly. Run `npm run check:search` to check it alone.
+
+When this check fails after an upgrade:
+
+1. Compare the installed `@astrojs/starlight/components/Search.astro` with
+   `src/components/overrides/Search.astro`. The checker prints the upstream file location.
+2. Port upstream fixes while retaining the language filter, or remove the override and
+   this check if Starlight now provides a suitable extension hook.
+3. Verify search in both languages, shared-page switching with an existing query,
+   remembered language selection, and pagination in a production preview.
+4. Update `reviewedHash` to the checksum printed by the checker after reviewing the
+   changes, update the version in the override's attribution, and rebuild.
 
 ## Content conventions
 

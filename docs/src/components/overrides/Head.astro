@@ -1,11 +1,15 @@
 ---
 import Default from '@astrojs/starlight/components/Head.astro';
+import { LANGS, trackOf } from '../../tracks.mjs';
 import display from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2?url';
 import body from '@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2?url';
 import mono from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
 
 // Preloading the Latin faces lets first paint use them, so text does not reflow when fonts swap in.
 const fonts = [display, body, mono];
+// Shared pages belong to both search scopes; a language page belongs only to its own.
+const track = trackOf(Astro.locals.starlightRoute.id);
+const searchLanguages = track ? [track] : Object.keys(LANGS);
 
 // Browsers with Speculation Rules fetch a page once the pointer rests on its link, into a cache meant for navigations;
 // the others ignore the rules. Prefetch only: a prerender would run this page's scripts before the click.
@@ -21,6 +25,7 @@ const speculation = {
 ---
 
 <Default />
+{searchLanguages.map((lang) => <meta data-pagefind-filter="code-language[content]" content={lang} />)}
 <script type="speculationrules" is:inline set:html={JSON.stringify(speculation)} />
 <!-- Language pages set the language and remember it; shared pages use the remembered one (C# by default).
      Runs before first paint so language-specific blocks never flash. -->
