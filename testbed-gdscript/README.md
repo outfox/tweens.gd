@@ -1,11 +1,15 @@
 # GDScript conformance project
 
-The project runs actual `.gd` code, with no reference to the C# tween library.
-The addon itself has no .NET dependency; 2dog is only the development test host.
+The project runs the GDScript API and its GDExtension, with no reference to the C#
+tween library. The addon itself has no .NET dependency; 2dog is only the development
+test host. Build the extension for your platform first
+([gdextension/README.md](../gdextension/README.md)).
 
 From the repository root:
 
 ```powershell
+scons -C gdextension target=template_debug
+scons -C gdextension target=template_release
 dotnet run --project testbed-gdscript/host -c Release
 dotnet run --project testbed-gdscript/host -c Debug
 dotnet run --project testbed-gdscript/host -c Debug -- --rendering
@@ -13,8 +17,8 @@ dotnet run --project testbed-gdscript/host -c Release -- --lifecycle
 dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release
 ```
 
-The host build copies the current addon and shared fixtures into ignored project
-directories before 2dog's required MSBuild import. The launcher checks every addon script compiles, runs the tests, and
+The host build copies the current addon, including its `bin/` libraries, and shared
+fixtures into ignored project directories before 2dog's required MSBuild import. The launcher checks every addon script compiles, runs the tests, and
 exits nonzero for assertions, captured Godot script errors, or a 120-frame timeout.
 Shared timing, easing and group completion/overshoot fixtures also run through the
 C# implementation in the library test suite. Group tests additionally cover shared
@@ -42,35 +46,44 @@ dotnet msbuild testbed-gdscript/host/gdscript.2dog.csproj -t:StageGDScript
 godot --headless --path testbed-gdscript -- --run-tests
 ```
 
-Standard non-.NET Godot 4.7.2 is also validated. The project can be opened in the Godot editor; use
+Standard non-.NET Godot 4.7.2 is also validated on Windows and Linux; CI also runs the suite
+with the official Linux and macOS builds. The project can be opened in the Godot editor; use
 `--run-tests` in the run arguments. The 2dog build imports through its packaged
 editor library; it does not need an installed Godot executable.
 
 ## Export and packaging validation
 
-The committed Windows/Web test presets use matching official templates under
-`artifacts/godot-templates/`. Export with the installed standard Godot editor:
+The committed Windows and Web test presets use matching official templates under
+`artifacts/godot-templates/`. The Web presets use the `dlink` templates, which can
+load GDExtensions: one single-threaded, one with thread support. The Web exports need
+the release Web libraries, built with Emscripten 4.0.11 (emsdk) on `PATH`. Export with
+the installed standard Godot editor:
 
 ```powershell
+scons -C gdextension platform=web target=template_release threads=no
+scons -C gdextension platform=web target=template_release threads=yes
 ./scripts/Get-GodotTemplates.ps1
 ./scripts/Export-GDScriptTests.ps1 -Godot C:/Tools/godot/Godot_v4.7.2-stable_win64_console.exe
 npm.cmd install --prefix artifacts/browser-test --no-audit --no-fund playwright-core@1.56.1
 node scripts/test-gdscript-web.mjs
-./scripts/Pack-Addon.ps1
+node scripts/test-gdscript-web.mjs gdscript-web-threads
+./scripts/Pack-Addon.ps1 -AllowMissingNative # Partial: only the libraries built here.
 ```
 
 Template downloads are verified against the official SHA512 list. The export
-script builds both release exports and runs the Windows executable headlessly.
+script builds the three release exports and runs the Windows executable headlessly.
 The Web harness starts a temporary localhost server and isolated headless Edge,
 runs the exported suite, records its result, and closes both. Set `GDSCRIPT_BROWSER`
-to another installed Playwright Chromium channel to test it. Browser worker-thread
-rejection tests are skipped because this preset deliberately disables threads;
-core, group, catalog, custom-adapter and rendering tests still run.
+to another installed Playwright Chromium channel to test it. Worker-thread
+rejection tests are skipped on the Web; core, group, catalog, custom-adapter and
+rendering tests still run.
 
 Local validation used Godot 4.7.2 and Edge 154 on Windows. Wider browser/device
 coverage and performance budgets remain separate follow-ups. No benchmark rerun is
 part of the parity work. The addon ZIP contains only `addons/tweens_gd/`, including
-source, the helper catalog and licenses. CI checks generated files and uploads the
+source, the helper catalog, the GDExtension libraries and licenses. Locally,
+`-AllowMissingNative` packs a partial archive with only the libraries built here;
+release archives come from CI, which has every library. CI checks generated files and uploads the
 ZIP beside the C# packages for the existing release workflow.
 
 ## Baseline benchmark

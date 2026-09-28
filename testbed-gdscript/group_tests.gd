@@ -3,7 +3,6 @@
 extends RefCounted
 
 const T = preload("res://addons/tweens_gd/tweens.gd")
-const Carry = preload("res://addons/tweens_gd/carry.gd")
 
 var _host: Node
 
@@ -20,11 +19,11 @@ func check(condition: bool, message: String) -> void:
 func near(actual: float, expected: float, message: String) -> void:
 	_host.near(actual, expected, message)
 
-func start(scheduler, duration: float = 1.0) -> T.Handle:
+func start(scheduler, duration: float = 1.0) -> TweensGdHandle:
 	return scheduler.add(RefCounted.new(), T.value(0.0, 1.0, duration))
 
 func _completion() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var a := start(scheduler)
 	var b := start(scheduler, 2.0)
 	var input := [a, b, a]
@@ -45,7 +44,7 @@ func _completion() -> bool:
 	group.resume()
 	group.cancel()
 	check(results == [T.Reason.COMPLETED] and not group.is_paused, "settled group controls are safe and completion is one-shot")
-	var already := T.Group.of([a, b])
+	var already := TweensGdGroup.of([a, b])
 	check(already.is_settled and already.completion_reason == T.Reason.COMPLETED, "already-completed group settles at creation")
 	var c := start(scheduler)
 	var partial := T.group([b, c])
@@ -56,7 +55,7 @@ func _completion() -> bool:
 	return true
 
 func _controls() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var a := start(scheduler)
 	var b := start(scheduler, 2.0)
 	var group := T.group([a, b])
@@ -88,8 +87,8 @@ func _controls() -> bool:
 
 func _lifetimes() -> bool:
 	for reason in [T.Reason.TARGET_FREED, T.Reason.OWNER_EXITED, T.Reason.RUNNER_DISPOSED]:
-		var scheduler := T.Scheduler.new()
-		var other := T.Scheduler.new()
+		var scheduler := TweensGdScheduler.new()
+		var other := TweensGdScheduler.new()
 		var owner := Node.new()
 		_host.add_child(owner)
 		var target := Object.new()
@@ -112,7 +111,7 @@ func _lifetimes() -> bool:
 	return true
 
 func _failures() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var faulty := T.value(0.0, 1.0, 1.0)
 	faulty.ease_function = func(_t): return NAN
 	var stale_owner := Node.new()
@@ -147,7 +146,7 @@ func _failures() -> bool:
 	return true
 
 func _reentrancy() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var events: Array[String] = []
 	var holder: Array = []
 	var definition := T.value(0.0, 1.0, 1.0)
@@ -189,8 +188,8 @@ func _continue(group, scheduler, results: Array, definition = null) -> void:
 
 func _carry() -> bool:
 	for mismatch in ["lane", "time", "scheduler", "next_lane", "next_time", "next_scheduler"]:
-		var scheduler := T.Scheduler.new()
-		var other := T.Scheduler.new()
+		var scheduler := TweensGdScheduler.new()
+		var other := TweensGdScheduler.new()
 		var definition := T.value(0.0, 1.0, 1.0)
 		if mismatch == "lane": definition.process_mode = T.Process.PHYSICS
 		if mismatch == "time": definition.use_unscaled_time = true
@@ -214,8 +213,8 @@ func _carry() -> bool:
 		scheduler.dispose()
 		other.dispose()
 	# A cancelled group emitted inside an unrelated success must mask that success's carry.
-	var scheduler := T.Scheduler.new()
-	var other := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
+	var other := TweensGdScheduler.new()
 	var group := T.group([start(other)])
 	var next: Array = []
 	_continue(group, scheduler, next)
@@ -229,7 +228,7 @@ func _carry() -> bool:
 	scheduler.update(0.0)
 	near(next[1].value, 0.0, "cancelled group masks unrelated scheduler carry")
 	near(after[0].value, 0.25, "nested group scope restores outer carry")
-	check(Carry.current.is_empty(), "carry scope restored after all signals")
+	check(not TweensGdScheduler._has_carry(), "carry scope restored after all signals")
 	scheduler.dispose()
 	other.dispose()
 	return true
@@ -237,10 +236,10 @@ func _carry() -> bool:
 func _conformance() -> bool:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/groups.json"))
 	for test in data.cases:
-		var scheduler := T.Scheduler.new()
-		var members: Array[T.Handle] = []
+		var scheduler := TweensGdScheduler.new()
+		var members: Array[TweensGdHandle] = []
 		for duration in test.durations: members.append(start(scheduler, duration))
-		var ordered: Array[T.Handle] = []
+		var ordered: Array[TweensGdHandle] = []
 		for index in test.order: ordered.append(members[int(index)])
 		var group := T.group(ordered)
 		var next: Array = []
@@ -257,7 +256,7 @@ func _conformance() -> bool:
 	return true
 
 func _references() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var a := start(scheduler)
 	var b := start(scheduler)
 	var group := T.group([a, b])
@@ -281,7 +280,7 @@ func _references() -> bool:
 	scheduler = null
 	check(weak_scheduler.get_ref() == null and retained.is_settled, "completed group carries only a weak scheduler reference")
 	# Even accidentally dropping an undisposed manual scheduler must not create an ownership cycle.
-	var abandoned := T.Scheduler.new()
+	var abandoned := TweensGdScheduler.new()
 	var dropped := T.group([start(abandoned)])
 	var weak_dropped: WeakRef = weakref(dropped)
 	var weak_member: WeakRef = weakref(dropped.members[0])
@@ -301,7 +300,7 @@ func _temporary_wait(scheduler, results: Array) -> void:
 	results.append(await T.group([start(scheduler)]).wait())
 
 func _waits_and_validation() -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var group := T.group([start(scheduler)])
 	var results: Array = []
 	_record_wait(group, results)
@@ -313,7 +312,7 @@ func _waits_and_validation() -> void:
 	check(await group.wait() == T.Reason.COMPLETED, "late group wait returns immediately")
 	check(await group.wait() == T.Reason.COMPLETED, "repeated group wait returns cached reason")
 	var survivor := start(scheduler)
-	for input in [null, [], 42, [null], [survivor, null], [survivor, 42], [survivor, T.Definition.new()]]:
+	for input in [null, [], 42, [null], [survivor, null], [survivor, 42], [survivor, TweensGdDefinition.new()]]:
 		_host.failures.append_array(_host._collector.take_errors())
 		var invalid := T.group(input)
 		var diagnostics: Array[String] = _host._collector.take_errors()
@@ -332,7 +331,7 @@ func _waits_and_validation() -> void:
 	_host.failures.append_array(_host._collector.take_errors())
 	var worker := Thread.new()
 	worker.start(func(): return T.group([survivor]))
-	var worker_group: T.Group = worker.wait_to_finish()
+	var worker_group: TweensGdGroup = worker.wait_to_finish()
 	var diagnostics: Array[String] = _host._collector.take_errors()
 	check(worker_group.is_settled and await worker_group.wait() == T.Reason.FAILED, "worker group creation returns failed group")
 	check(diagnostics.size() == 1 and not survivor.is_terminal, "worker rejection does not touch member state")

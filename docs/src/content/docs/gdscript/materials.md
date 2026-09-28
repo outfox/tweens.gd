@@ -54,7 +54,7 @@ Cleanup releases playback bindings but never the resources you supplied. See
 
 ### Manual scheduling
 
-Call `scheduler.add(material, definition)` on a `Tweens.Scheduler`, or pass an
+Call `scheduler.add(material, definition)` on a `TweensGdScheduler`, or pass an
 owner as the third argument. Without an owner, a manual scheduler has no tree
 pause to follow. Call `dispose()` on the scheduler when you're finished with it.
 

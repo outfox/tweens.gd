@@ -49,7 +49,11 @@
     <Target Name="StageGDScriptAddon" BeforeTargets="BeforeBuild">
         <ItemGroup>
             <GalleryAddon Include="../addons/tweens_gd/**/*" />
+            <!-- Mirror the addon: files removed from the source must not linger. Godot keeps its generated .uid files. -->
+            <StagedGalleryAddon Include="addons/tweens_gd/**/*" Exclude="addons/tweens_gd/**/*.uid" />
+            <StaleGalleryAddon Include="@(StagedGalleryAddon)" Exclude="@(GalleryAddon->'addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
         </ItemGroup>
+        <Delete Files="@(StaleGalleryAddon)" />
         <Copy SourceFiles="@(GalleryAddon)" DestinationFiles="@(GalleryAddon->'addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
     </Target>
 </Project>

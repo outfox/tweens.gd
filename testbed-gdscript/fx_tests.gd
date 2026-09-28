@@ -76,7 +76,7 @@ func run(host: Node) -> bool:
 	return true
 
 func _runtime(host: Node) -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var target := Target.new()
 	scheduler.add(target, T.property(^"amount", null, 1).with_by(2.0).with_ease_function(T.FX.punch(2)))
 	var sample := T.FX.shake_2d(Vector2(8, 4))

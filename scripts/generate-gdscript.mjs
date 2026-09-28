@@ -43,27 +43,19 @@ let gd = `# SPDX-License-Identifier: MIT
 extends RefCounted
 
 const CatalogTypes = preload("types.gd")
-const CatalogDefinition = preload("definition.gd")
 const CompoundAdapter = preload("compound_adapter.gd")
-
-static func _named(path: NodePath, target: StringName, type: int, to: Variant, seconds: float, easing: int,
-\t\tdelay: float) -> CatalogDefinition:
-\tvar definition := CatalogDefinition.new()
-\tdefinition.property = path
-\tdefinition.target_class = target
-\tdefinition.value_type = type
-\tdefinition.to_value = to
-\tdefinition.duration = seconds
-\tdefinition.ease = easing
-\tdefinition.delay = delay
-\treturn definition
 `;
 for (const e of entries) {
   const p = e.kind === 'property' ? e.paths[0] : '';
+  const named = `TweensGdDefinition.named(^"${p}", &"${e.target}", TYPE_${types[e.type]}, to, seconds, easing, delay)`;
   gd += `\n## ${e.csharp}: ${e.target}, ${e.type}. Null endpoints use the captured value.\n`;
   gd += `static func ${e.name}(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,\n`;
-  gd += `\t\tdelay: float = 0.0) -> CatalogDefinition:\n`;
-  gd += `\tvar definition := _named(^"${p}", &"${e.target}", TYPE_${types[e.type]}, to, seconds, easing, delay)\n`;
+  gd += `\t\tdelay: float = 0.0) -> TweensGdDefinition:\n`;
+  if (e.kind === 'property') {
+    gd += `\treturn ${named}\n`;
+    continue;
+  }
+  gd += `\tvar definition := ${named}\n`;
   if (e.kind === 'value') gd += `\tdefinition.initial_value = ${defaults[e.type]}\n`;
   if (['compound', 'global_quaternion'].includes(e.kind)) {
     gd += '\tvar adapter := CompoundAdapter.new()\n';

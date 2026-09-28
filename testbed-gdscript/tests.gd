@@ -3,7 +3,9 @@
 extends Node
 
 const T = preload("res://addons/tweens_gd/tweens.gd")
-const Playback = preload("res://addons/tweens_gd/playback.gd")
+# White-box: the runner registers itself on the SceneTree under these metadata keys.
+const RUNNER_KEY := &"_tweens_gd_runner"
+const CLOSING_KEY := &"_tweens_gd_closing"
 const ErrorCollector = preload("error_collector.gd")
 const Benchmark = preload("benchmark.gd")
 const GroupTests = preload("group_tests.gd")
@@ -42,6 +44,16 @@ class ResourceProbe extends RefCounted:
 		get:
 			when_read.call()
 			return 0.0
+
+# Lists "dynamic" only when asked to, but always answers for it.
+class DynamicProbe extends RefCounted:
+	var listed := false
+	func _get_property_list() -> Array[Dictionary]:
+		var properties: Array[Dictionary] = []
+		if listed: properties.append({"name": "dynamic", "type": TYPE_FLOAT, "usage": PROPERTY_USAGE_DEFAULT})
+		return properties
+	func _get(property: StringName) -> Variant:
+		return 1.0 if property == &"dynamic" else null
 
 func _ready() -> void:
 	if OS.has_feature("tweens_test_export") or "--run-tests" in OS.get_cmdline_user_args(): _run_standalone.call_deferred()
@@ -98,10 +110,10 @@ func run_tests() -> void:
 func _conformance() -> bool:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/timelines.json"))
 	for test in data.cases:
-		var definition := T.Definition.new()
+		var definition := TweensGdDefinition.new()
 		for key in test.options: definition.set(key, test.options[key])
 		check(definition.validate().is_empty(), test.name + " validates")
-		var clock := Playback.new(definition)
+		var clock := TweensGdPlayback.create(definition)
 		clock.elapsed = test.get("credit", 0.0)
 		for sample in test.samples:
 			clock.advance(sample.delta)
@@ -114,16 +126,17 @@ func _conformance() -> bool:
 	for ease in T.Ease.values():
 		near(T.Easing.evaluate(ease, 0.0), 0.0, "ease start")
 		near(T.Easing.evaluate(ease, 1.0), 1.0, "ease end")
+		check(is_nan(T.Easing.evaluate(ease, NAN)), "ease %d keeps NaN progress detectable" % ease)
 	var infinite := T.value(0.0, 1.0, 1.0)
 	infinite.repeats = T.INFINITE
-	var huge := Playback.new(infinite)
-	huge.advance(Playback.MAX_TIME)
-	huge.advance(Playback.MAX_TIME)
+	var huge := TweensGdPlayback.create(infinite)
+	huge.advance(1.7976931348623157e308)
+	huge.advance(1.7976931348623157e308)
 	check(not huge.completed and is_finite(huge.progress), "huge infinite deltas saturate")
 	return true
 
 func _validation() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var target := RefCounted.new()
 	for field in ["duration", "delay", "offset", "ping_pong_interval", "repeat_interval"]:
 		for invalid in [-1.0, INF, NAN]:
@@ -150,6 +163,13 @@ func _validation() -> bool:
 	check(scheduler.add(target, T.value(Quaternion(0, 0, 0, 0), Quaternion.IDENTITY)).completion_reason == T.Reason.FAILED, "reject zero quaternion")
 	check(scheduler.add(target, T.property(^"missing", 1.0)).completion_reason == T.Reason.FAILED, "reject missing property")
 	check(scheduler.active_count == 0, "invalid starts do not register work")
+	var listing := DynamicProbe.new()
+	listing.listed = true
+	var dynamic := scheduler.add(listing, T.property(^"dynamic", 2.0, 1.0))
+	check(dynamic.completion_reason != T.Reason.FAILED, "an instance's own property list admits its property")
+	dynamic.cancel()
+	check(scheduler.add(DynamicProbe.new(), T.property(^"dynamic", 2.0, 1.0)).completion_reason == T.Reason.FAILED,
+		"another instance's property list does not admit a property")
 	var valid := scheduler.add(target, T.value(0.0, 1.0, 1.0))
 	scheduler.update(-0.1)
 	near(valid.value, 0.0, "invalid update does not advance")
@@ -160,7 +180,7 @@ func _validation() -> bool:
 
 func _snapshots_and_fill() -> bool:
 	if trace_runs: print("snapshots: nodes")
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var first := Node2D.new()
 	var second := Node2D.new()
 	add_child(first)
@@ -217,7 +237,7 @@ func _leg_exponents() -> bool:
 			[0.5, 0.5, 0.5, 0.5], [2.0, 1.0, 0.0625, 0.25],
 			[1.0, 2.0, 0.25, 0.0625], [2.0, 0.5, 0.0625, 0.5]]:
 		for easing in ["linear", "quad", "custom", "curve"]:
-			var scheduler := T.Scheduler.new()
+			var scheduler := TweensGdScheduler.new()
 			var definition := T.value(0.0, 1.0, 1.0).with_ping_pong().with_skew(exponents[0]).with_weks(exponents[1])
 			var curve := Curve.new()
 			curve.add_point(Vector2.ZERO)
@@ -245,7 +265,7 @@ func _leg_exponents() -> bool:
 			check(handle.completion_reason == T.Reason.COMPLETED, "ping-pong completes")
 			scheduler.dispose()
 	for relative in [false, true]:
-		var scheduler := T.Scheduler.new()
+		var scheduler := TweensGdScheduler.new()
 		var definition := T.value(0.0, null if relative else 1.0, 1.0).with_ping_pong().with_skew(2.0).with_weks(0.5)
 		if relative: definition.by_value = 1.0
 		definition.delay = 0.5
@@ -261,7 +281,7 @@ func _leg_exponents() -> bool:
 			near(handle.value, sample[1], "leg selection through intervals, repeats and jumps")
 		check(handle.completion_reason == T.Reason.COMPLETED, "repeats complete")
 		scheduler.dispose()
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var forward := scheduler.add(self, T.value(0.0, 1.0, 1.0).with_repeats(2).with_skew(2.0).with_weks(0.5))
 	scheduler.update(1.25)
 	near(forward.value, 0.0625, "weks does not affect forward repeats")
@@ -311,7 +331,7 @@ func _factories_and_with() -> bool:
 			["with_on_update", callback, "on_update"], ["with_on_end", callback, "on_end"],
 			["with_on_cancel", callback, "on_cancel"], ["with_on_finally", callback, "on_finally"]]:
 		var before: Variant = base.get(case[2])
-		var changed: T.Definition = base.call(case[0], case[1])
+		var changed: TweensGdDefinition = base.call(case[0], case[1])
 		check(changed != base and changed.get(case[2]) == case[1] and changed.target_class == &"Kept",
 			case[0] + " returns a changed copy")
 		check(base.get(case[2]) == before, case[0] + " leaves the original unchanged")
@@ -319,7 +339,7 @@ func _factories_and_with() -> bool:
 	check(chained.delay == 0.5 and chained.to_value == 3.0 and base.delay == 0.0 and base.to_value == 1.0,
 		"with_ calls chain on copies")
 
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var first := Node2D.new()
 	var second := Node2D.new()
 	add_child(first)
@@ -338,7 +358,7 @@ func _factories_and_with() -> bool:
 func _relative() -> bool:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/endpoints.json"))
 	for test in data.cases:
-		var fixture := T.Scheduler.new()
+		var fixture := TweensGdScheduler.new()
 		var probe := Holder.new()
 		probe.amount = test.start
 		var definition := T.property(^"amount", null)
@@ -354,7 +374,7 @@ func _relative() -> bool:
 			if sample.has("value"): near(probe.amount, sample.value, test.name)
 		fixture.dispose()
 
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var holder := Holder.new()
 	holder.amount = 1.0
 	scheduler.add(holder, T.property(^"amount", null, 1.0).with_by(10.0))
@@ -412,7 +432,7 @@ func _relative() -> bool:
 	return true
 
 func _adjustments() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var holder := Holder.new()
 	var tilt := Quaternion(Vector3.RIGHT, PI / 2.0)
 	holder.turn = Quaternion(Vector3.UP, PI / 2.0)
@@ -448,7 +468,7 @@ func _adjustments() -> bool:
 	return true
 
 func _interpolation() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var target := RefCounted.new()
 	for pair in [[0.0, 10.0, 5.0], [0, 3, 2], [Vector2.ZERO, Vector2(2, 4), Vector2(1, 2)],
 			[Vector3.ZERO, Vector3(2, 4, 6), Vector3(1, 2, 3)], [Vector4.ZERO, Vector4(2, 4, 6, 8), Vector4(1, 2, 3, 4)],
@@ -458,6 +478,16 @@ func _interpolation() -> bool:
 		scheduler.update(0.5)
 		check(h.value == pair[2], "interpolate type %s: got %s, expected %s (state %s, error %s)" % [type_string(typeof(pair[0])), h.value, pair[2], h.state, h.error])
 		h.cancel()
+	var extreme := scheduler.add(target, T.value(-1.7e308, 1.7e308, 1.0))
+	scheduler.update(0.0)
+	check(extreme.value == -1.7e308, "endpoints near opposite double limits keep their start")
+	scheduler.update(0.5)
+	check(extreme.completion_reason != T.Reason.FAILED and extreme.value == 0.0, "endpoints near opposite double limits interpolate")
+	extreme.cancel()
+	var wide := scheduler.add(target, T.value(Vector2(-3.0e38, 1.0), Vector2(3.0e38, 1.0), 1.0))
+	scheduler.update(0.5)
+	check(wide.completion_reason != T.Reason.FAILED and wide.value == Vector2(0.0, 1.0), "vector components near opposite float limits interpolate")
+	wide.cancel()
 	var rotation := scheduler.add(target, T.value(Quaternion.IDENTITY, -Quaternion(Vector3.UP, PI / 2.0), 1.0))
 	scheduler.update(0.5)
 	check(rotation.value.is_equal_approx(Quaternion(Vector3.UP, PI / 4.0)), "quaternion uses shortest path")
@@ -485,7 +515,7 @@ func _interpolation() -> bool:
 	return true
 
 func _callbacks() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var events: Array[String] = []
 	var definition := T.value(0.0, 1.0, 1.0)
 	definition.on_add = func(_h): events.append("add")
@@ -528,7 +558,7 @@ func _callbacks() -> bool:
 	return true
 
 func _lifetime() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var node := Node2D.new()
 	add_child(node)
 	var h := scheduler.add(node, T.property(^"position:x", 10.0, 1.0))
@@ -561,11 +591,20 @@ func _lifetime() -> bool:
 	var bound := scheduler.add(resource, T.value(0.0, 1.0, 1.0), owner)
 	owner.free()
 	check(bound.completion_reason == T.Reason.OWNER_EXITED, "resource follows owner lifetime")
+	var parent := Node.new()
+	var other := Node.new()
+	add_child(parent)
+	add_child(other)
+	scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0).with_on_cancel(func(_h): parent.free()), parent)
+	var unrelated := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0), other)
+	scheduler.cancel_owner(parent, true)
+	check(not unrelated.is_terminal, "cancel_owner survives a callback that frees the owner")
+	other.free()
 	scheduler.dispose()
 	return true
 
 func _setter_reentrancy() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var target := PropertyProbe.new()
 	add_child(target)
 	var h := scheduler.add(target, T.property(^"amount", 10.0, 1.0))
@@ -603,7 +642,7 @@ func _setter_reentrancy() -> bool:
 	return true
 
 func _pause_and_lanes() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var node := Node.new()
 	add_child(node)
 	node.process_mode = Node.PROCESS_MODE_DISABLED
@@ -639,7 +678,7 @@ func _pause_and_lanes() -> bool:
 	return true
 
 func _detected_faults() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var events: Array = []
 	var def := T.value(0.0, 1.0, 1.0)
 	def.ease_function = func(_t): return NAN
@@ -661,7 +700,7 @@ func _detected_faults() -> bool:
 	return true
 
 func _reference_cleanup() -> bool:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var h := scheduler.add(self, T.value(0.0, 1.0, 1.0))
 	var weak_handle: WeakRef = weakref(h)
 	h = null
@@ -670,13 +709,13 @@ func _reference_cleanup() -> bool:
 	var weak_scheduler: WeakRef = weakref(scheduler)
 	scheduler = null
 	check(weak_scheduler.get_ref() == null, "no scheduler/handle ownership cycle")
-	var retained_scheduler := T.Scheduler.new()
+	var retained_scheduler := TweensGdScheduler.new()
 	var retained := retained_scheduler.add(self, T.value(0.0, 1.0))
 	retained_scheduler.update(0.0)
 	var weak_retained_scheduler: WeakRef = weakref(retained_scheduler)
 	retained_scheduler = null
 	check(weak_retained_scheduler.get_ref() == null and retained.is_settled, "finished handle does not retain scheduler")
-	var observer_scheduler := T.Scheduler.new()
+	var observer_scheduler := TweensGdScheduler.new()
 	var observed := observer_scheduler.add(self, T.value(0.0, 1.0))
 	_capture_in_observer(observed)
 	var weak_observed: WeakRef = weakref(observed)
@@ -699,7 +738,7 @@ func _sequence(scheduler) -> void:
 	_sequence_handles.append(scheduler.add(self, T.value(0.0, 1.0, 1.0)))
 
 func _await_and_carry() -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var h := scheduler.add(self, T.value(0.0, 1.0, 1.0))
 	_record_wait(h)
 	_record_wait(h)
@@ -725,8 +764,8 @@ func _automatic_runner() -> void:
 	add_child(node)
 	var h := T.play(node, T.property(^"position:x", 10.0, 0.0))
 	var group := T.group([h, T.play(node, T.property(^"position:y", 20.0, 0.0))])
-	var runner = get_tree().get_meta(T.Runner.META_KEY)
-	check(runner == T._runner(get_tree()), "one automatic runner per tree")
+	var runner = get_tree().get_meta(RUNNER_KEY)
+	check(runner == TweensGdRunner.acquire(get_tree()), "one automatic runner per tree")
 	check(not runner.is_inside_tree(), "runner attachment is deferred")
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -742,32 +781,32 @@ func _automatic_runner() -> void:
 	var disposed := T.play(node, T.property(^"position:x", 1.0, 10.0))
 	runner.free()
 	check(disposed.completion_reason == T.Reason.RUNNER_DISPOSED, "runner teardown settles work")
-	check(not get_tree().has_meta(T.Runner.META_KEY), "runner removes tree metadata")
+	check(not get_tree().has_meta(RUNNER_KEY), "runner removes tree metadata")
 	# Disposal before deferred attachment must settle work and remove its metadata too.
 	var pending := T.play(node, T.property(^"position:x", 1.0, 10.0))
-	var pending_runner = get_tree().get_meta(T.Runner.META_KEY)
+	var pending_runner = get_tree().get_meta(RUNNER_KEY)
 	pending_runner.free()
 	check(pending.completion_reason == T.Reason.RUNNER_DISPOSED, "pending runner teardown settles work")
-	check(not get_tree().has_meta(T.Runner.META_KEY), "pending runner removes metadata")
+	check(not get_tree().has_meta(RUNNER_KEY), "pending runner removes metadata")
 	await get_tree().process_frame
 	# A queued runner can be replaced; deleting the old runner must keep the new one.
 	var old := T.play(node, T.property(^"position:x", 2.0, 10.0))
-	var old_runner = get_tree().get_meta(T.Runner.META_KEY)
+	var old_runner = get_tree().get_meta(RUNNER_KEY)
 	old_runner.queue_free()
 	var replacement := T.play(node, T.property(^"position:x", 3.0, 10.0))
-	var replacement_runner = get_tree().get_meta(T.Runner.META_KEY)
+	var replacement_runner = get_tree().get_meta(RUNNER_KEY)
 	check(old_runner != replacement_runner, "queued runner is replaced")
 	await get_tree().process_frame
 	await get_tree().process_frame
 	check(old.is_settled and not replacement.is_settled, "replacement outlives old runner")
-	check(get_tree().get_meta(T.Runner.META_KEY) == replacement_runner, "old runner preserves replacement metadata")
+	check(get_tree().get_meta(RUNNER_KEY) == replacement_runner, "old runner preserves replacement metadata")
 	replacement_runner.free()
 	node.free()
 
-func _expected_rejection(start: Callable, message: String) -> T.Handle:
+func _expected_rejection(start: Callable, message: String) -> TweensGdHandle:
 	# Keep unrelated errors visible; only consume the expected diagnostic for this call.
 	failures.append_array(_collector.take_errors())
-	var handle: T.Handle = start.call()
+	var handle: TweensGdHandle = start.call()
 	var errors := _collector.take_errors()
 	check(handle != null, message + " returns a handle")
 	check(errors.size() == 1, message + " reports exactly one error")
@@ -780,7 +819,7 @@ func _rejected_starts() -> void:
 	var callbacks: Array = []
 	definition.on_add = func(_h): callbacks.append("add")
 	definition.on_finally = func(_h): callbacks.append("finally")
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var diagnostics: Array[String] = []
 	scheduler.error_reported.connect(func(message): diagnostics.append(message))
 	var rejected := scheduler.add(self, definition)
@@ -800,7 +839,7 @@ func _rejected_starts() -> void:
 	check(after_signal.is_empty() and callbacks.is_empty(), "settled rejection cannot run callbacks or end a second time")
 	scheduler.dispose()
 	check(await scheduler.add(self, definition).wait() == T.Reason.FAILED, "disposed scheduler still returns an awaitable handle")
-	var getter_scheduler := T.Scheduler.new()
+	var getter_scheduler := TweensGdScheduler.new()
 	var owner := Node.new()
 	add_child(owner)
 	var resource := ResourceProbe.new()
@@ -832,14 +871,17 @@ func _rejected_starts() -> void:
 		check(failed.is_settled and await failed.wait() == T.Reason.FAILED, "automatic rejection is safely awaitable without a tick")
 	check(callbacks.is_empty(), "automatic rejections run no definition callbacks")
 	detached.free()
-	var runner = get_tree().get_meta(T.Runner.META_KEY)
+	var runner = get_tree().get_meta(RUNNER_KEY)
 	check(runner.scheduler.active_count == 0, "automatic rejection schedules no work")
 	runner.free()
-	get_tree().set_meta(T.Runner.CLOSING_KEY, true)
+	get_tree().set_meta(CLOSING_KEY, true)
 	var closing := _expected_rejection(func(): return T.play(self, definition), "closing tree")
-	get_tree().remove_meta(T.Runner.CLOSING_KEY)
+	get_tree().remove_meta(CLOSING_KEY)
 	check(await closing.wait() == T.Reason.FAILED, "closing tree needs no future tick to settle rejection")
-	check(not get_tree().has_meta(T.Runner.META_KEY), "closing tree rejection creates no runner")
+	check(not get_tree().has_meta(RUNNER_KEY), "closing tree rejection creates no runner")
+	failures.append_array(_collector.take_errors())
+	check(TweensGdRunner.acquire(null) == null, "acquire rejects a missing tree")
+	check(_collector.take_errors().size() == 1, "acquire reports a missing tree once")
 	# The API rejects worker-thread use before touching scene state, but still returns a handle.
 	if OS.has_feature("web"): return # The export deliberately disables thread support.
 	var worker := Thread.new()

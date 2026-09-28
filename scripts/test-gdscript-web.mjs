@@ -7,7 +7,9 @@ import path from 'node:path';
 import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const directory = path.join(root, 'artifacts/gdscript-web');
+// Pass gdscript-web-threads to test the thread-enabled export.
+const name = process.argv[2] ?? 'gdscript-web';
+const directory = path.join(root, 'artifacts', name);
 const log = [];
 const mime = { '.html': 'text/html', '.js': 'text/javascript', '.wasm': 'application/wasm', '.png': 'image/png' };
 const server = http.createServer((request, response) => {
@@ -29,11 +31,11 @@ try {
   await page.goto(`http://127.0.0.1:${server.address().port}/`);
   await page.waitForFunction(() => window.tweensTestResult, { }, { timeout: 60000 });
   const result = await page.evaluate(() => window.tweensTestResult);
-  fs.writeFileSync(path.join(root, 'artifacts/gdscript-web-result.json'), JSON.stringify({ browser: browser.version(), ...result }, null, 2));
-  console.log(`Web/WASM: ${result.checks} checks, ${result.failures.length} failures (${browser.version()}).`);
+  fs.writeFileSync(path.join(root, `artifacts/${name}-result.json`), JSON.stringify({ browser: browser.version(), ...result }, null, 2));
+  console.log(`Web/WASM (${name}): ${result.checks} checks, ${result.failures.length} failures (${browser.version()}).`);
   if (result.failures.length) throw new Error(result.failures.join('\n'));
 } finally {
-  fs.writeFileSync(path.join(root, 'artifacts/gdscript-web.log'), log.join('\n'));
+  fs.writeFileSync(path.join(root, `artifacts/${name}.log`), log.join('\n'));
   await browser?.close();
   await new Promise(resolve => server.close(resolve));
 }

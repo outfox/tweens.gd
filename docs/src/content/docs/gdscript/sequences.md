@@ -47,7 +47,7 @@ await Tweens.play_all(sprite, [grow, dim]).end
 ```
 
 Group tweens that are already playing, on any targets, with `Tweens.group()`.
-`Tweens.Group.of()` is the same function:
+`TweensGdGroup.of()` is the same function:
 
 ```gdscript
 var step := Tweens.group([

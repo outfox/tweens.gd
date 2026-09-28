@@ -4,13 +4,14 @@ description: Implementation status, engine requirements, and validated targets f
 ---
 
 Both C# and GDScript support are in beta. The C# library targets .NET 10 and
-Godot 4.7.2 .NET; the independent GDScript runtime implements the same reusable-definition
-model without a .NET dependency. Both ship in one addon. APIs may change during beta.
+Godot 4.7.2 .NET; the GDScript API implements the same reusable-definition model on
+a bundled native GDExtension, without a .NET dependency. Both ship in one addon. APIs
+may change during beta.
 
 | Implementation | Availability | Requirements |
 | --- | --- | --- |
 | C# | Beta; addon source install, optional project reference or NuGet | .NET 10, GodotSharp 4.7.2, matching engine |
-| GDScript addon | Beta; available from source or as a locally built ZIP | Godot 4.7.2; no .NET or native extension dependency |
+| GDScript addon | Beta; available as a locally built ZIP, or from source after building its GDExtension | Godot 4.7.2; bundled GDExtension, no .NET dependency |
 
 The C# package ID and namespace are both `tweens.gd`. The local development
 version is `0.1.0-pre`.
@@ -35,16 +36,18 @@ is a private build dependency.
 
 ## GDScript support
 
-The GDScript runtime needs no .NET runtime, autoload, or GDExtension, even though
-the same addon also includes C# sources.
+The GDScript API runs on the `tweens_gd` GDExtension included in the addon. It needs
+no .NET runtime, plugin, or autoload, even though the same addon also includes C# sources.
 
 | Area | Current status |
 | --- | --- |
-| Engine | Godot 4.7.2 in Debug and Release through 2dog, the embedded Godot host the tests run in, and the standard Godot 4.7.2 editor build |
+| Native libraries | Windows (x86_64, x86_32, arm64), Linux (x86_64, x86_32, arm64), macOS (universal), iOS (arm64), Android (arm64, arm32, x86_64, x86_32), and Web (wasm32, with and without threads), built by CI |
+| Engine | Godot 4.7.2 in Debug and Release through 2dog, the embedded Godot host the tests run in, and the standard Godot 4.7.2 builds for Windows and Linux |
 | Rendering | Real OpenGL rendering, including shader uniform defaults and output |
-| Exports | A Windows release export and a single-threaded Web/WASM release export, tested in Edge |
+| Exports | A Windows release export and Web/WASM release exports with and without threads, tested in Edge; Web exports need Extensions Support |
+| iOS and Android | Built, not tested on devices |
 | Other engines, browsers, and devices | Not validated |
-| Throughput | High tween counts need further optimization; no supported count or frame budget is promised |
+| Throughput | Playback updates run natively, except adapter hooks, which run in GDScript; no supported count or frame budget is promised |
 
 The addon's differences from C# are listed in the [GDScript Core API](/gdscript/api/#differences-from-c).
 

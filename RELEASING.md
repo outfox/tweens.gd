@@ -1,7 +1,7 @@
 # Releasing tweens.gd
 
 The primary distribution is one Godot Asset Store addon containing C# and
-GDScript source. Update the existing **tweens.gd** listing at
+GDScript source and the GDScript engine's prebuilt GDExtension libraries. Update the existing **tweens.gd** listing at
 [store.godotengine.org](https://store.godotengine.org/); do not create an Asset
 Library submission. NuGet is an optional distribution of the compiled C# API.
 
@@ -11,6 +11,11 @@ Library submission. NuGet is an optional distribution of the compiled C# API.
 at its root; `csharp/` holds the canonical C# sources and `csharp/Generated/`
 holds the prepared `Tweens.*` record definitions. The NuGet project links the
 same runtime sources and regenerates its definitions during compilation.
+
+The GDScript engine is C++ in `gdextension/`, built with SCons against the pinned
+`gdextension/godot-cpp` submodule. Builds write to the ignored `addons/tweens_gd/bin/`,
+named as `tweens_gd.gdextension` expects. See [gdextension/README.md](gdextension/README.md).
+CI builds every platform; a local checkout only needs the libraries for its own platform.
 
 After changing adapters, configuration properties or the Roslyn generator:
 
@@ -32,13 +37,17 @@ the GDScript addon must exclude `addons/tweens_gd/csharp/**/*.cs` from compilati
 
 ## Build and verify
 
-From a complete repository checkout with .NET 10, Node.js and PowerShell 7:
+From a complete repository checkout with .NET 10, Node.js, PowerShell 7, Python with
+SCons and a C++ compiler:
 
 ```powershell
+git submodule update --init --recursive
+scons -C gdextension target=template_debug
+scons -C gdextension target=template_release
 dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release
 dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release
 dotnet run --project testbed-gdscript/host -c Release
-./scripts/Pack-Addon.ps1 -Version 0.1.0-pre
+./scripts/Pack-Addon.ps1 -Version 0.1.0-pre -AllowMissingNative
 dotnet pack csharp/tweens.gd.csproj -c Release -p:Version=0.1.0-pre -o artifacts/packages
 dotnet msbuild build/Smoke.proj -p:Version=0.1.0-pre
 dotnet msbuild build/Coverage.proj
@@ -61,15 +70,18 @@ the GPU suite, or `-p:NoBuild=true` after building each selected suite. Reports 
 TRX files are isolated per run under `artifacts/coverage/`.
 
 The output is `artifacts/packages/tweens.gd-<version>.zip`, with paths rooted
-at `addons/tweens_gd/`. It contains both languages, generated definitions, docs
-and licenses, with no binaries, build projects, tools or dependencies to install.
+at `addons/tweens_gd/`. It contains both languages, generated definitions, the
+GDExtension libraries, docs and licenses, with no build projects, tools or
+dependencies to install. `Pack-Addon.ps1` fails when a library named in
+`tweens_gd.gdextension` is missing; `-AllowMissingNative` packs a local, partial
+archive for testing. Release archives come from CI, which has every library.
 
 ## Release and Store update
 
 1. Choose a version and run the checks above with that version. Commit all source
    and generated changes. Tag that commit `v<version>` and push when ready to release.
-2. The tag workflow validates the version, runs CI, verifies both installation
-   methods and attaches the addon ZIP, `.nupkg` and `.snupkg` to a GitHub release.
+2. The tag workflow validates the version, runs CI (which builds the GDExtension for
+   every platform), verifies both installation methods and attaches the addon ZIP, `.nupkg` and `.snupkg` to a GitHub release.
    NuGet publication remains opt-in through `NUGET_PUBLISH_ENABLED` and the
    existing trusted-publishing environment.
 3. In the existing tweens.gd Store listing's **Versions** tab, upload the unified
