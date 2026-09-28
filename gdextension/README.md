@@ -13,7 +13,7 @@ Needs Python with [SCons](https://scons.org/) and a C++ compiler for the target
 NDK, Emscripten 4.0.11 for the Web). From the repository root:
 
 ```sh
-git submodule update --init
+git submodule update --init --recursive
 scons -C gdextension target=template_debug
 scons -C gdextension target=template_release
 ```

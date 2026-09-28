@@ -30,6 +30,13 @@ class Probe extends T.Adapter:
 		events.append("release")
 		return "release failed" if fail_release else ""
 
+# copy() is an overridable hook that runs before the start checks its target.
+class FreeingCopy extends T.Adapter:
+	var victim: Object
+	func copy() -> TweensGdAdapter:
+		if is_instance_valid(victim): victim.free()
+		return super.copy()
+
 class Box extends RefCounted:
 	var amount := 2.0
 	var count := 2
@@ -127,6 +134,15 @@ func _custom() -> void:
 	host.add_child(wrong_target)
 	check(scheduler.add(wrong_target, T.position_3d(Vector3.ONE)).completion_reason == T.Reason.FAILED, "named helpers validate native target class")
 	wrong_target.free()
+	var doomed := Node2D.new()
+	host.add_child(doomed)
+	var freeing := FreeingCopy.new()
+	freeing.victim = doomed
+	var copying := TweensGdDefinition.new()
+	copying.adapter = freeing
+	copying.target_class = &"Node2D"
+	copying.to_value = 1.0
+	check(scheduler.add(doomed, copying).completion_reason == T.Reason.FAILED, "a copy() hook that frees the target is rejected")
 	var wrong := scheduler.add(box, T.property(^"amount", Vector2.ONE))
 	check(wrong.completion_reason == T.Reason.FAILED, "property endpoints remain type checked")
 	scheduler.dispose()

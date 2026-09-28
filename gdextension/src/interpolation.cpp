@@ -70,13 +70,15 @@ bool is_listed(Object *p_target, const StringName &p_name) {
 	return names->has(p_name) || instance_lists(p_target, p_name);
 }
 
-// The usual lerp, unless finite endpoints near opposite ends of the double range overflow their difference.
-double lerp_scalar(double p_from, double p_to, double p_weight) {
-	const double difference = p_to - p_from;
+// The usual lerp, unless finite endpoints near opposite ends of the range overflow their difference.
+// real_t components use the same arithmetic as Vector2::lerp() and friends otherwise.
+template <typename T>
+T lerp_scalar(T p_from, T p_to, T p_weight) {
+	const T difference = p_to - p_from;
 	if (Math::is_finite(difference)) {
 		return p_from + difference * p_weight;
 	}
-	return p_from * (1.0 - p_weight) + p_to * p_weight;
+	return p_from * (T(1) - p_weight) + p_to * p_weight;
 }
 
 bool has_component(Variant::Type p_type, const String &p_name) {
@@ -164,49 +166,12 @@ bool TweensGdInterpolation::finite(const Variant &p_value) {
 }
 
 Variant TweensGdInterpolation::interpolate(const Variant &p_from, const Variant &p_to, double p_weight, int64_t p_value_type) {
-	switch (p_value_type) {
-		case Variant::INT: {
-			// Keep exact integer endpoints and saturate overshoot at Variant int64 limits.
-			if (p_weight == 0.0 && p_from.get_type() == Variant::INT) {
-				return p_from;
-			}
-			if (p_weight == 1.0 && p_to.get_type() == Variant::INT) {
-				return p_to;
-			}
-			const double from = p_from;
-			const double to = p_to;
-			const double number = Math::round(from + (to - from) * p_weight);
-			if (number >= 9223372036854775807.0) {
-				return INT64_MAX;
-			}
-			if (number <= -9223372036854775808.0) {
-				return INT64_MIN;
-			}
-			return int64_t(number);
-		}
-		case Variant::FLOAT: {
-			const double from = p_from;
-			const double to = p_to;
-			return lerp_scalar(from, to, p_weight);
-		}
-		case Variant::QUATERNION:
-			return Quaternion(p_from).normalized().slerp(Quaternion(p_to).normalized(), p_weight).normalized();
-		case Variant::RECT2: {
-			const Rect2 from = p_from;
-			const Rect2 to = p_to;
-			return Rect2(from.position.lerp(to.position, p_weight), from.size.lerp(to.size, p_weight));
-		}
-		case Variant::VECTOR2:
-			return Vector2(p_from).lerp(p_to, p_weight);
-		case Variant::VECTOR3:
-			return Vector3(p_from).lerp(p_to, p_weight);
-		case Variant::VECTOR4:
-			return Vector4(p_from).lerp(p_to, p_weight);
-		case Variant::COLOR:
-			return Color(p_from).lerp(p_to, p_weight);
-		default:
-			return Variant();
+	TypedLerp lerp;
+	Variant result;
+	if (lerp.prepare(p_from, p_to, Variant::Type(p_value_type))) {
+		lerp.sample(p_weight, result);
 	}
+	return result;
 }
 
 Variant TweensGdInterpolation::zero(int64_t p_value_type) {
@@ -379,8 +344,12 @@ bool TypedLerp::prepare(const Variant &p_from, const Variant &p_to, Variant::Typ
 }
 
 bool TypedLerp::sample(double p_weight, Variant &r_value) const {
-	const real_t *a = from_components;
-	const real_t *b = to_components;
+	real_t c[4];
+	const auto components = [&](int p_count) {
+		for (int index = 0; index < p_count; index++) {
+			c[index] = lerp_scalar(from_components[index], to_components[index], real_t(p_weight));
+		}
+	};
 	switch (type) {
 		case Variant::INT: {
 			if (p_weight == 0.0 && exact_from) {
@@ -391,7 +360,7 @@ bool TypedLerp::sample(double p_weight, Variant &r_value) const {
 				r_value = Variant(to_integer);
 				return true;
 			}
-			const double number = Math::round(from_scalar + (to_scalar - from_scalar) * p_weight);
+			const double number = Math::round(lerp_scalar(from_scalar, to_scalar, p_weight));
 			if (number >= 9223372036854775807.0) {
 				r_value = Variant(INT64_MAX);
 			} else if (number <= -9223372036854775808.0) {
@@ -407,27 +376,32 @@ bool TypedLerp::sample(double p_weight, Variant &r_value) const {
 			return Math::is_finite(result);
 		}
 		case Variant::VECTOR2: {
-			const Vector2 result = Vector2(a[0], a[1]).lerp(Vector2(b[0], b[1]), p_weight);
+			components(2);
+			const Vector2 result(c[0], c[1]);
 			r_value = Variant(result);
 			return result.is_finite();
 		}
 		case Variant::VECTOR3: {
-			const Vector3 result = Vector3(a[0], a[1], a[2]).lerp(Vector3(b[0], b[1], b[2]), p_weight);
+			components(3);
+			const Vector3 result(c[0], c[1], c[2]);
 			r_value = Variant(result);
 			return result.is_finite();
 		}
 		case Variant::VECTOR4: {
-			const Vector4 result = Vector4(a[0], a[1], a[2], a[3]).lerp(Vector4(b[0], b[1], b[2], b[3]), p_weight);
+			components(4);
+			const Vector4 result(c[0], c[1], c[2], c[3]);
 			r_value = Variant(result);
 			return result.is_finite();
 		}
 		case Variant::COLOR: {
-			const Color result = Color(a[0], a[1], a[2], a[3]).lerp(Color(b[0], b[1], b[2], b[3]), p_weight);
+			components(4);
+			const Color result(c[0], c[1], c[2], c[3]);
 			r_value = Variant(result);
 			return Math::is_finite(result.r) && Math::is_finite(result.g) && Math::is_finite(result.b) && Math::is_finite(result.a);
 		}
 		case Variant::RECT2: {
-			const Rect2 result(Vector2(a[0], a[1]).lerp(Vector2(b[0], b[1]), p_weight), Vector2(a[2], a[3]).lerp(Vector2(b[2], b[3]), p_weight));
+			components(4);
+			const Rect2 result(c[0], c[1], c[2], c[3]);
 			r_value = Variant(result);
 			return result.position.is_finite() && result.size.is_finite();
 		}

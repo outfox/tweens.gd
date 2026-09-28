@@ -41,7 +41,7 @@ From a complete repository checkout with .NET 10, Node.js, PowerShell 7, Python 
 SCons and a C++ compiler:
 
 ```powershell
-git submodule update --init
+git submodule update --init --recursive
 scons -C gdextension target=template_debug
 scons -C gdextension target=template_release
 dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release

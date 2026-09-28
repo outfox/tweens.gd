@@ -75,11 +75,16 @@ void TweensGdRunner::attach(const Variant &p_tree) {
 	tree->get_root()->add_child(this);
 }
 
-void TweensGdRunner::shutdown() {
-	scheduler->dispose();
+bool TweensGdRunner::shutdown() {
+	const ObjectID self(get_instance_id());
+	const Ref<TweensGdScheduler> disposing = scheduler;
+	disposing->dispose();
+	if (!is_alive(self)) {
+		return false;
+	}
 	SceneTree *tree = get_bound_tree();
 	if (tree == nullptr) {
-		return;
+		return true;
 	}
 	Window *root = tree->get_root();
 	if (root != nullptr && root->is_connected(names().tree_exiting, tree_exit)) {
@@ -88,13 +93,16 @@ void TweensGdRunner::shutdown() {
 	if (find(tree) == this) {
 		tree->remove_meta(names().runner_key);
 	}
+	return true;
 }
 
 void TweensGdRunner::tree_exiting() {
 	if (SceneTree *tree = get_bound_tree()) {
 		tree->set_meta(names().closing_key, true);
 	}
-	shutdown();
+	if (!shutdown()) {
+		return;
+	}
 	// Also free a runner whose deferred attachment never happened.
 	if (!is_inside_tree()) {
 		queue_free();

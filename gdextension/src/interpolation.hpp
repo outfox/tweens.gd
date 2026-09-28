@@ -31,7 +31,7 @@ public:
 };
 
 // Endpoints kept as native values, so playback without an adapter samples without Variant conversions.
-// Produces exactly what TweensGdInterpolation::interpolate() does for the same endpoints.
+// TweensGdInterpolation::interpolate() samples through it too, so both paths share one result.
 class TypedLerp {
 	Variant::Type type = Variant::NIL;
 	bool exact_from = false;

@@ -22,7 +22,8 @@ class TweensGdRunner : public Node {
 	SceneTree *get_bound_tree() const;
 	void bind_tree(SceneTree *p_tree);
 	void attach(const Variant &p_tree);
-	void shutdown();
+	// False when a playback callback freed this runner during disposal; it has then torn itself down.
+	bool shutdown();
 	void tree_exiting();
 	static Ref<TweensGdHandle> reject(const String &p_message);
 

@@ -11,7 +11,7 @@ may change during beta.
 | Implementation | Availability | Requirements |
 | --- | --- | --- |
 | C# | Beta; addon source install, optional project reference or NuGet | .NET 10, GodotSharp 4.7.2, matching engine |
-| GDScript addon | Beta; available from source or as a locally built ZIP | Godot 4.7.2; bundled GDExtension, no .NET dependency |
+| GDScript addon | Beta; available as a locally built ZIP, or from source after building its GDExtension | Godot 4.7.2; bundled GDExtension, no .NET dependency |
 
 The C# package ID and namespace are both `tweens.gd`. The local development
 version is `0.1.0-pre`.

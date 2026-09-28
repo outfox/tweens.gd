@@ -91,6 +91,10 @@ Ref<TweensGdHandle> TweensGdScheduler::add(const Variant &p_target, const Ref<Tw
 		}
 	} owned{ p_definition->get_settings().snapshot() };
 	TweenSettings &snapshot = *owned.settings;
+	// The snapshot runs the adapter's overridable copy(), which can free the target or owner.
+	if (lifetime_ended()) {
+		return reject("The target or owner became invalid while copying the definition.", &snapshot);
+	}
 	if (!snapshot.target_class.is_empty() && !target->is_class(snapshot.target_class)) {
 		return reject(vformat("This definition requires a %s target.", snapshot.target_class));
 	}
