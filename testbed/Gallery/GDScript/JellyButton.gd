@@ -31,7 +31,7 @@ func squish_button() -> void:
 
 func flash() -> void:
 	var movement = options(Tweens.control_position(Vector2(9, 5), 0.4 * tempo), Tweens.Ease.LINEAR, Vector2.ZERO)
-	movement.ease_function = Tweens.FX.punch(42.0 / TAU)
+	movement.ease_function = Tweens.FX.punch(3.0)
 	await Tweens.group([
 		Tweens.play(targets.shaker, movement),
 		Tweens.play(targets.burst, options(Tweens.scale_2d(Vector2(2.1, 2.1), 0.6 * tempo), Tweens.Ease.QUART_OUT, Vector2(0.7, 0.7))),

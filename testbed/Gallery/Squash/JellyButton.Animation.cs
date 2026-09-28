@@ -35,7 +35,7 @@ public sealed partial class JellyButton
             shaker.TweenPosition(new Vector2(9, 5), 0.4 * Tempo, options =>
             {
                 options.From = Vector2.Zero;
-                options.EaseFunction = Tweens.FX.Punch(frequency: 42f / MathF.Tau);
+                options.EaseFunction = Tweens.FX.Punch(frequency: 3.0f);
             }),
             burst.TweenScale(new Vector2(2.1f, 2.1f), flash, options =>
             {
