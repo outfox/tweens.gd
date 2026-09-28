@@ -53,7 +53,7 @@ describes each `Tweens.Reason`.
 
 | Member | Type | Meaning |
 | --- | --- | --- |
-| `Tweens.Cancellation.new()` | `TweensGdCancellation` | A token to pass to `wait()` |
+| `TweensGdCancellation.new()` | `TweensGdCancellation` | A token to pass to `wait()` |
 | `cancel()` | `void` | Stop the waits that use this token; playback continues |
 | `is_cancelled` | `bool` | True after `cancel()` |
 | `cancelled` | signal | Emitted by `cancel()` |

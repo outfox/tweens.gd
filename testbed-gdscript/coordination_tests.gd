@@ -20,7 +20,7 @@ func continue_end(source, scheduler, results: Array) -> void:
 	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0)))
 
 func check_end() -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	for cancel in [false, true]:
 		var handle := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
 		var group := T.group([handle])
@@ -35,9 +35,9 @@ func check_end() -> void:
 		host.check(results == [expected, expected, expected], "end resumes every waiter with the reason")
 		host.check(await handle.end == expected and await group.end == expected, "end returns immediately after settlement")
 		host.check(handle.ended.get_connections().is_empty() and group.ended.get_connections().is_empty(), "end releases completed subscriptions")
-	var rejected := T.Handle.rejected("test rejection")
+	var rejected := TweensGdHandle.rejected("test rejection")
 	host.check(await rejected.end == T.Reason.FAILED, "rejected start can be awaited through end")
-	var rejected_group := T.Group.new([], "test rejection")
+	var rejected_group := TweensGdGroup.rejected("test rejection")
 	host.check(await rejected_group.end == T.Reason.FAILED, "rejected group can be awaited through end")
 	for grouped in [false, true]:
 		var handle := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
@@ -52,10 +52,10 @@ func check_end() -> void:
 func run(owner: Node) -> bool:
 	host = owner
 	await check_end()
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var a := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
 	var group := T.group([a])
-	var token := T.Cancellation.new()
+	var token := TweensGdCancellation.new()
 	var results: Array = []
 	var uninterrupted: Array = []
 	record_wait(a, token, results)
@@ -70,7 +70,7 @@ func run(owner: Node) -> bool:
 	scheduler.update(0.5)
 	host.check(uninterrupted == [T.Reason.COMPLETED], "uncancelled waiter resumes on playback completion")
 	host.check(await a.wait(token) == T.Reason.COMPLETED, "already-settled playback wins over token cancellation")
-	var completing := T.Cancellation.new()
+	var completing := TweensGdCancellation.new()
 	var b := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.25))
 	var after: Array = []
 	continuation(b, completing, scheduler, after)
@@ -100,7 +100,7 @@ func run(owner: Node) -> bool:
 	await host.get_tree().process_frame
 	host.check(tree_bound.is_settled and tree_bound.completion_reason == T.Reason.COMPLETED, "resource playback accepts a SceneTree lifetime")
 	host.check(await automatic.wait() == T.Reason.COMPLETED and node.position == Vector2(4, 8) and node.modulate.a == 0.25, "automatic multi-start applies named helpers")
-	var runner = host.get_tree().get_meta(T.Runner.META_KEY)
+	var runner = TweensGdRunner.find(host.get_tree())
 	runner.free()
 	node.free()
 	return true

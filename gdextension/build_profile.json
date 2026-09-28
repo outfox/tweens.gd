@@ -1,0 +1,12 @@
+{
+	"type": "feature_profile",
+	"enabled_classes": [
+		"Curve",
+		"Engine",
+		"Node",
+		"OS",
+		"SceneTree",
+		"Time",
+		"Window"
+	]
+}

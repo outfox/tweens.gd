@@ -58,13 +58,13 @@ they're paused. Godot emits tree exit before it invalidates a node freed with
 
 ## Cancel a wait, not the tween
 
-`wait()` accepts a `Tweens.Cancellation`. Cancelling it ends only that wait,
+`wait()` accepts a `TweensGdCancellation`. Cancelling it ends only that wait,
 which returns `WAIT_CANCELLED`; other waiters and playback continue unless you
 call `cancel()`.
 
 ```gdscript
 var movement := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
-var cancellation := Tweens.Cancellation.new()
+var cancellation := TweensGdCancellation.new()
 get_tree().create_timer(0.25).timeout.connect(cancellation.cancel)
 if await movement.wait(cancellation) == Tweens.Reason.WAIT_CANCELLED:
 	# This wait was cancelled. Stop playback too if that is your policy.

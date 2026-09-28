@@ -29,7 +29,7 @@ func run(owner: Node) -> bool:
 	return true
 
 func _materials() -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var m := material("shader_type canvas_item; uniform float amount = 0.25; uniform int count = 1; uniform vec2 v2; uniform vec3 v3; uniform vec4 v4; uniform vec4 tint : source_color; uniform bool flag;")
 	var compare := AdapterTests.new()
 	var values := [[&"amount", 2.0, 4.0], [&"count", 2, 4], [&"v2", Vector2.ONE, Vector2(3, 5)],
@@ -42,7 +42,7 @@ func _materials() -> void:
 		var h := scheduler.add(m, definition)
 		check(not h.is_terminal and watched(m.shader), "shader metadata binding: " + entry[0])
 		scheduler.update(0.5)
-		var expected: Variant = T.Handle.Interpolation.interpolate(entry[1], entry[2], 0.5, typeof(entry[1]))
+		var expected: Variant = TweensGdInterpolation.interpolate(entry[1], entry[2], 0.5, typeof(entry[1]))
 		check(compare._close(expected, m.get_shader_parameter(entry[0])), "shader midpoint: " + entry[0])
 		scheduler.update(0.5)
 		check(h.completion_reason == T.Reason.COMPLETED and compare._close(entry[1], m.get_shader_parameter(entry[0])), "shader explicit override restored: " + entry[0])
@@ -97,7 +97,7 @@ func _materials() -> void:
 	scheduler.dispose()
 
 func _rendering() -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var m := material("shader_type canvas_item; uniform float amount = 0.25; void fragment() { COLOR = vec4(amount, 0.0, 0.0, 1.0); }")
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(8, 8)

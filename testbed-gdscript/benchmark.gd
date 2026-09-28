@@ -22,7 +22,7 @@ static func run(owner: Node) -> String:
 
 static func _measure(owner: Node, workload: String, count: int, backend: String) -> Dictionary:
 	var targets: Array[Object] = []
-	var definition: T.Definition
+	var definition: TweensGdDefinition
 	match workload:
 		"value": definition = T.value(0.0, 1.0, 1000.0)
 		"position": definition = T.property(^"position", Vector2(100, 200), 1000.0)
@@ -36,7 +36,7 @@ static func _measure(owner: Node, workload: String, count: int, backend: String)
 			targets.append(node)
 		elif workload == "resource": targets.append(StandardMaterial3D.new())
 		else: targets.append(RefCounted.new())
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var builtin: Tween
 	var start := Time.get_ticks_usec()
 	if backend == "gdscript":

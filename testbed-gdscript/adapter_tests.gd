@@ -52,7 +52,7 @@ func check(condition: bool, message: String) -> void:
 	host.check(condition, message)
 
 func _custom() -> void:
-	var scheduler := T.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var box := Box.new()
 	var definition := T.custom(func(t): return t.amount, func(t, v): t.amount = v, 10.0, 1.0)
 	definition.fill = T.Fill.NONE
@@ -82,7 +82,7 @@ func _custom() -> void:
 	check(box.text == "b" and text.value == "b", "custom interpolation supports user-validated value types")
 	text.cancel()
 	var adapter := Probe.new()
-	var source := T.Definition.new()
+	var source := TweensGdDefinition.new()
 	source.adapter = adapter
 	source.to_value = 8.0
 	source.duration = 1.0
@@ -199,7 +199,7 @@ func _close(a: Variant, b: Variant) -> bool:
 		_: return (a - b).length() <= 0.001 * maxf(1.0, a.length())
 
 func _read(scheduler, target, factory: String) -> Variant:
-	var probe: T.Handle = scheduler.add(target, factories.call(factory))
+	var probe: TweensGdHandle = scheduler.add(target, factories.call(factory))
 	probe.cancel()
 	return probe.value
 
@@ -207,9 +207,9 @@ func _catalog() -> void:
 	var entries: Array = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/adapters.json"))
 	check(entries.size() == 331, "catalog covers every concrete C# property/value adapter")
 	for entry in entries:
-		var scheduler := T.Scheduler.new()
+		var scheduler := TweensGdScheduler.new()
 		var target := _create(entry.target)
-		var definition: T.Definition = factories.call(entry.name)
+		var definition: TweensGdDefinition = factories.call(entry.name)
 		var probe := scheduler.add(target, definition)
 		check(probe.completion_reason != T.Reason.FAILED, entry.name + " starts: " + probe.error)
 		if probe.completion_reason != T.Reason.FAILED:
@@ -222,10 +222,10 @@ func _catalog() -> void:
 				initial = _read(scheduler, target, entry.name)
 				check(_close(first, initial), entry.name + " writes its native property")
 			var to: Variant = _perturb(initial)
-			var move: T.Definition = factories.call(entry.name, to, 1.0)
+			var move: TweensGdDefinition = factories.call(entry.name, to, 1.0)
 			var playing := scheduler.add(target, move)
 			scheduler.update(0.5)
-			var expected: Variant = T.Handle.Interpolation.interpolate(initial, to, 0.5, typeof(initial))
+			var expected: Variant = TweensGdInterpolation.interpolate(initial, to, 0.5, typeof(initial))
 			var actual: Variant = playing.value if entry.kind == "value" else _read(scheduler, target, entry.name)
 			check(_close(expected, actual), "%s midpoint: expected %s, got %s" % [entry.name, expected, actual])
 			scheduler.update(0.5)
@@ -253,7 +253,7 @@ func _curves() -> void:
 		curve.add_point(Vector2(bounds.x, -1), 0.25, 0.5, Curve.TANGENT_FREE, Curve.TANGENT_LINEAR)
 		curve.add_point(Vector2((bounds.x + bounds.y) / 2.0, 2), -0.25, 0.75)
 		curve.add_point(Vector2(bounds.y, 1), 1.0, 0.0, Curve.TANGENT_LINEAR, Curve.TANGENT_FREE)
-		var definition := T.Definition.new()
+		var definition := TweensGdDefinition.new()
 		definition.curve = curve
 		var copy := definition.copy().curve
 		check(copy != curve and copy.min_domain == curve.min_domain and copy.max_domain == curve.max_domain, "curve snapshot preserves non-default domains")

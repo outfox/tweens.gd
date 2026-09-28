@@ -14,15 +14,16 @@ compiles `csharp/`, including the prepared definitions in `csharp/Generated/`.
 No NuGet package or tweens.gd analyzer is needed. See the [C# quickstart](csharp/README.md),
 including the optional NuGet route with `dotnet add package tweens.gd`.
 
-**GDScript:** the runtime is pure GDScript and requires neither .NET nor a
-GDExtension. The bundled C# files can remain in a GDScript-only project.
-The rest of this guide describes the GDScript API.
+**GDScript:** the API runs on the `tweens_gd` GDExtension in `bin/`, prebuilt for
+Windows, Linux, macOS, iOS, Android and the Web; no .NET is needed. Web exports need
+**Extensions Support** turned on. The bundled C# files can remain in a GDScript-only
+project. The rest of this guide describes the GDScript API.
 
 Both C# and GDScript support are in beta; APIs may change. Validation covers
 2dog/Godot 4.7.2 in Debug and Release,
-real OpenGL rendering, the installed standard Godot 4.7.2 engine, a Windows release
-export and a single-threaded Web/WASM release export in Edge. Other engines,
-browsers and devices have not been validated. A distributable ZIP can be built
+real OpenGL rendering, the standard Godot 4.7.2 engine on Windows and Linux, a Windows
+release export and Web/WASM release exports with and without threads in Edge. Other
+engines, browsers and devices have not been validated. A distributable ZIP can be built
 with `./scripts/Pack-Addon.ps1` from the repository root.
 
 ## Start and await
@@ -219,7 +220,7 @@ to `FAILED`. C# exception-task behavior cannot be reproduced for arbitrary scrip
 Individual waits can be cancelled without stopping playback:
 
 ```gdscript
-var cancellation := Tweens.Cancellation.new()
+var cancellation := TweensGdCancellation.new()
 get_tree().create_timer(0.25).timeout.connect(cancellation.cancel)
 var reason := await handle.wait(cancellation)
 if reason == Tweens.Reason.WAIT_CANCELLED:
@@ -306,7 +307,7 @@ await motion.end
 print("Motion ended")
 ```
 
-`Tweens.Group.of(handles)` is equivalent. A group completes after every member
+`TweensGdGroup.of(handles)` is equivalent. A group completes after every member
 settles, including its callbacks and cleanup. When a member stops without completing,
 the group cancels its active siblings and keeps that first stop reason. This includes
 already-rejected `FAILED` handles. `group.cancel()` cancels the remaining playback;
@@ -336,7 +337,7 @@ still first samples on the next eligible update.
 ## Manual scheduling and diagnostics
 
 ```gdscript
-var scheduler := Tweens.Scheduler.new()
+var scheduler := TweensGdScheduler.new()
 var handle := scheduler.add(target, definition) # Optional third argument: owner.
 scheduler.update(0.25) # Explicit delta; optional unscaled delta and process lane.
 if handle.completion_reason == Tweens.Reason.FAILED:

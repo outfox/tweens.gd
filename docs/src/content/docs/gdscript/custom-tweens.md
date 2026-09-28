@@ -48,7 +48,7 @@ func set_health(fraction: float) -> void:
 ## Drive a scheduler yourself
 
 To animate an object that isn't a node, such as a model in a test, add it to a
-`Tweens.Scheduler` and advance it yourself:
+`TweensGdScheduler` and advance it yourself:
 
 ```gdscript title="meter_example.gd"
 extends RefCounted
@@ -58,7 +58,7 @@ class Meter:
 
 static func sample_midpoint() -> float:
 	var meter := Meter.new()
-	var scheduler := Tweens.Scheduler.new()
+	var scheduler := TweensGdScheduler.new()
 	var fill := Tweens.property(^"value", 100.0, 1.0)
 	fill.from_value = 0.0
 	scheduler.add(meter, fill)
@@ -133,7 +133,7 @@ func write(target: Object, value: Variant) -> String:
 ```
 
 ```gdscript
-var glow := Tweens.Definition.new()
+var glow := TweensGdDefinition.new()
 glow.adapter = MetaAdapter.new()
 glow.to_value = 1.0
 glow.duration = 0.5

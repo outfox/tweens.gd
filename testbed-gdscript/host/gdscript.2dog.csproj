@@ -19,6 +19,12 @@
       <AddonSource Include="../../addons/tweens_gd/**/*" />
       <ConformanceSource Include="../../tests/conformance/*.json" />
     </ItemGroup>
+    <!-- Mirror the addon: files removed from the source must not linger. Godot keeps its generated .uid files. -->
+    <ItemGroup>
+      <StagedAddon Include="../addons/tweens_gd/**/*" Exclude="../addons/tweens_gd/**/*.uid" />
+      <StaleAddon Include="@(StagedAddon)" Exclude="@(AddonSource->'../addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Delete Files="@(StaleAddon)" />
     <Copy SourceFiles="@(AddonSource)" DestinationFiles="@(AddonSource->'../addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(ConformanceSource)" DestinationFolder="../conformance" />
     <!-- Inputs are normally globbed at evaluation, before a fresh checkout has staged files. -->

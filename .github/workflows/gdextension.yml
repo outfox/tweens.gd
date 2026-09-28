@@ -1,0 +1,128 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Moritz Voss
+
+name: GDExtension
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }} ${{ matrix.arch }}${{ matrix.threads == 'no' && ' (no threads)' || '' }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { platform: windows, arch: x86_64, os: windows-latest }
+          - { platform: windows, arch: x86_32, os: windows-latest }
+          - { platform: windows, arch: arm64, os: windows-latest }
+          - { platform: linux, arch: x86_64, os: ubuntu-22.04 }
+          - { platform: linux, arch: x86_32, os: ubuntu-22.04 }
+          - { platform: linux, arch: arm64, os: ubuntu-22.04-arm }
+          - { platform: macos, arch: universal, os: macos-latest }
+          - { platform: ios, arch: arm64, os: macos-latest }
+          - { platform: android, arch: arm64, os: ubuntu-22.04 }
+          - { platform: android, arch: arm32, os: ubuntu-22.04 }
+          - { platform: android, arch: x86_64, os: ubuntu-22.04 }
+          - { platform: android, arch: x86_32, os: ubuntu-22.04 }
+          - { platform: web, arch: wasm32, threads: 'yes', os: ubuntu-22.04 }
+          - { platform: web, arch: wasm32, threads: 'no', os: ubuntu-22.04 }
+    env:
+      # Web side modules must match the Emscripten version godot-cpp 10 targets.
+      EM_VERSION: 4.0.11
+      SCONS_VERSION: 4.10.1
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - name: Install SCons
+        run: python -m pip install "scons==$SCONS_VERSION"
+      - name: Install 32-bit toolchain
+        if: matrix.platform == 'linux' && matrix.arch == 'x86_32'
+        run: sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib
+      - uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1.6.0
+        if: matrix.platform == 'android'
+        with:
+          ndk-version: r28b
+          link-to-sdk: true
+      - name: Install Emscripten
+        if: matrix.platform == 'web'
+        run: |
+          git clone --depth 1 --branch "$EM_VERSION" https://github.com/emscripten-core/emsdk.git "$RUNNER_TEMP/emsdk"
+          "$RUNNER_TEMP/emsdk/emsdk" install "$EM_VERSION"
+          "$RUNNER_TEMP/emsdk/emsdk" activate "$EM_VERSION"
+      - name: Build debug and release libraries
+        working-directory: gdextension
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          ARCH: ${{ matrix.arch }}
+          THREADS: ${{ matrix.threads || 'yes' }}
+        run: |
+          if [ "$PLATFORM" = web ]; then source "$RUNNER_TEMP/emsdk/emsdk_env.sh"; fi
+          for target in template_debug template_release; do
+            scons -j4 platform="$PLATFORM" arch="$ARCH" target="$target" threads="$THREADS"
+          done
+          ls -la ../addons/tweens_gd/bin
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: gdextension-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.threads == 'no' && '-nothreads' || '' }}
+          path: addons/tweens_gd/bin/
+          if-no-files-found: error
+
+  test:
+    name: Test GDScript on ${{ matrix.name }}
+    needs: build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Linux, os: ubuntu-22.04, asset: Godot_v4.7.2-stable_linux.x86_64.zip, godot: ./Godot_v4.7.2-stable_linux.x86_64 }
+          - { name: macOS, os: macos-latest, asset: Godot_v4.7.2-stable_macos.universal.zip, godot: ./Godot.app/Contents/MacOS/Godot }
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: gdextension-*
+          path: addons/tweens_gd/bin
+          merge-multiple: true
+      - name: Download Godot
+        env:
+          ASSET: ${{ matrix.asset }}
+        run: |
+          base=https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable
+          curl -fsSLO "$base/$ASSET"
+          curl -fsSL "$base/SHA512-SUMS.txt" | grep " $ASSET\$" > sums.txt
+          if command -v sha512sum > /dev/null; then sha512sum -c sums.txt; else shasum -a 512 -c sums.txt; fi
+          unzip -q "$ASSET"
+      - name: Stage the addon
+        run: |
+          mkdir -p testbed-gdscript/addons testbed-gdscript/conformance
+          cp -R addons/tweens_gd testbed-gdscript/addons/
+          cp tests/conformance/*.json testbed-gdscript/conformance/
+      - name: Test with the official Godot build
+        env:
+          GODOT: ${{ matrix.godot }}
+        run: |
+          "$GODOT" --headless --path testbed-gdscript --import || true
+          grep -q tweens_gd.gdextension testbed-gdscript/.godot/extension_list.cfg
+          "$GODOT" --headless --path testbed-gdscript -- --run-tests 2>&1 | tee run.log
+          grep -qE 'GDScript: [0-9]+ checks, 0 failures\.' run.log

@@ -21,8 +21,10 @@ dotnet run --project testbed/testbed.2dog -- --gallery-language gdscript
   mode. This keeps geometry, materials, resources and initial values identical.
   Animation, sequencing, callbacks and button interactions use the selected library.
 
-This gallery is a .NET host in either mode. The GDScript addon itself remains pure
-GDScript; `../testbed-gdscript/` is the standalone non-.NET addon/export test project.
+This gallery is a .NET host in either mode. The GDScript addon itself needs no .NET;
+its engine is the addon's GDExtension, so build the library for your platform first
+(see `../gdextension/README.md`). `../testbed-gdscript/` is the standalone non-.NET
+addon/export test project.
 Building the gallery stages the canonical `../addons/tweens_gd/` into its ignored
 `addons/` directory. There is no separately maintained copy of the addon.
 

@@ -1,11 +1,12 @@
 ---
 title: Install
-description: Install the unified tweens.gd addon and use its independent GDScript runtime without .NET.
+description: Install the unified tweens.gd addon and use its GDScript API without .NET.
 ---
 
-tweens.gd includes both C# and GDScript in one addon. Its GDScript runtime is
-independent: there is no plugin to activate, no autoload, and no .NET runtime or
-GDExtension to install. The bundled C# files can stay in a GDScript-only project.
+tweens.gd includes both C# and GDScript in one addon. The GDScript API runs on a
+GDExtension that the addon ships prebuilt for Windows, Linux, macOS, iOS, Android,
+and the Web. There is no plugin to activate, no autoload, and no .NET runtime to
+install. The bundled C# files can stay in a GDScript-only project.
 
 :::note[Beta]
 The GDScript API may change during beta. [Compatibility](/compatibility/) lists
@@ -21,8 +22,12 @@ You can also download the unified addon ZIP from
 Both downloads include C# and GDScript.
 
 Unpack the addon into your project's root directory, keeping the entire
-`addons/tweens_gd/` directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
-The entry script should be at `res://addons/tweens_gd/tweens.gd`.
+`addons/tweens_gd/` directory, including `tweens_gd.gdextension`, the `bin/`
+libraries, `LICENSE`, and `THIRD-PARTY-NOTICES.md`. The entry script should be at
+`res://addons/tweens_gd/tweens.gd`.
+
+For a Web export, turn on **Extensions Support** in the export preset. Both the
+single-threaded and the thread-enabled variants are supported.
 
 ## Load it from a script
 
@@ -34,7 +39,7 @@ await Tweens.play(self, Tweens.position_2d(Vector2(100, 50), 0.3)).end
 ```
 
 Let the editor finish importing before running the project. For a fresh
-headless checkout, run `godot --headless --editor --import` once to populate the
-script-class cache used by the addon's internal types.
+headless checkout, run `godot --headless --editor --import` once to register the
+extension and populate the script-class cache.
 
 Then write [your first tween](/gdscript/quickstart/).

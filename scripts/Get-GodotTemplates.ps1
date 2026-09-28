@@ -15,7 +15,7 @@ if (Test-Path -LiteralPath $manifestPath) {
         $item = Join-Path $destination $file
         $valid = $valid -and (Test-Path -LiteralPath $item) -and ((Get-FileHash -LiteralPath $item -Algorithm SHA256).Hash -eq $manifest.files[$file])
     }
-    if ($valid -and $manifest.files.Count -eq 4) { Write-Output "Verified cached Godot $Version templates."; return }
+    if ($valid -and $manifest.files.Count -eq 6) { Write-Output "Verified cached Godot $Version templates."; return }
 }
 $base = "https://github.com/godotengine/godot-builds/releases/download/$Version-stable"
 $asset = "Godot_v$Version-stable_export_templates.tpz"
@@ -31,13 +31,14 @@ $archive = [IO.Compression.ZipFile]::OpenRead($archivePath)
 $hashes = @{}
 try {
     foreach ($entry in $archive.Entries) {
-        if ($entry.Name -notmatch '^(web_(debug|release)\.zip|windows_(debug|release)_x86_64\.exe)$') { continue }
+        # The dlink Web templates can load GDExtension side modules.
+        if ($entry.Name -notmatch '^(web_dlink_(nothreads_)?(debug|release)\.zip|windows_(debug|release)_x86_64\.exe)$') { continue }
         $file = Join-Path $destination $entry.Name
         [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $file, $true)
         $hashes[$entry.Name] = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash
     }
 } finally { $archive.Dispose() }
-if ($hashes.Count -ne 4) { throw 'The official archive did not contain all required templates.' }
+if ($hashes.Count -ne 6) { throw 'The official archive did not contain all required templates.' }
 @{ version = $Version; archive_sha512 = $expected; files = $hashes } | ConvertTo-Json | Set-Content -LiteralPath $manifestPath
 if (!$KeepArchive) { Remove-Item -LiteralPath $archivePath }
 Write-Output "Verified and extracted Windows/Web templates for Godot $Version."

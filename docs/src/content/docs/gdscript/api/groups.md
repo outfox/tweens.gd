@@ -13,7 +13,7 @@ control and await members of a [handle](/gdscript/api/handles/), but no `state`,
 | Member | Type | Meaning |
 | --- | --- | --- |
 | `Tweens.group(handles)` | `TweensGdGroup` | Group handles that are already playing |
-| `Tweens.Group.of(handles)` | `TweensGdGroup` | The same as `Tweens.group()` |
+| `TweensGdGroup.of(handles)` | `TweensGdGroup` | The same as `Tweens.group()` |
 | `members` | `Array[TweensGdHandle]` | A copy of the grouped handles, without duplicates |
 
 ## Control the group

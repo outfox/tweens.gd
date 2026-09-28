@@ -23,7 +23,7 @@ A coin pops in, then rises and fades when collected:
 ```gdscript title="coin.gd" {"1":3-6} {"2":8-11} {"3":13-14} {"4":16-18}
 extends Sprite2D
 
-static func snappy(definition: Tweens.Definition) -> Tweens.Definition:
+static func snappy(definition: TweensGdDefinition) -> TweensGdDefinition:
 	definition.duration = 0.25
 	definition.ease = Tweens.Ease.BACK_OUT
 	return definition

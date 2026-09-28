@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Moritz Voss
+import os
+import sys
+
+libname = "tweens_gd"
+output = "../addons/tweens_gd/bin"
+
+if not os.path.isfile("godot-cpp/SConstruct"):
+    print("godot-cpp is missing. Run: git submodule update --init --recursive", file=sys.stderr)
+    Exit(1)
+
+localEnv = Environment(tools=["default"], PLATFORM="")
+# Only the classes the engine uses get bindings, which keeps every platform build short.
+localEnv["build_profile"] = File("build_profile.json").abspath
+customs = [os.path.abspath("custom.py")]
+opts = Variables(customs, ARGUMENTS)
+opts.Update(localEnv)
+Help(opts.GenerateHelpText(localEnv))
+
+env = SConscript("godot-cpp/SConstruct", {"env": localEnv.Clone(), "api_version": "4.4", "customs": customs})
+env.Append(CPPPATH=["src/"])
+sources = Glob("src/*.cpp")
+if env.get("is_msvc", False):
+    # Nothing links against the extension, so keep import libraries out of the addon.
+    env["no_import_lib"] = True
+    env.Append(LINKFLAGS=["/NOIMPLIB", "/NOEXP"])
+elif env["platform"] in ("linux", "android"):
+    # Export only the entry symbol, not the statically linked C++ runtime, and drop unused code.
+    env.Append(LINKFLAGS=["-Wl,--exclude-libs,ALL", "-Wl,--gc-sections"])
+
+# Every variant keeps its full platform/target/arch suffix; the .gdextension file maps feature tags to names.
+suffix = env["suffix"].replace(".dev", "")
+library = env.SharedLibrary(
+    "{}/lib{}{}{}".format(output, libname, suffix, env["SHLIBSUFFIX"]),
+    source=sources,
+)
+env.NoCache(library)
+Default(library)

@@ -7,10 +7,11 @@ This page lists the functions that start playback. The pages after it list every
 field of the definitions you start and every member of the handles you get back.
 
 Use the addon's global class `Tweens` once the editor has imported the addon;
-no preload is needed. The classes it returns are
-also registered globally: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`,
-`TweensGdScheduler`, `TweensGdAdapter`, and `TweensGdCancellation`. Use the API
-on Godot's main thread.
+no preload is needed. The classes it returns come from the addon's GDExtension and
+are global too: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`,
+`TweensGdScheduler`, and `TweensGdCancellation`. Use these names in type annotations.
+`TweensGdAdapter`, the adapter base class, is a GDScript class. Use the API on
+Godot's main thread.
 
 ## Start playback
 
@@ -33,7 +34,7 @@ stops at the first rejected start and cancels the definitions it already started
 | Entry point | Returns | Purpose |
 | --- | --- | --- |
 | `Tweens.group(handles)` | `TweensGdGroup` | Treat handles that are already playing as one step |
-| `Tweens.Group.of(handles)` | `TweensGdGroup` | The same as `Tweens.group()` |
+| `TweensGdGroup.of(handles)` | `TweensGdGroup` | The same as `Tweens.group()` |
 | `Tweens.cancel_tweens(owner, include_children = false)` | `void` | Cancel the automatic playback this node owns |
 
 ## Find a member

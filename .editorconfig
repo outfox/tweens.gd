@@ -216,3 +216,8 @@ resharper_csharp_naming_rule.method = AaBb:do_not_check
 # Exact zero/one comparisons preserve the mathematical endpoints of these eases.
 [csharp/src/Easing/Easing.cs]
 resharper_compare_of_floats_by_equality_operator_highlighting = none
+
+# The GDExtension follows godot-cpp style: tabs, Godot naming.
+[gdextension/src/*.{cpp,hpp}]
+indent_style = tab
+tab_width = 4
