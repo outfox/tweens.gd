@@ -10,20 +10,21 @@ hero:
   title: tweens.gd
   tagline: What if writing tweens didn't suck?
   actions:
-    - text: Choose C#
-      link: '#choose-a-language'
+    - text: Start the tutorial
+      link: '#learn-it-in-five-steps'
       icon: right-arrow
-    - text: or GDScript
-      link: '#choose-a-language'
-      icon: right-arrow
+    - text: Godot Asset Store
+      link: https://store.godotengine.org/asset/outfox/tweens/
+      icon: external
+      variant: secondary
     - text: Join our Discord
       link: https://discord.gg/3UXVHnmEwd
       icon: discord
-      variant: secondary
-    - text: Github
+      variant: minimal
+    - text: GitHub
       link: https://github.com/outfox/tweens.gd
       icon: github
-      variant: secondary
+      variant: minimal
       attrs:
         iconPlacement: start
 ---
@@ -31,50 +32,24 @@ hero:
 import Compare from '../../components/Compare.astro';
 import Doors from '../../components/Doors.astro';
 import Lang from '../../components/Lang.astro';
-import Moves from '../../components/Moves.astro';
 import Path from '../../components/Path.astro';
-import ReauthorDemo from '../../components/ReauthorDemo.astro';
 import Variants from '../../components/Variants.astro';
+
+## Learn it in five steps
+
+<p id="language-hint">Choose your language, then start with installation or jump to the step you need.</p>
 
 <Doors />
 
-## Quickstart: 5 Step Tutorial
-
 <Lang only="csharp">
 
-<Path>
-
-1. [Install](/csharp/installation/)
-   Add the C# library to your Godot project.
-2. [Your first tween](/csharp/quickstart/)
-   Move a sprite, then fade it out.
-3. [Definitions](/csharp/definitions/)
-   Name motion once and reuse it everywhere.
-4. [Sequences](/csharp/sequences/)
-   Chain, group, and stagger steps.
-5. [Control & completion](/csharp/playback/)
-   Pause, cancel, and handle every ending.
-
-</Path>
+<Path lang="csharp" />
 
 </Lang>
 
 <Lang only="gdscript">
 
-<Path>
-
-1. [Install](/gdscript/installation/)
-   Copy the addon into your Godot project.
-2. [Your first tween](/gdscript/quickstart/)
-   Move a sprite, then fade it out.
-3. [Definitions](/gdscript/definitions/)
-   Name motion once and reuse it everywhere.
-4. [Sequences](/gdscript/sequences/)
-   Chain, group, and stagger steps.
-5. [Control & completion](/gdscript/playback/)
-   Pause, cancel, and handle every ending.
-
-</Path>
+<Path lang="gdscript" />
 
 </Lang>
 
@@ -151,15 +126,6 @@ GD.Print("Arrived");
 
 </Variants>
 
-|  | Godot's Tween | tweens.gd |
-| --- | --- | --- |
-| Code | `CreateTween()`, a `TweenProperty()` step, then `SetTrans()` and `SetEase()` | One shorthand call, such as `sprite.TweenPosition(to, 0.6)` |
-| Property | A string path and a `Variant`; mistakes surface at runtime | A typed method; the compiler checks the property and value |
-| Easing | A `TransitionType` plus an `EaseType` | One `EaseType`, such as `CubicOut` |
-| Reuse | Build a new `Tween` for each node and each replay | [Store a definition](/csharp/definitions/) and start it on any node; `with` varies one start |
-| Variants | Copy the tween code and change its numbers | [Scale a shared definition](/csharp/variations/), as in `Recoil with { FactorBy = 2 }`; the variant follows later tuning |
-| Ending | `Finished` fires on completion only | `End` settles with a `Reason`: completed, cancelled, owner left the tree |
-
 </Lang>
 
 <Lang only="gdscript">
@@ -224,137 +190,5 @@ print("Arrived")
 </Compare>
 
 </Variants>
-
-|  | Godot's Tween | tweens.gd |
-| --- | --- | --- |
-| Code | `create_tween()`, `set_trans()` and `set_ease()`, then a `tween_property()` step | One helper call, such as `Tweens.position_2d(to, 0.6)`, started with `Tweens.play()` |
-| Property | A string path; a wrong name or value type fails when the tween runs | A named helper such as `position_2d`; the node class and value type are checked when the tween starts |
-| Easing | A `TRANS_*` transition plus an `EASE_*` direction | One `Tweens.Ease` constant, such as `CUBIC_OUT` |
-| Reuse | Build a new `Tween` for each node and each replay | [Store a definition](/gdscript/definitions/) and start it on any node; `with_*()` varies one start |
-| Variants | Copy the tween code and change its numbers | [Scale a shared definition](/gdscript/variations/), as in `recoil.with_factor_by(2.0)`; the variant follows later tuning |
-| Ending | `finished` fires on completion only | `await handle.end` returns a `Tweens.Reason`: completed, cancelled, owner left the tree |
-
-</Lang>
-
-## Three ways to write a tween
-
-tweens.gd keeps tween code short with three layers that mix freely. Start with the
-shortest one that fits, and move to the next when a motion grows.
-
-<Lang only="csharp">
-
-### Shorthand methods
-
-Every property in the [catalog](/csharp/nodes/) has a shorthand method that starts
-a tween in one call:
-
-```csharp
-await sprite.TweenPosition(new Vector2(400, 180), 0.6).End;
-```
-
-### Configurators
-
-A configure callback adjusts one call. A shared `TweenOptions` value gives several
-calls the same timing and easing:
-
-```csharp
-sprite.TweenScale(Vector2.One, 0.25, options => options.From = Vector2.Zero);
-
-var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
-label.TweenModulateAlpha(1, 0.25, snappy);
-```
-
-### Definitions
-
-For motion you reuse, a definition gives it a name. It's a small struct that you
-start on any node and vary with `with`:
-
-<Moves>
-
-```csharp {"1":1-6} {"2":8} {"3":9-10}
-var arrive = new Tweens.Position2D
-{
-    To = new Vector2(400, 180),
-    Duration = 0.6,
-    Ease = EaseType.CubicOut,
-};
-
-var movement = sprite.Tween(arrive);
-await movement.End;
-GD.Print("Arrived");
-```
-
-1. **Define** the motion. Property, endpoint, duration, and easing sit together
-   and read top to bottom.
-2. **Start** it on a node. It begins wherever the node is and returns a handle.
-3. **Await** the handle before continuing. [Check the result](/csharp/cancellation/)
-   when your next action depends on successful completion.
-
-</Moves>
-
-</Lang>
-
-<Lang only="gdscript">
-
-### Named helpers
-
-Every property in the [helper catalog](/gdscript/nodes/) has a helper that builds
-its tween in one call:
-
-```gdscript
-await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).end
-```
-
-### Decorators
-
-Each `with_*()` method returns a copy with one setting changed, so a start can
-adjust a helper or a shared definition in place. They chain:
-
-```gdscript
-var pop := Tweens.scale_2d(Vector2.ONE, 0.25, Tweens.Ease.BACK_OUT)
-Tweens.play(sprite, pop.with_from(Vector2.ZERO).with_delay(0.1))
-```
-
-### Definitions
-
-Every helper returns a definition. Keep one in a `static var`, and any node can
-start it:
-
-<Moves>
-
-```gdscript {"1":1} {"2":3} {"3":4}
-var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
-
-await Tweens.play(sprite, arrive).end
-print("Arrived")
-```
-
-1. **Define** the motion. The helper names the property and checks the node's
-   class; its arguments are the endpoint, duration, and easing.
-2. **Start** it on a node and **await** its `end`. It begins wherever the node is.
-3. **Continue** once it ends. [Check the result](/gdscript/cancellation/) when
-   your next action depends on successful completion.
-
-</Moves>
-
-</Lang>
-
-## Reuse a definition
-
-<Lang only="csharp">
-
-The coin, gem, and sprite below all start the same `Pop` definition. Change its
-ease or duration, and each of them uses the new values the next time it starts.
-
-<ReauthorDemo />
-
-</Lang>
-
-<Lang only="gdscript">
-
-The coin, gem, and sprite below all start the same `pop` definition. Change its
-ease or duration, and each of them uses the new values the next time it starts.
-
-<ReauthorDemo lang="gdscript" />
 
 </Lang>

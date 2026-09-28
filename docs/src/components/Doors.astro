@@ -1,205 +1,122 @@
 ---
-// The landing's two entries, one per language, then the switch that picks the language of the examples below.
-import { Code } from '@astrojs/starlight/components';
-import LangSwitch from './LangSwitch.astro';
+import { Icon } from '@astrojs/starlight/components';
 
 const doors = [
-	{
-		lang: 'csharp',
-		name: 'C#',
-		badge: 'Beta',
-		facts: ['NuGet package', '.NET 10', 'GodotSharp 4.7.2'],
-		status: 'Install it from source or a locally packed NuGet package.',
-		code: `var hop = new Tweens.Position2D(target, 0.6);\nsprite.Tween(hop);`,
-		start: '/csharp/installation/',
-		links: [
-			{ text: 'Your first tween', href: '/csharp/quickstart/' },
-			{ text: 'Core API', href: '/csharp/api/' },
-		],
-	},
-	{
-		lang: 'gdscript',
-		name: 'GDScript',
-		badge: 'Beta',
-		facts: ['Native GDExtension, no .NET', 'Godot 4.7.2'],
-		status: 'Copy the addon from the repository or unpack a locally built ZIP.',
-		code: `var hop := Tweens.position_2d(target, 0.6)\nTweens.play(sprite, hop)`,
-		start: '/gdscript/installation/',
-		links: [
-			{ text: 'Your first tween', href: '/gdscript/quickstart/' },
-			{ text: 'Core API', href: '/gdscript/api/' },
-		],
-	},
+	{ lang: 'csharp', name: 'C#', requirements: '.NET 10 · Godot 4.7.2', api: '/csharp/api/' },
+	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2 · No .NET required', api: '/gdscript/api/' },
 ];
 ---
 
-<section class="doors not-content tw-wide" id="choose-a-language" aria-label="Choose a language">
-	<div class="grid">
-		{
-			doors.map((d) => (
-				<article class="door" data-door={d.lang}>
-					<h2 class="name">
-						{d.name}
-						{d.badge && <span class="badge">{d.badge}</span>}
-					</h2>
-					<ul class="facts">
-						{d.facts.map((f) => (
-							<li>{f}</li>
-						))}
-					</ul>
-					<Code code={d.code} lang={d.lang} />
-					<p class="status">{d.status}</p>
-					<div class="actions">
-						<a class="start" href={d.start}>
-							Start with {d.name}
-							<svg viewBox="0 0 16 16" aria-hidden="true">
-								<path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
-							</svg>
-						</a>
-						{d.links.map((l) => (
-							<a class="more" href={l.href}>
-								{l.text}
-							</a>
-						))}
-					</div>
-				</article>
-			))
-		}
-	</div>
-	<div class="examples"><span>The examples on this page use</span> <LangSwitch /></div>
-</section>
+<div class="doors not-content tw-wide" id="choose-a-language" data-lang-switch data-shared role="group" aria-label="Tutorial language">
+	{doors.map((d) => (
+		<div class="door" data-door={d.lang}>
+			<button class="start" type="button" data-lang-choice={d.lang} aria-describedby="language-hint">
+				<span class="choice-copy">
+					<span class="name">Start with {d.name}</span>
+					<span class="requirements">{d.requirements}</span>
+				</span>
+				<span class="indicator" aria-hidden="true"><Icon name="check" /></span>
+			</button>
+			<div class="reference">
+				<span class="selection"><span class="selected">Selected</span><span class="unselected">Available</span></span>
+				<a href={d.api} aria-label={`${d.name} Core API`}>Core API <Icon name="right-arrow" /></a>
+			</div>
+		</div>
+	))}
+</div>
 
 <style>
 	.doors {
-		container-type: inline-size;
-		margin-top: 2.5rem;
-	}
-	.grid {
 		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1rem;
-	}
-	@container (min-width: 44rem) {
-		.grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 1.5rem;
-		}
+		margin-block: 1.5rem;
 	}
 	.door {
-		display: flex;
-		flex-direction: column;
-		gap: 0.9rem;
+		--choice-background: var(--tw-stage);
+		--choice-border: var(--tw-outline);
+		--choice-color: var(--sl-color-white);
 		min-width: 0;
-		padding: 1.4rem;
-		border: 1px solid var(--tw-outline);
-		border-radius: 1.1rem;
-		background: var(--tw-stage);
-		transition:
-			border-color 0.3s,
-			box-shadow 0.4s var(--ease-expo-out);
+		border: 1px solid var(--choice-border);
+		border-radius: 1rem;
+		background: var(--choice-background);
+		transition: border-color 0.2s, background-color 0.2s;
 	}
-	/* The remembered language's door is outlined, matching the switch below. */
 	:global(:root:not([data-lang='gdscript'])) .door[data-door='csharp'],
 	:global(:root[data-lang='gdscript']) .door[data-door='gdscript'] {
-		border-color: color-mix(in oklab, var(--tw-mint) 70%, var(--tw-outline));
-		box-shadow: var(--tw-shadow);
-	}
-	.name {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		margin: 0;
-		font-size: 1.9rem;
-		font-weight: 780;
-		font-stretch: 88%;
-		letter-spacing: -0.03em;
-		color: var(--sl-color-white);
-	}
-	.badge {
-		padding: 0.25rem 0.6rem;
-		border-radius: 999px;
-		background: color-mix(in oklab, var(--tw-amber) 18%, transparent);
-		color: var(--tw-amber-ink);
-		font: 650 var(--sl-text-xs) / 1 var(--sl-font-mono);
-		letter-spacing: 0;
-	}
-	.facts {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-	.facts li {
-		padding: 0.15rem 0.6rem;
-		border-radius: 999px;
-		background: var(--tw-raised);
-		color: var(--tw-soft);
-		font: var(--sl-text-2xs) var(--sl-font-mono);
-	}
-	.door :global(.expressive-code) {
-		margin: 0;
-	}
-	.status {
-		margin: 0;
-		color: var(--tw-soft);
-		font-size: var(--sl-text-sm);
-	}
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.5rem 1.1rem;
-		margin-top: auto;
+		--choice-background: var(--tw-selected);
+		--choice-border: var(--tw-mint-ink);
+		--choice-color: var(--tw-mint-ink);
+		background-image: radial-gradient(ellipse at 0 0, color-mix(in oklab, var(--tw-mint) 22%, transparent), transparent 80%);
+		box-shadow: 0 10px 28px -22px var(--tw-mint);
 	}
 	.start {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		width: 100%;
+		padding: 1.25rem;
+		border: 0;
+		border-radius: 1rem 1rem 0 0;
+		background: transparent;
+		color: var(--choice-color);
+		font: inherit;
+		text-align: start;
+		cursor: pointer;
+		transition: background-color 0.2s, color 0.2s;
+	}
+	.start:hover { background: color-mix(in oklab, var(--tw-mint) 8%, transparent); }
+	.start:focus-visible, a:focus-visible {
+		outline: 2px solid var(--tw-mint-ink);
+		outline-offset: 4px;
+	}
+	.choice-copy { display: grid; gap: 0.4rem; }
+	.name { font: 700 1.35rem / 1.25 var(--tw-font-display); }
+	.requirements { color: var(--tw-soft); font-size: var(--sl-text-sm); line-height: 1.5; }
+	.indicator {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		width: 1.5rem;
+		height: 1.5rem;
+		border: 1px solid var(--tw-muted);
+		border-radius: 50%;
+	}
+	.indicator :global(svg) { opacity: 0; }
+	.selected { display: none; }
+	.door:has([aria-pressed='true']) .indicator {
+		background: var(--tw-mint-ink);
+		border-color: var(--tw-mint-ink);
+		color: var(--tw-on-accent);
+	}
+	.door:has([aria-pressed='true']) .indicator :global(svg) { opacity: 1; }
+	.door:has([aria-pressed='true']) .selected { display: inline; }
+	.door:has([aria-pressed='true']) .unselected { display: none; }
+	.reference {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-inline: 1.25rem;
+		border-top: 1px solid color-mix(in oklab, var(--choice-border) 40%, transparent);
+		font-size: var(--sl-text-sm);
+	}
+	.selection { color: var(--choice-color); }
+	a {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.45rem;
-		min-height: 2.5rem;
-		padding: 0.4rem 1.1rem;
-		border-radius: 999px;
-		background: var(--tw-mint);
-		color: var(--tw-on-accent);
-		font-weight: 650;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		color: var(--tw-soft);
 		text-decoration: none;
-		transition:
-			translate 0.35s var(--ease-back-out),
-			box-shadow 0.35s var(--ease-expo-out);
 	}
-	:global(:root[data-theme='light']) .start {
-		background: var(--tw-mint-ink);
+	a:hover { color: var(--tw-mint-ink); text-decoration: underline; text-underline-offset: 0.2em; }
+	@media (max-width: 36rem) {
+		.doors { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
+		.start { padding: 1rem 1.25rem; }
 	}
-	.start:hover {
-		translate: 0 -2px;
-		box-shadow: 0 10px 22px -10px color-mix(in oklab, var(--tw-mint) 70%, transparent);
-	}
-	.start svg {
-		width: 1rem;
-		height: 1rem;
-		fill: none;
-		stroke: currentColor;
-		stroke-width: 1.8;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-		transition: translate 0.45s var(--ease-elastic-out);
-	}
-	.start:hover svg {
-		translate: 3px 0;
-	}
-	.more {
-		color: var(--tw-mint-ink);
-		font-size: var(--sl-text-sm);
-		text-decoration-color: color-mix(in oklab, currentColor 45%, transparent);
-		text-underline-offset: 0.22em;
-	}
-	.examples {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.6rem;
-		margin: 1.5rem 0 0;
-		color: var(--tw-muted);
-		font-size: var(--sl-text-sm);
+	@media (prefers-reduced-motion: reduce) {
+		.door, .start { transition: none; }
 	}
 </style>

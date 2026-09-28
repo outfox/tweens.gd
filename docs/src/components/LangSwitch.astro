@@ -95,11 +95,11 @@ const slug = track ? slugOf(id) : firstSlug;
 
 	// Shared pages: the choices are toggle buttons for the language of the page's examples.
 	for (const nav of document.querySelectorAll<HTMLElement>('[data-lang-switch][data-shared]')) {
-		const choices = [...nav.querySelectorAll<HTMLAnchorElement>('[data-lang-choice]')];
+		const choices = [...nav.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>('[data-lang-choice]')];
 		const sync = () =>
 			choices.forEach((a) => a.setAttribute('aria-pressed', String(a.dataset.langChoice === root.dataset.lang)));
 		choices.forEach((a) => {
-			a.setAttribute('role', 'button');
+			if (a instanceof HTMLAnchorElement) a.setAttribute('role', 'button');
 			a.addEventListener('click', (event) => {
 				event.preventDefault();
 				if (a.dataset.langChoice === root.dataset.lang) return;
