@@ -44,6 +44,9 @@ pages are shared; the sidebar lists all but the overview, which the site title l
 - Interactive demos are shared. Pass `lang="gdscript"` so their code and labels use
   GDScript names; `src/scripts/lang.ts` maps the C# names.
 - Renamed URLs keep working through `redirects` in `src/tracks.mjs`.
+- Search includes the selected language's path and shared pages. `Head.astro` tags pages
+  for Pagefind; `overrides/Search.astro` applies the filter and follows `tweens:lang` changes.
+  The search override retains Starlight 0.42.4's UI; review it when upgrading Starlight.
 
 ## Content conventions
 

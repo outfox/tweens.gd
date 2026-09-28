@@ -11,7 +11,7 @@ const language = lang && LANGS[lang];
 const slug = lang ? slugOf(id) : undefined;
 const section = (PATH.find((g) => pagesOf(g).some((p) => p.slug === slug))?.art ??
 	(['faq', 'compatibility', 'acknowledgements'].includes(id) ? 'catalog' : undefined)) as Section | undefined;
-// Search results list both languages' twins, so their titles carry the language.
+// Keep the language visible in search result titles alongside shared pages.
 const searchTitle = language ? `title:${title} (${language.label})` : undefined;
 // Letters are split so a hover can ripple through them like a staggered tween list.
 let i = 0;
