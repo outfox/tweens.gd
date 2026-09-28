@@ -33,7 +33,7 @@ func squish_button() -> void:
 
 func flash() -> void:
 	var movement = options(Tweens.control_position(Vector2(9, 5), 0.4 * tempo), Tweens.Ease.LINEAR, Vector2.ZERO)
-	movement.ease_function = shake
+	movement.ease_function = Tweens.FX.punch(42.0 / TAU)
 	await Tweens.group([
 		Tweens.play(targets.shaker, movement),
 		Tweens.play(targets.burst, options(Tweens.scale_2d(Vector2(2.1, 2.1), 0.6 * tempo), Tweens.Ease.QUART_OUT, Vector2(0.7, 0.7))),
@@ -85,6 +85,3 @@ func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float 
 
 func wait(seconds_to_wait: float) -> bool:
 	return await Tweens.play(stage, Tweens.value(0.0, 1.0, seconds_to_wait)).wait() == Tweens.Reason.COMPLETED
-
-func shake(progress: float) -> float:
-	return sin(progress * 42.0) * (1.0 - progress) * (1.0 - progress)

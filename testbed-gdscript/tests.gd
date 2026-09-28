@@ -10,6 +10,7 @@ const GroupTests = preload("group_tests.gd")
 const AdapterTests = preload("adapter_tests.gd")
 const ShaderTests = preload("shader_tests.gd")
 const CoordinationTests = preload("coordination_tests.gd")
+const FXTests = preload("fx_tests.gd")
 
 var finished := false
 var trace_runs := false
@@ -85,6 +86,7 @@ func run_tests() -> void:
 	await _await_and_carry()
 	check(await GroupTests.new().run(self) == true, "group suite returned normally")
 	check(AdapterTests.new().run(self), "adapter suite returned normally")
+	check(FXTests.new().run(self), "FX suite returned normally")
 	check(await ShaderTests.new().run(self), "shader suite returned normally")
 	check(await CoordinationTests.new().run(self), "coordination suite returned normally")
 	await _automatic_runner()

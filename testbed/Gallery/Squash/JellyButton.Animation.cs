@@ -42,7 +42,7 @@ public sealed partial class JellyButton
             shaker.TweenPosition(new Vector2(9, 5), 0.4 * Tempo, options =>
             {
                 options.From = Vector2.Zero;
-                options.EaseFunction = Shake;
+                options.EaseFunction = Tweens.FX.Punch(frequency: 42f / MathF.Tau);
             }),
             burst.TweenScale(new Vector2(2.1f, 2.1f), flash, options =>
             {
@@ -123,7 +123,4 @@ public sealed partial class JellyButton
         ]).End;
     }
 
-    // A decaying oscillation that finishes at the starting value.
-    private static float Shake(float progress) =>
-        MathF.Sin(progress * 42) * (1 - progress) * (1 - progress);
 }

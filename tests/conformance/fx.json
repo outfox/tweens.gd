@@ -1,0 +1,204 @@
+{
+  "shake": [
+    {
+      "seed": 0,
+      "offset": 0,
+      "t": 0,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": 0,
+      "offset": 0,
+      "t": 0.125,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0.048746766301045685
+    },
+    {
+      "seed": 0,
+      "offset": 0,
+      "t": 0.375,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": -0.7187407917809455
+    },
+    {
+      "seed": 0,
+      "offset": 0,
+      "t": 0.625,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": -0.1851093108064449
+    },
+    {
+      "seed": 0,
+      "offset": 0,
+      "t": 1,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": -17,
+      "offset": -2.5,
+      "t": 0,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": -17,
+      "offset": -2.5,
+      "t": 0.125,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 1.6796648592407966
+    },
+    {
+      "seed": -17,
+      "offset": -2.5,
+      "t": 0.375,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 1.1926255093271831
+    },
+    {
+      "seed": -17,
+      "offset": -2.5,
+      "t": 0.625,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": -0.1015824833595227
+    },
+    {
+      "seed": -17,
+      "offset": -2.5,
+      "t": 1,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": 2147483647,
+      "offset": 7.25,
+      "t": 0,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": 2147483647,
+      "offset": 7.25,
+      "t": 0.125,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": -0.06460803686381014
+    },
+    {
+      "seed": 2147483647,
+      "offset": 7.25,
+      "t": 0.375,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 1.6967361709013817
+    },
+    {
+      "seed": 2147483647,
+      "offset": 7.25,
+      "t": 0.625,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0.13779236902204414
+    },
+    {
+      "seed": 2147483647,
+      "offset": 7.25,
+      "t": 1,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": -2147483648,
+      "offset": 1048575.5,
+      "t": 0,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    },
+    {
+      "seed": -2147483648,
+      "offset": 1048575.5,
+      "t": 0.125,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 1.5244196966580161
+    },
+    {
+      "seed": -2147483648,
+      "offset": 1048575.5,
+      "t": 0.375,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": -1.4209807218030177
+    },
+    {
+      "seed": -2147483648,
+      "offset": 1048575.5,
+      "t": 0.625,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": -0.2902343743656074
+    },
+    {
+      "seed": -2147483648,
+      "offset": 1048575.5,
+      "t": 1,
+      "frequency": 8,
+      "amplitude": 3,
+      "decay": 2,
+      "attack": 0.125,
+      "value": 0
+    }
+  ]
+}
