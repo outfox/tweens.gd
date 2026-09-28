@@ -12,8 +12,6 @@ var random = RandomNumberGenerator.new()
 func animate() -> void:
 	random.randomize()
 	targets.button.pressed.connect(pop)
-	while await wait(1.5 * tempo):
-		pop()
 
 func pop() -> void:
 	squish_button()
@@ -82,6 +80,3 @@ func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float 
 	definition.from_value = from
 	definition.delay = delay
 	return definition
-
-func wait(seconds_to_wait: float) -> bool:
-	return await Tweens.play(stage, Tweens.value(0.0, 1.0, seconds_to_wait)).wait() == Tweens.Reason.COMPLETED

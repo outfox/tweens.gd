@@ -45,9 +45,23 @@ public class GalleryLanguageTests
             csharp.Start(1.0);
             gdscript.Start(1.0);
             var scheduler = TweenRuntime.GetRunner(first).Scheduler;
+            if (name == nameof(JellyButton))
+            {
+                // This example waits for input: elapsed time alone must not award points.
+                scheduler.Update(3);
+                GDScriptScheduler()?.Call("update", 3.0);
+                foreach (var effect in new[] { csharp, gdscript })
+                {
+                    var targets = effect.SceneTargets;
+                    Assert.Equal("000", targets["score"].As<Label>().Text);
+                    var button = targets["button"].As<Button>();
+                    Assert.Equal("TAP ME!", button.Text);
+                    button.EmitSignal(BaseButton.SignalName.Pressed);
+                }
+            }
             var gdScheduler = GDScriptScheduler();
             Assert.NotNull(gdScheduler);
-            Assert.False(gdscript.Sequence!.IsCompleted);
+            Assert.Equal(name == nameof(JellyButton), gdscript.Sequence!.IsCompleted);
             // Binary-exact deltas keep endpoint comparisons independent of accumulated decimal roundoff.
             for (var tick = 0; tick < 384; tick++)
             {

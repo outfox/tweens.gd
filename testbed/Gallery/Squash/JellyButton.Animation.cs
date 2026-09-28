@@ -13,13 +13,6 @@ public sealed partial class JellyButton
 {
     private const int Points = 10;
 
-    private async Task<bool> AutoTap()
-    {
-        if (!await Wait(1.5 * Tempo)) return false;
-        _ = Run(Pop());
-        return true;
-    }
-
     private async Task Pop()
     {
         await Task.WhenAll([Squish(), Flash(), .. shards.Select(Throw), FloatBonus(), AddToScore()]);

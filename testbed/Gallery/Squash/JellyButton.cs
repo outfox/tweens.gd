@@ -56,7 +56,7 @@ public sealed partial class JellyButton : GalleryEffect
     {
         var tap = new Button
         {
-            Text = "TAP", FocusMode = Control.FocusModeEnum.None, Size = new Vector2(150, 58),
+            Text = "TAP ME!", FocusMode = Control.FocusModeEnum.None, Size = new Vector2(150, 58),
             Position = new Vector2(-75, -21), PivotOffset = new Vector2(75, 58),
         };
         tap.AddThemeFontSizeOverride("font_size", 24);
@@ -98,5 +98,5 @@ public sealed partial class JellyButton : GalleryEffect
         ["score"] = score,
     };
 
-    protected override void Animate() => Sequence = Repeat(AutoTap);
+    protected override void Animate() => Sequence = System.Threading.Tasks.Task.CompletedTask;
 }

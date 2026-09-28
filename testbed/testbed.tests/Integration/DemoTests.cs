@@ -50,6 +50,8 @@ public class DemoTests
             try
             {
                 effect.Start(1.8);
+                if (effect is JellyButton)
+                    effect.SceneTargets["button"].As<Button>().EmitSignal(BaseButton.SignalName.Pressed);
                 var sequence = Assert.IsAssignableFrom<Task>(effect.Sequence);
                 for (var i = 0; i < updates; i++) scheduler.Update(0.05);
                 Assert.False(sequence.IsFaulted);
