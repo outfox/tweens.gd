@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <GodotProjectDir>..</GodotProjectDir>
+    <TwoDogRequireImport>true</TwoDogRequireImport>
+    <TwoDogVariant Condition="'$(Configuration)' == 'Debug'">debug</TwoDogVariant>
+    <TwoDogVariant Condition="'$(Configuration)' == 'Editor'">editor</TwoDogVariant>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="2dog.engine" Version="$(TwoDogVersion)" />
+    <ProjectReference Include="../../csharp/tweens.gd.csproj" />
+  </ItemGroup>
+  <!-- The GDScript side runs the addon (and its GDExtension) with testbed-gdscript's benchmark script. -->
+  <Target Name="StageBenchmark" BeforeTargets="BeforeBuild;TwoDogImportGodotProject">
+    <ItemGroup>
+      <AddonSource Include="../../addons/tweens_gd/**/*" Exclude="../../addons/tweens_gd/csharp/**" />
+      <BenchmarkSource Include="../../testbed-gdscript/benchmark.gd" />
+    </ItemGroup>
+    <!-- Mirror the addon: files removed from the source must not linger. Godot keeps its generated .uid files. -->
+    <ItemGroup>
+      <StagedAddon Include="../addons/tweens_gd/**/*" Exclude="../addons/tweens_gd/**/*.uid" />
+      <StaleAddon Include="@(StagedAddon)" Exclude="@(AddonSource->'../addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Delete Files="@(StaleAddon)" />
+    <Copy SourceFiles="@(AddonSource)" DestinationFiles="@(AddonSource->'../addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(BenchmarkSource)" DestinationFolder=".." />
+    <!-- Inputs are normally globbed at evaluation, before a fresh checkout has staged files. -->
+    <ItemGroup>
+      <TwoDogImportInputs Include="@(AddonSource);@(BenchmarkSource)" />
+    </ItemGroup>
+  </Target>
+</Project>
