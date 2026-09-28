@@ -67,7 +67,7 @@ scons -C gdextension platform=web target=template_release threads=yes
 npm.cmd install --prefix artifacts/browser-test --no-audit --no-fund playwright-core@1.56.1
 node scripts/test-gdscript-web.mjs
 node scripts/test-gdscript-web.mjs gdscript-web-threads
-./scripts/Pack-Addon.ps1 -AllowMissingNative
+./scripts/Pack-Addon.ps1 -AllowMissingNative # Partial: only the libraries built here.
 ```
 
 Template downloads are verified against the official SHA512 list. The export

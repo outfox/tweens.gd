@@ -70,6 +70,15 @@ bool is_listed(Object *p_target, const StringName &p_name) {
 	return names->has(p_name) || instance_lists(p_target, p_name);
 }
 
+// The usual lerp, unless finite endpoints near opposite ends of the double range overflow their difference.
+double lerp_scalar(double p_from, double p_to, double p_weight) {
+	const double difference = p_to - p_from;
+	if (Math::is_finite(difference)) {
+		return p_from + difference * p_weight;
+	}
+	return p_from * (1.0 - p_weight) + p_to * p_weight;
+}
+
 bool has_component(Variant::Type p_type, const String &p_name) {
 	switch (p_type) {
 		case Variant::VECTOR2:
@@ -178,7 +187,7 @@ Variant TweensGdInterpolation::interpolate(const Variant &p_from, const Variant 
 		case Variant::FLOAT: {
 			const double from = p_from;
 			const double to = p_to;
-			return from + (to - from) * p_weight;
+			return lerp_scalar(from, to, p_weight);
 		}
 		case Variant::QUATERNION:
 			return Quaternion(p_from).normalized().slerp(Quaternion(p_to).normalized(), p_weight).normalized();
@@ -393,7 +402,7 @@ bool TypedLerp::sample(double p_weight, Variant &r_value) const {
 			return true;
 		}
 		case Variant::FLOAT: {
-			const double result = from_scalar + (to_scalar - from_scalar) * p_weight;
+			const double result = lerp_scalar(from_scalar, to_scalar, p_weight);
 			r_value = Variant(result);
 			return Math::is_finite(result);
 		}

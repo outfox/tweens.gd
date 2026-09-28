@@ -54,6 +54,10 @@ double TweensGdEasing::evaluate(int64_t p_ease, double p_progress) {
 	using std::pow;
 	using std::sin;
 	using std::sqrt;
+	// NaN progress stays detectable; infinities clamp like any other out-of-range progress.
+	if (Math::is_nan(p_progress)) {
+		return Math::NaN;
+	}
 	const double t = CLAMP(p_progress, 0.0, 1.0);
 	switch (p_ease) {
 		case LINEAR:
