@@ -28,6 +28,8 @@ if env.get("is_msvc", False):
     env.Append(LINKFLAGS=["/NOIMPLIB", "/NOEXP"])
 elif env["platform"] in ("linux", "android"):
     # Export only the entry symbol, not the statically linked C++ runtime, and drop unused code.
+    # The env is shared with godot-cpp's library build, so its objects get their own sections too.
+    env.Append(CCFLAGS=["-ffunction-sections", "-fdata-sections"])
     env.Append(LINKFLAGS=["-Wl,--exclude-libs,ALL", "-Wl,--gc-sections"])
 
 # Every variant keeps its full platform/target/arch suffix; the .gdextension file maps feature tags to names.

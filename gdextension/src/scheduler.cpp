@@ -187,6 +187,8 @@ Ref<TweensGdGroup> TweensGdScheduler::add_all(const Variant &p_target, const Var
 	if (!require_main_thread()) {
 		return TweensGdGroup::of(Array::make(TweensGdHandle::rejected("Use tweens.gd on Godot's main thread.")));
 	}
+	// on_add callbacks may drop the last reference to this scheduler between starts.
+	const Ref<TweensGdScheduler> keep(this);
 	if (p_definitions.get_type() != Variant::ARRAY || Array(p_definitions).is_empty()) {
 		return TweensGdGroup::of(Array::make(reject("At least one tween definition is required.")));
 	}
@@ -267,12 +269,16 @@ void TweensGdScheduler::cancel_owner(Node *p_owner, bool p_include_children) {
 	}
 	const Ref<TweensGdScheduler> keep(this);
 	const ObjectID owner_id(p_owner->get_instance_id());
-	const LocalVector<Ref<TweensGdHandle>> snapshot(instances);
-	for (const Ref<TweensGdHandle> &instance : snapshot) {
+	// Cancel callbacks can free the owner, so every match is decided before any playback is cancelled.
+	LocalVector<Ref<TweensGdHandle>> matches;
+	for (const Ref<TweensGdHandle> &instance : instances) {
 		Node *instance_owner = instance->get_owner_node();
 		if (instance->owner_id == owner_id || (p_include_children && instance_owner != nullptr && p_owner->is_ancestor_of(instance_owner))) {
-			instance->cancel();
+			matches.push_back(instance);
 		}
+	}
+	for (const Ref<TweensGdHandle> &instance : matches) {
+		instance->cancel();
 	}
 	if (!updating) {
 		compact();

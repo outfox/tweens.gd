@@ -41,11 +41,12 @@ void TweensGdEasing::_bind_methods() {
 	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress"), &TweensGdEasing::evaluate);
 }
 
-bool TweensGdEasing::is_known(int64_t p_ease) {
-	if (p_ease == LINEAR || p_ease == SMOOTH_STEP || p_ease == SMOOTHER_STEP) {
+bool tweens::is_known_ease(int64_t p_ease) {
+	using Ease = TweensGdEasing::Ease;
+	if (p_ease == Ease::LINEAR || p_ease == Ease::SMOOTH_STEP || p_ease == Ease::SMOOTHER_STEP) {
 		return true;
 	}
-	return p_ease >= SINE_IN && p_ease <= BOUNCE_IN_OUT && p_ease % 10 <= 2;
+	return p_ease >= Ease::SINE_IN && p_ease <= Ease::BOUNCE_IN_OUT && p_ease % 10 <= 2;
 }
 
 double TweensGdEasing::evaluate(int64_t p_ease, double p_progress) {

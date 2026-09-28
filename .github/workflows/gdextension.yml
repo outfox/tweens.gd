@@ -122,7 +122,17 @@ jobs:
         env:
           GODOT: ${{ matrix.godot }}
         run: |
-          "$GODOT" --headless --path testbed-gdscript --import || true
-          grep -q tweens_gd.gdextension testbed-gdscript/.godot/extension_list.cfg
+          # Godot 4.7.2 can crash on exit after registering an extension it found during the import (debug_draw_3d
+          # does too). Tolerate only that crash, then require the registration it has already written.
+          status=0
+          "$GODOT" --headless --path testbed-gdscript --import || status=$?
+          if [ "$status" -ne 0 ] && [ "$status" -lt 128 ]; then
+            echo "::error::The import failed with exit code $status."
+            exit "$status"
+          fi
+          if ! grep -q tweens_gd.gdextension testbed-gdscript/.godot/extension_list.cfg 2>/dev/null; then
+            echo "::error::The import did not register tweens_gd.gdextension (exit code $status)."
+            exit 1
+          fi
           "$GODOT" --headless --path testbed-gdscript -- --run-tests 2>&1 | tee run.log
           grep -qE 'GDScript: [0-9]+ checks, 0 failures\.' run.log

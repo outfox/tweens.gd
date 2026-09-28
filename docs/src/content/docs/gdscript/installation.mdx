@@ -40,6 +40,7 @@ await Tweens.play(self, Tweens.position_2d(Vector2(100, 50), 0.3)).end
 
 Let the editor finish importing before running the project. For a fresh
 headless checkout, run `godot --headless --editor --import` once to register the
-extension and populate the script-class cache.
+extension and populate the script-class cache. Godot 4.7.2 can crash on exit from
+this first import after it has registered the extension; later runs start normally.
 
 Then write [your first tween](/gdscript/quickstart/).

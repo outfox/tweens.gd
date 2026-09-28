@@ -6,6 +6,7 @@
 		"Node",
 		"OS",
 		"SceneTree",
+		"Script",
 		"Time",
 		"Window"
 	]

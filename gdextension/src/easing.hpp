@@ -51,9 +51,13 @@ public:
 		SMOOTHER_STEP = 120,
 	};
 
-	static bool is_known(int64_t p_ease);
 	// Unknown easing functions return NaN.
 	static double evaluate(int64_t p_ease, double p_progress);
 };
+
+namespace tweens {
+// Whether the value is one of the TweensGdEasing::Ease functions; used by definition validation.
+bool is_known_ease(int64_t p_ease);
+} // namespace tweens
 
 } // namespace godot

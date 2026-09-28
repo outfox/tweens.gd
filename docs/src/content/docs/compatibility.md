@@ -47,7 +47,7 @@ no .NET runtime, plugin, or autoload, even though the same addon also includes C
 | Exports | A Windows release export and Web/WASM release exports with and without threads, tested in Edge; Web exports need Extensions Support |
 | iOS and Android | Built, not tested on devices |
 | Other engines, browsers, and devices | Not validated |
-| Throughput | Playback updates run natively; no supported count or frame budget is promised |
+| Throughput | Playback updates run natively, except adapter hooks, which run in GDScript; no supported count or frame budget is promised |
 
 The addon's differences from C# are listed in the [GDScript Core API](/gdscript/api/#differences-from-c).
 

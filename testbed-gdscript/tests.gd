@@ -45,6 +45,16 @@ class ResourceProbe extends RefCounted:
 			when_read.call()
 			return 0.0
 
+# Lists "dynamic" only when asked to, but always answers for it.
+class DynamicProbe extends RefCounted:
+	var listed := false
+	func _get_property_list() -> Array[Dictionary]:
+		var properties: Array[Dictionary] = []
+		if listed: properties.append({"name": "dynamic", "type": TYPE_FLOAT, "usage": PROPERTY_USAGE_DEFAULT})
+		return properties
+	func _get(property: StringName) -> Variant:
+		return 1.0 if property == &"dynamic" else null
+
 func _ready() -> void:
 	if OS.has_feature("tweens_test_export") or "--run-tests" in OS.get_cmdline_user_args(): _run_standalone.call_deferred()
 
@@ -116,6 +126,7 @@ func _conformance() -> bool:
 	for ease in T.Ease.values():
 		near(T.Easing.evaluate(ease, 0.0), 0.0, "ease start")
 		near(T.Easing.evaluate(ease, 1.0), 1.0, "ease end")
+		check(is_nan(T.Easing.evaluate(ease, NAN)), "ease %d keeps NaN progress detectable" % ease)
 	var infinite := T.value(0.0, 1.0, 1.0)
 	infinite.repeats = T.INFINITE
 	var huge := TweensGdPlayback.create(infinite)
@@ -152,6 +163,13 @@ func _validation() -> bool:
 	check(scheduler.add(target, T.value(Quaternion(0, 0, 0, 0), Quaternion.IDENTITY)).completion_reason == T.Reason.FAILED, "reject zero quaternion")
 	check(scheduler.add(target, T.property(^"missing", 1.0)).completion_reason == T.Reason.FAILED, "reject missing property")
 	check(scheduler.active_count == 0, "invalid starts do not register work")
+	var listing := DynamicProbe.new()
+	listing.listed = true
+	var dynamic := scheduler.add(listing, T.property(^"dynamic", 2.0, 1.0))
+	check(dynamic.completion_reason != T.Reason.FAILED, "an instance's own property list admits its property")
+	dynamic.cancel()
+	check(scheduler.add(DynamicProbe.new(), T.property(^"dynamic", 2.0, 1.0)).completion_reason == T.Reason.FAILED,
+		"another instance's property list does not admit a property")
 	var valid := scheduler.add(target, T.value(0.0, 1.0, 1.0))
 	scheduler.update(-0.1)
 	near(valid.value, 0.0, "invalid update does not advance")
@@ -563,6 +581,15 @@ func _lifetime() -> bool:
 	var bound := scheduler.add(resource, T.value(0.0, 1.0, 1.0), owner)
 	owner.free()
 	check(bound.completion_reason == T.Reason.OWNER_EXITED, "resource follows owner lifetime")
+	var parent := Node.new()
+	var other := Node.new()
+	add_child(parent)
+	add_child(other)
+	scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0).with_on_cancel(func(_h): parent.free()), parent)
+	var unrelated := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0), other)
+	scheduler.cancel_owner(parent, true)
+	check(not unrelated.is_terminal, "cancel_owner survives a callback that frees the owner")
+	other.free()
 	scheduler.dispose()
 	return true
 
@@ -842,6 +869,9 @@ func _rejected_starts() -> void:
 	get_tree().remove_meta(CLOSING_KEY)
 	check(await closing.wait() == T.Reason.FAILED, "closing tree needs no future tick to settle rejection")
 	check(not get_tree().has_meta(RUNNER_KEY), "closing tree rejection creates no runner")
+	failures.append_array(_collector.take_errors())
+	check(TweensGdRunner.acquire(null) == null, "acquire rejects a missing tree")
+	check(_collector.take_errors().size() == 1, "acquire reports a missing tree once")
 	# The API rejects worker-thread use before touching scene state, but still returns a handle.
 	if OS.has_feature("web"): return # The export deliberately disables thread support.
 	var worker := Thread.new()

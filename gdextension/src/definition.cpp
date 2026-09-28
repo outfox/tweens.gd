@@ -85,7 +85,7 @@ String TweenSettings::validate() const {
 	if (!Math::is_finite(weks) || weks <= 0.0) {
 		return "Weks must be finite and positive.";
 	}
-	if (!TweensGdEasing::is_known(ease)) {
+	if (!is_known_ease(ease)) {
 		return "Unknown easing function.";
 	}
 	if (process_mode < LANE_PROCESS || process_mode > LANE_PHYSICS || pause_mode < PAUSE_BOUND || pause_mode > PAUSE_ALWAYS) {

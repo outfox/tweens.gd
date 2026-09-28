@@ -13,6 +13,8 @@ try {
     # Godot 4.7.2 can crash on exit after registering an extension it found during the scan (debug_draw_3d does
     # too); the list is written before that. Once registered at startup, the exports below exit cleanly.
     & $Godot --headless --path testbed-gdscript --import *> artifacts/gdscript-import.log
+    # A crash reports a negative (Windows) or 128+ exit code; anything else is a failed import.
+    if ($LASTEXITCODE -gt 0 -and $LASTEXITCODE -lt 128) { throw "Import failed (exit $LASTEXITCODE; see artifacts/gdscript-import.log)." }
     if (!(Select-String -LiteralPath testbed-gdscript/.godot/extension_list.cfg -Pattern 'tweens_gd.gdextension' -Quiet)) {
         throw 'The import did not register the tweens_gd extension (see artifacts/gdscript-import.log).'
     }

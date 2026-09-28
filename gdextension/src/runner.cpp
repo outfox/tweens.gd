@@ -109,6 +109,13 @@ TweensGdRunner *TweensGdRunner::find(SceneTree *p_tree) {
 }
 
 TweensGdRunner *TweensGdRunner::acquire(SceneTree *p_tree) {
+	if (!require_main_thread()) {
+		return nullptr;
+	}
+	if (p_tree == nullptr) {
+		report("A runner needs a SceneTree.");
+		return nullptr;
+	}
 	TweensGdRunner *existing = find(p_tree);
 	if (existing != nullptr && !existing->is_queued_for_deletion() && !existing->scheduler->is_disposed()) {
 		return existing;

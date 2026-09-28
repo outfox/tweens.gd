@@ -20,8 +20,8 @@ scons -C gdextension target=template_release
 
 The editor and debug exports load `template_debug`, release exports
 `template_release`. Pass `platform=`, `arch=` and, for the Web, `threads=no` to
-cross-build. Libraries are written to `addons/tweens_gd/bin/` with the names
-`addons/tweens_gd/tweens_gd.gdextension` maps to feature tags.
+cross-build. Libraries are written to `addons/tweens_gd/bin/`, using the filenames
+that `addons/tweens_gd/tweens_gd.gdextension` maps to feature tags.
 
 CI (`.github/workflows/gdextension.yml`) builds Windows x86_64/x86_32/arm64,
 Linux x86_64/x86_32/arm64, macOS universal, iOS arm64, Android

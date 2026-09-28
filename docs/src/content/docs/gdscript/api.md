@@ -7,7 +7,7 @@ This page lists the functions that start playback. The pages after it list every
 field of the definitions you start and every member of the handles you get back.
 
 Use the addon's global class `Tweens` once the editor has imported the addon;
-no preload is needed. The classes it returns come from the addon's GDExtension and
+no preload is needed. The classes the API uses come from the addon's GDExtension and
 are global too: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`,
 `TweensGdScheduler`, and `TweensGdCancellation`. Use these names in type annotations.
 `TweensGdAdapter`, the adapter base class, is a GDScript class. Use the API on

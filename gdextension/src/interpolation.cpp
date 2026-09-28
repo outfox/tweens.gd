@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 #include "interpolation.hpp"
 
+#include <godot_cpp/classes/class_db_singleton.hpp>
+#include <godot_cpp/classes/script.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
@@ -28,35 +30,44 @@ struct ClassKeyHasher {
 
 using PropertyNames = HashSet<StringName>;
 
-// Property lists are costly to build, so names are cached per native class and script.
-HashMap<ClassKey, PropertyNames, ClassKeyHasher> *listed_properties = nullptr;
+// Property lists are costly to build. Class and script declarations appear in every instance's list, so they are
+// cached; anything else, such as metadata or _get_property_list() entries, is checked against the instance itself.
+HashMap<ClassKey, PropertyNames, ClassKeyHasher> *declared_properties = nullptr;
 
-PropertyNames list_properties(Object *p_target) {
-	PropertyNames result;
+void add_names(PropertyNames &r_names, const TypedArray<Dictionary> &p_list) {
+	for (int64_t index = 0; index < p_list.size(); index++) {
+		const Dictionary entry = p_list[index];
+		r_names.insert(entry["name"]);
+	}
+}
+
+bool instance_lists(Object *p_target, const StringName &p_name) {
 	const TypedArray<Dictionary> list = p_target->get_property_list();
 	for (int64_t index = 0; index < list.size(); index++) {
 		const Dictionary entry = list[index];
-		result.insert(entry["name"]);
+		if (StringName(entry["name"]) == p_name) {
+			return true;
+		}
 	}
-	return result;
+	return false;
 }
 
 bool is_listed(Object *p_target, const StringName &p_name) {
-	if (listed_properties == nullptr) {
-		listed_properties = memnew((HashMap<ClassKey, PropertyNames, ClassKeyHasher>));
+	if (declared_properties == nullptr) {
+		declared_properties = memnew((HashMap<ClassKey, PropertyNames, ClassKeyHasher>));
 	}
-	const Variant script = p_target->get_script();
-	const Object *script_object = script;
-	const ClassKey key{ p_target->get_class(), script_object != nullptr ? uint64_t(script_object->get_instance_id()) : 0 };
-	PropertyNames *names = listed_properties->getptr(key);
+	Script *script = Object::cast_to<Script>(p_target->get_script().get_validated_object());
+	const ClassKey key{ p_target->get_class(), script != nullptr ? uint64_t(script->get_instance_id()) : 0 };
+	PropertyNames *names = declared_properties->getptr(key);
 	if (names == nullptr) {
-		names = &listed_properties->insert(key, list_properties(p_target))->value;
+		PropertyNames declared;
+		add_names(declared, ClassDBSingleton::get_singleton()->class_get_property_list(key.type));
+		if (script != nullptr) {
+			add_names(declared, script->get_script_property_list());
+		}
+		names = &declared_properties->insert(key, declared)->value;
 	}
-	if (names->has(p_name)) {
-		return true;
-	}
-	// Metadata and dynamic lists differ per instance.
-	return list_properties(p_target).has(p_name);
+	return names->has(p_name) || instance_lists(p_target, p_name);
 }
 
 bool has_component(Variant::Type p_type, const String &p_name) {
@@ -423,9 +434,9 @@ bool TypedLerp::sample(double p_weight, Variant &r_value) const {
 }
 
 void TweensGdInterpolation::clear_caches() {
-	if (listed_properties != nullptr) {
-		memdelete(listed_properties);
-		listed_properties = nullptr;
+	if (declared_properties != nullptr) {
+		memdelete(declared_properties);
+		declared_properties = nullptr;
 	}
 }
 

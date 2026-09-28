@@ -41,6 +41,7 @@ public:
 
 	// The runner bound to this tree, or null.
 	static TweensGdRunner *find(SceneTree *p_tree);
+	// The runner for this tree, created if needed. Null for a null tree or off the main thread.
 	static TweensGdRunner *acquire(SceneTree *p_tree);
 	// Node targets bind to themselves; Resources/Objects need an explicit owner.
 	// Always returns an awaitable handle, including an already-failed handle on rejection.
