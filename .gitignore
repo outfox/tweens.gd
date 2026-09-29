@@ -141,6 +141,10 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+# Plugin Litter
+CLAUDE.md
+AGENTS.md
+
 # Mac desktop service store files
 .DS_Store
 
