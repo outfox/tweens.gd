@@ -66,13 +66,25 @@ Which frames advance the tween. See
 
 ## EaseType
 
-`EaseType.Linear` is the default. `SmoothStep` and `SmootherStep` are S-curves
-with no variants. Ten families come in `In`, `Out`, and `InOut` forms, such as
-`EaseType.CubicOut`: `Sine`, `Quad`, `Cubic`, `Quart`, `Quint`, `Expo`, `Circ`,
-`Back`, `Elastic`, and `Bounce`. [Easing](/csharp/easing/) compares their curves.
+`EaseType` accepts `In`, `Out`, and `InOut` constants. Combine one In and one Out
+with `|`, for example `In.Sine | Out.Cubic`. `InOut.Sine` is `In.Sine | Out.Sine`.
+Both sides provide `None`, `Linear`, `Sine`, `Quad`, `Cubic`, `Quart`, `Quint`,
+`Expo`, `Circ`, `Back`, `Elastic`, `Bounce`, `SmoothStep`, and `SmootherStep`;
+`InOut` provides every matching pair except `None`. A single leg runs on its own;
+two half-duration legs meet through a local Hermite join over 30–70% of progress
+after skew. Matching families exactly reproduce their conventional InOut curve.
+
+`EaseType.Linear` (zero) remains the default. Legacy `EaseType` constants keep
+their numeric values and original shapes. Do not OR legacy names with the new
+flags. [Easing](/csharp/easing/) includes the composer and migration details.
 
 ## Constants
 
 | Member | Meaning |
 | --- | --- |
 | `TweenOptions.Infinite` | `-1`, for `Repeats` that run until cancelled |
+
+## BlendType
+
+Choose `Hermite` (default), `SmoothStep`, or `Linear`.
+The centered join width defaults to 0.4. See [easing](/csharp/easing/#choose-the-method-and-width).

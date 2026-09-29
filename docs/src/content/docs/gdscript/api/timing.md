@@ -26,6 +26,8 @@ See [easing](/gdscript/easing/).
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `ease` | `Tweens.Ease` | `LINEAR` | One of the 33 built-in eases |
+| `ease` | `int` | `LINEAR` | Composable In/Out flags or a legacy ease |
+| `blend_type` | `Tweens.BlendType` | `HERMITE` | Method for joining mixed In/Out families |
+| `blend` | `float` | `0.4` | Centered join width in [0, 1]; zero directly splices the halves |
 | `ease_function` | `Callable` | `Callable()` | Maps normalized time to a weight; overrides `ease` |
 | `curve` | `Curve` | `null` | Godot curve that overrides `ease`; set it or `ease_function`, not both |

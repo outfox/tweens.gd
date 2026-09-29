@@ -3,7 +3,9 @@
 // SPDX-FileCopyrightText: 2020 Jeffrey Lanters
 
 namespace tweens.gd {
-  public enum EaseType {
+  // Legacy named curves keep their numeric values and shape. Use In/Out/InOut for composable curves.
+  [System.Flags]
+  public enum EaseType : long {
     Linear = 0,
     SineIn = 10,
     SineOut = 11,

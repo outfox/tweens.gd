@@ -18,6 +18,7 @@ and `npm run astro -- dev stop`.
 ```powershell
 npm run build
 npm run check:links
+npm run check:easing
 npm run preview -- --background
 ```
 

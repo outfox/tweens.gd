@@ -11,8 +11,9 @@ start, start a copy: `copy()` returns an unchanged one, and the
 
 ## Factories
 
-Each factory returns a new `TweensGdDefinition`. `easing` is a `Tweens.Ease`
-constant, such as `Tweens.Ease.CUBIC_OUT`.
+Each factory returns a new `TweensGdDefinition`. `easing` accepts integer flags,
+such as `Tweens.In.SINE | Tweens.Out.CUBIC`, or a matching pair such as
+`Tweens.InOut.SINE`. Legacy `Tweens.Ease` constants also work.
 
 | Factory | Purpose |
 | --- | --- |

@@ -9,6 +9,13 @@ The tolerance accommodates C#'s single-precision easing/progress values.
 These fixtures establish timing/easing agreement, not full API or export parity.
 Engine lifetime, callbacks and property writes have separate integration tests.
 
+`easing.json` supplies composed In/Out samples at the blend boundaries, inside
+the transition, with missing legs and with skew. Optional `blendType` and `blend`
+select the method and centered window (defaults: Hermite and 0.4). Non-polynomial
+samples also exercise the analytic derivatives used to construct the cubic join. C#, native GDScript, and the
+website's `npm run check:easing` consume the same samples. Each implementation
+also checks every family pairing. Legacy curves remain covered by `timelines.json`.
+
 `fx.json` supplies shared samples of the FX shake signal, including negative noise
 coordinates, signed seed extremes and the periodic lattice boundary. Noise is
 quintic-interpolated value noise with a fixed 32-bit lattice hash. Both languages

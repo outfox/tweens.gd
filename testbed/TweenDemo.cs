@@ -20,6 +20,7 @@ public partial class TweenDemo : Control
         ("3D", () => new SpatialPage()),
         ("Materials", () => new MaterialsPage()),
         ("Shaders", () => new ShadersPage()),
+        ("Easing", () => new EasingPage()),
     ];
 
     public static readonly string[] PageNames = Pages.Select(p => p.Name).ToArray();
@@ -32,6 +33,7 @@ public partial class TweenDemo : Control
     private OptionButton languagePicker = null!;
     public GalleryLanguage Language { get; private set; }
     private GalleryPage? page;
+    private EasingSelection easingSelection = EasingSelection.Default;
     private int revision;
 
     public int SelectedPage { get; private set; }
@@ -182,6 +184,7 @@ public partial class TweenDemo : Control
         for (var i = 0; i < navigation.Count; i++) navigation[i].SetPressedNoSignal(i == index);
 
         page = Pages[index].Create();
+        if (page is EasingPage easingPage) easingPage.Selection = easingSelection;
         page.Language = Language;
         page.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         page.SizeFlagsVertical = SizeFlags.ExpandFill;
@@ -226,6 +229,7 @@ public partial class TweenDemo : Control
     private void DestroyPage()
     {
         if (page is null) return;
+        if (page is EasingPage) easingSelection = ((EasingComposer)page.Effects[0]).Selection;
         page.Free();
         page.ReleaseResources();
         page = null;

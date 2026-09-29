@@ -1,50 +1,131 @@
 ---
 title: Easing
-description: Pick an ease for each kind of motion, from the 33 built-in functions to custom functions and Godot curves.
+description: Compose independent In and Out curves, choose the join method and width, and tune duration and skew.
 ---
 
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
-Easing controls how a tween speeds up and slows down without changing how long it
-takes. The default, `EaseType.Linear`, moves at constant speed, which rarely suits
-characters or UI. Pick an ease for every definition.
+Choose how a tween starts and how it finishes independently. Combine one `In`
+curve and one `Out` curve with `|`, or choose a matching pair with `InOut`.
+Duration controls how long it takes; skew changes when the motion happens.
 
-## Choose an ease
+## Compose an ease
 
-| Motion | Try | Why |
-| --- | --- | --- |
-| Arriving, settling into place | `CubicOut`, `QuartOut` | Starts fast, lands gently |
-| Leaving the screen | `CubicIn`, `QuadIn` | Gathers speed on the way out |
-| Moving between two resting spots | `SmootherStep`, `SineInOut` | Eases out of rest and into rest |
-| A playful pop or emphasis | `BackOut`, `ElasticOut` | Overshoots, then settles |
-| Dropping onto a surface | `BounceOut` | Lands with bounces |
-| Constant motion, such as spinners or progress | `Linear` | No acceleration |
+```csharp
+sprite.TweenPositionX(300, 1.2, options =>
+{
+    options.Ease = In.Sine | Out.Cubic;
+    options.Skew = 1;
+});
+```
 
-`Out` eases decelerate, `In` eases accelerate, and `InOut` eases do both.
-`Linear`, `SmoothStep`, and `SmootherStep` have no variants. Each of the ten
-families below comes in all three, such as `EaseType.CubicIn`, `EaseType.CubicOut`,
-and `EaseType.CubicInOut`.
+`InOut.Sine` is exactly `In.Sine | Out.Sine`. Each selector is an `EaseType`
+constant, so it works anywhere an ease is accepted: a shorthand call, a
+`TweenOptions` value, a definition, or `Easing.Evaluate`.
+
+A single selection such as `Out.Cubic` runs that curve over the whole duration.
+`In.None` and `Out.None` omit a leg. `In.Linear` and `Out.Linear` explicitly select
+a straight line for that side of a blend; no selections means linear motion.
+Choose at most one curve from each side. Multiple different In flags or multiple
+different Out flags are rejected.
 
 ## Compare the curves
 
 <EasingPlayground />
 
-| Family | Character |
+The amber and blue lines show the original In and Out halves. The green line
+shows their joined result; shading marks the adjustable join window after skew.
+The velocity plot reveals changes in speed and direction. Compare methods,
+scrub progress, or play the motion. Matching families and single legs ignore
+join settings, so those controls are disabled for them.
+
+## How the join works
+
+In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
+the Sine halves are `0.5 * SineIn(2 * t)` and
+`0.5 + 0.5 * SineOut(2 * t - 1)`. Every pair passes through `(0.5, 0.5)`.
+We use each family's conventional InOut half profile, including the authored
+InOut tuning of Back and Elastic. SmoothStep and SmootherStep keep their
+existing symmetric profiles.
+
+**Hermite is the default.** It joins the two halves with two cubic segments
+inside a centered window. With width 0.4, progress up to 0.3 follows the In
+half exactly and progress from 0.7 follows the Out half exactly. Inside, the
+cubics match the values and velocities at both edges and share one velocity
+at the midpoint. No changing crossfade weight contributes extra motion.
+
+The midpoint velocity is solved from equal acceleration between the cubics,
+then limited to prevent new reversals when the selected families are monotone.
+This gives a continuous velocity across the join at regular points of the
+source curves. Acceleration can change at the outer edges. Authored bounce
+corners and overshoot outside the window remain part of the selected curves.
+
+For a window half-width `h`, edge values `y0, y1`, and edge velocities
+`v0, v1`, the construction is:
+
+```text
+d0 = (0.5 - y0) / h
+d1 = (y1 - 0.5) / h
+midVelocity = clamp((3 * (d0 + d1) - v0 - v1) / 4,
+                    0, 3 * max(0, min(d0, d1)))
+left cubic:  (0.5 - h, y0, v0) -> (0.5, 0.5, midVelocity)
+right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
+```
+
+Matching families bypass the join: **Sine | Sine is exactly SineInOut**, and
+all other matching families preserve their conventional InOut curves too.
+
+## Choose the method and width
+
+Set `BlendType = BlendType.Hermite` and `Blend = 0.4` on the tween definition or options.
+The width must be finite and in `[0, 1]`. A smaller window preserves more of
+each original leg; a larger window gives the join more room to reshape them.
+Width zero directly splices the halves and may produce a velocity jump.
+
+| Method | Behavior |
 | --- | --- |
-| `Sine` | Gentle acceleration and deceleration |
-| `Quad`, `Cubic`, `Quart`, `Quint` | Increasingly pronounced polynomial curves |
-| `Expo` | Strong exponential acceleration and deceleration |
-| `Circ` | Circular curve |
-| `Back` | Overshoots an endpoint |
-| `Elastic` | Oscillates around an endpoint |
-| `Bounce` | Repeated bounces |
-| `SmoothStep`, `SmootherStep` | S-curves that start and stop at zero speed; `SmootherStep` also starts and stops with zero acceleration |
+| Hermite | Local cubic join with matched velocity; the default |
+| SmoothStep | Crossfades the two complete family InOut profiles with `u²(3 − 2u)` |
+| Linear | Crossfades those profiles with `u`; velocity may jump at the window edges |
 
-Back and elastic weights aren't clamped. Overshoot suits motion, but native
-property limits still apply to constrained values such as alpha or ranges.
+All methods preserve the midpoint. SmoothStep and Linear let you compare the
+crossfade approach; they can still inherit steep or singular midpoint slopes
+from a family such as Circ. Join settings do not alter a legacy ease, a single
+leg, a matching pair, or a custom function/Curve.
 
-To start an ease slower or faster without choosing another one, set `Skew` for the outward leg or `Weks` for the ping-pong return; see
-[variations](/csharp/variations/#change-the-pacing-with-skew).
+Sample the same configuration with `Easing.Evaluate(ease, t, BlendType.Hermite, 0.4)`.
+Both settings also work in immutable `TweenOptions` and generated definitions.
+
+Skew warps normalized time **before** the join. A value of 1 leaves time
+unchanged; values above 1 delay motion, and values between 0 and 1 bring it
+forward. Weks independently warps the ping-pong return. In and Out shape each
+traversal; they do not mean forward and ping-pong return.
+See [variations](/csharp/variations/#change-the-pacing-with-skew).
+
+## Choose a family
+
+| Motion | Try |
+| --- | --- |
+| Arriving, settling into place | `Out.Cubic`, `Out.Quart` |
+| Leaving the screen | `In.Cubic`, `In.Quad` |
+| Moving between resting spots | `InOut.Sine`, `InOut.SmootherStep` |
+| Winding up, then bouncing into place | `In.Back \| Out.Bounce` |
+| A gentle start with a spring finish | `In.Sine \| Out.Elastic` |
+| Constant motion | `InOut.Linear` |
+
+Both sides offer `Linear`, `Sine`, `Quad`, `Cubic`, `Quart`, `Quint`, `Expo`,
+`Circ`, `Back`, `Elastic`, `Bounce`, `SmoothStep`, and `SmootherStep`.
+SmoothStep and SmootherStep are symmetric curves, so their In and Out shapes
+are identical. Back and Elastic can overshoot. Output weights aren't clamped;
+native property limits still apply to constrained values such as alpha or ranges.
+
+## Migrate existing eases
+
+Use `In.Sine` for `EaseType.SineIn`, `Out.Sine` for `EaseType.SineOut`, and
+`InOut.Sine` for `EaseType.SineInOut`; the same naming applies to the other families.
+Single-leg and matching InOut shapes stay the same. Legacy `EaseType` names and
+numeric values remain available. Do not combine legacy names with flags.
+New code should use `In`, `Out`, and `InOut`.
 
 ## Custom functions and curves
 
@@ -153,7 +234,7 @@ Apply local rotation as `baseline * sample(t)`; identity is the neutral offset:
 
 ```csharp
 var rotation = Tweens.FX.PunchQuaternion(new Vector3(0.1f, 0.2f, 0));
-node.Tween(new Tweens.Property<Node3D, Quaternion>(
+mesh.Tween(new Tweens.Property<Node3D, Quaternion>(
     target => target.Quaternion,
     (target, value) => target.Quaternion = value,
     (from, _, t) => (from * rotation(t)).Normalized())

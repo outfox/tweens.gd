@@ -61,6 +61,7 @@ public class GalleryRenderingTests(Fixture godot)
     [InlineData(2, GalleryLanguage.GDScript)] [InlineData(3, GalleryLanguage.GDScript)]
     [InlineData(4, GalleryLanguage.GDScript)] [InlineData(5, GalleryLanguage.GDScript)]
     [InlineData(6, GalleryLanguage.GDScript)] [InlineData(7, GalleryLanguage.GDScript)]
+    [InlineData(8, GalleryLanguage.CSharp)] [InlineData(8, GalleryLanguage.GDScript)]
     public void EachPagePlaysAndReleasesItsNativeScene(int index, GalleryLanguage language)
     {
         var demo = new testbed.TweenDemo(); godot.Tree.Root.AddChild(demo);
@@ -77,7 +78,7 @@ public class GalleryRenderingTests(Fixture godot)
             Assert.False(animation.IsCompleted);
             Assert.True(Descendants(page).OfType<SubViewport>().All(v => v.Size.X > 0 && v.Size.Y > 0));
             var sourceButtons = Descendants(page).OfType<Button>().Where(b => b.Text == (language == GalleryLanguage.CSharp ? "View C#" : "View GDScript")).ToArray();
-            Assert.Equal(4, sourceButtons.Length);
+            Assert.Equal(page.Effects.Count, sourceButtons.Length);
             for (var effect = 0; effect < sourceButtons.Length; effect++)
             {
                 sourceButtons[effect].EmitSignal(BaseButton.SignalName.Pressed);

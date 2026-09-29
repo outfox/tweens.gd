@@ -1,0 +1,292 @@
+{
+  "tolerance": 0.00001,
+  "cases": [
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": 0.125
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.3,
+      "skew": 1,
+      "expected": 0.18
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.3175
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.5,
+      "skew": 1,
+      "expected": 0.5
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.7215
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.7,
+      "skew": 1,
+      "expected": 0.892
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 0.9375
+    },
+    {
+      "in": "None",
+      "out": "Cubic",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": 0.578125
+    },
+    {
+      "in": "Quad",
+      "out": "None",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.36
+    },
+    {
+      "in": "Linear",
+      "out": "Sine",
+      "progress": 0.5,
+      "skew": 1,
+      "expected": 0.5
+    },
+    {
+      "in": "Sine",
+      "out": "Linear",
+      "progress": 0.5,
+      "skew": 1,
+      "expected": 0.5
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.5,
+      "skew": 2,
+      "expected": 0.125
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.25,
+      "skew": 0.5,
+      "expected": 0.5
+    },
+    {
+      "in": "SmoothStep",
+      "out": "Linear",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": 0.15625
+    },
+    {
+      "in": "Linear",
+      "out": "SmoothStep",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 0.84375
+    },
+    {
+      "in": "Sine",
+      "out": "SmootherStep",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 0.896484375
+    },
+    {
+      "in": "SmootherStep",
+      "out": "Cubic",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": 0.103515625
+    },
+    {
+      "in": "None",
+      "out": "None",
+      "progress": 0.5,
+      "skew": 2,
+      "expected": 0.25
+    },
+    {
+      "in": "Sine",
+      "out": "Sine",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": 0.1464466094067262
+    },
+    {
+      "in": "Sine",
+      "out": "Sine",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.3454915028125263
+    },
+    {
+      "in": "Sine",
+      "out": "Sine",
+      "progress": 0.5,
+      "skew": 1,
+      "expected": 0.5
+    },
+    {
+      "in": "Sine",
+      "out": "Sine",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.6545084971874737
+    },
+    {
+      "in": "Sine",
+      "out": "Sine",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 0.8535533905932737
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.32,
+      "blendType": "Hermite",
+      "blend": 0
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.744,
+      "blendType": "Hermite",
+      "blend": 0
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.40125,
+      "blendType": "Hermite",
+      "blend": 0.2
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.352,
+      "blendType": "Hermite",
+      "blend": 1
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.31,
+      "blendType": "SmoothStep",
+      "blend": 0.4
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.304,
+      "blendType": "Linear",
+      "blend": 0.4
+    },
+    {
+      "in": "Circ",
+      "out": "Sine",
+      "progress": 0.499,
+      "skew": 1,
+      "expected": 0.49789785068146614,
+      "blendType": "Hermite",
+      "blend": 0.4
+    },
+    {
+      "in": "Circ",
+      "out": "Sine",
+      "progress": 0.501,
+      "skew": 1,
+      "expected": 0.502091626807746,
+      "blendType": "Hermite",
+      "blend": 0.4
+    },
+    {
+      "in": "Back",
+      "out": "Elastic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.1342742631869783,
+      "blendType": "Hermite",
+      "blend": 0.4
+    },
+    {
+      "in": "Back",
+      "out": "Elastic",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.8392816854591754,
+      "blendType": "Hermite",
+      "blend": 0.4
+    },
+    {
+      "in": "Bounce",
+      "out": "Expo",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.11985604367406247,
+      "blendType": "Hermite",
+      "blend": 0.4
+    },
+    {
+      "in": "Expo",
+      "out": "Bounce",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.8801439563259378,
+      "blendType": "Hermite",
+      "blend": 0.4
+    },
+    {
+      "in": "Elastic",
+      "out": "SmootherStep",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.11737811488973467,
+      "blendType": "Hermite",
+      "blend": 0.2
+    },
+    {
+      "in": "SmoothStep",
+      "out": "Back",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.7027694145624999,
+      "blendType": "Hermite",
+      "blend": 0.8
+    }
+  ]
+}

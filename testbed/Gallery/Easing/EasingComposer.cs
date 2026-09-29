@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Moritz Voss
+using System;
+using Godot;
+namespace testbed;
+
+public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.4)
+{
+    public static EasingSelection Default => new(2, 4, 1);
+}
+
+public sealed partial class EasingComposer : GalleryEffect
+{
+    public EasingSelection InitialSelection { get; set; } = EasingSelection.Default;
+    public EasingSelection Selection => new(entry.Selected, exit.Selected, skew.Value, blend.Selected, width.Value);
+    private OptionButton entry = null!, exit = null!, blend = null!;
+    private HSlider skew = null!, width = null!;
+    private Label recipe = null!;
+    private Line2D entryCurve = null!, exitCurve = null!, resultCurve = null!;
+    private Polygon2D ball = null!, tracer = null!, region = null!;
+
+    public override string Title => "In | Out";
+    public override string Caption => "Amber: In half. Blue: Out half. Mint: result. Hermite joins with continuous velocity. Width controls how much of each leg is reshaped.";
+
+    protected override void Build()
+    {
+        var view = View();
+        var container = (Control)view.GetParent();
+        container.OffsetTop = 48;
+        container.OffsetBottom = -100;
+        var camera = view.GetChild<Camera2D>(0);
+        view.SizeChanged += () => camera.Zoom = Vector2.One * Math.Min(view.Size.X / 512f, view.Size.Y / 256f);
+        region = view.Add(new Polygon2D { Color = Palette.Mint with { A = 0.08f } });
+        Line(view, [new(-200, -66), new(200, -66)], Palette.Outline, 1);
+        Line(view, [new(-200, 66), new(200, 66)], Palette.Outline, 1);
+        Line(view, [new(-200, 105), new(200, 105)], Palette.Outline, 1);
+        entryCurve = Line(view, [], Palette.Amber with { A = 0.65f }, 1.5f);
+        exitCurve = Line(view, [], Palette.Blue with { A = 0.65f }, 1.5f);
+        resultCurve = Line(view, [], Palette.Mint, 3);
+        tracer = Blob(view, 5, 5, Palette.Text, new(-200, 66));
+        ball = Blob(view, 8, 8, Palette.Mint, new(-200, 105));
+
+        var controls = Stage.Add(new HBoxContainer());
+        controls.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopWide, margin: 10);
+        controls.AddThemeConstantOverride("separation", 10);
+        controls.AddChild(GalleryTheme.Label("In", 14, Palette.Amber));
+        entry = controls.Add(new OptionButton { Name = "InCurve", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill });
+        controls.AddChild(GalleryTheme.Label("|", 16, Palette.Muted));
+        controls.AddChild(GalleryTheme.Label("Out", 14, Palette.Blue));
+        exit = controls.Add(new OptionButton { Name = "OutCurve", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill });
+        foreach (var family in Families) { entry.AddItem(family.Name); exit.AddItem(family.Name); }
+        entry.Select(InitialSelection.InIndex);
+        exit.Select(InitialSelection.OutIndex);
+
+        var footer = Stage.Add(new VBoxContainer());
+        footer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide, margin: 10);
+        footer.OffsetTop = -96;
+        var row = footer.Add(new HBoxContainer());
+        row.AddChild(GalleryTheme.Label("Skew", 14, Palette.Muted));
+        skew = row.Add(new HSlider { Name = "EasingSkew", MinValue = 0.25, MaxValue = 4, Step = 0.05, Value = InitialSelection.Skew,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, CustomMinimumSize = new(120, 24) });
+        var join = footer.Add(new HBoxContainer());
+        blend = join.Add(new OptionButton { Name = "EasingBlend" });
+        foreach (var method in new[] { "Hermite", "SmoothStep", "Linear" }) blend.AddItem(method);
+        blend.Select(InitialSelection.BlendType);
+        join.AddChild(GalleryTheme.Label("Width", 14, Palette.Muted));
+        width = join.Add(new HSlider { Name = "EasingWidth", MinValue = 0, MaxValue = 1, Step = 0.02, Value = InitialSelection.Blend,
+            SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, CustomMinimumSize = new(120, 24) });
+        recipe = footer.Add(GalleryTheme.Label("", 13, Palette.Mint));
+        recipe.HorizontalAlignment = HorizontalAlignment.Center;
+    }
+
+    public override Godot.Collections.Dictionary SceneTargets => new()
+    {
+        ["entry"] = entry, ["exit"] = exit, ["skew"] = skew, ["blend"] = blend, ["width"] = width, ["recipe"] = recipe,
+        ["entryCurve"] = entryCurve, ["exitCurve"] = exitCurve, ["resultCurve"] = resultCurve,
+        ["ball"] = ball, ["tracer"] = tracer, ["region"] = region,
+    };
+
+    protected override void Animate() => Sequence = Run(AnimateAsync());
+}

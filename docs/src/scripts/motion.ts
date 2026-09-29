@@ -70,6 +70,68 @@ export const EASES = {
 export type EaseName = keyof typeof EASES;
 export const ease = (name: EaseName, t: number) => EASES[name](Math.min(1, Math.max(0, t)));
 
+export const FAMILIES = ['Linear', 'Sine', 'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Circ', 'Back', 'Elastic', 'Bounce', 'SmoothStep', 'SmootherStep'] as const;
+export type EaseFamily = (typeof FAMILIES)[number];
+export type EaseLeg = EaseFamily | 'None';
+
+/** Join half-duration profiles locally; crossfade modes are available for comparison. */
+export type BlendType = 'Hermite' | 'SmoothStep' | 'Linear';
+export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 1, method: BlendType = 'Hermite', width = 0.4): number {
+	if (!['Hermite', 'SmoothStep', 'Linear'].includes(method) || !Number.isFinite(width) || width < 0 || width > 1) throw new RangeError('Invalid easing blend');
+	const t = Math.min(1, Math.max(0, progress)) ** skew;
+	if (entry === 'None') return legEase(exit, 'Out', t);
+	if (exit === 'None') return legEase(entry, 'In', t);
+	if (entry === exit) return pairedLegEase(entry, t);
+	const h = width / 2, left = 0.5 - h, right = 0.5 + h;
+	if (t <= left) return pairedLegEase(entry, t);
+	if (t >= right) return pairedLegEase(exit, t);
+	if (method !== 'Hermite') {
+		const u = (t - left) / width, w = method === 'SmoothStep' ? u * u * (3 - 2 * u) : u;
+		return pairedLegEase(entry, t) * (1 - w) + pairedLegEase(exit, t) * w;
+	}
+	const y0 = pairedLegEase(entry, left), y1 = pairedLegEase(exit, right);
+	const v0 = pairSlope(entry, left), v1 = pairSlope(exit, right);
+	const d0 = (0.5 - y0) / h, d1 = (y1 - 0.5) / h;
+	const middle = Math.min(3 * Math.max(0, Math.min(d0, d1)), Math.max(0, (3 * (d0 + d1) - v0 - v1) / 4));
+	return t <= 0.5 ? hermite((t - left) / h, y0, 0.5, h * v0, h * middle)
+		: hermite((t - 0.5) / h, 0.5, y1, h * middle, h * v1);
+}
+
+function hermite(u: number, y0: number, y1: number, m0: number, m1: number) {
+	return (2*u**3 - 3*u*u + 1)*y0 + (u**3 - 2*u*u + u)*m0 + (-2*u**3 + 3*u*u)*y1 + (u**3 - u*u)*m1;
+}
+
+function pairSlope(family: EaseLeg, time: number): number {
+	const t = Math.min(time, 1-time), x = 2*t, b = 1.70158*1.525, e = 2*Math.PI/4.5;
+	switch (family) {
+		case 'Sine': return Math.PI*Math.sin(Math.PI*t)/2;
+		case 'Quad': return 4*t;
+		case 'Cubic': return 12*t*t;
+		case 'Quart': return 32*t**3;
+		case 'Quint': return 80*t**4;
+		case 'Expo': return 10*Math.LN2*2**(20*t-10);
+		case 'Circ': return x/Math.sqrt(1-x*x);
+		case 'Back': return 3*(b+1)*x*x-2*b*x;
+		case 'Elastic': return -10*2**(20*t-10)*(Math.LN2*Math.sin((20*t-11.125)*e)+e*Math.cos((20*t-11.125)*e));
+		case 'Bounce': { let v = 1-x; if (v >= 2.5/2.75) v -= 2.625/2.75; else if (v >= 2/2.75) v -= 2.25/2.75; else if (v >= 1/2.75) v -= 1.5/2.75; return 15.125*v; }
+		case 'SmoothStep': return 6*t*(1-t);
+		case 'SmootherStep': return 30*t*t*(1-t)**2;
+		default: return 1;
+	}
+}
+
+export function pairedLegEase(family: EaseLeg, t: number): number {
+	if (family === 'None') return t;
+	const name = ['Linear', 'SmoothStep', 'SmootherStep'].includes(family) ? family : family + 'InOut';
+	return ease(name as EaseName, t);
+}
+
+export function legEase(family: EaseLeg, direction: 'In' | 'Out', t: number): number {
+	if (family === 'None') return t;
+	const name = ['Linear', 'SmoothStep', 'SmootherStep'].includes(family) ? family : family + direction;
+	return ease(name as EaseName, t);
+}
+
 export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** `Element.animate` for small feedback pops, skipped under reduced motion (the CSS rule cannot reach script animations). */

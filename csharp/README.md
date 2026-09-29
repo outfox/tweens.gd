@@ -59,3 +59,20 @@ The site's source is in the [repository](https://github.com/outfox/tweens.gd/tre
 MIT licensed. tweens.gd was inspired by Jeffrey Lanters' unity-tweens; its easing
 functions still follow that implementation, so the package includes the unity-tweens
 MIT notice alongside its own license.
+
+## Composable easing
+
+```csharp
+sprite.TweenPositionX(300, 1.2, options =>
+{
+    options.Ease = In.Sine | Out.Cubic;
+    options.Skew = 1.5;
+});
+```
+
+`InOut.Sine` is `In.Sine | Out.Sine` and exactly preserves `EaseType.SineInOut`.
+Single legs run on their own; pairs use In on 0–0.5 and Out on 0.5–1, with a local
+Hermite join over 30–70% of progress after skew. `BlendType` selects Hermite,
+SmoothStep, or Linear; `Blend` sets the window width in [0, 1]. Legacy
+`EaseType` names keep their original shapes. Try the
+[easing composer](https://tweens.gd/csharp/easing/).

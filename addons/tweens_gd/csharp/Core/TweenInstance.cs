@@ -251,7 +251,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 follows = definition.From is null && !adjustsFrom && definition.FollowsTarget;
                 pingPong = definition.UsePingPong;
             }
-            ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease);
+            ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend);
             if (definition.Curve is not null)
             {
                 curve = (Curve)definition.Curve.Duplicate();

@@ -127,6 +127,7 @@ func _conformance() -> bool:
 		near(T.Easing.evaluate(ease, 0.0), 0.0, "ease start")
 		near(T.Easing.evaluate(ease, 1.0), 1.0, "ease end")
 		check(is_nan(T.Easing.evaluate(ease, NAN)), "ease %d keeps NaN progress detectable" % ease)
+	_composed_easing()
 	var infinite := T.value(0.0, 1.0, 1.0)
 	infinite.repeats = T.INFINITE
 	var huge := TweensGdPlayback.create(infinite)
@@ -134,6 +135,71 @@ func _conformance() -> bool:
 	huge.advance(1.7976931348623157e308)
 	check(not huge.completed and is_finite(huge.progress), "huge infinite deltas saturate")
 	return true
+
+
+func _composed_easing() -> void:
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/easing.json"))
+	for sample in data.cases:
+		var a: int = T.In[String(sample["in"]).to_snake_case().to_upper()]
+		var b: int = T.Out[String(sample["out"]).to_snake_case().to_upper()]
+		near(T.Easing.evaluate(a | b, pow(sample.progress, sample.skew), T.BlendType[String(sample.get("blendType", "Hermite")).to_snake_case().to_upper()], sample.get("blend", 0.4)), sample.expected, "shared composed sample")
+	for family in T.InOut:
+		check(T.InOut[family] == (T.In[family] | T.Out[family]), "matching ease alias")
+		var legacy: int = T.Ease[family if family in ["LINEAR", "SMOOTH_STEP", "SMOOTHER_STEP"] else family + "_IN_OUT"]
+		for i in range(1001):
+			check(T.Easing.evaluate(T.InOut[family], i / 1000.0) == T.Easing.evaluate(legacy, i / 1000.0), "matching pair preserves conventional InOut")
+	for entry in T.In.values():
+		for exit in T.Out.values():
+			var combined: int = entry | exit
+			near(T.Easing.evaluate(combined, -1.0), 0.0, "composed start")
+			near(T.Easing.evaluate(combined, 2.0), 1.0, "composed end")
+			check(is_nan(T.Easing.evaluate(combined, NAN)), "composed NaN")
+			if entry and exit: near(T.Easing.evaluate(combined, 0.5), 0.5, "half legs meet at midpoint")
+			for i in range(101):
+				var t := i / 100.0
+				var a := T.Easing.evaluate(entry | (entry << 13), t) if exit else T.Easing.evaluate(entry, t)
+				var b := T.Easing.evaluate((exit >> 13) | exit, t) if entry else T.Easing.evaluate(exit, t)
+				var expected := lerpf(a, b, smoothstep(0.3, 0.7, t))
+				if entry == 0: expected = b
+				if exit == 0: expected = a
+				near(T.Easing.evaluate(combined, t, T.BlendType.SMOOTH_STEP), expected, "smoothstep comparison")
+				var actual := T.Easing.evaluate(combined, t)
+				check(is_finite(actual), "finite Hermite composition")
+				if exit == 0 or (entry and t <= 0.3): near(actual, a, "original In half")
+				if entry == 0 or (exit and t >= 0.7): near(actual, b, "original Out half")
+	for width in [-0.1, 1.1, INF, NAN]:
+		check(is_nan(T.Easing.evaluate(T.InOut.SINE, 0.5, T.BlendType.HERMITE, width)), "invalid blend width")
+		check(not T.value(0.0, 1.0, 1.0).with_blend(width).validate().is_empty(), "validate width")
+	check(is_nan(T.Easing.evaluate(T.InOut.SINE, 0.5, 99)), "invalid blend method")
+	check(not T.value(0.0, 1.0, 1.0).with_blend_type(99).validate().is_empty(), "validate blend")
+	var custom := T.value(0.0, 1.0, 1.0, T.In.QUAD | T.Out.CUBIC).with_blend_type(T.BlendType.LINEAR).with_blend(0.2)
+	var custom_scheduler := TweensGdScheduler.new()
+	var custom_handle := custom_scheduler.add(self, custom)
+	custom.blend = 1.0
+	custom_scheduler.update(0.45)
+	near(custom_handle.value, T.Easing.evaluate(custom.ease, 0.45, T.BlendType.LINEAR, 0.2), "blend settings snapshot")
+	custom_scheduler.dispose()
+	for invalid in [T.In.SINE | T.In.BACK, T.Out.SINE | T.Out.BACK,
+			T.In.SINE | T.Ease.BACK_OUT, 1 << 40, -1]:
+		check(is_nan(T.Easing.evaluate(invalid, 0.5)), "reject invalid easing flags")
+		check(not T.value(0.0, 1.0, 1.0, invalid).validate().is_empty(), "validate invalid flags")
+	var scheduler := TweensGdScheduler.new()
+	var target := Holder.new()
+	var combined: int = T.In.QUAD | T.Out.CUBIC
+	var definition := T.property(^"amount", 1.0, 2.0, combined)
+	definition.skew = 2.0
+	definition.weks = 0.5
+	definition.use_ping_pong = true
+	var handle := scheduler.add(target, definition)
+	scheduler.update(1.0)
+	near(target.amount, 0.125, "skew before blended easing")
+	scheduler.update(2.0)
+	near(target.amount, T.Easing.evaluate(combined, sqrt(0.5)), "independent return skew")
+	scheduler.update(1.0)
+	near(target.amount, 0.0, "composed return endpoint")
+	check(handle.completion_reason == T.Reason.COMPLETED, "composed playback completes")
+	check(T.position_2d_x(1.0, 1.0, combined).ease == combined, "catalog accepts flags")
+	scheduler.dispose()
 
 func _validation() -> bool:
 	var scheduler := TweensGdScheduler.new()

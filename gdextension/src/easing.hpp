@@ -52,11 +52,11 @@ public:
 	};
 
 	// Unknown easing functions return NaN.
-	static double evaluate(int64_t p_ease, double p_progress);
+	static double evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type = 0, double p_blend = 0.4);
 };
 
 namespace tweens {
-// Whether the value is one of the TweensGdEasing::Ease functions; used by definition validation.
+// A legacy Ease or at most one In flag and one Out flag; used by definition validation.
 bool is_known_ease(int64_t p_ease);
 } // namespace tweens
 

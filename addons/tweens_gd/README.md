@@ -32,7 +32,7 @@ with `./scripts/Pack-Addon.ps1` from the repository root.
 extends Node2D
 
 func _ready() -> void:
-	var move := Tweens.property(^"position", Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
+	var move := Tweens.property(^"position", Vector2(400, 180), 0.6, Tweens.Out.CUBIC)
 	await Tweens.play(self, move).end
 	print("Movement ended")
 ```
@@ -53,7 +53,7 @@ Each `with_*()` method returns a copy with one field changed, like C#'s `with`,
 so a shared definition can vary a single start:
 
 ```gdscript
-var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Out.CUBIC)
 Tweens.play(first, arrive)
 Tweens.play(second, arrive.with_duration(0.8))
 Tweens.play(third, arrive.with_delay(0.2).with_duration(1.0))
@@ -92,7 +92,7 @@ Helpers return the same reusable definition type and validate the native target
 class and captured value type before playback:
 
 ```gdscript
-var move := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Ease.CUBIC_OUT)
+var move := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Out.CUBIC)
 var fade := Tweens.modulate_alpha(0.0, 0.3)
 var together := Tweens.play_all(sprite, [move, fade])
 await together.end
@@ -140,6 +140,23 @@ including when it is shared. Generic property paths and named helpers provide
 access to Node2D, Node3D, Control and ordinary material properties. Shader-uniform
 restoration is available through the shader helpers below.
 
+## Composable easing
+
+```gdscript
+var move := Tweens.position_2d_x(300.0, 1.2, Tweens.In.SINE | Tweens.Out.CUBIC)
+move.skew = 1.5
+Tweens.play(sprite, move)
+```
+
+`Tweens.InOut.SINE` is `Tweens.In.SINE | Tweens.Out.SINE`. A single leg runs
+on its own. In and Out occupy the first and second halves. Their conventional
+halves meet through a local Hermite join between 30% and 70% of progress after
+skew. `blend_type` selects `Tweens.BlendType.HERMITE`, `SMOOTH_STEP`, or `LINEAR`;
+`blend` sets the centered window width in [0, 1] (default 0.4). Matching families exactly preserve their conventional InOut shape.
+Choose one curve per side; `NONE` omits a side and
+`LINEAR` selects a straight line. Legacy `Tweens.Ease` names retain their old
+shapes. The [easing composer](https://tweens.gd/gdscript/easing/) previews all pairs.
+
 ## Timing configuration
 
 | Field | Default and behavior |
@@ -151,7 +168,7 @@ restoration is available through the shader helpers below.
 | `use_ping_pong` | `false`; forward and return legs form one cycle |
 | `ping_pong_interval` | `0.0`; wait at the far endpoint before returning |
 | `repeat_interval` | `0.0`; wait between cycles, never after the last |
-| `ease` | `Tweens.Ease.LINEAR`; 33 functions matching the C# catalog |
+| `ease` | `Tweens.Ease.LINEAR`; composable In/Out flags or a legacy ease |
 | `skew` | `1.0`; positive finite forward progress exponent before easing |
 | `weks` | `1.0`; independent positive finite exponent for descending ping-pong return progress before easing; set equal to `skew` to preserve the previous retracing behavior |
 | `ease_function` / `curve` | Optional synchronous Callable or duplicated Curve; choose one |

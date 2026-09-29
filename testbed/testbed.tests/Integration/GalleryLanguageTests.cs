@@ -181,6 +181,51 @@ public class GalleryLanguageTests
     private GodotObject? GDScriptScheduler() => godot.Tree.HasMeta("_tweens_gd_runner")
         ? godot.Tree.GetMeta("_tweens_gd_runner").AsGodotObject().Get("scheduler").AsGodotObject() : null;
 
+    [Fact]
+    public void ComposerControlsChangeRealPlaybackAndSurviveDurationAndLanguageChanges()
+    {
+        var demo = new TweenDemo();
+        godot.Tree.Root.AddChild(demo);
+        Pump();
+        try
+        {
+            demo.SelectPage(Array.IndexOf(TweenDemo.PageNames, "Easing"));
+            Pump();
+            foreach (var language in new[] { GalleryLanguage.CSharp, GalleryLanguage.GDScript })
+            {
+                demo.SelectLanguage(language);
+                Pump();
+                var targets = demo.CurrentPage!.Effects[0].SceneTargets;
+                var entry = targets["entry"].As<OptionButton>();
+                entry.Select(3); // Quad
+                entry.EmitSignal(OptionButton.SignalName.ItemSelected, 3);
+                targets["skew"].As<HSlider>().Value = 2;
+                targets["blend"].As<OptionButton>().Select(2);
+                targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 2);
+                targets["width"].As<HSlider>().Value = 0.8;
+                var duration = Descendants(demo).OfType<HSlider>().Single(s => s.Name != "EasingSkew" && s.Name != "EasingWidth");
+                duration.Value = duration.Value == 2 ? 1 : 2; // Rebuild while keeping the composition.
+                Pump();
+                targets = demo.CurrentPage!.Effects[0].SceneTargets;
+                Assert.Equal(3, targets["entry"].As<OptionButton>().Selected);
+                Assert.Equal(4, targets["exit"].As<OptionButton>().Selected);
+                Assert.Equal(2, targets["skew"].As<HSlider>().Value);
+                Assert.Equal(2, targets["blend"].As<OptionButton>().Selected);
+                Assert.Equal(0.8, targets["width"].As<HSlider>().Value);
+                // Reset again to remove wall-clock progress from Pump, then sample exactly halfway.
+                targets["entry"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 3);
+                if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(demo).Scheduler.Update(duration.Value / 2);
+                else GDScriptScheduler()!.Call("update", duration.Value / 2);
+                Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-154.6875)), 0, 0.001);
+                var points = targets["resultCurve"].As<Line2D>().Points;
+                Assert.InRange(Math.Abs(points[120].Y - 51.046875), 0, 0.001);
+            }
+        }
+        finally { demo.Free(); }
+        Pump();
+        Assert.Empty(godot.Errors.Drain());
+    }
+
     private static readonly HashSet<string> Properties = [
         "position", "rotation", "scale", "skew", "modulate", "self_modulate", "visible", "text", "visible_ratio",
         "color", "default_color", "width", "offset", "zoom", "value", "scroll_vertical", "spread", "gravity",

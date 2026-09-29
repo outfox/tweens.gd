@@ -42,6 +42,8 @@ struct TweenSettings {
 	double repeat_interval = 0.0;
 	int64_t fill = tweens::FILL_RETAIN_FINAL_VALUE;
 	int64_t ease = 0;
+	int64_t blend_type = 0;
+	double blend = 0.4;
 	double skew = 1.0;
 	double weks = 1.0;
 	Callable ease_function;
@@ -137,6 +139,10 @@ public:
 	int64_t get_fill() const { return settings.fill; }
 	void set_ease(int64_t p_value) { settings.ease = p_value; }
 	int64_t get_ease() const { return settings.ease; }
+	void set_blend_type(int64_t p_value) { settings.blend_type = p_value; }
+	int64_t get_blend_type() const { return settings.blend_type; }
+	void set_blend(double p_value) { settings.blend = p_value; }
+	double get_blend() const { return settings.blend; }
 	void set_skew(double p_value) { settings.skew = p_value; }
 	double get_skew() const { return settings.skew; }
 	void set_weks(double p_value) { settings.weks = p_value; }
@@ -190,6 +196,8 @@ public:
 	Ref<TweensGdDefinition> with_repeat_interval(double p_seconds) const;
 	Ref<TweensGdDefinition> with_fill(int64_t p_mode) const;
 	Ref<TweensGdDefinition> with_ease(int64_t p_easing) const;
+	Ref<TweensGdDefinition> with_blend_type(int64_t p_mode) const;
+	Ref<TweensGdDefinition> with_blend(double p_blend) const;
 	Ref<TweensGdDefinition> with_skew(double p_exponent) const;
 	Ref<TweensGdDefinition> with_weks(double p_exponent) const;
 	Ref<TweensGdDefinition> with_ease_function(const Callable &p_function) const;

@@ -17,14 +17,18 @@ const Process = Types.Process
 const Pause = Types.Pause
 const State = Types.State
 const Reason = Types.Reason
+const BlendType = Types.BlendType
 const Ease = Types.Ease
+const In = Types.In
+const Out = Types.Out
+const InOut = Types.InOut
 
 ## Configure once, then play the definition on any compatible target.
-static func property(path: NodePath, to: Variant, seconds: float = 0.0, easing: Types.Ease = Types.Ease.LINEAR,
+static func property(path: NodePath, to: Variant, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(path, &"", TYPE_NIL, to, seconds, easing, delay)
 
-static func value(from: Variant, to: Variant, seconds: float = 0.0, easing: Types.Ease = Types.Ease.LINEAR,
+static func value(from: Variant, to: Variant, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"", TYPE_NIL, to, seconds, easing, delay)
 	definition.initial_value = from
@@ -50,7 +54,7 @@ static func play_all(target: Variant, definitions: Variant, owner: Variant = nul
 	return TweensGdRunner.play_all(target, definitions, owner)
 
 static func shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0,
-		easing: Types.Ease = Types.Ease.LINEAR, delay: float = 0.0) -> TweensGdDefinition:
+		easing: int = Types.Ease.LINEAR, delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"", TYPE_NIL, to, seconds, easing, delay)
 	var adapter := ShaderAdapter.new()
 	adapter.parameter = parameter
@@ -58,7 +62,7 @@ static func shader_parameter(parameter: StringName, to: Variant = null, seconds:
 	return definition
 
 static func instance_shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0,
-		easing: Types.Ease = Types.Ease.LINEAR, delay: float = 0.0) -> TweensGdDefinition:
+		easing: int = Types.Ease.LINEAR, delay: float = 0.0) -> TweensGdDefinition:
 	var definition := shader_parameter(parameter, to, seconds, easing, delay)
 	definition.adapter.instance_uniform = true
 	return definition

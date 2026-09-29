@@ -52,7 +52,13 @@ public readonly record struct TweenOptions
     private readonly FillMode fill;
     // Encode the default so default(TweenOptions) and new TweenOptions() behave identically.
     public FillMode Fill { get => fill ^ FillMode.RetainFinalValue; init => fill = value ^ FillMode.RetainFinalValue; }
+    /// <summary>Combine one In and one Out with |, use an InOut pair, or select a single curve. Legacy EaseType names retain their original shapes.</summary>
     public EaseType Ease { get; init; }
+    /// <summary>How mixed In/Out legs join. Defaults to Hermite; matching families keep their conventional shape.</summary>
+    public BlendType BlendType { get; init; }
+    private readonly double? blend;
+    /// <summary>Centered transition width in [0, 1]. Defaults to 0.4 (30%–70%); zero directly splices the halves.</summary>
+    public double Blend { get => blend ?? 0.4; init => blend = value == 0.4 ? null : value; }
     private readonly double? skew;
     /// <summary>Positive finite exponent applied to forward normalized time before easing. Defaults to 1 (identity).</summary>
     public double Skew { get => skew ?? 1; init => skew = value == 1 ? null : value; }
@@ -81,6 +87,8 @@ public readonly record struct TweenOptions
         target.UseUnscaledTime = UseUnscaledTime;
         target.Fill = Fill;
         target.Ease = Ease;
+        target.BlendType = BlendType;
+        target.Blend = Blend;
         target.Skew = Skew;
         target.Weks = Weks;
         target.EaseFunction = EaseFunction;
@@ -114,6 +122,8 @@ public class TweenOptionsBuilder
     public bool UseUnscaledTime { get; set; }
     public FillMode Fill { get; set; } = FillMode.RetainFinalValue;
     public EaseType Ease { get; set; }
+    public BlendType BlendType { get; set; }
+    public double Blend { get; set; } = 0.4;
     /// <inheritdoc cref="TweenOptions.Skew"/>
     public double Skew { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.Weks"/>
@@ -140,6 +150,8 @@ public class TweenOptionsBuilder
         UseUnscaledTime = UseUnscaledTime,
         Fill = Fill,
         Ease = Ease,
+        BlendType = BlendType,
+        Blend = Blend,
         Skew = Skew,
         Weks = Weks,
         EaseFunction = EaseFunction,
@@ -171,6 +183,7 @@ internal sealed class Playback
 
     internal Playback(TweenOptions options)
     {
+        Easing.ValidateBlend(options.BlendType, options.Blend);
         Nonnegative(options.Duration, nameof(options.Duration));
         if (!double.IsFinite(options.FactorDuration)) throw new ArgumentOutOfRangeException(nameof(options.FactorDuration));
         if (!double.IsFinite(options.DeltaDuration)) throw new ArgumentOutOfRangeException(nameof(options.DeltaDuration));

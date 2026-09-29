@@ -210,7 +210,7 @@ void TweensGdHandle::advance_inner(double p_delta) {
 		}
 		weight = result;
 	} else {
-		weight = TweensGdEasing::evaluate(options->ease, time);
+		weight = TweensGdEasing::evaluate(options->ease, time, options->blend_type, options->blend);
 	}
 	if (!Math::is_finite(weight)) {
 		fail("Easing must return a finite number.");

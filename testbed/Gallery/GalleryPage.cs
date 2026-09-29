@@ -60,6 +60,7 @@ public abstract partial class GalleryPage : VBoxContainer
         split.AddChild(grid);
 
         effects = CreateEffects();
+        grid.Columns = effects.Length == 1 ? 1 : 2;
         for (var i = 0; i < effects.Length; i++)
         {
             examplePicker.AddItem(effects[i].Title);
@@ -92,7 +93,7 @@ public abstract partial class GalleryPage : VBoxContainer
         sourceNavigation.Hide();
         description.Show();
         sourceView.Hide();
-        grid.Columns = 2;
+        grid.Columns = effects.Length == 1 ? 1 : 2;
         grid.SizeFlagsVertical = SizeFlags.ExpandFill;
         foreach (var card in cards) card.Show();
         foreach (var button in sourceButtons) button.Show();

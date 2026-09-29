@@ -1,6 +1,6 @@
 # tweens.gd testbed
 
-Eight pages and 32 examples run against either the beta C# library or the beta
+Nine pages and 33 examples run against either the beta C# library or the beta
 GDScript addon. The global language selector changes the running implementation
 and the source shown beside it.
 
@@ -28,6 +28,17 @@ addon/export test project.
 Building the gallery stages the canonical `../addons/tweens_gd/` into its ignored
 `addons/` directory. There is no separately maintained copy of the addon.
 
+## Easing composer
+
+The Easing page lets you select independent In and Out curves and tune skew while
+the preview runs in the selected language. The global leg-duration slider controls
+its duration. In occupies 0–0.5 and Out 0.5–1; matching families reproduce the
+conventional InOut curve exactly. Curves and skew survive duration changes, restarts, navigation and
+language changes. Amber and blue show the original halves; mint shows the result.
+Choose Hermite, SmoothStep, or Linear and adjust the join width. The shaded
+region marks the join window after skew has warped time.
+Choose None on either side to inspect a single curve.
+
 ## Sources
 
 Each example has a C# scene file, a C# `.Animation.cs` file, and a GDScript file in
@@ -53,7 +64,7 @@ Run these suites separately: they build different tests into the same output.
 Headless comparison tests sample both implementations at the same fixed times,
 check finite completion and scene teardown, and exercise global switching,
 rapid selections, source identity and button clicks. Rendering tests run all
-eight pages in both languages, including the four shader examples.
+nine pages in both languages, including the four shader examples.
 
 The easing race exposes a numeric difference at Expo/Elastic endpoints: C# uses
 single-precision progress for easing; GDScript uses double precision. A value

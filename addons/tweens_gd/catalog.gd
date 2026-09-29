@@ -7,274 +7,274 @@ const CatalogTypes = preload("types.gd")
 const CompoundAdapter = preload("compound_adapter.gd")
 
 ## AnimatedSprite2DFrame: AnimatedSprite2D, int. Null endpoints use the captured value.
-static func animated_sprite_2d_frame(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func animated_sprite_2d_frame(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"frame", &"AnimatedSprite2D", TYPE_INT, to, seconds, easing, delay)
 
 ## AnimatedSprite2DSpeedScale: AnimatedSprite2D, float. Null endpoints use the captured value.
-static func animated_sprite_2d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func animated_sprite_2d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"AnimatedSprite2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AnimatedSprite3DFrame: AnimatedSprite3D, int. Null endpoints use the captured value.
-static func animated_sprite_3d_frame(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func animated_sprite_3d_frame(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"frame", &"AnimatedSprite3D", TYPE_INT, to, seconds, easing, delay)
 
 ## AnimatedSprite3DSpeedScale: AnimatedSprite3D, float. Null endpoints use the captured value.
-static func animated_sprite_3d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func animated_sprite_3d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"AnimatedSprite3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AnimationPlayerSpeedScale: AnimationPlayer, float. Null endpoints use the captured value.
-static func animation_player_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func animation_player_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"AnimationPlayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioPitchScale: AudioStreamPlayer, float. Null endpoints use the captured value.
-static func audio_pitch_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_pitch_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pitch_scale", &"AudioStreamPlayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioPitchScale2D: AudioStreamPlayer2D, float. Null endpoints use the captured value.
-static func audio_pitch_scale_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_pitch_scale_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pitch_scale", &"AudioStreamPlayer2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioPitchScale3D: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_pitch_scale_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_pitch_scale_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pitch_scale", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer2DAttenuation: AudioStreamPlayer2D, float. Null endpoints use the captured value.
-static func audio_stream_player_2d_attenuation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_2d_attenuation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"attenuation", &"AudioStreamPlayer2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer2DMaxDistance: AudioStreamPlayer2D, float. Null endpoints use the captured value.
-static func audio_stream_player_2d_max_distance(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_2d_max_distance(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"max_distance", &"AudioStreamPlayer2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer2DPanningStrength: AudioStreamPlayer2D, float. Null endpoints use the captured value.
-static func audio_stream_player_2d_panning_strength(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_2d_panning_strength(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"panning_strength", &"AudioStreamPlayer2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DAttenuationFilterCutoffHz: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_attenuation_filter_cutoff_hz(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_attenuation_filter_cutoff_hz(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"attenuation_filter_cutoff_hz", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DAttenuationFilterDb: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_attenuation_filter_db(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_attenuation_filter_db(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"attenuation_filter_db", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DEmissionAngleDegrees: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_emission_angle_degrees(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_emission_angle_degrees(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_angle_degrees", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DEmissionAngleFilterAttenuationDb: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_emission_angle_filter_attenuation_db(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_emission_angle_filter_attenuation_db(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_angle_filter_attenuation_db", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DMaxDistance: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_max_distance(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_max_distance(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"max_distance", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DPanningStrength: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_panning_strength(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_panning_strength(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"panning_strength", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioStreamPlayer3DUnitSize: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_stream_player_3d_unit_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_stream_player_3d_unit_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"unit_size", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioVolumeDb: AudioStreamPlayer, float. Null endpoints use the captured value.
-static func audio_volume_db(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_volume_db(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"volume_db", &"AudioStreamPlayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioVolumeDb2D: AudioStreamPlayer2D, float. Null endpoints use the captured value.
-static func audio_volume_db_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_volume_db_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"volume_db", &"AudioStreamPlayer2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioVolumeDb3D: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_volume_db_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_volume_db_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"volume_db", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioVolumeLinear: AudioStreamPlayer, float. Null endpoints use the captured value.
-static func audio_volume_linear(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_volume_linear(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"volume_linear", &"AudioStreamPlayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioVolumeLinear2D: AudioStreamPlayer2D, float. Null endpoints use the captured value.
-static func audio_volume_linear_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_volume_linear_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"volume_linear", &"AudioStreamPlayer2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## AudioVolumeLinear3D: AudioStreamPlayer3D, float. Null endpoints use the captured value.
-static func audio_volume_linear_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func audio_volume_linear_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"volume_linear", &"AudioStreamPlayer3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera2DOffset: Camera2D, Vector2. Null endpoints use the captured value.
-static func camera_2d_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_2d_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"Camera2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Camera2DOffsetX: Camera2D, float. Null endpoints use the captured value.
-static func camera_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"Camera2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera2DOffsetY: Camera2D, float. Null endpoints use the captured value.
-static func camera_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"Camera2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera2DZoom: Camera2D, Vector2. Null endpoints use the captured value.
-static func camera_2d_zoom(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_2d_zoom(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"zoom", &"Camera2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Camera2DZoomX: Camera2D, float. Null endpoints use the captured value.
-static func camera_2d_zoom_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_2d_zoom_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"zoom:x", &"Camera2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera2DZoomY: Camera2D, float. Null endpoints use the captured value.
-static func camera_2d_zoom_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_2d_zoom_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"zoom:y", &"Camera2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DFar: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_far(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_far(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"far", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DFov: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_fov(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_fov(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"fov", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DFrustumOffset: Camera3D, Vector2. Null endpoints use the captured value.
-static func camera_3d_frustum_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_frustum_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"frustum_offset", &"Camera3D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Camera3DFrustumOffsetX: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_frustum_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_frustum_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"frustum_offset:x", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DFrustumOffsetY: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_frustum_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_frustum_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"frustum_offset:y", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DHOffset: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_h_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_h_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"h_offset", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DNear: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_near(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_near(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"near", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DSize: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Camera3DVOffset: Camera3D, float. Null endpoints use the captured value.
-static func camera_3d_v_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func camera_3d_v_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"v_offset", &"Camera3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CanvasLayerOffset: CanvasLayer, Vector2. Null endpoints use the captured value.
-static func canvas_layer_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"CanvasLayer", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## CanvasLayerOffsetX: CanvasLayer, float. Null endpoints use the captured value.
-static func canvas_layer_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"CanvasLayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CanvasLayerOffsetY: CanvasLayer, float. Null endpoints use the captured value.
-static func canvas_layer_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"CanvasLayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CanvasLayerRotation: CanvasLayer, float. Null endpoints use the captured value.
-static func canvas_layer_rotation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_rotation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation", &"CanvasLayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CanvasLayerScale: CanvasLayer, Vector2. Null endpoints use the captured value.
-static func canvas_layer_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale", &"CanvasLayer", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## CanvasLayerScaleX: CanvasLayer, float. Null endpoints use the captured value.
-static func canvas_layer_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:x", &"CanvasLayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CanvasLayerScaleY: CanvasLayer, float. Null endpoints use the captured value.
-static func canvas_layer_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_layer_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:y", &"CanvasLayer", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CanvasModulateColor: CanvasModulate, Color. Null endpoints use the captured value.
-static func canvas_modulate_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_modulate_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color", &"CanvasModulate", TYPE_COLOR, to, seconds, easing, delay)
 
 ## CanvasModulateColorAlpha: CanvasModulate, float. Null endpoints use the captured value.
-static func canvas_modulate_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func canvas_modulate_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color:a", &"CanvasModulate", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ColorRectColor: ColorRect, Color. Null endpoints use the captured value.
-static func color_rect_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func color_rect_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color", &"ColorRect", TYPE_COLOR, to, seconds, easing, delay)
 
 ## ColorRectColorAlpha: ColorRect, float. Null endpoints use the captured value.
-static func color_rect_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func color_rect_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color:a", &"ColorRect", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Color: Node, Color. Null endpoints use the captured value.
-static func color_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func color_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_COLOR, to, seconds, easing, delay)
 	definition.initial_value = Color(0, 0, 0, 0)
 	return definition
 
 ## ControlAnchorBottom: Control, float. Null endpoints use the captured value.
-static func control_anchor_bottom(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_anchor_bottom(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"anchor_bottom", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlAnchorLeft: Control, float. Null endpoints use the captured value.
-static func control_anchor_left(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_anchor_left(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"anchor_left", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlAnchorMax: Control, Vector2. Null endpoints use the captured value.
-static func control_anchor_max(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_anchor_max(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 	var adapter := CompoundAdapter.new()
@@ -283,7 +283,7 @@ static func control_anchor_max(to: Variant = null, seconds: float = 0.0, easing:
 	return definition
 
 ## ControlAnchorMin: Control, Vector2. Null endpoints use the captured value.
-static func control_anchor_min(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_anchor_min(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 	var adapter := CompoundAdapter.new()
@@ -292,162 +292,162 @@ static func control_anchor_min(to: Variant = null, seconds: float = 0.0, easing:
 	return definition
 
 ## ControlAnchorRight: Control, float. Null endpoints use the captured value.
-static func control_anchor_right(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_anchor_right(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"anchor_right", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlAnchorTop: Control, float. Null endpoints use the captured value.
-static func control_anchor_top(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_anchor_top(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"anchor_top", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlCustomMaximumSize: Control, Vector2. Null endpoints use the captured value.
-static func control_custom_maximum_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_custom_maximum_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"custom_maximum_size", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlCustomMaximumSizeX: Control, float. Null endpoints use the captured value.
-static func control_custom_maximum_size_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_custom_maximum_size_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"custom_maximum_size:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlCustomMaximumSizeY: Control, float. Null endpoints use the captured value.
-static func control_custom_maximum_size_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_custom_maximum_size_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"custom_maximum_size:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlCustomMinimumSize: Control, Vector2. Null endpoints use the captured value.
-static func control_custom_minimum_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_custom_minimum_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"custom_minimum_size", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlCustomMinimumSizeX: Control, float. Null endpoints use the captured value.
-static func control_custom_minimum_size_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_custom_minimum_size_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"custom_minimum_size:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlCustomMinimumSizeY: Control, float. Null endpoints use the captured value.
-static func control_custom_minimum_size_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_custom_minimum_size_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"custom_minimum_size:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlGlobalPosition: Control, Vector2. Null endpoints use the captured value.
-static func control_global_position(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_global_position(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlGlobalPositionX: Control, float. Null endpoints use the captured value.
-static func control_global_position_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_global_position_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlGlobalPositionY: Control, float. Null endpoints use the captured value.
-static func control_global_position_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_global_position_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetBottom: Control, float. Null endpoints use the captured value.
-static func control_offset_bottom(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_bottom(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_bottom", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetLeft: Control, float. Null endpoints use the captured value.
-static func control_offset_left(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_left(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_left", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetRight: Control, float. Null endpoints use the captured value.
-static func control_offset_right(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_right(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_right", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTop: Control, float. Null endpoints use the captured value.
-static func control_offset_top(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_top(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_top", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPivot: Control, Vector2. Null endpoints use the captured value.
-static func control_offset_transform_pivot(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_pivot(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_pivot", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPivotRatio: Control, Vector2. Null endpoints use the captured value.
-static func control_offset_transform_pivot_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_pivot_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_pivot_ratio", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPivotRatioX: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_pivot_ratio_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_pivot_ratio_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_pivot_ratio:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPivotRatioY: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_pivot_ratio_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_pivot_ratio_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_pivot_ratio:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPivotX: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_pivot_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_pivot_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_pivot:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPivotY: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_pivot_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_pivot_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_pivot:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPosition: Control, Vector2. Null endpoints use the captured value.
-static func control_offset_transform_position(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_position(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_position", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPositionRatio: Control, Vector2. Null endpoints use the captured value.
-static func control_offset_transform_position_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_position_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_position_ratio", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPositionRatioX: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_position_ratio_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_position_ratio_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_position_ratio:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPositionRatioY: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_position_ratio_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_position_ratio_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_position_ratio:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPositionX: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_position_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_position_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_position:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformPositionY: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_position_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_position_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_position:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformRotation: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_rotation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_rotation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_rotation", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformScale: Control, Vector2. Null endpoints use the captured value.
-static func control_offset_transform_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_scale", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlOffsetTransformScaleX: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_scale:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsetTransformScaleY: Control, float. Null endpoints use the captured value.
-static func control_offset_transform_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offset_transform_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset_transform_scale:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlOffsets: Control, Vector4. Null endpoints use the captured value.
-static func control_offsets(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_offsets(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Control", TYPE_VECTOR4, to, seconds, easing, delay)
 	var adapter := CompoundAdapter.new()
@@ -456,386 +456,386 @@ static func control_offsets(to: Variant = null, seconds: float = 0.0, easing: Ca
 	return definition
 
 ## ControlPivotOffset: Control, Vector2. Null endpoints use the captured value.
-static func control_pivot_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_pivot_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pivot_offset", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlPivotOffsetRatio: Control, Vector2. Null endpoints use the captured value.
-static func control_pivot_offset_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_pivot_offset_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pivot_offset_ratio", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlPivotOffsetRatioX: Control, float. Null endpoints use the captured value.
-static func control_pivot_offset_ratio_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_pivot_offset_ratio_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pivot_offset_ratio:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlPivotOffsetRatioY: Control, float. Null endpoints use the captured value.
-static func control_pivot_offset_ratio_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_pivot_offset_ratio_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pivot_offset_ratio:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlPivotOffsetX: Control, float. Null endpoints use the captured value.
-static func control_pivot_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_pivot_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pivot_offset:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlPivotOffsetY: Control, float. Null endpoints use the captured value.
-static func control_pivot_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_pivot_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pivot_offset:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlPosition: Control, Vector2. Null endpoints use the captured value.
-static func control_position(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_position(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlPositionX: Control, float. Null endpoints use the captured value.
-static func control_position_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_position_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlPositionY: Control, float. Null endpoints use the captured value.
-static func control_position_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_position_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlRotation: Control, float. Null endpoints use the captured value.
-static func control_rotation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_rotation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlScale: Control, Vector2. Null endpoints use the captured value.
-static func control_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlScaleX: Control, float. Null endpoints use the captured value.
-static func control_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlScaleY: Control, float. Null endpoints use the captured value.
-static func control_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlSize: Control, Vector2. Null endpoints use the captured value.
-static func control_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size", &"Control", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## ControlSizeFlagsStretchRatio: Control, float. Null endpoints use the captured value.
-static func control_size_flags_stretch_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_size_flags_stretch_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size_flags_stretch_ratio", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlSizeX: Control, float. Null endpoints use the captured value.
-static func control_size_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_size_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:x", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ControlSizeY: Control, float. Null endpoints use the captured value.
-static func control_size_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func control_size_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:y", &"Control", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DColor: CPUParticles2D, Color. Null endpoints use the captured value.
-static func cpu_particles_2d_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color", &"CPUParticles2D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## CpuParticles2DColorAlpha: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color:a", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DDirection: CPUParticles2D, Vector2. Null endpoints use the captured value.
-static func cpu_particles_2d_direction(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_direction(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction", &"CPUParticles2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## CpuParticles2DDirectionX: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_direction_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_direction_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction:x", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DDirectionY: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_direction_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_direction_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction:y", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DEmissionRectExtents: CPUParticles2D, Vector2. Null endpoints use the captured value.
-static func cpu_particles_2d_emission_rect_extents(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_emission_rect_extents(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_rect_extents", &"CPUParticles2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## CpuParticles2DEmissionRectExtentsX: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_emission_rect_extents_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_emission_rect_extents_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_rect_extents:x", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DEmissionRectExtentsY: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_emission_rect_extents_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_emission_rect_extents_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_rect_extents:y", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DEmissionSphereRadius: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_emission_sphere_radius(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_emission_sphere_radius(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_sphere_radius", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DExplosiveness: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"explosiveness", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DGravity: CPUParticles2D, Vector2. Null endpoints use the captured value.
-static func cpu_particles_2d_gravity(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_gravity(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity", &"CPUParticles2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## CpuParticles2DGravityX: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_gravity_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_gravity_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity:x", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DGravityY: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_gravity_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_gravity_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity:y", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DLifetime: CPUParticles2D, double. Null endpoints use the captured value.
-static func cpu_particles_2d_lifetime(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_lifetime(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"lifetime", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DRandomness: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_randomness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_randomness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"randomness", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DSpeedScale: CPUParticles2D, double. Null endpoints use the captured value.
-static func cpu_particles_2d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles2DSpread: CPUParticles2D, float. Null endpoints use the captured value.
-static func cpu_particles_2d_spread(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_2d_spread(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spread", &"CPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DColor: CPUParticles3D, Color. Null endpoints use the captured value.
-static func cpu_particles_3d_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color", &"CPUParticles3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## CpuParticles3DColorAlpha: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color:a", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DDirection: CPUParticles3D, Vector3. Null endpoints use the captured value.
-static func cpu_particles_3d_direction(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_direction(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction", &"CPUParticles3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## CpuParticles3DDirectionX: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_direction_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_direction_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction:x", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DDirectionY: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_direction_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_direction_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction:y", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DDirectionZ: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_direction_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_direction_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"direction:z", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DEmissionBoxExtents: CPUParticles3D, Vector3. Null endpoints use the captured value.
-static func cpu_particles_3d_emission_box_extents(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_emission_box_extents(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_box_extents", &"CPUParticles3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## CpuParticles3DEmissionBoxExtentsX: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_emission_box_extents_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_emission_box_extents_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_box_extents:x", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DEmissionBoxExtentsY: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_emission_box_extents_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_emission_box_extents_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_box_extents:y", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DEmissionBoxExtentsZ: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_emission_box_extents_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_emission_box_extents_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_box_extents:z", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DEmissionSphereRadius: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_emission_sphere_radius(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_emission_sphere_radius(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_sphere_radius", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DExplosiveness: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"explosiveness", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DGravity: CPUParticles3D, Vector3. Null endpoints use the captured value.
-static func cpu_particles_3d_gravity(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_gravity(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity", &"CPUParticles3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## CpuParticles3DGravityX: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_gravity_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_gravity_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity:x", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DGravityY: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_gravity_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_gravity_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity:y", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DGravityZ: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_gravity_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_gravity_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"gravity:z", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DLifetime: CPUParticles3D, double. Null endpoints use the captured value.
-static func cpu_particles_3d_lifetime(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_lifetime(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"lifetime", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DRandomness: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_randomness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_randomness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"randomness", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DSpeedScale: CPUParticles3D, double. Null endpoints use the captured value.
-static func cpu_particles_3d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## CpuParticles3DSpread: CPUParticles3D, float. Null endpoints use the captured value.
-static func cpu_particles_3d_spread(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func cpu_particles_3d_spread(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spread", &"CPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## DecalEmissionEnergy: Decal, float. Null endpoints use the captured value.
-static func decal_emission_energy(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_emission_energy(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_energy", &"Decal", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## DecalModulate: Decal, Color. Null endpoints use the captured value.
-static func decal_modulate(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_modulate(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate", &"Decal", TYPE_COLOR, to, seconds, easing, delay)
 
 ## DecalModulateAlpha: Decal, float. Null endpoints use the captured value.
-static func decal_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate:a", &"Decal", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## DecalSize: Decal, Vector3. Null endpoints use the captured value.
-static func decal_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size", &"Decal", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## DecalSizeX: Decal, float. Null endpoints use the captured value.
-static func decal_size_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_size_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:x", &"Decal", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## DecalSizeY: Decal, float. Null endpoints use the captured value.
-static func decal_size_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_size_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:y", &"Decal", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## DecalSizeZ: Decal, float. Null endpoints use the captured value.
-static func decal_size_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func decal_size_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:z", &"Decal", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Double: Node, double. Null endpoints use the captured value.
-static func double_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func double_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_FLOAT, to, seconds, easing, delay)
 	definition.initial_value = 0.0
 	return definition
 
 ## Float: Node, float. Null endpoints use the captured value.
-static func float_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func float_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_FLOAT, to, seconds, easing, delay)
 	definition.initial_value = 0.0
 	return definition
 
 ## FogVolumeSize: FogVolume, Vector3. Null endpoints use the captured value.
-static func fog_volume_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func fog_volume_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size", &"FogVolume", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## FogVolumeSizeX: FogVolume, float. Null endpoints use the captured value.
-static func fog_volume_size_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func fog_volume_size_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:x", &"FogVolume", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## FogVolumeSizeY: FogVolume, float. Null endpoints use the captured value.
-static func fog_volume_size_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func fog_volume_size_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:y", &"FogVolume", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## FogVolumeSizeZ: FogVolume, float. Null endpoints use the captured value.
-static func fog_volume_size_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func fog_volume_size_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"size:z", &"FogVolume", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GeometryInstance3DTransparency: GeometryInstance3D, float. Null endpoints use the captured value.
-static func geometry_instance_3d_transparency(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func geometry_instance_3d_transparency(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"transparency", &"GeometryInstance3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalPosition2D: Node2D, Vector2. Null endpoints use the captured value.
-static func global_position_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position", &"Node2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## GlobalPosition2DX: Node2D, float. Null endpoints use the captured value.
-static func global_position_2d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_2d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:x", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalPosition2DY: Node2D, float. Null endpoints use the captured value.
-static func global_position_2d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_2d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:y", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalPosition3D: Node3D, Vector3. Null endpoints use the captured value.
-static func global_position_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position", &"Node3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## GlobalPosition3DX: Node3D, float. Null endpoints use the captured value.
-static func global_position_3d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_3d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:x", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalPosition3DY: Node3D, float. Null endpoints use the captured value.
-static func global_position_3d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_3d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:y", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalPosition3DZ: Node3D, float. Null endpoints use the captured value.
-static func global_position_3d_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_position_3d_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_position:z", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalQuaternion3D: Node3D, Quaternion. Null endpoints use the captured value.
-static func global_quaternion_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_quaternion_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node3D", TYPE_QUATERNION, to, seconds, easing, delay)
 	var adapter := CompoundAdapter.new()
@@ -844,850 +844,850 @@ static func global_quaternion_3d(to: Variant = null, seconds: float = 0.0, easin
 	return definition
 
 ## GlobalRotation2D: Node2D, float. Null endpoints use the captured value.
-static func global_rotation_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_rotation_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_rotation", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalRotation3D: Node3D, Vector3. Null endpoints use the captured value.
-static func global_rotation_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_rotation_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_rotation", &"Node3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## GlobalRotation3DX: Node3D, float. Null endpoints use the captured value.
-static func global_rotation_3d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_rotation_3d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_rotation:x", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalRotation3DY: Node3D, float. Null endpoints use the captured value.
-static func global_rotation_3d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_rotation_3d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_rotation:y", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalRotation3DZ: Node3D, float. Null endpoints use the captured value.
-static func global_rotation_3d_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_rotation_3d_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_rotation:z", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalScale2D: Node2D, Vector2. Null endpoints use the captured value.
-static func global_scale_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_scale_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_scale", &"Node2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## GlobalScale2DX: Node2D, float. Null endpoints use the captured value.
-static func global_scale_2d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_scale_2d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_scale:x", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalScale2DY: Node2D, float. Null endpoints use the captured value.
-static func global_scale_2d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_scale_2d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_scale:y", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GlobalSkew2D: Node2D, float. Null endpoints use the captured value.
-static func global_skew_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func global_skew_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"global_skew", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles2DAmountRatio: GPUParticles2D, float. Null endpoints use the captured value.
-static func gpu_particles_2d_amount_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_2d_amount_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"amount_ratio", &"GPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles2DExplosiveness: GPUParticles2D, float. Null endpoints use the captured value.
-static func gpu_particles_2d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_2d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"explosiveness", &"GPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles2DLifetime: GPUParticles2D, double. Null endpoints use the captured value.
-static func gpu_particles_2d_lifetime(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_2d_lifetime(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"lifetime", &"GPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles2DRandomness: GPUParticles2D, float. Null endpoints use the captured value.
-static func gpu_particles_2d_randomness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_2d_randomness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"randomness", &"GPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles2DSpeedScale: GPUParticles2D, double. Null endpoints use the captured value.
-static func gpu_particles_2d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_2d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"GPUParticles2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles3DAmountRatio: GPUParticles3D, float. Null endpoints use the captured value.
-static func gpu_particles_3d_amount_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_3d_amount_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"amount_ratio", &"GPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles3DExplosiveness: GPUParticles3D, float. Null endpoints use the captured value.
-static func gpu_particles_3d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_3d_explosiveness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"explosiveness", &"GPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles3DLifetime: GPUParticles3D, double. Null endpoints use the captured value.
-static func gpu_particles_3d_lifetime(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_3d_lifetime(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"lifetime", &"GPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles3DRandomness: GPUParticles3D, float. Null endpoints use the captured value.
-static func gpu_particles_3d_randomness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_3d_randomness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"randomness", &"GPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## GpuParticles3DSpeedScale: GPUParticles3D, double. Null endpoints use the captured value.
-static func gpu_particles_3d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func gpu_particles_3d_speed_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"speed_scale", &"GPUParticles3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Label3DModulate: Label3D, Color. Null endpoints use the captured value.
-static func label_3d_modulate(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_modulate(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate", &"Label3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## Label3DModulateAlpha: Label3D, float. Null endpoints use the captured value.
-static func label_3d_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate:a", &"Label3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Label3DOffset: Label3D, Vector2. Null endpoints use the captured value.
-static func label_3d_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"Label3D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Label3DOffsetX: Label3D, float. Null endpoints use the captured value.
-static func label_3d_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"Label3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Label3DOffsetY: Label3D, float. Null endpoints use the captured value.
-static func label_3d_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"Label3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Label3DOutlineModulate: Label3D, Color. Null endpoints use the captured value.
-static func label_3d_outline_modulate(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_outline_modulate(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"outline_modulate", &"Label3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## Label3DOutlineModulateAlpha: Label3D, float. Null endpoints use the captured value.
-static func label_3d_outline_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_outline_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"outline_modulate:a", &"Label3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Label3DPixelSize: Label3D, float. Null endpoints use the captured value.
-static func label_3d_pixel_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_3d_pixel_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pixel_size", &"Label3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## LabelVisibleCharacters: Label, int. Null endpoints use the captured value.
-static func label_visible_characters(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_visible_characters(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"visible_characters", &"Label", TYPE_INT, to, seconds, easing, delay)
 
 ## LabelVisibleRatio: Label, float. Null endpoints use the captured value.
-static func label_visible_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func label_visible_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"visible_ratio", &"Label", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Light2DShadowColor: Light2D, Color. Null endpoints use the captured value.
-static func light_2d_shadow_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_2d_shadow_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"shadow_color", &"Light2D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## Light2DShadowColorAlpha: Light2D, float. Null endpoints use the captured value.
-static func light_2d_shadow_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_2d_shadow_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"shadow_color:a", &"Light2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Light3DLightIndirectEnergy: Light3D, float. Null endpoints use the captured value.
-static func light_3d_light_indirect_energy(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_3d_light_indirect_energy(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"light_indirect_energy", &"Light3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Light3DLightTemperature: Light3D, float. Null endpoints use the captured value.
-static func light_3d_light_temperature(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_3d_light_temperature(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"light_temperature", &"Light3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Light3DLightVolumetricFogEnergy: Light3D, float. Null endpoints use the captured value.
-static func light_3d_light_volumetric_fog_energy(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_3d_light_volumetric_fog_energy(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"light_volumetric_fog_energy", &"Light3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Light3DShadowOpacity: Light3D, float. Null endpoints use the captured value.
-static func light_3d_shadow_opacity(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_3d_shadow_opacity(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"shadow_opacity", &"Light3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## LightColor2D: Light2D, Color. Null endpoints use the captured value.
-static func light_color_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_color_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color", &"Light2D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## LightColor3D: Light3D, Color. Null endpoints use the captured value.
-static func light_color_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_color_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"light_color", &"Light3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## LightEnergy2D: Light2D, float. Null endpoints use the captured value.
-static func light_energy_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_energy_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"energy", &"Light2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## LightEnergy3D: Light3D, float. Null endpoints use the captured value.
-static func light_energy_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func light_energy_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"light_energy", &"Light3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Line2DDefaultColor: Line2D, Color. Null endpoints use the captured value.
-static func line_2d_default_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func line_2d_default_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"default_color", &"Line2D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## Line2DDefaultColorAlpha: Line2D, float. Null endpoints use the captured value.
-static func line_2d_default_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func line_2d_default_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"default_color:a", &"Line2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Line2DWidth: Line2D, float. Null endpoints use the captured value.
-static func line_2d_width(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func line_2d_width(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"width", &"Line2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialAlbedoAlpha: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_albedo_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_albedo_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"albedo_color:a", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialAlbedoColor: BaseMaterial3D, Color. Null endpoints use the captured value.
-static func material_albedo_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_albedo_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"albedo_color", &"BaseMaterial3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## MaterialEmission: BaseMaterial3D, Color. Null endpoints use the captured value.
-static func material_emission(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_emission(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission", &"BaseMaterial3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## MaterialEmissionEnergyMultiplier: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_emission_energy_multiplier(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_emission_energy_multiplier(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_energy_multiplier", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialEmissionIntensity: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_emission_intensity(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_emission_intensity(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"emission_intensity", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialMetallic: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_metallic(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_metallic(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"metallic", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialMetallicSpecular: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_metallic_specular(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_metallic_specular(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"metallic_specular", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialNormalScale: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_normal_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_normal_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"normal_scale", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialRoughness: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_roughness(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_roughness(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"roughness", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUv1Offset: BaseMaterial3D, Vector3. Null endpoints use the captured value.
-static func material_uv1_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_offset", &"BaseMaterial3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## MaterialUv1OffsetX: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv1_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_offset:x", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUv1OffsetY: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv1_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_offset:y", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUv1OffsetZ: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv1_offset_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_offset_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_offset:z", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUv1Scale: BaseMaterial3D, Vector3. Null endpoints use the captured value.
-static func material_uv1_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_scale", &"BaseMaterial3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## MaterialUv1ScaleX: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv1_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_scale:x", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUv1ScaleY: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv1_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_scale:y", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUv1ScaleZ: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv1_scale_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv1_scale_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv1_scale:z", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUV2Offset: BaseMaterial3D, Vector3. Null endpoints use the captured value.
-static func material_uv2_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_offset", &"BaseMaterial3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## MaterialUV2OffsetX: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv2_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_offset:x", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUV2OffsetY: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv2_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_offset:y", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUV2OffsetZ: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv2_offset_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_offset_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_offset:z", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUV2Scale: BaseMaterial3D, Vector3. Null endpoints use the captured value.
-static func material_uv2_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_scale", &"BaseMaterial3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## MaterialUV2ScaleX: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv2_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_scale:x", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUV2ScaleY: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv2_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_scale:y", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## MaterialUV2ScaleZ: BaseMaterial3D, float. Null endpoints use the captured value.
-static func material_uv2_scale_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func material_uv2_scale_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"uv2_scale:z", &"BaseMaterial3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Modulate: CanvasItem, Color. Null endpoints use the captured value.
-static func modulate(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func modulate(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate", &"CanvasItem", TYPE_COLOR, to, seconds, easing, delay)
 
 ## ModulateAlpha: CanvasItem, float. Null endpoints use the captured value.
-static func modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate:a", &"CanvasItem", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## OmniLight3DOmniAttenuation: OmniLight3D, float. Null endpoints use the captured value.
-static func omni_light_3d_omni_attenuation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func omni_light_3d_omni_attenuation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"omni_attenuation", &"OmniLight3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## OmniRange: OmniLight3D, float. Null endpoints use the captured value.
-static func omni_range(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func omni_range(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"omni_range", &"OmniLight3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Parallax2DAutoscroll: Parallax2D, Vector2. Null endpoints use the captured value.
-static func parallax_2d_autoscroll(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_autoscroll(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"autoscroll", &"Parallax2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Parallax2DAutoscrollX: Parallax2D, float. Null endpoints use the captured value.
-static func parallax_2d_autoscroll_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_autoscroll_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"autoscroll:x", &"Parallax2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Parallax2DAutoscrollY: Parallax2D, float. Null endpoints use the captured value.
-static func parallax_2d_autoscroll_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_autoscroll_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"autoscroll:y", &"Parallax2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Parallax2DScrollOffset: Parallax2D, Vector2. Null endpoints use the captured value.
-static func parallax_2d_scroll_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_scroll_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_offset", &"Parallax2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Parallax2DScrollOffsetX: Parallax2D, float. Null endpoints use the captured value.
-static func parallax_2d_scroll_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_scroll_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_offset:x", &"Parallax2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Parallax2DScrollOffsetY: Parallax2D, float. Null endpoints use the captured value.
-static func parallax_2d_scroll_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_scroll_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_offset:y", &"Parallax2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Parallax2DScrollScale: Parallax2D, Vector2. Null endpoints use the captured value.
-static func parallax_2d_scroll_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_scroll_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_scale", &"Parallax2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Parallax2DScrollScaleX: Parallax2D, float. Null endpoints use the captured value.
-static func parallax_2d_scroll_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_scroll_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_scale:x", &"Parallax2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Parallax2DScrollScaleY: Parallax2D, float. Null endpoints use the captured value.
-static func parallax_2d_scroll_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func parallax_2d_scroll_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_scale:y", &"Parallax2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow2DHOffset: PathFollow2D, float. Null endpoints use the captured value.
-static func path_follow_2d_h_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_2d_h_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"h_offset", &"PathFollow2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow2DProgress: PathFollow2D, float. Null endpoints use the captured value.
-static func path_follow_2d_progress(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_2d_progress(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"progress", &"PathFollow2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow2DProgressRatio: PathFollow2D, float. Null endpoints use the captured value.
-static func path_follow_2d_progress_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_2d_progress_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"progress_ratio", &"PathFollow2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow2DVOffset: PathFollow2D, float. Null endpoints use the captured value.
-static func path_follow_2d_v_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_2d_v_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"v_offset", &"PathFollow2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow3DHOffset: PathFollow3D, float. Null endpoints use the captured value.
-static func path_follow_3d_h_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_3d_h_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"h_offset", &"PathFollow3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow3DProgress: PathFollow3D, float. Null endpoints use the captured value.
-static func path_follow_3d_progress(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_3d_progress(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"progress", &"PathFollow3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow3DProgressRatio: PathFollow3D, float. Null endpoints use the captured value.
-static func path_follow_3d_progress_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_3d_progress_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"progress_ratio", &"PathFollow3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PathFollow3DVOffset: PathFollow3D, float. Null endpoints use the captured value.
-static func path_follow_3d_v_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func path_follow_3d_v_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"v_offset", &"PathFollow3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PointLight2DHeight: PointLight2D, float. Null endpoints use the captured value.
-static func point_light_2d_height(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func point_light_2d_height(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"height", &"PointLight2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PointLight2DOffset: PointLight2D, Vector2. Null endpoints use the captured value.
-static func point_light_2d_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func point_light_2d_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"PointLight2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## PointLight2DOffsetX: PointLight2D, float. Null endpoints use the captured value.
-static func point_light_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func point_light_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"PointLight2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PointLight2DOffsetY: PointLight2D, float. Null endpoints use the captured value.
-static func point_light_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func point_light_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"PointLight2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## PointLight2DTextureScale: PointLight2D, float. Null endpoints use the captured value.
-static func point_light_2d_texture_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func point_light_2d_texture_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_scale", &"PointLight2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DColor: Polygon2D, Color. Null endpoints use the captured value.
-static func polygon_2d_color(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_color(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color", &"Polygon2D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## Polygon2DColorAlpha: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_color_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_color_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"color:a", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DOffset: Polygon2D, Vector2. Null endpoints use the captured value.
-static func polygon_2d_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"Polygon2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Polygon2DOffsetX: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DOffsetY: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DTextureOffset: Polygon2D, Vector2. Null endpoints use the captured value.
-static func polygon_2d_texture_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_offset", &"Polygon2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Polygon2DTextureOffsetX: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_texture_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_offset:x", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DTextureOffsetY: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_texture_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_offset:y", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DTextureRotation: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_texture_rotation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_rotation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_rotation", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DTextureScale: Polygon2D, Vector2. Null endpoints use the captured value.
-static func polygon_2d_texture_scale(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_scale(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_scale", &"Polygon2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Polygon2DTextureScaleX: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_texture_scale_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_scale_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_scale:x", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Polygon2DTextureScaleY: Polygon2D, float. Null endpoints use the captured value.
-static func polygon_2d_texture_scale_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func polygon_2d_texture_scale_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_scale:y", &"Polygon2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Position2D: Node2D, Vector2. Null endpoints use the captured value.
-static func position_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position", &"Node2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Position2DX: Node2D, float. Null endpoints use the captured value.
-static func position_2d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_2d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:x", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Position2DY: Node2D, float. Null endpoints use the captured value.
-static func position_2d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_2d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:y", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Position3D: Node3D, Vector3. Null endpoints use the captured value.
-static func position_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position", &"Node3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## Position3DX: Node3D, float. Null endpoints use the captured value.
-static func position_3d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_3d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:x", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Position3DY: Node3D, float. Null endpoints use the captured value.
-static func position_3d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_3d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:y", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Position3DZ: Node3D, float. Null endpoints use the captured value.
-static func position_3d_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func position_3d_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"position:z", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Quaternion3D: Node3D, Quaternion. Null endpoints use the captured value.
-static func quaternion_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func quaternion_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"quaternion", &"Node3D", TYPE_QUATERNION, to, seconds, easing, delay)
 
 ## Quaternion: Node, Quaternion. Null endpoints use the captured value.
-static func quaternion_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func quaternion_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_QUATERNION, to, seconds, easing, delay)
 	definition.initial_value = Quaternion.IDENTITY
 	return definition
 
 ## RangeValue: Range, double. Null endpoints use the captured value.
-static func range_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func range_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"value", &"Range", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Rect2: Node, Rect2. Null endpoints use the captured value.
-static func rect2_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rect2_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_RECT2, to, seconds, easing, delay)
 	definition.initial_value = Rect2()
 	return definition
 
 ## RichTextLabelVisibleCharacters: RichTextLabel, int. Null endpoints use the captured value.
-static func rich_text_label_visible_characters(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rich_text_label_visible_characters(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"visible_characters", &"RichTextLabel", TYPE_INT, to, seconds, easing, delay)
 
 ## RichTextLabelVisibleRatio: RichTextLabel, float. Null endpoints use the captured value.
-static func rich_text_label_visible_ratio(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rich_text_label_visible_ratio(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"visible_ratio", &"RichTextLabel", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Rotation2D: Node2D, float. Null endpoints use the captured value.
-static func rotation_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rotation_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Rotation3D: Node3D, Vector3. Null endpoints use the captured value.
-static func rotation_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rotation_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation", &"Node3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## Rotation3DX: Node3D, float. Null endpoints use the captured value.
-static func rotation_3d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rotation_3d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation:x", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Rotation3DY: Node3D, float. Null endpoints use the captured value.
-static func rotation_3d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rotation_3d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation:y", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Rotation3DZ: Node3D, float. Null endpoints use the captured value.
-static func rotation_3d_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func rotation_3d_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"rotation:z", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Scale2D: Node2D, Vector2. Null endpoints use the captured value.
-static func scale_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale", &"Node2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Scale2DX: Node2D, float. Null endpoints use the captured value.
-static func scale_2d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_2d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:x", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Scale2DY: Node2D, float. Null endpoints use the captured value.
-static func scale_2d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_2d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:y", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Scale3D: Node3D, Vector3. Null endpoints use the captured value.
-static func scale_3d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_3d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale", &"Node3D", TYPE_VECTOR3, to, seconds, easing, delay)
 
 ## Scale3DX: Node3D, float. Null endpoints use the captured value.
-static func scale_3d_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_3d_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:x", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Scale3DY: Node3D, float. Null endpoints use the captured value.
-static func scale_3d_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_3d_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:y", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Scale3DZ: Node3D, float. Null endpoints use the captured value.
-static func scale_3d_z(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scale_3d_z(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scale:z", &"Node3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## ScrollContainerScrollHorizontal: ScrollContainer, int. Null endpoints use the captured value.
-static func scroll_container_scroll_horizontal(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scroll_container_scroll_horizontal(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_horizontal", &"ScrollContainer", TYPE_INT, to, seconds, easing, delay)
 
 ## ScrollContainerScrollVertical: ScrollContainer, int. Null endpoints use the captured value.
-static func scroll_container_scroll_vertical(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func scroll_container_scroll_vertical(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"scroll_vertical", &"ScrollContainer", TYPE_INT, to, seconds, easing, delay)
 
 ## SelfModulate: CanvasItem, Color. Null endpoints use the captured value.
-static func self_modulate(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func self_modulate(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"self_modulate", &"CanvasItem", TYPE_COLOR, to, seconds, easing, delay)
 
 ## SelfModulateAlpha: CanvasItem, float. Null endpoints use the captured value.
-static func self_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func self_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"self_modulate:a", &"CanvasItem", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Skew2D: Node2D, float. Null endpoints use the captured value.
-static func skew_2d(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func skew_2d(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"skew", &"Node2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpotAngle: SpotLight3D, float. Null endpoints use the captured value.
-static func spot_angle(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func spot_angle(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spot_angle", &"SpotLight3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpotLight3DSpotAngleAttenuation: SpotLight3D, float. Null endpoints use the captured value.
-static func spot_light_3d_spot_angle_attenuation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func spot_light_3d_spot_angle_attenuation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spot_angle_attenuation", &"SpotLight3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpotLight3DSpotAttenuation: SpotLight3D, float. Null endpoints use the captured value.
-static func spot_light_3d_spot_attenuation(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func spot_light_3d_spot_attenuation(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spot_attenuation", &"SpotLight3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpotRange: SpotLight3D, float. Null endpoints use the captured value.
-static func spot_range(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func spot_range(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spot_range", &"SpotLight3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpringArm3DSpringLength: SpringArm3D, float. Null endpoints use the captured value.
-static func spring_arm_3d_spring_length(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func spring_arm_3d_spring_length(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"spring_length", &"SpringArm3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Sprite2DFrame: Sprite2D, int. Null endpoints use the captured value.
-static func sprite_2d_frame(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_2d_frame(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"frame", &"Sprite2D", TYPE_INT, to, seconds, easing, delay)
 
 ## Sprite2DOffset: Sprite2D, Vector2. Null endpoints use the captured value.
-static func sprite_2d_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_2d_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"Sprite2D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## Sprite2DOffsetX: Sprite2D, float. Null endpoints use the captured value.
-static func sprite_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_2d_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"Sprite2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Sprite2DOffsetY: Sprite2D, float. Null endpoints use the captured value.
-static func sprite_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_2d_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"Sprite2D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Sprite2DRegionRect: Sprite2D, Rect2. Null endpoints use the captured value.
-static func sprite_2d_region_rect(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_2d_region_rect(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"region_rect", &"Sprite2D", TYPE_RECT2, to, seconds, easing, delay)
 
 ## SpriteBase3DModulate: SpriteBase3D, Color. Null endpoints use the captured value.
-static func sprite_base_3d_modulate(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_base_3d_modulate(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate", &"SpriteBase3D", TYPE_COLOR, to, seconds, easing, delay)
 
 ## SpriteBase3DModulateAlpha: SpriteBase3D, float. Null endpoints use the captured value.
-static func sprite_base_3d_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_base_3d_modulate_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"modulate:a", &"SpriteBase3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpriteBase3DOffset: SpriteBase3D, Vector2. Null endpoints use the captured value.
-static func sprite_base_3d_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_base_3d_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset", &"SpriteBase3D", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## SpriteBase3DOffsetX: SpriteBase3D, float. Null endpoints use the captured value.
-static func sprite_base_3d_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_base_3d_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:x", &"SpriteBase3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpriteBase3DOffsetY: SpriteBase3D, float. Null endpoints use the captured value.
-static func sprite_base_3d_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_base_3d_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"offset:y", &"SpriteBase3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## SpriteBase3DPixelSize: SpriteBase3D, float. Null endpoints use the captured value.
-static func sprite_base_3d_pixel_size(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func sprite_base_3d_pixel_size(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"pixel_size", &"SpriteBase3D", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarRadialCenterOffset: TextureProgressBar, Vector2. Null endpoints use the captured value.
-static func texture_progress_bar_radial_center_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_radial_center_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"radial_center_offset", &"TextureProgressBar", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## TextureProgressBarRadialCenterOffsetX: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_radial_center_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_radial_center_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"radial_center_offset:x", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarRadialCenterOffsetY: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_radial_center_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_radial_center_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"radial_center_offset:y", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarRadialFillDegrees: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_radial_fill_degrees(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_radial_fill_degrees(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"radial_fill_degrees", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarRadialInitialAngle: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_radial_initial_angle(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_radial_initial_angle(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"radial_initial_angle", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarTextureProgressOffset: TextureProgressBar, Vector2. Null endpoints use the captured value.
-static func texture_progress_bar_texture_progress_offset(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_texture_progress_offset(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_progress_offset", &"TextureProgressBar", TYPE_VECTOR2, to, seconds, easing, delay)
 
 ## TextureProgressBarTextureProgressOffsetX: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_texture_progress_offset_x(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_texture_progress_offset_x(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_progress_offset:x", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarTextureProgressOffsetY: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_texture_progress_offset_y(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_texture_progress_offset_y(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"texture_progress_offset:y", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarTintOver: TextureProgressBar, Color. Null endpoints use the captured value.
-static func texture_progress_bar_tint_over(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_tint_over(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"tint_over", &"TextureProgressBar", TYPE_COLOR, to, seconds, easing, delay)
 
 ## TextureProgressBarTintOverAlpha: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_tint_over_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_tint_over_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"tint_over:a", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarTintProgress: TextureProgressBar, Color. Null endpoints use the captured value.
-static func texture_progress_bar_tint_progress(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_tint_progress(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"tint_progress", &"TextureProgressBar", TYPE_COLOR, to, seconds, easing, delay)
 
 ## TextureProgressBarTintProgressAlpha: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_tint_progress_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_tint_progress_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"tint_progress:a", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## TextureProgressBarTintUnder: TextureProgressBar, Color. Null endpoints use the captured value.
-static func texture_progress_bar_tint_under(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_tint_under(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"tint_under", &"TextureProgressBar", TYPE_COLOR, to, seconds, easing, delay)
 
 ## TextureProgressBarTintUnderAlpha: TextureProgressBar, float. Null endpoints use the captured value.
-static func texture_progress_bar_tint_under_alpha(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func texture_progress_bar_tint_under_alpha(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(^"tint_under:a", &"TextureProgressBar", TYPE_FLOAT, to, seconds, easing, delay)
 
 ## Vector2: Node, Vector2. Null endpoints use the captured value.
-static func vector2_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func vector2_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_VECTOR2, to, seconds, easing, delay)
 	definition.initial_value = Vector2.ZERO
 	return definition
 
 ## Vector3: Node, Vector3. Null endpoints use the captured value.
-static func vector3_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func vector3_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_VECTOR3, to, seconds, easing, delay)
 	definition.initial_value = Vector3.ZERO
 	return definition
 
 ## Vector4: Node, Vector4. Null endpoints use the captured value.
-static func vector4_value(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,
+static func vector4_value(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"Node", TYPE_VECTOR4, to, seconds, easing, delay)
 	definition.initial_value = Vector4.ZERO

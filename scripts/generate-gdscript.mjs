@@ -49,7 +49,7 @@ for (const e of entries) {
   const p = e.kind === 'property' ? e.paths[0] : '';
   const named = `TweensGdDefinition.named(^"${p}", &"${e.target}", TYPE_${types[e.type]}, to, seconds, easing, delay)`;
   gd += `\n## ${e.csharp}: ${e.target}, ${e.type}. Null endpoints use the captured value.\n`;
-  gd += `static func ${e.name}(to: Variant = null, seconds: float = 0.0, easing: CatalogTypes.Ease = CatalogTypes.Ease.LINEAR,\n`;
+  gd += `static func ${e.name}(to: Variant = null, seconds: float = 0.0, easing: int = CatalogTypes.Ease.LINEAR,\n`;
   gd += `\t\tdelay: float = 0.0) -> TweensGdDefinition:\n`;
   if (e.kind === 'property') {
     gd += `\treturn ${named}\n`;
@@ -65,7 +65,7 @@ for (const e of entries) {
   }
   gd += '\treturn definition\n';
 }
-let md = '# GDScript helper catalog\n\nGenerated from the C# property catalog. Each helper returns a reusable definition:\n`Tweens.position_2d(destination, seconds, Tweens.Ease.CUBIC_OUT)`. All helpers accept\n`(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.\nNative target and value types are checked at start.\n\n';
+let md = '# GDScript helper catalog\n\nGenerated from the C# property catalog. Each helper returns a reusable definition:\n`Tweens.position_2d(destination, seconds, Tweens.In.SINE | Tweens.Out.CUBIC)`. All helpers accept\n`(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.\nNative target and value types are checked at start.\n\n';
 md += 'Property is the path each helper tweens. Compound helpers write several properties together, and\n';
 md += 'callback-value helpers write none.\n\n';
 // The path a helper writes: its definition's property, or its compound adapter's paths.

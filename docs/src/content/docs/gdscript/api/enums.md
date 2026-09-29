@@ -68,14 +68,26 @@ Which frames advance the tween. See
 
 ## Tweens.Ease
 
-`LINEAR` is the default. `SMOOTH_STEP` and `SMOOTHER_STEP` are S-curves with no
-variants. Ten families come in `IN`, `OUT`, and `IN_OUT` forms, such as
-`Tweens.Ease.CUBIC_OUT`: `SINE`, `QUAD`, `CUBIC`, `QUART`, `QUINT`, `EXPO`,
-`CIRC`, `BACK`, `ELASTIC`, and `BOUNCE`. [Easing](/gdscript/easing/) compares
-their curves.
+Use integer flags from `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`. Combine
+one In and one Out with `|`: `Tweens.In.SINE | Tweens.Out.CUBIC`.
+`Tweens.InOut.SINE` is `Tweens.In.SINE | Tweens.Out.SINE`.
+Both sides provide `NONE`, `LINEAR`, `SINE`, `QUAD`, `CUBIC`, `QUART`, `QUINT`,
+`EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `SMOOTH_STEP`, and `SMOOTHER_STEP`;
+`InOut` provides every matching pair except `NONE`. A single leg runs on its own;
+two half-duration legs meet through a local Hermite join over 30–70% of progress
+after skew. Matching families exactly reproduce their conventional InOut curve.
+
+`Tweens.Ease.LINEAR` (zero) remains the default. Legacy `Tweens.Ease` constants
+keep their numeric values and original shapes. Do not OR legacy names with new
+flags. [Easing](/gdscript/easing/) includes the composer and migration details.
 
 ## Tweens.INFINITE
 
 | Member | Meaning |
 | --- | --- |
 | `Tweens.INFINITE` | `-1`, for `repeats` that run until cancelled |
+
+## BlendType
+
+Choose `Tweens.BlendType.HERMITE` (default), `SMOOTH_STEP`, or `LINEAR`.
+The centered join width defaults to 0.4. See [easing](/gdscript/easing/#choose-the-method-and-width).

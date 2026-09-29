@@ -26,6 +26,8 @@ public readonly record struct AudioVolumeLinear3D : ITweenDefinition<global::God
     public bool @UseUnscaledTime { get => Options.@UseUnscaledTime; init => Options = Options with { @UseUnscaledTime = value }; }
     public global::tweens.gd.FillMode @Fill { get => Options.@Fill; init => Options = Options with { @Fill = value }; }
     public global::tweens.gd.EaseType @Ease { get => Options.@Ease; init => Options = Options with { @Ease = value }; }
+    public global::tweens.gd.BlendType @BlendType { get => Options.@BlendType; init => Options = Options with { @BlendType = value }; }
+    public double @Blend { get => Options.@Blend; init => Options = Options with { @Blend = value }; }
     public double @Skew { get => Options.@Skew; init => Options = Options with { @Skew = value }; }
     public double @Weks { get => Options.@Weks; init => Options = Options with { @Weks = value }; }
     public global::System.Func<float, float>? @EaseFunction { get => Options.@EaseFunction; init => Options = Options with { @EaseFunction = value }; }

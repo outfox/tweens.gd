@@ -85,6 +85,9 @@ String TweenSettings::validate() const {
 	if (!Math::is_finite(weks) || weks <= 0.0) {
 		return "Weks must be finite and positive.";
 	}
+	if (blend_type < 0 || blend_type > 2 || !Math::is_finite(blend) || blend < 0.0 || blend > 1.0) {
+		return "Invalid easing blend: use a known method and width in [0, 1].";
+	}
 	if (!is_known_ease(ease)) {
 		return "Unknown easing function.";
 	}
@@ -168,6 +171,8 @@ void TweensGdDefinition::_bind_methods() {
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "repeat_interval"), repeat_interval);
 	BIND_SETTING(PropertyInfo(Variant::INT, "fill"), fill);
 	BIND_SETTING(PropertyInfo(Variant::INT, "ease"), ease);
+	BIND_SETTING(PropertyInfo(Variant::INT, "blend_type"), blend_type);
+	BIND_SETTING(PropertyInfo(Variant::FLOAT, "blend"), blend);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "skew"), skew);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "weks"), weks);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "ease_function"), ease_function);
@@ -208,6 +213,8 @@ void TweensGdDefinition::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("with_repeat_interval", "seconds"), &TweensGdDefinition::with_repeat_interval);
 	ClassDB::bind_method(D_METHOD("with_fill", "mode"), &TweensGdDefinition::with_fill);
 	ClassDB::bind_method(D_METHOD("with_ease", "easing"), &TweensGdDefinition::with_ease);
+	ClassDB::bind_method(D_METHOD("with_blend_type", "mode"), &TweensGdDefinition::with_blend_type);
+	ClassDB::bind_method(D_METHOD("with_blend", "blend"), &TweensGdDefinition::with_blend);
 	ClassDB::bind_method(D_METHOD("with_skew", "exponent"), &TweensGdDefinition::with_skew);
 	ClassDB::bind_method(D_METHOD("with_weks", "exponent"), &TweensGdDefinition::with_weks);
 	ClassDB::bind_method(D_METHOD("with_ease_function", "function"), &TweensGdDefinition::with_ease_function);
@@ -283,6 +290,8 @@ DEFINE_WITH(with_ping_pong_interval, double, ping_pong_interval)
 DEFINE_WITH(with_repeat_interval, double, repeat_interval)
 DEFINE_WITH(with_fill, int64_t, fill)
 DEFINE_WITH(with_ease, int64_t, ease)
+DEFINE_WITH(with_blend_type, int64_t, blend_type)
+DEFINE_WITH(with_blend, double, blend)
 DEFINE_WITH(with_skew, double, skew)
 DEFINE_WITH(with_weks, double, weks)
 DEFINE_WITH(with_ease_function, const Callable &, ease_function)

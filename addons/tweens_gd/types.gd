@@ -9,6 +9,7 @@ enum Process { PROCESS, PHYSICS }
 enum Pause { BOUND, SCENE_TREE, ALWAYS }
 enum State { DELAYED, PLAYING, INTERVAL, COMPLETED, CANCELLED, FAULTED }
 enum Reason { COMPLETED, CANCELLED, TARGET_FREED, OWNER_EXITED, RUNNER_DISPOSED, FAILED, WAIT_CANCELLED }
+enum BlendType { HERMITE, SMOOTH_STEP, LINEAR }
 enum Ease {
 	LINEAR = 0,
 	SINE_IN = 10, SINE_OUT, SINE_IN_OUT,
@@ -22,4 +23,57 @@ enum Ease {
 	ELASTIC_IN = 90, ELASTIC_OUT, ELASTIC_IN_OUT,
 	BOUNCE_IN = 100, BOUNCE_OUT, BOUNCE_IN_OUT,
 	SMOOTH_STEP = 110, SMOOTHER_STEP = 120,
+}
+
+## Select at most one curve per leg. A missing leg leaves the other curve unchanged.
+enum In {
+	NONE = 0,
+	LINEAR = 1 << 8,
+	SINE = 1 << 9,
+	QUAD = 1 << 10,
+	CUBIC = 1 << 11,
+	QUART = 1 << 12,
+	QUINT = 1 << 13,
+	EXPO = 1 << 14,
+	CIRC = 1 << 15,
+	BACK = 1 << 16,
+	ELASTIC = 1 << 17,
+	BOUNCE = 1 << 18,
+	SMOOTH_STEP = 1 << 19,
+	SMOOTHER_STEP = 1 << 20,
+}
+
+## Select at most one curve per leg. A missing leg leaves the other curve unchanged.
+enum Out {
+	NONE = 0,
+	LINEAR = 1 << 21,
+	SINE = 1 << 22,
+	QUAD = 1 << 23,
+	CUBIC = 1 << 24,
+	QUART = 1 << 25,
+	QUINT = 1 << 26,
+	EXPO = 1 << 27,
+	CIRC = 1 << 28,
+	BACK = 1 << 29,
+	ELASTIC = 1 << 30,
+	BOUNCE = 1 << 31,
+	SMOOTH_STEP = 1 << 32,
+	SMOOTHER_STEP = 1 << 33,
+}
+
+## Matching half-duration legs. Reproduces the conventional InOut curve exactly.
+enum InOut {
+	LINEAR = In.LINEAR | Out.LINEAR,
+	SINE = In.SINE | Out.SINE,
+	QUAD = In.QUAD | Out.QUAD,
+	CUBIC = In.CUBIC | Out.CUBIC,
+	QUART = In.QUART | Out.QUART,
+	QUINT = In.QUINT | Out.QUINT,
+	EXPO = In.EXPO | Out.EXPO,
+	CIRC = In.CIRC | Out.CIRC,
+	BACK = In.BACK | Out.BACK,
+	ELASTIC = In.ELASTIC | Out.ELASTIC,
+	BOUNCE = In.BOUNCE | Out.BOUNCE,
+	SMOOTH_STEP = In.SMOOTH_STEP | Out.SMOOTH_STEP,
+	SMOOTHER_STEP = In.SMOOTHER_STEP | Out.SMOOTHER_STEP,
 }
