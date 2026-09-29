@@ -33,6 +33,19 @@ public static class In
     public const EaseType Elastic30 = (EaseType)(1L << 39);
     public const EaseType Elastic40 = (EaseType)(1L << 40);
     public const EaseType Elastic50 = (EaseType)(1L << 41);
+    /// <summary>Alias for the default 10% first-rebound depth, relative to the full tween range.</summary>
+    public const EaseType Bounce10 = Bounce;
+    public const EaseType Bounce20 = (EaseType)(1L << 50);
+    public const EaseType Bounce30 = (EaseType)(1L << 51);
+    public const EaseType Bounce40 = (EaseType)(1L << 52);
+    public const EaseType Bounce50 = (EaseType)(1L << 53);
+    /// <summary>Mirrored Jump motion; the largest dip is 10% of the full tween range below the start.</summary>
+    public const EaseType Jump = (EaseType)((1L << 58) | (1L << 59));
+    public const EaseType Jump10 = Jump;
+    public const EaseType Jump20 = (EaseType)((1L << 58) | (1L << 60));
+    public const EaseType Jump30 = (EaseType)((1L << 59) | (1L << 60));
+    public const EaseType Jump40 = (EaseType)((1L << 58) | (1L << 61));
+    public const EaseType Jump50 = (EaseType)((1L << 59) | (1L << 61));
 }
 
 /// <summary>Out curves. Combine one In and one Out with |; a single curve runs on its own.</summary>
@@ -65,9 +78,22 @@ public static class Out
     public const EaseType Elastic30 = (EaseType)(1L << 47);
     public const EaseType Elastic40 = (EaseType)(1L << 48);
     public const EaseType Elastic50 = (EaseType)(1L << 49);
+    /// <summary>Alias for the default 10% first-rebound depth, relative to the full tween range.</summary>
+    public const EaseType Bounce10 = Bounce;
+    public const EaseType Bounce20 = (EaseType)(1L << 54);
+    public const EaseType Bounce30 = (EaseType)(1L << 55);
+    public const EaseType Bounce40 = (EaseType)(1L << 56);
+    public const EaseType Bounce50 = (EaseType)(1L << 57);
+    /// <summary>Three peaks above the target; the first is 10% of the full tween range.</summary>
+    public const EaseType Jump = (EaseType)((1L << 62) | (1L << 63));
+    public const EaseType Jump10 = Jump;
+    public const EaseType Jump20 = (EaseType)((1L << 62) | (1L << 6));
+    public const EaseType Jump30 = (EaseType)((1L << 63) | (1L << 6));
+    public const EaseType Jump40 = (EaseType)((1L << 62) | (1L << 7));
+    public const EaseType Jump50 = (EaseType)((1L << 63) | (1L << 7));
 }
 
-/// <summary>Matching half-duration legs. Back and Elastic variants target the named overshoot over the full tween range.</summary>
+/// <summary>Matching half-duration legs. Back/Elastic/Jump overshoot and Bounce first-rebound depth are percentages of the full tween range.</summary>
 public static class InOut
 {
     public const EaseType Linear = In.Linear | Out.Linear;
@@ -93,5 +119,18 @@ public static class InOut
     public const EaseType Elastic30 = In.Elastic30 | Out.Elastic30;
     public const EaseType Elastic40 = In.Elastic40 | Out.Elastic40;
     public const EaseType Elastic50 = In.Elastic50 | Out.Elastic50;
+    /// <summary>Alias for the default 10% first-rebound depth, relative to the full tween range.</summary>
+    public const EaseType Bounce10 = Bounce;
+    public const EaseType Bounce20 = In.Bounce20 | Out.Bounce20;
+    public const EaseType Bounce30 = In.Bounce30 | Out.Bounce30;
+    public const EaseType Bounce40 = In.Bounce40 | Out.Bounce40;
+    public const EaseType Bounce50 = In.Bounce50 | Out.Bounce50;
+    /// <summary>Matching Jump legs with 10% peak overshoot relative to the full tween range.</summary>
+    public const EaseType Jump = In.Jump | Out.Jump;
+    public const EaseType Jump10 = Jump;
+    public const EaseType Jump20 = In.Jump20 | Out.Jump20;
+    public const EaseType Jump30 = In.Jump30 | Out.Jump30;
+    public const EaseType Jump40 = In.Jump40 | Out.Jump40;
+    public const EaseType Jump50 = In.Jump50 | Out.Jump50;
 }
 

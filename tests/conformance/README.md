@@ -11,12 +11,16 @@ Engine lifetime, callbacks and property writes have separate integration tests.
 
 `easing.json` supplies composed In/Out samples at the blend boundaries, inside
 the transition, with missing legs and with skew. Optional `blendType` and `blend`
-select the method and centered window (defaults: Hermite and 0.4). Non-polynomial
+select the method and centered window (defaults: Hermite and 0.2). Non-polynomial
 samples also exercise the analytic derivatives used to construct the cubic join. C#, native GDScript, and the
 website's `npm run check:easing` consume the same samples. Each implementation
 also checks every family pairing. Back/Elastic fixtures cover aliases, 10%–50%
 variants, and mixed joins; independent peak tests verify the named overshoot
-against the full tween range for solo curves and matching pairs. Legacy curves remain covered by `timelines.json`.
+against the full tween range for solo curves and matching pairs. Bounce fixtures
+cover the same 10%–50% variants; separate tests find the first rebound depth,
+check the two shrinking rebounds, and verify bounds and mirror symmetry. Jump checks find three diminishing
+peaks above the target and verify the intervening landings, mirror symmetry,
+full-range percentages, and signed flag combinations. Legacy curves remain covered by `timelines.json`.
 
 `fx.json` supplies shared samples of the FX shake signal, including negative noise
 coordinates, signed seed extremes and the periodic lattice boundary. Noise is

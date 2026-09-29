@@ -76,6 +76,10 @@ Hermite join over 30–70% of progress after skew. `BlendType` selects Hermite,
 SmoothStep, or Linear; `Blend` sets the window width in [0, 1].
 `Back` / `Back10` and `Elastic` / `Elastic10` have 10% peak overshoot. Both families
 offer `20` through `50` variants in `In`, `Out`, and `InOut`, measured against the
-full tween range for solo legs and matching pairs. Legacy
-`EaseType` names keep their original shapes. Try the
+full tween range for solo legs and matching pairs. `Bounce` aliases `Bounce10`;
+`Bounce10` through `Bounce50` measure the first rebound depth in the same
+full-range percentages, followed by two smaller bounces. `Jump` / `Jump10` through
+`Jump50` instead launch above the target and return to it between three diminishing
+peaks, with the same percentage convention. Legacy `EaseType` names
+keep their original shapes. Try the
 [easing composer](https://tweens.gd/csharp/easing/).

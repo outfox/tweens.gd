@@ -11,7 +11,7 @@ using Godot;
 namespace tweens.gd {
   public static class Easing {
     /// <summary>Sample a curve. Width is a fraction of normalized time in [0, 1]; zero directly splices the halves.</summary>
-    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Hermite, double blend = 0.4)
+    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Hermite, double blend = 0.2)
       => GetFunction(ease, blendType, blend)(Math.Clamp(progress, 0, 1));
 
     const float ConstantA = 1.70158f;
@@ -22,14 +22,23 @@ namespace tweens.gd {
     const float ConstantF = 7.5625f;
     const float ConstantG = 2.75f;
 
-    // Bits 0–7 are reserved for the legacy enum. One bit per curve lets us reject
-    // accidental In.Sine | In.Back combinations instead of silently choosing a third curve.
+    // Original one-bit flags keep their values. Jump uses two-of-four codes in
+    // bits 58-61 (In) and 62/63/6/7 (Out); OR-ing different codes is invalid.
+    // Every nonzero legacy enum contains a bit in 0-5, which compositions exclude.
     const long LegMask = (1L << 13) - 1;
-    // Preserve the original flag values; extra In/Out choices occupy bits 34–41 / 42–49.
-    const int CurveCount = 21;
-    const long CompositionMask = ((1L << 50) - 1) & ~255L;
-    static ulong LegBits(long bits, bool exit) => (ulong)(((bits >> (exit ? 21 : 8)) & LegMask)
-      | (((bits >> (exit ? 42 : 34)) & 255) << 13));
+    const int CurveCount = 30;
+    const long CompositionMask = ~63L;
+    static ulong LegBits(long bits, bool exit) {
+      var curves = (ulong)(((bits >> (exit ? 21 : 8)) & LegMask)
+        | (((bits >> (exit ? 42 : 34)) & 255) << 13)
+        | (((bits >> (exit ? 54 : 50)) & 15) << 21));
+      var jump = exit ? ((bits >> 62) & 3) | ((bits >> 4) & 12) : (bits >> 58) & 15;
+      return curves | (jump switch {
+        0 => 0UL, 3 => 1UL << 25, 5 => 1UL << 26, 6 => 1UL << 27,
+        9 => 1UL << 28, 10 => 1UL << 29,
+        _ => 3UL << 30, // Invalid codes fail the single-curve check below.
+      });
+    }
 
     // Calibrated for 10%, 20%, ... 50% of the full range. Paired legs have half the
     // value range, so their local peak must be twice the requested overshoot.
@@ -40,26 +49,36 @@ namespace tweens.gd {
     const float ElasticPairPeriod = 0.5074981597799941f;
     static readonly float[] ElasticSoloKick = [0, 0.6853132138892408f, 1.1091787748281363f, 1.4696240828544362f, 1.8012905799033314f];
     static readonly float[] ElasticPairKick = [0, 0.8829462755133655f, 1.4362972653938577f, 1.9263692424370968f, 2.3898041023212153f];
+    static readonly float[] BounceSoloRoot = [Mathf.Sqrt(0.1f), Mathf.Sqrt(0.2f), Mathf.Sqrt(0.3f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.5f)];
+    static readonly float[] BouncePairRoot = [Mathf.Sqrt(0.2f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.6f), Mathf.Sqrt(0.8f), 1];
+    static readonly float[] JumpSoloLaunch = [Mathf.Sqrt(1.1f), Mathf.Sqrt(1.2f), Mathf.Sqrt(1.3f), Mathf.Sqrt(1.4f), Mathf.Sqrt(1.5f)];
+    static readonly float[] JumpPairLaunch = [Mathf.Sqrt(1.2f), Mathf.Sqrt(1.4f), Mathf.Sqrt(1.6f), Mathf.Sqrt(1.8f), Mathf.Sqrt(2)];
     static readonly Func<float, float>[] InCurves =
     [
       Linear, SineIn, QuadIn, CubicIn, QuartIn, QuintIn, ExpoIn, CircIn,
-      t => BackLegIn(t, 0), t => ElasticLegIn(t, 0), BounceIn, SmoothStep, SmootherStep,
+      t => BackLegIn(t, 0), t => ElasticLegIn(t, 0), t => BounceLegIn(t, 0), SmoothStep, SmootherStep,
       t => BackLegIn(t, 1), t => BackLegIn(t, 2), t => BackLegIn(t, 3), t => BackLegIn(t, 4),
-      t => ElasticLegIn(t, 1), t => ElasticLegIn(t, 2), t => ElasticLegIn(t, 3), t => ElasticLegIn(t, 4)
+      t => ElasticLegIn(t, 1), t => ElasticLegIn(t, 2), t => ElasticLegIn(t, 3), t => ElasticLegIn(t, 4),
+      t => BounceLegIn(t, 1), t => BounceLegIn(t, 2), t => BounceLegIn(t, 3), t => BounceLegIn(t, 4),
+      t => JumpLegIn(t, 0), t => JumpLegIn(t, 1), t => JumpLegIn(t, 2), t => JumpLegIn(t, 3), t => JumpLegIn(t, 4)
     ];
     static readonly Func<float, float>[] OutCurves =
     [
       Linear, SineOut, QuadOut, CubicOut, QuartOut, QuintOut, ExpoOut, CircOut,
-      t => BackLegOut(t, 0), t => ElasticLegOut(t, 0), BounceOut, SmoothStep, SmootherStep,
+      t => BackLegOut(t, 0), t => ElasticLegOut(t, 0), t => BounceLegOut(t, 0), SmoothStep, SmootherStep,
       t => BackLegOut(t, 1), t => BackLegOut(t, 2), t => BackLegOut(t, 3), t => BackLegOut(t, 4),
-      t => ElasticLegOut(t, 1), t => ElasticLegOut(t, 2), t => ElasticLegOut(t, 3), t => ElasticLegOut(t, 4)
+      t => ElasticLegOut(t, 1), t => ElasticLegOut(t, 2), t => ElasticLegOut(t, 3), t => ElasticLegOut(t, 4),
+      t => BounceLegOut(t, 1), t => BounceLegOut(t, 2), t => BounceLegOut(t, 3), t => BounceLegOut(t, 4),
+      t => JumpLegOut(t, 0), t => JumpLegOut(t, 1), t => JumpLegOut(t, 2), t => JumpLegOut(t, 3), t => JumpLegOut(t, 4)
     ];
     static readonly Func<float, float>[] InOutCurves =
     [
       Linear, SineInOut, QuadInOut, CubicInOut, QuartInOut, QuintInOut, ExpoInOut, CircInOut,
-      t => BackPair(t, 0), t => ElasticPair(t, 0), BounceInOut, SmoothStep, SmootherStep,
+      t => BackPair(t, 0), t => ElasticPair(t, 0), t => BouncePair(t, 0), SmoothStep, SmootherStep,
       t => BackPair(t, 1), t => BackPair(t, 2), t => BackPair(t, 3), t => BackPair(t, 4),
-      t => ElasticPair(t, 1), t => ElasticPair(t, 2), t => ElasticPair(t, 3), t => ElasticPair(t, 4)
+      t => ElasticPair(t, 1), t => ElasticPair(t, 2), t => ElasticPair(t, 3), t => ElasticPair(t, 4),
+      t => BouncePair(t, 1), t => BouncePair(t, 2), t => BouncePair(t, 3), t => BouncePair(t, 4),
+      t => JumpPair(t, 0), t => JumpPair(t, 1), t => JumpPair(t, 2), t => JumpPair(t, 3), t => JumpPair(t, 4)
     ];
     static readonly Func<float, float>[,] Compositions = CreateCompositions();
 
@@ -67,7 +86,7 @@ namespace tweens.gd {
       var functions = new Func<float, float>[CurveCount, CurveCount];
       for (var i = 0; i < CurveCount; i++)
         for (var o = 0; o < CurveCount; o++) {
-          functions[i, o] = Compose(i, o, BlendType.Hermite, 0.4f);
+          functions[i, o] = Compose(i, o, BlendType.Hermite, 0.2f);
         }
       return functions;
     }
@@ -87,17 +106,21 @@ namespace tweens.gd {
         7 => x / Mathf.Sqrt(1 - x * x),
         8 or >= 13 and <= 16 => BackSlope(x, family == 8 ? 0 : family - 12),
         9 or >= 17 and <= 20 => ElasticSlope(1 - x, family == 9 ? 0 : family - 16),
-        10 => BounceSlope(1 - x),
+        10 or >= 21 and <= 24 => BounceSlope(1 - x, family == 10 ? 0 : family - 20),
+        >= 25 and <= 29 => JumpSlope(1 - x, family - 25),
         11 => 6 * t * (1 - t),
         _ => 30 * t * t * (1 - t) * (1 - t),
       };
     }
 
-    static float BounceSlope(float t) {
-      if (t >= 2.5f / ConstantG) t -= 2.625f / ConstantG;
-      else if (t >= 2f / ConstantG) t -= 2.25f / ConstantG;
-      else if (t >= 1f / ConstantG) t -= 1.5f / ConstantG;
-      return 2 * ConstantF * t;
+    static float BounceSlope(float t, int level) {
+      var r = BouncePairRoot[level];
+      var scale = 1 + 3.5f * r;
+      var u = t * scale;
+      if (u >= 1 + 3 * r) u -= 1 + 3.25f * r;
+      else if (u >= 1 + 2 * r) u -= 1 + 2.5f * r;
+      else if (u >= 1) u -= 1 + r;
+      return 2 * scale * u;
     }
 
     static float Hermite(float u, float y0, float y1, float m0, float m1) {
@@ -142,10 +165,10 @@ namespace tweens.gd {
       if (!double.IsFinite(blend) || blend < 0 || blend > 1) throw new ArgumentOutOfRangeException(nameof(blend));
     }
 
-    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Hermite, double blend = 0.4) {
+    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Hermite, double blend = 0.2) {
       ValidateBlend(blendType, blend);
       var bits = (long)easeType;
-      if (bits >= 256 && (bits & ~CompositionMask) == 0) {
+      if (bits != 0 && (bits & ~CompositionMask) == 0) {
         var entry = LegBits(bits, false);
         var exit = LegBits(bits, true);
         if ((entry == 0 || BitOperations.IsPow2(entry)) && (exit == 0 || BitOperations.IsPow2(exit))) {
@@ -153,7 +176,7 @@ namespace tweens.gd {
           if (exit == 0) return InCurves[BitOperations.TrailingZeroCount(entry)];
           var i = BitOperations.TrailingZeroCount(entry);
           var o = BitOperations.TrailingZeroCount(exit);
-          return blendType == BlendType.Hermite && blend == 0.4 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend);
+          return blendType == BlendType.Hermite && blend == 0.2 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend);
         }
       }
       return easeType switch {
@@ -302,6 +325,51 @@ namespace tweens.gd {
       return time < 0.5 ?
         Mathf.Pow(2 * time, 2) * ((ConstantB + 1) * 2 * time - ConstantB) / 2 :
         (Mathf.Pow(2 * time - 2, 2) * ((ConstantB + 1) * (time * 2 - 2) + ConstantB) + 2) / 2;
+    }
+
+    // Constant acceleration across the initial fall and three rebounds. Rebound
+    // depths are h, h/4, h/16, so flight times total 1 + 2*sqrt(h) + sqrt(h) + sqrt(h)/2.
+    static float BounceLegOut(float t, int level, bool paired = false) {
+      if (t == 0 || t == 1) return t;
+      var h = (level + 1) * (paired ? 0.2f : 0.1f);
+      var r = (paired ? BouncePairRoot : BounceSoloRoot)[level];
+      var u = t * (1 + 3.5f * r);
+      if (u < 1) return u * u;
+      if (u < 1 + 2 * r) { u -= 1 + r; return 1 - h + u * u; }
+      if (u < 1 + 3 * r) { u -= 1 + 2.5f * r; return 1 - h / 4 + u * u; }
+      u -= 1 + 3.25f * r;
+      return 1 - h / 16 + u * u;
+    }
+
+    static float BounceLegIn(float t, int level, bool paired = false) => 1 - BounceLegOut(1 - t, level, paired);
+    static float BouncePair(float t, int level) => t < 0.5f ? BounceLegIn(2 * t, level, true) / 2
+      : 0.5f + BounceLegOut(2 * t - 1, level, true) / 2;
+
+    // Launch directly into the first overshoot, then make two smaller parabolic
+    // hops. A shared acceleration gives peak heights h, h/4, h/16 above the target.
+    static float JumpLegOut(float t, int level, bool paired = false) {
+      if (t == 0 || t == 1) return t;
+      var h = (level + 1) * (paired ? 0.2f : 0.1f);
+      var r = (paired ? BouncePairRoot : BounceSoloRoot)[level];
+      var a = (paired ? JumpPairLaunch : JumpSoloLaunch)[level];
+      var u = t * (a + 2.5f * r);
+      if (u < a + r) { u -= a; return 1 + h - u * u; }
+      if (u < a + 2 * r) { u -= a + 1.5f * r; return 1 + h / 4 - u * u; }
+      u -= a + 2.25f * r;
+      return 1 + h / 16 - u * u;
+    }
+
+    static float JumpLegIn(float t, int level, bool paired = false) => 1 - JumpLegOut(1 - t, level, paired);
+    static float JumpPair(float t, int level) => t < 0.5f ? JumpLegIn(2 * t, level, true) / 2
+      : 0.5f + JumpLegOut(2 * t - 1, level, true) / 2;
+
+    static float JumpSlope(float t, int level) {
+      var r = BouncePairRoot[level];
+      var a = JumpPairLaunch[level];
+      var scale = a + 2.5f * r;
+      var u = t * scale;
+      var center = u < a + r ? a : u < a + 2 * r ? a + 1.5f * r : a + 2.25f * r;
+      return 2 * scale * (center - u);
     }
 
     static float BackLegIn(float t, int level, bool paired = false) {

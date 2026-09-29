@@ -19,10 +19,24 @@ constexpr double C = A + 1.0;
 constexpr double D = Math::TAU / 3.0;
 constexpr double E = Math::TAU / 4.5;
 constexpr int64_t LEG_MASK = (int64_t(1) << 13) - 1;
-constexpr int64_t COMPOSITION_MASK = ((int64_t(1) << 50) - 1) & ~int64_t(255);
-// Extra slots preserve the original In/Out bit values.
+constexpr int64_t COMPOSITION_MASK = ~int64_t(63);
+// Preserve original flags. Jump uses two-of-four codes in bits 58-61 (In)
+// and 62/63/6/7 (Out); combining different codes fails single_or_missing.
 int64_t leg_bits(int64_t bits, bool out) {
-	return ((bits >> (out ? 21 : 8)) & LEG_MASK) | (((bits >> (out ? 42 : 34)) & 255) << 13);
+	const int64_t curves = ((bits >> (out ? 21 : 8)) & LEG_MASK) | (((bits >> (out ? 42 : 34)) & 255) << 13)
+		| (((bits >> (out ? 54 : 50)) & 15) << 21);
+	const int64_t jump = out ? ((bits >> 62) & 3) | ((bits >> 4) & 12) : (bits >> 58) & 15;
+	int slot;
+	switch (jump) {
+		case 0: return curves;
+		case 3: slot = 25; break;
+		case 5: slot = 26; break;
+		case 6: slot = 27; break;
+		case 9: slot = 28; break;
+		case 10: slot = 29; break;
+		default: return curves | (int64_t(3) << 30);
+	}
+	return curves | (int64_t(1) << slot);
 }
 
 // Peak-calibrated parameters for 10%, 20%, ... 50% over the full tween range.
@@ -32,6 +46,12 @@ constexpr double ELASTIC_SOLO_PERIOD = 0.7553423501870573;
 constexpr double ELASTIC_PAIR_PERIOD = 0.5074981597799941;
 constexpr double ELASTIC_SOLO_KICK[] = {0, 0.6853132138892408, 1.1091787748281363, 1.4696240828544362, 1.8012905799033314};
 constexpr double ELASTIC_PAIR_KICK[] = {0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153};
+
+const double BOUNCE_SOLO_ROOT[] = {std::sqrt(0.1), std::sqrt(0.2), std::sqrt(0.3), std::sqrt(0.4), std::sqrt(0.5)};
+const double BOUNCE_PAIR_ROOT[] = {std::sqrt(0.2), std::sqrt(0.4), std::sqrt(0.6), std::sqrt(0.8), 1.0};
+
+const double JUMP_SOLO_LAUNCH[] = {std::sqrt(1.1), std::sqrt(1.2), std::sqrt(1.3), std::sqrt(1.4), std::sqrt(1.5)};
+const double JUMP_PAIR_LAUNCH[] = {std::sqrt(1.2), std::sqrt(1.4), std::sqrt(1.6), std::sqrt(1.8), std::sqrt(2.0)};
 
 bool single_or_missing(int64_t bits) {
 	return (bits & (bits - 1)) == 0;
@@ -45,6 +65,8 @@ int leg_slot(int64_t bits) {
 }
 int back_level(int slot) { return slot == 8 ? 0 : slot >= 13 && slot <= 16 ? slot - 12 : -1; }
 int elastic_level(int slot) { return slot == 9 ? 0 : slot >= 17 && slot <= 20 ? slot - 16 : -1; }
+int bounce_level(int slot) { return slot == 10 ? 0 : slot >= 21 && slot <= 24 ? slot - 20 : -1; }
+int jump_level(int slot) { return slot >= 25 && slot <= 29 ? slot - 25 : -1; }
 int64_t legacy_leg(int slot, bool out) {
 	if (slot == 0) return TweensGdEasing::LINEAR;
 	if (slot == 11) return TweensGdEasing::SMOOTH_STEP;
@@ -63,14 +85,41 @@ double elastic_out(double t, int level, bool paired) {
 	const double kick = (paired ? ELASTIC_PAIR_KICK : ELASTIC_SOLO_KICK)[level];
 	return 1.0 - std::pow(2.0, -10.0*t)*(std::cos(angle)-kick*std::sin(angle));
 }
+// Constant acceleration; three rebound depths h, h/4, h/16, with flight times
+// 2*sqrt(h), sqrt(h), sqrt(h)/2 after the unit-duration initial fall.
+double bounce_leg_out(double t, int level, bool paired) {
+	if (t == 0.0 || t == 1.0) return t;
+	const double h = (level+1)*(paired ? 0.2 : 0.1);
+	const double r = (paired ? BOUNCE_PAIR_ROOT : BOUNCE_SOLO_ROOT)[level];
+	double u = t*(1.0+3.5*r);
+	if (u < 1.0) return u*u;
+	if (u < 1.0+2.0*r) { u -= 1.0+r; return 1.0-h+u*u; }
+	if (u < 1.0+3.0*r) { u -= 1.0+2.5*r; return 1.0-h/4.0+u*u; }
+	u -= 1.0+3.25*r;
+	return 1.0-h/16.0+u*u;
+}
+// Launch to the first peak, then rebound twice above the target.
+double jump_leg_out(double t, int level, bool paired) {
+	if (t == 0.0 || t == 1.0) return t;
+	const double h = (level+1)*(paired ? 0.2 : 0.1);
+	const double r = (paired ? BOUNCE_PAIR_ROOT : BOUNCE_SOLO_ROOT)[level];
+	const double a = (paired ? JUMP_PAIR_LAUNCH : JUMP_SOLO_LAUNCH)[level];
+	double u = t*(a+2.5*r);
+	if (u < a+r) { u -= a; return 1.0+h-u*u; }
+	if (u < a+2.0*r) { u -= a+1.5*r; return 1.0+h/4.0-u*u; }
+	u -= a+2.25*r;
+	return 1.0+h/16.0-u*u;
+}
 double family_leg(int slot, bool out, double t, bool paired = false) {
-	const int back = back_level(slot), elastic = elastic_level(slot);
+	const int back = back_level(slot), elastic = elastic_level(slot), bounce = bounce_level(slot), jump = jump_level(slot);
 	if (back >= 0) return out ? 1.0-back_in(1.0-t, back, paired) : back_in(t, back, paired);
 	if (elastic >= 0) return out ? elastic_out(t, elastic, paired) : 1.0-elastic_out(1.0-t, elastic, paired);
+	if (bounce >= 0) return out ? bounce_leg_out(t, bounce, paired) : 1.0-bounce_leg_out(1.0-t, bounce, paired);
+	if (jump >= 0) return out ? jump_leg_out(t, jump, paired) : 1.0-jump_leg_out(1.0-t, jump, paired);
 	return TweensGdEasing::evaluate(legacy_leg(slot, out), t);
 }
 double family_pair(int slot, double t) {
-	if (back_level(slot) >= 0 || elastic_level(slot) >= 0)
+	if (back_level(slot) >= 0 || elastic_level(slot) >= 0 || bounce_level(slot) >= 0 || jump_level(slot) >= 0)
 		return t < 0.5 ? family_leg(slot, false, 2.0*t, true)/2.0 : 0.5+family_leg(slot, true, 2.0*t-1.0, true)/2.0;
 	const int64_t legacy = legacy_leg(slot, false);
 	return TweensGdEasing::evaluate(legacy >= 10 && legacy <= 100 ? legacy+2 : legacy, t);
@@ -79,11 +128,26 @@ double family_pair(int slot, double t) {
 // Derivative of a paired half profile; symmetric about the midpoint.
 double pair_slope(int64_t family, double time) {
 	const double t = MIN(time, 1.0 - time), x = 2.0 * t;
-	const int back = back_level(int(family)), elastic = elastic_level(int(family));
+	const int back = back_level(int(family)), elastic = elastic_level(int(family)), bounce = bounce_level(int(family));
 	if (back >= 0) { const double s = BACK_PAIRED[back]; return 3.0*(s+1.0)*x*x - 2.0*s*x; }
 	if (elastic >= 0) {
 		const double u = 1.0-x, omega = Math::TAU/ELASTIC_PAIR_PERIOD, decay = 10.0*std::log(2.0), kick = ELASTIC_PAIR_KICK[elastic];
 		return std::pow(2.0, -10.0*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
+	}
+	if (bounce >= 0) {
+		const double r = BOUNCE_PAIR_ROOT[bounce], scale = 1.0+3.5*r;
+		double u = (1.0-x)*scale;
+		if (u >= 1.0+3.0*r) u -= 1.0+3.25*r;
+		else if (u >= 1.0+2.0*r) u -= 1.0+2.5*r;
+		else if (u >= 1.0) u -= 1.0+r;
+		return 2.0*scale*u;
+	}
+	const int jump = jump_level(int(family));
+	if (jump >= 0) {
+		const double r = BOUNCE_PAIR_ROOT[jump], a = JUMP_PAIR_LAUNCH[jump], scale = a+2.5*r;
+		const double u = (1.0-x)*scale;
+		const double center = u < a+r ? a : u < a+2.0*r ? a+1.5*r : a+2.25*r;
+		return 2.0*scale*(center-u);
 	}
 	switch (family) {
 		case 1: return Math::PI * std::sin(Math::PI * t) / 2.0;
@@ -93,13 +157,6 @@ double pair_slope(int64_t family, double time) {
 		case 5: return 80.0 * t * t * t * t;
 		case 6: return 10.0 * std::log(2.0) * std::pow(2.0, 20.0 * t - 10.0);
 		case 7: return x / std::sqrt(1.0 - x * x);
-		case 10: {
-			double v = 1.0 - x;
-			if (v >= 2.5 / 2.75) v -= 2.625 / 2.75;
-			else if (v >= 2.0 / 2.75) v -= 2.25 / 2.75;
-			else if (v >= 1.0 / 2.75) v -= 1.5 / 2.75;
-			return 15.125 * v;
-		}
 		case 11: return 6.0 * t * (1.0 - t);
 		case 12: return 30.0 * t * t * (1.0 - t) * (1.0 - t);
 		default: return 1.0;
@@ -131,11 +188,11 @@ double bounce_out(double t) {
 } // namespace
 
 void TweensGdEasing::_bind_methods() {
-	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress", "blend_type", "blend"), &TweensGdEasing::evaluate, DEFVAL(0), DEFVAL(0.4));
+	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress", "blend_type", "blend"), &TweensGdEasing::evaluate, DEFVAL(0), DEFVAL(0.2));
 }
 
 bool tweens::is_known_ease(int64_t p_ease) {
-	if (p_ease >= 256 && (p_ease & ~COMPOSITION_MASK) == 0) {
+	if (p_ease != 0 && (p_ease & ~COMPOSITION_MASK) == 0) {
 		return single_or_missing(leg_bits(p_ease, false)) && single_or_missing(leg_bits(p_ease, true));
 	}
 	using Ease = TweensGdEasing::Ease;
@@ -156,7 +213,7 @@ double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_ble
 		return Math::NaN;
 	}
 	const double t = CLAMP(p_progress, 0.0, 1.0);
-	if (p_ease >= 256) {
+	if (p_ease != 0 && (p_ease & ~COMPOSITION_MASK) == 0) {
 		if (!tweens::is_known_ease(p_ease)) return Math::NaN;
 		const int64_t entry = leg_bits(p_ease, false), exit = leg_bits(p_ease, true);
 		if (entry == 0) return family_leg(leg_slot(exit), true, t);

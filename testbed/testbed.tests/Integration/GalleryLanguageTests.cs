@@ -197,10 +197,11 @@ public class GalleryLanguageTests
                 Pump();
                 var targets = demo.CurrentPage!.Effects[0].SceneTargets;
                 var entry = targets["entry"].As<OptionButton>();
-                entry.Select(3); // Quad
-                entry.EmitSignal(OptionButton.SignalName.ItemSelected, 3);
-                targets["exit"].As<OptionButton>().Select(4); // Cubic
-                targets["exit"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 4);
+                entry.Select(entry.GetItemIndex(3)); // Quad
+                entry.EmitSignal(OptionButton.SignalName.ItemSelected, entry.Selected);
+                var exit = targets["exit"].As<OptionButton>();
+                exit.Select(exit.GetItemIndex(4)); // Cubic
+                exit.EmitSignal(OptionButton.SignalName.ItemSelected, exit.Selected);
                 targets["skew"].As<HSlider>().Value = 2;
                 targets["blend"].As<OptionButton>().Select(2);
                 targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 2);
@@ -209,13 +210,13 @@ public class GalleryLanguageTests
                 duration.Value = duration.Value == 2 ? 1 : 2; // Rebuild while keeping the composition.
                 Pump();
                 targets = demo.CurrentPage!.Effects[0].SceneTargets;
-                Assert.Equal(3, targets["entry"].As<OptionButton>().Selected);
-                Assert.Equal(4, targets["exit"].As<OptionButton>().Selected);
+                Assert.Equal(3, targets["entry"].As<OptionButton>().GetSelectedId());
+                Assert.Equal(4, targets["exit"].As<OptionButton>().GetSelectedId());
                 Assert.Equal(2, targets["skew"].As<HSlider>().Value);
                 Assert.Equal(2, targets["blend"].As<OptionButton>().Selected);
                 Assert.Equal(0.8, targets["width"].As<HSlider>().Value);
                 // Reset again to remove wall-clock progress from Pump, then sample exactly halfway.
-                targets["entry"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 3);
+                targets["entry"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, targets["entry"].As<OptionButton>().Selected);
                 if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(demo).Scheduler.Update(duration.Value / 2);
                 else GDScriptScheduler()!.Call("update", duration.Value / 2);
                 Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-154.6875)), 0, 0.001);
@@ -250,6 +251,15 @@ public class GalleryLanguageTests
                 ("Elastic50", "Back20", In.Elastic50 | Out.Back20),
                 ("Elastic10", "Elastic", InOut.Elastic),
                 ("Back", "Back10", InOut.Back),
+                ("Bounce", "Bounce10", InOut.Bounce),
+                ("None", "Bounce50", Out.Bounce50),
+                ("Bounce50", "Bounce50", InOut.Bounce50),
+                ("Bounce20", "Bounce40", In.Bounce20 | Out.Bounce40),
+                ("None", "Jump50", Out.Jump50),
+                ("Jump", "Jump10", InOut.Jump),
+                ("Jump50", "Jump50", InOut.Jump50),
+                ("Jump20", "Jump40", In.Jump20 | Out.Jump40),
+                ("Jump30", "Bounce20", In.Jump30 | Out.Bounce20),
             })
             {
                 entry.Select(Enumerable.Range(0, entry.ItemCount).Single(i => entry.GetItemText(i) == a));
@@ -258,7 +268,7 @@ public class GalleryLanguageTests
                 if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(stage).Scheduler.Update(0.25);
                 else GDScriptScheduler()!.Call("update", 0.25);
                 Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-200 + 400 * Easing.Evaluate(ease, 0.25f))), 0, 0.002);
-                Assert.Equal(a != "Elastic50", targets["blend"].As<OptionButton>().Disabled);
+                Assert.Equal(a is not ("Elastic50" or "Bounce20" or "Jump20" or "Jump30"), targets["blend"].As<OptionButton>().Disabled);
                 var line = targets["resultCurve"].As<Line2D>();
                 var view = line.GetViewport();
                 var zoom = view.GetCamera2D().Zoom;

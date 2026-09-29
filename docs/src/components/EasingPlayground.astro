@@ -4,7 +4,9 @@ import type { Lang } from '../scripts/lang';
 interface Props { lang?: Lang }
 const { lang = 'csharp' } = Astro.props;
 const gd = lang === 'gdscript';
-const legs = ['None', ...FAMILIES.toSorted((a, b) => a.localeCompare(b, 'en'))];
+const sorted = FAMILIES.toSorted((a, b) => a.localeCompare(b, 'en'));
+const curves = sorted.filter(f => !/\d$/.test(f));
+const variants = sorted.filter(f => /\d$/.test(f));
 ---
 
 <div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
@@ -42,14 +44,22 @@ const legs = ['None', ...FAMILIES.toSorted((a, b) => a.localeCompare(b, 'en'))];
 		</div>
 		<div class="controls">
 			<div class="selectors">
-				<label class="tw-field"><span class="in-key">In curve</span><select data-in aria-label="In curve">{legs.map(f => <option value={f} selected={f === 'None'}>{f === 'None' ? 'None (Out only)' : f}</option>)}</select></label>
+				<label class="tw-field"><span class="in-key">In curve</span><select data-in aria-label="In curve">
+					<option value="None" selected>None (Out only)</option><hr />
+					{curves.map(f => <option value={f}>{f}</option>)}<hr />
+					{variants.map(f => <option value={f}>{f}</option>)}
+				</select></label>
 				<span class="join" aria-hidden="true">|</span>
-				<label class="tw-field"><span class="out-key">Out curve</span><select data-out aria-label="Out curve">{legs.map(f => <option value={f} selected={f === 'Elastic'}>{f === 'None' ? 'None (In only)' : f}</option>)}</select></label>
+				<label class="tw-field"><span class="out-key">Out curve</span><select data-out aria-label="Out curve">
+					<option value="None">None (In only)</option><hr />
+					{curves.map(f => <option value={f} selected={f === 'Elastic'}>{f}</option>)}<hr />
+					{variants.map(f => <option value={f}>{f}</option>)}
+				</select></label>
 			</div>
 			<label class="tw-field"><span>Duration <output data-duration-out>1.2 s</output></span><input type="range" min="0.2" max="4" step="0.1" value="1.2" data-duration /></label>
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
 			<label class="tw-field"><span>Join method</span><select data-blend aria-label="Join method"><option value="Hermite">Hermite · match velocity</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
-			<label class="tw-field"><span>Join width <output data-width-out>40%</output></span><input aria-label="Join width" type="range" min="0" max="1" step="0.02" value="0.4" data-width /></label>
+			<label class="tw-field"><span>Join width <output data-width-out>20%</output></span><input aria-label="Join width" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
 			<p class="hint" data-hint>A single selected curve runs over the full duration. Choose both curves to join them.</p>
 			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
 		</div>
@@ -58,17 +68,17 @@ const legs = ['None', ...FAMILIES.toSorted((a, b) => a.localeCompare(b, 'en'))];
 		<pre>{gd ? (
 			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>1.2</span>,
     <span data-code-ease><span class="ty">Tweens.Out</span>.ELASTIC</span>)
-move.skew = <span class="num" data-code-skew>1.00</span>
-move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>HERMITE</span>
-move.blend = <span class="num" data-code-blend>0.40</span>
+<span class="comment" data-code-option="skew"><span data-comment># </span>move.skew = <span class="num" data-code-skew>1.00</span></span>
+<span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>HERMITE</span></span>
+<span class="comment" data-code-option="blend"><span data-comment># </span>move.blend = <span class="num" data-code-blend>0.20</span></span>
 <span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
 		) : (
 			<code data-code>sprite.<span class="fn">TweenPositionX</span>(<span class="num">300</span>, <span class="num" data-code-duration>1.2</span>, options <span class="kw">=&gt;</span>
 {'{'}
     options.Ease = <span data-code-ease><span class="ty">Out</span>.Elastic</span>;
-    options.Skew = <span class="num" data-code-skew>1.00</span>;
-    options.BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Hermite</span>;
-    options.Blend = <span class="num" data-code-blend>0.40</span>;
+    <span class="comment" data-code-option="skew"><span data-comment>// </span>options.Skew = <span class="num" data-code-skew>1.00</span>;</span>
+    <span class="comment" data-code-option="blend-type"><span data-comment>// </span>options.BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Hermite</span>;</span>
+    <span class="comment" data-code-option="blend"><span data-comment>// </span>options.Blend = <span class="num" data-code-blend>0.20</span>;</span>
 {'}'});</code>
 		)}</pre>
 		<button type="button" class="tw-btn" data-copy>Copy</button>
@@ -166,6 +176,12 @@ move.blend = <span class="num" data-code-blend>0.40</span>
 			$('[data-code-skew]').textContent = k.toFixed(2);
 			$('[data-code-blend-type]').textContent = gd ? constant(blend.value) : blend.value;
 			$('[data-code-blend]').textContent = (+width.value).toFixed(2);
+			root.querySelectorAll<HTMLElement>('[data-code-option]').forEach(line => {
+				const commented = line.dataset.codeOption === 'skew' ? k === 1
+					: blend.disabled || (line.dataset.codeOption === 'blend' && +width.value === 0.2);
+				line.classList.toggle('comment', commented);
+				line.querySelector('[data-comment]')!.textContent = commented ? (gd ? '# ' : '// ') : '';
+			});
 			root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.preset === `${a},${b}`)));
 			draw(+progress.value);
 		};
@@ -181,7 +197,7 @@ move.blend = <span class="num" data-code-blend>0.40</span>
 		root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.addEventListener('click', () => {
 			[entry.value, exit.value] = button.dataset.preset!.split(','); update();
 		}));
-		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.2'; skew.value = '1'; blend.value = 'Hermite'; width.value = '0.4'; progress.value = '0'; update(); });
+		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.2'; skew.value = '1'; blend.value = 'Hermite'; width.value = '0.2'; progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($('[data-code]').textContent!); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }
@@ -232,6 +248,7 @@ move.blend = <span class="num" data-code-blend>0.40</span>
 	.recipe :global(.kw) { color: var(--tw-blue-ink); }
 	.recipe :global(.ty) { color: var(--tw-mint-ink); }
 	.recipe :global(.fn), .recipe :global(.num) { color: var(--tw-amber-ink); }
+	.recipe :global(.comment), .recipe :global(.comment *) { color: var(--tw-muted); }
 	.recipe .tw-btn { font-size: .75rem; }
 	.scrub { font-size: .8rem; }
 	@media (min-width: 50rem) { .composer { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }

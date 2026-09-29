@@ -27,6 +27,17 @@ public sealed partial class EasingComposer
         ("Elastic30", In.Elastic30, Out.Elastic30),
         ("Elastic40", In.Elastic40, Out.Elastic40),
         ("Elastic50", In.Elastic50, Out.Elastic50),
+        ("Bounce10", In.Bounce10, Out.Bounce10),
+        ("Bounce20", In.Bounce20, Out.Bounce20),
+        ("Bounce30", In.Bounce30, Out.Bounce30),
+        ("Bounce40", In.Bounce40, Out.Bounce40),
+        ("Bounce50", In.Bounce50, Out.Bounce50),
+        ("Jump", In.Jump, Out.Jump),
+        ("Jump10", In.Jump10, Out.Jump10),
+        ("Jump20", In.Jump20, Out.Jump20),
+        ("Jump30", In.Jump30, Out.Jump30),
+        ("Jump40", In.Jump40, Out.Jump40),
+        ("Jump50", In.Jump50, Out.Jump50),
     ];
     private TweenInstance? preview;
 
@@ -46,8 +57,8 @@ public sealed partial class EasingComposer
     private void Refresh()
     {
         preview?.Cancel();
-        var a = Families[entry.Selected];
-        var b = Families[exit.Selected];
+        var a = Families[entry.GetSelectedId()];
+        var b = Families[exit.GetSelectedId()];
         var ease = a.In | b.Out;
         var exponent = skew.Value;
         var method = (BlendType)blend.Selected;
@@ -78,7 +89,7 @@ public sealed partial class EasingComposer
         });
     }
 
-    private static Vector2[] Sample(EaseType ease, double skew, BlendType blendType = BlendType.Hermite, double blend = 0.4, double start = 0, double end = 1)
+    private static Vector2[] Sample(EaseType ease, double skew, BlendType blendType = BlendType.Hermite, double blend = 0.2, double start = 0, double end = 1)
     {
         var points = new Vector2[241];
         for (var i = 0; i < points.Length; i++)

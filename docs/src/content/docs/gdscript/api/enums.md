@@ -72,7 +72,7 @@ Use integer flags from `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`. Combine
 one In and one Out with `|`: `Tweens.In.SINE | Tweens.Out.CUBIC`.
 `Tweens.InOut.SINE` is `Tweens.In.SINE | Tweens.Out.SINE`.
 Both sides provide `NONE`, `LINEAR`, `SINE`, `QUAD`, `CUBIC`, `QUART`, `QUINT`,
-`EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `SMOOTH_STEP`, and `SMOOTHER_STEP`;
+`EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `JUMP`, `SMOOTH_STEP`, and `SMOOTHER_STEP`;
 `InOut` provides every matching pair except `NONE`. A single leg runs on its own;
 two half-duration legs meet through a local Hermite join over 30–70% of progress
 after skew. Matching families use their paired profile directly.
@@ -87,6 +87,11 @@ rebound depth to that percentage of the full tween range, in single legs and
 matching pairs. The next two rebounds have one-quarter and one-sixteenth of
 that depth. All variants are available in `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
 
+`JUMP` aliases `JUMP10`; `JUMP20` through `JUMP50` set the first peak above the
+target to that percentage of the full tween range. Three peaks diminish to
+one-quarter and one-sixteenth of the first, touching the target between them.
+Use `Tweens.In`, `Tweens.Out`, or `Tweens.InOut` for mirrored, outgoing, or paired motion.
+
 `Tweens.Ease.LINEAR` (zero) remains the default. Legacy `Tweens.Ease` constants
 keep their numeric values and original shapes. Do not OR legacy names with new
 flags. [Easing](/gdscript/easing/) includes the composer and migration details.
@@ -100,4 +105,4 @@ flags. [Easing](/gdscript/easing/) includes the composer and migration details.
 ## BlendType
 
 Choose `Tweens.BlendType.HERMITE` (default), `SMOOTH_STEP`, or `LINEAR`.
-The centered join width defaults to 0.4. See [easing](/gdscript/easing/#choose-the-method-and-width).
+The centered join width defaults to 0.2. See [easing](/gdscript/easing/#choose-the-method-and-width).

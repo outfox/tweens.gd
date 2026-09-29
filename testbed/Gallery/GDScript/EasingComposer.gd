@@ -5,7 +5,9 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 
 const FAMILIES = ["NONE", "LINEAR", "SINE", "QUAD", "CUBIC", "QUART", "QUINT", "EXPO",
 	"CIRC", "BACK", "ELASTIC", "BOUNCE", "SMOOTH_STEP", "SMOOTHER_STEP",
-	"BACK10", "BACK20", "BACK30", "BACK40", "BACK50", "ELASTIC10", "ELASTIC20", "ELASTIC30", "ELASTIC40", "ELASTIC50"]
+	"BACK10", "BACK20", "BACK30", "BACK40", "BACK50", "ELASTIC10", "ELASTIC20", "ELASTIC30", "ELASTIC40", "ELASTIC50",
+	"BOUNCE10", "BOUNCE20", "BOUNCE30", "BOUNCE40", "BOUNCE50",
+	"JUMP", "JUMP10", "JUMP20", "JUMP30", "JUMP40", "JUMP50"]
 var preview: TweensGdHandle
 
 func animate() -> void:
@@ -23,17 +25,17 @@ func animate() -> void:
 
 func refresh() -> void:
 	if preview: preview.cancel()
-	var a: int = Tweens.In[FAMILIES[targets.entry.selected]]
-	var b: int = Tweens.Out[FAMILIES[targets.exit.selected]]
+	var a: int = Tweens.In[FAMILIES[targets.entry.get_selected_id()]]
+	var b: int = Tweens.Out[FAMILIES[targets.exit.get_selected_id()]]
 	var ease: int = a | b
 	var exponent: float = targets.skew.value
 	var method: int = targets.blend.selected
 	var width: float = targets.width.value
-	var single: bool = not a or not b or a == Tweens.In[FAMILIES[targets.exit.selected]]
+	var single: bool = not a or not b or a == Tweens.In[FAMILIES[targets.exit.get_selected_id()]]
 	targets.blend.disabled = single
 	targets.width.editable = not single
-	var entry_pair: int = a | Tweens.Out[FAMILIES[targets.entry.selected]] if b else a
-	var exit_pair: int = Tweens.In[FAMILIES[targets.exit.selected]] | b if a else b
+	var entry_pair: int = a | Tweens.Out[FAMILIES[targets.entry.get_selected_id()]] if b else a
+	var exit_pair: int = Tweens.In[FAMILIES[targets.exit.get_selected_id()]] | b if a else b
 	targets.entryCurve.points = sample(entry_pair, exponent, method, width, 0.0, 1.0 if not b else pow(0.5, 1.0/exponent)) if a else PackedVector2Array()
 	targets.exitCurve.points = sample(exit_pair, exponent, method, width, 0.0 if not a else pow(0.5, 1.0/exponent), 1.0) if b else PackedVector2Array()
 	targets.resultCurve.points = sample(ease, exponent, method, width)

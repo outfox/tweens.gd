@@ -57,8 +57,8 @@ public readonly record struct TweenOptions
     /// <summary>How mixed In/Out legs join. Defaults to Hermite; matching families keep their conventional shape.</summary>
     public BlendType BlendType { get; init; }
     private readonly double? blend;
-    /// <summary>Centered transition width in [0, 1]. Defaults to 0.4 (30%–70%); zero directly splices the halves.</summary>
-    public double Blend { get => blend ?? 0.4; init => blend = value == 0.4 ? null : value; }
+    /// <summary>Centered transition width in [0, 1]. Defaults to 0.2 (40%–60%); zero directly splices the halves.</summary>
+    public double Blend { get => blend ?? 0.2; init => blend = value == 0.2 ? null : value; }
     private readonly double? skew;
     /// <summary>Positive finite exponent applied to forward normalized time before easing. Defaults to 1 (identity).</summary>
     public double Skew { get => skew ?? 1; init => skew = value == 1 ? null : value; }
@@ -123,7 +123,7 @@ public class TweenOptionsBuilder
     public FillMode Fill { get; set; } = FillMode.RetainFinalValue;
     public EaseType Ease { get; set; }
     public BlendType BlendType { get; set; }
-    public double Blend { get; set; } = 0.4;
+    public double Blend { get; set; } = 0.2;
     /// <inheritdoc cref="TweenOptions.Skew"/>
     public double Skew { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.Weks"/>

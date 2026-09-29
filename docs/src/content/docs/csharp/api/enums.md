@@ -69,7 +69,7 @@ Which frames advance the tween. See
 `EaseType` accepts `In`, `Out`, and `InOut` constants. Combine one In and one Out
 with `|`, for example `In.Sine | Out.Cubic`. `InOut.Sine` is `In.Sine | Out.Sine`.
 Both sides provide `None`, `Linear`, `Sine`, `Quad`, `Cubic`, `Quart`, `Quint`,
-`Expo`, `Circ`, `Back`, `Elastic`, `Bounce`, `SmoothStep`, and `SmootherStep`;
+`Expo`, `Circ`, `Back`, `Elastic`, `Bounce`, `Jump`, `SmoothStep`, and `SmootherStep`;
 `InOut` provides every matching pair except `None`. A single leg runs on its own;
 two half-duration legs meet through a local Hermite join over 30–70% of progress
 after skew. Matching families use their paired profile directly.
@@ -84,6 +84,11 @@ rebound depth to that percentage of the full tween range, in single legs and
 matching pairs. The next two rebounds have one-quarter and one-sixteenth of
 that depth. All variants are available in `In`, `Out`, and `InOut`.
 
+`Jump` aliases `Jump10`; `Jump20` through `Jump50` set the first peak above the
+target to that percentage of the full tween range. Three peaks diminish to
+one-quarter and one-sixteenth of the first, touching the target between them.
+Use `In`, `Out`, or `InOut` for mirrored, outgoing, or paired motion.
+
 `EaseType.Linear` (zero) remains the default. Legacy `EaseType` constants keep
 their numeric values and original shapes. Do not OR legacy names with the new
 flags. [Easing](/csharp/easing/) includes the composer and migration details.
@@ -97,4 +102,4 @@ flags. [Easing](/csharp/easing/) includes the composer and migration details.
 ## BlendType
 
 Choose `Hermite` (default), `SmoothStep`, or `Linear`.
-The centered join width defaults to 0.4. See [easing](/csharp/easing/#choose-the-method-and-width).
+The centered join width defaults to 0.2. See [easing](/csharp/easing/#choose-the-method-and-width).

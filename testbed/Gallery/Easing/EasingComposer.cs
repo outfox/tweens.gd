@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 using System;
+using System.Linq;
 using Godot;
 namespace testbed;
 
-public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.4)
+public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.2)
 {
     public static EasingSelection Default => new(0, 10, 1);
 }
@@ -12,7 +13,7 @@ public readonly record struct EasingSelection(int InIndex, int OutIndex, double 
 public sealed partial class EasingComposer : GalleryEffect
 {
     public EasingSelection InitialSelection { get; set; } = EasingSelection.Default;
-    public EasingSelection Selection => new(entry.Selected, exit.Selected, skew.Value, blend.Selected, width.Value);
+    public EasingSelection Selection => new(entry.GetSelectedId(), exit.GetSelectedId(), skew.Value, blend.Selected, width.Value);
     private OptionButton entry = null!, exit = null!, blend = null!;
     private HSlider skew = null!, width = null!;
     private Label recipe = null!;
@@ -50,9 +51,23 @@ public sealed partial class EasingComposer : GalleryEffect
         controls.AddChild(GalleryTheme.Label("|", 16, Palette.Muted));
         controls.AddChild(GalleryTheme.Label("Out", 14, Palette.Blue));
         exit = controls.Add(new OptionButton { Name = "OutCurve", SizeFlagsHorizontal = Control.SizeFlags.ExpandFill });
-        foreach (var family in Families) { entry.AddItem(family.Name); exit.AddItem(family.Name); }
-        entry.Select(InitialSelection.InIndex);
-        exit.Select(InitialSelection.OutIndex);
+        // Stable IDs keep selection and playback independent of the display order.
+        var groups = Families.Select((family, id) => (family.Name, Id: id))
+            .GroupBy(family => family.Id == 0 ? 0 : char.IsDigit(family.Name[^1]) ? 2 : 1)
+            .OrderBy(group => group.Key);
+        foreach (var group in groups)
+        {
+            if (group.Key != 0)
+                foreach (var picker in new[] { entry, exit })
+                {
+                    picker.AddSeparator();
+                    picker.SetItemId(picker.ItemCount - 1, -group.Key);
+                }
+            foreach (var (name, id) in group.OrderBy(family => family.Name, StringComparer.OrdinalIgnoreCase))
+            { entry.AddItem(name, id); exit.AddItem(name, id); }
+        }
+        entry.Select(entry.GetItemIndex(InitialSelection.InIndex));
+        exit.Select(exit.GetItemIndex(InitialSelection.OutIndex));
 
         var footer = Stage.Add(new VBoxContainer());
         footer.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomWide, margin: 10);

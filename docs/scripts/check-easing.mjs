@@ -8,7 +8,7 @@ for (const sample of data.cases) {
   assert.ok(Math.abs(composeEase(sample.in, sample.out, sample.progress, sample.skew, sample.blendType, sample.blend) - sample.expected) < data.tolerance,
     JSON.stringify(sample));
 }
-const calibrated = f => /^(Back|Elastic|Bounce)/.test(f);
+const calibrated = f => /^(Back|Elastic|Bounce|Jump)/.test(f);
 for (const family of FAMILIES.filter(f => !calibrated(f))) {
   const legacy = ['Linear', 'SmoothStep', 'SmootherStep'].includes(family) ? family : family + 'InOut';
   for (let i = 0; i <= 1000; i++) assert.equal(composeEase(family, family, i / 1000), ease(legacy, i / 1000));
@@ -26,8 +26,8 @@ for (const entry of ['None', ...FAMILIES]) {
       if (exit === 'None') assert.equal(value, legEase(entry, 'In', t));
       else if (entry === 'None') assert.equal(value, legEase(exit, 'Out', t));
       else {
-        if (t <= 0.3) assert.equal(value, pairedLegEase(entry, t));
-        if (t >= 0.7) assert.equal(value, pairedLegEase(exit, t));
+        if (t <= 0.4) assert.equal(value, pairedLegEase(entry, t));
+        if (t >= 0.6) assert.equal(value, pairedLegEase(exit, t));
       }
     }
   }
@@ -53,7 +53,7 @@ for (const a of FAMILIES) for (const b of FAMILIES) {
 }
 console.log('Hermite: monotonicity, bounds and velocity continuity passed.');
 
-for (const base of ['Back', 'Elastic']) for (const percent of [10,20,30,40,50]) {
+for (const base of ['Back', 'Elastic', 'Jump']) for (const percent of [10,20,30,40,50]) {
   const family=base+percent, amount=percent/100;
   let soloLow=0, soloHigh=1, pairLow=0, pairHigh=1;
   for (let i=0; i<=10000; i++) {
@@ -69,7 +69,7 @@ for (const base of ['Back', 'Elastic']) for (const percent of [10,20,30,40,50]) 
   for (const peak of [-soloLow,soloHigh-1,-pairLow,pairHigh-1]) assert.ok(Math.abs(peak-amount)<.00002, family+': '+peak);
 }
 assert.ok(ease('ElasticOut',.13474)>1.37);
-console.log('Back/Elastic: 10%-50% solo and paired peaks, symmetry, aliases, and legacy preservation passed.');
+console.log('Back/Elastic/Jump: 10%-50% solo and paired peaks, symmetry, aliases, and legacy preservation passed.');
 
 for (const percent of [10,20,30,40,50]) {
   const family='Bounce'+percent;
@@ -92,3 +92,24 @@ for (const percent of [10,20,30,40,50]) {
 assert.equal(ease('BounceOut',6/11),.75);
 assert.equal(ease('BounceInOut',17/22),.875);
 console.log('Bounce: 10%-50% first rebounds, three diminishing bounces, bounds, mirrors, aliases, and legacy preservation passed.');
+
+for (const percent of [10,20,30,40,50]) {
+  const family='Jump'+percent;
+  for (const paired of [false,true]) {
+    const values=Array.from({length:10001},(_,i)=>composeEase(paired?family:'None',family,(paired?.5:0)+(paired?.5:1)*i/10000));
+    const peaks=[];
+    let landed=false;
+    for (let i=1;i<values.length-1;i++) {
+      if (values[i]>values[i-1]&&values[i]>=values[i+1]) peaks.push(i);
+      if (values[i]>=1) landed=true;
+      if (landed) assert.ok(values[i]>=1-1e-12);
+    }
+    assert.equal(peaks.length,3);
+    peaks.forEach((p,i)=>{
+      assert.ok(Math.abs(values[p]-1-percent/100/4**i)<.00002,JSON.stringify({family,paired,i,value:values[p]}));
+      if (i>0) assert.ok(Math.abs(Math.min(...values.slice(peaks[i-1],p+1))-1)<.001);
+    });
+    for (let i=1;i<=peaks[0];i++) assert.ok(values[i]>=values[i-1]);
+  }
+}
+console.log('Jump: three peaks above the target, diminishing heights, intervening landings and a direct launch passed.');

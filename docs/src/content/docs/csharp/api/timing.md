@@ -28,6 +28,6 @@ See [easing](/csharp/easing/).
 | --- | --- | --- | --- |
 | `Ease` | `EaseType` | `Linear` | Composable In/Out flags or a legacy ease |
 | `BlendType` | `BlendType` | `Hermite` | Method for joining mixed In/Out families |
-| `Blend` | `double` | `0.4` | Centered join width in [0, 1]; zero directly splices the halves |
+| `Blend` | `double` | `0.2` | Centered join width in [0, 1]; zero directly splices the halves |
 | `EaseFunction` | `Func<float, float>?` | `null` | Custom ease that overrides `Ease` |
 | `Curve` | `Curve?` | `null` | Godot curve that overrides `Ease`; set it or `EaseFunction`, not both |

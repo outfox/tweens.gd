@@ -21,7 +21,7 @@ Pass the flags after the duration in any helper, assign them to a definition's
 `ease`, use `with_ease()`, or sample them with `Tweens.Easing.evaluate(ease, t)`.
 Easing arguments accept integers so flags from either side compose naturally.
 `Tweens.InOut` includes every curve family and numbered variant, such as
-`Tweens.InOut.BACK30`, `Tweens.InOut.ELASTIC20`, and `Tweens.InOut.BOUNCE50`.
+`Tweens.InOut.BACK30`, `Tweens.InOut.ELASTIC20`, `Tweens.InOut.BOUNCE50`, and `Tweens.InOut.JUMP40`.
 
 A single selection such as `Tweens.Out.CUBIC` runs that curve over the whole duration.
 `Tweens.In.NONE` and `Tweens.Out.NONE` omit a leg. `Tweens.In.LINEAR` and
@@ -44,14 +44,14 @@ join settings, so those controls are disabled for them.
 In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
 the Sine halves are `0.5 * SineIn(2 * t)` and
 `0.5 + 0.5 * SineOut(2 * t - 1)`. Every pair passes through `(0.5, 0.5)`.
-Each family supplies an InOut half profile. Back and Elastic are calibrated
+Each family supplies an InOut half profile. Back, Elastic, and Jump are calibrated
 to their named overshoot percentage; Bounce uses its first rebound depth.
 Other families keep their conventional profiles, including symmetric
 SmoothStep and SmootherStep.
 
 **Hermite is the default.** It joins the two halves with two cubic segments
-inside a centered window. With width 0.4, progress up to 0.3 follows the In
-half exactly and progress from 0.7 follows the Out half exactly. Inside, the
+inside a centered window. With the default width 0.2, progress up to 0.4 follows the In
+half exactly and progress from 0.6 follows the Out half exactly. Inside, the
 cubics match the values and velocities at both edges and share one velocity
 at the midpoint. No changing crossfade weight contributes extra motion.
 
@@ -74,12 +74,12 @@ right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
 ```
 
 Matching families bypass the join: **Sine | Sine is exactly SineInOut**, and
-Back, Elastic, and Bounce use their calibrated paired profiles directly. Other matching
+Back, Elastic, Bounce, and Jump use their calibrated paired profiles directly. Other matching
 families preserve their conventional InOut curves too.
 
 ## Choose the method and width
 
-Set `blend_type = Tweens.BlendType.HERMITE` and `blend = 0.4` on the tween definition or options.
+Set `blend_type = Tweens.BlendType.HERMITE` and `blend = 0.2` on the tween definition or options.
 The width must be finite and in `[0, 1]`. A smaller window preserves more of
 each original leg; a larger window gives the join more room to reshape them.
 Width zero directly splices the halves and may produce a velocity jump.
@@ -95,7 +95,7 @@ crossfade approach; they can still inherit steep or singular midpoint slopes
 from a family such as Circ. Join settings do not alter a legacy ease, a single
 leg, a matching pair, or a custom function/Curve.
 
-Sample the same configuration with `Tweens.Easing.evaluate(ease, t, Tweens.BlendType.HERMITE, 0.4)`.
+Sample the same configuration with `Tweens.Easing.evaluate(ease, t, Tweens.BlendType.HERMITE, 0.2)`.
 The copy helpers are `with_blend_type()` and `with_blend()`.
 
 Skew warps normalized time **before** the join. A value of 1 leaves time
@@ -116,9 +116,9 @@ See [variations](/gdscript/variations/#change-the-pacing-with-skew).
 | Constant motion | `InOut.LINEAR` |
 
 All selectors above live under `Tweens`. Both sides offer `LINEAR`, `SINE`, `QUAD`,
-`CUBIC`, `QUART`, `QUINT`, `EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`,
+`CUBIC`, `QUART`, `QUINT`, `EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `JUMP`,
 `SMOOTH_STEP`, and `SMOOTHER_STEP`. SmoothStep and SmootherStep are symmetric,
-so their In and Out shapes are identical. Back and Elastic can overshoot.
+so their In and Out shapes are identical. Back, Elastic, and Jump can overshoot.
 Output weights aren't clamped; native property setters still apply their own limits.
 
 Back and Elastic offer **10%, 20%, 30%, 40%, and 50%** peak overshoot:
@@ -142,11 +142,21 @@ and one-sixteenth of the first. `Tweens.In.BOUNCE30` mirrors this motion;
 A mixed pair's join may reshape rebounds inside its blend window.
 Legacy `Tweens.Ease.BOUNCE_OUT` retains its original 25% first rebound.
 
+Jump offers `JUMP10` through `JUMP50`, with `JUMP` aliasing `JUMP10`.
+It rebounds **above the target** in three parabolic arcs. From 0 to 100,
+`Tweens.Out.JUMP30` rises directly to 130, lands at 100, then reaches 107.5 and
+101.875, landing at 100 after each peak. It stays above the target once it
+first reaches it. The numbered percentage sets the first peak; later peaks
+are one-quarter and one-sixteenth as high above the target.
+`Tweens.In.JUMP30` mirrors that motion. `Tweens.InOut.JUMP30` keeps the same 30%
+first-peak height relative to the full tween range in each half. A mixed
+pair's join can reshape peaks inside its blend window.
+
 ## Migrate existing eases
 
 Use `Tweens.In.SINE` for `Tweens.Ease.SINE_IN`, `Tweens.Out.SINE` for
 `Tweens.Ease.SINE_OUT`, and `Tweens.InOut.SINE` for `Tweens.Ease.SINE_IN_OUT`;
-the same naming applies to the other families. Back and Elastic use the new
+the same naming applies to the other families. Back, Elastic, and Bounce use the new
 percentage calibration; other shapes stay the same. Legacy `Tweens.Ease` names and numeric values remain
 available. Do not combine legacy names with flags. New code should use
 `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.

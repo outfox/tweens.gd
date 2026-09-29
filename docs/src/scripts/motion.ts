@@ -70,10 +70,10 @@ export const EASES = {
 export type EaseName = keyof typeof EASES;
 export const ease = (name: EaseName, t: number) => EASES[name](Math.min(1, Math.max(0, t)));
 
-export const FAMILIES = ['Linear', 'Sine', 'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Circ', 'Back', 'Elastic', 'Bounce', 'SmoothStep', 'SmootherStep', 'Back10', 'Back20', 'Back30', 'Back40', 'Back50', 'Elastic10', 'Elastic20', 'Elastic30', 'Elastic40', 'Elastic50', 'Bounce10', 'Bounce20', 'Bounce30', 'Bounce40', 'Bounce50'] as const;
+export const FAMILIES = ['Linear', 'Sine', 'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Circ', 'Back', 'Elastic', 'Bounce', 'SmoothStep', 'SmootherStep', 'Back10', 'Back20', 'Back30', 'Back40', 'Back50', 'Elastic10', 'Elastic20', 'Elastic30', 'Elastic40', 'Elastic50', 'Bounce10', 'Bounce20', 'Bounce30', 'Bounce40', 'Bounce50', 'Jump', 'Jump10', 'Jump20', 'Jump30', 'Jump40', 'Jump50'] as const;
 export type EaseFamily = (typeof FAMILIES)[number];
 export type EaseLeg = EaseFamily | 'None';
-export const canonicalFamily = (family: EaseLeg): EaseLeg => family === 'Back10' ? 'Back' : family === 'Elastic10' ? 'Elastic' : family === 'Bounce10' ? 'Bounce' : family;
+export const canonicalFamily = (family: EaseLeg): EaseLeg => family === 'Back10' ? 'Back' : family === 'Elastic10' ? 'Elastic' : family === 'Bounce10' ? 'Bounce' : family === 'Jump10' ? 'Jump' : family;
 const BACK_SOLO = [1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737];
 const BACK_PAIRED = [2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325];
 const ELASTIC_SOLO_PERIOD = 0.7553423501870573, ELASTIC_PAIR_PERIOD = 0.5074981597799941;
@@ -81,6 +81,8 @@ const ELASTIC_SOLO_KICK = [0, 0.6853132138892408, 1.1091787748281363, 1.46962408
 const ELASTIC_PAIR_KICK = [0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153];
 const BOUNCE_SOLO_ROOT = [.1,.2,.3,.4,.5].map(Math.sqrt);
 const BOUNCE_PAIR_ROOT = [.2,.4,.6,.8,1].map(Math.sqrt);
+const JUMP_SOLO_LAUNCH = [1.1,1.2,1.3,1.4,1.5].map(Math.sqrt);
+const JUMP_PAIR_LAUNCH = [1.2,1.4,1.6,1.8,2].map(Math.sqrt);
 const strengthLevel = (family: EaseLeg) => +(family.match(/\d+$/)?.[0] ?? 10)/10-1;
 const isOvershoot = (family: EaseLeg) => family.startsWith('Back') || family.startsWith('Elastic');
 
@@ -111,9 +113,21 @@ function bounceLegOut(t: number, level: number, paired: boolean): number {
 	return 1-h/16+u*u;
 }
 
+// Launch to the first overshoot, then rebound twice above the target.
+function jumpLegOut(t: number, level: number, paired: boolean): number {
+	if (t === 0 || t === 1) return t;
+	const h = (level+1)*(paired ? .2 : .1), r = (paired ? BOUNCE_PAIR_ROOT : BOUNCE_SOLO_ROOT)[level];
+	const a = (paired ? JUMP_PAIR_LAUNCH : JUMP_SOLO_LAUNCH)[level];
+	let u = t*(a+2.5*r);
+	if (u < a+r) { u -= a; return 1+h-u*u; }
+	if (u < a+2*r) { u -= a+1.5*r; return 1+h/4-u*u; }
+	u -= a+2.25*r;
+	return 1+h/16-u*u;
+}
+
 /** Join half-duration profiles locally; crossfade modes are available for comparison. */
 export type BlendType = 'Hermite' | 'SmoothStep' | 'Linear';
-export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 1, method: BlendType = 'Hermite', width = 0.4): number {
+export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 1, method: BlendType = 'Hermite', width = 0.2): number {
 	if (!['Hermite', 'SmoothStep', 'Linear'].includes(method) || !Number.isFinite(width) || width < 0 || width > 1) throw new RangeError('Invalid easing blend');
 	entry = canonicalFamily(entry); exit = canonicalFamily(exit);
 	const t = Math.min(1, Math.max(0, progress)) ** skew;
@@ -154,6 +168,11 @@ function pairSlope(family: EaseLeg, time: number): number {
 		else if (u >= 1) u -= 1+r;
 		return 2*scale*u;
 	}
+	if (family.startsWith('Jump')) {
+		const r = BOUNCE_PAIR_ROOT[level], a = JUMP_PAIR_LAUNCH[level], scale = a+2.5*r, u = (1-x)*scale;
+		const center = u < a+r ? a : u < a+2*r ? a+1.5*r : a+2.25*r;
+		return 2*scale*(center-u);
+	}
 	switch (family) {
 		case 'Sine': return Math.PI*Math.sin(Math.PI*t)/2;
 		case 'Quad': return 4*t;
@@ -170,6 +189,7 @@ function pairSlope(family: EaseLeg, time: number): number {
 
 export function pairedLegEase(family: EaseLeg, t: number): number {
 	t = Math.min(1, Math.max(0, t));
+	if (family.startsWith('Jump')) return t < .5 ? (1-jumpLegOut(1-2*t, strengthLevel(family), true))/2 : .5+jumpLegOut(2*t-1, strengthLevel(family), true)/2;
 	if (family.startsWith('Bounce')) return t < .5 ? (1-bounceLegOut(1-2*t, strengthLevel(family), true))/2 : .5+bounceLegOut(2*t-1, strengthLevel(family), true)/2;
 	if (isOvershoot(family)) return t < 0.5 ? overshootLeg(family, 'In', 2*t, true)/2 : 0.5+overshootLeg(family, 'Out', 2*t-1, true)/2;
 	if (family === 'None') return t;
@@ -179,6 +199,7 @@ export function pairedLegEase(family: EaseLeg, t: number): number {
 
 export function legEase(family: EaseLeg, direction: 'In' | 'Out', t: number): number {
 	t = Math.min(1, Math.max(0, t));
+	if (family.startsWith('Jump')) return direction === 'In' ? 1-jumpLegOut(1-t, strengthLevel(family), false) : jumpLegOut(t, strengthLevel(family), false);
 	if (family.startsWith('Bounce')) return direction === 'In' ? 1-bounceLegOut(1-t, strengthLevel(family), false) : bounceLegOut(t, strengthLevel(family), false);
 	if (isOvershoot(family)) return overshootLeg(family, direction, Math.min(1, Math.max(0, t)), false);
 	if (family === 'None') return t;

@@ -51,6 +51,17 @@ enum In {
 	ELASTIC30 = 1 << 39,
 	ELASTIC40 = 1 << 40,
 	ELASTIC50 = 1 << 41,
+	BOUNCE10 = BOUNCE,
+	BOUNCE20 = 1 << 50,
+	BOUNCE30 = 1 << 51,
+	BOUNCE40 = 1 << 52,
+	BOUNCE50 = 1 << 53,
+	JUMP = (1 << 58) | (1 << 59),
+	JUMP10 = JUMP,
+	JUMP20 = (1 << 58) | (1 << 60),
+	JUMP30 = (1 << 59) | (1 << 60),
+	JUMP40 = (1 << 58) | (1 << 61),
+	JUMP50 = (1 << 59) | (1 << 61),
 }
 
 ## Select at most one curve per leg. A missing leg leaves the other curve unchanged.
@@ -79,9 +90,20 @@ enum Out {
 	ELASTIC30 = 1 << 47,
 	ELASTIC40 = 1 << 48,
 	ELASTIC50 = 1 << 49,
+	BOUNCE10 = BOUNCE,
+	BOUNCE20 = 1 << 54,
+	BOUNCE30 = 1 << 55,
+	BOUNCE40 = 1 << 56,
+	BOUNCE50 = 1 << 57,
+	JUMP = (1 << 62) | (1 << 63),
+	JUMP10 = JUMP,
+	JUMP20 = (1 << 62) | (1 << 6),
+	JUMP30 = (1 << 63) | (1 << 6),
+	JUMP40 = (1 << 62) | (1 << 7),
+	JUMP50 = (1 << 63) | (1 << 7),
 }
 
-## Matching half-duration legs. Back/Elastic percentages refer to the full tween range.
+## Matching half-duration legs. Back/Elastic/Jump overshoot and Bounce first-rebound depth use the full tween range.
 enum InOut {
 	LINEAR = In.LINEAR | Out.LINEAR,
 	SINE = In.SINE | Out.SINE,
@@ -106,4 +128,15 @@ enum InOut {
 	ELASTIC30 = In.ELASTIC30 | Out.ELASTIC30,
 	ELASTIC40 = In.ELASTIC40 | Out.ELASTIC40,
 	ELASTIC50 = In.ELASTIC50 | Out.ELASTIC50,
+	BOUNCE10 = BOUNCE,
+	BOUNCE20 = In.BOUNCE20 | Out.BOUNCE20,
+	BOUNCE30 = In.BOUNCE30 | Out.BOUNCE30,
+	BOUNCE40 = In.BOUNCE40 | Out.BOUNCE40,
+	BOUNCE50 = In.BOUNCE50 | Out.BOUNCE50,
+	JUMP = In.JUMP | Out.JUMP,
+	JUMP10 = JUMP,
+	JUMP20 = In.JUMP20 | Out.JUMP20,
+	JUMP30 = In.JUMP30 | Out.JUMP30,
+	JUMP40 = In.JUMP40 | Out.JUMP40,
+	JUMP50 = In.JUMP50 | Out.JUMP50,
 }

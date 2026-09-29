@@ -6,49 +6,56 @@
       "out": "Cubic",
       "progress": 0.25,
       "skew": 1,
-      "expected": 0.125
+      "expected": 0.125,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.3,
       "skew": 1,
-      "expected": 0.18
+      "expected": 0.18,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.4,
       "skew": 1,
-      "expected": 0.3175
+      "expected": 0.3175,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 1,
-      "expected": 0.5
+      "expected": 0.5,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.6,
       "skew": 1,
-      "expected": 0.7215
+      "expected": 0.7215,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.7,
       "skew": 1,
-      "expected": 0.892
+      "expected": 0.892,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.75,
       "skew": 1,
-      "expected": 0.9375
+      "expected": 0.9375,
+      "blend": 0.4
     },
     {
       "in": "None",
@@ -69,56 +76,64 @@
       "out": "Sine",
       "progress": 0.5,
       "skew": 1,
-      "expected": 0.5
+      "expected": 0.5,
+      "blend": 0.4
     },
     {
       "in": "Sine",
       "out": "Linear",
       "progress": 0.5,
       "skew": 1,
-      "expected": 0.5
+      "expected": 0.5,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 2,
-      "expected": 0.125
+      "expected": 0.125,
+      "blend": 0.4
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": 0.5
+      "expected": 0.5,
+      "blend": 0.4
     },
     {
       "in": "SmoothStep",
       "out": "Linear",
       "progress": 0.25,
       "skew": 1,
-      "expected": 0.15625
+      "expected": 0.15625,
+      "blend": 0.4
     },
     {
       "in": "Linear",
       "out": "SmoothStep",
       "progress": 0.75,
       "skew": 1,
-      "expected": 0.84375
+      "expected": 0.84375,
+      "blend": 0.4
     },
     {
       "in": "Sine",
       "out": "SmootherStep",
       "progress": 0.75,
       "skew": 1,
-      "expected": 0.896484375
+      "expected": 0.896484375,
+      "blend": 0.4
     },
     {
       "in": "SmootherStep",
       "out": "Cubic",
       "progress": 0.25,
       "skew": 1,
-      "expected": 0.103515625
+      "expected": 0.103515625,
+      "blend": 0.4
     },
     {
       "in": "None",
@@ -257,7 +272,7 @@
       "out": "Expo",
       "progress": 0.4,
       "skew": 1,
-      "expected": 0.11985604367406247,
+      "expected": 0.10109878651093587,
       "blendType": "Hermite",
       "blend": 0.4
     },
@@ -266,7 +281,7 @@
       "out": "Bounce",
       "progress": 0.6,
       "skew": 1,
-      "expected": 0.8801439563259378,
+      "expected": 0.8989012134890643,
       "blendType": "Hermite",
       "blend": 0.4
     },
@@ -1299,6 +1314,1123 @@
       "blendType": "Linear",
       "blend": 0.6,
       "expected": 1.0676058253801521
+    },
+    {
+      "in": "None",
+      "out": "Bounce10",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.9027195659051827
+    },
+    {
+      "in": "Bounce10",
+      "out": "None",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.09728043409481735
+    },
+    {
+      "in": "Bounce10",
+      "out": "Bounce10",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": 0.039287914042481664
+    },
+    {
+      "in": "Bounce10",
+      "out": "Bounce10",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.4670975241575015
+    },
+    {
+      "in": "Bounce10",
+      "out": "Bounce10",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.9607120859575183
+    },
+    {
+      "in": "None",
+      "out": "Bounce20",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.808452035960037
+    },
+    {
+      "in": "Bounce20",
+      "out": "None",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.191547964039963
+    },
+    {
+      "in": "Bounce20",
+      "out": "Bounce20",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": 0.009618156434649139
+    },
+    {
+      "in": "Bounce20",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.4483640563788214
+    },
+    {
+      "in": "Bounce20",
+      "out": "Bounce20",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.9903818435653509
+    },
+    {
+      "in": "None",
+      "out": "Bounce30",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.7410041493954538
+    },
+    {
+      "in": "Bounce30",
+      "out": "None",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.2589958506045462
+    },
+    {
+      "in": "Bounce30",
+      "out": "Bounce30",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": 0.01763104996137771
+    },
+    {
+      "in": "Bounce30",
+      "out": "Bounce30",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.43113911657654813
+    },
+    {
+      "in": "Bounce30",
+      "out": "Bounce30",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.9823689500386223
+    },
+    {
+      "in": "None",
+      "out": "Bounce40",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.6874391318103651
+    },
+    {
+      "in": "Bounce40",
+      "out": "None",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.3125608681896349
+    },
+    {
+      "in": "Bounce40",
+      "out": "Bounce40",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": 0.04058359213500107
+    },
+    {
+      "in": "Bounce40",
+      "out": "Bounce40",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.414695048315003
+    },
+    {
+      "in": "Bounce40",
+      "out": "Bounce40",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.9594164078649989
+    },
+    {
+      "in": "None",
+      "out": "Bounce50",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.6427460325558381
+    },
+    {
+      "in": "Bounce50",
+      "out": "None",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.35725396744416194
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce50",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": 0.06374999999999997
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce50",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.39875000000000005
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce50",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.93625
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.19507037099640562
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.3539620266300803
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.7904148806303184
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.1873561742145096
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.10437182523766028
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.9934639303895643
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.18101058165244224
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.086514507346417
+    },
+    {
+      "in": "Bounce20",
+      "out": "Elastic50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.9838338993861997
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.3294206330349855
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.05196335667352769
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.4500770583649637
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.3394006104062272
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.2124536571247769
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.868649204119476
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.31593019424926916
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.17095754441212363
+    },
+    {
+      "in": "Back40",
+      "out": "Bounce50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.9191831590906974
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.37789815670114013
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.6039642038800469
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.5888113445469998
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.3733767518134127
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.16175472519848494
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.8829415363442312
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.36728286410710714
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.15972115644254287
+    },
+    {
+      "in": "Bounce50",
+      "out": "Bounce20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.8706510407845307
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.09977816686254187
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.27264635083053357
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.7590024929635457
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.09977816686254187
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.27264635083053357
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.7590024929635457
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.09977816686254187
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.27264635083053357
+    },
+    {
+      "in": "Bounce",
+      "out": "Bounce10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.7590024929635457
+    },
+    {
+      "in": "None",
+      "out": "Jump10",
+      "progress": 0.1,
+      "skew": 1,
+      "expected": 0.35199811556599314
+    },
+    {
+      "in": "None",
+      "out": "Jump10",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 1.051119817806481
+    },
+    {
+      "in": "None",
+      "out": "Jump10",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 1.0043742148191637
+    },
+    {
+      "in": "Jump10",
+      "out": "None",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": -0.004374214819163669
+    },
+    {
+      "in": "Jump10",
+      "out": "None",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.4973776696148431
+    },
+    {
+      "in": "Jump10",
+      "out": "Jump10",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.001492346141747647
+    },
+    {
+      "in": "Jump10",
+      "out": "Jump10",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0014923461417475
+    },
+    {
+      "in": "None",
+      "out": "Jump20",
+      "progress": 0.1,
+      "skew": 1,
+      "expected": 0.43595407685048604
+    },
+    {
+      "in": "None",
+      "out": "Jump20",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 1.1901237113388363
+    },
+    {
+      "in": "None",
+      "out": "Jump20",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 1.0387308653543692
+    },
+    {
+      "in": "Jump20",
+      "out": "None",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": -0.038730865354369204
+    },
+    {
+      "in": "Jump20",
+      "out": "None",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.3828150577951448
+    },
+    {
+      "in": "Jump20",
+      "out": "Jump20",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.03062486080160909
+    },
+    {
+      "in": "Jump20",
+      "out": "Jump20",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.030624860801609
+    },
+    {
+      "in": "None",
+      "out": "Jump30",
+      "progress": 0.1,
+      "skew": 1,
+      "expected": 0.5092749099279279
+    },
+    {
+      "in": "None",
+      "out": "Jump30",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 1.299881002301802
+    },
+    {
+      "in": "None",
+      "out": "Jump30",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 1.06865621246997
+    },
+    {
+      "in": "Jump30",
+      "out": "None",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": -0.06865621246996989
+    },
+    {
+      "in": "Jump30",
+      "out": "None",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.28331887760210206
+    },
+    {
+      "in": "Jump30",
+      "out": "Jump30",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.05773469228349526
+    },
+    {
+      "in": "Jump30",
+      "out": "Jump30",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0577346922834954
+    },
+    {
+      "in": "None",
+      "out": "Jump40",
+      "progress": 0.1,
+      "skew": 1,
+      "expected": 0.5777491648096547
+    },
+    {
+      "in": "None",
+      "out": "Jump40",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 1.3963102032265504
+    },
+    {
+      "in": "None",
+      "out": "Jump40",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 1.096562152004023
+    },
+    {
+      "in": "Jump40",
+      "out": "None",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": -0.09656215200402296
+    },
+    {
+      "in": "Jump40",
+      "out": "None",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.19068868318632237
+    },
+    {
+      "in": "Jump40",
+      "out": "Jump40",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.08399999999999996
+    },
+    {
+      "in": "Jump40",
+      "out": "Jump40",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.084
+    },
+    {
+      "in": "None",
+      "out": "Jump50",
+      "progress": 0.1,
+      "skew": 1,
+      "expected": 0.6434614317029974
+    },
+    {
+      "in": "None",
+      "out": "Jump50",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 1.4851439371832424
+    },
+    {
+      "in": "None",
+      "out": "Jump50",
+      "progress": 0.75,
+      "skew": 1,
+      "expected": 1.1233172632095823
+    },
+    {
+      "in": "Jump50",
+      "out": "None",
+      "progress": 0.25,
+      "skew": 1,
+      "expected": -0.12331726320958225
+    },
+    {
+      "in": "Jump50",
+      "out": "None",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 0.10197130508742047
+    },
+    {
+      "in": "Jump50",
+      "out": "Jump50",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.10981601717798217
+    },
+    {
+      "in": "Jump50",
+      "out": "Jump50",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.109816017177982
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.13271419032450693
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.0360396587434709
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.8596163161135029
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.13695339819726055
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.0886168792815464
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.0302618328426307
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.13263106473841482
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.08532352117208444
+    },
+    {
+      "in": "Jump20",
+      "out": "Elastic50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.0398545912974477
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.33562239761199586
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.11980057981865999
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 1.2339332674251764
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.34170310726565173
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.3263679270888337
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.42822745048229
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.3373628769582909
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.33726238235686035
+    },
+    {
+      "in": "Back40",
+      "out": "Jump50",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.416818037220614
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.19832065118843856
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.10899924034994532
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.7254794201130419
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.20818918526547942
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.3162814303967169
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.0015188129048074
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.19515288712218765
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.2659244311719791
+    },
+    {
+      "in": "Jump50",
+      "out": "Bounce20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.0511716855780042
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.09086868546367655
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.031889239688547066
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.9874655081995589
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.09086868546367655
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.031889239688547066
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.9874655081995589
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.09086868546367655
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.031889239688547066
+    },
+    {
+      "in": "Jump",
+      "out": "Jump10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.9874655081995589
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.35,
+      "skew": 1,
+      "expected": 0.245
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.4,
+      "skew": 1,
+      "expected": 0.32
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.45,
+      "skew": 1,
+      "expected": 0.40125
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.5,
+      "skew": 1,
+      "expected": 0.5
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.55,
+      "skew": 1,
+      "expected": 0.62675
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.6,
+      "skew": 1,
+      "expected": 0.744
+    },
+    {
+      "in": "Quad",
+      "out": "Cubic",
+      "progress": 0.65,
+      "skew": 1,
+      "expected": 0.8285
     }
   ]
 }
