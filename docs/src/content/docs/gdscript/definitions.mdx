@@ -1,226 +1,90 @@
 ---
 title: Reusable definitions
-description: Keep motion in shared definitions, share timing and easing with a helper function, vary single starts with with_ methods, and build steps from functions.
+description: Define a motion once, choose its endpoints, and change a copy for one start.
 ---
 
-import Moves from '../../../components/Moves.astro';
 import VaryStart from '../../../components/VaryStart.astro';
 
-A definition is an object that describes one motion. You configure it once and
-start it on any number of nodes. Each start takes a snapshot of it, so when you
-change the definition, the next start picks up the change and tweens already
-playing don't.
+A definition describes a motion independently of the node playing it. Keep one
+definition for motion you reuse; each start gets its own snapshot.
 
-Examples assume the global `Tweens` class and
-run on Godot's main thread, on nodes inside the tree.
+Examples use the global `Tweens` class and run on Godot's main thread with nodes
+inside the tree.
 
-## A complete example
+<span id="a-complete-example" />
+<span id="keep-definitions-in-static-variables" />
 
-A coin pops in, then rises and fades when collected:
+## Define once, start twice
 
-<Moves>
-
-```gdscript title="coin.gd" {"1":3-6} {"2":8-11} {"3":13-14} {"4":16-18}
-extends Sprite2D
-
-static func snappy(definition: TweensGdDefinition) -> TweensGdDefinition:
-	definition.duration = 0.25
-	definition.ease = Tweens.Ease.BACK_OUT
-	return definition
-
-static var pop := snappy(Tweens.scale_2d()) \
-	.with_from(Vector2.ZERO).with_delay(0.5).with_fill(Tweens.Fill.BOTH)
-static var fade := snappy(Tweens.modulate_alpha(0.0))
-static var lift := snappy(Tweens.position_2d_y())
-
-func appear(stagger: float) -> void:
-	Tweens.play(self, pop.with_delta_delay(stagger))
-
-func collect() -> void:
-	var up := lift.with_to(position.y - 40.0)
-	await Tweens.play_all(self, [up, fade]).end
-```
-
-1. **Share timing.** `snappy` sets the duration and easing of every coin motion
-   in one place.
-2. **Keep definitions in static variables.** Each name says what the motion is
-   for. `pop` and `lift` each leave out an endpoint.
-3. **Vary a start.** `pop.with_delta_delay(stagger)` returns a copy that waits
-   `pop`'s half second plus the stagger, and `pop` itself never changes.
-4. **Build steps from functions.** `collect` plays two tweens as one step and
-   waits for it to end.
-
-</Moves>
-
-## Share timing and easing
-
-GDScript definitions have no separate options object. To give several
-definitions the same timing and easing, write a function that sets those fields
-and returns the definition, as `snappy` does. `pop`, `fade`, and `lift` animate
-different properties but pass through the same function, so editing `snappy`
-changes how the whole coin moves.
-
-To override one setting, change it after the shared function has run:
-
-```gdscript
-var slow_pop := snappy(Tweens.scale_2d()).with_duration(0.6)
-```
-
-A definition that shares its timing with nothing else can take it from the
-helper instead: `Tweens.modulate_alpha(0.0, 0.25, Tweens.Ease.BACK_OUT)`.
-
-:::caution[Order matters]
-- Call the shared function first. It assigns every field it sets, so a value
-  you set before calling it is replaced, including a duration or easing passed
-  to the helper.
-- Static variables initialize top to bottom. A static variable that reads
-  another one must be declared after it.
-:::
-
-## Keep definitions in static variables
-
-Declare shared definitions as `static var`. A static variable belongs to the
-script, not to one node, so a single `pop` serves every coin in the level, and
-each start takes its own snapshot of it. The variable name tells a reader what
-the motion is for and its initializer shows how it moves, so adjusting the
-motion means editing one place.
-
-Definitions are mutable objects, unlike C#'s immutable values. Anything that
-holds a reference to `pop` can change it for every later start, so treat shared
-definitions as read-only after setup and vary single starts with
-[copies](#vary-a-start-with-with_).
-
-## Leave out `from_value` or `to_value`
-
-An endpoint left at `null` is read from the property when the tween starts.
-Every named helper takes `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
-delay = 0.0)`, so its `to_value` is `null` until you pass one.
-
-- Leave out `from_value` to start wherever the node is. `lift` rises from the
-  coin's current height.
-- Leave out `to_value` to animate into the current value. `pop` grows from zero
-  to whatever scale the coin has in the scene.
-
-Set both only when the motion must span fixed values. Callback-only definitions,
-such as `Tweens.value()` and `Tweens.float_value()`, have no property to read,
-so their `null` endpoints use `initial_value` instead: the `from` you pass to
-`Tweens.value()`, or zero, transparent black, or identity for the named value
-helpers.
-
-## Move by an offset with `by_value`
-
-Set `by_value` instead of `to_value` to move relative to wherever the property
-is:
+Keep the definition in a `static var` so every instance can use it:
 
 ```gdscript title="crate.gd"
 extends Node2D
 
-static var nudge := Tweens.position_2d(null, 0.2, Tweens.Ease.CUBIC_OUT) \
-	.with_by(Vector2(16, 0))
+static var nudge := Tweens.position_2d(null, 0.2, Tweens.Out.CUBIC) \
+	.with_by(Vector2(80, 0))
 
-func push() -> void:
-	Tweens.play(self, nudge)
+func push_pair(first: Node2D, second: Node2D) -> void:
+	Tweens.play(first, nudge)
+	Tweens.play(second, nudge)
 ```
 
-`by_value` is added to the property's current value on every frame, so other
-changes to the property are kept. Two quick pushes move the crate 32 pixels,
-even while the first is still playing. Physics and your own code can move the
-crate at the same time.
+Both nodes move 80 pixels right from their own positions. Editing `nudge` tunes
+the motion in one place. Starting it returns a separate handle for each node.
 
-- Set `to_value` or `by_value`, not both. A `to_value` tween on the same
-  property still sets it outright.
-- With `from_value`, the tween runs from `from_value` to `from_value` plus
-  `by_value`, like a `to_value` tween.
-- Each repeat adds `by_value` again, so `repeats = 2` moves three times as far.
-  A ping-pong cycle comes back to where it started.
-- A `fill` that doesn't retain the final value takes the offset back out at the
-  end, and keeps other changes.
-- A quaternion offset rotates about the node's own axes, so the tween ends at
-  `start * by_value`.
-- Callback-only definitions add `by_value` to `initial_value`.
+## Leave out `from_value` or `to_value`
+
+Use `to_value` for a destination, or `from_value` for an entrance:
+
+| Definition | Motion |
+| --- | --- |
+| `Tweens.position_2d(Vector2(400, 180), 0.4)` | Move from the current position to a fixed destination |
+| `Tweens.scale_2d(null, 0.4).with_from(Vector2.ZERO)` | Grow from zero to the scale set in the scene |
+
+An endpoint left at `null` is read from the property **when you start the tween**,
+before any delay. Set both endpoints when both must be fixed.
+
+## Move by an offset with `by_value`
+
+`nudge` uses `with_by()` to add an offset. Other changes to the property are kept
+while it plays: two overlapping nudges move a crate 160 pixels in total.
+
+Use either `to_value` or `by_value`. Leave `from_value` out for this additive
+motion; setting it makes the tween run between fixed endpoints, from
+`from_value` to `from_value + by_value`.
 
 ## Vary a start with `with_*()`
 
-Each `with_*()` method returns a copy of the definition with one setting
-changed, like C#'s `with`. Start the copy; the shared definition stays as
-declared, so a delay or target you set for one start doesn't carry over to the
-next:
+In `push_pair`, replace the second call with
+`Tweens.play(second, nudge.with_duration(0.6))`.
 
-- `pop.with_delta_delay(stagger)` staggers coins that share one definition. Each
-  coin waits `pop`'s fixed 0.5 seconds plus its own stagger. `delta_delay` adds
-  to `delay` instead of replacing it, so the half second stays in `pop`, where
-  one edit retimes every coin. `pop` sets `fill = Tweens.Fill.BOTH`, which
-  applies `from_value` during the delay, so waiting coins stay hidden instead of
-  flashing at full size.
-- `lift.with_to(position.y - 40.0)` computes a target from this coin's position.
+`with_duration()` returns a modified copy. The second node takes longer, but
+`nudge` still has a duration of 0.2 seconds. Neither copy changes a tween already
+playing.
 
-There is one method per setting, named after its field: `with_from()`,
-`with_to()`, `with_duration()`, `with_delay()`, `with_ease()`, `with_fill()`,
-`with_repeats()`, `with_ping_pong()`, and so on. They chain, as in
-`pop.with_delay(0.1).with_duration(0.4)`. `copy()` returns an unchanged copy.
+:::caution[Keep shared definitions read-only]
+GDScript definitions are mutable objects. Assigning `nudge.duration = 0.6`
+changes it for every later start. Use a `with_*()` copy to change just one start.
+:::
 
-A value you set with `with_*()` replaces the definition's. To vary it instead,
-such as twice as long or 20% larger, use a factor or delta; see
-[variations](/gdscript/variations/).
-
-Setting a field on the shared definition and starting it also works, because
-`Tweens.play()` snapshots it. The new value then stays on the definition for every
-later start, which is the mistake `with_*()` avoids.
-
-Try it below. **Appear** starts `pop` on six coins, each with its own stagger.
-**Collect** lifts each coin 40 pixels from where it sits. Clear `fill` and press
-**Appear** again to see waiting coins flash at full size.
+**Try it:** change the second node's duration and press **Play both**. Both travel
+the same distance; the first always takes 0.2 seconds.
 
 <VaryStart lang="gdscript" />
 
-## Build steps from functions
+For a duration that scales with the original instead of replacing it, use
+[factors and deltas](/gdscript/variations/).
 
-Wrap named motion in a coroutine. Await each tween to put the steps in order:
+<span id="share-timing-and-easing" />
+<span id="helper-or-property-path" />
+<span id="what-each-start-copies" />
+<span id="when-tweens-compete" />
 
-```gdscript title="chest.gd"
-extends Node2D
+Shared timing, property paths, and copying rules are covered in the
+[definition reference](/gdscript/api/definitions/). See the
+[endpoint reference](/gdscript/api/endpoints/) for repeats, callback values, and
+tweens that compete for one property.
 
-static var wobble := Tweens.rotation_2d(0.15, 0.08).with_ping_pong().with_repeats(2)
-static var burst := Tweens.scale_2d(Vector2(1.3, 1.3), 0.2, Tweens.Ease.BACK_OUT)
+<span id="build-steps-from-functions" />
 
-func open() -> void:
-	await Tweens.play(self, wobble).end
-	await Tweens.play(self, burst).end
-```
-
-`Tweens.play_all(node, [first, second])` plays several definitions on one node as
-one step, as `collect` does above. [Groups and sequences](/gdscript/sequences/)
-covers chaining, staggering, waits, and stopping.
-
-For steps that must stop when interrupted, see
-[cancellation and completion reasons](/gdscript/cancellation/).
-
-## Helper or property path?
-
-Every definition is the same type, whether a named helper or `Tweens.property()`
-created it.
-
-| | Named helper | Property path |
-| --- | --- | --- |
-| Call | `Tweens.position_2d(to, 0.5)` | `Tweens.property(^"position", to, 0.5)` |
-| Checked at start | The target's class and the value's type | That the target has the property |
-| Reaches | The properties in the [helper catalog](/gdscript/nodes/) | Any property on the target, and components such as `position:x` or `region_rect:size:x` |
-
-Paths select a property and its value components on the target itself. They
-can't traverse nodes or cross into another object; pass that object as the
-target instead.
-
-## What each start copies
-
-Starting a definition snapshots its configuration and captures the property's
-current value. Later changes to the definition never reach running playback.
-Callables and the objects they capture stay shared, but `curve` resources are
-duplicated for each start. Each `copy()` and `with_*()` call creates a new
-definition object.
-
-## When tweens compete
-
-Two tweens may animate the same property. Tweens write in the order they were
-started, so each update the one started last wins. Component paths, such as
-`position:x` or `modulate:a`, read the other components on every write, so an x
-tween and a y tween combine.
+Next, [combine motions into groups and sequences](/gdscript/sequences/).

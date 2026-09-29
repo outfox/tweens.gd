@@ -1,6 +1,7 @@
 ---
 title: Custom definitions
 description: The members to override in TweenDefinition, PropertyTween for delegates, the Interpolators helpers, and the class-based definitions.
+tableOfContents: true
 ---
 
 To animate a value the catalog doesn't cover, derive from

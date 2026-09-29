@@ -47,6 +47,8 @@ an owner node that decides when it stops. See [materials](/csharp/materials/).
 | [Creating definitions](/csharp/api/definitions/) | The definition structs, their constructors, and `TweenOptions` |
 | [Endpoints and variations](/csharp/api/endpoints/) | `From`, `To`, `By`, and the factors, deltas, and Skew/Weks that derive variants |
 | [Timing and easing](/csharp/api/timing/) | `Duration`, `Delay`, `Repeats`, ping-pong, `Fill`, and the easing members |
+| [Easing reference](/csharp/api/easing/) | Curve families, composition, calibration, and join methods |
+| [Effect factories](/csharp/api/effects/) | Punch, shake, and breathe functions |
 | [Modes and callbacks](/csharp/api/modes/) | Process, time scale, and pause modes, and `OnAdd` through `OnFinally` |
 | [Enums](/csharp/api/enums/) | Every value of `FillMode`, `TweenState`, `Reason`, and the modes |
 | [Handles](/csharp/api/handles/) | What starting returns: control it, read its state, await it |

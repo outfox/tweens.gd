@@ -1,6 +1,7 @@
 ---
 title: Handles and groups
 description: The members of TweensGdHandle and TweensGdGroup, what starting playback returns, and cancellation tokens for waits.
+tableOfContents: true
 ---
 
 `Tweens.play()` returns a `TweensGdHandle`. `Tweens.play_all()` and

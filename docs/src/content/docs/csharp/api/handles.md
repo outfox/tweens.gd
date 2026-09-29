@@ -1,6 +1,7 @@
 ---
 title: Handles and groups
 description: The members of TweenInstance and Group, the handles that starting playback returns.
+tableOfContents: true
 ---
 
 Starting one definition returns a `TweenInstance<TTarget, TValue>` handle.

@@ -1,6 +1,7 @@
 ---
 title: Endpoints and variations
 description: Where a tween starts and ends, the relative By offset, and the factors, deltas, and skew/weks that derive variants.
+tableOfContents: true
 ---
 
 Where a tween starts and ends, and how a variant derives from those values.
@@ -33,3 +34,32 @@ when the tween starts, each value becomes factor × value + delta. See
 | `delta_delay` | `float` | `0.0` | Then add these seconds, as in a per-start stagger |
 | `skew` | `float` | `1.0` | Forward progress exponent before easing: above 1 starts slower, below 1 faster |
 | `weks` | `float` | `1.0` | Independent exponent for descending ping-pong return progress before easing; set equal to `skew` to retrace |
+
+## Relative offsets
+
+- Set `to_value` or `by_value`, not both. A `to_value` tween on the same
+  property still sets it outright.
+- With `from_value`, the tween runs from `from_value` to `from_value` plus
+  `by_value`, like a `to_value` tween.
+- Each repeat adds `by_value` again, so `repeats = 2` moves three times as far.
+  A ping-pong cycle comes back to where it started.
+- A `fill` that doesn't retain the final value takes the offset back out at the
+  end, and keeps other changes.
+- A quaternion offset rotates about the node's own axes, so the tween ends at
+  `start * by_value`.
+- Callback-only definitions add `by_value` to `initial_value`.
+
+## Callback endpoints
+
+Callback-only definitions,
+such as `Tweens.value()` and `Tweens.float_value()`, have no property to read,
+so their `null` endpoints use `initial_value` instead: the `from` you pass to
+`Tweens.value()`, or zero, transparent black, or identity for the named value
+helpers.
+
+## When tweens compete
+
+Two tweens may animate the same property. Tweens write in the order they were
+started, so each update the one started last wins. Component paths, such as
+`position:x` or `modulate:a`, read the other components on every write, so an x
+tween and a y tween combine.

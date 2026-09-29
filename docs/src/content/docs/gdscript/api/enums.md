@@ -1,6 +1,7 @@
 ---
 title: Constants
 description: Every value of Tweens.Fill, State, Reason, Pause, Process, and Ease, and Tweens.INFINITE, with its meaning.
+tableOfContents: true
 ---
 
 The constants that definitions and handles use, one value per entry.
@@ -105,4 +106,4 @@ flags. [Easing](/gdscript/easing/) includes the composer and migration details.
 ## BlendType
 
 Choose `Tweens.BlendType.HERMITE` (default), `SMOOTH_STEP`, or `LINEAR`.
-The centered join width defaults to 0.2. See [easing](/gdscript/easing/#choose-the-method-and-width).
+The centered join width defaults to 0.2. See [easing](/gdscript/api/easing/#choose-the-method-and-width).

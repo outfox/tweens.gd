@@ -1,6 +1,7 @@
 ---
 title: Groups
 description: The members of Group, which controls and awaits several tweens as one step.
+tableOfContents: true
 ---
 
 A `Group` controls several tweens as one step. `node.Tween(first, second, ...)`

@@ -30,8 +30,10 @@ starter-template text. Preview the production build when checking search.
 
 The site has two parallel learning paths with the same page slugs: `csharp/<slug>` and
 `gdscript/<slug>`. `src/tracks.mjs` lists the path once; `astro.config.mjs` builds the
-sidebar from it, and `src/routeData.ts` shows each page only its own language's path, with
-prev/next following that path. The overview, FAQ, compatibility, and acknowledgements
+sidebar from it, and `src/routeData.ts` shows each page only its own language's track.
+Only the five `LEARN` pages have prev/next links; the homepage uses that same list.
+Guides, Reference, and Project start collapsed, with the current page's group opened.
+The overview, FAQ, compatibility, and acknowledgements
 pages are shared; the sidebar lists all but the overview, which the site title links to.
 
 - Add a page to both paths at the same slug and register it once in `src/tracks.mjs`.
@@ -70,8 +72,13 @@ When this check fails after an upgrade:
 
 ## Content conventions
 
-- Each path is a learning path: start here, write reusable tweens, shape the motion,
-  beyond nodes, then reference. Prev/next links follow it.
+- Learn is a five-step tutorial with a definite endpoint. Guides answer optional questions;
+  Reference contains complete member lists and detailed rules.
+- Teach one concept with one example before adding variations. Move exhaustive rules
+  into reference, and link to them from the guide. Preserve old section anchors when moving content.
+- Keep language twins in the same section order. Give demos one concrete experiment
+  instead of repeating an explanation of every control.
+- Enable `tableOfContents: true` on reference pages with several sections.
 - Each page opens with a one-paragraph lede stating its key idea; the theme sets it apart.
   Pitfalls go in `:::caution` asides so they stand out from the main flow.
 - Annotated examples use Expressive Code line-marker labels (`{"1":3-7}`) inside `<Moves>`,

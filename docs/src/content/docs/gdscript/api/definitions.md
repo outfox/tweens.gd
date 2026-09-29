@@ -1,6 +1,7 @@
 ---
 title: Creating definitions
 description: The GDScript factories and named helpers, the with_ methods that vary a copy, and the fields that choose what a definition animates.
+tableOfContents: true
 ---
 
 A `TweensGdDefinition` describes one motion. It's a mutable object: each start
@@ -58,3 +59,56 @@ Every definition has the same fields, listed by role:
   `fill`, `ease`, and the rest of the timeline.
 - [Modes and callbacks](/gdscript/api/modes/): process, time scale, and pause
   modes, and `on_add` through `on_finally`.
+
+## Share timing and easing
+
+GDScript definitions have no separate options object. To give several
+definitions the same timing and easing, write a function that sets those fields
+and returns the definition:
+
+```gdscript
+static func snappy(definition: TweensGdDefinition) -> TweensGdDefinition:
+	definition.duration = 0.25
+	definition.ease = Tweens.Out.CUBIC
+	return definition
+```
+
+To override one setting, change it after the shared function has run:
+
+```gdscript
+var slow_pop := snappy(Tweens.scale_2d()).with_duration(0.6)
+```
+
+A definition that shares its timing with nothing else can take it from the
+helper instead: `Tweens.modulate_alpha(0.0, 0.25, Tweens.Ease.BACK_OUT)`.
+
+:::caution[Order matters]
+- Call the shared function first. It assigns every field it sets, so a value
+  you set before calling it is replaced, including a duration or easing passed
+  to the helper.
+- Static variables initialize top to bottom. A static variable that reads
+  another one must be declared after it.
+:::
+
+## Helper or property path?
+
+Every definition is the same type, whether a named helper or `Tweens.property()`
+created it.
+
+| | Named helper | Property path |
+| --- | --- | --- |
+| Call | `Tweens.position_2d(to, 0.5)` | `Tweens.property(^"position", to, 0.5)` |
+| Checked at start | The target's class and the value's type | That the target has the property |
+| Reaches | The properties in the [helper catalog](/gdscript/nodes/) | Any property on the target, and components such as `position:x` or `region_rect:size:x` |
+
+Paths select a property and its value components on the target itself. They
+can't traverse nodes or cross into another object; pass that object as the
+target instead.
+
+## What each start copies
+
+Starting a definition snapshots its configuration and captures the property's
+current value. Later changes to the definition never reach running playback.
+Callables and the objects they capture stay shared, but `curve` resources are
+duplicated for each start. Each `copy()` and `with_*()` call creates a new
+definition object.

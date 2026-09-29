@@ -1,6 +1,7 @@
 ---
 title: UI controls
 description: Definitions and shorthand methods for Control, Range, Label, and the other UI classes.
+tableOfContents: true
 ---
 
 Definitions for `Control`, `Range`, and the UI classes that derive from them.

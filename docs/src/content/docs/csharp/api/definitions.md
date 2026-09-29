@@ -1,6 +1,7 @@
 ---
 title: Creating definitions
 description: The built-in C# definition structs, their constructors, shared TweenOptions, and the interfaces that start them.
+tableOfContents: true
 ---
 
 A definition describes one motion. The built-in ones are `readonly record struct`
@@ -39,9 +40,25 @@ Set anything else in an initializer after the arguments:
 [timing, easing](/csharp/api/timing/), and [mode](/csharp/api/modes/) members,
 plus `Skew`, `Weks`, `FactorDuration`, and `DeltaDuration`. Assign it to a
 definition's `Options`, or pass it to a shorthand method. A definition's flat
-members, such as `Duration`, read and write that same value, so assign `Options`
-first in an initializer: a later `Options` assignment replaces every timing
-setting listed before it.
+members, such as `Duration`, read and write that same value.
+
+To override one setting, list it after `Options`. Shorthand methods accept
+options too:
+
+```csharp
+var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
+var slowPop = new Tweens.Scale2D { Options = snappy, Duration = 0.6 };
+sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
+```
+
+:::caution[Order matters]
+- Put `Options` first in an initializer. Assigning it replaces every timing
+  setting listed before it, including a duration or ease passed to the
+  constructor.
+- Declare shared options above the static definitions that use them. Static
+  fields initialize top to bottom, so a definition declared first copies empty
+  options.
+:::
 
 ## Interfaces
 
@@ -60,3 +77,26 @@ Every definition has the same members, listed by role:
   `Ease`, and the rest of the timeline.
 - [Modes and callbacks](/csharp/api/modes/): process, time scale, and pause modes,
   and `OnAdd` through `OnFinally`.
+
+## Definition or shorthand?
+
+Every built-in definition also has a typed shorthand method. Both return the same
+kind of handle.
+
+| | Definition | Shorthand |
+| --- | --- | --- |
+| Call | `sprite.Tween(new Tweens.Position2D { ... })` | `sprite.TweenPosition(to, 0.5)` |
+| Best for | Motion you name, reuse, or tune | One-off motion next to game logic |
+| Configure with | Constructor arguments, an initializer, and `with` | A callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
+
+A shorthand call's duration argument wins over the duration in a `TweenOptions`
+value. Reusable configure callbacks take a `TweenOptionsBuilder`.
+
+## What each start copies
+
+Starting a definition snapshots it and captures the property's current value.
+Later `with` copies never reach running playback. Delegates and the objects they
+capture stay shared, but Godot `Curve` resources are duplicated for each playback.
+
+A `with` copy allocates nothing. Starting boxes the definition once and allocates
+its playback state. After that, nothing is copied per frame.

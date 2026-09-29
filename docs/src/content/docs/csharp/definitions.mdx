@@ -1,233 +1,90 @@
 ---
 title: Reusable definitions
-description: Keep motion in fields, share timing and easing with TweenOptions, vary single starts with `with`, and build steps from methods.
+description: Define a motion once, choose its endpoints, and change a copy for one start.
 ---
 
-import Moves from '../../../components/Moves.astro';
 import VaryStart from '../../../components/VaryStart.astro';
 
-A definition is a value that describes one motion. You write it once and start
-it on any number of nodes. Each start takes its own copy, so when you change the
-definition, the next start picks up the change and tweens already playing don't.
+A definition describes a motion independently of the node playing it. Keep one
+definition for motion you reuse; each start gets its own snapshot.
 
-Examples assume `using Godot;` and `using tweens.gd;`, plus
-`System.Threading.Tasks` if implicit usings are off, and run on Godot's main thread.
+Examples assume `using Godot;` and `using tweens.gd;`, and run on Godot's main
+thread with nodes inside the tree.
 
-## A complete example
+<span id="a-complete-example" />
+<span id="keep-definitions-in-fields" />
 
-A coin pops in, then rises and fades when collected:
+## Define once, start twice
 
-<Moves>
-
-```csharp title="Coin.cs" {"1":3-7} {"2":9-21} {"3":23} {"4":25-29}
-public partial class Coin : Sprite2D
-{
-    static readonly TweenOptions Snappy = new()
-    {
-        Duration = 0.25,
-        Ease = EaseType.BackOut,
-    };
-
-    static readonly Tweens.Scale2D Pop = new()
-    {
-        Options = Snappy,
-        From = Vector2.Zero,
-        Delay = 0.5,
-        Fill = FillMode.Both,
-    };
-    static readonly Tweens.ModulateAlpha Fade = new()
-    {
-        Options = Snappy,
-        To = 0,
-    };
-    static readonly Tweens.Position2DY Lift = new() { Options = Snappy };
-
-    public void Appear(double stagger) => this.Tween(Pop with { DeltaDelay = stagger });
-
-    public async Task Collect()
-    {
-        var step = this.Tween(Lift with { To = Position.Y - 40 }, Fade);
-        await step.End;
-    }
-}
-```
-
-1. **Share options.** One `TweenOptions` value sets the timing and easing of
-   every coin motion.
-2. **Keep definitions in fields.** Each field's name says what the motion is
-   for. `Pop` and `Lift` each leave out an endpoint.
-3. **Vary a start.** Each call to `Appear` adds its own stagger to `Pop`'s
-   half-second delay through `with`, and `Pop` itself never changes.
-4. **Build steps from methods.** `Collect` plays two tweens as one step and
-   waits for it to end.
-
-</Moves>
-
-## Share timing and easing
-
-`TweenOptions` holds timing and easing without a property or endpoints. Assign
-it with `Options = Snappy`. `Pop`, `Fade`, and `Lift` animate different
-properties but share its duration and ease, so editing `Snappy` changes how the
-whole coin moves.
-
-To override one setting, list it after `Options`. Shorthand methods accept
-options too:
-
-```csharp
-var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
-var slowPop = new Tweens.Scale2D { Options = snappy, Duration = 0.6 };
-sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
-```
-
-A definition that shares its timing with nothing else can take it from the
-constructor instead: `new Tweens.ModulateAlpha(0, 0.25, EaseType.BackOut)`. The
-arguments are `(to, duration, ease, delay)`, and all of them are optional.
-
-:::caution[Order matters]
-- Put `Options` first in an initializer. Assigning it replaces every timing
-  setting listed before it, including a duration or ease passed to the
-  constructor.
-- Declare shared options above the static definitions that use them. Static
-  fields initialize top to bottom, so a definition declared first copies empty
-  options.
-:::
-
-## Keep definitions in fields
-
-Declare definitions as `static readonly` fields. The field name tells a reader
-what the motion is for and the initializer shows how it moves, so adjusting the
-motion means editing one declaration.
-
-Built-in definitions are immutable `readonly record struct` values in the root
-`Tweens` namespace. One field can serve every coin in the level, because each
-start takes its own copy.
-
-## Leave out `From` or `To`
-
-An omitted `From` or `To` is read from the property when the tween starts.
-
-- Omit `From` to start wherever the node is. `Lift` rises from the coin's
-  current height.
-- Omit `To` to animate into the current value. `Pop` grows from zero to whatever
-  scale the coin has in the scene.
-
-Set both only when the motion must span fixed values. Callback value tweens such
-as `Tweens.Float` have no property to read, so their omitted endpoints fall back
-to zero, transparent black, or identity.
-
-## Move by an offset with `By`
-
-Set `By` instead of `To` to move relative to wherever the property is:
+Keep the definition in a `static readonly` field so every instance can use it:
 
 ```csharp title="Crate.cs"
 public partial class Crate : Node2D
 {
     static readonly Tweens.Position2D Nudge = new()
     {
-        By = new Vector2(16, 0),
+        By = new Vector2(80, 0),
         Duration = 0.2,
-        Ease = EaseType.CubicOut,
+        Ease = Out.Cubic,
     };
 
-    public void Push() => this.Tween(Nudge);
-}
-```
-
-`By` is added to the property's current value on every frame, so other changes
-to the property are kept. Two quick pushes move the crate 32 pixels, even while
-the first is still playing. Physics and your own code can move the crate at the
-same time.
-
-- Set `To` or `By`, not both. A `To` tween on the same property still sets it
-  outright.
-- With `From`, the tween runs from `From` to `From` plus `By`, like a `To` tween.
-- Each repeat adds `By` again, so `Repeats = 2` moves three times as far. A
-  ping-pong cycle comes back to where it started.
-- A `Fill` that doesn't retain the final value takes the offset back out at the
-  end, and keeps other changes.
-- A quaternion offset rotates about the node's own axes, so the tween ends at
-  `start * By`.
-- Callback value tweens such as `Tweens.Float` add `By` to their start value.
-
-## Vary a start with `with`
-
-`with` copies a definition and changes only the properties you list. The field
-itself stays as declared, so a delay or target you set for one start doesn't
-carry over to the next:
-
-- `Pop with { DeltaDelay = stagger }` staggers coins that share one definition.
-  Each coin waits `Pop`'s fixed 0.5 seconds plus its own stagger. `DeltaDelay`
-  adds to `Delay` instead of replacing it, so the half second stays in `Pop`,
-  where one edit retimes every coin. `Fill = FillMode.Both` applies `From` during
-  the delay, so waiting coins stay hidden instead of flashing at full size.
-- `Lift with { To = Position.Y - 40 }` computes a target from this coin's position.
-
-`with` works on `TweenOptions` too, as in `Snappy with { Ease = EaseType.CubicOut }`.
-
-A value you set with `with` replaces the definition's. To vary it instead, such
-as twice as long or 20% larger, use a factor or delta; see
-[variations](/csharp/variations/).
-
-Try it below. **Appear** starts `Pop` on six coins, each with its own stagger.
-**Collect** lifts each coin 40 pixels from where it sits. Clear `Fill` and press
-**Appear** again to see waiting coins flash at full size.
-
-<VaryStart />
-
-## Build steps from methods
-
-Wrap named motion in an async method. Await each tween to put the steps in order:
-
-```csharp title="Chest.cs"
-public partial class Chest : Node2D
-{
-    static readonly Tweens.Rotation2D Wobble = new(0.15f, 0.08)
+    public void PushPair(Node2D first, Node2D second)
     {
-        UsePingPong = true,
-        Repeats = 2,
-    };
-    static readonly Tweens.Scale2D Burst = new(new Vector2(1.3f, 1.3f), 0.2, EaseType.BackOut);
-
-    public async Task Open()
-    {
-        await this.Tween(Wobble).End;
-        await this.Tween(Burst).End;
+        first.Tween(Nudge);
+        second.Tween(Nudge);
     }
 }
 ```
 
-`node.Tween(first, second)` plays several definitions as one step, as `Collect`
-does above. [Sequences](/csharp/sequences/) covers chaining, staggering, waits,
-and stopping.
+Both nodes move 80 pixels right from their own positions. Editing `Nudge` tunes
+the motion in one place. Starting it returns a separate handle for each node.
 
-For steps that must stop when interrupted, see
-[cancellation and completion reasons](/csharp/cancellation/).
+## Leave out `From` or `To`
 
-## Definition or shorthand?
+Use `To` for a destination, or `From` for an entrance:
 
-Every built-in definition also has a typed shorthand method. Both return the same
-kind of handle.
+| Definition | Motion |
+| --- | --- |
+| `new Tweens.Position2D { To = new Vector2(400, 180), Duration = 0.4 }` | Move from the current position to a fixed destination |
+| `new Tweens.Scale2D { From = Vector2.Zero, Duration = 0.4 }` | Grow from zero to the scale set in the scene |
 
-| | Definition | Shorthand |
-| --- | --- | --- |
-| Call | `sprite.Tween(new Tweens.Position2D { ... })` | `sprite.TweenPosition(to, 0.5)` |
-| Best for | Motion you name, reuse, or tune | One-off motion next to game logic |
-| Configure with | Constructor arguments, an initializer, and `with` | A callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
+An omitted endpoint is read from the property **when you start the tween**, before
+any delay. Set both endpoints when both must be fixed.
 
-A shorthand call's duration argument wins over the duration in a `TweenOptions`
-value. Reusable configure callbacks take a `TweenOptionsBuilder`.
+## Move by an offset with `By`
 
-## What each start copies
+`Nudge` uses `By` to add an offset. Other changes to the property are kept while
+it plays: two overlapping nudges move a crate 160 pixels in total.
 
-Starting a definition snapshots it and captures the property's current value.
-Later `with` copies never reach running playback. Delegates and the objects they
-capture stay shared, but Godot `Curve` resources are duplicated for each playback.
+Use either `To` or `By`. Leave `From` out for this additive motion; setting it
+makes the tween run between fixed endpoints, from `From` to `From + By`.
 
-A `with` copy allocates nothing. Starting boxes the definition once and allocates
-its playback state. After that, nothing is copied per frame.
+## Vary a start with `with`
 
-## When tweens compete
+In `PushPair`, replace the second call with
+`second.Tween(Nudge with { Duration = 0.6 });`.
 
-Two tweens may animate the same property. Each frame, the one started last wins.
-Axis and alpha adapters, such as `Tweens.Position2DX` and `Tweens.ModulateAlpha`,
-read the other components on every write, so an X tween and a Y tween combine.
+`with` creates a modified value. The second node takes longer, but `Nudge` still
+has a duration of 0.2 seconds. Neither copy changes a tween already playing.
+
+**Try it:** change the second node's duration and press **Play both**. Both travel
+the same distance; the first always takes 0.2 seconds.
+
+<VaryStart />
+
+For a duration that scales with the original instead of replacing it, use
+[factors and deltas](/csharp/variations/).
+
+<span id="share-timing-and-easing" />
+<span id="definition-or-shorthand" />
+<span id="what-each-start-copies" />
+<span id="when-tweens-compete" />
+
+Shared options, shorthand calls, and copying rules are covered in the
+[definition reference](/csharp/api/definitions/). See the
+[endpoint reference](/csharp/api/endpoints/) for repeats, callback values, and
+tweens that compete for one property.
+
+<span id="build-steps-from-methods" />
+
+Next, [combine motions into sequences](/csharp/sequences/).

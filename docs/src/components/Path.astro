@@ -1,23 +1,24 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
-import { LANGS } from '../tracks.mjs';
+import { LANGS, LEARN } from '../tracks.mjs';
 
 interface Props {
 	lang: 'csharp' | 'gdscript';
 }
 const { lang } = Astro.props;
 const label = LANGS[lang].label;
-const steps = [
-	{
-		slug: 'installation',
-		title: 'Install',
-		text: lang === 'csharp' ? 'Add the C# library to your Godot project.' : 'Copy the addon into your Godot project.',
-	},
-	{ slug: 'quickstart', title: 'Your first tween', text: 'Move a sprite, then fade it out.' },
-	{ slug: 'definitions', title: 'Definitions', text: 'Name motion once and reuse it everywhere.' },
-	{ slug: 'sequences', title: 'Sequences', text: 'Chain, group, and stagger steps.' },
-	{ slug: 'playback', title: 'Control & completion', text: 'Pause, cancel, and handle every ending.' },
-];
+const descriptions: Record<string, string> = {
+	installation: lang === 'csharp' ? 'Add the C# library to your Godot project.' : 'Copy the addon into your Godot project.',
+	quickstart: 'Move a sprite, then fade it out.',
+	definitions: 'Name motion once and reuse it everywhere.',
+	sequences: 'Chain, group, and stagger steps.',
+	playback: 'Pause, cancel, and handle every ending.',
+};
+const steps = LEARN.map((page) => ({
+	slug: page.slug,
+	title: page[lang] ?? page.label,
+	text: descriptions[page.slug],
+}));
 ---
 
 <nav class="path not-content tw-wide" aria-label={`${label} tutorial`}>

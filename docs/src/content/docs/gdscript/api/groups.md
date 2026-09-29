@@ -1,6 +1,7 @@
 ---
 title: Groups
 description: The members of TweensGdGroup, which controls and awaits several tweens as one step.
+tableOfContents: true
 ---
 
 A `TweensGdGroup` controls several tweens as one step. `Tweens.play_all()` returns

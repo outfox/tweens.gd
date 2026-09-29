@@ -1,6 +1,7 @@
 ---
 title: Animation and audio
 description: Definitions and shorthand methods for AnimationPlayer and the audio stream players.
+tableOfContents: true
 ---
 
 Definitions for `AnimationPlayer` and the audio stream players.

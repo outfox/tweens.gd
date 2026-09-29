@@ -1,4 +1,4 @@
-// The site runs two parallel learning paths, one per language, with the same page slugs under /csharp/ and /gdscript/.
+// Two language tracks share page slugs. Only Learn is sequential; Guides and Reference are optional.
 // astro.config.mjs builds the sidebar from this list; the route middleware, the language switch, and the section art
 // read it too, so a page and its twin always sit at the same place in each path.
 
@@ -11,72 +11,65 @@ export const LANGS = {
  *  An entry with `pages` instead of a `slug` is a nested sidebar group. */
 export const PATH = [
 	{
-		label: 'Start here',
-		art: 'dock',
+		label: 'Learn',
+		art: 'hop',
 		pages: [
 			{ slug: 'installation', label: 'Install' },
 			{ slug: 'quickstart', label: 'Your first tween' },
-		],
-	},
-	{
-		label: 'Write reusable tweens',
-		art: 'hop',
-		pages: [
 			{ slug: 'definitions', label: 'Definitions' },
 			{ slug: 'sequences', label: 'Sequences', gdscript: 'Groups & sequences' },
 			{ slug: 'playback', label: 'Control & completion' },
-			{ slug: 'cancellation', label: 'Cancellation & reasons' },
 		],
 	},
 	{
-		label: 'Shape the motion',
+		label: 'Guides',
 		art: 'curve',
+		collapsed: true,
 		pages: [
 			{ slug: 'easing', label: 'Easing' },
 			{ slug: 'timing', label: 'Timing & loops' },
 			{ slug: 'variations', label: 'Variations' },
 			{ slug: 'lifetime', label: 'Lifetime & ownership' },
-		],
-	},
-	{
-		label: 'Beyond nodes',
-		art: 'catalog',
-		pages: [
+			{ slug: 'cancellation', label: 'Cancellation & reasons' },
 			{ slug: 'materials', label: 'Materials' },
 			{ slug: 'shaders', label: 'Shader uniforms' },
 			{ slug: 'custom-tweens', label: 'Custom tweens', gdscript: 'Custom adapters' },
 		],
 	},
 	{
-		label: 'Core API',
+		label: 'Reference',
 		art: 'catalog',
+		collapsed: true,
 		pages: [
-			{ slug: 'api', label: 'Overview' },
-			{ slug: 'api/definitions', label: 'Creating definitions' },
-			{ slug: 'api/endpoints', label: 'Endpoints & variations' },
-			{ slug: 'api/timing', label: 'Timing & easing' },
-			{ slug: 'api/modes', label: 'Modes & callbacks' },
-			{ slug: 'api/enums', label: 'Enums', gdscript: 'Constants' },
-			{ slug: 'api/handles', label: 'Handles' },
-			{ slug: 'api/groups', label: 'Groups' },
-			{ slug: 'api/scheduler', label: 'Scheduler' },
-			{ slug: 'api/custom', label: 'Custom definitions', gdscript: 'Adapters' },
-		],
-	},
-	{
-		label: 'Catalog',
-		art: 'catalog',
-		pages: [
-			{ slug: 'nodes', label: 'Overview' },
-			{ slug: 'nodes/2d', label: '2D nodes' },
-			{ slug: 'nodes/3d', label: '3D nodes' },
-			{ slug: 'nodes/ui', label: 'UI controls' },
-			{ slug: 'nodes/materials', label: 'Material properties' },
-			{ slug: 'nodes/audio', label: 'Animation & audio' },
-			{ slug: 'nodes/values', label: 'Callback values' },
+			{ label: 'Core API', pages: [
+				{ slug: 'api', label: 'Overview' },
+				{ slug: 'api/definitions', label: 'Creating definitions' },
+				{ slug: 'api/endpoints', label: 'Endpoints & variations' },
+				{ slug: 'api/timing', label: 'Timing & easing' },
+				{ slug: 'api/easing', label: 'Easing reference' },
+				{ slug: 'api/effects', label: 'Effect factories' },
+				{ slug: 'api/modes', label: 'Modes & callbacks' },
+				{ slug: 'api/enums', label: 'Enums', gdscript: 'Constants' },
+				{ slug: 'api/handles', label: 'Handles' },
+				{ slug: 'api/groups', label: 'Groups' },
+				{ slug: 'api/scheduler', label: 'Scheduler' },
+				{ slug: 'api/custom', label: 'Custom definitions', gdscript: 'Adapters' },
+			] },
+			{ label: 'Property catalog', pages: [
+				{ slug: 'nodes', label: 'Overview' },
+				{ slug: 'nodes/2d', label: '2D nodes' },
+				{ slug: 'nodes/3d', label: '3D nodes' },
+				{ slug: 'nodes/ui', label: 'UI controls' },
+				{ slug: 'nodes/materials', label: 'Material properties' },
+				{ slug: 'nodes/audio', label: 'Animation & audio' },
+				{ slug: 'nodes/values', label: 'Callback values' },
+			] },
 		],
 	},
 ];
+
+/** Only these pages form the sequential tutorial, also shown on the homepage. */
+export const LEARN = PATH[0].pages;
 
 /** Pages that belong to neither language, listed under Project. The overview is reached from the site title. */
 export const SHARED = [
@@ -103,7 +96,7 @@ export const firstSlug = PATH[0].pages[0].slug;
 const items = (pages, lang) =>
 	pages.map((page) =>
 		page.pages
-			? { label: page[lang] ?? page.label, items: items(page.pages, lang) }
+			? { label: page[lang] ?? page.label, collapsed: true, items: items(page.pages, lang) }
 			: { label: page[lang] ?? page.label, slug: `${lang}/${page.slug}` },
 	);
 
@@ -112,9 +105,9 @@ export const sidebar = () => [
 	...Object.entries(LANGS).map(([lang, { label, status }]) => ({
 		label,
 		...(status && { badge: { text: status, variant: 'note' } }),
-		items: PATH.map((group) => ({ label: group.label, items: items(group.pages, lang) })),
+		items: PATH.map((group) => ({ label: group.label, collapsed: group.collapsed ?? false, items: items(group.pages, lang) })),
 	})),
-	{ label: SHARED_LABEL, items: SHARED.map(({ slug, label }) => ({ label, slug })) },
+	{ label: SHARED_LABEL, collapsed: true, items: SHARED.map(({ slug, label }) => ({ label, slug })) },
 ];
 
 /** Old single-path URLs, kept working after the split. */

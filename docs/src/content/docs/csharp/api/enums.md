@@ -1,6 +1,7 @@
 ---
 title: Enums
 description: Every value of FillMode, TweenState, Reason, TweenPauseMode, TweenProcessMode, and EaseType, with its meaning.
+tableOfContents: true
 ---
 
 The enums that definitions and handles use, one value per entry.
@@ -102,4 +103,4 @@ flags. [Easing](/csharp/easing/) includes the composer and migration details.
 ## BlendType
 
 Choose `Hermite` (default), `SmoothStep`, or `Linear`.
-The centered join width defaults to 0.2. See [easing](/csharp/easing/#choose-the-method-and-width).
+The centered join width defaults to 0.2. See [easing](/csharp/api/easing/#choose-the-method-and-width).

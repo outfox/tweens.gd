@@ -1,289 +1,76 @@
 ---
 title: Easing
-description: Compose independent In and Out curves, choose the join method and width, and tune duration and skew.
+description: Choose how motion accelerates, compare curves, and combine a gentle start with a different finish.
 ---
 
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
-Choose how a tween starts and how it finishes independently. Combine one
-`Tweens.In` curve and one `Tweens.Out` curve with `|`, or choose a matching pair
-with `Tweens.InOut`. Duration controls how long it takes; skew changes when the motion happens.
+Easing changes how speed varies during a tween. Start with `Tweens.Out.CUBIC` for a
+motion that slows into place; duration still controls how long it takes.
 
-## Compose an ease
-
-```gdscript
-var move := Tweens.position_2d_x(300.0, 1.2, Tweens.In.SINE | Tweens.Out.CUBIC)
-Tweens.play(sprite, move)
-```
-
-`Tweens.InOut.SINE` is exactly `Tweens.In.SINE | Tweens.Out.SINE`.
-Pass the flags after the duration in any helper, assign them to a definition's
-`ease`, use `with_ease()`, or sample them with `Tweens.Easing.evaluate(ease, t)`.
-Easing arguments accept integers so flags from either side compose naturally.
-`Tweens.InOut` includes every curve family and numbered variant, such as
-`Tweens.InOut.BACK30`, `Tweens.InOut.ELASTIC20`, `Tweens.InOut.BOUNCE50`, and `Tweens.InOut.JUMP40`.
-
-A single selection such as `Tweens.Out.CUBIC` runs that curve over the whole duration.
-`Tweens.In.NONE` and `Tweens.Out.NONE` omit a leg. `Tweens.In.LINEAR` and
-`Tweens.Out.LINEAR` explicitly select a straight line for that side of a blend;
-no selections means linear motion. Choose at most one curve from each side.
-Multiple different In flags or multiple different Out flags are rejected.
-
-## Compare the curves
-
-<EasingPlayground lang="gdscript" />
-
-The amber and blue lines show the original In and Out halves. The green line
-shows their joined result; shading marks the adjustable join window after skew.
-The velocity plot reveals changes in speed and direction. Compare methods,
-scrub progress, or play the motion. Matching families and single legs ignore
-join settings, so those controls are disabled for them.
-
-## How the join works
-
-In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
-the Sine halves are `0.5 * SineIn(2 * t)` and
-`0.5 + 0.5 * SineOut(2 * t - 1)`. Every pair passes through `(0.5, 0.5)`.
-Each family supplies an InOut half profile. Back, Elastic, and Jump are calibrated
-to their named overshoot percentage; Bounce uses its first rebound depth.
-Other families keep their conventional profiles, including symmetric
-SmoothStep and SmootherStep.
-
-**Hermite is the default.** It joins the two halves with two cubic segments
-inside a centered window. With the default width 0.2, progress up to 0.4 follows the In
-half exactly and progress from 0.6 follows the Out half exactly. Inside, the
-cubics match the values and velocities at both edges and share one velocity
-at the midpoint. No changing crossfade weight contributes extra motion.
-
-The midpoint velocity is solved from equal acceleration between the cubics,
-then limited to prevent new reversals when the selected families are monotone.
-This gives a continuous velocity across the join at regular points of the
-source curves. Acceleration can change at the outer edges. Authored bounce
-corners and overshoot outside the window remain part of the selected curves.
-
-For a window half-width `h`, edge values `y0, y1`, and edge velocities
-`v0, v1`, the construction is:
-
-```text
-d0 = (0.5 - y0) / h
-d1 = (y1 - 0.5) / h
-midVelocity = clamp((3 * (d0 + d1) - v0 - v1) / 4,
-                    0, 3 * max(0, min(d0, d1)))
-left cubic:  (0.5 - h, y0, v0) -> (0.5, 0.5, midVelocity)
-right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
-```
-
-Matching families bypass the join: **Sine | Sine is exactly SineInOut**, and
-Back, Elastic, Bounce, and Jump use their calibrated paired profiles directly. Other matching
-families preserve their conventional InOut curves too.
-
-## Choose the method and width
-
-Set `blend_type = Tweens.BlendType.HERMITE` and `blend = 0.2` on the tween definition or options.
-The width must be finite and in `[0, 1]`. A smaller window preserves more of
-each original leg; a larger window gives the join more room to reshape them.
-Width zero directly splices the halves and may produce a velocity jump.
-
-| Method | Behavior |
-| --- | --- |
-| Hermite | Local cubic join with matched velocity; the default |
-| SmoothStep | Crossfades the two complete family InOut profiles with `u²(3 − 2u)` |
-| Linear | Crossfades those profiles with `u`; velocity may jump at the window edges |
-
-All methods preserve the midpoint. SmoothStep and Linear let you compare the
-crossfade approach; they can still inherit steep or singular midpoint slopes
-from a family such as Circ. Join settings do not alter a legacy ease, a single
-leg, a matching pair, or a custom function/Curve.
-
-Sample the same configuration with `Tweens.Easing.evaluate(ease, t, Tweens.BlendType.HERMITE, 0.2)`.
-The copy helpers are `with_blend_type()` and `with_blend()`.
-
-Skew warps normalized time **before** the join. A value of 1 leaves time
-unchanged; values above 1 delay motion, and values between 0 and 1 bring it
-forward. Weks independently warps the ping-pong return. In and Out shape each
-traversal; they do not mean forward and ping-pong return.
-See [variations](/gdscript/variations/#change-the-pacing-with-skew).
+Examples use the global `Tweens` class, with an in-tree `Sprite2D`
+named `sprite` on Godot's main thread.
 
 ## Choose a family
 
+```gdscript
+var move := Tweens.position_2d_x(300.0, 0.6, Tweens.Out.CUBIC)
+Tweens.play(sprite, move)
+```
+
 | Motion | Try |
 | --- | --- |
-| Arriving, settling into place | `Out.CUBIC`, `Out.QUART` |
-| Leaving the screen | `In.CUBIC`, `In.QUAD` |
-| Moving between resting spots | `InOut.SINE`, `InOut.SMOOTHER_STEP` |
-| Winding up, then bouncing into place | `In.BACK \| Out.BOUNCE` |
-| A gentle start with a spring finish | `In.SINE \| Out.ELASTIC` |
-| Constant motion | `InOut.LINEAR` |
+| Arrive and settle | `Tweens.Out.CUBIC` |
+| Accelerate away | `Tweens.In.CUBIC` |
+| Move between resting positions | `Tweens.InOut.SINE` |
+| Spring past the target, then settle | `Tweens.Out.ELASTIC30` |
+| Keep a constant speed | `Tweens.InOut.LINEAR` |
 
-All selectors above live under `Tweens`. Both sides offer `LINEAR`, `SINE`, `QUAD`,
-`CUBIC`, `QUART`, `QUINT`, `EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `JUMP`,
-`SMOOTH_STEP`, and `SMOOTHER_STEP`. SmoothStep and SmootherStep are symmetric,
-so their In and Out shapes are identical. Back, Elastic, and Jump can overshoot.
-Output weights aren't clamped; native property setters still apply their own limits.
+`In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
+family's start and finish. These describe each traversal, not the forward and
+return legs of ping-pong.
 
-Back and Elastic offer **10%, 20%, 30%, 40%, and 50%** peak overshoot:
-`BACK10` through `BACK50`, and `ELASTIC10` through `ELASTIC50`.
-`BACK` aliases `BACK10`; `ELASTIC` aliases `ELASTIC10`.
-Every variant is available in `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
-For example, use `Tweens.In.BACK20 | Tweens.Out.ELASTIC40` or `Tweens.InOut.ELASTIC30`.
+## Compare the curves
 
-The percentage measures overshoot relative to the **full tween range**, for a
-single leg or a matching pair. An Out tween from 0 to 100 with `ELASTIC30`
-peaks at 130; its In counterpart dips to -30. `InOut.ELASTIC30` reaches both
-extremes. A mixed pair's join can reshape overshoot inside its blend window.
-Legacy `Tweens.Ease` curves keep their original shapes.
+**Try it:** play **Sine in & out**, then **Spring finish**. Watch how the spring
+passes its destination before settling. The generated code follows your choices.
 
-Bounce offers `BOUNCE10` through `BOUNCE50`, with `BOUNCE` aliasing `BOUNCE10`.
-The percentage is the **first rebound's depth** within the full tween range.
-A tween from 0 to 100 with `Tweens.Out.BOUNCE30` first reaches 100, rebounds to
-70, then settles through two smaller bounces. Their depths are one-quarter
-and one-sixteenth of the first. `Tweens.In.BOUNCE30` mirrors this motion;
-`Tweens.InOut.BOUNCE30` retains the 30-unit rebound depth in each half.
-A mixed pair's join may reshape rebounds inside its blend window.
-Legacy `Tweens.Ease.BOUNCE_OUT` retains its original 25% first rebound.
+<EasingPlayground lang="gdscript" />
 
-Jump offers `JUMP10` through `JUMP50`, with `JUMP` aliasing `JUMP10`.
-It rebounds **above the target** in three parabolic arcs. From 0 to 100,
-`Tweens.Out.JUMP30` rises directly to 130, lands at 100, then reaches 107.5 and
-101.875, landing at 100 after each peak. It stays above the target once it
-first reaches it. The numbered percentage sets the first peak; later peaks
-are one-quarter and one-sixteenth as high above the target.
-`Tweens.In.JUMP30` mirrors that motion. `Tweens.InOut.JUMP30` keeps the same 30%
-first-peak height relative to the full tween range in each half. A mixed
-pair's join can reshape peaks inside its blend window.
+## Compose an ease
 
-## Migrate existing eases
+Combine one In family and one Out family with `|`: `Tweens.In.SINE | Tweens.Out.CUBIC` starts gently
+and finishes with Cubic. Choose at most one from each side. A single selection
+runs over the whole duration; a matching pair is the same as `InOut`.
 
-Use `Tweens.In.SINE` for `Tweens.Ease.SINE_IN`, `Tweens.Out.SINE` for
-`Tweens.Ease.SINE_OUT`, and `Tweens.InOut.SINE` for `Tweens.Ease.SINE_IN_OUT`;
-the same naming applies to the other families. Back, Elastic, and Bounce use the new
-percentage calibration; other shapes stay the same. Legacy `Tweens.Ease` names and numeric values remain
-available. Do not combine legacy names with flags. New code should use
-`Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
+Mixed families use a smooth Hermite join by default. Most motions need no
+adjustment. `blend` sets the join width from 0 to 1; a smaller width preserves
+more of the original halves. Matching pairs and single curves ignore it.
+
+<span id="choose-the-method-and-width" />
+<span id="how-the-join-works" />
+<span id="migrate-existing-eases" />
+
+See the [easing reference](/gdscript/api/easing/) for join methods, curve
+percentages, and migration from legacy names. For changing the pacing without
+changing families, see [`skew` and `weks`](/gdscript/variations/#change-the-pacing-with-skew).
 
 ## Custom functions and curves
 
-For punch, shake, and breathing effects, use the [FX factories](#effect-factories).
-
-For a shape the built-in eases don't cover, assign a Callable that maps normalized
-progress to a weight:
+For a shape the built-in families don't cover, supply a function from normalized
+progress to an interpolation weight:
 
 ```gdscript
-var eased := Tweens.position_2d(Vector2(300, 120), 0.5)
-eased.ease_function = func(t: float) -> float: return t * t
-Tweens.play(sprite, eased)
+var move := Tweens.position_2d_x(300.0, 0.6)
+move.ease_function = func(t: float) -> float: return t * t
+Tweens.play(sprite, move)
 ```
 
-`ease_function` overrides `ease`. A Godot `Curve` assigned to `curve` can override
-`ease` instead. It's sampled with normalized time from 0 to 1, and each start gets
-its own copy of the curve. Set only one of `ease_function` and `curve`; a definition
-with both is rejected.
+`ease_function` overrides `ease`. A Godot `Curve` assigned to `curve` is another
+option; each playback gets its own copy. Set only one of `ease_function` and `curve`.
 
-The Callable runs synchronously on every update. If it becomes invalid or returns
-anything other than a finite number, the tween ends with `Tweens.Reason.FAILED` and
-the message in `handle.error`. A script error raised inside the Callable remains an
-ordinary Godot script error; the addon can't convert it into a failure reason.
+<span id="effect-factories" />
+<span id="independent-axes-and-rotations" />
 
-## Effect factories
-
-`Tweens.FX` creates reusable Callables of normalized progress. Existing `ease`,
-`ease_function`, and `curve` configuration stays unchanged. Scalar factories can
-be assigned directly to `ease_function`:
-
-```gdscript
-var recoil := Tweens.position_2d(null, 0.4).with_by(Vector2(9, 5))
-recoil.ease_function = Tweens.FX.punch(6.0)
-Tweens.play(sprite, recoil)
-```
-
-This moves along the `by_value` vector and returns to the baseline. The factory's
-scalar amplitude multiplies the tween's displacement; keep it at one when
-`by_value` supplies the strength. JellyButton uses `Tweens.FX.punch(42.0 / TAU)`
-to reproduce its original `sin(42t) * (1-t)^2` motion.
-
-| Factory | Shape | Defaults |
-| --- | --- | --- |
-| `punch(frequency, amplitude, decay, phase, attack)` | Damped sine | `6, 1, 2, 0, 0` |
-| `shake(frequency, amplitude, seed, offset, decay, attack)` | Smooth seeded value noise with an envelope | `12, 1, 0, 0, 2, 0.1` |
-| `breathe(frequency, amplitude, phase)` | Raised cosine from zero to amplitude and back | `1, 1, 0` |
-| `decay(power)` | Envelope `(1-t)^power` | `2` |
-| `attack_release(attack, power)` | Envelope with separately proportioned attack and release | `0.1, 2` |
-
-Frequency is **per tween duration**: cycles for punch/breathe, noise lattice
-intervals for shake. For a rate per second, multiply it by the duration when
-creating the factory. Phase is in cycles; a shake offset is a noise coordinate.
-Neither is a time delay. Amplitudes can be signed; zero locks that axis.
-
-Attack is the fraction of the duration spent rising from zero to full amplitude.
-For example, `attack = 0.1` allocates 10% to attack and 90% to release. Positive
-attack uses quintic ramps, with zero slope at their join; the decay exponent shapes
-the release. At zero attack the envelope starts at one and follows `(1-t)^decay`.
-Punch still starts at zero displacement when phase is zero. Shake with zero
-attack can start displaced. Punch and shake end exactly at zero. Breathe preserves
-its phase: integral frequency with phase zero returns to zero, while fractional
-cycles can end elsewhere.
-
-### Independent axes and rotations
-
-| Family | 2D | 3D | Rotation |
-| --- | --- | --- | --- |
-| Punch | `punch_2d` | `punch_3d` | `punch_quaternion` |
-| Shake | `shake_2d` | `shake_3d` | `shake_quaternion` |
-| Breathe | `breathe_2d` | `breathe_3d` | `breathe_quaternion` |
-
-These factories take `amplitude` first, followed by optional per-axis `frequency`.
-Punch then accepts `decay`, per-axis `phase`, and `attack`; shake accepts `seed`,
-per-axis `offset`, `decay`, and `attack`; breathe accepts per-axis `phase`.
-Use Vector2 parameters for 2D and Vector3 parameters for 3D or quaternion.
-Default frequencies match the scalar versions. Default phases are zero; shake's
-default offsets are `(0, 101.37)` or `(0, 101.37, 203.71)` so the axes differ.
-Equal frequency and offset settings deliberately use the same noise path.
-
-Each vector component is `amplitude * envelope * signal` with its own frequency
-and phase/offset. Vector Callables return offsets, so use a linear callback tween
-or a custom interpolator. They cannot go in the scalar `ease_function` slot:
-
-```gdscript
-# Use a dedicated visual child so gameplay movement has its own transform.
-var rest := sprite.position
-var sample := Tweens.FX.shake_2d(
-    Vector2(12, 6), Vector2(10, 14), 123, Vector2(0.3, 100.7))
-var driver := Tweens.value(0.0, 1.0, 0.4)
-driver.on_update = func(_handle, t): sprite.position = rest + sample.call(t)
-driver.on_finally = func(_handle):
-    if is_instance_valid(sprite): sprite.position = rest
-Tweens.play(sprite, driver)
-```
-
-Quaternion factories interpret their Vector3 amplitude as **rotation-vector
-components in radians**, then convert the sampled vector to a normalized unit
-quaternion. They do not interpolate or multiply the four quaternion components.
-Apply local rotation as `baseline * sample.call(t)`; identity is the neutral offset:
-
-```gdscript
-var rotation := Tweens.FX.punch_quaternion(Vector3(0.1, 0.2, 0))
-var turn := Tweens.custom(
-    func(target): return target.quaternion,
-    func(target, value): target.quaternion = value,
-    null, 0.4,
-    func(from, _to, t): return (from * rotation.call(t)).normalized())
-Tweens.play(node, turn)
-```
-
-Factories capture fixed settings, use no mutable random generator or native noise
-resource, and reproduce a sample regardless of call order or frame rate. Reuse
-Callables between starts; create another with a different seed for another noise
-pattern. Sampling clamps finite progress to `[0, 1]`; nonfinite progress produces
-nonfinite output, which the tween runtime detects when used as easing or an
-interpolator. Invalid configuration reports an error and returns an empty Callable.
-Frequency must be nonnegative, decay positive, attack in `[0, 1)`, and seeds signed
-32-bit integers. Frequency, amplitude, and phase/offset must fit finite 32-bit floats
-to match C# and Godot vector storage. Check `is_valid()` if creating factories from
-untrusted configuration; an empty `ease_function` otherwise means built-in easing.
-
-These are functions, not playback controllers. Cancellation normally retains the
-last sample; the callback example explicitly clears its visual offset. Cancel a
-previous effect on that child before starting another. `by_value` retains its
-ordinary repeat accumulation semantics, so use a callback/custom-property tween
-for repeated return-to-rest effects. `skew`/`weks` warp the entire effect when used
-as easing; leave the callback driver linear to preserve the factory's timing.
+For ready-made punch, shake, and breathing motion, use the
+[effect factories](/gdscript/api/effects/), including vector and rotation effects.
