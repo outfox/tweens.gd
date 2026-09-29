@@ -79,6 +79,11 @@ provide `20`, `30`, `40`, and `50` variants (for example `Out.Elastic30`).
 The number is the peak overshoot percentage of the full tween range, for single
 legs and matching pairs.
 
+`Bounce` aliases `Bounce10`; `Bounce20` through `Bounce50` set the first
+rebound depth to that percentage of the full tween range, in single legs and
+matching pairs. The next two rebounds have one-quarter and one-sixteenth of
+that depth. All variants are available in `In`, `Out`, and `InOut`.
+
 `EaseType.Linear` (zero) remains the default. Legacy `EaseType` constants keep
 their numeric values and original shapes. Do not OR legacy names with the new
 flags. [Easing](/csharp/easing/) includes the composer and migration details.

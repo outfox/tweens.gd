@@ -4,7 +4,7 @@ import type { Lang } from '../scripts/lang';
 interface Props { lang?: Lang }
 const { lang = 'csharp' } = Astro.props;
 const gd = lang === 'gdscript';
-const legs = ['None', ...FAMILIES];
+const legs = ['None', ...FAMILIES.toSorted((a, b) => a.localeCompare(b, 'en'))];
 ---
 
 <div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>

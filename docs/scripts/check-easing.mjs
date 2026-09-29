@@ -8,8 +8,8 @@ for (const sample of data.cases) {
   assert.ok(Math.abs(composeEase(sample.in, sample.out, sample.progress, sample.skew, sample.blendType, sample.blend) - sample.expected) < data.tolerance,
     JSON.stringify(sample));
 }
-const overshoots = f => /^(Back|Elastic)/.test(f);
-for (const family of FAMILIES.filter(f => !overshoots(f))) {
+const calibrated = f => /^(Back|Elastic|Bounce)/.test(f);
+for (const family of FAMILIES.filter(f => !calibrated(f))) {
   const legacy = ['Linear', 'SmoothStep', 'SmootherStep'].includes(family) ? family : family + 'InOut';
   for (let i = 0; i <= 1000; i++) assert.equal(composeEase(family, family, i / 1000), ease(legacy, i / 1000));
 }
@@ -35,7 +35,7 @@ for (const entry of ['None', ...FAMILIES]) {
 console.log(`Easing: ${data.cases.length} shared samples and all ${new Set(FAMILIES.map(canonicalFamily)).size ** 2} pairs plus missing legs passed.`);
 
 // Test behavior, rather than duplicating the interpolation formula.
-const monotone = FAMILIES.filter(f => !overshoots(f) && f !== 'Bounce');
+const monotone = FAMILIES.filter(f => !calibrated(f));
 for (const a of monotone) for (const b of monotone) for (const width of [0, .01, .2, .4, .8, 1]) {
   let previous = 0;
   for (let i=0; i<=1000; i++) {
@@ -70,3 +70,25 @@ for (const base of ['Back', 'Elastic']) for (const percent of [10,20,30,40,50]) 
 }
 assert.ok(ease('ElasticOut',.13474)>1.37);
 console.log('Back/Elastic: 10%-50% solo and paired peaks, symmetry, aliases, and legacy preservation passed.');
+
+for (const percent of [10,20,30,40,50]) {
+  const family='Bounce'+percent;
+  for (const paired of [false,true]) {
+    const values=Array.from({length:10001},(_,i)=>composeEase(paired?family:'None',family,(paired?.5:0)+(paired?.5:1)*i/10000));
+    const depths=values.filter((v,i)=>i>0&&i<values.length-1&&v<values[i-1]&&v<=values[i+1]).map(v=>1-v);
+    assert.equal(depths.length,3);
+    depths.forEach((v,i)=>assert.ok(Math.abs(v-percent/100/4**i)<.00002,JSON.stringify({family,paired,i,v})));
+  }
+  for (let i=0;i<=1000;i++) {
+    const t=i/1000, a=composeEase(family,'None',t), b=composeEase('None',family,t), pair=composeEase(family,family,t);
+    assert.ok(Math.abs(a-(1-composeEase('None',family,1-t)))<1e-12);
+    for (const y of [a,b,pair]) assert.ok(y>=-1e-12&&y<=1+1e-12);
+    if (percent===10) {
+      assert.equal(b,composeEase('None','Bounce',t));
+      assert.equal(pair,composeEase('Bounce','Bounce10',t));
+    }
+  }
+}
+assert.equal(ease('BounceOut',6/11),.75);
+assert.equal(ease('BounceInOut',17/22),.875);
+console.log('Bounce: 10%-50% first rebounds, three diminishing bounces, bounds, mirrors, aliases, and legacy preservation passed.');

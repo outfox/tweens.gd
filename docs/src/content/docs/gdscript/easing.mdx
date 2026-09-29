@@ -44,8 +44,9 @@ In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
 the Sine halves are `0.5 * SineIn(2 * t)` and
 `0.5 + 0.5 * SineOut(2 * t - 1)`. Every pair passes through `(0.5, 0.5)`.
 Each family supplies an InOut half profile. Back and Elastic are calibrated
-to their named overshoot percentage; the other families keep their conventional
-profiles, including symmetric SmoothStep and SmootherStep.
+to their named overshoot percentage; Bounce uses its first rebound depth.
+Other families keep their conventional profiles, including symmetric
+SmoothStep and SmootherStep.
 
 **Hermite is the default.** It joins the two halves with two cubic segments
 inside a centered window. With width 0.4, progress up to 0.3 follows the In
@@ -72,7 +73,7 @@ right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
 ```
 
 Matching families bypass the join: **Sine | Sine is exactly SineInOut**, and
-Back and Elastic use their calibrated paired profiles directly. Other matching
+Back, Elastic, and Bounce use their calibrated paired profiles directly. Other matching
 families preserve their conventional InOut curves too.
 
 ## Choose the method and width
@@ -130,6 +131,15 @@ single leg or a matching pair. An Out tween from 0 to 100 with `ELASTIC30`
 peaks at 130; its In counterpart dips to -30. `InOut.ELASTIC30` reaches both
 extremes. A mixed pair's join can reshape overshoot inside its blend window.
 Legacy `Tweens.Ease` curves keep their original shapes.
+
+Bounce offers `BOUNCE10` through `BOUNCE50`, with `BOUNCE` aliasing `BOUNCE10`.
+The percentage is the **first rebound's depth** within the full tween range.
+A tween from 0 to 100 with `Tweens.Out.BOUNCE30` first reaches 100, rebounds to
+70, then settles through two smaller bounces. Their depths are one-quarter
+and one-sixteenth of the first. `Tweens.In.BOUNCE30` mirrors this motion;
+`Tweens.InOut.BOUNCE30` retains the 30-unit rebound depth in each half.
+A mixed pair's join may reshape rebounds inside its blend window.
+Legacy `Tweens.Ease.BOUNCE_OUT` retains its original 25% first rebound.
 
 ## Migrate existing eases
 

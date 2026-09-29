@@ -82,6 +82,11 @@ provide `20`, `30`, `40`, and `50` variants (for example `Tweens.Out.ELASTIC30`)
 The number is the peak overshoot percentage of the full tween range, for single
 legs and matching pairs.
 
+`BOUNCE` aliases `BOUNCE10`; `BOUNCE20` through `BOUNCE50` set the first
+rebound depth to that percentage of the full tween range, in single legs and
+matching pairs. The next two rebounds have one-quarter and one-sixteenth of
+that depth. All variants are available in `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
+
 `Tweens.Ease.LINEAR` (zero) remains the default. Legacy `Tweens.Ease` constants
 keep their numeric values and original shapes. Do not OR legacy names with new
 flags. [Easing](/gdscript/easing/) includes the composer and migration details.
