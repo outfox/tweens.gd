@@ -22,7 +22,7 @@ internal static class Program
         var output = index >= 0 && index + 1 < args.Length ? Path.GetFullPath(args[index + 1]) : null;
         using var engine = new twodog.Engine("benchmarks.2dog", args: ["--headless", "--fixed-fps", "60"]);
         engine.Start();
-        try { return Run(engine, output); }
+        try { return args.Contains("--easing") ? EasingBenchmark.Run(engine, output) : Run(engine, output); }
         finally
         {
             // Finalize wrappers while their engine is alive.

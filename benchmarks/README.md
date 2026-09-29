@@ -25,3 +25,23 @@ backend's own language. Results at 10,000 tweens vary noticeably between runs.
 The project is not in the solution or CI. Godot 4.7.2 can crash on exit the first
 time an import registers the extension; if the first build fails in the 2dog import,
 run it again.
+
+For the composed easing paths, use `--easing`:
+
+```powershell
+$env:DOTNET_TieredCompilation = '0'
+dotnet run --project benchmarks/host -c Release -- --easing --output artifacts/benchmark-easing.json
+```
+
+This measures 1,000 and 10,000 Node2D position tweens in C# and native GDScript:
+linear, legacy and paired Sine, Quad/Cubic with all three blend methods,
+Back30/Bounce20, and solo Jump30. One-second infinite loops use staggered offsets
+so every update includes the whole curve, including the 0.2 blend window.
+Each case has 120 warmup updates and 240 measured updates; C# also gets an untimed
+pass through every profile. Disabling tiered compilation avoids compilation-tier
+changes during these short measurements. Remove or restore that environment
+variable afterward. The original comparison remains unchanged and uses its
+shorter warmup; use the same environment when comparing runs.
+
+Repeat runs sequentially and retain their ranges: allocation patterns, CPU load,
+and runtime warmup can materially change results, particularly at 10,000 tweens.
