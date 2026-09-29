@@ -15,13 +15,14 @@ Duration controls how long it takes; skew changes when the motion happens.
 sprite.TweenPositionX(300, 1.2, options =>
 {
     options.Ease = In.Sine | Out.Cubic;
-    options.Skew = 1;
 });
 ```
 
 `InOut.Sine` is exactly `In.Sine | Out.Sine`. Each selector is an `EaseType`
 constant, so it works anywhere an ease is accepted: a shorthand call, a
 `TweenOptions` value, a definition, or `Easing.Evaluate`.
+`InOut` includes every curve family and numbered variant, such as `InOut.Back30`,
+`InOut.Elastic20`, and `InOut.Bounce50`.
 
 A single selection such as `Out.Cubic` runs that curve over the whole duration.
 `In.None` and `Out.None` omit a leg. `In.Linear` and `Out.Linear` explicitly select

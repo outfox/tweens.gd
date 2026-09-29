@@ -13,7 +13,6 @@ with `Tweens.InOut`. Duration controls how long it takes; skew changes when the 
 
 ```gdscript
 var move := Tweens.position_2d_x(300.0, 1.2, Tweens.In.SINE | Tweens.Out.CUBIC)
-move.skew = 1.0
 Tweens.play(sprite, move)
 ```
 
@@ -21,6 +20,8 @@ Tweens.play(sprite, move)
 Pass the flags after the duration in any helper, assign them to a definition's
 `ease`, use `with_ease()`, or sample them with `Tweens.Easing.evaluate(ease, t)`.
 Easing arguments accept integers so flags from either side compose naturally.
+`Tweens.InOut` includes every curve family and numbered variant, such as
+`Tweens.InOut.BACK30`, `Tweens.InOut.ELASTIC20`, and `Tweens.InOut.BOUNCE50`.
 
 A single selection such as `Tweens.Out.CUBIC` runs that curve over the whole duration.
 `Tweens.In.NONE` and `Tweens.Out.NONE` omit a leg. `Tweens.In.LINEAR` and
