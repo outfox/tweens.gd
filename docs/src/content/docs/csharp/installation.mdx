@@ -1,84 +1,53 @@
 ---
 title: Install
-description: Install the unified tweens.gd Godot addon, with NuGet as an optional C# installation method.
+description: Add tweens.gd to your Godot C# project from Godot Store or NuGet.
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import InstallOptions from '../../../components/InstallOptions.astro';
 
-tweens.gd ships C# and GDScript source together in one Godot addon. Copy the addon
-into your Godot .NET project and build normally. NuGet is an optional C#
-installation method.
-
-:::note[Beta]
-The C# API may change during beta.
-:::
-
-You need .NET 10 and a Godot .NET engine that matches GodotSharp 4.7.2; your game
-supplies the engine. [Compatibility](/compatibility/) lists what has been
-validated. The package ID and the namespace are both lowercase `tweens.gd`.
+Add tweens.gd to your project through Godot Store or NuGet. Choose whichever fits
+how you manage your game's dependencies.
 
 ## Add the library
 
-The addon is the default route. Use one C# implementation in a project.
+Choose one of these two methods:
 
-<Tabs>
-<TabItem label="Godot addon">
+<InstallOptions>
+<div slot="store">
 
-Download the addon from the
-[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/) (recommended).
-You can also download the unified addon ZIP from
-[GitHub releases](https://github.com/outfox/tweens.gd/releases).
-Both downloads include C# and GDScript.
+### Godot Store
 
-Unpack the addon into your project root, keeping the entire `addons/tweens_gd/`
-directory, including `LICENSE` and `THIRD-PARTY-NOTICES.md`.
-The C# sources live in `addons/tweens_gd/csharp/` and are
-included by the project's normal build. Keep `Generated/`: it contains the
-prepared definitions, so there is no tweens.gd analyzer to install or run.
-Godot's own source generators run normally through your Godot.NET.Sdk.
+Get the shared addon with support for both C# and GDScript.
 
-Set your project's target framework to `net10.0` if needed. No plugin activation,
-autoload or package reference is required. Both languages can coexist; GDScript
-uses its own runtime and entry script.
+1. Download it from the [Godot Store](https://store.godotengine.org/asset/outfox/tweens/).
+2. Unpack it into your project root, keeping the entire `addons/tweens_gd/` directory.
 
-</TabItem>
-<TabItem label="NuGet">
+</div>
+<div slot="alternative">
 
-In your game's project directory, install the C# package from NuGet:
+### NuGet
+
+Add the pure C# library through your package manager.
 
 ```powershell
 dotnet add package tweens.gd
 ```
 
-This installs the compiled C# library. To use GDScript as well, install the addon
-and exclude its bundled C# sources as described below.
+</div>
+</InstallOptions>
 
-</TabItem>
-<TabItem label="Project reference">
+## Build your project
 
-For library development, clone the repository and reference its project from
-your game's project, adjusting both paths:
+Build your game with Godot .NET 4.7.2 and .NET 10. Set the target framework in your
+project file to `net10.0` if needed. No plugin activation or autoload is required.
 
-```powershell
-dotnet add path/to/YourGame.csproj reference path/to/tweens.gd/csharp/tweens.gd.csproj
-```
+Once tweens.gd is installed and Godot is running, you're ready to write
+[your first tween](/csharp/quickstart/).
 
-Godot then builds the library together with your game.
+## Odds and ends
 
-</TabItem>
-</Tabs>
+Bring your C# tweens to the web with [2dog 🦴](https://2dog.dev), which supports
+GodotSharp web exports.
 
-If using NuGet or a project reference while keeping the addon for GDScript,
-exclude the bundled C# sources in your game's project file to avoid duplicate
-types:
-
-```xml
-<ItemGroup>
-  <Compile Remove="addons/tweens_gd/csharp/**/*.cs" />
-</ItemGroup>
-```
-
-Alternatively, omit the addon's `csharp/` directory. NuGet contains the compiled
-C# API and needs no tweens.gd analyzer at the consumer end either.
-
-Then write [your first tween](/csharp/quickstart/).
+The API is in beta and may change. See [compatibility](/compatibility/) for
+validated engines and platforms.

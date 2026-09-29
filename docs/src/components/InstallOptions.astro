@@ -1,0 +1,25 @@
+<div class="install-options tw-wide" role="group" aria-label="Choose an installation method">
+	<div class="choices">
+		<section class="option"><slot name="store" /></section>
+		<span class="or">or</span>
+		<section class="option"><slot name="alternative" /></section>
+	</div>
+</div>
+
+<style>
+	.install-options { container-type: inline-size; margin-block: 1.5rem; }
+	.choices { display: grid; gap: 1rem; align-items: stretch; }
+	.option {
+		min-width: 0;
+		padding: 1.25rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 1rem;
+		background: var(--tw-stage);
+	}
+	.option :global(h3) { margin-top: 0; }
+	.option :global(ol) { padding-inline-start: 1.25rem; }
+	.or { align-self: center; text-align: center; color: var(--tw-soft); font-weight: 700; }
+	@container (min-width: 42rem) {
+		.choices { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+	}
+</style>

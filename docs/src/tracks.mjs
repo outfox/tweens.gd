@@ -75,6 +75,7 @@ export const LEARN = PATH[0].pages;
 export const SHARED = [
 	{ slug: 'faq', label: 'FAQ' },
 	{ slug: 'compatibility', label: 'Compatibility' },
+	{ slug: 'advanced-development', label: 'Advanced development' },
 	{ slug: 'acknowledgements', label: 'Acknowledgements' },
 ];
 export const SHARED_LABEL = 'Project';

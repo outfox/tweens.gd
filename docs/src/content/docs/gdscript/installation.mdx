@@ -1,46 +1,51 @@
 ---
 title: Install
-description: Install the unified tweens.gd addon and use its GDScript API without .NET.
+description: Add tweens.gd to your Godot project from Godot Store or GitHub Releases.
 ---
 
-tweens.gd includes both C# and GDScript in one addon. The GDScript API runs on a
-GDExtension that the addon ships prebuilt for Windows, Linux, macOS, iOS, Android,
-and the Web. There is no plugin to activate, no autoload, and no .NET runtime to
-install. The bundled C# files can stay in a GDScript-only project.
+import InstallOptions from '../../../components/InstallOptions.astro';
 
-:::note[Beta]
-The GDScript API may change during beta. [Compatibility](/compatibility/) lists
-what has been validated.
-:::
+Get tweens.gd from Godot Store or GitHub Releases, then add it to your project.
+Both downloads include everything you need for GDScript; no .NET installation is needed.
 
 ## Add the addon
 
-Download the addon from the
-[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/) (recommended).
-You can also download the unified addon ZIP from
-[GitHub releases](https://github.com/outfox/tweens.gd/releases).
-Both downloads include C# and GDScript.
+Choose where to download the addon:
 
-Unpack the addon into your project's root directory, keeping the entire
-`addons/tweens_gd/` directory, including `tweens_gd.gdextension`, the `bin/`
-libraries, `LICENSE`, and `THIRD-PARTY-NOTICES.md`. The entry script should be at
-`res://addons/tweens_gd/tweens.gd`.
+<InstallOptions>
+<div slot="store">
 
-For a Web export, turn on **Extensions Support** in the export preset. Both the
-single-threaded and the thread-enabled variants are supported.
+### Godot Store
 
-## Load it from a script
+Get the shared addon with support for both C# and GDScript.
 
-The entry script registers the global class `Tweens`. Use it directly, with no
-preload or autoload:
+1. Download it from the [Godot Store](https://store.godotengine.org/asset/outfox/tweens/).
+2. Unpack it into your project root, keeping the entire `addons/tweens_gd/` directory.
 
-```gdscript
-await Tweens.play(self, Tweens.position_2d(Vector2(100, 50), 0.3)).end
-```
+</div>
+<div slot="alternative">
 
-Let the editor finish importing before running the project. For a fresh
-headless checkout, run `godot --headless --editor --import` once to register the
-extension and populate the script-class cache. Godot 4.7.2 can crash on exit from
-this first import after it has registered the extension; later runs start normally.
+### GitHub Releases
 
-Then write [your first tween](/gdscript/quickstart/).
+Get the addon ZIP from [GitHub Releases](https://github.com/outfox/tweens.gd/releases).
+Alongside the combined addon, releases will also offer lightweight GDScript-only builds.
+
+Choose the packaged addon from the release assets, then unpack it into your project root.
+
+</div>
+</InstallOptions>
+
+## Build your project
+
+Keep the entire `addons/tweens_gd/` directory so its scripts, native libraries, and
+licenses stay together. The entry script should be at `res://addons/tweens_gd/tweens.gd`.
+If you choose the combined addon, its C# files can stay in a GDScript-only project.
+
+<span id="load-it-from-a-script" />
+
+Once tweens.gd is installed and Godot is running, you're ready to write
+[your first tween](/gdscript/quickstart/).
+
+## Odds and ends
+
+To export your game to the Web, turn on **Extensions Support** in the export preset.
