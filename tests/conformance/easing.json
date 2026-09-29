@@ -239,7 +239,7 @@
       "out": "Elastic",
       "progress": 0.4,
       "skew": 1,
-      "expected": 0.1342742631869783,
+      "expected": 0.13022061095409027,
       "blendType": "Hermite",
       "blend": 0.4
     },
@@ -248,7 +248,7 @@
       "out": "Elastic",
       "progress": 0.6,
       "skew": 1,
-      "expected": 0.8392816854591754,
+      "expected": 0.8621813215178332,
       "blendType": "Hermite",
       "blend": 0.4
     },
@@ -275,7 +275,7 @@
       "out": "SmootherStep",
       "progress": 0.45,
       "skew": 1,
-      "expected": 0.11737811488973467,
+      "expected": 0.14158711935707283,
       "blendType": "Hermite",
       "blend": 0.2
     },
@@ -284,9 +284,1021 @@
       "out": "Back",
       "progress": 0.6,
       "skew": 1,
-      "expected": 0.7027694145624999,
+      "expected": 0.7027357015577805,
       "blendType": "Hermite",
       "blend": 0.8
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 0,
+      "skew": 1,
+      "expected": 0
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 0.1,
+      "skew": 1,
+      "expected": 0.6632389210709732
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 0.27674,
+      "skew": 1,
+      "expected": 1.0980755512421807
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 0.5,
+      "skew": 1,
+      "expected": 1.0164198107847517
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 0.7,
+      "skew": 1,
+      "expected": 0.9930008243875782
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 1,
+      "skew": 1,
+      "expected": 1
+    },
+    {
+      "in": "Elastic",
+      "out": "None",
+      "progress": 0,
+      "skew": 1,
+      "expected": 0
+    },
+    {
+      "in": "Elastic",
+      "out": "None",
+      "progress": 0.3,
+      "skew": 1,
+      "expected": 0.006999175612421809
+    },
+    {
+      "in": "Elastic",
+      "out": "None",
+      "progress": 0.72326,
+      "skew": 1,
+      "expected": -0.09807555124218076
+    },
+    {
+      "in": "Elastic",
+      "out": "None",
+      "progress": 0.9,
+      "skew": 1,
+      "expected": 0.3367610789290269
+    },
+    {
+      "in": "Elastic",
+      "out": "None",
+      "progress": 1,
+      "skew": 1,
+      "expected": 1
+    },
+    {
+      "in": "None",
+      "out": "Elastic",
+      "progress": 0.5,
+      "skew": 2,
+      "expected": 1.086110943599662
+    },
+    {
+      "in": "None",
+      "out": "Back10",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 0.7057971454549532
+    },
+    {
+      "in": "Back10",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": 0.2942028545450468
+    },
+    {
+      "in": "Back10",
+      "out": "Back10",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.06816025039776342
+    },
+    {
+      "in": "Back10",
+      "out": "Back10",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0681602503977634
+    },
+    {
+      "in": "None",
+      "out": "Back20",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 0.8198257793940866
+    },
+    {
+      "in": "Back20",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": 0.18017422060591337
+    },
+    {
+      "in": "Back20",
+      "out": "Back20",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.11740595655813461
+    },
+    {
+      "in": "Back20",
+      "out": "Back20",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.1174059565581347
+    },
+    {
+      "in": "None",
+      "out": "Back30",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 0.9224386122425039
+    },
+    {
+      "in": "Back30",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": 0.0775613877574961
+    },
+    {
+      "in": "Back30",
+      "out": "Back30",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.1635181219275308
+    },
+    {
+      "in": "Back30",
+      "out": "Back30",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.1635181219275308
+    },
+    {
+      "in": "None",
+      "out": "Back40",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.019935315537817
+    },
+    {
+      "in": "Back40",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.019935315537817022
+    },
+    {
+      "in": "Back40",
+      "out": "Back40",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.2083368404492395
+    },
+    {
+      "in": "Back40",
+      "out": "Back40",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.2083368404492396
+    },
+    {
+      "in": "None",
+      "out": "Back50",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.114542018705118
+    },
+    {
+      "in": "Back50",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.11454201870511804
+    },
+    {
+      "in": "Back50",
+      "out": "Back50",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.2524713714501874
+    },
+    {
+      "in": "Back50",
+      "out": "Back50",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.2524713714501874
+    },
+    {
+      "in": "None",
+      "out": "Elastic10",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.0231839514371155
+    },
+    {
+      "in": "Elastic10",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.023183951437115484
+    },
+    {
+      "in": "Elastic10",
+      "out": "Elastic10",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.002836004307079204
+    },
+    {
+      "in": "Elastic10",
+      "out": "Elastic10",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0028360043070792
+    },
+    {
+      "in": "None",
+      "out": "Elastic20",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.1937739584776215
+    },
+    {
+      "in": "Elastic20",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.19377395847762144
+    },
+    {
+      "in": "Elastic20",
+      "out": "Elastic20",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.005207807164831671
+    },
+    {
+      "in": "Elastic20",
+      "out": "Elastic20",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0052078071648318
+    },
+    {
+      "in": "None",
+      "out": "Elastic30",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.2992837130822952
+    },
+    {
+      "in": "Elastic30",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.2992837130822953
+    },
+    {
+      "in": "Elastic30",
+      "out": "Elastic30",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.006694239007330384
+    },
+    {
+      "in": "Elastic30",
+      "out": "Elastic30",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0066942390073303
+    },
+    {
+      "in": "None",
+      "out": "Elastic40",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.3890067278844898
+    },
+    {
+      "in": "Elastic40",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.3890067278844898
+    },
+    {
+      "in": "Elastic40",
+      "out": "Elastic40",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.008010688431141291
+    },
+    {
+      "in": "Elastic40",
+      "out": "Elastic40",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0080106884311413
+    },
+    {
+      "in": "None",
+      "out": "Elastic50",
+      "progress": 0.2,
+      "skew": 1,
+      "expected": 1.4715660437126172
+    },
+    {
+      "in": "Elastic50",
+      "out": "None",
+      "progress": 0.8,
+      "skew": 1,
+      "expected": -0.47156604371261734
+    },
+    {
+      "in": "Elastic50",
+      "out": "Elastic50",
+      "progress": 0.15,
+      "skew": 1,
+      "expected": -0.009255584248178607
+    },
+    {
+      "in": "Elastic50",
+      "out": "Elastic50",
+      "progress": 0.85,
+      "skew": 1,
+      "expected": 1.0092555842481787
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.40778682653674436
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.09159339534633243
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.6028812012648879
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.8768582764915045
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.4173551369284725
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.3391494971457343
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.8708510024569153
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.1134445125256542
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.4035125208544185
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.3099029592998033
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.8675902368012965
+    },
+    {
+      "in": "Back50",
+      "out": "Elastic20",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.1481418023055228
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.007665994236425106
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.1545740042972007
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.6000403207867825
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 1.014880865880708
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.006572724637991666
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.08598939596926994
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.9515302427725489
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.1851390791702774
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.015048476470912495
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.09860141470062708
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.9640084360916314
+    },
+    {
+      "in": "Elastic50",
+      "out": "Back30",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.1659619550733402
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.11615901842228708
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.2815517270083684
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.5584923249394332
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.8039644368213084
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.11630708207893016
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.22966978248310338
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.8938196018684302
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.9686005317413509
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.1123898392188328
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.19761781395492442
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.8795911699345998
+    },
+    {
+      "in": "Sine",
+      "out": "Elastic40",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.9403388749537558
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.17767279375131712
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.07878116969070112
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.5779752399720003
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.8110794787113449
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.18310410387301876
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.03940885501692431
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.6242490718548266
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.8665775600537756
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.17564095401015903
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.013141606701308685
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.6266582196696723
+    },
+    {
+      "in": "Back20",
+      "out": "Cubic",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.8941390005183317
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.09831299760224183
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.015126775900115907
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.6443842640387896
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 1.002046604385526
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.09831299760224183
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.015126775900115907
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.6443842640387896
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.002046604385526
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.09831299760224183
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.015126775900115907
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.6443842640387896
+    },
+    {
+      "in": "Back10",
+      "out": "Back",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.002046604385526
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.008751075496015542
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": -0.08033172342755986
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 0.7397513066940866
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Hermite",
+      "blend": 0.6,
+      "expected": 1.0676058253801521
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.008751075496015542
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": -0.08033172342755986
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 0.7397513066940866
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "SmoothStep",
+      "blend": 0.6,
+      "expected": 1.0676058253801521
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.3,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.008751075496015542
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.45,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": -0.08033172342755986
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.6,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 0.7397513066940866
+    },
+    {
+      "in": "Elastic",
+      "out": "Elastic10",
+      "progress": 0.7,
+      "skew": 1.25,
+      "blendType": "Linear",
+      "blend": 0.6,
+      "expected": 1.0676058253801521
     }
   ]
 }

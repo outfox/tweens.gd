@@ -20,7 +20,8 @@ public class ComposedEasingTests
         }
     }
 
-    private static readonly string[] Families = ["Linear", "Sine", "Quad", "Cubic", "Quart", "Quint", "Expo", "Circ", "Back", "Elastic", "Bounce", "SmoothStep", "SmootherStep"];
+    private static readonly string[] Families = typeof(In).GetFields().Select(f => f.Name).Where(n => n != "None").ToArray();
+    private static bool Overshoots(string family) => family.StartsWith("Back") || family.StartsWith("Elastic");
     private static EaseType Flag(Type type, string name) => (EaseType)type.GetField(name)!.GetValue(null)!;
     private static EaseType ConventionalPair(string family) =>
         Enum.Parse<EaseType>(family + (family is "Linear" or "SmoothStep" or "SmootherStep" ? "" : "InOut"));
@@ -43,16 +44,16 @@ public class ComposedEasingTests
                 var t = i / 100f;
                 var actual = Easing.Evaluate(combined, t);
                 Assert.True(float.IsFinite(actual));
-                if (t <= 0.3f) Assert.Equal(Easing.Evaluate(ConventionalPair(entry), t), actual);
-                if (t >= 0.7f) Assert.Equal(Easing.Evaluate(ConventionalPair(exit), t), actual);
+                if (t <= 0.3f) Assert.Equal(Easing.Evaluate(Flag(typeof(InOut), entry), t), actual);
+                if (t >= 0.7f) Assert.Equal(Easing.Evaluate(Flag(typeof(InOut), exit), t), actual);
             }
         }
     }
 
     [Fact]
-    public void EveryMatchingPairExactlyReproducesItsConventionalInOut()
+    public void MatchingNonOvershootPairsExactlyReproduceTheirConventionalInOut()
     {
-        foreach (var family in Families)
+        foreach (var family in Families.Where(f => !Overshoots(f)))
         for (var i = 0; i <= 1000; i++)
         {
             var t = i / 1000f;
@@ -79,7 +80,7 @@ public class ComposedEasingTests
     }
 
     [Fact]
-    public void ConvenienceNamesMatchFlagsAndSingleLegsKeepTheirShape()
+    public void ConvenienceNamesMatchFlagsAndOtherSingleLegsKeepTheirShape()
     {
         foreach (var family in Families)
         {
@@ -88,23 +89,88 @@ public class ComposedEasingTests
             var both = Flag(typeof(InOut), family);
             Assert.Equal(entry | exit, both);
             var plain = family is "Linear" or "SmoothStep" or "SmootherStep";
-            var oldIn = Enum.Parse<EaseType>(family + (plain ? "" : "In"));
-            var oldOut = Enum.Parse<EaseType>(family + (plain ? "" : "Out"));
+            var oldIn = Overshoots(family) ? EaseType.Linear : Enum.Parse<EaseType>(family + (plain ? "" : "In"));
+            var oldOut = Overshoots(family) ? EaseType.Linear : Enum.Parse<EaseType>(family + (plain ? "" : "Out"));
             for (var i = 0; i <= 100; i++)
             {
                 var t = i / 100f;
-                Assert.Equal(Easing.Evaluate(oldIn, t), Easing.Evaluate(entry, t));
-                Assert.Equal(Easing.Evaluate(oldOut, t), Easing.Evaluate(exit, t));
+                if (!Overshoots(family))
+                {
+                    Assert.Equal(Easing.Evaluate(oldIn, t), Easing.Evaluate(entry, t));
+                    Assert.Equal(Easing.Evaluate(oldOut, t), Easing.Evaluate(exit, t));
+                }
                 Assert.InRange(Math.Abs(1 - Easing.Evaluate(both, 1 - t) - Easing.Evaluate(both, t)), 0, 0.00001f);
             }
         }
     }
 
     [Theory]
+    [InlineData("Back")]
+    [InlineData("Elastic")]
+    public void NamedOvershootLevelsApplyToSoloAndPairedCurves(string family)
+    {
+        foreach (var type in new[] { typeof(In), typeof(Out), typeof(InOut) })
+            Assert.Equal(Flag(type, family), Flag(type, family + "10"));
+        foreach (var percent in new[] { 10, 20, 30, 40, 50 })
+        {
+            var entry = Flag(typeof(In), family + percent);
+            var exit = Flag(typeof(Out), family + percent);
+            var pair = Flag(typeof(InOut), family + percent);
+            var low = 0f;
+            var high = 1f;
+            var pairLow = 0f;
+            var pairHigh = 1f;
+            for (var i = 0; i <= 10000; i++)
+            {
+                var t = i / 10000f;
+                var a = Easing.Evaluate(entry, t);
+                var b = Easing.Evaluate(exit, t);
+                var both = Easing.Evaluate(pair, t);
+                low = Math.Min(low, a);
+                high = Math.Max(high, b);
+                pairLow = Math.Min(pairLow, both);
+                pairHigh = Math.Max(pairHigh, both);
+                Assert.InRange(Math.Abs(a - (1 - Easing.Evaluate(exit, 1 - t))), 0, 0.000002f);
+            }
+            foreach (var peak in new[] { -low, high - 1, -pairLow, pairHigh - 1 })
+                Assert.InRange(Math.Abs(peak - percent / 100f), 0, 0.00002f);
+            foreach (var curve in new[] { entry, exit, pair })
+            {
+                Assert.Equal(0, Easing.Evaluate(curve, 0));
+                Assert.Equal(1, Easing.Evaluate(curve, 1));
+            }
+        }
+    }
+
+    [Fact]
+    public void OriginalFlagValuesAndLegacyElasticStrengthRemainStable()
+    {
+        Assert.Equal(1L << 16, (long)In.Back);
+        Assert.Equal(1L << 30, (long)Out.Elastic);
+        Assert.InRange(Easing.Evaluate(EaseType.ElasticOut, 0.13474f), 1.37f, 1.38f);
+        Assert.Equal(InOut.Elastic, In.Elastic10 | Out.Elastic);
+        Assert.Equal(InOut.Back, In.Back | Out.Back10);
+    }
+
+    [Theory]
+    [InlineData(In.Elastic)]
+    [InlineData(Out.Elastic)]
+    public void SoloElasticPlaybackUsesTheSameCurveAsTheViewer(EaseType ease)
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box();
+        scheduler.Add(box, new PlainTween { To = 1, Duration = 1, Ease = ease });
+        scheduler.Update(0.3);
+        Assert.Equal(Easing.Evaluate(ease, 0.3f), box.Value);
+    }
+
+    [Theory]
     [InlineData(In.Sine | In.Back)]
     [InlineData(Out.Sine | Out.Back)]
+    [InlineData(In.Back20 | In.Elastic50)]
+    [InlineData(Out.Back50 | Out.Elastic)]
     [InlineData(In.Sine | EaseType.BackOut)]
-    [InlineData((EaseType)(1L << 40))]
+    [InlineData((EaseType)(1L << 62))]
     public void InvalidFlagsAreRejected(EaseType ease) =>
         Assert.Throws<NotImplementedException>(() => Easing.Evaluate(ease, 0.5f));
 
@@ -125,7 +191,7 @@ public class ComposedEasingTests
     [Fact]
     public void MonotoneFamiliesDoNotAcquireOvershootOrReversals()
     {
-        var monotone = Families.Except(["Back", "Elastic", "Bounce"]).ToArray();
+        var monotone = Families.Where(f => !Overshoots(f) && f != "Bounce").ToArray();
         foreach (var entry in monotone)
         foreach (var exit in monotone)
         foreach (var width in new[] { 0.0, 0.01, 0.2, 0.4, 0.8, 1.0 })

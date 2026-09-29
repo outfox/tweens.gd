@@ -25,26 +25,54 @@ namespace tweens.gd {
     // Bits 0–7 are reserved for the legacy enum. One bit per curve lets us reject
     // accidental In.Sine | In.Back combinations instead of silently choosing a third curve.
     const long LegMask = (1L << 13) - 1;
-    const long CompositionMask = (LegMask << 8) | (LegMask << 21);
+    // Preserve the original flag values; extra In/Out choices occupy bits 34–41 / 42–49.
+    const int CurveCount = 21;
+    const long CompositionMask = ((1L << 50) - 1) & ~255L;
+    static ulong LegBits(long bits, bool exit) => (ulong)(((bits >> (exit ? 21 : 8)) & LegMask)
+      | (((bits >> (exit ? 42 : 34)) & 255) << 13));
+
+    // Calibrated for 10%, 20%, ... 50% of the full range. Paired legs have half the
+    // value range, so their local peak must be twice the requested overshoot.
+    // Back: peak = 4*s^3 / (27*(s+1)^2).
+    static readonly float[] BackSolo = [1.701540198866824f, 2.5923889015162995f, 3.3940516581445603f, 4.155744652639195f, 4.894859521133737f];
+    static readonly float[] BackPaired = [2.5923889015162995f, 4.155744652639195f, 5.619622918334311f, 7.042439379340937f, 8.44353560159325f];
+    const float ElasticSoloPeriod = 0.7553423501870573f;
+    const float ElasticPairPeriod = 0.5074981597799941f;
+    static readonly float[] ElasticSoloKick = [0, 0.6853132138892408f, 1.1091787748281363f, 1.4696240828544362f, 1.8012905799033314f];
+    static readonly float[] ElasticPairKick = [0, 0.8829462755133655f, 1.4362972653938577f, 1.9263692424370968f, 2.3898041023212153f];
     static readonly Func<float, float>[] InCurves =
-      [Linear, SineIn, QuadIn, CubicIn, QuartIn, QuintIn, ExpoIn, CircIn, BackIn, ElasticIn, BounceIn, SmoothStep, SmootherStep];
+    [
+      Linear, SineIn, QuadIn, CubicIn, QuartIn, QuintIn, ExpoIn, CircIn,
+      t => BackLegIn(t, 0), t => ElasticLegIn(t, 0), BounceIn, SmoothStep, SmootherStep,
+      t => BackLegIn(t, 1), t => BackLegIn(t, 2), t => BackLegIn(t, 3), t => BackLegIn(t, 4),
+      t => ElasticLegIn(t, 1), t => ElasticLegIn(t, 2), t => ElasticLegIn(t, 3), t => ElasticLegIn(t, 4)
+    ];
     static readonly Func<float, float>[] OutCurves =
-      [Linear, SineOut, QuadOut, CubicOut, QuartOut, QuintOut, ExpoOut, CircOut, BackOut, ElasticOut, BounceOut, SmoothStep, SmootherStep];
-    // Conventional half profiles retain Back/Elastic's InOut parameters and symmetric step curves.
+    [
+      Linear, SineOut, QuadOut, CubicOut, QuartOut, QuintOut, ExpoOut, CircOut,
+      t => BackLegOut(t, 0), t => ElasticLegOut(t, 0), BounceOut, SmoothStep, SmootherStep,
+      t => BackLegOut(t, 1), t => BackLegOut(t, 2), t => BackLegOut(t, 3), t => BackLegOut(t, 4),
+      t => ElasticLegOut(t, 1), t => ElasticLegOut(t, 2), t => ElasticLegOut(t, 3), t => ElasticLegOut(t, 4)
+    ];
     static readonly Func<float, float>[] InOutCurves =
-      [Linear, SineInOut, QuadInOut, CubicInOut, QuartInOut, QuintInOut, ExpoInOut, CircInOut, BackInOut, ElasticInOut, BounceInOut, SmoothStep, SmootherStep];
+    [
+      Linear, SineInOut, QuadInOut, CubicInOut, QuartInOut, QuintInOut, ExpoInOut, CircInOut,
+      t => BackPair(t, 0), t => ElasticPair(t, 0), BounceInOut, SmoothStep, SmootherStep,
+      t => BackPair(t, 1), t => BackPair(t, 2), t => BackPair(t, 3), t => BackPair(t, 4),
+      t => ElasticPair(t, 1), t => ElasticPair(t, 2), t => ElasticPair(t, 3), t => ElasticPair(t, 4)
+    ];
     static readonly Func<float, float>[,] Compositions = CreateCompositions();
 
     static Func<float, float>[,] CreateCompositions() {
-      var functions = new Func<float, float>[13, 13];
-      for (var i = 0; i < 13; i++)
-        for (var o = 0; o < 13; o++) {
+      var functions = new Func<float, float>[CurveCount, CurveCount];
+      for (var i = 0; i < CurveCount; i++)
+        for (var o = 0; o < CurveCount; o++) {
           functions[i, o] = Compose(i, o, BlendType.Hermite, 0.4f);
         }
       return functions;
     }
 
-    // Analytic derivative of the conventional first half (the second half is symmetric).
+    // Analytic derivative of the paired first half (the second half is symmetric).
     static float PairSlope(int family, float time) {
       var t = Math.Min(time, 1 - time);
       var x = 2 * t;
@@ -57,9 +85,8 @@ namespace tweens.gd {
         5 => 80 * t * t * t * t,
         6 => 10 * Mathf.Log(2) * Mathf.Pow(2, 20 * t - 10),
         7 => x / Mathf.Sqrt(1 - x * x),
-        8 => 3 * (ConstantB + 1) * x * x - 2 * ConstantB * x,
-        9 => -10 * Mathf.Pow(2, 20 * t - 10) *
-          (Mathf.Log(2) * Mathf.Sin((20 * t - 11.125f) * ConstantE) + ConstantE * Mathf.Cos((20 * t - 11.125f) * ConstantE)),
+        8 or >= 13 and <= 16 => BackSlope(x, family == 8 ? 0 : family - 12),
+        9 or >= 17 and <= 20 => ElasticSlope(1 - x, family == 9 ? 0 : family - 16),
         10 => BounceSlope(1 - x),
         11 => 6 * t * (1 - t),
         _ => 30 * t * t * (1 - t) * (1 - t),
@@ -119,8 +146,8 @@ namespace tweens.gd {
       ValidateBlend(blendType, blend);
       var bits = (long)easeType;
       if (bits >= 256 && (bits & ~CompositionMask) == 0) {
-        var entry = (ulong)((bits >> 8) & LegMask);
-        var exit = (ulong)((bits >> 21) & LegMask);
+        var entry = LegBits(bits, false);
+        var exit = LegBits(bits, true);
         if ((entry == 0 || BitOperations.IsPow2(entry)) && (exit == 0 || BitOperations.IsPow2(exit))) {
           if (entry == 0) return OutCurves[BitOperations.TrailingZeroCount(exit)];
           if (exit == 0) return InCurves[BitOperations.TrailingZeroCount(entry)];
@@ -275,6 +302,42 @@ namespace tweens.gd {
       return time < 0.5 ?
         Mathf.Pow(2 * time, 2) * ((ConstantB + 1) * 2 * time - ConstantB) / 2 :
         (Mathf.Pow(2 * time - 2, 2) * ((ConstantB + 1) * (time * 2 - 2) + ConstantB) + 2) / 2;
+    }
+
+    static float BackLegIn(float t, int level, bool paired = false) {
+      if (t == 0 || t == 1) return t;
+      var s = (paired ? BackPaired : BackSolo)[level];
+      return (s + 1) * t * t * t - s * t * t;
+    }
+
+    static float BackLegOut(float t, int level, bool paired = false) => 1 - BackLegIn(1 - t, level, paired);
+    static float BackPair(float t, int level) => t < 0.5f ? BackLegIn(2 * t, level, true) / 2
+      : 0.5f + BackLegOut(2 * t - 1, level, true) / 2;
+
+    static float BackSlope(float t, int level) {
+      var s = BackPaired[level];
+      return 3 * (s + 1) * t * t - 2 * s * t;
+    }
+
+    // A damped oscillator with an adjustable sine term keeps both endpoints fixed.
+    // The periods set the 10% baseline; the kicks set each larger peak analytically.
+    static float ElasticLegOut(float t, int level, bool paired = false) {
+      if (t == 0 || t == 1) return t;
+      var angle = Mathf.Tau * t / (paired ? ElasticPairPeriod : ElasticSoloPeriod);
+      var kick = (paired ? ElasticPairKick : ElasticSoloKick)[level];
+      return 1 - Mathf.Pow(2, -10 * t) * (Mathf.Cos(angle) - kick * Mathf.Sin(angle));
+    }
+
+    static float ElasticLegIn(float t, int level, bool paired = false) => 1 - ElasticLegOut(1 - t, level, paired);
+    static float ElasticPair(float t, int level) => t < 0.5f ? ElasticLegIn(2 * t, level, true) / 2
+      : 0.5f + ElasticLegOut(2 * t - 1, level, true) / 2;
+
+    static float ElasticSlope(float t, int level) {
+      var omega = Mathf.Tau / ElasticPairPeriod;
+      var decay = 10 * Mathf.Log(2);
+      var kick = ElasticPairKick[level];
+      return Mathf.Pow(2, -10 * t) * ((decay + kick * omega) * Mathf.Cos(omega * t)
+        + (omega - kick * decay) * Mathf.Sin(omega * t));
     }
 
     static float ElasticIn(float time) {

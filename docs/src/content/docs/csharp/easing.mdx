@@ -44,9 +44,9 @@ join settings, so those controls are disabled for them.
 In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
 the Sine halves are `0.5 * SineIn(2 * t)` and
 `0.5 + 0.5 * SineOut(2 * t - 1)`. Every pair passes through `(0.5, 0.5)`.
-We use each family's conventional InOut half profile, including the authored
-InOut tuning of Back and Elastic. SmoothStep and SmootherStep keep their
-existing symmetric profiles.
+Each family supplies an InOut half profile. Back and Elastic are calibrated
+to their named overshoot percentage; the other families keep their conventional
+profiles, including symmetric SmoothStep and SmootherStep.
 
 **Hermite is the default.** It joins the two halves with two cubic segments
 inside a centered window. With width 0.4, progress up to 0.3 follows the In
@@ -73,7 +73,8 @@ right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
 ```
 
 Matching families bypass the join: **Sine | Sine is exactly SineInOut**, and
-all other matching families preserve their conventional InOut curves too.
+Back and Elastic use their calibrated paired profiles directly. Other matching
+families preserve their conventional InOut curves too.
 
 ## Choose the method and width
 
@@ -119,11 +120,24 @@ SmoothStep and SmootherStep are symmetric curves, so their In and Out shapes
 are identical. Back and Elastic can overshoot. Output weights aren't clamped;
 native property limits still apply to constrained values such as alpha or ranges.
 
+Back and Elastic offer **10%, 20%, 30%, 40%, and 50%** peak overshoot:
+`Back10` through `Back50`, and `Elastic10` through `Elastic50`.
+`Back` aliases `Back10`; `Elastic` aliases `Elastic10`.
+Every variant is available in `In`, `Out`, and `InOut`.
+For example, use `In.Back20 | Out.Elastic40` or `InOut.Elastic30`.
+
+The percentage measures overshoot relative to the **full tween range**, for a
+single leg or a matching pair. An Out tween from 0 to 100 with `Elastic30`
+peaks at 130; its In counterpart dips to -30. `InOut.Elastic30` reaches both
+extremes. A mixed pair's join can reshape overshoot inside its blend window.
+Legacy `EaseType` curves keep their original shapes.
+
 ## Migrate existing eases
 
 Use `In.Sine` for `EaseType.SineIn`, `Out.Sine` for `EaseType.SineOut`, and
 `InOut.Sine` for `EaseType.SineInOut`; the same naming applies to the other families.
-Single-leg and matching InOut shapes stay the same. Legacy `EaseType` names and
+Back and Elastic use the new percentage calibration; other shapes stay the same.
+Legacy `EaseType` names and
 numeric values remain available. Do not combine legacy names with flags.
 New code should use `In`, `Out`, and `InOut`.
 

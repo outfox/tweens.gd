@@ -1,14 +1,15 @@
 // Shared numeric fixtures run in C#, GDScript, and the actual website easing code.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { composeEase, FAMILIES, legEase, pairedLegEase, ease } from '../src/scripts/motion.ts';
+import { composeEase, canonicalFamily, FAMILIES, legEase, pairedLegEase, ease } from '../src/scripts/motion.ts';
 
 const data = JSON.parse(readFileSync(new URL('../../tests/conformance/easing.json', import.meta.url), 'utf8'));
 for (const sample of data.cases) {
   assert.ok(Math.abs(composeEase(sample.in, sample.out, sample.progress, sample.skew, sample.blendType, sample.blend) - sample.expected) < data.tolerance,
     JSON.stringify(sample));
 }
-for (const family of FAMILIES) {
+const overshoots = f => /^(Back|Elastic)/.test(f);
+for (const family of FAMILIES.filter(f => !overshoots(f))) {
   const legacy = ['Linear', 'SmoothStep', 'SmootherStep'].includes(family) ? family : family + 'InOut';
   for (let i = 0; i <= 1000; i++) assert.equal(composeEase(family, family, i / 1000), ease(legacy, i / 1000));
 }
@@ -31,10 +32,10 @@ for (const entry of ['None', ...FAMILIES]) {
     }
   }
 }
-console.log(`Easing: ${data.cases.length} shared samples and all 169 pairs plus missing legs passed.`);
+console.log(`Easing: ${data.cases.length} shared samples and all ${new Set(FAMILIES.map(canonicalFamily)).size ** 2} pairs plus missing legs passed.`);
 
 // Test behavior, rather than duplicating the interpolation formula.
-const monotone = FAMILIES.filter(f => !['Back', 'Elastic', 'Bounce'].includes(f));
+const monotone = FAMILIES.filter(f => !overshoots(f) && f !== 'Bounce');
 for (const a of monotone) for (const b of monotone) for (const width of [0, .01, .2, .4, .8, 1]) {
   let previous = 0;
   for (let i=0; i<=1000; i++) {
@@ -44,10 +45,28 @@ for (const a of monotone) for (const b of monotone) for (const width of [0, .01,
   }
 }
 for (const a of FAMILIES) for (const b of FAMILIES) {
-  if (a===b) continue; // Preserve authored corners/singularities in matching families.
+  if (canonicalFamily(a)===canonicalFamily(b)) continue; // Preserve authored corners/singularities in matching families.
   for (const width of [.1,.4,.8]) for (const t of [.5-width/2,.5,.5+width/2]) {
     const h=1e-6, f=p=>composeEase(a,b,p,1,'Hermite',width);
     assert.ok(Math.abs((f(t)-f(t-h))/h-(f(t+h)-f(t))/h)<.01, JSON.stringify({a,b,width,t}));
   }
 }
 console.log('Hermite: monotonicity, bounds and velocity continuity passed.');
+
+for (const base of ['Back', 'Elastic']) for (const percent of [10,20,30,40,50]) {
+  const family=base+percent, amount=percent/100;
+  let soloLow=0, soloHigh=1, pairLow=0, pairHigh=1;
+  for (let i=0; i<=10000; i++) {
+    const t=i/10000, a=composeEase(family,'None',t), b=composeEase('None',family,t), pair=composeEase(family,family,t);
+    assert.ok(Math.abs(a-(1-composeEase('None',family,1-t)))<1e-12);
+    soloLow=Math.min(soloLow,a); soloHigh=Math.max(soloHigh,b);
+    pairLow=Math.min(pairLow,pair); pairHigh=Math.max(pairHigh,pair);
+    if (percent===10) {
+      assert.equal(b,composeEase('None',base,t));
+      assert.equal(pair,composeEase(base,family,t));
+    }
+  }
+  for (const peak of [-soloLow,soloHigh-1,-pairLow,pairHigh-1]) assert.ok(Math.abs(peak-amount)<.00002, family+': '+peak);
+}
+assert.ok(ease('ElasticOut',.13474)>1.37);
+console.log('Back/Elastic: 10%-50% solo and paired peaks, symmetry, aliases, and legacy preservation passed.');

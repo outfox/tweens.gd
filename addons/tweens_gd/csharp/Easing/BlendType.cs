@@ -7,7 +7,7 @@ public enum BlendType
 {
     /// <summary>Two cubic Hermite segments preserve the midpoint and join the legs with continuous velocity.</summary>
     Hermite,
-    /// <summary>Crossfade the families' conventional InOut curves with a smooth weight.</summary>
+    /// <summary>Crossfade the families' paired profiles with a smooth weight.</summary>
     SmoothStep,
     /// <summary>Crossfade with a linear weight; velocity may jump at the window edges.</summary>
     Linear,

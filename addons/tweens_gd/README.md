@@ -149,12 +149,15 @@ Tweens.play(sprite, move)
 ```
 
 `Tweens.InOut.SINE` is `Tweens.In.SINE | Tweens.Out.SINE`. A single leg runs
-on its own. In and Out occupy the first and second halves. Their conventional
+on its own. In and Out occupy the first and second halves. Their
 halves meet through a local Hermite join between 30% and 70% of progress after
 skew. `blend_type` selects `Tweens.BlendType.HERMITE`, `SMOOTH_STEP`, or `LINEAR`;
-`blend` sets the centered window width in [0, 1] (default 0.4). Matching families exactly preserve their conventional InOut shape.
+`blend` sets the centered window width in [0, 1] (default 0.4). Matching families use their paired profile directly.
 Choose one curve per side; `NONE` omits a side and
-`LINEAR` selects a straight line. Legacy `Tweens.Ease` names retain their old
+`LINEAR` selects a straight line. `BACK` / `BACK10` and `ELASTIC` / `ELASTIC10`
+have 10% peak overshoot. Both families offer `20` through `50` variants in `In`,
+`Out`, and `InOut`, measured against the full tween range for solo legs and matching
+pairs. Legacy `Tweens.Ease` names retain their old
 shapes. The [easing composer](https://tweens.gd/gdscript/easing/) previews all pairs.
 
 ## Timing configuration

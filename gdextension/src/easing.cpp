@@ -19,51 +19,89 @@ constexpr double C = A + 1.0;
 constexpr double D = Math::TAU / 3.0;
 constexpr double E = Math::TAU / 4.5;
 constexpr int64_t LEG_MASK = (int64_t(1) << 13) - 1;
-constexpr int64_t COMPOSITION_MASK = (LEG_MASK << 8) | (LEG_MASK << 21);
+constexpr int64_t COMPOSITION_MASK = ((int64_t(1) << 50) - 1) & ~int64_t(255);
+// Extra slots preserve the original In/Out bit values.
+int64_t leg_bits(int64_t bits, bool out) {
+	return ((bits >> (out ? 21 : 8)) & LEG_MASK) | (((bits >> (out ? 42 : 34)) & 255) << 13);
+}
+
+// Peak-calibrated parameters for 10%, 20%, ... 50% over the full tween range.
+constexpr double BACK_SOLO[] = {1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737};
+constexpr double BACK_PAIRED[] = {2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325};
+constexpr double ELASTIC_SOLO_PERIOD = 0.7553423501870573;
+constexpr double ELASTIC_PAIR_PERIOD = 0.5074981597799941;
+constexpr double ELASTIC_SOLO_KICK[] = {0, 0.6853132138892408, 1.1091787748281363, 1.4696240828544362, 1.8012905799033314};
+constexpr double ELASTIC_PAIR_KICK[] = {0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153};
 
 bool single_or_missing(int64_t bits) {
 	return (bits & (bits - 1)) == 0;
 }
 
-// Slot order matches the public In/Out flags in types.gd and EaseLegs.cs.
-int64_t legacy_leg(int64_t bits, bool out) {
+// Slot order matches EaseLegs.cs and the public flags in types.gd.
+int leg_slot(int64_t bits) {
 	int slot = 0;
 	while ((bits >>= 1) != 0) ++slot;
+	return slot;
+}
+int back_level(int slot) { return slot == 8 ? 0 : slot >= 13 && slot <= 16 ? slot - 12 : -1; }
+int elastic_level(int slot) { return slot == 9 ? 0 : slot >= 17 && slot <= 20 ? slot - 16 : -1; }
+int64_t legacy_leg(int slot, bool out) {
 	if (slot == 0) return TweensGdEasing::LINEAR;
 	if (slot == 11) return TweensGdEasing::SMOOTH_STEP;
 	if (slot == 12) return TweensGdEasing::SMOOTHER_STEP;
 	return slot * 10 + (out ? 1 : 0);
 }
 
-// Conventional half profiles, including the authored InOut tuning of Back and Elastic.
-int64_t legacy_pair(int64_t bits) {
-	const int64_t entry = legacy_leg(bits, false);
-	return entry >= TweensGdEasing::SINE_IN && entry <= TweensGdEasing::BOUNCE_IN ? entry + 2 : entry;
+double back_in(double t, int level, bool paired) {
+	if (t == 0.0 || t == 1.0) return t;
+	const double s = (paired ? BACK_PAIRED : BACK_SOLO)[level];
+	return (s + 1.0)*t*t*t - s*t*t;
+}
+double elastic_out(double t, int level, bool paired) {
+	if (t == 0.0 || t == 1.0) return t;
+	const double angle = Math::TAU*t/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
+	const double kick = (paired ? ELASTIC_PAIR_KICK : ELASTIC_SOLO_KICK)[level];
+	return 1.0 - std::pow(2.0, -10.0*t)*(std::cos(angle)-kick*std::sin(angle));
+}
+double family_leg(int slot, bool out, double t, bool paired = false) {
+	const int back = back_level(slot), elastic = elastic_level(slot);
+	if (back >= 0) return out ? 1.0-back_in(1.0-t, back, paired) : back_in(t, back, paired);
+	if (elastic >= 0) return out ? elastic_out(t, elastic, paired) : 1.0-elastic_out(1.0-t, elastic, paired);
+	return TweensGdEasing::evaluate(legacy_leg(slot, out), t);
+}
+double family_pair(int slot, double t) {
+	if (back_level(slot) >= 0 || elastic_level(slot) >= 0)
+		return t < 0.5 ? family_leg(slot, false, 2.0*t, true)/2.0 : 0.5+family_leg(slot, true, 2.0*t-1.0, true)/2.0;
+	const int64_t legacy = legacy_leg(slot, false);
+	return TweensGdEasing::evaluate(legacy >= 10 && legacy <= 100 ? legacy+2 : legacy, t);
 }
 
-// Derivative of a conventional half profile; symmetric about the midpoint.
+// Derivative of a paired half profile; symmetric about the midpoint.
 double pair_slope(int64_t family, double time) {
 	const double t = MIN(time, 1.0 - time), x = 2.0 * t;
+	const int back = back_level(int(family)), elastic = elastic_level(int(family));
+	if (back >= 0) { const double s = BACK_PAIRED[back]; return 3.0*(s+1.0)*x*x - 2.0*s*x; }
+	if (elastic >= 0) {
+		const double u = 1.0-x, omega = Math::TAU/ELASTIC_PAIR_PERIOD, decay = 10.0*std::log(2.0), kick = ELASTIC_PAIR_KICK[elastic];
+		return std::pow(2.0, -10.0*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
+	}
 	switch (family) {
-		case TweensGdEasing::SINE_IN_OUT: return Math::PI * std::sin(Math::PI * t) / 2.0;
-		case TweensGdEasing::QUAD_IN_OUT: return 4.0 * t;
-		case TweensGdEasing::CUBIC_IN_OUT: return 12.0 * t * t;
-		case TweensGdEasing::QUART_IN_OUT: return 32.0 * t * t * t;
-		case TweensGdEasing::QUINT_IN_OUT: return 80.0 * t * t * t * t;
-		case TweensGdEasing::EXPO_IN_OUT: return 10.0 * std::log(2.0) * std::pow(2.0, 20.0 * t - 10.0);
-		case TweensGdEasing::CIRC_IN_OUT: return x / std::sqrt(1.0 - x * x);
-		case TweensGdEasing::BACK_IN_OUT: return 3.0 * (B + 1.0) * x * x - 2.0 * B * x;
-		case TweensGdEasing::ELASTIC_IN_OUT: return -10.0 * std::pow(2.0, 20.0 * t - 10.0) *
-			(std::log(2.0) * std::sin((20.0 * t - 11.125) * E) + E * std::cos((20.0 * t - 11.125) * E));
-		case TweensGdEasing::BOUNCE_IN_OUT: {
+		case 1: return Math::PI * std::sin(Math::PI * t) / 2.0;
+		case 2: return 4.0 * t;
+		case 3: return 12.0 * t * t;
+		case 4: return 32.0 * t * t * t;
+		case 5: return 80.0 * t * t * t * t;
+		case 6: return 10.0 * std::log(2.0) * std::pow(2.0, 20.0 * t - 10.0);
+		case 7: return x / std::sqrt(1.0 - x * x);
+		case 10: {
 			double v = 1.0 - x;
 			if (v >= 2.5 / 2.75) v -= 2.625 / 2.75;
 			else if (v >= 2.0 / 2.75) v -= 2.25 / 2.75;
 			else if (v >= 1.0 / 2.75) v -= 1.5 / 2.75;
 			return 15.125 * v;
 		}
-		case TweensGdEasing::SMOOTH_STEP: return 6.0 * t * (1.0 - t);
-		case TweensGdEasing::SMOOTHER_STEP: return 30.0 * t * t * (1.0 - t) * (1.0 - t);
+		case 11: return 6.0 * t * (1.0 - t);
+		case 12: return 30.0 * t * t * (1.0 - t) * (1.0 - t);
 		default: return 1.0;
 	}
 }
@@ -98,7 +136,7 @@ void TweensGdEasing::_bind_methods() {
 
 bool tweens::is_known_ease(int64_t p_ease) {
 	if (p_ease >= 256 && (p_ease & ~COMPOSITION_MASK) == 0) {
-		return single_or_missing((p_ease >> 8) & LEG_MASK) && single_or_missing((p_ease >> 21) & LEG_MASK);
+		return single_or_missing(leg_bits(p_ease, false)) && single_or_missing(leg_bits(p_ease, true));
 	}
 	using Ease = TweensGdEasing::Ease;
 	if (p_ease == Ease::LINEAR || p_ease == Ease::SMOOTH_STEP || p_ease == Ease::SMOOTHER_STEP) {
@@ -120,20 +158,19 @@ double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_ble
 	const double t = CLAMP(p_progress, 0.0, 1.0);
 	if (p_ease >= 256) {
 		if (!tweens::is_known_ease(p_ease)) return Math::NaN;
-		const int64_t entry = (p_ease >> 8) & LEG_MASK;
-		const int64_t exit = (p_ease >> 21) & LEG_MASK;
-		if (entry == 0) return evaluate(legacy_leg(exit, true), t);
-		if (exit == 0) return evaluate(legacy_leg(entry, false), t);
-		const int64_t in_pair = legacy_pair(entry), out_pair = legacy_pair(exit);
+		const int64_t entry = leg_bits(p_ease, false), exit = leg_bits(p_ease, true);
+		if (entry == 0) return family_leg(leg_slot(exit), true, t);
+		if (exit == 0) return family_leg(leg_slot(entry), false, t);
+		const int in_pair = leg_slot(entry), out_pair = leg_slot(exit);
 		const double h = p_blend / 2.0, left = 0.5 - h, right = 0.5 + h;
-		if (entry == exit || t <= left) return evaluate(in_pair, t);
-		if (t >= right) return evaluate(out_pair, t);
+		if (entry == exit || t <= left) return family_pair(in_pair, t);
+		if (t >= right) return family_pair(out_pair, t);
 		if (p_blend_type != 0) {
 			const double u = (t - left) / p_blend;
 			const double w = p_blend_type == 1 ? u*u*(3.0 - 2.0*u) : u;
-			return evaluate(in_pair, t)*(1.0-w) + evaluate(out_pair, t)*w;
+			return family_pair(in_pair, t)*(1.0-w) + family_pair(out_pair, t)*w;
 		}
-		const double y0 = evaluate(in_pair, left), y1 = evaluate(out_pair, right);
+		const double y0 = family_pair(in_pair, left), y1 = family_pair(out_pair, right);
 		const double v0 = pair_slope(in_pair, left), v1 = pair_slope(out_pair, right);
 		const double d0 = (0.5-y0)/h, d1 = (y1-0.5)/h;
 		// Shared midpoint tangent solves equal acceleration, limited against new reversals.

@@ -73,6 +73,9 @@ sprite.TweenPositionX(300, 1.2, options =>
 `InOut.Sine` is `In.Sine | Out.Sine` and exactly preserves `EaseType.SineInOut`.
 Single legs run on their own; pairs use In on 0–0.5 and Out on 0.5–1, with a local
 Hermite join over 30–70% of progress after skew. `BlendType` selects Hermite,
-SmoothStep, or Linear; `Blend` sets the window width in [0, 1]. Legacy
+SmoothStep, or Linear; `Blend` sets the window width in [0, 1].
+`Back` / `Back10` and `Elastic` / `Elastic10` have 10% peak overshoot. Both families
+offer `20` through `50` variants in `In`, `Out`, and `InOut`, measured against the
+full tween range for solo legs and matching pairs. Legacy
 `EaseType` names keep their original shapes. Try the
 [easing composer](https://tweens.gd/csharp/easing/).

@@ -1,13 +1,14 @@
 ---
-import { FAMILIES } from '../scripts/motion';
+import { FAMILIES, canonicalFamily } from '../scripts/motion';
 import type { Lang } from '../scripts/lang';
 interface Props { lang?: Lang }
 const { lang = 'csharp' } = Astro.props;
+const gd = lang === 'gdscript';
 const legs = ['None', ...FAMILIES];
 ---
 
 <div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
-	<div class="ep-heading"><span class="eyebrow">EASING COMPOSER</span><span class="badge">13 × 13 curves</span></div>
+	<div class="ep-heading"><span class="eyebrow">EASING COMPOSER</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span></div>
 	<div class="presets" aria-label="Easing presets">
 		<button class="tw-btn" type="button" data-preset="Sine,Cubic">Soft landing</button>
 		<button class="tw-btn" type="button" data-preset="Back,Bounce">Wind-up & bounce</button>
@@ -18,8 +19,8 @@ const legs = ['None', ...FAMILIES];
 		<div class="visual">
 			<svg class="graph" viewBox="0 0 496 296" role="img" aria-label="In, Out, and blended easing curves over time">
 				<rect class="blend-zone" data-zone x="162" y="16" width="172" height="256" rx="8" />
-				<path class="grid" d="M32 60H464M32 145H464M32 230H464M32 16V272M464 16V272" />
-				<text x="12" y="64">1</text><text x="4" y="149">0.5</text><text x="12" y="234">0</text>
+				<path class="grid" data-value-grid d="M32 60H464M32 145H464M32 230H464M32 16V272M464 16V272" />
+				<text x="12" y="64" data-value-tick="1">1</text><text x="4" y="149" data-value-tick="0.5">0.5</text><text x="12" y="234" data-value-tick="0">0</text>
 				<text x="32" y="290">0 s</text><text x="464" y="290" text-anchor="end" data-end-time>1.2 s</text>
 				<path class="source entry" data-entry />
 				<path class="source exit" data-exit />
@@ -29,7 +30,7 @@ const legs = ['None', ...FAMILIES];
 			</svg>
 			<div class="legend"><span class="in-key">In half</span><span class="out-key">Out half</span><span class="result-key">Result</span><span class="zone-key">Join window</span></div>
 			<svg class="lane" viewBox="0 0 496 48" aria-hidden="true">
-				<path class="rail" d="M76 24H420" />
+				<path class="rail" data-rail d="M76 24H420" />
 				{Array.from({length: 11}, () => <circle class="ghost" data-ghost cy="24" r="5" />)}
 				<circle class="ball" data-ball cx="76" cy="24" r="10" />
 			</svg>
@@ -41,25 +42,43 @@ const legs = ['None', ...FAMILIES];
 		</div>
 		<div class="controls">
 			<div class="selectors">
-				<label class="tw-field"><span class="in-key">In curve</span><select data-in aria-label="In curve">{legs.map(f => <option value={f} selected={f === 'Sine'}>{f === 'None' ? 'None (Out only)' : f}</option>)}</select></label>
+				<label class="tw-field"><span class="in-key">In curve</span><select data-in aria-label="In curve">{legs.map(f => <option value={f} selected={f === 'None'}>{f === 'None' ? 'None (Out only)' : f}</option>)}</select></label>
 				<span class="join" aria-hidden="true">|</span>
-				<label class="tw-field"><span class="out-key">Out curve</span><select data-out aria-label="Out curve">{legs.map(f => <option value={f} selected={f === 'Cubic'}>{f === 'None' ? 'None (In only)' : f}</option>)}</select></label>
+				<label class="tw-field"><span class="out-key">Out curve</span><select data-out aria-label="Out curve">{legs.map(f => <option value={f} selected={f === 'Elastic'}>{f === 'None' ? 'None (In only)' : f}</option>)}</select></label>
 			</div>
 			<label class="tw-field"><span>Duration <output data-duration-out>1.2 s</output></span><input type="range" min="0.2" max="4" step="0.1" value="1.2" data-duration /></label>
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
 			<label class="tw-field"><span>Join method</span><select data-blend aria-label="Join method"><option value="Hermite">Hermite · match velocity</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
 			<label class="tw-field"><span>Join width <output data-width-out>40%</output></span><input aria-label="Join width" type="range" min="0" max="1" step="0.02" value="0.4" data-width /></label>
-			<p class="hint" data-hint>In covers the first half, Out the second. A cubic join connects them around the midpoint.</p>
+			<p class="hint" data-hint>A single selected curve runs over the full duration. Choose both curves to join them.</p>
 			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
 		</div>
 	</div>
-	<div class="recipe"><pre><code data-code></code></pre><button type="button" class="tw-btn" data-copy>Copy</button></div>
+	<div class="recipe">
+		<pre>{gd ? (
+			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>1.2</span>,
+    <span data-code-ease><span class="ty">Tweens.Out</span>.ELASTIC</span>)
+move.skew = <span class="num" data-code-skew>1.00</span>
+move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>HERMITE</span>
+move.blend = <span class="num" data-code-blend>0.40</span>
+<span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
+		) : (
+			<code data-code>sprite.<span class="fn">TweenPositionX</span>(<span class="num">300</span>, <span class="num" data-code-duration>1.2</span>, options <span class="kw">=&gt;</span>
+{'{'}
+    options.Ease = <span data-code-ease><span class="ty">Out</span>.Elastic</span>;
+    options.Skew = <span class="num" data-code-skew>1.00</span>;
+    options.BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Hermite</span>;
+    options.Blend = <span class="num" data-code-blend>0.40</span>;
+{'}'});</code>
+		)}</pre>
+		<button type="button" class="tw-btn" data-copy>Copy</button>
+	</div>
 	<p class="footnote">Time runs left to right. Rings mark equal time intervals; wider gaps mean faster motion. The velocity plot shows changes in speed and direction. Skew warps time before both curves and their join.</p>
 	<span class="sr-only" role="status" aria-live="polite" data-announce></span>
 </div>
 
 <script>
-	import { composeEase, legEase, pairedLegEase, type EaseLeg, type BlendType, tween, type TweenHandle } from '../scripts/motion';
+	import { composeEase, legEase, pairedLegEase, canonicalFamily, type EaseLeg, type BlendType, tween, type TweenHandle } from '../scripts/motion';
 	import { constant, langOf } from '../scripts/lang';
 	for (const root of document.querySelectorAll<HTMLElement>('[data-easing-playground]')) {
 		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
@@ -73,18 +92,21 @@ const legs = ['None', ...FAMILIES];
 		const playButton = $<HTMLButtonElement>('[data-play]');
 		const gd = langOf(root) === 'gdscript';
 		let playing: TweenHandle | undefined;
+		let graphScale = 170, laneScale = 344;
+		const graphY = (v: number) => 145 - graphScale * (v - 0.5);
+		const laneX = (v: number) => 248 + laneScale * (v - 0.5);
 		const value = (p: number) => composeEase(entry.value as EaseLeg, exit.value as EaseLeg, p, +skew.value, blend.value as BlendType, +width.value);
 		const path = (f: (t: number) => number, start = 0, end = 1) => Array.from({length: 241}, (_, i) => {
 			const t = start + (end - start) * i / 240;
-			return `${i ? 'L' : 'M'}${(32 + 432 * t).toFixed(2)} ${(230 - 170 * f(t)).toFixed(2)}`;
+			return `${i ? 'L' : 'M'}${(32 + 432 * t).toFixed(2)} ${(graphY(f(t))).toFixed(2)}`;
 		}).join('');
 		const draw = (p: number) => {
 			const w = value(p), x = String(32 + 432 * p);
 			$('[data-tracer]').setAttribute('cx', x);
-			$('[data-tracer]').setAttribute('cy', String(230 - 170 * w));
+			$('[data-tracer]').setAttribute('cy', String(graphY(w)));
 			$('[data-now]').setAttribute('x1', x);
 			$('[data-now]').setAttribute('x2', x);
-			$('[data-ball]').setAttribute('cx', String(76 + 344 * w));
+			$('[data-ball]').setAttribute('cx', String(laneX(w)));
 			progress.value = String(p);
 			$('[data-position-out]').textContent = `${(p * +duration.value).toFixed(2)} s · ${w.toFixed(3)}`;
 		};
@@ -92,16 +114,30 @@ const legs = ['None', ...FAMILIES];
 		const update = () => {
 			stop();
 			const a = entry.value as EaseLeg, b = exit.value as EaseLeg, k = +skew.value;
+			const matching = canonicalFamily(a) === canonicalFamily(b);
+			// Keep the full overshoot and its motion preview visible, including the 50% curves.
+			let extent = 0.5;
+			for (let i = 0; i <= 1000; i++) {
+				const t = i / 1000, u = t ** k;
+				extent = Math.max(extent, Math.abs(value(t) - 0.5));
+				if (a !== 'None' && (b === 'None' || u <= 0.5)) extent = Math.max(extent, Math.abs((b === 'None' ? legEase(a, 'In', u) : pairedLegEase(a, u)) - 0.5));
+				if (b !== 'None' && (a === 'None' || u >= 0.5)) extent = Math.max(extent, Math.abs((a === 'None' ? legEase(b, 'Out', u) : pairedLegEase(b, u)) - 0.5));
+			}
+			graphScale = Math.min(170, 119 / extent);
+			laneScale = Math.min(344, 214 / extent);
+			$('[data-value-grid]').setAttribute('d', [0, 0.5, 1].map(v => `M32 ${graphY(v)}H464`).join('') + 'M32 16V272M464 16V272');
+			root.querySelectorAll<SVGTextElement>('[data-value-tick]').forEach(tick => tick.setAttribute('y', String(graphY(+tick.dataset.valueTick!) + 4)));
+			$('[data-rail]').setAttribute('d', `M${laneX(0)} 24H${laneX(1)}`);
 			$('[data-curve]').setAttribute('d', path(value));
 			$('[data-entry]').setAttribute('d', a === 'None' ? '' : path(t => b === 'None' ? legEase(a, 'In', t ** k) : pairedLegEase(a, t ** k), 0, b === 'None' ? 1 : 0.5 ** (1/k)));
 			$('[data-exit]').setAttribute('d', b === 'None' ? '' : path(t => a === 'None' ? legEase(b, 'Out', t ** k) : pairedLegEase(b, t ** k), a === 'None' ? 0 : 0.5 ** (1/k), 1));
 			const start = ((1 - +width.value)/2) ** (1 / k), end = ((1 + +width.value)/2) ** (1 / k);
 			$('[data-zone]').setAttribute('x', String(32 + 432 * start));
-			$('[data-zone]').setAttribute('width', String(a === 'None' || b === 'None' || a === b ? 0 : 432 * (end - start)));
+			$('[data-zone]').setAttribute('width', String(a === 'None' || b === 'None' || matching ? 0 : 432 * (end - start)));
 			$('[data-duration-out]').textContent = $<Element>('[data-end-time]').textContent = `${(+duration.value).toFixed(1)} s`;
 			$('[data-skew-out]').textContent = k.toFixed(2);
 			$('[data-width-out]').textContent = `${Math.round(+width.value*100)}%`;
-			blend.disabled = width.disabled = a === 'None' || b === 'None' || a === b;
+			blend.disabled = width.disabled = a === 'None' || b === 'None' || matching;
 			const velocities = Array.from({length: 241}, (_, i) => {
 				const l = Math.max(0, (i-0.5)/240), r = Math.min(1, (i+0.5)/240);
 				return (value(r)-value(l))/(r-l)/+duration.value;
@@ -113,16 +149,23 @@ const legs = ['None', ...FAMILIES];
 			$('[data-speed-scale]').textContent = `${lo.toFixed(1)} … ${hi.toFixed(1)} / s`;
 			$('[data-hint]').textContent = a === 'None' || b === 'None'
 				? 'A single selected curve runs over the full duration. Choose both curves to join them.'
-				: a === b ? `Matching ${a} legs reproduce the conventional InOut curve exactly.`
+				: matching ? `Matching ${a} legs use their paired profile directly.`
 				: +width.value === 0 ? 'Direct splice at the midpoint. Different legs may meet with a velocity jump.'
 				: `${blend.value === 'Hermite' ? 'Cubic join matches velocity' : blend.value + ' crossfades the family profiles'} from ${(start * 100).toFixed(0)}% to ${(end * 100).toFixed(0)}% of elapsed time.`;
-			root.querySelectorAll('[data-ghost]').forEach((g, i) => g.setAttribute('cx', String(76 + 344 * value(i / 10))));
-			const name = (leg: string, family: string) => gd ? `Tweens.${leg}.${constant(family)}` : `${leg}.${family}`;
-			const expression = a === b && a !== 'None' ? name('InOut', a)
-				: a === 'None' ? name('Out', b) : b === 'None' ? name('In', a) : `${name('In', a)} | ${name('Out', b)}`;
-			$('[data-code]').textContent = gd
-				? `var move = Tweens.position_2d_x(300.0, ${(+duration.value).toFixed(1)},\n    ${expression})\nmove.skew = ${k.toFixed(2)}\nmove.blend_type = Tweens.BlendType.${constant(blend.value)}\nmove.blend = ${(+width.value).toFixed(2)}\nTweens.play(sprite, move)`
-				: `sprite.TweenPositionX(300, ${(+duration.value).toFixed(1)}, options =>\n{\n    options.Ease = ${expression};\n    options.Skew = ${k.toFixed(2)};\n    options.BlendType = BlendType.${blend.value};\n    options.Blend = ${(+width.value).toFixed(2)};\n});`;
+			root.querySelectorAll('[data-ghost]').forEach((g, i) => g.setAttribute('cx', String(laneX(value(i / 10)))));
+			const name = (leg: string, family: string): (Node | string)[] => {
+				const type = document.createElement('span');
+				type.className = 'ty';
+				type.textContent = gd ? `Tweens.${leg}` : leg;
+				return [type, `.${gd ? constant(family) : family}`];
+			};
+			const expression = matching && a !== 'None' ? name('InOut', a)
+				: a === 'None' ? name('Out', b) : b === 'None' ? name('In', a) : [...name('In', a), ' | ', ...name('Out', b)];
+			$('[data-code-ease]').replaceChildren(...expression);
+			$('[data-code-duration]').textContent = (+duration.value).toFixed(1);
+			$('[data-code-skew]').textContent = k.toFixed(2);
+			$('[data-code-blend-type]').textContent = gd ? constant(blend.value) : blend.value;
+			$('[data-code-blend]').textContent = (+width.value).toFixed(2);
 			root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.preset === `${a},${b}`)));
 			draw(+progress.value);
 		};
@@ -138,7 +181,7 @@ const legs = ['None', ...FAMILIES];
 		root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.addEventListener('click', () => {
 			[entry.value, exit.value] = button.dataset.preset!.split(','); update();
 		}));
-		$('[data-reset]').addEventListener('click', () => { entry.value = 'Sine'; exit.value = 'Cubic'; duration.value = '1.2'; skew.value = '1'; blend.value = 'Hermite'; width.value = '0.4'; progress.value = '0'; update(); });
+		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.2'; skew.value = '1'; blend.value = 'Hermite'; width.value = '0.4'; progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($('[data-code]').textContent!); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }
@@ -186,6 +229,9 @@ const legs = ['None', ...FAMILIES];
 	.hint, .footnote { color: var(--tw-muted); font-size: .8rem; line-height: 1.6; margin: 0; }
 	.recipe { display: flex; gap: .75rem; align-items: start; background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .75rem; padding: 1rem; }
 	.recipe pre { flex: 1; min-width: 0; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .78rem; color: var(--tw-soft); }
+	.recipe :global(.kw) { color: var(--tw-blue-ink); }
+	.recipe :global(.ty) { color: var(--tw-mint-ink); }
+	.recipe :global(.fn), .recipe :global(.num) { color: var(--tw-amber-ink); }
 	.recipe .tw-btn { font-size: .75rem; }
 	.scrub { font-size: .8rem; }
 	@media (min-width: 50rem) { .composer { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }

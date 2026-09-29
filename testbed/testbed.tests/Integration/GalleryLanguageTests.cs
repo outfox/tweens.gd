@@ -199,6 +199,8 @@ public class GalleryLanguageTests
                 var entry = targets["entry"].As<OptionButton>();
                 entry.Select(3); // Quad
                 entry.EmitSignal(OptionButton.SignalName.ItemSelected, 3);
+                targets["exit"].As<OptionButton>().Select(4); // Cubic
+                targets["exit"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 4);
                 targets["skew"].As<HSlider>().Value = 2;
                 targets["blend"].As<OptionButton>().Select(2);
                 targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 2);
@@ -222,6 +224,53 @@ public class GalleryLanguageTests
             }
         }
         finally { demo.Free(); }
+        Pump();
+        Assert.Empty(godot.Errors.Drain());
+    }
+
+    [Theory]
+    [InlineData(GalleryLanguage.CSharp)]
+    [InlineData(GalleryLanguage.GDScript)]
+    public void ComposerSupportsOvershootVariantsAndFitsTheirFullRange(GalleryLanguage language)
+    {
+        var stage = new Control { Size = new Vector2(600, 400) };
+        godot.Tree.Root.AddChild(stage);
+        var effect = new EasingComposer();
+        effect.Attach(stage, language);
+        Pump();
+        try
+        {
+            effect.Start(1);
+            var targets = effect.SceneTargets;
+            var entry = targets["entry"].As<OptionButton>();
+            var exit = targets["exit"].As<OptionButton>();
+            foreach (var (a, b, ease) in new[] {
+                ("Back50", "Back50", InOut.Back50),
+                ("None", "Elastic50", Out.Elastic50),
+                ("Elastic50", "Back20", In.Elastic50 | Out.Back20),
+                ("Elastic10", "Elastic", InOut.Elastic),
+                ("Back", "Back10", InOut.Back),
+            })
+            {
+                entry.Select(Enumerable.Range(0, entry.ItemCount).Single(i => entry.GetItemText(i) == a));
+                exit.Select(Enumerable.Range(0, exit.ItemCount).Single(i => exit.GetItemText(i) == b));
+                entry.EmitSignal(OptionButton.SignalName.ItemSelected, entry.Selected);
+                if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(stage).Scheduler.Update(0.25);
+                else GDScriptScheduler()!.Call("update", 0.25);
+                Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-200 + 400 * Easing.Evaluate(ease, 0.25f))), 0, 0.002);
+                Assert.Equal(a != "Elastic50", targets["blend"].As<OptionButton>().Disabled);
+                var line = targets["resultCurve"].As<Line2D>();
+                var view = line.GetViewport();
+                var zoom = view.GetCamera2D().Zoom;
+                foreach (var point in line.Points)
+                {
+                    Assert.True(Math.Abs(point.Y) * zoom.Y < view.GetVisibleRect().Size.Y / 2);
+                    var ballX = -200 + 400 * ((66 - point.Y) / 132);
+                    Assert.True(Math.Abs(ballX) * zoom.X < view.GetVisibleRect().Size.X / 2);
+                }
+            }
+        }
+        finally { stage.Free(); effect.ReleaseResources(); }
         Pump();
         Assert.Empty(godot.Errors.Drain());
     }
@@ -264,6 +313,8 @@ public class GalleryLanguageTests
         {
             var close = a.VariantType switch
             {
+                // Callbacks belong to separate scene instances; their effects are checked through scene state.
+                Variant.Type.Callable => !a.AsCallable().Equals(default(Callable)) && !b.AsCallable().Equals(default(Callable)),
                 Variant.Type.String => a.AsString() == b.AsString(),
                 Variant.Type.StringName => a.AsStringName() == b.AsStringName(),
                 Variant.Type.Bool => a.AsBool() == b.AsBool(),

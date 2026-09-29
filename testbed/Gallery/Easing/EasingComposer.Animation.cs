@@ -17,6 +17,16 @@ public sealed partial class EasingComposer
         ("Circ", In.Circ, Out.Circ), ("Back", In.Back, Out.Back), ("Elastic", In.Elastic, Out.Elastic),
         ("Bounce", In.Bounce, Out.Bounce), ("SmoothStep", In.SmoothStep, Out.SmoothStep),
         ("SmootherStep", In.SmootherStep, Out.SmootherStep),
+        ("Back10", In.Back10, Out.Back10),
+        ("Back20", In.Back20, Out.Back20),
+        ("Back30", In.Back30, Out.Back30),
+        ("Back40", In.Back40, Out.Back40),
+        ("Back50", In.Back50, Out.Back50),
+        ("Elastic10", In.Elastic10, Out.Elastic10),
+        ("Elastic20", In.Elastic20, Out.Elastic20),
+        ("Elastic30", In.Elastic30, Out.Elastic30),
+        ("Elastic40", In.Elastic40, Out.Elastic40),
+        ("Elastic50", In.Elastic50, Out.Elastic50),
     ];
     private TweenInstance? preview;
 
@@ -42,12 +52,13 @@ public sealed partial class EasingComposer
         var exponent = skew.Value;
         var method = (BlendType)blend.Selected;
         var joinWidth = width.Value;
-        var single = a.In == 0 || b.Out == 0 || entry.Selected == exit.Selected;
+        var single = a.In == 0 || b.Out == 0 || a.In == b.In;
         blend.Disabled = single;
         width.Editable = !single;
         entryCurve.Points = a.In == 0 ? [] : Sample(b.Out == 0 ? a.In : a.In | a.Out, exponent, end: b.Out == 0 ? 1 : Math.Pow(0.5, 1/exponent));
         exitCurve.Points = b.Out == 0 ? [] : Sample(a.In == 0 ? b.Out : b.In | b.Out, exponent, start: a.In == 0 ? 0 : Math.Pow(0.5, 1/exponent));
         resultCurve.Points = Sample(ease, exponent, method, joinWidth);
+        FitPreview();
         var left = -200 + 400 * (float)Math.Pow((1-joinWidth)/2, 1 / exponent);
         var right = -200 + 400 * (float)Math.Pow((1+joinWidth)/2, 1 / exponent);
         region.Polygon = [new(left, -110), new(right, -110), new(right, 85), new(left, 85)];

@@ -6,7 +6,7 @@ namespace testbed;
 
 public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.4)
 {
-    public static EasingSelection Default => new(2, 4, 1);
+    public static EasingSelection Default => new(0, 10, 1);
 }
 
 public sealed partial class EasingComposer : GalleryEffect
@@ -17,6 +17,8 @@ public sealed partial class EasingComposer : GalleryEffect
     private HSlider skew = null!, width = null!;
     private Label recipe = null!;
     private Line2D entryCurve = null!, exitCurve = null!, resultCurve = null!;
+    private SubViewport previewView = null!;
+    private Camera2D previewCamera = null!;
     private Polygon2D ball = null!, tracer = null!, region = null!;
 
     public override string Title => "In | Out";
@@ -24,12 +26,12 @@ public sealed partial class EasingComposer : GalleryEffect
 
     protected override void Build()
     {
-        var view = View();
+        var view = previewView = View();
         var container = (Control)view.GetParent();
         container.OffsetTop = 48;
         container.OffsetBottom = -100;
-        var camera = view.GetChild<Camera2D>(0);
-        view.SizeChanged += () => camera.Zoom = Vector2.One * Math.Min(view.Size.X / 512f, view.Size.Y / 256f);
+        previewCamera = view.GetChild<Camera2D>(0);
+        view.SizeChanged += FitPreview;
         region = view.Add(new Polygon2D { Color = Palette.Mint with { A = 0.08f } });
         Line(view, [new(-200, -66), new(200, -66)], Palette.Outline, 1);
         Line(view, [new(-200, 66), new(200, 66)], Palette.Outline, 1);
@@ -70,10 +72,22 @@ public sealed partial class EasingComposer : GalleryEffect
         recipe.HorizontalAlignment = HorizontalAlignment.Center;
     }
 
+    private void FitPreview()
+    {
+        if (resultCurve is null) return;
+        float halfWidth = 256, halfHeight = 128;
+        foreach (var curve in new[] { entryCurve, exitCurve, resultCurve })
+        foreach (var point in curve.Points) halfHeight = Math.Max(halfHeight, Math.Abs(point.Y) + 20);
+        foreach (var point in resultCurve.Points)
+            halfWidth = Math.Max(halfWidth, Math.Abs(400 * ((66 - point.Y) / 132) - 200) + 24);
+        previewCamera.Zoom = Vector2.One * Math.Min(previewView.Size.X / (2 * halfWidth), previewView.Size.Y / (2 * halfHeight));
+    }
+
     public override Godot.Collections.Dictionary SceneTargets => new()
     {
         ["entry"] = entry, ["exit"] = exit, ["skew"] = skew, ["blend"] = blend, ["width"] = width, ["recipe"] = recipe,
         ["entryCurve"] = entryCurve, ["exitCurve"] = exitCurve, ["resultCurve"] = resultCurve,
+        ["fit_preview"] = Callable.From(FitPreview),
         ["ball"] = ball, ["tracer"] = tracer, ["region"] = region,
     };
 

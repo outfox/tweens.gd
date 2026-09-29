@@ -41,6 +41,16 @@ enum In {
 	BOUNCE = 1 << 18,
 	SMOOTH_STEP = 1 << 19,
 	SMOOTHER_STEP = 1 << 20,
+	BACK10 = BACK,
+	ELASTIC10 = ELASTIC,
+	BACK20 = 1 << 34,
+	BACK30 = 1 << 35,
+	BACK40 = 1 << 36,
+	BACK50 = 1 << 37,
+	ELASTIC20 = 1 << 38,
+	ELASTIC30 = 1 << 39,
+	ELASTIC40 = 1 << 40,
+	ELASTIC50 = 1 << 41,
 }
 
 ## Select at most one curve per leg. A missing leg leaves the other curve unchanged.
@@ -59,9 +69,19 @@ enum Out {
 	BOUNCE = 1 << 31,
 	SMOOTH_STEP = 1 << 32,
 	SMOOTHER_STEP = 1 << 33,
+	BACK10 = BACK,
+	ELASTIC10 = ELASTIC,
+	BACK20 = 1 << 42,
+	BACK30 = 1 << 43,
+	BACK40 = 1 << 44,
+	BACK50 = 1 << 45,
+	ELASTIC20 = 1 << 46,
+	ELASTIC30 = 1 << 47,
+	ELASTIC40 = 1 << 48,
+	ELASTIC50 = 1 << 49,
 }
 
-## Matching half-duration legs. Reproduces the conventional InOut curve exactly.
+## Matching half-duration legs. Back/Elastic percentages refer to the full tween range.
 enum InOut {
 	LINEAR = In.LINEAR | Out.LINEAR,
 	SINE = In.SINE | Out.SINE,
@@ -76,4 +96,14 @@ enum InOut {
 	BOUNCE = In.BOUNCE | Out.BOUNCE,
 	SMOOTH_STEP = In.SMOOTH_STEP | Out.SMOOTH_STEP,
 	SMOOTHER_STEP = In.SMOOTHER_STEP | Out.SMOOTHER_STEP,
+	BACK10 = BACK,
+	ELASTIC10 = ELASTIC,
+	BACK20 = In.BACK20 | Out.BACK20,
+	BACK30 = In.BACK30 | Out.BACK30,
+	BACK40 = In.BACK40 | Out.BACK40,
+	BACK50 = In.BACK50 | Out.BACK50,
+	ELASTIC20 = In.ELASTIC20 | Out.ELASTIC20,
+	ELASTIC30 = In.ELASTIC30 | Out.ELASTIC30,
+	ELASTIC40 = In.ELASTIC40 | Out.ELASTIC40,
+	ELASTIC50 = In.ELASTIC50 | Out.ELASTIC50,
 }

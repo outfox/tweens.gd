@@ -14,7 +14,9 @@ the transition, with missing legs and with skew. Optional `blendType` and `blend
 select the method and centered window (defaults: Hermite and 0.4). Non-polynomial
 samples also exercise the analytic derivatives used to construct the cubic join. C#, native GDScript, and the
 website's `npm run check:easing` consume the same samples. Each implementation
-also checks every family pairing. Legacy curves remain covered by `timelines.json`.
+also checks every family pairing. Back/Elastic fixtures cover aliases, 10%–50%
+variants, and mixed joins; independent peak tests verify the named overshoot
+against the full tween range for solo curves and matching pairs. Legacy curves remain covered by `timelines.json`.
 
 `fx.json` supplies shared samples of the FX shake signal, including negative noise
 coordinates, signed seed extremes and the periodic lattice boundary. Noise is

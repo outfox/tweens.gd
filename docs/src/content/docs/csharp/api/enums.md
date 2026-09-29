@@ -72,7 +72,12 @@ Both sides provide `None`, `Linear`, `Sine`, `Quad`, `Cubic`, `Quart`, `Quint`,
 `Expo`, `Circ`, `Back`, `Elastic`, `Bounce`, `SmoothStep`, and `SmootherStep`;
 `InOut` provides every matching pair except `None`. A single leg runs on its own;
 two half-duration legs meet through a local Hermite join over 30–70% of progress
-after skew. Matching families exactly reproduce their conventional InOut curve.
+after skew. Matching families use their paired profile directly.
+
+`Back` aliases `Back10` and `Elastic` aliases `Elastic10`. Both families also
+provide `20`, `30`, `40`, and `50` variants (for example `Out.Elastic30`).
+The number is the peak overshoot percentage of the full tween range, for single
+legs and matching pairs.
 
 `EaseType.Linear` (zero) remains the default. Legacy `EaseType` constants keep
 their numeric values and original shapes. Do not OR legacy names with the new

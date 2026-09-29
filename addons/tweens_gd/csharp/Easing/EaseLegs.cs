@@ -21,6 +21,18 @@ public static class In
     public const EaseType Bounce = (EaseType)(1L << 18);
     public const EaseType SmoothStep = (EaseType)(1L << 19);
     public const EaseType SmootherStep = (EaseType)(1L << 20);
+    /// <summary>Alias for the default 10% Back curve.</summary>
+    public const EaseType Back10 = Back;
+    /// <summary>Alias for the default 10% Elastic curve.</summary>
+    public const EaseType Elastic10 = Elastic;
+    public const EaseType Back20 = (EaseType)(1L << 34);
+    public const EaseType Back30 = (EaseType)(1L << 35);
+    public const EaseType Back40 = (EaseType)(1L << 36);
+    public const EaseType Back50 = (EaseType)(1L << 37);
+    public const EaseType Elastic20 = (EaseType)(1L << 38);
+    public const EaseType Elastic30 = (EaseType)(1L << 39);
+    public const EaseType Elastic40 = (EaseType)(1L << 40);
+    public const EaseType Elastic50 = (EaseType)(1L << 41);
 }
 
 /// <summary>Out curves. Combine one In and one Out with |; a single curve runs on its own.</summary>
@@ -41,9 +53,21 @@ public static class Out
     public const EaseType Bounce = (EaseType)(1L << 31);
     public const EaseType SmoothStep = (EaseType)(1L << 32);
     public const EaseType SmootherStep = (EaseType)(1L << 33);
+    /// <summary>Alias for the default 10% Back curve.</summary>
+    public const EaseType Back10 = Back;
+    /// <summary>Alias for the default 10% Elastic curve.</summary>
+    public const EaseType Elastic10 = Elastic;
+    public const EaseType Back20 = (EaseType)(1L << 42);
+    public const EaseType Back30 = (EaseType)(1L << 43);
+    public const EaseType Back40 = (EaseType)(1L << 44);
+    public const EaseType Back50 = (EaseType)(1L << 45);
+    public const EaseType Elastic20 = (EaseType)(1L << 46);
+    public const EaseType Elastic30 = (EaseType)(1L << 47);
+    public const EaseType Elastic40 = (EaseType)(1L << 48);
+    public const EaseType Elastic50 = (EaseType)(1L << 49);
 }
 
-/// <summary>Matching half-duration legs. Reproduces the conventional InOut curve exactly.</summary>
+/// <summary>Matching half-duration legs. Back and Elastic variants target the named overshoot over the full tween range.</summary>
 public static class InOut
 {
     public const EaseType Linear = In.Linear | Out.Linear;
@@ -59,5 +83,15 @@ public static class InOut
     public const EaseType Bounce = In.Bounce | Out.Bounce;
     public const EaseType SmoothStep = In.SmoothStep | Out.SmoothStep;
     public const EaseType SmootherStep = In.SmootherStep | Out.SmootherStep;
+    public const EaseType Back10 = Back;
+    public const EaseType Elastic10 = Elastic;
+    public const EaseType Back20 = In.Back20 | Out.Back20;
+    public const EaseType Back30 = In.Back30 | Out.Back30;
+    public const EaseType Back40 = In.Back40 | Out.Back40;
+    public const EaseType Back50 = In.Back50 | Out.Back50;
+    public const EaseType Elastic20 = In.Elastic20 | Out.Elastic20;
+    public const EaseType Elastic30 = In.Elastic30 | Out.Elastic30;
+    public const EaseType Elastic40 = In.Elastic40 | Out.Elastic40;
+    public const EaseType Elastic50 = In.Elastic50 | Out.Elastic50;
 }
 
