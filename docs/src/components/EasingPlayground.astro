@@ -11,12 +11,6 @@ const variants = sorted.filter(f => /\d$/.test(f));
 
 <div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
 	<div class="ep-heading"><span class="eyebrow">EASING PLAYGROUND</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span></div>
-	<div class="presets" aria-label="Easing presets">
-		<button class="tw-btn" type="button" data-preset="Sine,Cubic">Soft landing</button>
-		<button class="tw-btn" type="button" data-preset="Back,Bounce">Wind-up & bounce</button>
-		<button class="tw-btn" type="button" data-preset="Sine,Elastic">Spring finish</button>
-		<button class="tw-btn" type="button" data-preset="Sine,Sine">Sine in & out</button>
-	</div>
 	<div class="composer">
 		<div class="visual">
 			<svg class="graph" viewBox="0 0 496 296" role="img" aria-label="In, Out, and blended easing curves over time">
@@ -60,14 +54,11 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
 			<label class="tw-field"><span>Blend type</span><select data-blend aria-label="Blend type"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
 			<label class="tw-field"><span>Blend &nbsp;<output data-width-out>20%</output></span><input aria-label="Blend" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
-			<p class="hint" data-hint>A single selected curve runs over the full duration. Choose both curves to join them.</p>
 			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
-		</div>
-	</div>
+			<p class="hint" data-hint>Source code recipe for this curve:</p>
 	<div class="recipe">
 		<pre>{gd ? (
-			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>,
-    <span data-code-ease><span class="ty">Out</span>.ELASTIC</span>)
+			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>, <span data-code-ease><span class="ty">Out</span>.ELASTIC</span>)
 <span class="comment" data-code-option="skew"><span data-comment># </span>move.skew = <span class="num" data-code-skew>1.00</span></span>
 <span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span>
 <span class="comment" data-code-option="blend"><span data-comment># </span>move.blend = <span class="num" data-code-blend>0.20</span></span>
@@ -82,6 +73,8 @@ const variants = sorted.filter(f => /\d$/.test(f));
 {'}'});</code>
 		)}</pre>
 		<button type="button" class="tw-btn" data-copy>Copy</button>
+	</div>
+		</div>
 	</div>
 	<span class="sr-only" role="status" aria-live="polite" data-announce></span>
 </div>
@@ -156,11 +149,6 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			$('[data-speed]').setAttribute('d', velocities.map((v,i) => `${i ? 'L' : 'M'}${32+432*i/240} ${sy(v)}`).join(''));
 			$('[data-speed-zero]').setAttribute('d', `M32 ${sy(0)}H464`);
 			$('[data-speed-scale]').textContent = `${lo.toFixed(1)} … ${hi.toFixed(1)} / s`;
-			$('[data-hint]').textContent = a === 'None' || b === 'None'
-				? 'A single selected curve runs over the full duration. Choose both curves to join them.'
-				: matching ? `Matching ${a} legs use their paired profile directly.`
-				: +width.value === 0 ? 'Direct splice at the midpoint. Different legs may meet with a velocity jump.'
-				: `${blend.value === 'Makima' || blend.value === 'Hermite' ? blend.value + ' cubic join matches velocity' : blend.value + ' crossfades the family profiles'} from ${(start * 100).toFixed(0)}% to ${(end * 100).toFixed(0)}% of elapsed time.`;
 			root.querySelectorAll('[data-ghost]').forEach((g, i) => g.setAttribute('cx', String(laneX(value(i / 10)))));
 			const name = (leg: string, family: string): (Node | string)[] => {
 				const type = document.createElement('span');

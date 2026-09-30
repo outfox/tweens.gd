@@ -7,12 +7,8 @@ import EasingPlayground from '../../../components/EasingPlayground.astro';
 
 Ease functions change how speed and values vary during a tween.
 
-In lieu of the common [Penner](https://easings.net/) easing functions, we use Hermite splines and use [Makima](https://www.mathworks.com/help/matlab/ref/makima.html)
-interpolation so you can freely mix and match how a tween starts and how it ends. 
-
-We still offer the usual suspects such as `InOut.QUINT` or `Out.BOUNCE`. In addition to these, you get some extra control over how far an overshoot goes, 
-e.g. `Out.BACK_40` for \~40% overshoot. And there's a bunch of brand new ones, like `Out.JUMP_30` which once you see it, you might wonder where it has been 
-our entire lives.
+In lieu of the common [Penner](https://easings.net/) easing functions, we use Hermite splines and [Makima](https://www.mathworks.com/help/matlab/ref/makima.html)
+interpolation. Now you can freely mix and match how a tween starts and how it ends!
 
 <EasingPlayground lang="gdscript" />
 
