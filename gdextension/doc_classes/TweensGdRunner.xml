@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdRunner" inherits="Node" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Automatic playback runtime for one scene tree.
+	</brief_description>
+	<description>
+		Prefer [code]Tweens.play[/code], [code]Tweens.play_all[/code], and [code]Tweens.cancel_tweens[/code]. The runner
+		is created automatically and disposed when its scene tree exits. No autoload is needed. Node targets must be in
+		the tree and own their playback; other Objects require an in-tree Node or SceneTree owner. C# equivalent:
+		[code]TweenRuntime[/code] and node extension methods.
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="acquire" qualifiers="static">
+			<return type="TweensGdRunner" />
+			<param index="0" name="tree" type="SceneTree" />
+			<description>
+				Returns or creates the automatic runtime for a live [param tree]. Use Godot's main thread.
+			</description>
+		</method>
+		<method name="cancel_tweens" qualifiers="static">
+			<return type="void" />
+			<param index="0" name="owner" type="Node" />
+			<param index="1" name="include_children" type="bool" default="false" />
+			<description>
+				Cancels active tweens owned by [param owner], optionally including descendant owners.
+			</description>
+		</method>
+		<method name="find" qualifiers="static">
+			<return type="TweensGdRunner" />
+			<param index="0" name="tree" type="SceneTree" />
+			<description>
+				Returns the existing runtime for [param tree], or null. Does not create one.
+			</description>
+		</method>
+		<method name="play" qualifiers="static">
+			<return type="TweensGdHandle" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definition" type="TweensGdDefinition" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<description>
+				Starts one definition and returns its playback handle. Node targets own their playback; other Objects
+				require an in-tree Node or SceneTree owner. A rejected start returns a failed handle. Prefer
+				[code]Tweens.play[/code].
+			</description>
+		</method>
+		<method name="play_all" qualifiers="static">
+			<return type="TweensGdGroup" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definitions" type="Variant" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<description>
+				Starts an Array of definitions in parallel and returns a group. Ownership follows [method play]. A
+				rejected start cancels earlier members and prevents later starts. Prefer [code]Tweens.play_all[/code].
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="scheduler" type="TweensGdScheduler" setter="" getter="get_scheduler">
+			The scheduler driven by this runtime. Prefer [code]Tweens.play[/code] for automatic animation.
+		</member>
+	</members>
+</class>

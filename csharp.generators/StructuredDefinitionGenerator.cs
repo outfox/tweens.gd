@@ -127,7 +127,8 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 || property.SetMethod?.DeclaredAccessibility != Accessibility.Public) continue;
             var name = "@" + property.Name;
             var type = property.Type.ToDisplayString(TypeFormat);
-            source.Append("    public ").Append(type).Append(' ').Append(name)
+            source.Append("    /// <inheritdoc cref=\"TweenOptions.").Append(property.Name).Append("\"/>\n")
+                .Append("    public ").Append(type).Append(' ').Append(name)
                 .Append(" { get => Options.").Append(name)
                 .Append("; init => Options = Options with { ").Append(name).Append(" = value }; }\n");
             var index = Array.IndexOf(ConstructorOptions, property.Name);
@@ -195,12 +196,15 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         var contract = "ITweenDefinition<" + target + ", " + value + ">";
         var source = new StringBuilder(Header + "using global::System;\nusing global::tweens.gd;\n\nnamespace Tweens;\n\n");
         source.Append("/// <summary>Reusable immutable ").Append(name)
-            .Append(" configuration. Each start creates independent playback.</summary>\n")
+            .Append(" definition. Each start snapshots configuration and captures the current value.</summary>\n")
             .Append("public readonly record struct ").Append(name).Append(generic).Append(" : ").Append(contract);
         if (kind == DefinitionKind.CustomProperty) source.Append("\n    where TTarget : class where TValue : struct");
         else if (kind == DefinitionKind.ShaderParameter) source.Append("\n    where TValue : struct");
-        source.Append("\n{\n    public TweenOptions Options { get; init; }\n").Append(options.Properties).Append('\n')
+        source.Append("\n{\n    /// <summary>Shared timing, easing, and playback modes. Individual option properties forward to this value.</summary>\n")
+            .Append("    public TweenOptions Options { get; init; }\n").Append(options.Properties).Append('\n')
+            .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.From\"/>\n")
             .Append("    public ").Append(value).Append("? From { get; init; }\n")
+            .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.To\"/>\n")
             .Append("    public ").Append(value).Append("? To { get; init; }\n")
             .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.By\"/>\n")
             .Append("    public ").Append(value).Append("? By { get; init; }\n");
@@ -213,7 +217,8 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.Delta").Append(endpoint).Append("\"/>\n")
                 .Append("    public ").Append(value).Append("? Delta").Append(endpoint).Append(" { get; init; }\n");
         foreach (var callback in Callbacks)
-            source.Append("    public Action<").Append(instance).Append(callback == "OnUpdate" ? ", " + value : "")
+            source.Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.").Append(callback).Append("\"/>\n")
+                .Append("    public Action<").Append(instance).Append(callback == "OnUpdate" ? ", " + value : "")
                 .Append(">? ").Append(callback).Append(" { get; init; }\n");
 
         // Binding parameters lead, then the endpoint and the constructor options.
@@ -221,14 +226,18 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         var bound = "";
         if (kind == DefinitionKind.ShaderParameter)
         {
-            source.Append("\n    public string Parameter { get; init; }\n");
+            source.Append("\n    /// <summary>Name of the shader uniform. Resolved and validated when playback starts.</summary>\n")
+                .Append("    public string Parameter { get; init; }\n");
             binding = "string parameter, ";
             bound = "        Parameter = parameter;\n";
         }
         else if (kind == DefinitionKind.CustomProperty)
         {
-            source.Append("\n    public Func<TTarget, TValue> Getter { get; init; }\n")
+            source.Append("\n    /// <summary>Reads the current value from the target.</summary>\n")
+                .Append("    public Func<TTarget, TValue> Getter { get; init; }\n")
+                .Append("    /// <summary>Writes the interpolated value to the target.</summary>\n")
                 .Append("    public Action<TTarget, TValue> Setter { get; init; }\n")
+                .Append("    /// <summary>Interpolates endpoints using eased weight, which may overshoot [0, 1].</summary>\n")
                 .Append("    public Func<TValue, TValue, float, TValue> Interpolate { get; init; }\n");
             binding = "Func<TTarget, TValue> getter, Action<TTarget, TValue> setter,\n"
                 + "        Func<TValue, TValue, float, TValue> interpolate, ";
@@ -289,7 +298,8 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 AppendTwin(source, "    /// <inheritdoc cref=\"" + id + "\"/>\n", method, to, form, conversion, null, ref count);
             if (method.Parameters.FirstOrDefault(parameter => parameter.Name == "configure") is not { Type: INamedTypeSymbol action } configure)
                 continue;
-            var summary = "    /// <summary>Starts a " + action.TypeArguments[0].Name + " with an easing and a delay.</summary>\n";
+            var summary = "    /// <summary>Starts a " + action.TypeArguments[0].Name + " and returns its playback handle.</summary>\n"
+                + "    /// <remarks>Sets duration, easing, and delay before snapshotting.</remarks>\n";
             foreach (var (form, conversion, _) in shorthands.Prepend((endpoint, "@to", "")))
                 AppendTwin(source, summary, method, to, form, conversion, configure, ref count);
         }

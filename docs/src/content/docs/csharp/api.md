@@ -10,6 +10,13 @@ member of the definitions you start and the handles you get back.
 Definitions such as `Tweens.Position2D` live in the root `Tweens` namespace, so
 they need no `using`.
 
+The GDScript API uses the same model: reusable definitions, independent playback
+handles, groups for parallel steps, and ordinary awaits for sequences.
+`node.Tween(a, b)` corresponds to `Tweens.play_all(node, [a, b])`; `Group.Of(a, b)`
+corresponds to `TweensGdGroup.of([a, b])`. Member names map from PascalCase to
+snake_case; `From`, `To`, and `By` become `from_value`, `to_value`, and `by_value`.
+See the [GDScript core API](/gdscript/api/) for its entry points.
+
 ## Start on a node
 
 | Entry point | Returns | Purpose |

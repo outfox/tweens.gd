@@ -28,6 +28,38 @@ with `./scripts/Pack-Addon.ps1` from the repository root.
 
 ## Start and await
 
+Both languages use the same model: a **definition** describes one motion, a
+**playback handle** controls one start, a **group** controls a parallel step, and a
+**sequence** is ordinary awaits. Factories configure definitions; starting them
+snapshots configuration and captures the current value before any delay.
+
+| Operation | C# | GDScript |
+| --- | --- | --- |
+| Create a definition | `new Tweens.Position2D(to, seconds, ease, delay)` | `Tweens.position_2d(to, seconds, ease, delay)` |
+| Vary a copy | `move with { Duration = 0.8 }` | `move.with_duration(0.8)` |
+| Start one tween | `sprite.Tween(move)` | `Tweens.play(sprite, move)` |
+| Start a parallel step | `sprite.Tween(move, fade)` | `Tweens.play_all(sprite, [move, fade])` |
+| Group existing handles | `Group.Of(a, b)` | `TweensGdGroup.of([a, b])` |
+| Await a step | `await handle.End` | `await handle.end` |
+| Control playback | `Pause()`, `Resume()`, `Cancel()` | `pause()`, `resume()`, `cancel()` |
+| Configure endpoints | `From`, `To`, `By` | `from_value`, `to_value`, `by_value` |
+| Combine easing legs | `In.Sine \| Out.Cubic` | `In.SINE \| Out.CUBIC` |
+
+C# uses PascalCase members and typed immutable definitions; GDScript uses
+snake_case members and mutable definitions with copy-returning `with_*()` methods.
+Other settings map directly, such as `UsePingPong` to `use_ping_pong`.
+Timing is in seconds in both languages; C# also accepts `TimeSpan`.
+Vector and color endpoints accept numeric component arrays in both APIs. C# also
+accepts tuples, scalar scale values, and color strings. GDScript uses explicit
+values for those shortcuts, such as `Vector2.ONE * 1.2` and `Color("tomato")`.
+
+Awaiting completion works after a step has ended. Cancellation returns a reason
+in both languages. C# faults throw from `End`; GDScript returns `FAILED` and stores
+the message in `error`. Check the result before starting another step when an
+interruption should stop the sequence. Cancelling a wait leaves playback running:
+C# uses `AwaitDecommissionAsync(token)` and throws on wait cancellation; GDScript
+uses `wait(cancellation)` and returns `WAIT_CANCELLED`.
+
 ```gdscript
 extends Node2D
 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdScheduler" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A manually driven playback scheduler.
+	</brief_description>
+	<description>
+		Use [method add] or [method add_all] to start definitions, then call [method update] with deltas in seconds. Use
+		Godot's main thread. The automatic [code]Tweens.play[/code] API drives a scheduler per scene tree. C#
+		equivalent: [code]TweenScheduler[/code].
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="add">
+			<return type="TweensGdHandle" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definition" type="TweensGdDefinition" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<description>
+				Starts one definition and returns its playback handle. Node targets must be in the tree and own their
+				playback. Other Objects may use an in-tree Node owner or run without an owner under this manual
+				scheduler. A rejected start returns a failed handle. C# equivalent:
+				[code]scheduler.Add(target, definition, owner)[/code].
+			</description>
+		</method>
+		<method name="add_all">
+			<return type="TweensGdGroup" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definitions" type="Variant" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<description>
+				Starts an Array of definitions in parallel on one target and returns a group. Ownership follows
+				[method add]. Invalid Array entries reject before any start; a rejected start cancels earlier members
+				and prevents later starts.
+			</description>
+		</method>
+		<method name="cancel_all">
+			<return type="void" />
+			<description>
+				Cancels every active tween. The scheduler remains usable.
+			</description>
+		</method>
+		<method name="cancel_owner">
+			<return type="void" />
+			<param index="0" name="owner" type="Node" />
+			<param index="1" name="include_children" type="bool" default="false" />
+			<description>
+				Cancels active tweens owned by [param owner], optionally including descendant owners.
+			</description>
+		</method>
+		<method name="dispose">
+			<return type="void" />
+			<description>
+				Ends every active tween with RUNNER_DISPOSED and releases the scheduler. Safe to call repeatedly.
+			</description>
+		</method>
+		<method name="update">
+			<return type="void" />
+			<param index="0" name="delta" type="float" />
+			<param index="1" name="unscaled_delta" type="float" default="-1.0" />
+			<param index="2" name="mode" type="int" default="0" />
+			<description>
+				Advances one process mode by a finite, nonnegative [param delta] in seconds. An omitted
+				[param unscaled_delta] (-1) uses delta. Tweens added during callbacks advance on the next update.
+				Recursive updates are rejected. C# uses null instead of -1 for omitted unscaled delta.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="active_count" type="int" setter="" getter="get_active_count" default="0">
+			Number of unfinished tweens, including paused tweens.
+		</member>
+		<member name="is_disposed" type="bool" setter="" getter="is_disposed" default="false">
+			True after [method dispose]. New starts are rejected.
+		</member>
+		<member name="last_error" type="String" setter="" getter="get_last_error" default="&quot;&quot;">
+			Most recently reported scheduler error, or an empty string.
+		</member>
+	</members>
+	<signals>
+		<signal name="error_reported">
+			<param index="0" name="message" type="String" />
+			<description>
+				Emitted after a failed tween is cleaned up, with its error message.
+			</description>
+		</signal>
+	</signals>
+</class>

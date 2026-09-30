@@ -10,19 +10,72 @@ using System.Threading.Tasks;
 
 namespace tweens.gd;
 
+/// <summary>Value behavior during delay and after natural completion. Cancellation does not restore the initial value.</summary>
+/// <remarks>A relative tween that follows concurrent property changes removes only its own offset when restoring.</remarks>
 [Flags]
 public enum FillMode
 {
+    /// <summary>Leave the property untouched during delay; restore its initial value on natural completion.</summary>
     None = 0,
+    /// <summary>Apply From during delay; restore the initial value on natural completion.</summary>
     ApplyFromDuringDelay = 1,
+    /// <summary>Keep the final value on natural completion; leave the property untouched during delay.</summary>
     RetainFinalValue = 2,
+    /// <summary>Apply From during delay and keep the final value on natural completion.</summary>
     Both = ApplyFromDuringDelay | RetainFinalValue,
 }
 
-public enum TweenProcessMode { Process, Physics }
-public enum TweenPauseMode { Bound, SceneTree, Always }
-public enum TweenState { Delayed, Playing, Interval, Completed, Cancelled, Faulted }
-public enum Reason { Completed, Cancelled, TargetFreed, OwnerExited, RunnerDisposed }
+/// <summary>The update phase used by playback.</summary>
+public enum TweenProcessMode
+{
+    /// <summary>Advance on process ticks.</summary>
+    Process,
+    /// <summary>Advance on physics ticks.</summary>
+    Physics,
+}
+
+/// <summary>How playback responds to scene and owner pausing.</summary>
+public enum TweenPauseMode
+{
+    /// <summary>Follow the owner's CanProcess; without an owner, follow scene-tree pause.</summary>
+    Bound,
+    /// <summary>Follow scene-tree pause, independently of the owner's process mode.</summary>
+    SceneTree,
+    /// <summary>Ignore scene and owner pausing. Explicit handle pauses still apply.</summary>
+    Always,
+}
+
+/// <summary>Current timeline state, independently of explicit pausing.</summary>
+public enum TweenState
+{
+    /// <summary>Waiting for the initial delay.</summary>
+    Delayed,
+    /// <summary>Advancing a forward or return leg.</summary>
+    Playing,
+    /// <summary>Holding between legs or cycles.</summary>
+    Interval,
+    /// <summary>Ended naturally.</summary>
+    Completed,
+    /// <summary>Stopped before natural completion.</summary>
+    Cancelled,
+    /// <summary>Stopped because playback or a callback failed.</summary>
+    Faulted,
+}
+
+/// <summary>Why playback ended. Faults are reported separately through Error and End.</summary>
+public enum Reason
+{
+    /// <summary>Every scheduled cycle completed.</summary>
+    Completed,
+    /// <summary>Playback was explicitly cancelled.</summary>
+    Cancelled,
+    /// <summary>The target was freed or queued for deletion.</summary>
+    TargetFreed,
+    /// <summary>The owner left the scene tree.</summary>
+    OwnerExited,
+    /// <summary>The scheduler or scene tree was disposed.</summary>
+    RunnerDisposed,
+}
 
 /// <summary>Immutable timing configuration. Use with expressions to vary a reusable value.</summary>
 public readonly record struct TweenOptions
@@ -30,27 +83,35 @@ public readonly record struct TweenOptions
     /// <summary>A <see cref="Repeats"/> value that repeats until cancelled.</summary>
     public const int Infinite = -1;
 
+    /// <summary>Duration of one leg, in seconds. Defaults to zero; must be finite and nonnegative.</summary>
     public Duration Duration { get; init; }
     private readonly double? factorDuration;
     /// <summary>Scales <see cref="Duration"/> at start: the tween lasts FactorDuration * Duration + DeltaDuration.</summary>
     public double FactorDuration { get => factorDuration ?? 1; init => factorDuration = value == 1 ? null : value; }
     /// <summary>Added to <see cref="Duration"/> at start, after <see cref="FactorDuration"/>.</summary>
     public Duration DeltaDuration { get; init; }
+    /// <summary>Wait before the first leg, in seconds. Defaults to zero; initial values are captured before it.</summary>
     public Duration Delay { get; init; }
     private readonly double? factorDelay;
     /// <summary>Scales <see cref="Delay"/> at start: the tween waits FactorDelay * Delay + DeltaDelay.</summary>
     public double FactorDelay { get => factorDelay ?? 1; init => factorDelay = value == 1 ? null : value; }
     /// <summary>Added to <see cref="Delay"/> at start, after <see cref="FactorDelay"/>.</summary>
     public Duration DeltaDelay { get; init; }
+    /// <summary>Hold between the forward and return legs, in seconds. Defaults to zero.</summary>
     public Duration PingPongInterval { get; init; }
+    /// <summary>Hold between cycles, in seconds. No hold follows the final cycle.</summary>
     public Duration RepeatInterval { get; init; }
+    /// <summary>Start this many seconds into the first leg, after the delay. Must not exceed the adjusted duration.</summary>
     public Duration Offset { get; init; }
     /// <summary>Cycles after the first, or <see cref="Infinite"/>. A ping-pong cycle includes both legs.</summary>
     public int Repeats { get; init; }
+    /// <summary>Return to the start after each forward leg. Duration applies to each leg; defaults to false.</summary>
     public bool UsePingPong { get; init; }
+    /// <summary>Use the scheduler's unscaled delta instead of its scaled delta. Defaults to false.</summary>
     public bool UseUnscaledTime { get; init; }
     private readonly FillMode fill;
     // Encode the default so default(TweenOptions) and new TweenOptions() behave identically.
+    /// <summary>Value behavior during delay and after natural completion. Defaults to RetainFinalValue.</summary>
     public FillMode Fill { get => fill ^ FillMode.RetainFinalValue; init => fill = value ^ FillMode.RetainFinalValue; }
     /// <summary>Combine one In and one Out with |, use an InOut pair, or select a single curve. Legacy EaseType names retain their original shapes.</summary>
     public EaseType Ease { get; init; }
@@ -65,10 +126,15 @@ public readonly record struct TweenOptions
     private readonly double? weks;
     /// <summary>Positive finite exponent applied to descending ping-pong progress before easing. Defaults to 1, independently of Skew.</summary>
     public double Weks { get => weks ?? 1; init => weks = value == 1 ? null : value; }
+    /// <summary>Custom progress-to-weight function instead of Ease. Mutually exclusive with Curve.</summary>
     public Func<float, float>? EaseFunction { get; init; }
+    /// <summary>Custom progress-to-weight curve instead of Ease. Copied per playback; mutually exclusive with EaseFunction.</summary>
     public Godot.Curve? Curve { get; init; }
+    /// <summary>Update on process or physics ticks. Defaults to Process.</summary>
     public TweenProcessMode ProcessMode { get; init; }
+    /// <summary>Follow the owner, the scene tree, or neither when paused. Defaults to Bound.</summary>
     public TweenPauseMode PauseMode { get; init; }
+    /// <summary>Skip callbacks after the target or owner becomes invalid. Defaults to false.</summary>
     public bool SuppressCallbacksWhenTargetInvalid { get; init; }
 
     internal void CopyTo(TweenOptionsBuilder target)
@@ -102,36 +168,54 @@ public readonly record struct TweenOptions
 /// <summary>Mutable options used by convenience-method configurators and custom class definitions.</summary>
 public class TweenOptionsBuilder
 {
+    /// <inheritdoc cref="TweenOptions.Infinite"/>
     public const int Infinite = TweenOptions.Infinite;
 
+    /// <inheritdoc cref="TweenOptions.Duration"/>
     public Duration Duration { get; set; }
     /// <inheritdoc cref="TweenOptions.FactorDuration"/>
     public double FactorDuration { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.DeltaDuration"/>
     public Duration DeltaDuration { get; set; }
+    /// <inheritdoc cref="TweenOptions.Delay"/>
     public Duration Delay { get; set; }
     /// <inheritdoc cref="TweenOptions.FactorDelay"/>
     public double FactorDelay { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.DeltaDelay"/>
     public Duration DeltaDelay { get; set; }
+    /// <inheritdoc cref="TweenOptions.PingPongInterval"/>
     public Duration PingPongInterval { get; set; }
+    /// <inheritdoc cref="TweenOptions.RepeatInterval"/>
     public Duration RepeatInterval { get; set; }
+    /// <inheritdoc cref="TweenOptions.Offset"/>
     public Duration Offset { get; set; }
+    /// <inheritdoc cref="TweenOptions.Repeats"/>
     public int Repeats { get; set; }
+    /// <inheritdoc cref="TweenOptions.UsePingPong"/>
     public bool UsePingPong { get; set; }
+    /// <inheritdoc cref="TweenOptions.UseUnscaledTime"/>
     public bool UseUnscaledTime { get; set; }
+    /// <inheritdoc cref="TweenOptions.Fill"/>
     public FillMode Fill { get; set; } = FillMode.RetainFinalValue;
+    /// <inheritdoc cref="TweenOptions.Ease"/>
     public EaseType Ease { get; set; }
+    /// <inheritdoc cref="TweenOptions.BlendType"/>
     public BlendType BlendType { get; set; }
+    /// <inheritdoc cref="TweenOptions.Blend"/>
     public double Blend { get; set; } = 0.2;
     /// <inheritdoc cref="TweenOptions.Skew"/>
     public double Skew { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.Weks"/>
     public double Weks { get; set; } = 1;
+    /// <inheritdoc cref="TweenOptions.EaseFunction"/>
     public Func<float, float>? EaseFunction { get; set; }
+    /// <inheritdoc cref="TweenOptions.Curve"/>
     public Godot.Curve? Curve { get; set; }
+    /// <inheritdoc cref="TweenOptions.ProcessMode"/>
     public TweenProcessMode ProcessMode { get; set; }
+    /// <inheritdoc cref="TweenOptions.PauseMode"/>
     public TweenPauseMode PauseMode { get; set; }
+    /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
     public bool SuppressCallbacksWhenTargetInvalid { get; set; }
 
     internal TweenOptions ToOptions() => new()

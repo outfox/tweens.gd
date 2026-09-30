@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdEasing" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Samples easing curves without starting playback.
+	</brief_description>
+	<description>
+		Access through [code]Tweens.Easing[/code]. Combine one In and one Out with [code]|[/code], use an InOut pair, or
+		select a single curve. Legacy [code]Tweens.Ease[/code] constants retain their shapes. C# equivalent:
+		[code]Easing[/code].
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="evaluate" qualifiers="static">
+			<return type="float" />
+			<param index="0" name="ease" type="int" />
+			<param index="1" name="progress" type="float" />
+			<param index="2" name="blend_type" type="int" default="0" />
+			<param index="3" name="blend" type="float" default="0.2" />
+			<description>
+				Samples [param ease] at [param progress], clamped to [code][0, 1][/code]. Eased weight may overshoot.
+				[param blend] is the centered transition width in [code][0, 1][/code]; zero directly splices the halves.
+				[param blend_type] uses [code]BlendType[/code]. C# equivalent: [code]Easing.Evaluate[/code].
+			</description>
+		</method>
+	</methods>
+</class>

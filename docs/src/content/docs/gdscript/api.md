@@ -13,6 +13,14 @@ are global too: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`,
 `TweensGdAdapter`, the adapter base class, is a GDScript class. Use the API on
 Godot's main thread.
 
+The C# API uses the same model: reusable definitions, independent playback
+handles, groups for parallel steps, and ordinary awaits for sequences.
+`Tweens.play_all(node, [a, b])` corresponds to `node.Tween(a, b)`;
+`TweensGdGroup.of([a, b])` corresponds to `Group.Of(a, b)`. Member names map from
+snake_case to PascalCase; `from_value`, `to_value`, and `by_value` become `From`,
+`To`, and `By`. C# faults throw; GDScript reports `FAILED` and an `error` string.
+See the [C# core API](/csharp/api/) for its entry points.
+
 ## Start playback
 
 | Entry point | Returns | Purpose |

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdHandle" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A playback handle for one tween, independent of its definition.
+	</brief_description>
+	<description>
+		Returned by [code]Tweens.play[/code] or [method TweensGdScheduler.add]. Await [member end] before starting the
+		next step; use [method pause], [method resume], and [method cancel] to control playback. Controls use Godot's
+		main thread. C# equivalent: [code]TweenInstance[/code].
+		C# faults throw from [code]End[/code]; GDScript returns [code]Tweens.Reason.FAILED[/code] and stores the message
+		in [member error].
+		[codeblock]
+		var handle := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
+		if await handle.end != Tweens.Reason.COMPLETED:
+		    return
+		await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
+		[/codeblock]
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="cancel">
+			<return type="void" />
+			<description>
+				Stops active playback with [code]Tweens.Reason.CANCELLED[/code]. Ended playback is unchanged.
+			</description>
+		</method>
+		<method name="pause">
+			<return type="void" />
+			<description>
+				Explicitly pauses playback. Scene and owner pause modes apply separately.
+			</description>
+		</method>
+		<method name="rejected" qualifiers="static">
+			<return type="TweensGdHandle" />
+			<param index="0" name="message" type="String" />
+			<description>
+				Creates an already-ended result with [code]Tweens.Reason.FAILED[/code] and [param message] in
+				[member error].
+			</description>
+		</method>
+		<method name="resume">
+			<return type="void" />
+			<description>
+				Clears the explicit pause. Scene and owner pause modes still apply.
+			</description>
+		</method>
+		<method name="wait">
+			<return type="Variant" />
+			<param index="0" name="cancellation" type="TweensGdCancellation" default="null" />
+			<description>
+				Waits for playback to end. [param cancellation] cancels this wait, leaving playback running. Await the
+				returned value; cancellation returns [code]Tweens.Reason.WAIT_CANCELLED[/code]. Without a token this is
+				equivalent to [member end]. C# handle equivalent: [code]AwaitDecommissionAsync(token)[/code], which
+				throws on wait cancellation.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="completion_reason" type="int" setter="" getter="get_completion_reason">
+			Why playback ended, or -1 while running. Uses [code]Tweens.Reason[/code]; C# uses null while running.
+		</member>
+		<member name="end" type="Variant" setter="" getter="get_end">
+			Shared completion. Await this value: it is a Signal while running and the integer completion reason after
+			settlement, so late awaits are safe. Cancellation returns a reason; failure returns
+			[code]Tweens.Reason.FAILED[/code] with [member error]. Natural completion carries unused frame time into the
+			next step when scheduler, process mode, and time scale match. C# equivalent: [code]End[/code], a Task that
+			faults on errors. Prefer this to awaiting [signal ended], which cannot replay past emissions.
+		</member>
+		<member name="error" type="String" setter="" getter="get_error">
+			Failure message, or an empty string. C# uses an Exception or null.
+		</member>
+		<member name="is_paused" type="bool" setter="set_paused" getter="is_paused">
+			Explicit playback pause. Owner and scene pause modes apply separately.
+		</member>
+		<member name="is_settled" type="bool" setter="" getter="is_settled">
+			True once playback and all terminal callbacks finished. Late awaits return immediately.
+		</member>
+		<member name="is_terminal" type="bool" setter="" getter="is_terminal">
+			True once playback completed, was cancelled, or faulted. Terminal callbacks may still be running.
+		</member>
+		<member name="progress" type="float" setter="" getter="get_progress">
+			Uneased progress in [code][0, 1][/code]. Decreases on the ping-pong return leg.
+		</member>
+		<member name="state" type="int" setter="" getter="get_state">
+			Current timeline state from [code]Tweens.State[/code]. Explicit pausing does not change it.
+		</member>
+		<member name="target" type="Object" setter="" getter="get_target">
+			The target animated by this playback, or null if it has been freed.
+		</member>
+		<member name="value" type="Variant" setter="" getter="get_value">
+			Last sampled value, including easing and delay fill.
+		</member>
+	</members>
+	<signals>
+		<signal name="ended">
+			<param index="0" name="reason" type="int" />
+			<description>
+				Emitted once after playback settles, with its completion reason. Prefer awaiting [member end], which
+				also handles already-ended playback.
+			</description>
+		</signal>
+	</signals>
+</class>

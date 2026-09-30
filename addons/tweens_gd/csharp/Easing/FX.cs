@@ -7,9 +7,10 @@ using Godot;
 
 namespace Tweens;
 
-/// <summary>Reusable, deterministic progress-to-offset functions. Scalar functions also work as EaseFunction.
-/// Frequencies are cycles (Punch/Breathe) or noise lattice intervals (Shake) per tween, not per second.
-/// Vector functions are samplers for callback tweens/custom interpolators, not scalar easing functions.</summary>
+/// <summary>Creates reusable, deterministic progress-to-offset functions.</summary>
+/// <remarks>Scalar functions work as EaseFunction; vector and quaternion functions supply offsets to callbacks
+/// or custom interpolators. Frequency is cycles (Punch/Breathe) or noise intervals (Shake) per tween,
+/// not per second. In GDScript, use Tweens.FX with snake_case factory names and Callable samplers.</remarks>
 public static class FX
 {
     /// <summary>A damped sine, zero at the end. Phase is in cycles; phase zero starts at zero displacement.

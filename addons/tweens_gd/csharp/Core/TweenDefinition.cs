@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace tweens.gd;
 
-/// <summary>A definition that can start on <typeparamref name="TTarget"/>, whatever its value type.</summary>
+/// <summary>A reusable definition for <typeparamref name="TTarget"/>, regardless of its value type.</summary>
 public interface ITweenDefinition<in TTarget> where TTarget : class
 {
     internal TweenInstance AddTo(TweenScheduler scheduler, TTarget target);
 }
 
-/// <summary>A typed definition with independent configuration and playback state.</summary>
+/// <summary>A reusable definition with a typed target and value. Each start creates independent playback.</summary>
 public interface ITweenDefinition<TTarget, TValue> : ITweenDefinition<TTarget>
     where TTarget : class where TValue : struct
 {
@@ -24,13 +24,17 @@ public interface ITweenDefinition<TTarget, TValue> : ITweenDefinition<TTarget>
     TweenInstance ITweenDefinition<TTarget>.AddTo(TweenScheduler scheduler, TTarget target) => scheduler.Add(target, this);
 }
 
-/// <summary>A reusable typed definition. Override the three property operations for custom tweens.</summary>
+/// <summary>A mutable, reusable definition. Each start snapshots its configuration and captures the current value.</summary>
+/// <remarks>Override <see cref="Read"/>, <see cref="Write"/>, and <see cref="Interpolate"/> for custom storage.
+/// In GDScript, use TweensGdDefinition with a TweensGdAdapter. Immutable C# definitions live in the Tweens namespace.</remarks>
 public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, ITweenDefinition<TTarget, TValue>
     where TTarget : class where TValue : struct
 {
     TweenDefinition<TTarget, TValue> ITweenDefinition<TTarget, TValue>.CreatePlayback() => Snapshot();
 
+    /// <summary>Start value. Null uses the value captured at start, before the delay.</summary>
     public TValue? From { get; set; }
+    /// <summary>End value. Null uses the value captured at start. Mutually exclusive with <see cref="By"/>.</summary>
     public TValue? To { get; set; }
     /// <summary>A relative offset instead of <see cref="To"/>, added on top of other changes to the property while
     /// it plays. With <see cref="From"/> it is added to that start once. Each repeat adds it again.</summary>
@@ -48,15 +52,24 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     public double FactorBy { get; set; } = 1;
     /// <inheritdoc cref="FactorBy"/>
     public TValue? DeltaBy { get; set; }
+    /// <summary>Called once when playback is added, before any delay fill is applied. Receives the handle.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnAdd { get; set; }
+    /// <summary>Called once when playback reaches its first active update, after the delay. Receives the handle.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnStart { get; set; }
+    /// <summary>Called after each value write, including delay fill. Receives the handle and value.</summary>
     public Action<TweenInstance<TTarget, TValue>, TValue>? OnUpdate { get; set; }
+    /// <summary>Called on natural completion, before <see cref="TweenInstance.End"/> resolves. Receives the handle.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnEnd { get; set; }
+    /// <summary>Called when playback stops early without a fault, such as cancellation or owner exit. Receives the handle.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnCancel { get; set; }
+    /// <summary>Called last when playback ends, including faults. Receives the handle; may be suppressed for invalid targets.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnFinally { get; set; }
 
+    /// <summary>Reads the current value from the target.</summary>
     protected abstract TValue Read(TTarget target);
+    /// <summary>Writes the interpolated value to the target.</summary>
     protected abstract void Write(TTarget target, TValue value);
+    /// <summary>Interpolates endpoints using eased weight, which may overshoot the range [0, 1].</summary>
     protected abstract TValue Interpolate(TValue from, TValue to, float weight);
 
     /// <summary>Prepare per-playback bindings on the private snapshot, before its initial read.</summary>

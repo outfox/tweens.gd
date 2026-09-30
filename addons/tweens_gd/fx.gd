@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 extends TweensGdFX
-## Tweens.FX: deterministic progress-to-offset factories. Scalars work as ease_function; vectors and
-## quaternions are samplers for on_update/custom interpolators. Frequency is per tween.
-## Invalid configuration reports an error and returns an empty Callable.
+## Creates reusable, deterministic progress-to-offset Callables.
+##
+## Scalar functions work as [code]ease_function[/code]. Vector and quaternion functions
+## supply offsets to [code]on_update[/code] or custom interpolators. Frequency is per tween,
+## not per second. Invalid configuration reports an error and returns an empty Callable.
+## C# equivalent: [code]Tweens.FX[/code], returning [code]Func[/code] samplers.

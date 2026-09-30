@@ -14,7 +14,8 @@ namespace tweens.gd;
 
 public static partial class TweenExtensions
 {
-    /// <summary>Starts a AudioStreamPlayer2DPanningStrengthTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer2DPanningStrengthTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer2D, float> TweenPanningStrength(this AudioStreamPlayer2D target,
         double to, Duration duration, Action<AudioStreamPlayer2DPanningStrengthTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer2DPanningStrengthTween { To = (float)to, Duration = duration }, configure));
@@ -25,7 +26,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer2DPanningStrengthTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer2DMaxDistanceTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer2DMaxDistanceTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer2D, float> TweenMaxDistance(this AudioStreamPlayer2D target,
         double to, Duration duration, Action<AudioStreamPlayer2DMaxDistanceTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer2DMaxDistanceTween { To = (float)to, Duration = duration }, configure));
@@ -36,7 +38,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer2DMaxDistanceTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DPanningStrengthTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DPanningStrengthTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenPanningStrength(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DPanningStrengthTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DPanningStrengthTween { To = (float)to, Duration = duration }, configure));
@@ -47,7 +50,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer3DPanningStrengthTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DMaxDistanceTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DMaxDistanceTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenMaxDistance(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DMaxDistanceTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DMaxDistanceTween { To = (float)to, Duration = duration }, configure));
@@ -58,7 +62,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer3DMaxDistanceTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer2DAttenuationTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer2DAttenuationTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer2D, float> TweenAttenuation(this AudioStreamPlayer2D target,
         double to, Duration duration, Action<AudioStreamPlayer2DAttenuationTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer2DAttenuationTween { To = (float)to, Duration = duration }, configure));
@@ -69,7 +74,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer2DAttenuationTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DUnitSizeTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DUnitSizeTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenUnitSize(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DUnitSizeTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DUnitSizeTween { To = (float)to, Duration = duration }, configure));
@@ -80,7 +86,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer3DUnitSizeTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DEmissionAngleDegreesTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DEmissionAngleDegreesTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenEmissionAngleDegrees(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DEmissionAngleDegreesTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DEmissionAngleDegreesTween { To = (float)to, Duration = duration }, configure));
@@ -91,7 +98,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer3DEmissionAngleDegreesTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DEmissionAngleFilterAttenuationDbTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DEmissionAngleFilterAttenuationDbTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenEmissionAngleFilterAttenuationDb(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DEmissionAngleFilterAttenuationDbTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DEmissionAngleFilterAttenuationDbTween { To = (float)to, Duration = duration }, configure));
@@ -102,7 +110,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer3DEmissionAngleFilterAttenuationDbTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DAttenuationFilterCutoffHzTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DAttenuationFilterCutoffHzTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenAttenuationFilterCutoffHz(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DAttenuationFilterCutoffHzTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DAttenuationFilterCutoffHzTween { To = (float)to, Duration = duration }, configure));
@@ -113,7 +122,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new AudioStreamPlayer3DAttenuationFilterCutoffHzTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a AudioStreamPlayer3DAttenuationFilterDbTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a AudioStreamPlayer3DAttenuationFilterDbTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<AudioStreamPlayer3D, float> TweenAttenuationFilterDb(this AudioStreamPlayer3D target,
         double to, Duration duration, Action<AudioStreamPlayer3DAttenuationFilterDbTween>? configure = null)
         => target.Tween(ConfigureDefinition(new AudioStreamPlayer3DAttenuationFilterDbTween { To = (float)to, Duration = duration }, configure));

@@ -8,35 +8,61 @@ using global::tweens.gd;
 
 namespace Tweens;
 
-/// <summary>Reusable immutable Quaternion3D configuration. Each start creates independent playback.</summary>
+/// <summary>Reusable immutable Quaternion3D definition. Each start snapshots configuration and captures the current value.</summary>
 public readonly record struct Quaternion3D : ITweenDefinition<global::Godot.Node3D, global::Godot.Quaternion>
 {
+    /// <summary>Shared timing, easing, and playback modes. Individual option properties forward to this value.</summary>
     public TweenOptions Options { get; init; }
+    /// <inheritdoc cref="TweenOptions.Duration"/>
     public global::tweens.gd.Duration @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
+    /// <inheritdoc cref="TweenOptions.FactorDuration"/>
     public double @FactorDuration { get => Options.@FactorDuration; init => Options = Options with { @FactorDuration = value }; }
+    /// <inheritdoc cref="TweenOptions.DeltaDuration"/>
     public global::tweens.gd.Duration @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
+    /// <inheritdoc cref="TweenOptions.Delay"/>
     public global::tweens.gd.Duration @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
+    /// <inheritdoc cref="TweenOptions.FactorDelay"/>
     public double @FactorDelay { get => Options.@FactorDelay; init => Options = Options with { @FactorDelay = value }; }
+    /// <inheritdoc cref="TweenOptions.DeltaDelay"/>
     public global::tweens.gd.Duration @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
+    /// <inheritdoc cref="TweenOptions.PingPongInterval"/>
     public global::tweens.gd.Duration @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
+    /// <inheritdoc cref="TweenOptions.RepeatInterval"/>
     public global::tweens.gd.Duration @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
+    /// <inheritdoc cref="TweenOptions.Offset"/>
     public global::tweens.gd.Duration @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
+    /// <inheritdoc cref="TweenOptions.Repeats"/>
     public int @Repeats { get => Options.@Repeats; init => Options = Options with { @Repeats = value }; }
+    /// <inheritdoc cref="TweenOptions.UsePingPong"/>
     public bool @UsePingPong { get => Options.@UsePingPong; init => Options = Options with { @UsePingPong = value }; }
+    /// <inheritdoc cref="TweenOptions.UseUnscaledTime"/>
     public bool @UseUnscaledTime { get => Options.@UseUnscaledTime; init => Options = Options with { @UseUnscaledTime = value }; }
+    /// <inheritdoc cref="TweenOptions.Fill"/>
     public global::tweens.gd.FillMode @Fill { get => Options.@Fill; init => Options = Options with { @Fill = value }; }
+    /// <inheritdoc cref="TweenOptions.Ease"/>
     public global::tweens.gd.EaseType @Ease { get => Options.@Ease; init => Options = Options with { @Ease = value }; }
+    /// <inheritdoc cref="TweenOptions.BlendType"/>
     public global::tweens.gd.BlendType @BlendType { get => Options.@BlendType; init => Options = Options with { @BlendType = value }; }
+    /// <inheritdoc cref="TweenOptions.Blend"/>
     public double @Blend { get => Options.@Blend; init => Options = Options with { @Blend = value }; }
+    /// <inheritdoc cref="TweenOptions.Skew"/>
     public double @Skew { get => Options.@Skew; init => Options = Options with { @Skew = value }; }
+    /// <inheritdoc cref="TweenOptions.Weks"/>
     public double @Weks { get => Options.@Weks; init => Options = Options with { @Weks = value }; }
+    /// <inheritdoc cref="TweenOptions.EaseFunction"/>
     public global::System.Func<float, float>? @EaseFunction { get => Options.@EaseFunction; init => Options = Options with { @EaseFunction = value }; }
+    /// <inheritdoc cref="TweenOptions.Curve"/>
     public global::Godot.Curve? @Curve { get => Options.@Curve; init => Options = Options with { @Curve = value }; }
+    /// <inheritdoc cref="TweenOptions.ProcessMode"/>
     public global::tweens.gd.TweenProcessMode @ProcessMode { get => Options.@ProcessMode; init => Options = Options with { @ProcessMode = value }; }
+    /// <inheritdoc cref="TweenOptions.PauseMode"/>
     public global::tweens.gd.TweenPauseMode @PauseMode { get => Options.@PauseMode; init => Options = Options with { @PauseMode = value }; }
+    /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
     public bool @SuppressCallbacksWhenTargetInvalid { get => Options.@SuppressCallbacksWhenTargetInvalid; init => Options = Options with { @SuppressCallbacksWhenTargetInvalid = value }; }
 
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.From"/>
     public global::Godot.Quaternion? From { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.To"/>
     public global::Godot.Quaternion? To { get; init; }
     /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.By"/>
     public global::Godot.Quaternion? By { get; init; }
@@ -55,11 +81,17 @@ public readonly record struct Quaternion3D : ITweenDefinition<global::Godot.Node
     public double FactorBy { get => factorBy ?? 1; init => factorBy = value == 1 ? null : value; }
     /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.DeltaBy"/>
     public global::Godot.Quaternion? DeltaBy { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.OnAdd"/>
     public Action<TweenInstance<global::Godot.Node3D, global::Godot.Quaternion>>? OnAdd { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.OnStart"/>
     public Action<TweenInstance<global::Godot.Node3D, global::Godot.Quaternion>>? OnStart { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.OnUpdate"/>
     public Action<TweenInstance<global::Godot.Node3D, global::Godot.Quaternion>, global::Godot.Quaternion>? OnUpdate { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.OnEnd"/>
     public Action<TweenInstance<global::Godot.Node3D, global::Godot.Quaternion>>? OnEnd { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.OnCancel"/>
     public Action<TweenInstance<global::Godot.Node3D, global::Godot.Quaternion>>? OnCancel { get; init; }
+    /// <inheritdoc cref="TweenDefinition{TTarget, TValue}.OnFinally"/>
     public Action<TweenInstance<global::Godot.Node3D, global::Godot.Quaternion>>? OnFinally { get; init; }
 
     /// <summary>Sets the endpoint and common timing.</summary>

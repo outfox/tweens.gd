@@ -14,37 +14,44 @@ namespace tweens.gd;
 
 public static partial class TweenExtensions
 {
-    /// <summary>Starts a ControlPositionTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlPositionTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector2> TweenPosition(this Control target,
         Vector2 to, Duration duration, Action<ControlPositionTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlPositionTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlPositionTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlPositionTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, Vector2> TweenPosition(this Control target,
         Vector2 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlPositionTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlPositionXTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlPositionXTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenPositionX(this Control target,
         double to, Duration duration, Action<ControlPositionXTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlPositionXTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlPositionXTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlPositionXTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenPositionX(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlPositionXTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlPositionYTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlPositionYTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenPositionY(this Control target,
         double to, Duration duration, Action<ControlPositionYTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlPositionYTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlPositionYTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlPositionYTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenPositionY(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlPositionYTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlGlobalPositionTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlGlobalPositionTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector2> TweenGlobalPosition(this Control target,
         Vector2 to, Duration duration, Action<ControlGlobalPositionTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlGlobalPositionTween { To = to, Duration = duration }, configure));
@@ -55,7 +62,8 @@ public static partial class TweenExtensions
         Vector2 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlGlobalPositionTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlGlobalPositionXTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlGlobalPositionXTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenGlobalPositionX(this Control target,
         double to, Duration duration, Action<ControlGlobalPositionXTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlGlobalPositionXTween { To = (float)to, Duration = duration }, configure));
@@ -66,7 +74,8 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlGlobalPositionXTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlGlobalPositionYTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlGlobalPositionYTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenGlobalPositionY(this Control target,
         double to, Duration duration, Action<ControlGlobalPositionYTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlGlobalPositionYTween { To = (float)to, Duration = duration }, configure));
@@ -77,112 +86,134 @@ public static partial class TweenExtensions
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlGlobalPositionYTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlSizeTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlSizeTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector2> TweenSize(this Control target,
         Vector2 to, Duration duration, Action<ControlSizeTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlSizeTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlSizeTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlSizeTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, Vector2> TweenSize(this Control target,
         Vector2 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlSizeTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlSizeXTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlSizeXTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenSizeX(this Control target,
         double to, Duration duration, Action<ControlSizeXTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlSizeXTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlSizeXTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlSizeXTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenSizeX(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlSizeXTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlSizeYTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlSizeYTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenSizeY(this Control target,
         double to, Duration duration, Action<ControlSizeYTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlSizeYTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlSizeYTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlSizeYTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenSizeY(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlSizeYTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlScaleTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlScaleTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector2> TweenScale(this Control target,
         Vector2 to, Duration duration, Action<ControlScaleTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlScaleTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlScaleTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlScaleTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, Vector2> TweenScale(this Control target,
         Vector2 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlScaleTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlScaleXTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlScaleXTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenScaleX(this Control target,
         double to, Duration duration, Action<ControlScaleXTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlScaleXTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlScaleXTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlScaleXTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenScaleX(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlScaleXTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlScaleYTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlScaleYTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenScaleY(this Control target,
         double to, Duration duration, Action<ControlScaleYTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlScaleYTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlScaleYTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlScaleYTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenScaleY(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlScaleYTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlRotationTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlRotationTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, float> TweenRotation(this Control target,
         double to, Duration duration, Action<ControlRotationTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlRotationTween { To = (float)to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlRotationTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlRotationTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, float> TweenRotation(this Control target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlRotationTween { To = (float)to, Duration = duration }, options));
 
-    /// <summary>Starts a RangeValueTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a RangeValueTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Godot.Range, double> TweenValue(this Godot.Range target,
         double to, Duration duration, Action<RangeValueTween>? configure = null)
         => target.Tween(ConfigureDefinition(new RangeValueTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a RangeValueTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a RangeValueTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Godot.Range, double> TweenValue(this Godot.Range target,
         double to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new RangeValueTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlAnchorMinTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlAnchorMinTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector2> TweenAnchorMin(this Control target,
         Vector2 to, Duration duration, Action<ControlAnchorMinTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlAnchorMinTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlAnchorMinTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlAnchorMinTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, Vector2> TweenAnchorMin(this Control target,
         Vector2 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlAnchorMinTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlAnchorMaxTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlAnchorMaxTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector2> TweenAnchorMax(this Control target,
         Vector2 to, Duration duration, Action<ControlAnchorMaxTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlAnchorMaxTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlAnchorMaxTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlAnchorMaxTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, Vector2> TweenAnchorMax(this Control target,
         Vector2 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlAnchorMaxTween { To = to, Duration = duration }, options));
 
-    /// <summary>Starts a ControlOffsetsTween. Configure runs before snapshotting and can override any definition option.</summary>
+    /// <summary>Starts a ControlOffsetsTween and returns its playback handle.</summary>
+    /// <remarks>Configure runs before snapshotting and can override any definition option, including duration.</remarks>
     public static TweenInstance<Control, Vector4> TweenOffsets(this Control target,
         Vector4 to, Duration duration, Action<ControlOffsetsTween>? configure = null)
         => target.Tween(ConfigureDefinition(new ControlOffsetsTween { To = to, Duration = duration }, configure));
 
-    /// <summary>Starts a ControlOffsetsTween. Copies the options; the explicit duration takes precedence.</summary>
+    /// <summary>Starts a ControlOffsetsTween and returns its playback handle.</summary>
+    /// <remarks>Copies the options; the explicit duration takes precedence.</remarks>
     public static TweenInstance<Control, Vector4> TweenOffsets(this Control target,
         Vector4 to, Duration duration, TweenOptions options)
         => target.Tween(ApplyOptions(new ControlOffsetsTween { To = to, Duration = duration }, options));

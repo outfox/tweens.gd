@@ -24,7 +24,7 @@ scalar amplitude multiplies the tween's displacement; keep it at one when
 | `shake(frequency, amplitude, seed, offset, decay, attack)` | Smooth seeded value noise with an envelope | `12, 1, 0, 0, 2, 0.1` |
 | `breathe(frequency, amplitude, phase)` | Raised cosine from zero to amplitude and back | `1, 1, 0` |
 | `decay(power)` | Envelope `(1-t)^power` | `2` |
-| `attack_release(attack, power)` | Envelope with separately proportioned attack and release | `0.1, 2` |
+| `attack_release(attack, decay)` | Envelope with separately proportioned attack and release | `0.1, 2` |
 
 Frequency is **per tween duration**: cycles for punch/breathe, noise lattice
 intervals for shake. For a rate per second, multiply it by the duration when

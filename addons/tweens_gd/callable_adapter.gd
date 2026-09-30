@@ -1,10 +1,15 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 extends "adapter.gd"
+## Custom storage configured with Callables. Prefer [method Tweens.custom] to create one.
 
+## Receives the target and returns its current value.
 var getter: Callable
+## Receives the target and value. A String return reports failure; an empty String or other return means success.
 var setter: Callable
+## Optional Callable receiving from, to, and eased weight. Weight may overshoot [code][0, 1][/code].
 var interpolator: Callable
+## Optional Callable receiving a value and returning an error String, empty on success.
 var validator: Callable
 
 func prepare(_target: Object) -> String:

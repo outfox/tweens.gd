@@ -12,7 +12,9 @@ using Godot;
 
 namespace tweens.gd;
 
-/// <summary>A single playback. Mutating operations belong to its scheduler's thread.</summary>
+/// <summary>A playback handle for one tween, independent of its reusable definition.</summary>
+/// <remarks>Await <see cref="End"/> before starting the next step. Use the scheduler's creating thread
+/// (Godot's main thread for node tweens). The GDScript counterpart is TweensGdHandle.</remarks>
 public abstract class TweenInstance
 {
     private TaskCompletionSource<Reason>? completion;
@@ -29,24 +31,31 @@ public abstract class TweenInstance
     internal readonly bool Unscaled;
     private protected readonly Playback Clock;
 
+    /// <summary>Current timeline state. Explicit pausing does not change it.</summary>
     public TweenState State { get; protected set; } = TweenState.Delayed;
+    /// <summary>True once playback completed, was cancelled, or faulted.</summary>
     public bool IsTerminal => State is TweenState.Completed or TweenState.Cancelled or TweenState.Faulted;
+    /// <summary>The reason playback ended. Null while running; inspect <see cref="Error"/> for faults.</summary>
     public Reason? CompletionReason { get; private set; }
+    /// <summary>The exception that faulted playback, or null.</summary>
     public Exception? Error { get; private set; }
+    /// <summary>Uneased progress in [0, 1]. Decreases on the ping-pong return leg.</summary>
     public float Progress => Clock.Progress;
     /// <summary>Set on natural completion; continuations started from it inherit the overshoot.</summary>
     internal Carry? Stamp { get; private set; }
     internal bool IsSettled => settled;
     /// <summary>Raised once the tween has settled, before its completion task is resolved.</summary>
     internal event Action<TweenInstance>? Settled;
+    /// <summary>Explicit playback pause. Owner and scene pause modes apply separately.</summary>
     public bool IsPaused
     {
         get => paused;
         set { Scheduler.EnsureThread(); paused = value; }
     }
 
-    /// <summary>Shared completion. Cancellation is a result; callback errors fault the task.</summary>
-    /// <remarks>Tweens started where an await of it resumes continue its timeline, including its last overshoot.</remarks>
+    /// <summary>Shared completion task. Returns the completion reason; playback errors fault the task.</summary>
+    /// <remarks>Natural completion carries unused frame time into the next step when both steps use the
+    /// same scheduler, process mode, and time scale. In GDScript, await handle.end.</remarks>
     public Task<Reason> End
     {
         get
@@ -73,15 +82,20 @@ public abstract class TweenInstance
         Clock = new Playback(options.ToOptions());
     }
 
+    /// <summary>Explicitly pauses playback.</summary>
     public void Pause() => IsPaused = true;
+    /// <summary>Clears the explicit pause. Scene and owner pause modes still apply.</summary>
     public void Resume() => IsPaused = false;
+    /// <summary>Stops active playback with <see cref="Reason.Cancelled"/>. Ended playback is unchanged.</summary>
     public void Cancel()
     {
         Scheduler.EnsureThread();
         Finish(Reason.Cancelled);
     }
 
-    /// <summary>The token cancels only this wait, not the tween. Use Cancel to stop playback.</summary>
+    /// <summary>Waits for playback to end. The token cancels this wait, leaving playback running.</summary>
+    /// <remarks>Wait cancellation throws OperationCanceledException. Use <see cref="Cancel"/> to stop playback.
+    /// The GDScript counterpart is handle.wait(cancellation), which returns WAIT_CANCELLED.</remarks>
     public Task<Reason> AwaitDecommissionAsync(CancellationToken cancellationToken = default)
         => cancellationToken.CanBeCanceled ? End.WaitAsync(cancellationToken) : End;
 
@@ -93,6 +107,7 @@ public abstract class TweenInstance
         Owner.TreeExiting += exitHandler;
     }
 
+    /// <summary>True when the target or owner can no longer safely participate in playback.</summary>
     protected bool InvalidTargetOrOwner =>
         (nativeTarget is not null && (!GodotObject.IsInstanceValid(nativeTarget) ||
             (nativeTarget is Node targetNode && targetNode.IsQueuedForDeletion()))) ||
@@ -125,7 +140,9 @@ public abstract class TweenInstance
 
     internal abstract void Initialize();
     internal abstract void Advance(double delta);
+    /// <summary>Runs the terminal callbacks before completion resolves.</summary>
     protected abstract void InvokeTerminal(Reason reason, bool faulted);
+    /// <summary>Releases resources owned by this playback.</summary>
     protected abstract void Release();
 
     private protected void BeginOperation() => operationDepth++;
@@ -199,6 +216,7 @@ public abstract class TweenInstance
     }
 }
 
+/// <summary>A playback handle with a typed target and sampled value.</summary>
 public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     where TTarget : class where TValue : struct
 {
@@ -210,7 +228,9 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     private readonly bool relative, follows, pingPong;
     private TValue origin, applied;
     private bool started;
+    /// <summary>The target animated by this playback.</summary>
     public TTarget Target { get; }
+    /// <summary>Last sampled value, including easing and delay fill.</summary>
     public TValue Value { get; private set; }
 
     internal TweenInstance(TweenScheduler scheduler, TTarget target,

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdPlayback" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		A low-level timeline clock without a target or value writes.
+	</brief_description>
+	<description>
+		Use [method create] and [method advance] to inspect timeline timing. Ordinary animation uses [TweensGdHandle]
+		and [TweensGdScheduler]. The C# counterpart is the internal playback clock, not the public handle.
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="advance">
+			<return type="void" />
+			<param index="0" name="delta" type="float" />
+			<description>
+				Advances the clock by [param delta] seconds. Pass a finite, nonnegative value; this low-level clock
+				performs no validation. Writes no target values.
+			</description>
+		</method>
+		<method name="create" qualifiers="static">
+			<return type="TweensGdPlayback" />
+			<param index="0" name="definition" type="TweensGdDefinition" />
+			<description>
+				Creates a timeline clock from a definition. Does not validate configuration or start animation. Pass a
+				valid definition; null creates the default zero-duration clock.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="completed" type="bool" setter="" getter="is_completed">
+			True once the final cycle completed.
+		</member>
+		<member name="cycle" type="float" setter="" getter="get_cycle">
+			Zero-based current cycle index.
+		</member>
+		<member name="elapsed" type="float" setter="set_elapsed" getter="get_elapsed">
+			Elapsed seconds, including initial delay. Setting this credits time; call [method advance] to update state.
+		</member>
+		<member name="overshoot" type="float" setter="" getter="get_overshoot">
+			Unused seconds beyond the final cycle in the completing update.
+		</member>
+		<member name="progress" type="float" setter="" getter="get_progress">
+			Uneased progress in [code][0, 1][/code]. Decreases on the ping-pong return leg.
+		</member>
+		<member name="returning" type="bool" setter="" getter="is_returning">
+			True on the ping-pong return leg and its final hold.
+		</member>
+		<member name="started" type="bool" setter="" getter="is_started">
+			True once the initial delay has elapsed.
+		</member>
+		<member name="state" type="int" setter="" getter="get_state">
+			Current timeline state from [code]Tweens.State[/code]. Explicit pausing does not change it.
+		</member>
+	</members>
+</class>

@@ -84,14 +84,24 @@ public static class TweenRuntime
     }
 }
 
+/// <summary>Starts definitions through the automatic Godot runtime and controls node-owned playback.</summary>
 public static partial class TweenExtensions
 {
-    /// <summary>Start a typed tween, automatically owned by the target's scene-tree lifetime.</summary>
+    /// <summary>Starts one definition on this node and returns its playback handle.</summary>
+    /// <remarks>Snapshots configuration and captures the current value before any delay. The node must
+    /// be in the tree and owns playback. In GDScript, use Tweens.play(target, definition).</remarks>
     public static TweenInstance<TTarget, TValue> Tween<TTarget, TValue>(this TTarget target,
         ITweenDefinition<TTarget, TValue> definition) where TTarget : Node where TValue : struct
         => TweenRuntime.GetRunner(target).Scheduler.Add(target, definition);
 
-    /// <summary>Start several definitions together as one group, owned by the target's scene-tree lifetime.</summary>
+    /// <summary>Starts several definitions in parallel on this node and returns their group handle.</summary>
+    /// <remarks>Each member honors its own timing and modes. If starting a definition throws, earlier
+    /// members are cancelled. Await the group's End before starting the next step.
+    /// In GDScript, use Tweens.play_all(target, [first, second, ...]).</remarks>
+    /// <example><code>
+    /// await sprite.Tween(new Tweens.Position2D((400, 180), 0.6),
+    ///     new Tweens.ModulateAlpha(0, 0.6)).End;
+    /// </code></example>
     public static Group Tween<TTarget>(this TTarget target, ITweenDefinition<TTarget> first,
         ITweenDefinition<TTarget> second, params ITweenDefinition<TTarget>[] rest) where TTarget : Node
     {
@@ -114,6 +124,7 @@ public static partial class TweenExtensions
         return Group.Of(started);
     }
 
+    /// <summary>Cancels active tweens owned by this node, optionally including descendant owners.</summary>
     public static void CancelTweens(this Node owner, bool includeChildren = false)
         => TweenRuntime.Cancel(owner, includeChildren);
 }

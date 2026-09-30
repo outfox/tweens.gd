@@ -243,7 +243,7 @@ void TweensGdFX::_bind_methods() {
 	ClassDB::bind_static_method(name, D_METHOD("breathe", "frequency", "amplitude", "phase"), &TweensGdFX::breathe, DEFVAL(1.0),
 			DEFVAL(1.0), DEFVAL(0.0));
 	ClassDB::bind_static_method(name, D_METHOD("decay", "power"), &TweensGdFX::decay, DEFVAL(2.0));
-	ClassDB::bind_static_method(name, D_METHOD("attack_release", "attack", "power"), &TweensGdFX::attack_release, DEFVAL(0.1),
+	ClassDB::bind_static_method(name, D_METHOD("attack_release", "attack", "decay"), &TweensGdFX::attack_release, DEFVAL(0.1),
 			DEFVAL(2.0));
 	ClassDB::bind_static_method(name, D_METHOD("punch_2d", "amplitude", "frequency", "decay", "phase", "attack"), &TweensGdFX::punch_2d,
 			DEFVAL(Vector2(6, 6)), DEFVAL(2.0), DEFVAL(Vector2()), DEFVAL(0.0));
@@ -285,9 +285,9 @@ Callable TweensGdFX::decay(double p_power) {
 	return attack_release(0.0, p_power);
 }
 
-Callable TweensGdFX::attack_release(double p_attack, double p_power) {
+Callable TweensGdFX::attack_release(double p_attack, double p_decay) {
 	Channel channel;
-	return make_envelope(p_attack, p_power, channel) ? wrap(Shape::SCALAR, channel) : Callable();
+	return make_envelope(p_attack, p_decay, channel) ? wrap(Shape::SCALAR, channel) : Callable();
 }
 
 Callable TweensGdFX::punch_2d(const Vector2 &p_amplitude, const Vector2 &p_frequency, double p_decay, const Vector2 &p_phase, double p_attack) {

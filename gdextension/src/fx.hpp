@@ -24,7 +24,7 @@ public:
 	static Callable breathe(double p_frequency, double p_amplitude, double p_phase);
 	static Callable decay(double p_power);
 	// Attack takes this fraction of the duration, release the rest. Zero attack starts at one.
-	static Callable attack_release(double p_attack, double p_power);
+	static Callable attack_release(double p_attack, double p_decay);
 	static Callable punch_2d(const Vector2 &p_amplitude, const Vector2 &p_frequency, double p_decay, const Vector2 &p_phase, double p_attack);
 	static Callable punch_3d(const Vector3 &p_amplitude, const Vector3 &p_frequency, double p_decay, const Vector3 &p_phase, double p_attack);
 	static Callable shake_2d(const Vector2 &p_amplitude, const Vector2 &p_frequency, int64_t p_seed, const Vector2 &p_offset, double p_decay,

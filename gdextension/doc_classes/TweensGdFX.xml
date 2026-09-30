@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdFX" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Creates reusable, deterministic progress-to-offset Callables.
+	</brief_description>
+	<description>
+		Access through [code]Tweens.FX[/code]. Scalar functions work as [member TweensGdDefinition.ease_function];
+		vector and quaternion functions supply offsets to callbacks or custom interpolators. Frequency is cycles
+		(Punch/Breathe) or noise intervals (Shake) per tween, not per second. Progress is clamped to
+		[code][0, 1][/code]. Invalid configuration reports an error and returns an empty Callable. C# equivalent:
+		[code]Tweens.FX[/code].
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="attack_release" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="attack" type="float" default="0.1" />
+			<param index="1" name="decay" type="float" default="2.0" />
+			<description>
+				Creates an envelope whose attack occupies this fraction of the duration and release the rest. Attack
+				zero gives [code](1-t)^decay[/code]. Positive attack uses smooth ramps. [param decay] must be positive;
+				attack is in [code][0, 1)[/code]. C# equivalent: [code]FX.AttackRelease(attack, decay)[/code].
+			</description>
+		</method>
+		<method name="breathe" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="frequency" type="float" default="1.0" />
+			<param index="1" name="amplitude" type="float" default="1.0" />
+			<param index="2" name="phase" type="float" default="0.0" />
+			<description>
+				Creates a repeating raised cosine between zero and amplitude. Phase is in cycles. Integer frequency and
+				phase zero give zero at both ends; other settings preserve their phase.
+			</description>
+		</method>
+		<method name="breathe_2d" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector2" />
+			<param index="1" name="frequency" type="Vector2" default="Vector2(1, 1)" />
+			<param index="2" name="phase" type="Vector2" default="Vector2(0, 0)" />
+			<description>
+				Creates a per-axis breathe offset sampler. Parameters use the scalar factory's units; defaults are shown
+				in the signature.
+			</description>
+		</method>
+		<method name="breathe_3d" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector3" />
+			<param index="1" name="frequency" type="Vector3" default="Vector3(1, 1, 1)" />
+			<param index="2" name="phase" type="Vector3" default="Vector3(0, 0, 0)" />
+			<description>
+				Creates a per-axis breathe offset sampler. Parameters use the scalar factory's units; defaults are shown
+				in the signature.
+			</description>
+		</method>
+		<method name="breathe_quaternion" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector3" />
+			<param index="1" name="frequency" type="Vector3" default="Vector3(1, 1, 1)" />
+			<param index="2" name="phase" type="Vector3" default="Vector3(0, 0, 0)" />
+			<description>
+				Creates a unit rotation offset from a breathe rotation vector. Amplitude components are radians. Apply
+				locally as [code]baseline * sampler.call(progress)[/code].
+			</description>
+		</method>
+		<method name="decay" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="power" type="float" default="2.0" />
+			<description>
+				Creates an immediate amplitude envelope from one to zero. [param power] must be positive.
+			</description>
+		</method>
+		<method name="punch" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="frequency" type="float" default="6.0" />
+			<param index="1" name="amplitude" type="float" default="1.0" />
+			<param index="2" name="decay" type="float" default="2.0" />
+			<param index="3" name="phase" type="float" default="0.0" />
+			<param index="4" name="attack" type="float" default="0.0" />
+			<description>
+				Creates a damped sine, zero at the end. Phase is in cycles; phase zero starts at zero displacement.
+				Attack zero starts with full envelope strength. Amplitude may be signed.
+			</description>
+		</method>
+		<method name="punch_2d" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector2" />
+			<param index="1" name="frequency" type="Vector2" default="Vector2(6, 6)" />
+			<param index="2" name="decay" type="float" default="2.0" />
+			<param index="3" name="phase" type="Vector2" default="Vector2(0, 0)" />
+			<param index="4" name="attack" type="float" default="0.0" />
+			<description>
+				Creates a per-axis punch offset sampler. Parameters use the scalar factory's units; defaults are shown
+				in the signature.
+			</description>
+		</method>
+		<method name="punch_3d" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector3" />
+			<param index="1" name="frequency" type="Vector3" default="Vector3(6, 6, 6)" />
+			<param index="2" name="decay" type="float" default="2.0" />
+			<param index="3" name="phase" type="Vector3" default="Vector3(0, 0, 0)" />
+			<param index="4" name="attack" type="float" default="0.0" />
+			<description>
+				Creates a per-axis punch offset sampler. Parameters use the scalar factory's units; defaults are shown
+				in the signature.
+			</description>
+		</method>
+		<method name="punch_quaternion" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector3" />
+			<param index="1" name="frequency" type="Vector3" default="Vector3(6, 6, 6)" />
+			<param index="2" name="decay" type="float" default="2.0" />
+			<param index="3" name="phase" type="Vector3" default="Vector3(0, 0, 0)" />
+			<param index="4" name="attack" type="float" default="0.0" />
+			<description>
+				Creates a unit rotation offset from a punch rotation vector. Amplitude components are radians. Apply
+				locally as [code]baseline * sampler.call(progress)[/code].
+			</description>
+		</method>
+		<method name="shake" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="frequency" type="float" default="12.0" />
+			<param index="1" name="amplitude" type="float" default="1.0" />
+			<param index="2" name="seed" type="int" default="0" />
+			<param index="3" name="offset" type="float" default="0.0" />
+			<param index="4" name="decay" type="float" default="2.0" />
+			<param index="5" name="attack" type="float" default="0.1" />
+			<description>
+				Creates seeded value noise with a fading envelope. Offset is in noise coordinates. Positive attack
+				starts at zero; attack zero permits immediate displacement. No mutable RNG or engine noise resource.
+			</description>
+		</method>
+		<method name="shake_2d" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector2" />
+			<param index="1" name="frequency" type="Vector2" default="Vector2(12, 12)" />
+			<param index="2" name="seed" type="int" default="0" />
+			<param index="3" name="offset" type="Vector2" default="Vector2(0, 101.37)" />
+			<param index="4" name="decay" type="float" default="2.0" />
+			<param index="5" name="attack" type="float" default="0.1" />
+			<description>
+				Creates a per-axis shake offset sampler. Parameters use the scalar factory's units; defaults are shown
+				in the signature.
+			</description>
+		</method>
+		<method name="shake_3d" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector3" />
+			<param index="1" name="frequency" type="Vector3" default="Vector3(12, 12, 12)" />
+			<param index="2" name="seed" type="int" default="0" />
+			<param index="3" name="offset" type="Vector3" default="Vector3(0, 101.37, 203.71)" />
+			<param index="4" name="decay" type="float" default="2.0" />
+			<param index="5" name="attack" type="float" default="0.1" />
+			<description>
+				Creates a per-axis shake offset sampler. Parameters use the scalar factory's units; defaults are shown
+				in the signature.
+			</description>
+		</method>
+		<method name="shake_quaternion" qualifiers="static">
+			<return type="Callable" />
+			<param index="0" name="amplitude" type="Vector3" />
+			<param index="1" name="frequency" type="Vector3" default="Vector3(12, 12, 12)" />
+			<param index="2" name="seed" type="int" default="0" />
+			<param index="3" name="offset" type="Vector3" default="Vector3(0, 101.37, 203.71)" />
+			<param index="4" name="decay" type="float" default="2.0" />
+			<param index="5" name="attack" type="float" default="0.1" />
+			<description>
+				Creates a unit rotation offset from a shake rotation vector. Amplitude components are radians. Apply
+				locally as [code]baseline * sampler.call(progress)[/code].
+			</description>
+		</method>
+	</methods>
+</class>

@@ -12,7 +12,7 @@ using Godot;
 
 namespace tweens.gd;
 
-/// <summary>A manually driven scheduler, also used by the automatic Godot runner.</summary>
+/// <summary>A manually driven playback scheduler, also used by the automatic Godot runner.</summary>
 public sealed class TweenScheduler : IDisposable
 {
     private readonly List<TweenInstance> instances = [];
@@ -22,6 +22,7 @@ public sealed class TweenScheduler : IDisposable
     private readonly long[] ticks = new long[2];
     /// <summary>Reported after a failed tween is cleaned up. Exceptions in observers are ignored.</summary>
     public event Action<Exception>? UnhandledException;
+    /// <summary>Number of unfinished tweens, including paused tweens.</summary>
     public int ActiveCount
     {
         get
@@ -33,6 +34,8 @@ public sealed class TweenScheduler : IDisposable
         }
     }
 
+    /// <summary>Starts one definition and returns its playback handle. Node targets own their playback.</summary>
+    /// <remarks>Non-node targets need no owner for manual playback. The GDScript counterpart is scheduler.add.</remarks>
     public TweenInstance<TTarget, TValue> Add<TTarget, TValue>(TTarget target,
         ITweenDefinition<TTarget, TValue> definition) where TTarget : class where TValue : struct
         => AddCore(target, definition, target as Node, null);
@@ -82,7 +85,9 @@ public sealed class TweenScheduler : IDisposable
         return instance;
     }
 
-    /// <summary>Advance one lane. New tweens added during callbacks wait for the next Update.</summary>
+    /// <summary>Advances one process mode by a finite, nonnegative delta in seconds.</summary>
+    /// <remarks>Unscaled delta defaults to delta. Tweens added during callbacks advance on the next update.
+    /// Use the creating thread; recursive updates are rejected.</remarks>
     public void Update(Duration delta, Duration? unscaledDelta = null, TweenProcessMode mode = TweenProcessMode.Process)
     {
         EnsureThread();
@@ -111,6 +116,7 @@ public sealed class TweenScheduler : IDisposable
         }
     }
 
+    /// <summary>Cancels every active tween. The scheduler remains usable.</summary>
     public void CancelAll()
     {
         EnsureThread();
@@ -153,6 +159,7 @@ public sealed class TweenScheduler : IDisposable
         catch { /* An error observer must not interrupt other tweens or teardown. */ }
     }
 
+    /// <summary>Ends every active tween with RunnerDisposed and releases the scheduler. Safe to call repeatedly.</summary>
     public void Dispose()
     {
         EnsureThread();

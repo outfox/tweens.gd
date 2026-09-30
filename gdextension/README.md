@@ -30,3 +30,20 @@ GDScript suite on Linux and macOS.
 
 `build_profile.json` limits the generated bindings to the engine classes the
 sources use. Add a class there when the code starts using a new one.
+
+## Editor documentation
+
+`doc_classes/` contains Godot's XML class reference, with BBCode descriptions and
+examples. Editor/debug builds embed it through `GodotCPPDocData`; release exports
+omit the help data. Script factories and adapters use GDScript `##` comments.
+
+To refresh native signatures after changing bindings, stage the addon and run
+Godot's documentation tool against the test project, then review the XML changes:
+
+```sh
+godot --headless --path testbed-gdscript --doctool /absolute/path/to/gdextension --gdextension-docs
+```
+
+Keep the shared terms **definition**, **playback handle**, **group**, and
+**sequence** aligned with the C# XML documentation. A sequence is ordinary awaits;
+a group is a parallel step. Explain language differences at the relevant member.

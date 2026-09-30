@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdInterpolation" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Interpolates supported values and resolves property component paths.
+	</brief_description>
+	<description>
+		Used by property definitions and custom adapters. Supported values are int, float, Vector2, Vector3, Vector4,
+		Color, Quaternion, and Rect2. Weight may overshoot [code][0, 1][/code]. C# equivalent:
+		[code]Interpolators[/code] and the property adapters.
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="add" qualifiers="static">
+			<return type="Variant" />
+			<param index="0" name="value" type="Variant" />
+			<param index="1" name="offset" type="Variant" />
+			<description>
+				Adds [param offset] to [param value]. Quaternion offsets compose rotations by multiplication.
+			</description>
+		</method>
+		<method name="compatible" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="initial" type="Variant" />
+			<param index="1" name="endpoint" type="Variant" />
+			<description>
+				True if endpoints share a supported type; int and float endpoints may mix.
+			</description>
+		</method>
+		<method name="finite" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="value" type="Variant" />
+			<description>
+				True if [param value] is supported and all its components are finite.
+			</description>
+		</method>
+		<method name="interpolate" qualifiers="static">
+			<return type="Variant" />
+			<param index="0" name="from" type="Variant" />
+			<param index="1" name="to" type="Variant" />
+			<param index="2" name="weight" type="float" />
+			<param index="3" name="value_type" type="int" />
+			<description>
+				Interpolates [param from] and [param to] as [param value_type]. Weight may overshoot. Integers round
+				ties away from zero and saturate at 64-bit limits; C# Int uses 32-bit limits. Quaternions use normalized
+				spherical interpolation.
+			</description>
+		</method>
+		<method name="read_property" qualifiers="static">
+			<return type="Variant" />
+			<param index="0" name="target" type="Object" />
+			<param index="1" name="path" type="NodePath" />
+			<description>
+				Reads a property or value-component path on [param target]. Paths cannot cross Objects or traverse
+				nodes.
+			</description>
+		</method>
+		<method name="remove" qualifiers="static">
+			<return type="Variant" />
+			<param index="0" name="value" type="Variant" />
+			<param index="1" name="offset" type="Variant" />
+			<description>
+				Removes [param offset] from [param value]. Quaternion offsets use inverse rotation composition.
+			</description>
+		</method>
+		<method name="supported" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="value" type="Variant" />
+			<description>
+				True if [param value] has a supported interpolation type.
+			</description>
+		</method>
+		<method name="zero" qualifiers="static">
+			<return type="Variant" />
+			<param index="0" name="value_type" type="int" />
+			<description>
+				Returns the additive identity for [param value_type]; Quaternion uses IDENTITY.
+			</description>
+		</method>
+	</methods>
+</class>

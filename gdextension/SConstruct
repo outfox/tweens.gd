@@ -22,6 +22,9 @@ Help(opts.GenerateHelpText(localEnv))
 env = SConscript("godot-cpp/SConstruct", {"env": localEnv.Clone(), "api_version": "4.4", "customs": customs})
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
+# Embed Godot's class reference in editor/debug builds; release exports need no help data.
+if env["target"] in ("editor", "template_debug"):
+    sources.append(env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml")))
 if env.get("is_msvc", False):
     # Nothing links against the extension, so keep import libraries out of the addon.
     env["no_import_lib"] = True

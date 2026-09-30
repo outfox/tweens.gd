@@ -27,8 +27,9 @@ such as `In.SINE | Out.CUBIC`, or a matching pair such as
 
 ## `with_*()` methods
 
-Every definition field has a `with_*()` method that returns a copy with that field
-changed. The methods are named after the fields, with two shortenings:
+Playback settings and callbacks have `with_*()` methods that return a copy with
+one field changed. Binding fields (`property`, `adapter`, `target_class`, and
+`value_type`) are assigned directly. The copy methods use two shortenings:
 
 - Endpoint fields drop `_value`: `with_from()`, `with_to()`, and `with_by()`.
   `with_initial_value()` keeps its name.

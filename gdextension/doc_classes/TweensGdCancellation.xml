@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdCancellation" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Cancels waits independently of playback.
+	</brief_description>
+	<description>
+		Pass a token to [method TweensGdHandle.wait] or [method TweensGdGroup.wait]. Cancelling returns
+		[code]Tweens.Reason.WAIT_CANCELLED[/code] to those waits and leaves playback running. Use the handle or group's
+		[code]cancel()[/code] to stop playback. Tokens cannot be reset. C# equivalent:
+		[code]CancellationTokenSource[/code] and its token.
+	</description>
+	<tutorials>
+		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
+	</tutorials>
+	<methods>
+		<method name="cancel">
+			<return type="void" />
+			<description>
+				Cancels connected waits once. Playback keeps running. Use Godot's main thread.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="is_cancelled" type="bool" setter="" getter="is_cancelled" default="false">
+			True after [method cancel] has been called. Tokens cannot be reset.
+		</member>
+	</members>
+	<signals>
+		<signal name="cancelled">
+			<description>
+				Emitted once when this token cancels connected waits.
+			</description>
+		</signal>
+	</signals>
+</class>

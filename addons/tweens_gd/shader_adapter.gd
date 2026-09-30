@@ -1,9 +1,15 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 extends "adapter.gd"
-## Per-playback shader binding and override snapshot. Metadata is read only at start.
+## Binds a material or instance shader uniform for one playback.
+##
+## Prefer [method Tweens.shader_parameter] or [method Tweens.instance_shader_parameter].
+## Captures metadata and override state at start; non-retaining completion restores
+## the initial override or removes it to reveal the shader default.
 
+## Name of the shader uniform. Resolved and validated when playback starts.
 var parameter: StringName
+## Use an instance uniform on a CanvasItem or GeometryInstance3D instead of a ShaderMaterial uniform.
 var instance_uniform := false
 var _uniform_type := TYPE_NIL
 var _had_override := false

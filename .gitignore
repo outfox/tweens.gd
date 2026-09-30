@@ -10,6 +10,7 @@ docs-internal/
 .sconsign*.dblite
 gdextension/src/*.o
 gdextension/src/*.os
+gdextension/src/gen/
 compile_commands.json
 
 ## Ignore Visual Studio temporary files, build results, and

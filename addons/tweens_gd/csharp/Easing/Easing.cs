@@ -9,8 +9,11 @@ using System.Numerics;
 using Godot;
 
 namespace tweens.gd {
+  /// <summary>Samples easing curves without starting playback.</summary>
   public static class Easing {
-    /// <summary>Sample a curve. Width is a fraction of normalized time in [0, 1]; zero directly splices the halves.</summary>
+    /// <summary>Samples a curve at progress clamped to [0, 1]. Eased weight may overshoot.</summary>
+    /// <remarks>Blend is the centered transition width in [0, 1]; zero directly splices the halves.
+    /// In GDScript, use Tweens.Easing.evaluate(ease, progress, blend_type, blend).</remarks>
     public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Makima, double blend = 0.2)
       => GetFunction(ease, blendType, blend)(Math.Clamp(progress, 0, 1));
 
