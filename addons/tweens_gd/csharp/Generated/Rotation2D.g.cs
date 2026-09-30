@@ -62,10 +62,10 @@ public readonly record struct Rotation2D : ITweenDefinition<global::Godot.Node2D
     public Action<TweenInstance<global::Godot.Node2D, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Node2D, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Rotation2D(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Rotation2D(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

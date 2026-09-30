@@ -109,7 +109,11 @@ public class MaterialAdapterTests(HeadlessFixture godot)
                     scheduler.Update(0.5);
                     Close(initial, prop.GetValue(material)!);
                     Assert.Equal(TweenState.Completed, returning.State);
-                    var methods = typeof(TweenExtensions).GetMethods().Where(m => m.GetParameters().Any(p => p.ParameterType == typeof(Action<>).MakeGenericType(adapter))).ToArray();
+                    // The owner and tree overloads that take the value type, or double for float endpoints.
+                    var endpoint = typeof(T) == typeof(float) ? typeof(double) : typeof(T);
+                    var methods = typeof(TweenExtensions).GetMethods().Where(m =>
+                        m.GetParameters().Any(p => p.ParameterType == typeof(Action<>).MakeGenericType(adapter))
+                        && m.GetParameters()[1].ParameterType == endpoint).ToArray();
                     Assert.Equal(2, methods.Length);
                     var owner = new Node();
                     godot.Tree.Root.AddChild(owner);

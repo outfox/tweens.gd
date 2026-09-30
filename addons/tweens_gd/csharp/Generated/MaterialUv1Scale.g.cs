@@ -62,12 +62,24 @@ public readonly record struct MaterialUv1Scale : ITweenDefinition<global::Godot.
     public Action<TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public MaterialUv1Scale(global::Godot.Vector3? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public MaterialUv1Scale(global::Godot.Vector3 to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
+
+    /// <summary>Sets the endpoint from components and common timing.</summary>
+    public MaterialUv1Scale((double X, double Y, double Z) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from a component collection and common timing.</summary>
+    public MaterialUv1Scale(global::System.ReadOnlySpan<double> to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from one value for every axis and common timing.</summary>
+    public MaterialUv1Scale(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @ease, @delay) { }
 
     TweenDefinition<global::Godot.BaseMaterial3D, global::Godot.Vector3> ITweenDefinition<global::Godot.BaseMaterial3D, global::Godot.Vector3>.CreatePlayback()
     {

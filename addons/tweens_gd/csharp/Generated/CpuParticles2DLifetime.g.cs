@@ -62,8 +62,8 @@ public readonly record struct CpuParticles2DLifetime : ITweenDefinition<global::
     public Action<TweenInstance<global::Godot.CpuParticles2D, double>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.CpuParticles2D, double>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public CpuParticles2DLifetime(double? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public CpuParticles2DLifetime(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

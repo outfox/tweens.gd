@@ -312,7 +312,8 @@ public class ExpandedAdapterTests(HeadlessFixture godot)
 
         // Exercise every convenience overload through the real automatic scheduler.
         var extension = Assert.Single(typeof(TweenExtensions).GetMethods(), m =>
-            m.GetParameters().Length == 4 && m.GetParameters()[3].ParameterType == typeof(Action<>).MakeGenericType(adapter));
+            m.GetParameters().Length == 4 && m.GetParameters()[3].ParameterType == typeof(Action<>).MakeGenericType(adapter)
+            && m.GetParameters()[1].ParameterType == (typeof(TValue) == typeof(float) ? typeof(double) : typeof(TValue)));
         var automatic = (TweenInstance)extension.Invoke(null, [node, target, 1d, null])!;
         TweenRuntime.GetRunner(node).Scheduler.Update(0.5);
         Close(midpoint, prop.GetValue(node)!);

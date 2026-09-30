@@ -62,10 +62,10 @@ public readonly record struct RichTextLabelVisibleRatio : ITweenDefinition<globa
     public Action<TweenInstance<global::Godot.RichTextLabel, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.RichTextLabel, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public RichTextLabelVisibleRatio(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public RichTextLabelVisibleRatio(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

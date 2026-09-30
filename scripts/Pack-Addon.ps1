@@ -17,6 +17,9 @@ $destination = Join-Path $output "tweens.gd-$Version.zip"
 $source = Join-Path $repository 'addons/tweens_gd'
 $files = @(Get-ChildItem -LiteralPath $source -File -Recurse | Sort-Object FullName)
 if (!$files.Count -or !(Test-Path -LiteralPath (Join-Path $source 'tweens.gd'))) { throw 'Addon source is missing.' }
+# The C# sources compile inside projects with any nullable setting, so each file enables its own context.
+$unannotated = @($files | Where-Object { $_.Extension -eq '.cs' -and !(Select-String -LiteralPath $_.FullName -Pattern '^#nullable enable' -Quiet) })
+if ($unannotated.Count) { throw "C# files without #nullable enable: $($unannotated.Name -join ', ')" }
 # Every library the GDExtension manifest names ships in the package; CI assembles them from the native builds.
 $manifest = Get-Content -LiteralPath (Join-Path $source 'tweens_gd.gdextension') -Raw
 $libraries = @([regex]::Matches($manifest, '(?m)^[\w.]+\s*=\s*"(bin/[^"]+)"') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)

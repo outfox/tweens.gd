@@ -37,6 +37,7 @@ class Holder extends RefCounted:
 	var amount := 0.0
 	var count := 0
 	var turn := Quaternion.IDENTITY
+	var corners := Vector4.ZERO
 
 class ResourceProbe extends RefCounted:
 	var when_read: Callable
@@ -89,7 +90,7 @@ func near(actual: float, expected: float, message: String) -> void:
 func run_tests() -> void:
 	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
-	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _relative, _adjustments,
+	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _array_endpoints, _relative, _adjustments,
 			_leg_exponents, _interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
@@ -504,6 +505,42 @@ func _factories_and_with() -> bool:
 	scheduler.dispose()
 	first.free()
 	second.free()
+	return true
+
+func _array_endpoints() -> bool:
+	# Arrays of numbers stand in for the captured vector or color, on every endpoint.
+	var scheduler := TweensGdScheduler.new()
+	var node := Node2D.new()
+	add_child(node)
+	var moved := scheduler.add(node, T.position_2d([400, 180], 1.0).with_delta_to([10, 0]))
+	scheduler.update(1.0)
+	check(node.position == Vector2(410, 180), "arrays are Vector2 endpoints and deltas: " + moved.error)
+	scheduler.add(node, T.scale_2d([2, 2], 1.0).with_from([0.5, 0.5]))
+	scheduler.update(0.5)
+	check(node.scale == Vector2(1.25, 1.25), "arrays are from endpoints")
+	scheduler.update(0.5)
+	scheduler.add(node, T.scale_2d(null, 1.0).with_by([1, -0.5]))
+	scheduler.update(1.0)
+	check(node.scale == Vector2(3, 1.5), "arrays are by offsets")
+	scheduler.add(node, T.property(^"modulate", [1, 0.5, 0], 1.0))
+	scheduler.update(1.0)
+	check(node.modulate == Color(1, 0.5, 0), "three components are an opaque color")
+	scheduler.add(node, T.modulate([1, 0.5, 0, 0.25], 1.0))
+	scheduler.update(1.0)
+	check(node.modulate == Color(1, 0.5, 0, 0.25), "four components include alpha")
+	var spatial := Node3D.new()
+	add_child(spatial)
+	scheduler.add(spatial, T.position_3d([1, 2.5, -3], 1.0))
+	var holder := Holder.new()
+	scheduler.add(holder, T.property(^"corners", [1, 2, 3, 4], 1.0))
+	scheduler.update(1.0)
+	check(spatial.position == Vector3(1, 2.5, -3), "arrays are Vector3 endpoints")
+	check(holder.corners == Vector4(1, 2, 3, 4), "arrays are Vector4 endpoints")
+	for rejected in [T.position_2d([1, 2, 3], 1.0), T.position_2d(["1", 2], 1.0), T.property(^"rotation", [1, 2], 1.0)]:
+		check(scheduler.add(node, rejected).completion_reason == T.Reason.FAILED, "arrays must match the captured type")
+	node.free()
+	spatial.free()
+	scheduler.dispose()
 	return true
 
 func _relative() -> bool:

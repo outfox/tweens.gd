@@ -62,8 +62,8 @@ public readonly record struct AnimatedSprite3DFrame : ITweenDefinition<global::G
     public Action<TweenInstance<global::Godot.AnimatedSprite3D, int>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.AnimatedSprite3D, int>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public AnimatedSprite3DFrame(int? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public AnimatedSprite3DFrame(int to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

@@ -22,8 +22,8 @@ public partial class Trail : PathFollow2D
 
 ## Constructors
 
-Each definition's constructor takes the endpoint and common timing. Every
-argument after the binding is optional:
+Each definition's constructor takes the endpoint and common timing. The endpoint
+is required and never `null`; the timing after it is optional:
 
 | Constructor | Arguments |
 | --- | --- |
@@ -32,7 +32,24 @@ argument after the binding is optional:
 | `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations, then the same four |
 
 Set anything else in an initializer after the arguments:
-`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`.
+`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`. To read the
+start value instead, leave `To` unset: `new Tweens.Position2D { Duration = 0.4 }`,
+or `new Tweens.ShaderParameter<float>("dissolve") { By = 0.5f }`.
+
+### Shorter endpoints
+
+Built-in definitions and shorthand methods also take these forms. Components are
+`double`, so they need no `f` suffix:
+
+| Endpoint | Also takes | Example |
+| --- | --- | --- |
+| `float` | Any number | `new Tweens.ModulateAlpha(0.5, 0.2)` |
+| `Vector2`, `Vector3`, `Vector4` | A tuple or collection of components | `(400, 180)`, `[400, 180]` |
+| `Vector2`, `Vector3` scales | One number for every axis | `new Tweens.Scale2D(1.2, 0.2)` |
+| `Color` | Three or four components, an HTML code, or a color name | `(1, 0.5, 0)`, `[1, 0.5, 0, 0.8]`, `"#ff8800"`, `"tomato"` |
+
+Three color components leave the alpha at 1. A collection with the wrong number
+of components throws an `ArgumentException`.
 
 ## Shared options
 
@@ -85,9 +102,9 @@ kind of handle.
 
 | | Definition | Shorthand |
 | --- | --- | --- |
-| Call | `sprite.Tween(new Tweens.Position2D { ... })` | `sprite.TweenPosition(to, 0.5)` |
+| Call | `sprite.Tween(new Tweens.Position2D { ... })` | `sprite.TweenPosition((400, 180), 0.5, Out.Cubic)` |
 | Best for | Motion you name, reuse, or tune | One-off motion next to game logic |
-| Configure with | Constructor arguments, an initializer, and `with` | A callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
+| Configure with | Constructor arguments, an initializer, and `with` | An ease and delay, a callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
 
 A shorthand call's duration argument wins over the duration in a `TweenOptions`
 value. Reusable configure callbacks take a `TweenOptionsBuilder`.

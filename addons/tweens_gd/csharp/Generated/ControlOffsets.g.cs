@@ -62,12 +62,20 @@ public readonly record struct ControlOffsets : ITweenDefinition<global::Godot.Co
     public Action<TweenInstance<global::Godot.Control, global::Godot.Vector4>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Control, global::Godot.Vector4>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public ControlOffsets(global::Godot.Vector4? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public ControlOffsets(global::Godot.Vector4 to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
+
+    /// <summary>Sets the endpoint from components and common timing.</summary>
+    public ControlOffsets((double X, double Y, double Z, double W) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from a component collection and common timing.</summary>
+    public ControlOffsets(global::System.ReadOnlySpan<double> to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(global::tweens.gd.EndpointComponents.ToVector4(to), @duration, @ease, @delay) { }
 
     TweenDefinition<global::Godot.Control, global::Godot.Vector4> ITweenDefinition<global::Godot.Control, global::Godot.Vector4>.CreatePlayback()
     {

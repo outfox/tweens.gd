@@ -62,8 +62,8 @@ public readonly record struct Quaternion : ITweenDefinition<global::Godot.Node, 
     public Action<TweenInstance<global::Godot.Node, global::Godot.Quaternion>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Node, global::Godot.Quaternion>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Quaternion(global::Godot.Quaternion? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Quaternion(global::Godot.Quaternion to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

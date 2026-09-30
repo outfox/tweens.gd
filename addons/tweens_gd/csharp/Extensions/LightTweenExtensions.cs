@@ -26,13 +26,13 @@ public static partial class TweenExtensions
 
     /// <summary>Starts a LightEnergy2DTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<Light2D, float> TweenEnergy(this Light2D target,
-        float to, double duration, Action<LightEnergy2DTween>? configure = null)
-        => target.Tween(ConfigureDefinition(new LightEnergy2DTween { To = to, Duration = duration }, configure));
+        double to, double duration, Action<LightEnergy2DTween>? configure = null)
+        => target.Tween(ConfigureDefinition(new LightEnergy2DTween { To = (float)to, Duration = duration }, configure));
 
     /// <summary>Starts a LightEnergy2DTween. Copies the options; the explicit duration takes precedence.</summary>
     public static TweenInstance<Light2D, float> TweenEnergy(this Light2D target,
-        float to, double duration, TweenOptions options)
-        => target.Tween(ApplyOptions(new LightEnergy2DTween { To = to, Duration = duration }, options));
+        double to, double duration, TweenOptions options)
+        => target.Tween(ApplyOptions(new LightEnergy2DTween { To = (float)to, Duration = duration }, options));
 
     /// <summary>Starts a LightColor3DTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<Light3D, Color> TweenLightColor(this Light3D target,
@@ -46,41 +46,41 @@ public static partial class TweenExtensions
 
     /// <summary>Starts a LightEnergy3DTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<Light3D, float> TweenLightEnergy(this Light3D target,
-        float to, double duration, Action<LightEnergy3DTween>? configure = null)
-        => target.Tween(ConfigureDefinition(new LightEnergy3DTween { To = to, Duration = duration }, configure));
+        double to, double duration, Action<LightEnergy3DTween>? configure = null)
+        => target.Tween(ConfigureDefinition(new LightEnergy3DTween { To = (float)to, Duration = duration }, configure));
 
     /// <summary>Starts a LightEnergy3DTween. Copies the options; the explicit duration takes precedence.</summary>
     public static TweenInstance<Light3D, float> TweenLightEnergy(this Light3D target,
-        float to, double duration, TweenOptions options)
-        => target.Tween(ApplyOptions(new LightEnergy3DTween { To = to, Duration = duration }, options));
+        double to, double duration, TweenOptions options)
+        => target.Tween(ApplyOptions(new LightEnergy3DTween { To = (float)to, Duration = duration }, options));
 
     /// <summary>Starts a OmniRangeTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<OmniLight3D, float> TweenOmniRange(this OmniLight3D target,
-        float to, double duration, Action<OmniRangeTween>? configure = null)
-        => target.Tween(ConfigureDefinition(new OmniRangeTween { To = to, Duration = duration }, configure));
+        double to, double duration, Action<OmniRangeTween>? configure = null)
+        => target.Tween(ConfigureDefinition(new OmniRangeTween { To = (float)to, Duration = duration }, configure));
 
     /// <summary>Starts a OmniRangeTween. Copies the options; the explicit duration takes precedence.</summary>
     public static TweenInstance<OmniLight3D, float> TweenOmniRange(this OmniLight3D target,
-        float to, double duration, TweenOptions options)
-        => target.Tween(ApplyOptions(new OmniRangeTween { To = to, Duration = duration }, options));
+        double to, double duration, TweenOptions options)
+        => target.Tween(ApplyOptions(new OmniRangeTween { To = (float)to, Duration = duration }, options));
 
     /// <summary>Starts a SpotRangeTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<SpotLight3D, float> TweenSpotRange(this SpotLight3D target,
-        float to, double duration, Action<SpotRangeTween>? configure = null)
-        => target.Tween(ConfigureDefinition(new SpotRangeTween { To = to, Duration = duration }, configure));
+        double to, double duration, Action<SpotRangeTween>? configure = null)
+        => target.Tween(ConfigureDefinition(new SpotRangeTween { To = (float)to, Duration = duration }, configure));
 
     /// <summary>Starts a SpotRangeTween. Copies the options; the explicit duration takes precedence.</summary>
     public static TweenInstance<SpotLight3D, float> TweenSpotRange(this SpotLight3D target,
-        float to, double duration, TweenOptions options)
-        => target.Tween(ApplyOptions(new SpotRangeTween { To = to, Duration = duration }, options));
+        double to, double duration, TweenOptions options)
+        => target.Tween(ApplyOptions(new SpotRangeTween { To = (float)to, Duration = duration }, options));
 
     /// <summary>Starts a SpotAngleTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<SpotLight3D, float> TweenSpotAngle(this SpotLight3D target,
-        float to, double duration, Action<SpotAngleTween>? configure = null)
-        => target.Tween(ConfigureDefinition(new SpotAngleTween { To = to, Duration = duration }, configure));
+        double to, double duration, Action<SpotAngleTween>? configure = null)
+        => target.Tween(ConfigureDefinition(new SpotAngleTween { To = (float)to, Duration = duration }, configure));
 
     /// <summary>Starts a SpotAngleTween. Copies the options; the explicit duration takes precedence.</summary>
     public static TweenInstance<SpotLight3D, float> TweenSpotAngle(this SpotLight3D target,
-        float to, double duration, TweenOptions options)
-        => target.Tween(ApplyOptions(new SpotAngleTween { To = to, Duration = duration }, options));
+        double to, double duration, TweenOptions options)
+        => target.Tween(ApplyOptions(new SpotAngleTween { To = (float)to, Duration = duration }, options));
 }

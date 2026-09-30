@@ -122,6 +122,10 @@ Ref<TweensGdHandle> TweensGdScheduler::add(const Variant &p_target, const Ref<Tw
 	if (snapshot.value_type != Variant::NIL && initial.get_type() != snapshot.value_type) {
 		return reject("The captured value does not match the definition's value type.", &snapshot);
 	}
+	for (Variant *endpoint : { &snapshot.from_value, &snapshot.to_value, &snapshot.by_value, &snapshot.delta_from,
+				 &snapshot.delta_to, &snapshot.delta_by }) {
+		*endpoint = TweensGdInterpolation::coerce(*endpoint, initial.get_type());
+	}
 	const bool adjusts[3] = {
 		snapshot.factor_from != 1.0 || !is_null(snapshot.delta_from),
 		snapshot.factor_to != 1.0 || !is_null(snapshot.delta_to),

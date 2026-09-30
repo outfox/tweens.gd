@@ -62,10 +62,10 @@ public readonly record struct Parallax2DScrollScaleY : ITweenDefinition<global::
     public Action<TweenInstance<global::Godot.Parallax2D, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Parallax2D, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Parallax2DScrollScaleY(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Parallax2DScrollScaleY(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

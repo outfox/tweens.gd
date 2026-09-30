@@ -62,8 +62,8 @@ public readonly record struct GpuParticles3DLifetime : ITweenDefinition<global::
     public Action<TweenInstance<global::Godot.GpuParticles3D, double>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.GpuParticles3D, double>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public GpuParticles3DLifetime(double? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public GpuParticles3DLifetime(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

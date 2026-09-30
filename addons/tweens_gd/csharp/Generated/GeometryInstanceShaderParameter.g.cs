@@ -65,8 +65,14 @@ public readonly record struct GeometryInstanceShaderParameter<TValue> : ITweenDe
 
     public string Parameter { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public GeometryInstanceShaderParameter(string parameter, TValue? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the binding. Endpoints left unset are read at start.</summary>
+    public GeometryInstanceShaderParameter(string parameter)
+    {
+        Parameter = parameter;
+    }
+
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public GeometryInstanceShaderParameter(string parameter, TValue to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         Parameter = parameter;
         To = to;

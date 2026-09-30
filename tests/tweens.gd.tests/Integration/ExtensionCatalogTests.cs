@@ -55,6 +55,13 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
             Assert.Contains(overloads, method => method.GetParameters().Any(p => p.ParameterType == typeof(TweenOptions)));
             Assert.Single(overloads.Select(Configure).OfType<ParameterInfo>().Select(p => p.ParameterType).Distinct());
             Assert.All(overloads, method => Assert.StartsWith(method.Name, name));
+
+            // Float endpoints take doubles; vectors and colors also take their shorthand forms, with the same overloads.
+            var value = Adapter(overloads).BaseType!.GetGenericArguments()[1];
+            var forms = overloads.GroupBy(method => method.GetParameters()[1].ParameterType).ToArray();
+            Type[] expected = [value == typeof(float) ? typeof(double) : value, .. Shorthands.Forms(value, name)];
+            Assert.Equal(expected.OrderBy(type => type.FullName), forms.Select(form => form.Key).OrderBy(type => type.FullName));
+            Assert.Single(forms.Select(form => form.Count()).Distinct());
         }
     }
 
@@ -97,6 +104,9 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
             return probe.Value;
         }
         var to = (TValue)Values.Perturb(Read());
+        var form = method.GetParameters()[1].ParameterType;
+        var (argument, expected) = form == typeof(TValue) || typeof(TValue) == typeof(float) && form == typeof(double)
+            ? (to, to) : Shorthands.Create(form, to);
 
         var owners = method.GetParameters().Any(p => p.Name == "owner" && p.IsOptional) ? new[] { null, scope.Root } : new Node?[] { null };
         foreach (var owner in owners)
@@ -104,16 +114,18 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
             var captured = new List<TweenDefinition<TTarget, TValue>>();
             foreach (var configure in new Action<TweenDefinition<TTarget, TValue>>?[] { captured.Add, null })
             {
-                var arguments = Arguments(method, target, to, scope, owner, configure, adapter);
+                var arguments = Arguments(method, target, argument, scope, owner, configure, adapter);
                 var current = Read();
-                var tween = (TweenInstance<TTarget, TValue>)method.Invoke(null, arguments)!;
+                var tween = (TweenInstance<TTarget, TValue>)Shorthands.Invoke(method, arguments)!;
                 Assert.Same(target, tween.Target);
                 Assert.Equal(current, tween.Value);
                 if (Configure(method) is null)
                 {
-                    // Delay from the options, duration from the argument.
+                    // Delay from the options or argument, duration from the argument.
                     scope.Advance(0.75);
                     Assert.Equal(0.5f, tween.Progress);
+                    if (method.GetParameters().Any(parameter => parameter.ParameterType == typeof(EaseType)))
+                        Values.AssertClose(Values.Interpolate(current, expected, 0.25f), tween.Value, "eased by QuadIn");
                 }
                 tween.Cancel();
                 if (Configure(method) is null) break;
@@ -121,12 +133,12 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
             if (Configure(method) is null) continue;
             var definition = Assert.Single(captured);
             Assert.IsType(adapter, definition);
-            Assert.Equal(to, definition.To);
+            Assert.Equal((TValue)expected, definition.To);
             Assert.Equal(1, definition.Duration);
         }
     }
 
-    private static object?[] Arguments<TTarget, TValue>(MethodInfo method, TTarget target, TValue to, SceneScope scope,
+    private static object?[] Arguments<TTarget, TValue>(MethodInfo method, TTarget target, object to, SceneScope scope,
         Node? owner, Action<TweenDefinition<TTarget, TValue>>? configure, Type adapter)
         where TTarget : class where TValue : struct
     {
@@ -140,6 +152,8 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
             var type = parameters[i].ParameterType;
             arguments[i] = type == typeof(SceneTree) ? scope.Tree
                 : type == typeof(TweenOptions) ? Options
+                : type == typeof(EaseType) ? EaseType.QuadIn
+                : type == typeof(double) ? 0.25
                 : type == typeof(Node) ? parameters[i].IsOptional ? owner : scope.Root
                 : configure is null ? null
                 : typeof(ExtensionCatalogTests).GetMethod(nameof(Forward), BindingFlags.NonPublic | BindingFlags.Static)!

@@ -108,10 +108,13 @@ public class StructuredGeneratorTests
         Assert.Empty(definition.GetMembers("ReadOnly"));
         var ease = Assert.IsAssignableFrom<IPropertySymbol>(Assert.Single(definition.GetMembers("EaseFunction")));
         Assert.Equal(NullableAnnotation.Annotated, ease.NullableAnnotation);
-        // Constructor options follow their fixed order, not declaration order, and are all optional.
+        // Constructor options follow their fixed order, not declaration order, and are optional. The endpoint is
+        // required and never null; float endpoints take doubles.
         var constructor = Assert.Single(definition.InstanceConstructors, constructor => constructor.Parameters.Length > 0);
         Assert.Equal(["to", "duration", "ease"], constructor.Parameters.Select(parameter => parameter.Name));
-        Assert.All(constructor.Parameters, parameter => Assert.True(parameter.HasExplicitDefaultValue));
+        Assert.Equal(SpecialType.System_Double, constructor.Parameters[0].Type.SpecialType);
+        Assert.False(constructor.Parameters[0].HasExplicitDefaultValue);
+        Assert.All(constructor.Parameters.Skip(1), parameter => Assert.True(parameter.HasExplicitDefaultValue));
     }
 
     [Fact]
@@ -136,16 +139,85 @@ public class StructuredGeneratorTests
         {
             var type = output.GetTypeByMetadataName("Tweens." + name + "`1")!;
             Assert.True(Assert.Single(type.TypeParameters).HasValueTypeConstraint);
+            // The binding alone leaves the endpoints unset; with an endpoint, it is required.
+            Assert.Contains(type.InstanceConstructors, constructor => constructor.Parameters.Length == 1
+                && constructor.Parameters[0].Type.SpecialType == SpecialType.System_String);
             Assert.Contains(type.InstanceConstructors, constructor => constructor.Parameters.Length == 4
                 && constructor.Parameters[0].Type.SpecialType == SpecialType.System_String
-                && constructor.Parameters.Skip(1).All(parameter => parameter.HasExplicitDefaultValue));
+                && constructor.Parameters[1] is { Name: "to", HasExplicitDefaultValue: false }
+                && constructor.Parameters.Skip(2).All(parameter => parameter.HasExplicitDefaultValue));
         }
         var property = output.GetTypeByMetadataName("Tweens.Property`2")!;
         Assert.True(property.TypeParameters[0].HasReferenceTypeConstraint);
         Assert.True(property.TypeParameters[1].HasValueTypeConstraint);
         Assert.Contains(property.InstanceConstructors, constructor
+            => constructor.Parameters.Select(parameter => parameter.Name).SequenceEqual(["getter", "setter", "interpolate"]));
+        Assert.Contains(property.InstanceConstructors, constructor
             => constructor.Parameters.Select(parameter => parameter.Name).SequenceEqual(
                 ["getter", "setter", "interpolate", "to", "duration", "ease"]));
+    }
+
+    [Fact]
+    public void EmitsExtensionTwinsForShorterEndpointsAndEasing()
+    {
+        const string extensions = """
+            #nullable enable
+            namespace Godot
+            {
+                public struct Vector2 { public Vector2(float x, float y) { } }
+                public struct Color
+                {
+                    public Color(float r, float g, float b) { }
+                    public Color(float r, float g, float b, float a) { }
+                    public Color(string code) { }
+                }
+            }
+            namespace tweens.gd
+            {
+                internal static class EndpointComponents
+                {
+                    internal static Godot.Vector2 ToVector2(System.ReadOnlySpan<double> to) => default;
+                    internal static Godot.Color ToColor(System.ReadOnlySpan<double> to) => default;
+                }
+                public enum Mode { A, B }
+                public class Configurable { public EaseType Ease { get; set; } public double Delay { get; set; } }
+                public static partial class TweenExtensions
+                {
+                    public static TweenInstance<Targets.Widget, Godot.Vector2> TweenScale(this Targets.Widget target,
+                        Godot.Vector2 to, double duration, System.Action<Configurable>? configure = null, int count = 2,
+                        bool flag = true, Mode mode = Mode.B, float factor = 1.5f, string? label = "x") => new();
+                    public static TweenInstance<Targets.Widget, Godot.Color> TweenTint(this Targets.Widget target,
+                        Godot.Color to, double duration, TweenOptions options) => new();
+                    public static TweenInstance<Targets.Widget, float> TweenFade(this Targets.Widget target,
+                        double to, double duration, System.Action<Configurable>? configure = null) => new();
+                    public static TweenInstance<Targets.Widget, TValue> TweenAny<TValue>(this Targets.Widget target,
+                        TValue to, double duration) where TValue : struct => new();
+                }
+            }
+            """;
+        var (_, output, result) = Run(CreateCompilation(Contracts, extensions));
+        Assert.Equal(["Property.g.cs", "TweenExtensions.g.cs"], result.GeneratedSources.Select(source => source.HintName).Order());
+        var type = output.GetTypeByMetadataName("tweens.gd.TweenExtensions")!;
+        string Forms(string name) => string.Join(" | ", type.GetMembers(name).OfType<IMethodSymbol>()
+            .Select(method => method.Parameters[1].Type.ToDisplayString() + (method.Parameters.Any(p => p.Name == "ease") ? " eased" : ""))
+            .Order(StringComparer.Ordinal));
+
+        // Vectors take tuples and collections, scales one number; colors also take codes and names. Configure
+        // overloads get an easing and a delay, in every form. Generic methods keep their signatures.
+        Assert.Equal("(double X, double Y) | (double X, double Y) eased | Godot.Vector2 | Godot.Vector2 eased | "
+            + "System.ReadOnlySpan<double> | System.ReadOnlySpan<double> eased | double | double eased", Forms("TweenScale"));
+        Assert.Equal("(double R, double G, double B) | (double R, double G, double B, double A) | Godot.Color | "
+            + "System.ReadOnlySpan<double> | string", Forms("TweenTint"));
+        Assert.Equal("double | double eased", Forms("TweenFade"));
+        Assert.Single(type.GetMembers("TweenAny"));
+
+        // Twins keep the defaults after the endpoint.
+        var eased = type.GetMembers("TweenScale").OfType<IMethodSymbol>()
+            .Single(method => method.Parameters[1].Type.ToDisplayString() == "Godot.Vector2" && method.Parameters.Any(p => p.Name == "ease"));
+        Assert.Equal(["target", "to", "duration", "ease", "delay", "count", "flag", "mode", "factor", "label"],
+            eased.Parameters.Select(parameter => parameter.Name));
+        Assert.Equal(new object?[] { 0d, 2, true, 1, 1.5f, "x" }, eased.Parameters.Skip(4).Select(parameter => parameter.ExplicitDefaultValue));
+        Assert.False(eased.Parameters[3].HasExplicitDefaultValue);
     }
 
     [Fact]

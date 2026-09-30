@@ -38,8 +38,8 @@ public partial class HealthBar : Node2D
     public float Fill { get; set; } = 1;
 
     static readonly Tweens.Property<HealthBar, float> Drain = new(
-        bar => bar.Fill, (bar, value) => bar.Fill = value, Interpolators.Float,
-        duration: 0.4, ease: EaseType.SmootherStep);
+        bar => bar.Fill, (bar, value) => bar.Fill = value, Interpolators.Float)
+        { Duration = 0.4, Ease = EaseType.SmootherStep };
 
     public void SetHealth(float fraction) => this.Tween(Drain with { To = fraction });
 }

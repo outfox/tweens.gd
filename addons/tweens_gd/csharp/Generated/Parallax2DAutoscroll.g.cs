@@ -62,12 +62,20 @@ public readonly record struct Parallax2DAutoscroll : ITweenDefinition<global::Go
     public Action<TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Parallax2DAutoscroll(global::Godot.Vector2? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Parallax2DAutoscroll(global::Godot.Vector2 to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
+
+    /// <summary>Sets the endpoint from components and common timing.</summary>
+    public Parallax2DAutoscroll((double X, double Y) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from a component collection and common timing.</summary>
+    public Parallax2DAutoscroll(global::System.ReadOnlySpan<double> to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @ease, @delay) { }
 
     TweenDefinition<global::Godot.Parallax2D, global::Godot.Vector2> ITweenDefinition<global::Godot.Parallax2D, global::Godot.Vector2>.CreatePlayback()
     {

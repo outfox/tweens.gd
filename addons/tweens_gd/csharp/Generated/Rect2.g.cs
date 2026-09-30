@@ -62,8 +62,8 @@ public readonly record struct Rect2 : ITweenDefinition<global::Godot.Node, globa
     public Action<TweenInstance<global::Godot.Node, global::Godot.Rect2>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Node, global::Godot.Rect2>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Rect2(global::Godot.Rect2? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Rect2(global::Godot.Rect2 to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

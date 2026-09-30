@@ -62,8 +62,8 @@ public readonly record struct ScrollContainerScrollHorizontal : ITweenDefinition
     public Action<TweenInstance<global::Godot.ScrollContainer, int>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.ScrollContainer, int>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public ScrollContainerScrollHorizontal(int? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public ScrollContainerScrollHorizontal(int to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

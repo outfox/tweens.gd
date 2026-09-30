@@ -62,10 +62,10 @@ public readonly record struct GlobalPosition3DX : ITweenDefinition<global::Godot
     public Action<TweenInstance<global::Godot.Node3D, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Node3D, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public GlobalPosition3DX(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public GlobalPosition3DX(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

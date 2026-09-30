@@ -18,6 +18,8 @@ public:
 	static bool supported(const Variant &p_value);
 	static bool compatible(const Variant &p_initial, const Variant &p_endpoint);
 	static bool finite(const Variant &p_value);
+	// Arrays of numbers stand in for vectors and colors: [x, y], [r, g, b] or [r, g, b, a]. Anything else is kept.
+	static Variant coerce(const Variant &p_value, Variant::Type p_type);
 	static Variant interpolate(const Variant &p_from, const Variant &p_to, double p_weight, int64_t p_value_type);
 	// The offset that changes nothing, or null if by_value does not support the type.
 	static Variant zero(int64_t p_value_type);

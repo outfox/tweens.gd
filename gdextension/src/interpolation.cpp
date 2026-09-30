@@ -138,6 +138,36 @@ bool TweensGdInterpolation::compatible(const Variant &p_initial, const Variant &
 	return initial == endpoint;
 }
 
+Variant TweensGdInterpolation::coerce(const Variant &p_value, Variant::Type p_type) {
+	if (p_value.get_type() != Variant::ARRAY) {
+		return p_value;
+	}
+	const Array values = p_value;
+	for (int64_t index = 0; index < values.size(); index++) {
+		const Variant::Type type = values[index].get_type();
+		if (type != Variant::INT && type != Variant::FLOAT) {
+			return p_value;
+		}
+	}
+	const int64_t size = values.size();
+	const auto at = [&values](int64_t p_index) { return double(values[p_index]); };
+	switch (p_type) {
+		case Variant::VECTOR2:
+			return size == 2 ? Variant(Vector2(at(0), at(1))) : p_value;
+		case Variant::VECTOR3:
+			return size == 3 ? Variant(Vector3(at(0), at(1), at(2))) : p_value;
+		case Variant::VECTOR4:
+			return size == 4 ? Variant(Vector4(at(0), at(1), at(2), at(3))) : p_value;
+		case Variant::COLOR:
+			if (size == 3) {
+				return Color(at(0), at(1), at(2));
+			}
+			return size == 4 ? Variant(Color(at(0), at(1), at(2), at(3))) : p_value;
+		default:
+			return p_value;
+	}
+}
+
 bool TweensGdInterpolation::finite(const Variant &p_value) {
 	switch (p_value.get_type()) {
 		case Variant::INT:

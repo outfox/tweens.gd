@@ -62,10 +62,10 @@ public readonly record struct ControlOffsetTransformScaleY : ITweenDefinition<gl
     public Action<TweenInstance<global::Godot.Control, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Control, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public ControlOffsetTransformScaleY(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public ControlOffsetTransformScaleY(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

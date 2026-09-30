@@ -62,8 +62,8 @@ public readonly record struct RichTextLabelVisibleCharacters : ITweenDefinition<
     public Action<TweenInstance<global::Godot.RichTextLabel, int>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.RichTextLabel, int>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public RichTextLabelVisibleCharacters(int? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public RichTextLabelVisibleCharacters(int to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

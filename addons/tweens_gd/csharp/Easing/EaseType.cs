@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 // SPDX-FileCopyrightText: 2020 Jeffrey Lanters
 
+#nullable enable
 namespace tweens.gd {
   // Legacy named curves keep their numeric values and shape. Use In/Out/InOut for composable curves.
   [System.Flags]

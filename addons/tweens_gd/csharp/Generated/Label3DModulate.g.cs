@@ -62,12 +62,28 @@ public readonly record struct Label3DModulate : ITweenDefinition<global::Godot.L
     public Action<TweenInstance<global::Godot.Label3D, global::Godot.Color>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Label3D, global::Godot.Color>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Label3DModulate(global::Godot.Color? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Label3DModulate(global::Godot.Color to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
+
+    /// <summary>Sets the endpoint from components and common timing.</summary>
+    public Label3DModulate((double R, double G, double B) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from components and common timing.</summary>
+    public Label3DModulate((double R, double G, double B, double A) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from a component collection and common timing.</summary>
+    public Label3DModulate(global::System.ReadOnlySpan<double> to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(global::tweens.gd.EndpointComponents.ToColor(to), @duration, @ease, @delay) { }
+
+    /// <summary>Sets the endpoint from an HTML color code or color name and common timing.</summary>
+    public Label3DModulate(string to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        : this(new global::Godot.Color(to), @duration, @ease, @delay) { }
 
     TweenDefinition<global::Godot.Label3D, global::Godot.Color> ITweenDefinition<global::Godot.Label3D, global::Godot.Color>.CreatePlayback()
     {

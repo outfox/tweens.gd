@@ -62,10 +62,10 @@ public readonly record struct SpringArm3DSpringLength : ITweenDefinition<global:
     public Action<TweenInstance<global::Godot.SpringArm3D, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.SpringArm3D, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public SpringArm3DSpringLength(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public SpringArm3DSpringLength(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

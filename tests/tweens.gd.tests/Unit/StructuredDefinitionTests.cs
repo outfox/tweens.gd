@@ -69,18 +69,27 @@ public class StructuredDefinitionTests
         }
     }
 
-    // Shader and custom definitions lead with their binding; omitted arguments take their defaults.
-    private static TDefinition Create<TDefinition>(params object?[] arguments)
+    // Shader and custom definitions lead with their binding.
+    private static object?[] Binding(Type definition) => definition.GetGenericArguments().Length switch
     {
-        var constructor = typeof(TDefinition).GetConstructors().Single();
-        object?[] binding = constructor.GetParameters().Length switch
-        {
-            5 => ["amount"],
-            7 => [(Func<Box, float>)(b => b.Value), (Action<Box, float>)((b, v) => b.Value = v),
-                (Func<float, float, float, float>)Interpolators.Float],
-            _ => [],
-        };
-        return (TDefinition)constructor.Invoke([.. binding, .. arguments, .. Enumerable.Repeat(Type.Missing, 4 - arguments.Length)]);
+        1 => ["amount"],
+        2 => [(Func<Box, float>)(b => b.Value), (Action<Box, float>)((b, v) => b.Value = v),
+            (Func<float, float, float, float>)Interpolators.Float],
+        _ => [],
+    };
+
+    // The main constructor takes the value type, or double for built-in float endpoints, and never null.
+    private static Type Endpoint(Type definition, Type value) => value == typeof(float) && !definition.IsGenericType ? typeof(double) : value;
+
+    private static ConstructorInfo Primary(Type definition, Type value) => definition.GetConstructors().Single(constructor =>
+        constructor.GetParameters().FirstOrDefault(parameter => parameter.Name == "to")?.ParameterType == Endpoint(definition, value));
+
+    // Without endpoints: the default value, or only the binding for shader and custom definitions.
+    private static TDefinition Empty<TDefinition>() where TDefinition : struct
+    {
+        var binding = Binding(typeof(TDefinition));
+        return binding.Length == 0 ? new TDefinition() : (TDefinition)typeof(TDefinition).GetConstructors()
+            .Single(constructor => constructor.GetParameters().Length == binding.Length).Invoke(binding);
     }
 
     private static object? Get<TDefinition>(TDefinition definition, string property)
@@ -89,17 +98,37 @@ public class StructuredDefinitionTests
     private static void VerifyConstructor<TDefinition, TTarget, TValue>()
         where TDefinition : struct, ITweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
     {
+        var timing = new TweenOptions { Duration = 1.25, Ease = EaseType.QuadIn, Delay = 0.5 };
         var to = Sample<TValue>(0.75f);
-        var given = Create<TDefinition>(to, 1.25, EaseType.QuadIn, 0.5);
+        var binding = Binding(typeof(TDefinition));
+        var primary = Primary(typeof(TDefinition), typeof(TValue));
+        object endpoint = Endpoint(typeof(TDefinition), typeof(TValue)) == typeof(double) && to is float single ? (double)single : to;
+        var given = (TDefinition)primary.Invoke([.. binding, endpoint, 1.25, EaseType.QuadIn, 0.5]);
         Assert.Equal(to, Get(given, "To"));
         Assert.Null(Get(given, "From"));
-        Assert.Equal(new TweenOptions { Duration = 1.25, Ease = EaseType.QuadIn, Delay = 0.5 }, Get(given, "Options"));
+        Assert.Equal(timing, Get(given, "Options"));
+        var untimed = (TDefinition)primary.Invoke([.. binding, endpoint, Type.Missing, Type.Missing, Type.Missing]);
+        Assert.Equal(new TweenOptions(), Get(untimed, "Options"));
 
-        var omitted = Create<TDefinition>();
+        // Constructor endpoints are required and never null; one left unset comes from the initializer or binding.
+        var constructors = typeof(TDefinition).GetConstructors();
+        Assert.All(constructors.SelectMany(constructor => constructor.GetParameters()).Where(parameter => parameter.Name == "to"),
+            parameter => Assert.True(!parameter.IsOptional && Nullable.GetUnderlyingType(parameter.ParameterType) is null));
+        var omitted = Empty<TDefinition>();
         Assert.Null(Get(omitted, "To"));
         Assert.Equal(new TweenOptions(), Get(omitted, "Options"));
-        if (typeof(TDefinition).GetConstructors().Single().GetParameters().Length == 4)
-            Assert.Equal(new TDefinition(), omitted);
+
+        // Every shorthand form sets the converted endpoint and passes the timing through.
+        var shorthands = constructors.Where(constructor => constructor != primary && constructor.GetParameters().Length > binding.Length).ToArray();
+        var forms = shorthands.Select(constructor => constructor.GetParameters()[0].ParameterType);
+        Assert.Equal(Shorthands.Forms(typeof(TValue), typeof(TDefinition).Name).OrderBy(type => type.FullName), forms.OrderBy(type => type.FullName));
+        foreach (var constructor in shorthands)
+        {
+            var (argument, expected) = Shorthands.Create(constructor.GetParameters()[0].ParameterType, to);
+            var shorthand = (TDefinition)Shorthands.Invoke(constructor, [argument, 1.25, EaseType.QuadIn, 0.5])!;
+            Assert.Equal(expected, Get(shorthand, "To"));
+            Assert.Equal(timing, Get(shorthand, "Options"));
+        }
     }
 
     private static Type Close(Type definition) => definition.IsGenericTypeDefinition
@@ -112,7 +141,7 @@ public class StructuredDefinitionTests
     private static void Verify<TDefinition, TTarget, TValue>()
         where TDefinition : struct, ITweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
     {
-        object boxed = Create<TDefinition>();
+        object boxed = Empty<TDefinition>();
 
         // Assign through the init accessors, then read everything back.
         var expected = new Dictionary<string, object?>();
@@ -188,12 +217,38 @@ public class StructuredDefinitionTests
     {
         Assert.Equal(new Tweens.Position2D { To = new Vector2(4, 2), Duration = 0.5, Ease = EaseType.CubicOut, Delay = 0.25 },
             new Tweens.Position2D(new Vector2(4, 2), 0.5, EaseType.CubicOut, 0.25));
-        Assert.Equal(new Tweens.ModulateAlpha { Duration = 0.3 }, new Tweens.ModulateAlpha(duration: 0.3));
+        Assert.Equal(new Tweens.ModulateAlpha { To = 0.5f, Duration = 0.3 }, new Tweens.ModulateAlpha(0.5, 0.3));
         Assert.Equal(new Tweens.ShaderParameter<float>("amount") { To = 1, Delay = 0.1 },
             new Tweens.ShaderParameter<float>("amount", 1, delay: 0.1));
         Assert.Equal(10, movement.To);
         Assert.Equal(1, movement.Duration);
         Assert.Equal(FillMode.RetainFinalValue, new Tweens.Scale2D(Vector2.One, 0.2).Fill);
+    }
+
+    [Fact]
+    public void ShorthandEndpointsReadLikeTheirValues()
+    {
+        Assert.Equal(new Tweens.Position2D(new Vector2(400, 180), 0.6, EaseType.CubicOut), new Tweens.Position2D((400, 180), 0.6, EaseType.CubicOut));
+        Assert.Equal(new Tweens.Position3D(new Vector3(1.5f, 0, -2), 1), new Tweens.Position3D((1.5, 0, -2), 1));
+        Assert.Equal(new Tweens.Scale2D(new Vector2(1.2f, 1.2f), 0.2), new Tweens.Scale2D(1.2, 0.2));
+        Assert.Equal(new Tweens.Scale3D(new Vector3(0.5f, 0.5f, 0.5f), 0.4), new Tweens.Scale3D(0.5, 0.4));
+        Assert.Equal(new Tweens.Modulate(new Color(1, 0.5f, 0), 0.3), new Tweens.Modulate((1, 0.5, 0), 0.3));
+        Assert.Equal(new Tweens.Modulate(new Color(1, 0.5f, 0, 0.8f), 0.3), new Tweens.Modulate((1, 0.5, 0, 0.8), 0.3));
+        Assert.Equal(new Tweens.Modulate(Color.FromHtml("#ff8800"), 0.3), new Tweens.Modulate("#ff8800", 0.3));
+        Assert.Equal(new Tweens.Modulate(Colors.Tomato), new Tweens.Modulate("tomato"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Tweens.Modulate("not a color"));
+        Assert.Equal(0.5f, new Tweens.ModulateAlpha(0.5, 0.2).To);
+
+        // Collections are checked for their length when converted.
+        Assert.Equal(new Tweens.Position2D(new Vector2(400, 180), 0.6), new Tweens.Position2D([400, 180], 0.6));
+        Assert.Equal(new Tweens.Position3D(new Vector3(1, 2, 3)), new Tweens.Position3D([1, 2, 3]));
+        Assert.Equal(new Tweens.Modulate(new Color(1, 0.5f, 0)), new Tweens.Modulate([1, 0.5, 0]));
+        Assert.Equal(new Tweens.Modulate(new Color(1, 0.5f, 0, 0.8f)), new Tweens.Modulate([1, 0.5, 0, 0.8]));
+        Assert.Equal("to", Assert.Throws<ArgumentException>(() => new Tweens.Position2D([400], 0.6)).ParamName);
+        Assert.Throws<ArgumentException>(() => new Tweens.Position3D([1, 2]));
+        Assert.Equal(new Tweens.ControlOffsets(new Vector4(1, 2, 3, 4)), new Tweens.ControlOffsets([1, 2, 3, 4]));
+        Assert.Throws<ArgumentException>(() => new Tweens.ControlOffsets([1, 2, 3]));
+        Assert.Equal("to", Assert.Throws<ArgumentException>(() => new Tweens.Modulate([1, 0.5])).ParamName);
     }
 
     [Fact]

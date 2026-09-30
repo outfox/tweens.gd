@@ -67,9 +67,18 @@ public readonly record struct Property<TTarget, TValue> : ITweenDefinition<TTarg
     public Action<TTarget, TValue> Setter { get; init; }
     public Func<TValue, TValue, float, TValue> Interpolate { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
+    /// <summary>Sets the binding. Endpoints left unset are read at start.</summary>
     public Property(Func<TTarget, TValue> getter, Action<TTarget, TValue> setter,
-        Func<TValue, TValue, float, TValue> interpolate, TValue? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+        Func<TValue, TValue, float, TValue> interpolate)
+    {
+        Getter = getter;
+        Setter = setter;
+        Interpolate = interpolate;
+    }
+
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Property(Func<TTarget, TValue> getter, Action<TTarget, TValue> setter,
+        Func<TValue, TValue, float, TValue> interpolate, TValue to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         Getter = getter;
         Setter = setter;

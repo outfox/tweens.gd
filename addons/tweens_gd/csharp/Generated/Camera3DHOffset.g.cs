@@ -62,10 +62,10 @@ public readonly record struct Camera3DHOffset : ITweenDefinition<global::Godot.C
     public Action<TweenInstance<global::Godot.Camera3D, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Camera3D, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Camera3DHOffset(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Camera3DHOffset(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

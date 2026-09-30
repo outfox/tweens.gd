@@ -16,13 +16,13 @@ public static partial class TweenExtensions
 {
     /// <summary>Starts a FloatTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<Node, float> TweenFloat(this Node target,
-        float to, double duration, Action<FloatTween>? configure = null)
-        => target.Tween(ConfigureDefinition(new FloatTween { To = to, Duration = duration }, configure));
+        double to, double duration, Action<FloatTween>? configure = null)
+        => target.Tween(ConfigureDefinition(new FloatTween { To = (float)to, Duration = duration }, configure));
 
     /// <summary>Starts a FloatTween. Copies the options; the explicit duration takes precedence.</summary>
     public static TweenInstance<Node, float> TweenFloat(this Node target,
-        float to, double duration, TweenOptions options)
-        => target.Tween(ApplyOptions(new FloatTween { To = to, Duration = duration }, options));
+        double to, double duration, TweenOptions options)
+        => target.Tween(ApplyOptions(new FloatTween { To = (float)to, Duration = duration }, options));
 
     /// <summary>Starts a DoubleTween. Configure runs before snapshotting and can override any definition option.</summary>
     public static TweenInstance<Node, double> TweenDouble(this Node target,

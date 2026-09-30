@@ -65,8 +65,14 @@ public readonly record struct ShaderParameter<TValue> : ITweenDefinition<global:
 
     public string Parameter { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public ShaderParameter(string parameter, TValue? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the binding. Endpoints left unset are read at start.</summary>
+    public ShaderParameter(string parameter)
+    {
+        Parameter = parameter;
+    }
+
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public ShaderParameter(string parameter, TValue to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
         Parameter = parameter;
         To = to;

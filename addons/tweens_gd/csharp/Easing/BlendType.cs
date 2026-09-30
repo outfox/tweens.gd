@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
+
+#nullable enable
 namespace tweens.gd;
 
 /// <summary>How different In/Out families meet inside the centered transition window.</summary>

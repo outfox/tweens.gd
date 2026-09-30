@@ -10,6 +10,10 @@ Where a tween starts and ends, and how a variant derives from those values.
 
 A `null` endpoint reads the property when the tween starts. See
 [reusable definitions](/gdscript/definitions/#leave-out-from_value-or-to_value).
+An array of numbers can stand in for a vector or color endpoint, delta, or offset:
+`[400, 180]` for a `Vector2`, and `[1, 0.5, 0]` or `[1, 0.5, 0, 0.8]` for a
+`Color`. The start converts it to the captured value's type; an array that
+doesn't match rejects the start.
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |

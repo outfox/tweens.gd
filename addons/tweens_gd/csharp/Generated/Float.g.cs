@@ -62,10 +62,10 @@ public readonly record struct Float : ITweenDefinition<global::Godot.Node, float
     public Action<TweenInstance<global::Godot.Node, float>>? OnCancel { get; init; }
     public Action<TweenInstance<global::Godot.Node, float>>? OnFinally { get; init; }
 
-    /// <summary>Sets the endpoint and common timing. A null <paramref name="to"/> is read at start.</summary>
-    public Float(float? to = null, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    /// <summary>Sets the endpoint and common timing.</summary>
+    public Float(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
     {
-        To = to;
+        To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 

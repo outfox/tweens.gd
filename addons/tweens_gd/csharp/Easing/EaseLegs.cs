@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 
+#nullable enable
 namespace tweens.gd;
 
 /// <summary>In curves. Combine one In and one Out with |; a single curve runs on its own.</summary>
