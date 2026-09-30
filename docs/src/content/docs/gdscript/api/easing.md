@@ -9,20 +9,20 @@ For choosing an ease and trying it visually, start with the [easing guide](/gdsc
 ## Compose an ease
 
 ```gdscript
-var move := Tweens.position_2d_x(300.0, 1.2, Tweens.In.SINE | Tweens.Out.CUBIC)
+var move := Tweens.position_2d_x(300.0, 1.2, In.SINE | Out.CUBIC)
 Tweens.play(sprite, move)
 ```
 
-`Tweens.InOut.SINE` is exactly `Tweens.In.SINE | Tweens.Out.SINE`.
+`InOut.SINE` is exactly `In.SINE | Out.SINE`.
 Pass the flags after the duration in any helper, assign them to a definition's
 `ease`, use `with_ease()`, or sample them with `Tweens.Easing.evaluate(ease, t)`.
 Easing arguments accept integers so flags from either side compose naturally.
-`Tweens.InOut` includes every curve family and numbered variant, such as
-`Tweens.InOut.BACK30`, `Tweens.InOut.ELASTIC20`, `Tweens.InOut.BOUNCE50`, and `Tweens.InOut.JUMP40`.
+`InOut` includes every curve family and numbered variant, such as
+`InOut.BACK30`, `InOut.ELASTIC20`, `InOut.BOUNCE50`, and `InOut.JUMP40`.
 
-A single selection such as `Tweens.Out.CUBIC` runs that curve over the whole duration.
-`Tweens.In.NONE` and `Tweens.Out.NONE` omit a leg. `Tweens.In.LINEAR` and
-`Tweens.Out.LINEAR` explicitly select a straight line for that side of a blend;
+A single selection such as `Out.CUBIC` runs that curve over the whole duration.
+`In.NONE` and `Out.NONE` omit a leg. `In.LINEAR` and
+`Out.LINEAR` explicitly select a straight line for that side of a blend;
 no selections means linear motion. Choose at most one curve from each side.
 Multiple different In flags or multiple different Out flags are rejected.
 
@@ -46,8 +46,8 @@ Output weights aren't clamped; native property setters still apply their own lim
 Back and Elastic offer **10%, 20%, 30%, 40%, and 50%** peak overshoot:
 `BACK10` through `BACK50`, and `ELASTIC10` through `ELASTIC50`.
 `BACK` aliases `BACK10`; `ELASTIC` aliases `ELASTIC10`.
-Every variant is available in `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
-For example, use `Tweens.In.BACK20 | Tweens.Out.ELASTIC40` or `Tweens.InOut.ELASTIC30`.
+Every variant is available in `In`, `Out`, and `InOut`.
+For example, use `In.BACK20 | Out.ELASTIC40` or `InOut.ELASTIC30`.
 
 The percentage measures overshoot relative to the **full tween range**, for a
 single leg or a matching pair. An Out tween from 0 to 100 with `ELASTIC30`
@@ -57,20 +57,20 @@ Legacy `Tweens.Ease` curves keep their original shapes.
 
 Bounce offers `BOUNCE10` through `BOUNCE50`, with `BOUNCE` aliasing `BOUNCE10`.
 The percentage is the **first rebound's depth** within the full tween range.
-A tween from 0 to 100 with `Tweens.Out.BOUNCE30` first reaches 100, rebounds to
+A tween from 0 to 100 with `Out.BOUNCE30` first reaches 100, rebounds to
 70, then settles through two smaller bounces. Their depths are one-quarter
-and one-sixteenth of the first. `Tweens.In.BOUNCE30` mirrors this motion;
-`Tweens.InOut.BOUNCE30` retains the 30-unit rebound depth in each half.
+and one-sixteenth of the first. `In.BOUNCE30` mirrors this motion;
+`InOut.BOUNCE30` retains the 30-unit rebound depth in each half.
 A mixed pair's join may reshape rebounds inside its blend window.
 Legacy `Tweens.Ease.BOUNCE_OUT` retains its original 25% first rebound.
 
 Jump offers `JUMP10` through `JUMP50`, with `JUMP` aliasing `JUMP10`.
 It rebounds **above the target** in three parabolic arcs. From 0 to 100,
-`Tweens.Out.JUMP30` rises directly to 130, lands at 100, then reaches 107.5 and
+`Out.JUMP30` rises directly to 130, lands at 100, then reaches 107.5 and
 101.875, landing at 100 after each peak. It stays above the target once it
 first reaches it. The numbered percentage sets the first peak; later peaks
 are one-quarter and one-sixteenth as high above the target.
-`Tweens.In.JUMP30` mirrors that motion. `Tweens.InOut.JUMP30` keeps the same 30%
+`In.JUMP30` mirrors that motion. `InOut.JUMP30` keeps the same 30%
 first-peak height relative to the full tween range in each half. A mixed
 pair's join can reshape peaks inside its blend window.
 
@@ -155,12 +155,12 @@ families preserve their conventional InOut curves too.
 
 ## Migrate existing eases
 
-Use `Tweens.In.SINE` for `Tweens.Ease.SINE_IN`, `Tweens.Out.SINE` for
-`Tweens.Ease.SINE_OUT`, and `Tweens.InOut.SINE` for `Tweens.Ease.SINE_IN_OUT`;
+Use `In.SINE` for `Tweens.Ease.SINE_IN`, `Out.SINE` for
+`Tweens.Ease.SINE_OUT`, and `InOut.SINE` for `Tweens.Ease.SINE_IN_OUT`;
 the same naming applies to the other families. Back, Elastic, and Bounce use the new
 percentage calibration; other shapes stay the same. Legacy `Tweens.Ease` names and numeric values remain
 available. Do not combine legacy names with flags. New code should use
-`Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
+`In`, `Out`, and `InOut`.
 
 ## Custom functions and curves
 

@@ -3,11 +3,18 @@
 extends "res://Gallery/GDScript/GalleryAnimation.gd"
 # Scene objects are supplied by the matching C# scene setup file.
 
-const FAMILIES = ["NONE", "LINEAR", "SINE", "QUAD", "CUBIC", "QUART", "QUINT", "EXPO",
-	"CIRC", "BACK", "ELASTIC", "BOUNCE", "SMOOTH_STEP", "SMOOTHER_STEP",
-	"BACK10", "BACK20", "BACK30", "BACK40", "BACK50", "ELASTIC10", "ELASTIC20", "ELASTIC30", "ELASTIC40", "ELASTIC50",
-	"BOUNCE10", "BOUNCE20", "BOUNCE30", "BOUNCE40", "BOUNCE50",
-	"JUMP", "JUMP10", "JUMP20", "JUMP30", "JUMP40", "JUMP50"]
+# Each family's In and Out curve, in the order of the scene's family lists.
+const FAMILIES = [
+	[In.NONE, Out.NONE], [In.LINEAR, Out.LINEAR], [In.SINE, Out.SINE], [In.QUAD, Out.QUAD], [In.CUBIC, Out.CUBIC],
+	[In.QUART, Out.QUART], [In.QUINT, Out.QUINT], [In.EXPO, Out.EXPO], [In.CIRC, Out.CIRC], [In.BACK, Out.BACK],
+	[In.ELASTIC, Out.ELASTIC], [In.BOUNCE, Out.BOUNCE], [In.SMOOTH_STEP, Out.SMOOTH_STEP],
+	[In.SMOOTHER_STEP, Out.SMOOTHER_STEP], [In.BACK10, Out.BACK10], [In.BACK20, Out.BACK20], [In.BACK30, Out.BACK30],
+	[In.BACK40, Out.BACK40], [In.BACK50, Out.BACK50], [In.ELASTIC10, Out.ELASTIC10], [In.ELASTIC20, Out.ELASTIC20],
+	[In.ELASTIC30, Out.ELASTIC30], [In.ELASTIC40, Out.ELASTIC40], [In.ELASTIC50, Out.ELASTIC50],
+	[In.BOUNCE10, Out.BOUNCE10], [In.BOUNCE20, Out.BOUNCE20], [In.BOUNCE30, Out.BOUNCE30], [In.BOUNCE40, Out.BOUNCE40],
+	[In.BOUNCE50, Out.BOUNCE50], [In.JUMP, Out.JUMP], [In.JUMP10, Out.JUMP10], [In.JUMP20, Out.JUMP20],
+	[In.JUMP30, Out.JUMP30], [In.JUMP40, Out.JUMP40], [In.JUMP50, Out.JUMP50]
+]
 var preview: TweensGdHandle
 
 func animate() -> void:
@@ -25,17 +32,19 @@ func animate() -> void:
 
 func refresh() -> void:
 	if preview: preview.cancel()
-	var a: int = Tweens.In[FAMILIES[targets.entry.get_selected_id()]]
-	var b: int = Tweens.Out[FAMILIES[targets.exit.get_selected_id()]]
+	var entry_family: Array = FAMILIES[targets.entry.get_selected_id()]
+	var exit_family: Array = FAMILIES[targets.exit.get_selected_id()]
+	var a: int = entry_family[0]
+	var b: int = exit_family[1]
 	var ease: int = a | b
 	var exponent: float = targets.skew.value
 	var method: int = targets.blend.selected
 	var width: float = targets.width.value
-	var single: bool = not a or not b or a == Tweens.In[FAMILIES[targets.exit.get_selected_id()]]
+	var single: bool = not a or not b or a == exit_family[0]
 	targets.blend.disabled = single
 	targets.width.editable = not single
-	var entry_pair: int = a | Tweens.Out[FAMILIES[targets.entry.get_selected_id()]] if b else a
-	var exit_pair: int = Tweens.In[FAMILIES[targets.exit.get_selected_id()]] | b if a else b
+	var entry_pair: int = a | entry_family[1] if b else a
+	var exit_pair: int = exit_family[0] | b if a else b
 	targets.entryCurve.points = sample(entry_pair, exponent, method, width, 0.0, 1.0 if not b else pow(0.5, 1.0/exponent)) if a else PackedVector2Array()
 	targets.exitCurve.points = sample(exit_pair, exponent, method, width, 0.0 if not a else pow(0.5, 1.0/exponent), 1.0) if b else PackedVector2Array()
 	targets.resultCurve.points = sample(ease, exponent, method, width)
@@ -47,7 +56,7 @@ func refresh() -> void:
 	targets.recipe.text = "%s | %s    ·    Skew %.2f    ·    %s %d%%" % [targets.entry.get_item_text(targets.entry.selected), targets.exit.get_item_text(targets.exit.selected), exponent, targets.blend.get_item_text(method), roundi(width*100)]
 	targets.tracer.position = Vector2(-200, 66)
 	var motion := Tweens.position_2d_x(200.0, seconds, ease)
-	# For example: Tweens.In.SINE | Tweens.Out.CUBIC, or Tweens.InOut.SINE.
+	# For example: In.SINE | Out.CUBIC, or InOut.SINE.
 	motion.from_value = -200.0
 	motion.skew = exponent
 	motion.blend_type = method

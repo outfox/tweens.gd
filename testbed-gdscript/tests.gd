@@ -139,21 +139,25 @@ func _conformance() -> bool:
 
 
 func _composed_easing() -> void:
+	# The global easing classes' constants, by name.
+	var entries := _constants(In)
+	var exits := _constants(Out)
+	var pairs := _constants(InOut)
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/easing.json"))
 	for sample in data.cases:
-		var a: int = T.In[String(sample["in"]).replace("Step", "_Step").to_upper()]
-		var b: int = T.Out[String(sample["out"]).replace("Step", "_Step").to_upper()]
+		var a: int = entries[String(sample["in"]).replace("Step", "_Step").to_upper()]
+		var b: int = exits[String(sample["out"]).replace("Step", "_Step").to_upper()]
 		near(T.Easing.evaluate(a | b, pow(sample.progress, sample.skew), T.BlendType[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.get("blend", 0.2)), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
-	for family in T.InOut:
-		check(T.InOut[family] == (T.In[family] | T.Out[family]), "matching ease alias")
+	for family in pairs:
+		check(pairs[family] == (entries[family] | exits[family]), "matching ease alias")
 		if family.begins_with("BACK") or family.begins_with("ELASTIC") or family.begins_with("BOUNCE") or family.begins_with("JUMP"): continue
 		var legacy: int = T.Ease[family if family in ["LINEAR", "SMOOTH_STEP", "SMOOTHER_STEP"] else family + "_IN_OUT"]
 		for i in range(1001):
-			check(T.Easing.evaluate(T.InOut[family], i / 1000.0) == T.Easing.evaluate(legacy, i / 1000.0), "matching pair preserves conventional InOut")
-	for entry_name in T.In:
-		var entry: int = T.In[entry_name]
-		for exit_name in T.Out:
-			var exit: int = T.Out[exit_name]
+			check(T.Easing.evaluate(pairs[family], i / 1000.0) == T.Easing.evaluate(legacy, i / 1000.0), "matching pair preserves conventional InOut")
+	for entry_name in entries:
+		var entry: int = entries[entry_name]
+		for exit_name in exits:
+			var exit: int = exits[exit_name]
 			var combined: int = entry | exit
 			near(T.Easing.evaluate(combined, -1.0), 0.0, "composed start")
 			near(T.Easing.evaluate(combined, 2.0), 1.0, "composed end")
@@ -161,8 +165,8 @@ func _composed_easing() -> void:
 			if entry and exit: near(T.Easing.evaluate(combined, 0.5), 0.5, "half legs meet at midpoint")
 			for i in range(101):
 				var t := i / 100.0
-				var a := T.Easing.evaluate(entry | T.Out[entry_name], t) if exit else T.Easing.evaluate(entry, t)
-				var b := T.Easing.evaluate(T.In[exit_name] | exit, t) if entry else T.Easing.evaluate(exit, t)
+				var a := T.Easing.evaluate(entry | exits[entry_name], t) if exit else T.Easing.evaluate(entry, t)
+				var b := T.Easing.evaluate(entries[exit_name] | exit, t) if entry else T.Easing.evaluate(exit, t)
 				var expected := lerpf(a, b, smoothstep(0.4, 0.6, t))
 				if entry == 0: expected = b
 				if exit == 0: expected = a
@@ -172,7 +176,7 @@ func _composed_easing() -> void:
 				if exit == 0 or (entry and t <= 0.4): near(actual, a, "original In half")
 				if entry == 0 or (exit and t >= 0.6): near(actual, b, "original Out half")
 	for base in ["BACK", "ELASTIC", "JUMP"]:
-		check(T.In[base] == T.In[base + "10"] and T.Out[base] == T.Out[base + "10"] and T.InOut[base] == T.InOut[base + "10"], "10 percent aliases")
+		check(entries[base] == entries[base + "10"] and exits[base] == exits[base + "10"] and pairs[base] == pairs[base + "10"], "10 percent aliases")
 		for percent in [10, 20, 30, 40, 50]:
 			var family: String = base + str(percent)
 			var solo_low := 0.0
@@ -181,23 +185,23 @@ func _composed_easing() -> void:
 			var pair_high := 1.0
 			for i in range(10001):
 				var t := i / 10000.0
-				var a := T.Easing.evaluate(T.In[family], t)
-				var b := T.Easing.evaluate(T.Out[family], t)
-				var pair := T.Easing.evaluate(T.InOut[family], t)
-				near(a, 1.0 - T.Easing.evaluate(T.Out[family], 1.0-t), "overshoot mirror")
+				var a := T.Easing.evaluate(entries[family], t)
+				var b := T.Easing.evaluate(exits[family], t)
+				var pair := T.Easing.evaluate(pairs[family], t)
+				near(a, 1.0 - T.Easing.evaluate(exits[family], 1.0-t), "overshoot mirror")
 				solo_low = minf(solo_low, a)
 				solo_high = maxf(solo_high, b)
 				pair_low = minf(pair_low, pair)
 				pair_high = maxf(pair_high, pair)
 			for peak in [-solo_low, solo_high-1.0, -pair_low, pair_high-1.0]:
 				near(peak, percent/100.0, "named overshoot peak " + family)
-	check(T.In.BOUNCE10 == T.In.BOUNCE and T.Out.BOUNCE10 == T.Out.BOUNCE and T.InOut.BOUNCE10 == T.InOut.BOUNCE, "bounce 10 aliases")
+	check(In.BOUNCE10 == In.BOUNCE and Out.BOUNCE10 == Out.BOUNCE and InOut.BOUNCE10 == InOut.BOUNCE, "bounce 10 aliases")
 	for percent in [10, 20, 30, 40, 50]:
 		var family := "BOUNCE" + str(percent)
 		for paired in [false, true]:
 			var values := PackedFloat64Array()
 			for i in range(10001):
-				values.append(T.Easing.evaluate(T.InOut[family] if paired else T.Out[family], (0.5 if paired else 0.0) + (0.5 if paired else 1.0)*i/10000.0))
+				values.append(T.Easing.evaluate(pairs[family] if paired else exits[family], (0.5 if paired else 0.0) + (0.5 if paired else 1.0)*i/10000.0))
 			var depths := PackedFloat64Array()
 			for i in range(1, values.size()-1):
 				if values[i] < values[i-1] and values[i] <= values[i+1]: depths.append(1.0-values[i])
@@ -205,8 +209,8 @@ func _composed_easing() -> void:
 			for i in range(depths.size()): near(depths[i], percent/100.0/pow(4.0, i), "named first rebound " + family)
 		for i in range(1001):
 			var t := i/1000.0
-			near(T.Easing.evaluate(T.In[family], t), 1.0-T.Easing.evaluate(T.Out[family], 1.0-t), "bounce mirror")
-			for curve in [T.In[family], T.Out[family], T.InOut[family]]:
+			near(T.Easing.evaluate(entries[family], t), 1.0-T.Easing.evaluate(exits[family], 1.0-t), "bounce mirror")
+			for curve in [entries[family], exits[family], pairs[family]]:
 				var y := T.Easing.evaluate(curve, t)
 				check(y >= -0.000001 and y <= 1.000001, "bounce stays inside endpoints")
 	near(T.Easing.evaluate(T.Ease.BOUNCE_OUT, 6.0/11.0), 0.75, "legacy first rebound remains 25 percent")
@@ -216,7 +220,7 @@ func _composed_easing() -> void:
 		for paired in [false, true]:
 			var values := PackedFloat64Array()
 			for i in range(10001):
-				values.append(T.Easing.evaluate(T.InOut[family] if paired else T.Out[family], (0.5 if paired else 0.0) + (0.5 if paired else 1.0)*i/10000.0))
+				values.append(T.Easing.evaluate(pairs[family] if paired else exits[family], (0.5 if paired else 0.0) + (0.5 if paired else 1.0)*i/10000.0))
 			var peaks := PackedInt32Array()
 			var landed := false
 			for i in range(1, values.size()-1):
@@ -232,7 +236,7 @@ func _composed_easing() -> void:
 					check(absf(landing-1.0) < 0.001, "jump lands between peaks")
 			if not peaks.is_empty():
 				for i in range(1, peaks[0]+1): check(values[i] >= values[i-1], "direct jump launch")
-	for side in [T.In, T.Out]:
+	for side in [entries, exits]:
 		var curves: Array = side.values()
 		for i in range(curves.size()):
 			if curves[i] == 0: continue
@@ -242,36 +246,36 @@ func _composed_easing() -> void:
 			for legacy in T.Ease.values():
 				if legacy != 0: check(is_nan(T.Easing.evaluate(curves[i] | legacy, 0.5)), "reject legacy flag mix")
 	for width in [-0.1, 1.1, INF, NAN]:
-		check(is_nan(T.Easing.evaluate(T.InOut.SINE, 0.5, T.BlendType.HERMITE, width)), "invalid blend width")
+		check(is_nan(T.Easing.evaluate(InOut.SINE, 0.5, T.BlendType.HERMITE, width)), "invalid blend width")
 		check(not T.value(0.0, 1.0, 1.0).with_blend(width).validate().is_empty(), "validate width")
 	for method in [-1, T.BlendType.LINEAR + 1, 99]:
-		check(is_nan(T.Easing.evaluate(T.InOut.SINE, 0.5, method)), "invalid blend method")
+		check(is_nan(T.Easing.evaluate(InOut.SINE, 0.5, method)), "invalid blend method")
 		check(not T.value(0.0, 1.0, 1.0).with_blend_type(method).validate().is_empty(), "validate blend")
 	near(T.value(0.0, 1.0, 1.0).blend, 0.2, "default blend width")
 	check(T.value(0.0, 1.0, 1.0).blend_type == T.BlendType.MAKIMA, "default blend method")
-	near(T.Easing.evaluate(T.In.QUAD | T.Out.CUBIC, 0.45), 0.4041956521739131, "default evaluator blend")
-	near(T.Easing.evaluate(T.In.QUAD | T.Out.CUBIC, 0.45, T.BlendType.HERMITE), 0.40125, "hermite evaluator blend")
-	var custom := T.value(0.0, 1.0, 1.0, T.In.QUAD | T.Out.CUBIC).with_blend_type(T.BlendType.LINEAR).with_blend(0.4)
+	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45), 0.4041956521739131, "default evaluator blend")
+	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45, T.BlendType.HERMITE), 0.40125, "hermite evaluator blend")
+	var custom := T.value(0.0, 1.0, 1.0, In.QUAD | Out.CUBIC).with_blend_type(T.BlendType.LINEAR).with_blend(0.4)
 	var custom_scheduler := TweensGdScheduler.new()
 	var custom_handle := custom_scheduler.add(self, custom)
 	custom.blend = 1.0
 	custom_scheduler.update(0.45)
 	near(custom_handle.value, T.Easing.evaluate(custom.ease, 0.45, T.BlendType.LINEAR, 0.4), "blend settings snapshot")
-	for elastic in [T.In.ELASTIC, T.Out.ELASTIC, T.In.BOUNCE50, T.Out.BOUNCE50, T.In.BOUNCE20 | T.Out.BOUNCE40,
-			T.In.JUMP50, T.Out.JUMP, T.Out.JUMP20, T.Out.JUMP30, T.Out.JUMP40, T.Out.JUMP50, T.In.JUMP20 | T.Out.JUMP40]:
+	for elastic in [In.ELASTIC, Out.ELASTIC, In.BOUNCE50, Out.BOUNCE50, In.BOUNCE20 | Out.BOUNCE40,
+			In.JUMP50, Out.JUMP, Out.JUMP20, Out.JUMP30, Out.JUMP40, Out.JUMP50, In.JUMP20 | Out.JUMP40]:
 		var elastic_handle := custom_scheduler.add(self, T.value(0.0, 1.0, 1.0, elastic))
 		custom_scheduler.update(0.3)
 		near(elastic_handle.value, T.Easing.evaluate(elastic, 0.3), "calibrated playback matches sampler")
 	custom_scheduler.dispose()
-	for invalid in [T.In.SINE | T.In.BACK, T.Out.SINE | T.Out.BACK,
-			T.In.BACK20 | T.In.ELASTIC50, T.Out.BACK50 | T.Out.ELASTIC,
-			T.In.BOUNCE20 | T.In.BOUNCE50, T.Out.BOUNCE40 | T.Out.ELASTIC50,
-			T.In.SINE | T.Ease.BACK_OUT, 1 << 62, -1]:
+	for invalid in [In.SINE | In.BACK, Out.SINE | Out.BACK,
+			In.BACK20 | In.ELASTIC50, Out.BACK50 | Out.ELASTIC,
+			In.BOUNCE20 | In.BOUNCE50, Out.BOUNCE40 | Out.ELASTIC50,
+			In.SINE | T.Ease.BACK_OUT, 1 << 62, -1]:
 		check(is_nan(T.Easing.evaluate(invalid, 0.5)), "reject invalid easing flags")
 		check(not T.value(0.0, 1.0, 1.0, invalid).validate().is_empty(), "validate invalid flags")
 	var scheduler := TweensGdScheduler.new()
 	var target := Holder.new()
-	var combined: int = T.In.QUAD | T.Out.CUBIC
+	var combined: int = In.QUAD | Out.CUBIC
 	var definition := T.property(^"amount", 1.0, 2.0, combined)
 	definition.skew = 2.0
 	definition.weks = 0.5
@@ -286,6 +290,10 @@ func _composed_easing() -> void:
 	check(handle.completion_reason == T.Reason.COMPLETED, "composed playback completes")
 	check(T.position_2d_x(1.0, 1.0, combined).ease == combined, "catalog accepts flags")
 	scheduler.dispose()
+
+
+func _constants(script: Script) -> Dictionary:
+	return script.get_script_constant_map()
 
 func _validation() -> bool:
 	var scheduler := TweensGdScheduler.new()

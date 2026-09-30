@@ -13,8 +13,8 @@ start, start a copy: `copy()` returns an unchanged one, and the
 ## Factories
 
 Each factory returns a new `TweensGdDefinition`. `easing` accepts integer flags,
-such as `Tweens.In.SINE | Tweens.Out.CUBIC`, or a matching pair such as
-`Tweens.InOut.SINE`. Legacy `Tweens.Ease` constants also work.
+such as `In.SINE | Out.CUBIC`, or a matching pair such as
+`InOut.SINE`. Legacy `Tweens.Ease` constants also work.
 
 | Factory | Purpose |
 | --- | --- |
@@ -69,7 +69,7 @@ and returns the definition:
 ```gdscript
 static func snappy(definition: TweensGdDefinition) -> TweensGdDefinition:
 	definition.duration = 0.25
-	definition.ease = Tweens.Out.CUBIC
+	definition.ease = Out.CUBIC
 	return definition
 ```
 

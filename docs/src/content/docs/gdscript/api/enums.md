@@ -69,9 +69,9 @@ Which frames advance the tween. See
 
 ## Tweens.Ease
 
-Use integer flags from `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`. Combine
-one In and one Out with `|`: `Tweens.In.SINE | Tweens.Out.CUBIC`.
-`Tweens.InOut.SINE` is `Tweens.In.SINE | Tweens.Out.SINE`.
+Use integer flags from the global `In`, `Out`, and `InOut` classes. Combine
+one In and one Out with `|`: `In.SINE | Out.CUBIC`.
+`InOut.SINE` is `In.SINE | Out.SINE`.
 Both sides provide `NONE`, `LINEAR`, `SINE`, `QUAD`, `CUBIC`, `QUART`, `QUINT`,
 `EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `JUMP`, `SMOOTH_STEP`, and `SMOOTHER_STEP`;
 `InOut` provides every matching pair except `NONE`. A single leg runs on its own;
@@ -79,19 +79,19 @@ two half-duration legs meet through a local Makima join over 40–60% of progres
 after skew. Matching families use their paired profile directly.
 
 `BACK` aliases `BACK10` and `ELASTIC` aliases `ELASTIC10`. Both families also
-provide `20`, `30`, `40`, and `50` variants (for example `Tweens.Out.ELASTIC30`).
+provide `20`, `30`, `40`, and `50` variants (for example `Out.ELASTIC30`).
 The number is the peak overshoot percentage of the full tween range, for single
 legs and matching pairs.
 
 `BOUNCE` aliases `BOUNCE10`; `BOUNCE20` through `BOUNCE50` set the first
 rebound depth to that percentage of the full tween range, in single legs and
 matching pairs. The next two rebounds have one-quarter and one-sixteenth of
-that depth. All variants are available in `Tweens.In`, `Tweens.Out`, and `Tweens.InOut`.
+that depth. All variants are available in `In`, `Out`, and `InOut`.
 
 `JUMP` aliases `JUMP10`; `JUMP20` through `JUMP50` set the first peak above the
 target to that percentage of the full tween range. Three peaks diminish to
 one-quarter and one-sixteenth of the first, touching the target between them.
-Use `Tweens.In`, `Tweens.Out`, or `Tweens.InOut` for mirrored, outgoing, or paired motion.
+Use `In`, `Out`, or `InOut` for mirrored, outgoing, or paired motion.
 
 `Tweens.Ease.LINEAR` (zero) remains the default. Legacy `Tweens.Ease` constants
 keep their numeric values and original shapes. Do not OR legacy names with new

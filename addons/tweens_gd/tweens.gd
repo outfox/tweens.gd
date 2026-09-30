@@ -3,7 +3,8 @@
 class_name Tweens
 extends "catalog.gd"
 ## GDScript entry point. Playback runs in the bundled tweens_gd GDExtension, whose classes
-## (TweensGdDefinition, TweensGdHandle, TweensGdGroup, TweensGdScheduler, ...) are global.
+## (TweensGdDefinition, TweensGdHandle, TweensGdGroup, TweensGdScheduler, ...) are global. So are the easing
+## curves In, Out and InOut, as in [code]In.SINE | Out.CUBIC[/code].
 
 const Types = preload("types.gd")
 const Easing = preload("easing.gd")
@@ -19,9 +20,6 @@ const State = Types.State
 const Reason = Types.Reason
 const BlendType = Types.BlendType
 const Ease = Types.Ease
-const In = Types.In
-const Out = Types.Out
-const InOut = Types.InOut
 
 ## Configure once, then play the definition on any compatible target.
 static func property(path: NodePath, to: Variant, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,

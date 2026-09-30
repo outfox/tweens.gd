@@ -67,7 +67,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	<div class="recipe">
 		<pre>{gd ? (
 			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>,
-    <span data-code-ease><span class="ty">Tweens.Out</span>.ELASTIC</span>)
+    <span data-code-ease><span class="ty">Out</span>.ELASTIC</span>)
 <span class="comment" data-code-option="skew"><span data-comment># </span>move.skew = <span class="num" data-code-skew>1.00</span></span>
 <span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>MAKIMA</span></span>
 <span class="comment" data-code-option="blend"><span data-comment># </span>move.blend = <span class="num" data-code-blend>0.20</span></span>
@@ -166,7 +166,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			const name = (leg: string, family: string): (Node | string)[] => {
 				const type = document.createElement('span');
 				type.className = 'ty';
-				type.textContent = gd ? `Tweens.${leg}` : leg;
+				type.textContent = leg;
 				return [type, `.${gd ? constant(family) : family}`];
 			};
 			const expression = matching && a !== 'None' ? name('InOut', a)
@@ -226,7 +226,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	.entry { stroke: var(--tw-amber); stroke-dasharray: 7 5; }
 	.exit { stroke: var(--tw-blue); stroke-dasharray: 2 4; }
 	.result { stroke: var(--tw-mint); stroke-width: 3; }
-	.graph .result { stroke: color-mix(in oklab, var(--tw-mint) 60%, black); stroke-width: 6; }
+	.graph .result { stroke: color-mix(in oklab, var(--tw-mint) 60%, black); stroke-width: 12; }
 	.speed { stroke-width: 2; opacity: .8; }
 	.now { stroke: var(--tw-muted); stroke-dasharray: 2 4; opacity: .5; }
 	.tracer { fill: var(--tw-stage); stroke: var(--tw-mint); stroke-width: 3; }

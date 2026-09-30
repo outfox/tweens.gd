@@ -57,7 +57,7 @@ bool single_or_missing(int64_t bits) {
 	return (bits & (bits - 1)) == 0;
 }
 
-// Slot order matches EaseLegs.cs and the public flags in types.gd.
+// Slot order matches EaseLegs.cs and the public flags in ease_in.gd and ease_out.gd.
 int leg_slot(int64_t bits) {
 	int slot = 0;
 	while ((bits >>= 1) != 0) ++slot;

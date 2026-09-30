@@ -5,7 +5,7 @@ description: Choose how motion accelerates, compare curves, and combine a gentle
 
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
-Easing changes how speed varies during a tween. Start with `Tweens.Out.CUBIC` for a
+Easing changes how speed varies during a tween. Start with `Out.CUBIC` for a
 motion that slows into place; duration still controls how long it takes.
 
 Examples use the global `Tweens` class, with an in-tree `Sprite2D`
@@ -14,17 +14,17 @@ named `sprite` on Godot's main thread.
 ## Choose a family
 
 ```gdscript
-var move := Tweens.position_2d_x(300.0, 0.6, Tweens.Out.CUBIC)
+var move := Tweens.position_2d_x(300.0, 0.6, Out.CUBIC)
 Tweens.play(sprite, move)
 ```
 
 | Motion | Try |
 | --- | --- |
-| Arrive and settle | `Tweens.Out.CUBIC` |
-| Accelerate away | `Tweens.In.CUBIC` |
-| Move between resting positions | `Tweens.InOut.SINE` |
-| Spring past the target, then settle | `Tweens.Out.ELASTIC30` |
-| Keep a constant speed | `Tweens.InOut.LINEAR` |
+| Arrive and settle | `Out.CUBIC` |
+| Accelerate away | `In.CUBIC` |
+| Move between resting positions | `InOut.SINE` |
+| Spring past the target, then settle | `Out.ELASTIC30` |
+| Keep a constant speed | `InOut.LINEAR` |
 
 `In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
 family's start and finish. These describe each traversal, not the forward and
@@ -39,7 +39,7 @@ passes its destination before settling. The generated code follows your choices.
 
 ## Compose an ease
 
-Combine one In family and one Out family with `|`: `Tweens.In.SINE | Tweens.Out.CUBIC` starts gently
+Combine one In family and one Out family with `|`: `In.SINE | Out.CUBIC` starts gently
 and finishes with Cubic. Choose at most one from each side. A single selection
 runs over the whole duration; a matching pair is the same as `InOut`.
 
