@@ -76,14 +76,15 @@ pair's join can reshape peaks inside its blend window.
 
 ## Choose the method and width
 
-Set `blend_type = Tweens.BlendType.HERMITE` and `blend = 0.2` on the tween definition.
+Set `blend_type = Tweens.BlendType.MAKIMA` and `blend = 0.2` on the tween definition.
 The width must be finite and in `[0, 1]`. A smaller window preserves more of
 each original leg; a larger window gives the join more room to reshape them.
 Width zero directly splices the halves and may produce a velocity jump.
 
 | Method | Behavior |
 | --- | --- |
-| Hermite | Local cubic join with matched velocity; the default |
+| Makima | Local cubic join with matched velocity; the default |
+| Hermite | Local cubic join with matched velocity and midpoint acceleration |
 | SmoothStep | Crossfades the two complete family InOut profiles with `u²(3 − 2u)` |
 | Linear | Crossfades those profiles with `u`; velocity may jump at the window edges |
 
@@ -92,7 +93,7 @@ crossfade approach; they can still inherit steep or singular midpoint slopes
 from a family such as Circ. Join settings do not alter a legacy ease, a single
 leg, a matching pair, or a custom function/Curve.
 
-Sample the same configuration with `Tweens.Easing.evaluate(ease, t, Tweens.BlendType.HERMITE, 0.2)`.
+Sample the same configuration with `Tweens.Easing.evaluate(ease, t, Tweens.BlendType.MAKIMA, 0.2)`.
 The copy helpers are `with_blend_type()` and `with_blend()`.
 
 Skew warps normalized time **before** the join. A value of 1 leaves time
@@ -111,17 +112,24 @@ to their named overshoot percentage; Bounce uses its first rebound depth.
 Other families keep their conventional profiles, including symmetric
 SmoothStep and SmootherStep.
 
-**Hermite is the default.** It joins the two halves with two cubic segments
+**Makima is the default.** It joins the two halves with two cubic segments
 inside a centered window. With the default width 0.2, progress up to 0.4 follows the In
 half exactly and progress from 0.6 follows the Out half exactly. Inside, the
 cubics match the values and velocities at both edges and share one velocity
 at the midpoint. No changing crossfade weight contributes extra motion.
 
-The midpoint velocity is solved from equal acceleration between the cubics,
-then limited to prevent new reversals when the selected families are monotone.
-This gives a continuous velocity across the join at regular points of the
-source curves. Acceleration can change at the outer edges. Authored bounce
-corners and overshoot outside the window remain part of the selected curves.
+Makima sets the midpoint velocity with the modified Akima weights of MATLAB's
+[`makima`](https://www.mathworks.com/help/matlab/ref/makima.html): a weighted mean
+of the slopes on either side, favoring the half whose slope is steadier and closer
+to zero. The result stays between those slopes; for monotone families it adds no
+reversals or overshoot. Hermite instead solves the midpoint velocity from equal
+acceleration between the cubics, then limits it to prevent new reversals when the
+selected families are monotone.
+
+Both give a continuous velocity across the join at regular points of the
+source curves. Acceleration can change at the outer edges, and with Makima also
+at the midpoint. Authored bounce corners and overshoot outside the window remain
+part of the selected curves.
 
 For a window half-width `h`, edge values `y0, y1`, and edge velocities
 `v0, v1`, the construction is:
@@ -129,11 +137,17 @@ For a window half-width `h`, edge values `y0, y1`, and edge velocities
 ```text
 d0 = (0.5 - y0) / h
 d1 = (y1 - 0.5) / h
-midVelocity = clamp((3 * (d0 + d1) - v0 - v1) / 4,
-                    0, 3 * max(0, min(d0, d1)))
+Makima:  w0 = |v1 - d1| + |v1 + d1| / 2
+         w1 = |d0 - v0| + |d0 + v0| / 2
+         midVelocity = (w0 * d0 + w1 * d1) / (w0 + w1)
+Hermite: midVelocity = clamp((3 * (d0 + d1) - v0 - v1) / 4,
+                             0, 3 * max(0, min(d0, d1)))
 left cubic:  (0.5 - h, y0, v0) -> (0.5, 0.5, midVelocity)
 right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
 ```
+
+The edge velocities `v0` and `v1` stand in for the outer slopes that `makima`
+takes from neighboring samples.
 
 Matching families bypass the join: **Sine | Sine is exactly SineInOut**, and
 Back, Elastic, Bounce, and Jump use their calibrated paired profiles directly. Other matching

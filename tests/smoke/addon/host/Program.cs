@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
+using System.Reflection;
+using System.Runtime.Versioning;
 using Godot;
 
 internal static class Program
@@ -13,6 +15,14 @@ internal static class Program
             "gdscript" => "res://smoke.tscn",
             _ => throw new ArgumentException("Choose csharp or gdscript.")
         };
+        // The consumer mirrors a stock Godot 4.7 project. 2dog's import raises its csproj to net10.0 after this build,
+        // so make sure the run still loads the net8.0 build (rolled forward to this .NET 10 host).
+        var framework = typeof(Consumer).Assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
+        if (framework != ".NETCoreApp,Version=v8.0")
+        {
+            Console.Error.WriteLine($"Consumer must be the net8.0 build, not {framework}.");
+            return 1;
+        }
         using var engine = new twodog.Engine("Consumer", args: ["--headless", "--fixed-fps", "60", scene])
         {
             CaptureErrors = true

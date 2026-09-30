@@ -75,7 +75,7 @@ one In and one Out with `|`: `Tweens.In.SINE | Tweens.Out.CUBIC`.
 Both sides provide `NONE`, `LINEAR`, `SINE`, `QUAD`, `CUBIC`, `QUART`, `QUINT`,
 `EXPO`, `CIRC`, `BACK`, `ELASTIC`, `BOUNCE`, `JUMP`, `SMOOTH_STEP`, and `SMOOTHER_STEP`;
 `InOut` provides every matching pair except `NONE`. A single leg runs on its own;
-two half-duration legs meet through a local Hermite join over 30–70% of progress
+two half-duration legs meet through a local Makima join over 40–60% of progress
 after skew. Matching families use their paired profile directly.
 
 `BACK` aliases `BACK10` and `ELASTIC` aliases `ELASTIC10`. Both families also
@@ -105,5 +105,5 @@ flags. [Easing](/gdscript/easing/) includes the composer and migration details.
 
 ## BlendType
 
-Choose `Tweens.BlendType.HERMITE` (default), `SMOOTH_STEP`, or `LINEAR`.
+Choose `Tweens.BlendType.MAKIMA` (default), `HERMITE`, `SMOOTH_STEP`, or `LINEAR`.
 The centered join width defaults to 0.2. See [easing](/gdscript/api/easing/#choose-the-method-and-width).

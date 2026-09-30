@@ -69,6 +69,9 @@ jobs:
         run: dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release --no-build --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/test-results
       - name: Test library with coverage
         run: dotnet msbuild build/Coverage.proj -p:Configuration=Release -p:NoBuild=true
+      # Godot 4.7 projects target net8.0 and roll forward; run the library's net8.0 build on .NET 10 the same way.
+      - name: Test library net8.0 build
+        run: dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release --no-restore -p:LibraryFramework=net8.0 -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION --logger 'trx;LogFileName=library-net8.0.trx' --results-directory artifacts/test-results
       - name: Run headless testbed
         timeout-minutes: 2
         run: dotnet run --project testbed/testbed.2dog -c Release --no-build --no-restore -- --headless --quit-after 12

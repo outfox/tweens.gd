@@ -203,8 +203,8 @@ public class GalleryLanguageTests
                 exit.Select(exit.GetItemIndex(4)); // Cubic
                 exit.EmitSignal(OptionButton.SignalName.ItemSelected, exit.Selected);
                 targets["skew"].As<HSlider>().Value = 2;
-                targets["blend"].As<OptionButton>().Select(2);
-                targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, 2);
+                targets["blend"].As<OptionButton>().Select((int)BlendType.Linear);
+                targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, (int)BlendType.Linear);
                 targets["width"].As<HSlider>().Value = 0.8;
                 var duration = Descendants(demo).OfType<HSlider>().Single(s => s.Name != "EasingSkew" && s.Name != "EasingWidth");
                 duration.Value = duration.Value == 2 ? 1 : 2; // Rebuild while keeping the composition.
@@ -213,7 +213,7 @@ public class GalleryLanguageTests
                 Assert.Equal(3, targets["entry"].As<OptionButton>().GetSelectedId());
                 Assert.Equal(4, targets["exit"].As<OptionButton>().GetSelectedId());
                 Assert.Equal(2, targets["skew"].As<HSlider>().Value);
-                Assert.Equal(2, targets["blend"].As<OptionButton>().Selected);
+                Assert.Equal((int)BlendType.Linear, targets["blend"].As<OptionButton>().Selected);
                 Assert.Equal(0.8, targets["width"].As<HSlider>().Value);
                 // Reset again to remove wall-clock progress from Pump, then sample exactly halfway.
                 targets["entry"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, targets["entry"].As<OptionButton>().Selected);

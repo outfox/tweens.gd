@@ -11,7 +11,7 @@ using Godot;
 namespace tweens.gd {
   public static class Easing {
     /// <summary>Sample a curve. Width is a fraction of normalized time in [0, 1]; zero directly splices the halves.</summary>
-    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Hermite, double blend = 0.2)
+    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Makima, double blend = 0.2)
       => GetFunction(ease, blendType, blend)(Math.Clamp(progress, 0, 1));
 
     const float ConstantA = 1.70158f;
@@ -86,7 +86,7 @@ namespace tweens.gd {
       var functions = new Func<float, float>[CurveCount, CurveCount];
       for (var i = 0; i < CurveCount; i++)
         for (var o = 0; o < CurveCount; o++) {
-          functions[i, o] = Compose(i, o, BlendType.Hermite, 0.2f);
+          functions[i, o] = Compose(i, o, BlendType.Makima, 0.2f);
         }
       return functions;
     }
@@ -130,6 +130,14 @@ namespace tweens.gd {
         + (-2 * u3 + 3 * u2) * y1 + (u3 - u2) * m1;
     }
 
+    // Modified Akima (makima) slope at the midpoint from the four surrounding slopes. The legs' edge
+    // velocities stand in for the outer secants. Each half stays on its side of 0.5, so the weights never both vanish.
+    static float MakimaSlope(float s0, float s1, float s2, float s3) {
+      var w1 = Math.Abs(s3 - s2) + Math.Abs(s3 + s2) / 2;
+      var w2 = Math.Abs(s1 - s0) + Math.Abs(s1 + s0) / 2;
+      return (w1 * s1 + w2 * s2) / (w1 + w2);
+    }
+
     static Func<float, float> Compose(int i, int o, BlendType method, float blend) {
       var entry = InOutCurves[i];
       var exit = InOutCurves[o];
@@ -144,13 +152,14 @@ namespace tweens.gd {
       var v1 = PairSlope(o, right);
       var d0 = (0.5f - y0) / h;
       var d1 = (y1 - 0.5f) / h;
-      // Solve for equal acceleration at the midpoint, then limit the shared tangent
-      // to avoid introducing reversals in monotone legs. Outer tangents stay exact.
-      var middle = Math.Clamp((3 * (d0 + d1) - v0 - v1) / 4, 0, 3 * Math.Max(0, Math.Min(d0, d1)));
+      // Outer tangents stay exact. Hermite solves for equal acceleration at the midpoint, then limits
+      // the shared tangent to avoid introducing reversals in monotone legs.
+      var middle = method == BlendType.Makima ? MakimaSlope(v0, d0, d1, v1)
+        : Math.Clamp((3 * (d0 + d1) - v0 - v1) / 4, 0, 3 * Math.Max(0, Math.Min(d0, d1)));
       return t => {
         if (t <= left) return entry(t);
         if (t >= right) return exit(t);
-        if (method == BlendType.Hermite)
+        if (method is BlendType.Makima or BlendType.Hermite)
           return t <= 0.5f
             ? Hermite((t - left) / h, y0, 0.5f, h * v0, h * middle)
             : Hermite((t - 0.5f) / h, 0.5f, y1, h * middle, h * v1);
@@ -165,7 +174,7 @@ namespace tweens.gd {
       if (!double.IsFinite(blend) || blend < 0 || blend > 1) throw new ArgumentOutOfRangeException(nameof(blend));
     }
 
-    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Hermite, double blend = 0.2) {
+    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Makima, double blend = 0.2) {
       ValidateBlend(blendType, blend);
       var bits = (long)easeType;
       if (bits != 0 && (bits & ~CompositionMask) == 0) {
@@ -176,7 +185,7 @@ namespace tweens.gd {
           if (exit == 0) return InCurves[BitOperations.TrailingZeroCount(entry)];
           var i = BitOperations.TrailingZeroCount(entry);
           var o = BitOperations.TrailingZeroCount(exit);
-          return blendType == BlendType.Hermite && blend == 0.2 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend);
+          return blendType == BlendType.Makima && blend == 0.2 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend);
         }
       }
       return easeType switch {

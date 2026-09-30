@@ -169,6 +169,13 @@ double hermite(double u, double y0, double y1, double m0, double m1) {
 		+ (-2.0*u3 + 3.0*u2)*y1 + (u3 - u2)*m1;
 }
 
+// Modified Akima (makima) slope at the midpoint from the four surrounding slopes. The legs' edge
+// velocities stand in for the outer secants. Each half stays on its side of 0.5, so the weights never both vanish.
+double makima_slope(double s0, double s1, double s2, double s3) {
+	const double w1 = std::abs(s3 - s2) + std::abs(s3 + s2) / 2.0, w2 = std::abs(s1 - s0) + std::abs(s1 + s0) / 2.0;
+	return (w1 * s1 + w2 * s2) / (w1 + w2);
+}
+
 double bounce_out(double t) {
 	if (t < 1.0 / 2.75) {
 		return 7.5625 * t * t;
@@ -203,7 +210,7 @@ bool tweens::is_known_ease(int64_t p_ease) {
 }
 
 double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type, double p_blend) {
-	if (p_blend_type < 0 || p_blend_type > 2 || !std::isfinite(p_blend) || p_blend < 0.0 || p_blend > 1.0) return Math::NaN;
+	if (p_blend_type < BLEND_MAKIMA || p_blend_type > BLEND_LINEAR || !std::isfinite(p_blend) || p_blend < 0.0 || p_blend > 1.0) return Math::NaN;
 	using std::cos;
 	using std::pow;
 	using std::sin;
@@ -222,16 +229,17 @@ double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_ble
 		const double h = p_blend / 2.0, left = 0.5 - h, right = 0.5 + h;
 		if (entry == exit || t <= left) return family_pair(in_pair, t);
 		if (t >= right) return family_pair(out_pair, t);
-		if (p_blend_type != 0) {
+		if (p_blend_type == BLEND_SMOOTH_STEP || p_blend_type == BLEND_LINEAR) {
 			const double u = (t - left) / p_blend;
-			const double w = p_blend_type == 1 ? u*u*(3.0 - 2.0*u) : u;
+			const double w = p_blend_type == BLEND_SMOOTH_STEP ? u*u*(3.0 - 2.0*u) : u;
 			return family_pair(in_pair, t)*(1.0-w) + family_pair(out_pair, t)*w;
 		}
 		const double y0 = family_pair(in_pair, left), y1 = family_pair(out_pair, right);
 		const double v0 = pair_slope(in_pair, left), v1 = pair_slope(out_pair, right);
 		const double d0 = (0.5-y0)/h, d1 = (y1-0.5)/h;
-		// Shared midpoint tangent solves equal acceleration, limited against new reversals.
-		const double middle = CLAMP((3.0*(d0+d1)-v0-v1)/4.0, 0.0, 3.0*MAX(0.0, MIN(d0,d1)));
+		// Hermite's shared midpoint tangent solves equal acceleration, limited against new reversals.
+		const double middle = p_blend_type == BLEND_MAKIMA ? makima_slope(v0, d0, d1, v1)
+			: CLAMP((3.0*(d0+d1)-v0-v1)/4.0, 0.0, 3.0*MAX(0.0, MIN(d0,d1)));
 		return t <= 0.5 ? hermite((t-left)/h, y0, 0.5, h*v0, h*middle)
 			: hermite((t-0.5)/h, 0.5, y1, h*middle, h*v1);
 	}

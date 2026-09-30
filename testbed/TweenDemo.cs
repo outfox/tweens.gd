@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using tweens.gd;
+
 namespace testbed;
 
 /// <summary>Gallery shell. Pages own their examples; navigation destroys the previous playground.</summary>

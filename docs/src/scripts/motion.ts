@@ -126,9 +126,9 @@ function jumpLegOut(t: number, level: number, paired: boolean): number {
 }
 
 /** Join half-duration profiles locally; crossfade modes are available for comparison. */
-export type BlendType = 'Hermite' | 'SmoothStep' | 'Linear';
-export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 1, method: BlendType = 'Hermite', width = 0.2): number {
-	if (!['Hermite', 'SmoothStep', 'Linear'].includes(method) || !Number.isFinite(width) || width < 0 || width > 1) throw new RangeError('Invalid easing blend');
+export type BlendType = 'Makima' | 'Hermite' | 'SmoothStep' | 'Linear';
+export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 1, method: BlendType = 'Makima', width = 0.2): number {
+	if (!['Makima', 'Hermite', 'SmoothStep', 'Linear'].includes(method) || !Number.isFinite(width) || width < 0 || width > 1) throw new RangeError('Invalid easing blend');
 	entry = canonicalFamily(entry); exit = canonicalFamily(exit);
 	const t = Math.min(1, Math.max(0, progress)) ** skew;
 	if (entry === 'None') return legEase(exit, 'Out', t);
@@ -137,16 +137,24 @@ export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, ske
 	const h = width / 2, left = 0.5 - h, right = 0.5 + h;
 	if (t <= left) return pairedLegEase(entry, t);
 	if (t >= right) return pairedLegEase(exit, t);
-	if (method !== 'Hermite') {
+	if (method === 'SmoothStep' || method === 'Linear') {
 		const u = (t - left) / width, w = method === 'SmoothStep' ? u * u * (3 - 2 * u) : u;
 		return pairedLegEase(entry, t) * (1 - w) + pairedLegEase(exit, t) * w;
 	}
 	const y0 = pairedLegEase(entry, left), y1 = pairedLegEase(exit, right);
 	const v0 = pairSlope(entry, left), v1 = pairSlope(exit, right);
 	const d0 = (0.5 - y0) / h, d1 = (y1 - 0.5) / h;
-	const middle = Math.min(3 * Math.max(0, Math.min(d0, d1)), Math.max(0, (3 * (d0 + d1) - v0 - v1) / 4));
+	const middle = method === 'Makima' ? makimaSlope(v0, d0, d1, v1)
+		: Math.min(3 * Math.max(0, Math.min(d0, d1)), Math.max(0, (3 * (d0 + d1) - v0 - v1) / 4));
 	return t <= 0.5 ? hermite((t - left) / h, y0, 0.5, h * v0, h * middle)
 		: hermite((t - 0.5) / h, 0.5, y1, h * middle, h * v1);
+}
+
+// Modified Akima (makima) slope at the midpoint from the four surrounding slopes. The legs' edge
+// velocities stand in for the outer secants. Each half stays on its side of 0.5, so the weights never both vanish.
+function makimaSlope(s0: number, s1: number, s2: number, s3: number) {
+	const w1 = Math.abs(s3 - s2) + Math.abs(s3 + s2) / 2, w2 = Math.abs(s1 - s0) + Math.abs(s1 + s0) / 2;
+	return (w1 * s1 + w2 * s2) / (w1 + w2);
 }
 
 function hermite(u: number, y0: number, y1: number, m0: number, m1: number) {

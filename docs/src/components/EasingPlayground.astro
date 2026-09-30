@@ -23,10 +23,10 @@ const variants = sorted.filter(f => /\d$/.test(f));
 				<rect class="blend-zone" data-zone x="162" y="16" width="172" height="256" rx="8" />
 				<path class="grid" data-value-grid d="M32 60H464M32 145H464M32 230H464M32 16V272M464 16V272" />
 				<text x="12" y="64" data-value-tick="1">1</text><text x="4" y="149" data-value-tick="0.5">0.5</text><text x="12" y="234" data-value-tick="0">0</text>
-				<text x="32" y="290">0 s</text><text x="464" y="290" text-anchor="end" data-end-time>1.2 s</text>
+				<text x="32" y="290">0 s</text><text x="464" y="290" text-anchor="end" data-end-time>2.0 s</text>
+				<path class="result" data-curve />
 				<path class="source entry" data-entry />
 				<path class="source exit" data-exit />
-				<path class="result" data-curve />
 				<line class="now" data-now x1="32" x2="32" y1="16" y2="272" />
 				<circle class="tracer" data-tracer r="6" cx="32" cy="230" />
 			</svg>
@@ -56,9 +56,9 @@ const variants = sorted.filter(f => /\d$/.test(f));
 					{variants.map(f => <option value={f}>{f}</option>)}
 				</select></label>
 			</div>
-			<label class="tw-field"><span>Duration <output data-duration-out>1.2 s</output></span><input type="range" min="0.2" max="4" step="0.1" value="1.2" data-duration /></label>
+			<label class="tw-field"><span>Duration <output data-duration-out>2.0 s</output></span><input type="range" min="0.2" max="5" step="0.1" value="2" data-duration /></label>
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
-			<label class="tw-field"><span>Join method</span><select data-blend aria-label="Join method"><option value="Hermite">Hermite · match velocity</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
+			<label class="tw-field"><span>Join method</span><select data-blend aria-label="Join method"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
 			<label class="tw-field"><span>Join width <output data-width-out>20%</output></span><input aria-label="Join width" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
 			<p class="hint" data-hint>A single selected curve runs over the full duration. Choose both curves to join them.</p>
 			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
@@ -66,18 +66,18 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	</div>
 	<div class="recipe">
 		<pre>{gd ? (
-			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>1.2</span>,
+			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>,
     <span data-code-ease><span class="ty">Tweens.Out</span>.ELASTIC</span>)
 <span class="comment" data-code-option="skew"><span data-comment># </span>move.skew = <span class="num" data-code-skew>1.00</span></span>
-<span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>HERMITE</span></span>
+<span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>MAKIMA</span></span>
 <span class="comment" data-code-option="blend"><span data-comment># </span>move.blend = <span class="num" data-code-blend>0.20</span></span>
 <span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
 		) : (
-			<code data-code>sprite.<span class="fn">TweenPositionX</span>(<span class="num">300</span>, <span class="num" data-code-duration>1.2</span>, options <span class="kw">=&gt;</span>
+			<code data-code>sprite.<span class="fn">TweenPositionX</span>(<span class="num">300</span>, <span class="num" data-code-duration>2.0</span>, options <span class="kw">=&gt;</span>
 {'{'}
     options.Ease = <span data-code-ease><span class="ty">Out</span>.Elastic</span>;
     <span class="comment" data-code-option="skew"><span data-comment>// </span>options.Skew = <span class="num" data-code-skew>1.00</span>;</span>
-    <span class="comment" data-code-option="blend-type"><span data-comment>// </span>options.BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Hermite</span>;</span>
+    <span class="comment" data-code-option="blend-type"><span data-comment>// </span>options.BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Makima</span>;</span>
     <span class="comment" data-code-option="blend"><span data-comment>// </span>options.Blend = <span class="num" data-code-blend>0.20</span>;</span>
 {'}'});</code>
 		)}</pre>
@@ -161,7 +161,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 				? 'A single selected curve runs over the full duration. Choose both curves to join them.'
 				: matching ? `Matching ${a} legs use their paired profile directly.`
 				: +width.value === 0 ? 'Direct splice at the midpoint. Different legs may meet with a velocity jump.'
-				: `${blend.value === 'Hermite' ? 'Cubic join matches velocity' : blend.value + ' crossfades the family profiles'} from ${(start * 100).toFixed(0)}% to ${(end * 100).toFixed(0)}% of elapsed time.`;
+				: `${blend.value === 'Makima' || blend.value === 'Hermite' ? blend.value + ' cubic join matches velocity' : blend.value + ' crossfades the family profiles'} from ${(start * 100).toFixed(0)}% to ${(end * 100).toFixed(0)}% of elapsed time.`;
 			root.querySelectorAll('[data-ghost]').forEach((g, i) => g.setAttribute('cx', String(laneX(value(i / 10)))));
 			const name = (leg: string, family: string): (Node | string)[] => {
 				const type = document.createElement('span');
@@ -197,7 +197,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 		root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.addEventListener('click', () => {
 			[entry.value, exit.value] = button.dataset.preset!.split(','); update();
 		}));
-		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.2'; skew.value = '1'; blend.value = 'Hermite'; width.value = '0.2'; progress.value = '0'; update(); });
+		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '2'; skew.value = '1'; blend.value = 'Makima'; width.value = '0.2'; progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($('[data-code]').textContent!); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }
@@ -226,6 +226,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	.entry { stroke: var(--tw-amber); stroke-dasharray: 7 5; }
 	.exit { stroke: var(--tw-blue); stroke-dasharray: 2 4; }
 	.result { stroke: var(--tw-mint); stroke-width: 3; }
+	.graph .result { stroke: color-mix(in oklab, var(--tw-mint) 60%, black); stroke-width: 6; }
 	.speed { stroke-width: 2; opacity: .8; }
 	.now { stroke: var(--tw-muted); stroke-dasharray: 2 4; opacity: .5; }
 	.tracer { fill: var(--tw-stage); stroke: var(--tw-mint); stroke-width: 3; }

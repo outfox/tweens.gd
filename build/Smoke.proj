@@ -25,7 +25,8 @@
     <XmlPoke XmlInputPath="$(ConsumerDirectory)/package/NuGet.config" Query="/configuration/packageSources/add[@key='local']/@value" Value="$(PackageDirectory)" />
   </Target>
   <Target Name="Verify" DependsOnTargets="Stage">
-    <!-- Keep the source-install compilation independent of 2dog and repository build settings. -->
+    <!-- Keep the source-install compilation independent of 2dog and repository build settings. It targets net8.0 with
+         the default C# version, like a stock Godot 4.7 project. -->
     <Exec Command="dotnet build &quot;$(ConsumerDirectory)/addon/Consumer.csproj&quot; -c Debug" />
     <Exec Command="dotnet build &quot;$(ConsumerDirectory)/addon/Consumer.csproj&quot; -c Release" />
     <!-- 2dog's build target imports with the packaged editor library before either smoke test runs. -->

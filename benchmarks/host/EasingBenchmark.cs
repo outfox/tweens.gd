@@ -11,14 +11,15 @@ internal static class EasingBenchmark
     private const int Warmup = 120, Samples = 240;
     private static readonly (string Name, EaseType Ease, BlendType Method)[] Profiles =
     [
-        ("linear", EaseType.Linear, BlendType.Hermite),
-        ("legacy_sine", EaseType.SineInOut, BlendType.Hermite),
-        ("paired_sine", InOut.Sine, BlendType.Hermite),
+        ("linear", EaseType.Linear, BlendType.Makima),
+        ("legacy_sine", EaseType.SineInOut, BlendType.Makima),
+        ("paired_sine", InOut.Sine, BlendType.Makima),
+        ("mixed_makima", In.Quad | Out.Cubic, BlendType.Makima),
         ("mixed_hermite", In.Quad | Out.Cubic, BlendType.Hermite),
         ("mixed_smoothstep", In.Quad | Out.Cubic, BlendType.SmoothStep),
         ("mixed_linear", In.Quad | Out.Cubic, BlendType.Linear),
-        ("back30_bounce20", In.Back30 | Out.Bounce20, BlendType.Hermite),
-        ("solo_jump30", Out.Jump30, BlendType.Hermite),
+        ("back30_bounce20", In.Back30 | Out.Bounce20, BlendType.Makima),
+        ("solo_jump30", Out.Jump30, BlendType.Makima),
     ];
 
     public static int Run(twodog.Engine engine, string? output)

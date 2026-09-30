@@ -9,7 +9,7 @@ Unpack it into your project root, keeping this entire `addons/tweens_gd/` direct
 Both languages are included in the same package. No plugin
 activation or autoload is required.
 
-**C#:** use a Godot .NET 4.7.2 project targeting .NET 10. The normal project build
+**C#:** use a Godot .NET 4.7.2 project targeting .NET 8 or later. The normal project build
 compiles `csharp/`, including the prepared definitions in `csharp/Generated/`.
 No NuGet package or tweens.gd analyzer is needed. See the [C# quickstart](csharp/README.md),
 including the optional NuGet route with `dotnet add package tweens.gd`.
@@ -150,8 +150,8 @@ Tweens.play(sprite, move)
 
 `Tweens.InOut.SINE` is `Tweens.In.SINE | Tweens.Out.SINE`. A single leg runs
 on its own. In and Out occupy the first and second halves. Their
-halves meet through a local Hermite join between 30% and 70% of progress after
-skew. `blend_type` selects `Tweens.BlendType.HERMITE`, `SMOOTH_STEP`, or `LINEAR`;
+halves meet through a local Makima join between 40% and 60% of progress after
+skew. `blend_type` selects `Tweens.BlendType.MAKIMA`, `HERMITE`, `SMOOTH_STEP`, or `LINEAR`;
 `blend` sets the centered window width in [0, 1] (default 0.2). Matching families use their paired profile directly.
 Choose one curve per side; `NONE` omits a side and
 `LINEAR` selects a straight line. `BACK` / `BACK10` and `ELASTIC` / `ELASTIC10`

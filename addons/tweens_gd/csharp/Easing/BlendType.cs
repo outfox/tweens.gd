@@ -5,7 +5,9 @@ namespace tweens.gd;
 /// <summary>How different In/Out families meet inside the centered transition window.</summary>
 public enum BlendType
 {
-    /// <summary>Two cubic Hermite segments preserve the midpoint and join the legs with continuous velocity.</summary>
+    /// <summary>Two cubic segments preserve the midpoint; its velocity uses modified Akima (makima) weights.</summary>
+    Makima,
+    /// <summary>Two cubic Hermite segments preserve the midpoint and match acceleration there.</summary>
     Hermite,
     /// <summary>Crossfade the families' paired profiles with a smooth weight.</summary>
     SmoothStep,

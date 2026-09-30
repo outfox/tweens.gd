@@ -85,7 +85,8 @@ String TweenSettings::validate() const {
 	if (!Math::is_finite(weks) || weks <= 0.0) {
 		return "Weks must be finite and positive.";
 	}
-	if (blend_type < 0 || blend_type > 2 || !Math::is_finite(blend) || blend < 0.0 || blend > 1.0) {
+	if (blend_type < TweensGdEasing::BLEND_MAKIMA || blend_type > TweensGdEasing::BLEND_LINEAR || !Math::is_finite(blend)
+			|| blend < 0.0 || blend > 1.0) {
 		return "Invalid easing blend: use a known method and width in [0, 1].";
 	}
 	if (!is_known_ease(ease)) {

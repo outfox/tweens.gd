@@ -10,17 +10,25 @@ using Microsoft.Build.Utilities;
 
 public sealed class VerifyPackages : Task
 {
+    private static readonly string[] Frameworks = { "net8.0", "net10.0" };
+
     [Required] public string Directory { get; set; }
     [Required] public string Version { get; set; }
 
     public override bool Execute()
     {
         using (var symbols = ZipFile.OpenRead(Path.Combine(Directory, "tweens.gd." + Version + ".snupkg")))
-            Require(symbols, "lib/net10.0/tweens.gd.pdb");
+            foreach (var framework in Frameworks)
+                Require(symbols, "lib/" + framework + "/tweens.gd.pdb");
         using (var package = ZipFile.OpenRead(Path.Combine(Directory, "tweens.gd." + Version + ".nupkg")))
         {
-            foreach (var name in new[] { "LICENSE", "README.md", "THIRD-PARTY-NOTICES.md", "lib/net10.0/tweens.gd.dll", "lib/net10.0/tweens.gd.xml" })
+            foreach (var name in new[] { "LICENSE", "README.md", "THIRD-PARTY-NOTICES.md" })
                 Require(package, name);
+            foreach (var framework in Frameworks)
+            {
+                Require(package, "lib/" + framework + "/tweens.gd.dll");
+                Require(package, "lib/" + framework + "/tweens.gd.xml");
+            }
             using (var stream = Require(package, "tweens.gd.nuspec").Open())
             {
                 var document = XDocument.Load(stream);
@@ -31,9 +39,14 @@ public sealed class VerifyPackages : Task
                 var license = metadata.Element(ns + "license");
                 if ((string)license != "MIT" || (string)license.Attribute("type") != "expression")
                     Log.LogError("Package must declare the MIT license expression.");
-                var dependencies = metadata.Descendants(ns + "dependency").ToArray();
-                if (dependencies.Length != 1 || (string)dependencies[0].Attribute("id") != "GodotSharp")
-                    Log.LogError("The library package must depend only on GodotSharp.");
+                // NuGet writes one dependency group per target framework.
+                var groups = metadata.Descendants(ns + "group").ToArray();
+                var frameworks = groups.Select(group => (string)group.Attribute("targetFramework")).OrderBy(name => name);
+                if (!frameworks.SequenceEqual(Frameworks.OrderBy(name => name)))
+                    Log.LogError("Package must target exactly " + string.Join(" and ", Frameworks) + ".");
+                if (!groups.All(group => group.Elements(ns + "dependency")
+                        .Select(dependency => (string)dependency.Attribute("id")).SequenceEqual(new[] { "GodotSharp" })))
+                    Log.LogError("Each target framework must depend only on GodotSharp.");
             }
         }
         return !Log.HasLoggedErrors;

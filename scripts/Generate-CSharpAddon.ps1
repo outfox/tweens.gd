@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $repository = Split-Path -Parent $PSScriptRoot
 # A fresh emission directory prevents removed definitions surviving an incremental build.
 $emission = Join-Path $repository "artifacts/generated-csharp/$([Guid]::NewGuid())"
-dotnet build (Join-Path $repository 'csharp/tweens.gd.csproj') -c Release --no-incremental `
+dotnet build (Join-Path $repository 'csharp/tweens.gd.csproj') -c Release -f net8.0 --no-incremental `
     -p:EmitCompilerGeneratedFiles=true "-p:CompilerGeneratedFilesOutputPath=$emission"
 if ($LASTEXITCODE -ne 0) { throw 'C# definition generation failed.' }
 # Never ship Godot's generators: the consuming Godot SDK must generate its own glue.

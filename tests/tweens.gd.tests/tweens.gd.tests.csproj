@@ -30,8 +30,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Every suite tests the same library build. -->
-        <ProjectReference Include="../../csharp/tweens.gd.csproj" GlobalPropertiesToRemove="TestSuite" />
+        <!-- Every suite tests the same library build: net10.0, or the one -p:LibraryFramework selects. -->
+        <ProjectReference Include="../../csharp/tweens.gd.csproj" GlobalPropertiesToRemove="TestSuite;LibraryFramework">
+            <SetTargetFramework Condition="'$(LibraryFramework)' != ''">TargetFramework=$(LibraryFramework)</SetTargetFramework>
+        </ProjectReference>
     </ItemGroup>
 
     <!-- The Godot project is the parent directory; .gdignore hides this project from Godot's importer. -->
@@ -50,6 +52,15 @@
         <OutputPath>bin/$(TestSuite)/$(Configuration)/</OutputPath>
         <IntermediateOutputPath>obj/$(TestSuite)/$(Configuration)/</IntermediateOutputPath>
     </PropertyGroup>
+    <!-- -p:LibraryFramework=net8.0 runs a suite against the library's net8.0 build on this .NET 10 host, as Godot's
+         roll-forward does. Its separate output keeps the default build intact. -->
+    <PropertyGroup Condition="'$(LibraryFramework)' != ''">
+        <OutputPath>bin/$(TestSuite)-$(LibraryFramework)/$(Configuration)/</OutputPath>
+        <IntermediateOutputPath>obj/$(TestSuite)-$(LibraryFramework)/$(Configuration)/</IntermediateOutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(LibraryFramework)' == 'net8.0'">
+        <DefineConstants>$(DefineConstants);LIBRARY_NET8</DefineConstants>
+    </PropertyGroup>
     <ItemGroup>
         <Compile Remove="Lifecycle/**/*.cs;Rendering/**/*.cs" />
         <Compile Include="Lifecycle/**/*.cs" Condition="'$(TestSuite)' == 'Lifecycle'" />
@@ -59,5 +70,7 @@
     <Target Name="ValidateTestSuite" BeforeTargets="Build">
         <Error Condition="'$(TestSuite)' != 'Headless' And '$(TestSuite)' != 'Lifecycle' And '$(TestSuite)' != 'Rendering'"
                Text="Unknown TestSuite '$(TestSuite)'. Use Headless, Lifecycle or Rendering." />
+        <Error Condition="'$(LibraryFramework)' != '' And '$(LibraryFramework)' != 'net8.0'"
+               Text="Unknown LibraryFramework '$(LibraryFramework)'. Use net8.0, or omit it for net10.0." />
     </Target>
 </Project>

@@ -7,7 +7,7 @@ or download the addon ZIP from
 Unpack it into your Godot .NET project root, keeping the entire `addons/tweens_gd/` directory.
 The project's normal C# build automatically includes these sources. No package
 reference, analyzer installation, plugin activation or autoload is needed.
-The validated target is Godot .NET 4.7.2 with .NET 10 (`net10.0`).
+The validated targets are Godot .NET 4.7.2 with `net8.0`, Godot's default, and `net10.0`.
 
 ```csharp
 using Godot;

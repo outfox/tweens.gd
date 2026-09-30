@@ -35,7 +35,7 @@ the preview runs in the selected language. The global leg-duration slider contro
 its duration. In occupies 0–0.5 and Out 0.5–1; matching families reproduce the
 conventional InOut curve exactly. Curves and skew survive duration changes, restarts, navigation and
 language changes. Amber and blue show the original halves; mint shows the result.
-Choose Hermite, SmoothStep, or Linear and adjust the join width. The shaded
+Choose Makima, Hermite, SmoothStep, or Linear and adjust the join width. The shaded
 region marks the join window after skew has warped time.
 Choose None on either side to inspect a single curve.
 

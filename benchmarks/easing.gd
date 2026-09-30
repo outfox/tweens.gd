@@ -9,14 +9,15 @@ static func run(owner: Node) -> String:
 	var results: Array = []
 	for count in [1000, 10000]:
 		for profile in [
-			["linear", T.Ease.LINEAR, T.BlendType.HERMITE],
-			["legacy_sine", T.Ease.SINE_IN_OUT, T.BlendType.HERMITE],
-			["paired_sine", T.InOut.SINE, T.BlendType.HERMITE],
+			["linear", T.Ease.LINEAR, T.BlendType.MAKIMA],
+			["legacy_sine", T.Ease.SINE_IN_OUT, T.BlendType.MAKIMA],
+			["paired_sine", T.InOut.SINE, T.BlendType.MAKIMA],
+			["mixed_makima", T.In.QUAD | T.Out.CUBIC, T.BlendType.MAKIMA],
 			["mixed_hermite", T.In.QUAD | T.Out.CUBIC, T.BlendType.HERMITE],
 			["mixed_smoothstep", T.In.QUAD | T.Out.CUBIC, T.BlendType.SMOOTH_STEP],
 			["mixed_linear", T.In.QUAD | T.Out.CUBIC, T.BlendType.LINEAR],
-			["back30_bounce20", T.In.BACK30 | T.Out.BOUNCE20, T.BlendType.HERMITE],
-			["solo_jump30", T.Out.JUMP30, T.BlendType.HERMITE],
+			["back30_bounce20", T.In.BACK30 | T.Out.BOUNCE20, T.BlendType.MAKIMA],
+			["solo_jump30", T.Out.JUMP30, T.BlendType.MAKIMA],
 		]: results.append(_measure(owner, count, profile))
 	return JSON.stringify({"engine": Engine.get_version_info(), "os": OS.get_name(),
 		"cpu": OS.get_processor_name(), "debug_build": OS.is_debug_build(),

@@ -34,7 +34,7 @@ dotnet run --project benchmarks/host -c Release -- --easing --output artifacts/b
 ```
 
 This measures 1,000 and 10,000 Node2D position tweens in C# and native GDScript:
-linear, legacy and paired Sine, Quad/Cubic with all three blend methods,
+linear, legacy and paired Sine, Quad/Cubic with all four blend methods,
 Back30/Bounce20, and solo Jump30. One-second infinite loops use staggered offsets
 so every update includes the whole curve, including the 0.2 blend window.
 Each case has 120 warmup updates and 240 measured updates; C# also gets an untimed

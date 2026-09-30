@@ -11,7 +11,7 @@ Engine lifetime, callbacks and property writes have separate integration tests.
 
 `easing.json` supplies composed In/Out samples at the blend boundaries, inside
 the transition, with missing legs and with skew. Optional `blendType` and `blend`
-select the method and centered window (defaults: Hermite and 0.2). Non-polynomial
+select the method and centered window (defaults: Makima and 0.2). Non-polynomial
 samples also exercise the analytic derivatives used to construct the cubic join. C#, native GDScript, and the
 website's `npm run check:easing` consume the same samples. Each implementation
 also checks every family pairing. Back/Elastic fixtures cover aliases, 10%–50%

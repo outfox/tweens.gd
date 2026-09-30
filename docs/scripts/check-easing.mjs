@@ -36,22 +36,29 @@ console.log(`Easing: ${data.cases.length} shared samples and all ${new Set(FAMIL
 
 // Test behavior, rather than duplicating the interpolation formula.
 const monotone = FAMILIES.filter(f => !calibrated(f));
-for (const a of monotone) for (const b of monotone) for (const width of [0, .01, .2, .4, .8, 1]) {
-  let previous = 0;
-  for (let i=0; i<=1000; i++) {
-    const y = composeEase(a,b,i/1000,1,'Hermite',width);
-    assert.ok(y >= previous-1e-12 && y <= 1+1e-12, JSON.stringify({a,b,width,i,y,previous}));
-    previous=y;
+for (const method of ['Makima', 'Hermite']) {
+  for (const a of monotone) for (const b of monotone) for (const width of [0, .01, .2, .4, .8, 1]) {
+    let previous = 0;
+    for (let i=0; i<=1000; i++) {
+      const y = composeEase(a,b,i/1000,1,method,width);
+      assert.ok(y >= previous-1e-12 && y <= 1+1e-12, JSON.stringify({method,a,b,width,i,y,previous}));
+      previous=y;
+    }
+  }
+  for (const a of FAMILIES) for (const b of FAMILIES) {
+    if (canonicalFamily(a)===canonicalFamily(b)) continue; // Preserve authored corners/singularities in matching families.
+    for (const width of [.1,.4,.8]) {
+      const h=1e-6, f=p=>composeEase(a,b,p,1,method,width);
+      for (const t of [.5-width/2,.5,.5+width/2])
+        assert.ok(Math.abs((f(t)-f(t-h))/h-(f(t+h)-f(t))/h)<.01, JSON.stringify({method,a,b,width,t}));
+      if (method !== 'Makima') continue;
+      // Makima weights are nonnegative, so the midpoint velocity is a weighted mean of the two secants.
+      const d0 = (.5-f(.5-width/2))/(width/2), d1 = (f(.5+width/2)-.5)/(width/2), v = (f(.5+h)-f(.5-h))/(2*h);
+      assert.ok(v >= Math.min(d0,d1)-1e-3 && v <= Math.max(d0,d1)+1e-3, JSON.stringify({a,b,width,v,d0,d1}));
+    }
   }
 }
-for (const a of FAMILIES) for (const b of FAMILIES) {
-  if (canonicalFamily(a)===canonicalFamily(b)) continue; // Preserve authored corners/singularities in matching families.
-  for (const width of [.1,.4,.8]) for (const t of [.5-width/2,.5,.5+width/2]) {
-    const h=1e-6, f=p=>composeEase(a,b,p,1,'Hermite',width);
-    assert.ok(Math.abs((f(t)-f(t-h))/h-(f(t+h)-f(t))/h)<.01, JSON.stringify({a,b,width,t}));
-  }
-}
-console.log('Hermite: monotonicity, bounds and velocity continuity passed.');
+console.log('Makima and Hermite: monotonicity, bounds and velocity continuity passed.');
 
 for (const base of ['Back', 'Elastic', 'Jump']) for (const percent of [10,20,30,40,50]) {
   const family=base+percent, amount=percent/100;

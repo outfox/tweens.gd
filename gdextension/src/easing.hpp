@@ -51,8 +51,16 @@ public:
 		SMOOTHER_STEP = 120,
 	};
 
+	// Matches Tweens.BlendType in types.gd.
+	enum BlendType : int64_t {
+		BLEND_MAKIMA,
+		BLEND_HERMITE,
+		BLEND_SMOOTH_STEP,
+		BLEND_LINEAR,
+	};
+
 	// Unknown easing functions return NaN.
-	static double evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type = 0, double p_blend = 0.2);
+	static double evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type = BLEND_MAKIMA, double p_blend = 0.2);
 };
 
 namespace tweens {

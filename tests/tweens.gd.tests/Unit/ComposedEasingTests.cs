@@ -15,7 +15,7 @@ public class ComposedEasingTests
         {
             var ease = Flag(typeof(In), sample.GetProperty("in").GetString()!) | Flag(typeof(Out), sample.GetProperty("out").GetString()!);
             var t = Math.Pow(sample.GetProperty("progress").GetDouble(), sample.GetProperty("skew").GetDouble());
-            Assert.InRange(Math.Abs(Easing.Evaluate(ease, (float)t, sample.TryGetProperty("blendType", out var blendType) ? Enum.Parse<BlendType>(blendType.GetString()!) : BlendType.Hermite, sample.TryGetProperty("blend", out var blend) ? blend.GetDouble() : 0.2) - sample.GetProperty("expected").GetDouble()),
+            Assert.InRange(Math.Abs(Easing.Evaluate(ease, (float)t, sample.TryGetProperty("blendType", out var blendType) ? Enum.Parse<BlendType>(blendType.GetString()!) : BlendType.Makima, sample.TryGetProperty("blend", out var blend) ? blend.GetDouble() : 0.2) - sample.GetProperty("expected").GetDouble()),
                 0, data.RootElement.GetProperty("tolerance").GetDouble());
         }
     }
@@ -293,21 +293,26 @@ public class ComposedEasingTests
         Assert.Throws<NotImplementedException>(() => Easing.Evaluate(ease, 0.5f));
 
     [Theory]
-    [InlineData(0.4f)]
-    [InlineData(0.6f)]
-    [InlineData(0.5f)]
-    public void BlendBoundariesHaveContinuousValueAndSlope(float t)
+    [InlineData(0.4f, BlendType.Makima)]
+    [InlineData(0.6f, BlendType.Makima)]
+    [InlineData(0.5f, BlendType.Makima)]
+    [InlineData(0.4f, BlendType.Hermite)]
+    [InlineData(0.6f, BlendType.Hermite)]
+    [InlineData(0.5f, BlendType.Hermite)]
+    public void BlendBoundariesHaveContinuousValueAndSlope(float t, BlendType method)
     {
         const float h = 0.0001f;
         var ease = In.Quad | Out.Cubic;
-        var left = Easing.Evaluate(ease, t - h);
-        var center = Easing.Evaluate(ease, t);
-        var right = Easing.Evaluate(ease, t + h);
+        var left = Easing.Evaluate(ease, t - h, method);
+        var center = Easing.Evaluate(ease, t, method);
+        var right = Easing.Evaluate(ease, t + h, method);
         Assert.InRange(Math.Abs((center - left) / h - (right - center) / h), 0, 0.01f);
     }
 
-    [Fact]
-    public void MonotoneFamiliesDoNotAcquireOvershootOrReversals()
+    [Theory]
+    [InlineData(BlendType.Makima)]
+    [InlineData(BlendType.Hermite)]
+    public void MonotoneFamiliesDoNotAcquireOvershootOrReversals(BlendType method)
     {
         var monotone = Families.Where(f => !Calibrated(f)).ToArray();
         foreach (var entry in monotone)
@@ -318,10 +323,29 @@ public class ComposedEasingTests
             var previous = 0f;
             for (var i = 0; i <= 1000; i++)
             {
-                var actual = Easing.Evaluate(ease, i / 1000f, blend: width);
+                var actual = Easing.Evaluate(ease, i / 1000f, method, width);
                 Assert.InRange(actual, previous - 0.000001f, 1.000001f);
                 previous = actual;
             }
+        }
+    }
+
+    [Fact]
+    public void MakimaMidpointVelocityStaysBetweenTheAdjacentSecants()
+    {
+        // Makima weights are nonnegative, so the shared velocity is a weighted mean of both halves' secants.
+        foreach (var entry in Families)
+        foreach (var exit in Families)
+        foreach (var width in new[] { 0.2f, 0.6f })
+        {
+            var ease = Flag(typeof(In), entry) | Flag(typeof(Out), exit);
+            if (ease == Flag(typeof(InOut), entry)) continue; // Matching families bypass the join.
+            const float e = 0.0001f;
+            var h = width / 2;
+            var d0 = (0.5f - Easing.Evaluate(ease, 0.5f - h, blend: width)) / h;
+            var d1 = (Easing.Evaluate(ease, 0.5f + h, blend: width) - 0.5f) / h;
+            var velocity = (Easing.Evaluate(ease, 0.5f + e, blend: width) - Easing.Evaluate(ease, 0.5f - e, blend: width)) / (2 * e);
+            Assert.InRange(velocity, Math.Min(d0, d1) - 0.02f, Math.Max(d0, d1) + 0.02f);
         }
     }
 
@@ -342,11 +366,12 @@ public class ComposedEasingTests
         var builder = new TweenOptionsBuilder();
         Assert.Equal(0.2, builder.Blend);
         Assert.Equal(default(TweenOptions), new TweenOptions { Blend = 0.2 });
-        Assert.Equal(0.40125f, Easing.Evaluate(options.Ease, 0.45f), 5);
+        Assert.Equal(0.4041957f, Easing.Evaluate(options.Ease, 0.45f), 5);
+        Assert.Equal(0.40125f, Easing.Evaluate(options.Ease, 0.45f, BlendType.Hermite), 5);
         options.CopyTo(builder);
         Assert.Equal(options, builder.ToOptions());
         Assert.Equal(0.2, default(TweenOptions).Blend);
-        Assert.Equal(BlendType.Hermite, default(TweenOptions).BlendType);
+        Assert.Equal(BlendType.Makima, default(TweenOptions).BlendType);
         using var scheduler = new TweenScheduler();
         var box = new Box();
         var definition = new PlainTween { To = 1, Duration = 1 };

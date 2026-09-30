@@ -54,7 +54,7 @@ public readonly record struct TweenOptions
     public FillMode Fill { get => fill ^ FillMode.RetainFinalValue; init => fill = value ^ FillMode.RetainFinalValue; }
     /// <summary>Combine one In and one Out with |, use an InOut pair, or select a single curve. Legacy EaseType names retain their original shapes.</summary>
     public EaseType Ease { get; init; }
-    /// <summary>How mixed In/Out legs join. Defaults to Hermite; matching families keep their conventional shape.</summary>
+    /// <summary>How mixed In/Out legs join. Defaults to Makima; matching families keep their conventional shape.</summary>
     public BlendType BlendType { get; init; }
     private readonly double? blend;
     /// <summary>Centered transition width in [0, 1]. Defaults to 0.2 (40%–60%); zero directly splices the halves.</summary>

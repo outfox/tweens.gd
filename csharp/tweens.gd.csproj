@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
         <Configurations>Debug;Editor;Release</Configurations>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -42,7 +42,9 @@
         <PackageReference Include="Godot.SourceGenerators" Version="4.7.2" PrivateAssets="all" />
         <InternalsVisibleTo Include="testbed.tests" />
         <InternalsVisibleTo Include="tweens.gd.tests" />
-        <None Update="README.md" Pack="true" PackagePath="/" />
+        <!-- Multi-targeted packs evaluate without default items, so include the readme explicitly. -->
+        <None Remove="README.md" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
         <None Include="../LICENSE" Pack="true" PackagePath="/" />
         <None Include="../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
     </ItemGroup>

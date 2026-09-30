@@ -23,7 +23,7 @@ public sealed partial class EasingComposer : GalleryEffect
     private Polygon2D ball = null!, tracer = null!, region = null!;
 
     public override string Title => "In | Out";
-    public override string Caption => "Amber: In half. Blue: Out half. Mint: result. Hermite joins with continuous velocity. Width controls how much of each leg is reshaped.";
+    public override string Caption => "Amber: In half. Blue: Out half. Mint: result. Makima joins with continuous velocity. Width controls how much of each leg is reshaped.";
 
     protected override void Build()
     {
@@ -78,7 +78,7 @@ public sealed partial class EasingComposer : GalleryEffect
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, CustomMinimumSize = new(120, 24) });
         var join = footer.Add(new HBoxContainer());
         blend = join.Add(new OptionButton { Name = "EasingBlend" });
-        foreach (var method in new[] { "Hermite", "SmoothStep", "Linear" }) blend.AddItem(method);
+        foreach (var method in new[] { "Makima", "Hermite", "SmoothStep", "Linear" }) blend.AddItem(method);
         blend.Select(InitialSelection.BlendType);
         join.AddChild(GalleryTheme.Label("Width", 14, Palette.Muted));
         width = join.Add(new HSlider { Name = "EasingWidth", MinValue = 0, MaxValue = 1, Step = 0.02, Value = InitialSelection.Blend,
