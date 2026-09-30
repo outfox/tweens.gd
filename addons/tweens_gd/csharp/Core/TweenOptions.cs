@@ -30,21 +30,21 @@ public readonly record struct TweenOptions
     /// <summary>A <see cref="Repeats"/> value that repeats until cancelled.</summary>
     public const int Infinite = -1;
 
-    public double Duration { get; init; }
+    public Duration Duration { get; init; }
     private readonly double? factorDuration;
     /// <summary>Scales <see cref="Duration"/> at start: the tween lasts FactorDuration * Duration + DeltaDuration.</summary>
     public double FactorDuration { get => factorDuration ?? 1; init => factorDuration = value == 1 ? null : value; }
     /// <summary>Added to <see cref="Duration"/> at start, after <see cref="FactorDuration"/>.</summary>
-    public double DeltaDuration { get; init; }
-    public double Delay { get; init; }
+    public Duration DeltaDuration { get; init; }
+    public Duration Delay { get; init; }
     private readonly double? factorDelay;
     /// <summary>Scales <see cref="Delay"/> at start: the tween waits FactorDelay * Delay + DeltaDelay.</summary>
     public double FactorDelay { get => factorDelay ?? 1; init => factorDelay = value == 1 ? null : value; }
     /// <summary>Added to <see cref="Delay"/> at start, after <see cref="FactorDelay"/>.</summary>
-    public double DeltaDelay { get; init; }
-    public double PingPongInterval { get; init; }
-    public double RepeatInterval { get; init; }
-    public double Offset { get; init; }
+    public Duration DeltaDelay { get; init; }
+    public Duration PingPongInterval { get; init; }
+    public Duration RepeatInterval { get; init; }
+    public Duration Offset { get; init; }
     /// <summary>Cycles after the first, or <see cref="Infinite"/>. A ping-pong cycle includes both legs.</summary>
     public int Repeats { get; init; }
     public bool UsePingPong { get; init; }
@@ -104,19 +104,19 @@ public class TweenOptionsBuilder
 {
     public const int Infinite = TweenOptions.Infinite;
 
-    public double Duration { get; set; }
+    public Duration Duration { get; set; }
     /// <inheritdoc cref="TweenOptions.FactorDuration"/>
     public double FactorDuration { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.DeltaDuration"/>
-    public double DeltaDuration { get; set; }
-    public double Delay { get; set; }
+    public Duration DeltaDuration { get; set; }
+    public Duration Delay { get; set; }
     /// <inheritdoc cref="TweenOptions.FactorDelay"/>
     public double FactorDelay { get; set; } = 1;
     /// <inheritdoc cref="TweenOptions.DeltaDelay"/>
-    public double DeltaDelay { get; set; }
-    public double PingPongInterval { get; set; }
-    public double RepeatInterval { get; set; }
-    public double Offset { get; set; }
+    public Duration DeltaDelay { get; set; }
+    public Duration PingPongInterval { get; set; }
+    public Duration RepeatInterval { get; set; }
+    public Duration Offset { get; set; }
     public int Repeats { get; set; }
     public bool UsePingPong { get; set; }
     public bool UseUnscaledTime { get; set; }

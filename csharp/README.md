@@ -43,6 +43,15 @@ convenience configurators use `TweenOptionsBuilder`. Playback supports pause/res
 cancellation, delays, loops, ping-pong, easing, and node lifetime handling.
 Create and control tweens on Godot's main thread.
 
+Timing values use `Duration`, which accepts `float` and `double` seconds or a
+`TimeSpan` implicitly. Existing numeric calls work as before; durations, delays,
+intervals, offsets, and timing adjustments can also use `TimeSpan` directly:
+
+```csharp
+sprite.TweenPositionX(300, TimeSpan.FromMilliseconds(600), Out.Cubic,
+    delay: TimeSpan.FromMilliseconds(100));
+```
+
 ## Documentation
 
 The unified addon lives in `addons/tweens_gd/`. This NuGet package contains only

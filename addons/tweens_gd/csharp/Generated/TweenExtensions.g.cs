@@ -9,4138 +9,4138 @@ namespace tweens.gd;
 public static partial class TweenExtensions
 {
     /// <summary>Starts a MaterialAlbedoAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenAlbedoAlpha(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenAlbedoAlpha(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAlbedoAlpha(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialAlbedoAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenAlbedoAlpha(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenAlbedoAlpha(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenAlbedoAlpha(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
         => TweenAlbedoColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialAlbedoColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default)
         => TweenAlbedoColor(@target, new global::Godot.Color(to), @duration, @owner, @configure);
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAlbedoColor(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAlbedoColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAlbedoColor(@target, new global::Godot.Color(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenAlbedoColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenAlbedoColor(@target, new global::Godot.Color(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialAlbedoColorTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialAlbedoColorTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color(to), @duration, @tree, @configure, @owner);
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialAlbedoColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAlbedoColor(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenAlbedoColor(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenAlbedoColor(@target, new global::Godot.Color(to), @duration, @tree, @options, @owner);
 
     /// <summary>Starts a GpuParticles2DAmountRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, float> TweenAmountRatio(this global::Godot.GpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, float> TweenAmountRatio(this global::Godot.GpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAmountRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles3DAmountRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, float> TweenAmountRatio(this global::Godot.GpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, float> TweenAmountRatio(this global::Godot.GpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAmountRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorBottomTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorBottom(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorBottom(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorBottom(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorLeftTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorLeft(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorLeft(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorLeft(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlAnchorMaxTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlAnchorMaxTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlAnchorMaxTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlAnchorMaxTween>? @configure = default)
         => TweenAnchorMax(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlAnchorMaxTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlAnchorMaxTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlAnchorMaxTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlAnchorMaxTween>? @configure = default)
         => TweenAnchorMax(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlAnchorMaxTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorMax(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorMaxTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorMax(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorMaxTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorMax(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenAnchorMax(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMax(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMax(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenAnchorMax(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlAnchorMinTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlAnchorMinTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlAnchorMinTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlAnchorMinTween>? @configure = default)
         => TweenAnchorMin(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlAnchorMinTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlAnchorMinTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlAnchorMinTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlAnchorMinTween>? @configure = default)
         => TweenAnchorMin(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlAnchorMinTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorMin(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorMinTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorMin(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorMinTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorMin(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenAnchorMin(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAnchorMin(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenAnchorMin(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenAnchorMin(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlAnchorRightTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorRight(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorRight(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorRight(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlAnchorTopTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorTop(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenAnchorTop(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAnchorTop(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer2DAttenuationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenAttenuation(this global::Godot.AudioStreamPlayer2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenAttenuation(this global::Godot.AudioStreamPlayer2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAttenuation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer3DAttenuationFilterCutoffHzTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenAttenuationFilterCutoffHz(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenAttenuationFilterCutoffHz(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAttenuationFilterCutoffHz(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer3DAttenuationFilterDbTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenAttenuationFilterDb(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenAttenuationFilterDb(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAttenuationFilterDb(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DAutoscrollTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DAutoscrollTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DAutoscrollTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DAutoscrollTween>? @configure = default)
         => TweenAutoscroll(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DAutoscrollTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DAutoscrollTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DAutoscrollTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DAutoscrollTween>? @configure = default)
         => TweenAutoscroll(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Parallax2DAutoscrollTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAutoscroll(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DAutoscrollTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAutoscroll(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DAutoscrollTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAutoscroll(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenAutoscroll(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenAutoscroll(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenAutoscroll(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenAutoscroll(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a Parallax2DAutoscrollXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenAutoscrollX(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenAutoscrollX(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAutoscrollX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DAutoscrollYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenAutoscrollY(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenAutoscrollY(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenAutoscrollY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,System.Action{tweens.gd.CanvasModulateColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CanvasModulateColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,System.Action{tweens.gd.CanvasModulateColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CanvasModulateColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,System.Action{tweens.gd.CanvasModulateColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CanvasModulateColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,System.Action{tweens.gd.CanvasModulateColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, string @to, double @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CanvasModulateColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasModulateColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a CanvasModulateColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasModulateColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasModulateColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasModulateColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasModulateColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CanvasModulate,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, global::Godot.Color> TweenColor(this global::Godot.CanvasModulate @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,System.Action{tweens.gd.ColorRectColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorRectColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,System.Action{tweens.gd.ColorRectColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorRectColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,System.Action{tweens.gd.ColorRectColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorRectColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,System.Action{tweens.gd.ColorRectColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, string @to, double @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorRectColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorRectColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a ColorRectColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorRectColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorRectColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorRectColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorRectColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.ColorRect,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, global::Godot.Color> TweenColor(this global::Godot.ColorRect @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, string @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, string @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles3DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.CpuParticles3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Color> TweenColor(this global::Godot.CpuParticles3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, string @to, double @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor2DTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a LightColor2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenColor(this global::Godot.Light2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,System.Action{tweens.gd.ColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,System.Action{tweens.gd.ColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,System.Action{tweens.gd.ColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,System.Action{tweens.gd.ColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, string @to, double @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a ColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Node,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Color> TweenColor(this global::Godot.Node @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,System.Action{tweens.gd.Polygon2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,System.Action{tweens.gd.Polygon2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,System.Action{tweens.gd.Polygon2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,System.Action{tweens.gd.Polygon2DColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, string @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DColorTween>? @configure = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a Polygon2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenColor(Godot.Polygon2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Color> TweenColor(this global::Godot.Polygon2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenColor(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a CanvasModulateColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, float> TweenColorAlpha(this global::Godot.CanvasModulate @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasModulate, float> TweenColorAlpha(this global::Godot.CanvasModulate @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ColorRectColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, float> TweenColorAlpha(this global::Godot.ColorRect @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ColorRect, float> TweenColorAlpha(this global::Godot.ColorRect @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenColorAlpha(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenColorAlpha(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenColorAlpha(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenColorAlpha(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenColorAlpha(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenColorAlpha(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlCustomMaximumSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlCustomMaximumSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlCustomMaximumSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlCustomMaximumSizeTween>? @configure = default)
         => TweenCustomMaximumSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlCustomMaximumSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlCustomMaximumSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlCustomMaximumSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlCustomMaximumSizeTween>? @configure = default)
         => TweenCustomMaximumSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlCustomMaximumSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMaximumSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlCustomMaximumSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMaximumSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlCustomMaximumSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMaximumSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenCustomMaximumSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMaximumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMaximumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenCustomMaximumSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlCustomMaximumSizeXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMaximumSizeX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMaximumSizeX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMaximumSizeX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlCustomMaximumSizeYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMaximumSizeY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMaximumSizeY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMaximumSizeY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlCustomMinimumSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlCustomMinimumSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlCustomMinimumSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlCustomMinimumSizeTween>? @configure = default)
         => TweenCustomMinimumSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlCustomMinimumSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlCustomMinimumSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlCustomMinimumSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlCustomMinimumSizeTween>? @configure = default)
         => TweenCustomMinimumSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlCustomMinimumSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMinimumSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlCustomMinimumSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMinimumSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlCustomMinimumSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMinimumSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenCustomMinimumSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenCustomMinimumSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenCustomMinimumSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenCustomMinimumSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlCustomMinimumSizeXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMinimumSizeX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMinimumSizeX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMinimumSizeX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlCustomMinimumSizeYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMinimumSizeY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenCustomMinimumSizeY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenCustomMinimumSizeY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
         => TweenDefaultColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
         => TweenDefaultColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
         => TweenDefaultColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, string @to, double @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Line2DDefaultColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Line2DDefaultColorTween>? @configure = default)
         => TweenDefaultColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a Line2DDefaultColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDefaultColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Line2DDefaultColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDefaultColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Line2DDefaultColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDefaultColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Line2DDefaultColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDefaultColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Line2DDefaultColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDefaultColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDefaultColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDefaultColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDefaultColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDefaultColor(Godot.Line2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, global::Godot.Color> TweenDefaultColor(this global::Godot.Line2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDefaultColor(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a Line2DDefaultColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, float> TweenDefaultColorAlpha(this global::Godot.Line2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, float> TweenDefaultColorAlpha(this global::Godot.Line2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDefaultColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,System.Double,System.Action{tweens.gd.CpuParticles2DDirectionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DDirectionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DDirectionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DDirectionTween>? @configure = default)
         => TweenDirection(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,System.Double,System.Action{tweens.gd.CpuParticles2DDirectionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DDirectionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DDirectionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DDirectionTween>? @configure = default)
         => TweenDirection(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles2DDirectionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirection(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DDirectionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirection(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DDirectionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirection(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDirection(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenDirection(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDirection(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,System.Double,System.Action{tweens.gd.CpuParticles3DDirectionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DDirectionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DDirectionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DDirectionTween>? @configure = default)
         => TweenDirection(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,System.Double,System.Action{tweens.gd.CpuParticles3DDirectionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DDirectionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DDirectionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DDirectionTween>? @configure = default)
         => TweenDirection(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles3DDirectionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirection(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DDirectionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirection(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DDirectionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirection(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDirection(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenDirection(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenDirection(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenDirection(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a CpuParticles2DDirectionXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenDirectionX(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenDirectionX(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirectionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DDirectionXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenDirectionX(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenDirectionX(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirectionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DDirectionYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenDirectionY(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenDirectionY(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirectionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DDirectionYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenDirectionY(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenDirectionY(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirectionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DDirectionZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenDirectionZ(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenDirectionZ(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDirectionZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DoubleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, double> TweenDouble(this global::Godot.Node @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, double> TweenDouble(this global::Godot.Node @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenDouble(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
         => TweenEmission(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialEmissionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default)
         => TweenEmission(@target, new global::Godot.Color(to), @duration, @owner, @configure);
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmission(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmission(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmission(@target, new global::Godot.Color(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenEmission(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenEmission(@target, new global::Godot.Color(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialEmissionTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialEmissionTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color(to), @duration, @tree, @configure, @owner);
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialEmissionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenEmission(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmission(Godot.BaseMaterial3D,Godot.Color,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Color> TweenEmission(this global::Godot.BaseMaterial3D @target, string @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenEmission(@target, new global::Godot.Color(to), @duration, @tree, @options, @owner);
 
     /// <summary>Starts a AudioStreamPlayer3DEmissionAngleDegreesTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenEmissionAngleDegrees(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenEmissionAngleDegrees(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionAngleDegrees(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer3DEmissionAngleFilterAttenuationDbTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenEmissionAngleFilterAttenuationDb(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenEmissionAngleFilterAttenuationDb(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionAngleFilterAttenuationDb(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,System.Double,System.Action{tweens.gd.CpuParticles3DEmissionBoxExtentsTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DEmissionBoxExtentsTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DEmissionBoxExtentsTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DEmissionBoxExtentsTween>? @configure = default)
         => TweenEmissionBoxExtents(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,System.Double,System.Action{tweens.gd.CpuParticles3DEmissionBoxExtentsTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DEmissionBoxExtentsTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DEmissionBoxExtentsTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DEmissionBoxExtentsTween>? @configure = default)
         => TweenEmissionBoxExtents(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles3DEmissionBoxExtentsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionBoxExtents(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DEmissionBoxExtentsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionBoxExtents(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DEmissionBoxExtentsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionBoxExtents(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenEmissionBoxExtents(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionBoxExtents(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenEmissionBoxExtents(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenEmissionBoxExtents(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a CpuParticles3DEmissionBoxExtentsXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionBoxExtentsX(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionBoxExtentsX(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionBoxExtentsX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DEmissionBoxExtentsYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionBoxExtentsY(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionBoxExtentsY(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionBoxExtentsY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DEmissionBoxExtentsZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionBoxExtentsZ(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionBoxExtentsZ(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionBoxExtentsZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalEmissionEnergyTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenEmissionEnergy(this global::Godot.Decal @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenEmissionEnergy(this global::Godot.Decal @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionEnergy(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionEnergyMultiplierTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionEnergyMultiplier(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionEnergyMultiplier(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionEnergyMultiplier(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionEnergyMultiplierTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionEnergyMultiplier(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionEnergyMultiplier(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmissionEnergyMultiplier(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialEmissionIntensityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionIntensity(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionIntensity(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionIntensity(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialEmissionIntensityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionIntensity(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenEmissionIntensity(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenEmissionIntensity(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,System.Double,System.Action{tweens.gd.CpuParticles2DEmissionRectExtentsTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DEmissionRectExtentsTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DEmissionRectExtentsTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DEmissionRectExtentsTween>? @configure = default)
         => TweenEmissionRectExtents(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,System.Double,System.Action{tweens.gd.CpuParticles2DEmissionRectExtentsTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DEmissionRectExtentsTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DEmissionRectExtentsTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DEmissionRectExtentsTween>? @configure = default)
         => TweenEmissionRectExtents(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles2DEmissionRectExtentsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionRectExtents(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DEmissionRectExtentsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionRectExtents(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DEmissionRectExtentsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionRectExtents(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenEmissionRectExtents(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenEmissionRectExtents(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenEmissionRectExtents(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenEmissionRectExtents(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a CpuParticles2DEmissionRectExtentsXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenEmissionRectExtentsX(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenEmissionRectExtentsX(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionRectExtentsX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DEmissionRectExtentsYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenEmissionRectExtentsY(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenEmissionRectExtentsY(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionRectExtentsY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DEmissionSphereRadiusTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenEmissionSphereRadius(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenEmissionSphereRadius(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionSphereRadius(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DEmissionSphereRadiusTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionSphereRadius(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenEmissionSphereRadius(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEmissionSphereRadius(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightEnergy2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, float> TweenEnergy(this global::Godot.Light2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, float> TweenEnergy(this global::Godot.Light2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenEnergy(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DExplosivenessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenExplosiveness(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenExplosiveness(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenExplosiveness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DExplosivenessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenExplosiveness(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenExplosiveness(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenExplosiveness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles2DExplosivenessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, float> TweenExplosiveness(this global::Godot.GpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, float> TweenExplosiveness(this global::Godot.GpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenExplosiveness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles3DExplosivenessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, float> TweenExplosiveness(this global::Godot.GpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, float> TweenExplosiveness(this global::Godot.GpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenExplosiveness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DFarTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFar(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFar(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFar(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a FloatTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, float> TweenFloat(this global::Godot.Node @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, float> TweenFloat(this global::Godot.Node @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFloat(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DFovTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFov(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFov(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFov(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AnimatedSprite2DFrameTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite2D, int> TweenFrame(this global::Godot.AnimatedSprite2D @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite2D, int> TweenFrame(this global::Godot.AnimatedSprite2D @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrame(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AnimatedSprite3DFrameTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite3D, int> TweenFrame(this global::Godot.AnimatedSprite3D @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite3D, int> TweenFrame(this global::Godot.AnimatedSprite3D @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrame(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Sprite2DFrameTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, int> TweenFrame(this global::Godot.Sprite2D @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, int> TweenFrame(this global::Godot.Sprite2D @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrame(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,System.Double,System.Action{tweens.gd.Camera3DFrustumOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Camera3DFrustumOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Camera3DFrustumOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Camera3DFrustumOffsetTween>? @configure = default)
         => TweenFrustumOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,System.Double,System.Action{tweens.gd.Camera3DFrustumOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Camera3DFrustumOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Camera3DFrustumOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Camera3DFrustumOffsetTween>? @configure = default)
         => TweenFrustumOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Camera3DFrustumOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrustumOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DFrustumOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrustumOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DFrustumOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrustumOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenFrustumOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenFrustumOffset(Godot.Camera3D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, global::Godot.Vector2> TweenFrustumOffset(this global::Godot.Camera3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenFrustumOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a Camera3DFrustumOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFrustumOffsetX(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFrustumOffsetX(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrustumOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DFrustumOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFrustumOffsetY(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenFrustumOffsetY(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenFrustumOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlGlobalPositionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlGlobalPositionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlGlobalPositionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlGlobalPositionTween>? @configure = default)
         => TweenGlobalPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlGlobalPositionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlGlobalPositionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlGlobalPositionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlGlobalPositionTween>? @configure = default)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlGlobalPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlGlobalPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlGlobalPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.GlobalPosition2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.GlobalPosition2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.GlobalPosition2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalPosition2DTween>? @configure = default)
         => TweenGlobalPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.GlobalPosition2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.GlobalPosition2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.GlobalPosition2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalPosition2DTween>? @configure = default)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a GlobalPosition2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.GlobalPosition3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.GlobalPosition3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.GlobalPosition3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalPosition3DTween>? @configure = default)
         => TweenGlobalPosition(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.GlobalPosition3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.GlobalPosition3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.GlobalPosition3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalPosition3DTween>? @configure = default)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a GlobalPosition3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalPosition(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalPosition(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a ControlGlobalPositionXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenGlobalPositionX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenGlobalPositionX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition2DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalPositionX(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalPositionX(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition3DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalPositionX(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalPositionX(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlGlobalPositionYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenGlobalPositionY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenGlobalPositionY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition2DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalPositionY(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalPositionY(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition3DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalPositionY(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalPositionY(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalPosition3DZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalPositionZ(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalPositionZ(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalPositionZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalQuaternion3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Quaternion> TweenGlobalQuaternion(this global::Godot.Node3D @target, global::Godot.Quaternion @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Quaternion> TweenGlobalQuaternion(this global::Godot.Node3D @target, global::Godot.Quaternion @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalQuaternion(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalRotation2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalRotation(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalRotation(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.GlobalRotation3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.GlobalRotation3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.GlobalRotation3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalRotation3DTween>? @configure = default)
         => TweenGlobalRotation(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.GlobalRotation3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.GlobalRotation3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.GlobalRotation3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalRotation3DTween>? @configure = default)
         => TweenGlobalRotation(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a GlobalRotation3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalRotation3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotation(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalRotation3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotation(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalRotation(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenGlobalRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalRotation(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a GlobalRotation3DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalRotationX(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalRotationX(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotationX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalRotation3DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalRotationY(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalRotationY(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotationY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalRotation3DZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalRotationZ(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenGlobalRotationZ(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalRotationZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.GlobalScale2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.GlobalScale2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.GlobalScale2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalScale2DTween>? @configure = default)
         => TweenGlobalScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.GlobalScale2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.GlobalScale2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.GlobalScale2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalScale2DTween>? @configure = default)
         => TweenGlobalScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.GlobalScale2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, double @to, double @duration, global::System.Action<global::tweens.gd.GlobalScale2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.GlobalScale2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.GlobalScale2DTween>? @configure = default)
         => TweenGlobalScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a GlobalScale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalScale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalScale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalScale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGlobalScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenGlobalScale(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGlobalScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
     /// <summary>Starts a GlobalScale2DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalScaleX(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalScaleX(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalScale2DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalScaleY(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalScaleY(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GlobalSkew2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalSkew(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenGlobalSkew(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGlobalSkew(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,System.Double,System.Action{tweens.gd.CpuParticles2DGravityTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DGravityTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DGravityTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DGravityTween>? @configure = default)
         => TweenGravity(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,System.Double,System.Action{tweens.gd.CpuParticles2DGravityTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles2DGravityTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles2DGravityTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles2DGravityTween>? @configure = default)
         => TweenGravity(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles2DGravityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravity(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DGravityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravity(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DGravityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravity(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGravity(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, global::Godot.Vector2> TweenGravity(this global::Godot.CpuParticles2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGravity(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,System.Double,System.Action{tweens.gd.CpuParticles3DGravityTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DGravityTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DGravityTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DGravityTween>? @configure = default)
         => TweenGravity(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,System.Double,System.Action{tweens.gd.CpuParticles3DGravityTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CpuParticles3DGravityTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.CpuParticles3DGravityTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CpuParticles3DGravityTween>? @configure = default)
         => TweenGravity(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a CpuParticles3DGravityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravity(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DGravityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravity(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DGravityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravity(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGravity(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenGravity(Godot.CpuParticles3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, global::Godot.Vector3> TweenGravity(this global::Godot.CpuParticles3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenGravity(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a CpuParticles2DGravityXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenGravityX(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenGravityX(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravityX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DGravityXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenGravityX(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenGravityX(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravityX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DGravityYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenGravityY(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenGravityY(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravityY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DGravityYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenGravityY(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenGravityY(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravityY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DGravityZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenGravityZ(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenGravityZ(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenGravityZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DHOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenHOffset(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenHOffset(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenHOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow2DHOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenHOffset(this global::Godot.PathFollow2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenHOffset(this global::Godot.PathFollow2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenHOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow3DHOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenHOffset(this global::Godot.PathFollow3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenHOffset(this global::Godot.PathFollow3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenHOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PointLight2DHeightTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenHeight(this global::Godot.PointLight2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenHeight(this global::Godot.PointLight2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenHeight(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DLifetimeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, double> TweenLifetime(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, double> TweenLifetime(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLifetime(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DLifetimeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, double> TweenLifetime(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, double> TweenLifetime(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLifetime(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles2DLifetimeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, double> TweenLifetime(this global::Godot.GpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, double> TweenLifetime(this global::Godot.GpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLifetime(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles3DLifetimeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, double> TweenLifetime(this global::Godot.GpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, double> TweenLifetime(this global::Godot.GpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLifetime(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
         => TweenLightColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
         => TweenLightColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
         => TweenLightColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,System.Action{tweens.gd.LightColor3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, string @to, double @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.LightColor3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.LightColor3DTween>? @configure = default)
         => TweenLightColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a LightColor3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LightColor3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenLightColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenLightColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenLightColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenLightColor(Godot.Light3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, global::Godot.Color> TweenLightColor(this global::Godot.Light3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenLightColor(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a LightEnergy3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightEnergy(this global::Godot.Light3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightEnergy(this global::Godot.Light3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightEnergy(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light3DLightIndirectEnergyTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightIndirectEnergy(this global::Godot.Light3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightIndirectEnergy(this global::Godot.Light3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightIndirectEnergy(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light3DLightTemperatureTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightTemperature(this global::Godot.Light3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightTemperature(this global::Godot.Light3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightTemperature(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light3DLightVolumetricFogEnergyTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightVolumetricFogEnergy(this global::Godot.Light3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenLightVolumetricFogEnergy(this global::Godot.Light3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenLightVolumetricFogEnergy(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer2DMaxDistanceTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenMaxDistance(this global::Godot.AudioStreamPlayer2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenMaxDistance(this global::Godot.AudioStreamPlayer2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenMaxDistance(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer3DMaxDistanceTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenMaxDistance(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenMaxDistance(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenMaxDistance(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialMetallicTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallic(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallic(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenMetallic(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialMetallicTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallic(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallic(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenMetallic(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialMetallicSpecularTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallicSpecular(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallicSpecular(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenMetallicSpecular(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialMetallicSpecularTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallicSpecular(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenMetallicSpecular(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenMetallicSpecular(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.ModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.ModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.ModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.ModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, string @to, double @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.ModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a ModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenModulate(this global::Godot.CanvasItem @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,System.Action{tweens.gd.DecalModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.DecalModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,System.Action{tweens.gd.DecalModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.DecalModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,System.Action{tweens.gd.DecalModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.DecalModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,System.Action{tweens.gd.DecalModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, string @to, double @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.DecalModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.DecalModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a DecalModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Decal,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Color> TweenModulate(this global::Godot.Decal @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, string @to, double @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a Label3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenModulate(this global::Godot.Label3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, string @to, double @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SpriteBase3DModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SpriteBase3DModulateTween>? @configure = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a SpriteBase3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenModulate(Godot.SpriteBase3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Color> TweenModulate(this global::Godot.SpriteBase3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenModulate(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a ModulateAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, float> TweenModulateAlpha(this global::Godot.CanvasItem @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, float> TweenModulateAlpha(this global::Godot.CanvasItem @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulateAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalModulateAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenModulateAlpha(this global::Godot.Decal @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenModulateAlpha(this global::Godot.Decal @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulateAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DModulateAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenModulateAlpha(this global::Godot.Label3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenModulateAlpha(this global::Godot.Label3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulateAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DModulateAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenModulateAlpha(this global::Godot.SpriteBase3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenModulateAlpha(this global::Godot.SpriteBase3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenModulateAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DNearTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenNear(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenNear(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenNear(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialNormalScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenNormalScale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenNormalScale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenNormalScale(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialNormalScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenNormalScale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenNormalScale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenNormalScale(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Camera2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Camera2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Camera2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Camera2DOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Camera2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Camera2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Camera2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Camera2DOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Camera2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenOffset(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,System.Double,System.Action{tweens.gd.CanvasLayerOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.CanvasLayerOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CanvasLayerOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasLayerOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,System.Double,System.Action{tweens.gd.CanvasLayerOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CanvasLayerOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CanvasLayerOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasLayerOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a CanvasLayerOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenOffset(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,System.Double,System.Action{tweens.gd.Label3DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Label3DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Label3DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,System.Double,System.Action{tweens.gd.Label3DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Label3DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Label3DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Label3DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Label3D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Vector2> TweenOffset(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,System.Double,System.Action{tweens.gd.PointLight2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.PointLight2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.PointLight2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.PointLight2DOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,System.Double,System.Action{tweens.gd.PointLight2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.PointLight2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.PointLight2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.PointLight2DOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a PointLight2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PointLight2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PointLight2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.PointLight2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, global::Godot.Vector2> TweenOffset(this global::Godot.PointLight2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Polygon2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Sprite2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Sprite2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Sprite2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Sprite2DOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Sprite2DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Sprite2DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Sprite2DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Sprite2DOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Sprite2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Sprite2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Sprite2DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.Sprite2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Vector2> TweenOffset(this global::Godot.Sprite2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,System.Double,System.Action{tweens.gd.SpriteBase3DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.SpriteBase3DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.SpriteBase3DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SpriteBase3DOffsetTween>? @configure = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,System.Double,System.Action{tweens.gd.SpriteBase3DOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.SpriteBase3DOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.SpriteBase3DOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SpriteBase3DOffsetTween>? @configure = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a SpriteBase3DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffset(Godot.SpriteBase3D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, global::Godot.Vector2> TweenOffset(this global::Godot.SpriteBase3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlOffsetBottomTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetBottom(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetBottom(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetBottom(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetLeftTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetLeft(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetLeft(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetLeft(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetRightTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetRight(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetRight(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetRight(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTopTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTop(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTop(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTop(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPivotTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPivotTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotTween>? @configure = default)
         => TweenOffsetTransformPivot(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPivotTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPivotTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotTween>? @configure = default)
         => TweenOffsetTransformPivot(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlOffsetTransformPivotTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivot(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivot(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivot(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPivot(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivot(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivot(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPivot(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPivotRatioTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotRatioTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPivotRatioTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotRatioTween>? @configure = default)
         => TweenOffsetTransformPivotRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPivotRatioTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotRatioTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPivotRatioTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPivotRatioTween>? @configure = default)
         => TweenOffsetTransformPivotRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlOffsetTransformPivotRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPivotRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPivotRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPivotRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPivotRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlOffsetTransformPivotRatioXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotRatioX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotRatioX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotRatioX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotRatioYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotRatioY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotRatioY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotRatioY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPivotYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPivotY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPivotY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPositionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPositionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionTween>? @configure = default)
         => TweenOffsetTransformPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPositionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPositionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionTween>? @configure = default)
         => TweenOffsetTransformPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlOffsetTransformPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPositionRatioTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionRatioTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPositionRatioTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionRatioTween>? @configure = default)
         => TweenOffsetTransformPositionRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformPositionRatioTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionRatioTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformPositionRatioTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformPositionRatioTween>? @configure = default)
         => TweenOffsetTransformPositionRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlOffsetTransformPositionRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPositionRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformPositionRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformPositionRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformPositionRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlOffsetTransformPositionRatioXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionRatioX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionRatioX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionRatioX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionRatioYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionRatioY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionRatioY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionRatioY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformPositionYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformPositionY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformRotationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformRotation(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformRotation(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformScaleTween>? @configure = default)
         => TweenOffsetTransformScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformScaleTween>? @configure = default)
         => TweenOffsetTransformScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlOffsetTransformScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, double @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetTransformScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetTransformScaleTween>? @configure = default)
         => TweenOffsetTransformScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a ControlOffsetTransformScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsetTransformScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenOffsetTransformScale(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsetTransformScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
     /// <summary>Starts a ControlOffsetTransformScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformScaleX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformScaleX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetTransformScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformScaleY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenOffsetTransformScaleY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetTransformScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenOffsetX(this global::Godot.Camera2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenOffsetX(this global::Godot.Camera2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenOffsetX(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenOffsetX(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenOffsetX(this global::Godot.Label3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenOffsetX(this global::Godot.Label3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PointLight2DOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenOffsetX(this global::Godot.PointLight2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenOffsetX(this global::Godot.PointLight2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenOffsetX(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenOffsetX(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Sprite2DOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, float> TweenOffsetX(this global::Godot.Sprite2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, float> TweenOffsetX(this global::Godot.Sprite2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenOffsetX(this global::Godot.SpriteBase3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenOffsetX(this global::Godot.SpriteBase3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenOffsetY(this global::Godot.Camera2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenOffsetY(this global::Godot.Camera2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenOffsetY(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenOffsetY(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenOffsetY(this global::Godot.Label3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenOffsetY(this global::Godot.Label3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PointLight2DOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenOffsetY(this global::Godot.PointLight2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenOffsetY(this global::Godot.PointLight2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenOffsetY(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenOffsetY(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Sprite2DOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, float> TweenOffsetY(this global::Godot.Sprite2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, float> TweenOffsetY(this global::Godot.Sprite2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenOffsetY(this global::Godot.SpriteBase3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenOffsetY(this global::Godot.SpriteBase3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,System.Double,System.Action{tweens.gd.ControlOffsetsTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, (double X, double Y, double Z, double W) @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetsTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetsTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, (double X, double Y, double Z, double W) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetsTween>? @configure = default)
         => TweenOffsets(@target, new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,System.Double,System.Action{tweens.gd.ControlOffsetsTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlOffsetsTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,tweens.gd.Duration,System.Action{tweens.gd.ControlOffsetsTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlOffsetsTween>? @configure = default)
         => TweenOffsets(@target, global::tweens.gd.EndpointComponents.ToVector4(to), @duration, @configure);
 
     /// <summary>Starts a ControlOffsetsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::Godot.Vector4 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::Godot.Vector4 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsets(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, (double X, double Y, double Z, double W) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, (double X, double Y, double Z, double W) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsets(@target, new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlOffsetsTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOffsets(@target, global::tweens.gd.EndpointComponents.ToVector4(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, (double X, double Y, double Z, double W) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, (double X, double Y, double Z, double W) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsets(@target, new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOffsets(Godot.Control,Godot.Vector4,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector4> TweenOffsets(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOffsets(@target, global::tweens.gd.EndpointComponents.ToVector4(to), @duration, @options);
 
     /// <summary>Starts a OmniLight3DOmniAttenuationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.OmniLight3D, float> TweenOmniAttenuation(this global::Godot.OmniLight3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.OmniLight3D, float> TweenOmniAttenuation(this global::Godot.OmniLight3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOmniAttenuation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a OmniRangeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.OmniLight3D, float> TweenOmniRange(this global::Godot.OmniLight3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.OmniLight3D, float> TweenOmniRange(this global::Godot.OmniLight3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOmniRange(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
         => TweenOutlineModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
         => TweenOutlineModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
         => TweenOutlineModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, string @to, double @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Label3DOutlineModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Label3DOutlineModulateTween>? @configure = default)
         => TweenOutlineModulate(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a Label3DOutlineModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOutlineModulate(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOutlineModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOutlineModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOutlineModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOutlineModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOutlineModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOutlineModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DOutlineModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOutlineModulate(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOutlineModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOutlineModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOutlineModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenOutlineModulate(Godot.Label3D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, global::Godot.Color> TweenOutlineModulate(this global::Godot.Label3D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenOutlineModulate(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a Label3DOutlineModulateAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenOutlineModulateAlpha(this global::Godot.Label3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenOutlineModulateAlpha(this global::Godot.Label3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenOutlineModulateAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer2DPanningStrengthTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenPanningStrength(this global::Godot.AudioStreamPlayer2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenPanningStrength(this global::Godot.AudioStreamPlayer2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPanningStrength(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioStreamPlayer3DPanningStrengthTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenPanningStrength(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenPanningStrength(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPanningStrength(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioPitchScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer, float> TweenPitchScale(this global::Godot.AudioStreamPlayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer, float> TweenPitchScale(this global::Godot.AudioStreamPlayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPitchScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioPitchScale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenPitchScale(this global::Godot.AudioStreamPlayer2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenPitchScale(this global::Godot.AudioStreamPlayer2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPitchScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioPitchScale3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenPitchScale(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenPitchScale(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPitchScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlPivotOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlPivotOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetTween>? @configure = default)
         => TweenPivotOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlPivotOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlPivotOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetTween>? @configure = default)
         => TweenPivotOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlPivotOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPivotOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffset(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffset(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPivotOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlPivotOffsetRatioTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetRatioTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlPivotOffsetRatioTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetRatioTween>? @configure = default)
         => TweenPivotOffsetRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlPivotOffsetRatioTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetRatioTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlPivotOffsetRatioTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlPivotOffsetRatioTween>? @configure = default)
         => TweenPivotOffsetRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlPivotOffsetRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPivotOffsetRatio(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPivotOffsetRatio(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPivotOffsetRatio(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPivotOffsetRatio(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a ControlPivotOffsetRatioXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetRatioX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetRatioX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetRatioX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetRatioYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetRatioY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetRatioY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetRatioY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPivotOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPivotOffsetY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPivotOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Label3DPixelSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenPixelSize(this global::Godot.Label3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label3D, float> TweenPixelSize(this global::Godot.Label3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPixelSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpriteBase3DPixelSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenPixelSize(this global::Godot.SpriteBase3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpriteBase3D, float> TweenPixelSize(this global::Godot.SpriteBase3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPixelSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlPositionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlPositionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlPositionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlPositionTween>? @configure = default)
         => TweenPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlPositionTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlPositionTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlPositionTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlPositionTween>? @configure = default)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPositionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenPosition(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Position2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Position2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Position2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Position2DTween>? @configure = default)
         => TweenPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Position2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Position2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Position2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Position2DTween>? @configure = default)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Position2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPosition(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenPosition(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Position3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.Position3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Position3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Position3DTween>? @configure = default)
         => TweenPosition(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Position3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Position3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Position3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Position3DTween>? @configure = default)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a Position3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPosition(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenPosition(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenPosition(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenPosition(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a ControlPositionXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPositionX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPositionX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position2DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenPositionX(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenPositionX(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position3DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenPositionX(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenPositionX(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlPositionYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPositionY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenPositionY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position2DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenPositionY(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenPositionY(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position3DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenPositionY(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenPositionY(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Position3DZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenPositionZ(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenPositionZ(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenPositionZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow2DProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenProgress(this global::Godot.PathFollow2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenProgress(this global::Godot.PathFollow2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenProgress(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow3DProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenProgress(this global::Godot.PathFollow3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenProgress(this global::Godot.PathFollow3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenProgress(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow2DProgressRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenProgressRatio(this global::Godot.PathFollow2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenProgressRatio(this global::Godot.PathFollow2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenProgressRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow3DProgressRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenProgressRatio(this global::Godot.PathFollow3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenProgressRatio(this global::Godot.PathFollow3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenProgressRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a QuaternionTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Quaternion> TweenQuaternion(this global::Godot.Node @target, global::Godot.Quaternion @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Quaternion> TweenQuaternion(this global::Godot.Node @target, global::Godot.Quaternion @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenQuaternion(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Quaternion3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Quaternion> TweenQuaternion(this global::Godot.Node3D @target, global::Godot.Quaternion @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Quaternion> TweenQuaternion(this global::Godot.Node3D @target, global::Godot.Quaternion @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenQuaternion(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,System.Action{tweens.gd.TextureProgressBarRadialCenterOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarRadialCenterOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarRadialCenterOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarRadialCenterOffsetTween>? @configure = default)
         => TweenRadialCenterOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,System.Action{tweens.gd.TextureProgressBarRadialCenterOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarRadialCenterOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarRadialCenterOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarRadialCenterOffsetTween>? @configure = default)
         => TweenRadialCenterOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a TextureProgressBarRadialCenterOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialCenterOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarRadialCenterOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialCenterOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarRadialCenterOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialCenterOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenRadialCenterOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRadialCenterOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenRadialCenterOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenRadialCenterOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a TextureProgressBarRadialCenterOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialCenterOffsetX(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialCenterOffsetX(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialCenterOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarRadialCenterOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialCenterOffsetY(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialCenterOffsetY(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialCenterOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarRadialFillDegreesTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialFillDegrees(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialFillDegrees(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialFillDegrees(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarRadialInitialAngleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialInitialAngle(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenRadialInitialAngle(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRadialInitialAngle(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DRandomnessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenRandomness(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenRandomness(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRandomness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DRandomnessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenRandomness(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenRandomness(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRandomness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles2DRandomnessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, float> TweenRandomness(this global::Godot.GpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, float> TweenRandomness(this global::Godot.GpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRandomness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles3DRandomnessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, float> TweenRandomness(this global::Godot.GpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, float> TweenRandomness(this global::Godot.GpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRandomness(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Rect2Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Rect2> TweenRect2(this global::Godot.Node @target, global::Godot.Rect2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Rect2> TweenRect2(this global::Godot.Node @target, global::Godot.Rect2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRect2(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Sprite2DRegionRectTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Rect2> TweenRegionRect(this global::Godot.Sprite2D @target, global::Godot.Rect2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Sprite2D, global::Godot.Rect2> TweenRegionRect(this global::Godot.Sprite2D @target, global::Godot.Rect2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRegionRect(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerRotationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenRotation(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenRotation(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlRotationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenRotation(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenRotation(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Rotation2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenRotation(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenRotation(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Rotation3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.Rotation3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Rotation3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Rotation3DTween>? @configure = default)
         => TweenRotation(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Rotation3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Rotation3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Rotation3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Rotation3DTween>? @configure = default)
         => TweenRotation(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a Rotation3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Rotation3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotation(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Rotation3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotation(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenRotation(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenRotation(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenRotation(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenRotation(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a Rotation3DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenRotationX(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenRotationX(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotationX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Rotation3DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenRotationY(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenRotationY(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotationY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Rotation3DZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenRotationZ(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenRotationZ(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRotationZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialRoughnessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenRoughness(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenRoughness(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenRoughness(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialRoughnessTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenRoughness(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenRoughness(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenRoughness(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,System.Double,System.Action{tweens.gd.CanvasLayerScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.CanvasLayerScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CanvasLayerScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasLayerScaleTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,System.Double,System.Action{tweens.gd.CanvasLayerScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.CanvasLayerScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CanvasLayerScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasLayerScaleTween>? @configure = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,System.Double,System.Action{tweens.gd.CanvasLayerScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, double @to, double @duration, global::System.Action<global::tweens.gd.CanvasLayerScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.CanvasLayerScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.CanvasLayerScaleTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a CanvasLayerScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.CanvasLayer,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> TweenScale(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlScaleTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlScaleTween>? @configure = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, double @to, double @duration, global::System.Action<global::tweens.gd.ControlScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlScaleTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a ControlScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenScale(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Scale2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Scale2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Scale2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Scale2DTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Scale2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Scale2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Scale2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Scale2DTween>? @configure = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Scale2DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, double @to, double @duration, global::System.Action<global::tweens.gd.Scale2DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Scale2DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Scale2DTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a Scale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, global::Godot.Vector2> TweenScale(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Scale3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.Scale3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Scale3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Scale3DTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Scale3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Scale3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Scale3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Scale3DTween>? @configure = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,System.Double,System.Action{tweens.gd.Scale3DTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, double @to, double @duration, global::System.Action<global::tweens.gd.Scale3DTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Scale3DTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Scale3DTween>? @configure = default)
         => TweenScale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a Scale3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScale(Godot.Node3D,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, global::Godot.Vector3> TweenScale(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @options);
 
     /// <summary>Starts a CanvasLayerScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenScaleX(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenScaleX(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenScaleX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenScaleX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale2DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenScaleX(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenScaleX(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale3DXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenScaleX(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenScaleX(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CanvasLayerScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenScaleY(this global::Godot.CanvasLayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasLayer, float> TweenScaleY(this global::Godot.CanvasLayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenScaleY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenScaleY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale2DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenScaleY(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenScaleY(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale3DYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenScaleY(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenScaleY(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Scale3DZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenScaleZ(this global::Godot.Node3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node3D, float> TweenScaleZ(this global::Godot.Node3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScaleZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ScrollContainerScrollHorizontalTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ScrollContainer, int> TweenScrollHorizontal(this global::Godot.ScrollContainer @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ScrollContainer, int> TweenScrollHorizontal(this global::Godot.ScrollContainer @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollHorizontal(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DScrollOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DScrollOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DScrollOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DScrollOffsetTween>? @configure = default)
         => TweenScrollOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DScrollOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DScrollOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DScrollOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DScrollOffsetTween>? @configure = default)
         => TweenScrollOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Parallax2DScrollOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScrollOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollOffset(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollOffset(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScrollOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a Parallax2DScrollOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollOffsetX(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollOffsetX(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollOffsetY(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollOffsetY(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DScrollScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DScrollScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DScrollScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DScrollScaleTween>? @configure = default)
         => TweenScrollScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DScrollScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DScrollScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DScrollScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DScrollScaleTween>? @configure = default)
         => TweenScrollScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Parallax2DScrollScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, double @to, double @duration, global::System.Action<global::tweens.gd.Parallax2DScrollScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Parallax2DScrollScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Parallax2DScrollScaleTween>? @configure = default)
         => TweenScrollScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a Parallax2DScrollScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScrollScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScrollScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenScrollScale(Godot.Parallax2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, global::Godot.Vector2> TweenScrollScale(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenScrollScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
     /// <summary>Starts a Parallax2DScrollScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollScaleX(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollScaleX(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Parallax2DScrollScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollScaleY(this global::Godot.Parallax2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Parallax2D, float> TweenScrollScaleY(this global::Godot.Parallax2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ScrollContainerScrollVerticalTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.ScrollContainer, int> TweenScrollVertical(this global::Godot.ScrollContainer @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.ScrollContainer, int> TweenScrollVertical(this global::Godot.ScrollContainer @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenScrollVertical(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.SelfModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SelfModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
         => TweenSelfModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.SelfModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SelfModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
         => TweenSelfModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.SelfModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SelfModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
         => TweenSelfModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,System.Action{tweens.gd.SelfModulateTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, string @to, double @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.SelfModulateTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.SelfModulateTween>? @configure = default)
         => TweenSelfModulate(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a SelfModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSelfModulate(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SelfModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSelfModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SelfModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSelfModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SelfModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSelfModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SelfModulateTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSelfModulate(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSelfModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSelfModulate(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSelfModulate(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSelfModulate(Godot.CanvasItem,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, global::Godot.Color> TweenSelfModulate(this global::Godot.CanvasItem @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSelfModulate(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a SelfModulateAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, float> TweenSelfModulateAlpha(this global::Godot.CanvasItem @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CanvasItem, float> TweenSelfModulateAlpha(this global::Godot.CanvasItem @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSelfModulateAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.Light2DShadowColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Light2DShadowColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
         => TweenShadowColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.Light2DShadowColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Light2DShadowColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
         => TweenShadowColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.Light2DShadowColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Light2DShadowColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
         => TweenShadowColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,System.Action{tweens.gd.Light2DShadowColorTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, string @to, double @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.Light2DShadowColorTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Light2DShadowColorTween>? @configure = default)
         => TweenShadowColor(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a Light2DShadowColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowColor(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light2DShadowColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light2DShadowColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light2DShadowColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light2DShadowColorTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowColor(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenShadowColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenShadowColor(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenShadowColor(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenShadowColor(Godot.Light2D,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, global::Godot.Color> TweenShadowColor(this global::Godot.Light2D @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenShadowColor(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a Light2DShadowColorAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, float> TweenShadowColorAlpha(this global::Godot.Light2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light2D, float> TweenShadowColorAlpha(this global::Godot.Light2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowColorAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Light3DShadowOpacityTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenShadowOpacity(this global::Godot.Light3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Light3D, float> TweenShadowOpacity(this global::Godot.Light3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenShadowOpacity(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera3DSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenSize(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenSize(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.ControlSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlSizeTween>? @configure = default)
         => TweenSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,System.Double,System.Action{tweens.gd.ControlSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.ControlSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.ControlSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.ControlSizeTween>? @configure = default)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a ControlSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSize(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Control,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, global::Godot.Vector2> TweenSize(this global::Godot.Control @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,System.Double,System.Action{tweens.gd.DecalSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.DecalSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.DecalSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.DecalSizeTween>? @configure = default)
         => TweenSize(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,System.Double,System.Action{tweens.gd.DecalSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.DecalSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.DecalSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.DecalSizeTween>? @configure = default)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a DecalSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSize(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.Decal,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, global::Godot.Vector3> TweenSize(this global::Godot.Decal @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,System.Double,System.Action{tweens.gd.FogVolumeSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.FogVolumeSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.FogVolumeSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.FogVolumeSizeTween>? @configure = default)
         => TweenSize(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,System.Double,System.Action{tweens.gd.FogVolumeSizeTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.FogVolumeSizeTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.FogVolumeSizeTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.FogVolumeSizeTween>? @configure = default)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a FogVolumeSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a FogVolumeSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a FogVolumeSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSize(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenSize(Godot.FogVolume,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, global::Godot.Vector3> TweenSize(this global::Godot.FogVolume @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenSize(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
     /// <summary>Starts a ControlSizeFlagsStretchRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenSizeFlagsStretchRatio(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenSizeFlagsStretchRatio(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeFlagsStretchRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlSizeXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenSizeX(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenSizeX(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalSizeXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenSizeX(this global::Godot.Decal @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenSizeX(this global::Godot.Decal @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a FogVolumeSizeXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, float> TweenSizeX(this global::Godot.FogVolume @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, float> TweenSizeX(this global::Godot.FogVolume @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a ControlSizeYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenSizeY(this global::Godot.Control @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Control, float> TweenSizeY(this global::Godot.Control @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalSizeYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenSizeY(this global::Godot.Decal @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenSizeY(this global::Godot.Decal @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a FogVolumeSizeYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, float> TweenSizeY(this global::Godot.FogVolume @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, float> TweenSizeY(this global::Godot.FogVolume @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a DecalSizeZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenSizeZ(this global::Godot.Decal @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Decal, float> TweenSizeZ(this global::Godot.Decal @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a FogVolumeSizeZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, float> TweenSizeZ(this global::Godot.FogVolume @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.FogVolume, float> TweenSizeZ(this global::Godot.FogVolume @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSizeZ(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Skew2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenSkew(this global::Godot.Node2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node2D, float> TweenSkew(this global::Godot.Node2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSkew(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AnimatedSprite2DSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite2D, float> TweenSpeedScale(this global::Godot.AnimatedSprite2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite2D, float> TweenSpeedScale(this global::Godot.AnimatedSprite2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AnimatedSprite3DSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite3D, float> TweenSpeedScale(this global::Godot.AnimatedSprite3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AnimatedSprite3D, float> TweenSpeedScale(this global::Godot.AnimatedSprite3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AnimationPlayerSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AnimationPlayer, float> TweenSpeedScale(this global::Godot.AnimationPlayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AnimationPlayer, float> TweenSpeedScale(this global::Godot.AnimationPlayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, double> TweenSpeedScale(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, double> TweenSpeedScale(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, double> TweenSpeedScale(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, double> TweenSpeedScale(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles2DSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, double> TweenSpeedScale(this global::Godot.GpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles2D, double> TweenSpeedScale(this global::Godot.GpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GpuParticles3DSpeedScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, double> TweenSpeedScale(this global::Godot.GpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GpuParticles3D, double> TweenSpeedScale(this global::Godot.GpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpeedScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpotAngleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotAngle(this global::Godot.SpotLight3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotAngle(this global::Godot.SpotLight3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpotAngle(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpotLight3DSpotAngleAttenuationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotAngleAttenuation(this global::Godot.SpotLight3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotAngleAttenuation(this global::Godot.SpotLight3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpotAngleAttenuation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpotLight3DSpotAttenuationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotAttenuation(this global::Godot.SpotLight3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotAttenuation(this global::Godot.SpotLight3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpotAttenuation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpotRangeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotRange(this global::Godot.SpotLight3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpotLight3D, float> TweenSpotRange(this global::Godot.SpotLight3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpotRange(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles2DSpreadTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenSpread(this global::Godot.CpuParticles2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles2D, float> TweenSpread(this global::Godot.CpuParticles2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpread(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a CpuParticles3DSpreadTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenSpread(this global::Godot.CpuParticles3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.CpuParticles3D, float> TweenSpread(this global::Godot.CpuParticles3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpread(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a SpringArm3DSpringLengthTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.SpringArm3D, float> TweenSpringLength(this global::Godot.SpringArm3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.SpringArm3D, float> TweenSpringLength(this global::Godot.SpringArm3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenSpringLength(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DTextureOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DTextureOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DTextureOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DTextureOffsetTween>? @configure = default)
         => TweenTextureOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DTextureOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DTextureOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DTextureOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DTextureOffsetTween>? @configure = default)
         => TweenTextureOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Polygon2DTextureOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureOffset(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureOffset(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a Polygon2DTextureOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureOffsetX(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureOffsetX(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureOffsetY(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureOffsetY(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,System.Action{tweens.gd.TextureProgressBarTextureProgressOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTextureProgressOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTextureProgressOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTextureProgressOffsetTween>? @configure = default)
         => TweenTextureProgressOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,System.Action{tweens.gd.TextureProgressBarTextureProgressOffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTextureProgressOffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTextureProgressOffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTextureProgressOffsetTween>? @configure = default)
         => TweenTextureProgressOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a TextureProgressBarTextureProgressOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureProgressOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTextureProgressOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureProgressOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTextureProgressOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureProgressOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureProgressOffset(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureProgressOffset(Godot.TextureProgressBar,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Vector2> TweenTextureProgressOffset(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureProgressOffset(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a TextureProgressBarTextureProgressOffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTextureProgressOffsetX(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTextureProgressOffsetX(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureProgressOffsetX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTextureProgressOffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTextureProgressOffsetY(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTextureProgressOffsetY(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureProgressOffsetY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureRotationTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureRotation(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureRotation(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureRotation(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PointLight2DTextureScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenTextureScale(this global::Godot.PointLight2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PointLight2D, float> TweenTextureScale(this global::Godot.PointLight2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DTextureScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DTextureScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DTextureScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DTextureScaleTween>? @configure = default)
         => TweenTextureScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DTextureScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DTextureScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DTextureScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DTextureScaleTween>? @configure = default)
         => TweenTextureScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Polygon2DTextureScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, double @to, double @duration, global::System.Action<global::tweens.gd.Polygon2DTextureScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Polygon2DTextureScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Polygon2DTextureScaleTween>? @configure = default)
         => TweenTextureScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @configure);
 
     /// <summary>Starts a Polygon2DTextureScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScale(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureScale(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureScale(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTextureScale(Godot.Polygon2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2> TweenTextureScale(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTextureScale(@target, new global::Godot.Vector2((float)to, (float)to), @duration, @options);
 
     /// <summary>Starts a Polygon2DTextureScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureScaleX(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureScaleX(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScaleX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Polygon2DTextureScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureScaleY(this global::Godot.Polygon2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Polygon2D, float> TweenTextureScaleY(this global::Godot.Polygon2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTextureScaleY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
         => TweenTintOver(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
         => TweenTintOver(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
         => TweenTintOver(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintOverTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintOverTween>? @configure = default)
         => TweenTintOver(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a TextureProgressBarTintOverTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintOver(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintOverTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintOver(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintOverTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintOver(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintOverTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintOver(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintOverTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintOver(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintOver(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintOver(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintOver(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintOver(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintOver(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintOver(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a TextureProgressBarTintOverAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTintOverAlpha(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTintOverAlpha(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintOverAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
         => TweenTintProgress(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
         => TweenTintProgress(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
         => TweenTintProgress(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintProgressTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintProgressTween>? @configure = default)
         => TweenTintProgress(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a TextureProgressBarTintProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintProgress(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintProgress(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintProgress(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintProgress(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintProgressTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintProgress(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintProgress(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintProgress(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintProgress(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintProgress(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintProgress(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintProgress(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a TextureProgressBarTintProgressAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTintProgressAlpha(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTintProgressAlpha(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintProgressAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
         => TweenTintUnder(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
         => TweenTintUnder(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
         => TweenTintUnder(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,System.Action{tweens.gd.TextureProgressBarTintUnderTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.TextureProgressBarTintUnderTween>? @configure = default)
         => TweenTintUnder(@target, new global::Godot.Color(to), @duration, @configure);
 
     /// <summary>Starts a TextureProgressBarTintUnderTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::Godot.Color @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::Godot.Color @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintUnder(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintUnderTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintUnder(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintUnderTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintUnder(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintUnderTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintUnder(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a TextureProgressBarTintUnderTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintUnder(@target, new global::Godot.Color(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintUnder(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, (double R, double G, double B, double A) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintUnder(@target, new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintUnder(@target, global::tweens.gd.EndpointComponents.ToColor(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, string @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenTintUnder(Godot.TextureProgressBar,Godot.Color,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, global::Godot.Color> TweenTintUnder(this global::Godot.TextureProgressBar @target, string @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenTintUnder(@target, new global::Godot.Color(to), @duration, @options);
 
     /// <summary>Starts a TextureProgressBarTintUnderAlphaTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTintUnderAlpha(this global::Godot.TextureProgressBar @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.TextureProgressBar, float> TweenTintUnderAlpha(this global::Godot.TextureProgressBar @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTintUnderAlpha(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a GeometryInstance3DTransparencyTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.GeometryInstance3D, float> TweenTransparency(this global::Godot.GeometryInstance3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.GeometryInstance3D, float> TweenTransparency(this global::Godot.GeometryInstance3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenTransparency(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUV2OffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUV2OffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default)
         => TweenUV2Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUV2OffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUV2OffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default)
         => TweenUV2Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @configure);
 
     /// <summary>Starts a MaterialUV2OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Offset(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUV2Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUV2Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2OffsetTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2OffsetTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2OffsetTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2OffsetTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @configure, @owner);
 
     /// <summary>Starts a MaterialUV2OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUV2Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @options, @owner);
 
     /// <summary>Starts a MaterialUV2OffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2OffsetX(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2OffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2OffsetX(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2OffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2OffsetY(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2OffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2OffsetY(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2OffsetZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2OffsetZ(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2OffsetZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2OffsetZ(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUV2ScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUV2ScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUV2ScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUV2ScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default)
         => TweenUV2Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUV2ScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUV2ScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @owner, @configure);
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Scale(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUV2Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2ScaleTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2ScaleTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2ScaleTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2ScaleTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2ScaleTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUV2ScaleTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUV2ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @tree, @configure, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUV2Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUV2Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUV2Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @tree, @options, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2ScaleX(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2ScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2ScaleX(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2ScaleY(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2ScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2ScaleY(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUV2ScaleZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUV2ScaleZ(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUV2ScaleZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUV2ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUV2ScaleZ(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a AudioStreamPlayer3DUnitSizeTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenUnitSize(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenUnitSize(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUnitSize(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUv1OffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUv1OffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default)
         => TweenUv1Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUv1OffsetTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUv1OffsetTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default)
         => TweenUv1Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @configure);
 
     /// <summary>Starts a MaterialUv1OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Offset(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUv1Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUv1Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1OffsetTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1OffsetTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1OffsetTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1OffsetTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1OffsetTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @configure, @owner);
 
     /// <summary>Starts a MaterialUv1OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1OffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Offset(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Offset(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUv1Offset(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @options, @owner);
 
     /// <summary>Starts a MaterialUv1OffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1OffsetX(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1OffsetXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1OffsetX(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1OffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1OffsetY(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1OffsetYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1OffsetY(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1OffsetZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1OffsetZ(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1OffsetZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1OffsetZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1OffsetZ(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUv1ScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUv1ScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUv1ScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUv1ScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default)
         => TweenUv1Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,System.Action{tweens.gd.MaterialUv1ScaleTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,System.Action{tweens.gd.MaterialUv1ScaleTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @owner, @configure);
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Scale(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUv1Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.Node,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.Node,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.TweenOptions @options)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @owner, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1ScaleTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1ScaleTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1ScaleTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1ScaleTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @configure, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1ScaleTween},Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,System.Action{tweens.gd.MaterialUv1ScaleTween},Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::System.Action<global::tweens.gd.MaterialUv1ScaleTween>? @configure = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @tree, @configure, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @tree, @options, @owner);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,System.Double,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenUv1Scale(Godot.BaseMaterial3D,Godot.Vector3,tweens.gd.Duration,Godot.SceneTree,tweens.gd.TweenOptions,Godot.Node)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, global::Godot.Vector3> TweenUv1Scale(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.TweenOptions @options, global::Godot.Node? @owner = default)
         => TweenUv1Scale(@target, new global::Godot.Vector3((float)to, (float)to, (float)to), @duration, @tree, @options, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1ScaleX(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1ScaleXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleX(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleX(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1ScaleX(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1ScaleY(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1ScaleYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleY(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleY(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1ScaleY(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a MaterialUv1ScaleZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.Node @owner, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenUv1ScaleZ(@target, @to, @duration, @owner, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a MaterialUv1ScaleZTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, double @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, double @delay = 0, global::Godot.Node? @owner = default)
+    public static global::tweens.gd.TweenInstance<global::Godot.BaseMaterial3D, float> TweenUv1ScaleZ(this global::Godot.BaseMaterial3D @target, double @to, global::tweens.gd.Duration @duration, global::Godot.SceneTree @tree, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default, global::Godot.Node? @owner = default)
         => TweenUv1ScaleZ(@target, @to, @duration, @tree, definition => { definition.Ease = @ease; definition.Delay = @delay; }, @owner);
 
     /// <summary>Starts a Camera3DVOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenVOffset(this global::Godot.Camera3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera3D, float> TweenVOffset(this global::Godot.Camera3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow2DVOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenVOffset(this global::Godot.PathFollow2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow2D, float> TweenVOffset(this global::Godot.PathFollow2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a PathFollow3DVOffsetTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenVOffset(this global::Godot.PathFollow3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.PathFollow3D, float> TweenVOffset(this global::Godot.PathFollow3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVOffset(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a RangeValueTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Range, double> TweenValue(this global::Godot.Range @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Range, double> TweenValue(this global::Godot.Range @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenValue(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,System.Double,System.Action{tweens.gd.Vector2Tween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Vector2Tween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Vector2Tween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Vector2Tween>? @configure = default)
         => TweenVector2(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,System.Double,System.Action{tweens.gd.Vector2Tween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Vector2Tween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Vector2Tween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Vector2Tween>? @configure = default)
         => TweenVector2(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Vector2Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector2(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Vector2Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector2(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Vector2Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector2(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenVector2(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector2(Godot.Node,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector2> TweenVector2(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenVector2(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,System.Double,System.Action{tweens.gd.Vector3Tween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, (double X, double Y, double Z) @to, double @duration, global::System.Action<global::tweens.gd.Vector3Tween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Vector3Tween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Vector3Tween>? @configure = default)
         => TweenVector3(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,System.Double,System.Action{tweens.gd.Vector3Tween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Vector3Tween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,tweens.gd.Duration,System.Action{tweens.gd.Vector3Tween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Vector3Tween>? @configure = default)
         => TweenVector3(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @configure);
 
     /// <summary>Starts a Vector3Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::Godot.Vector3 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::Godot.Vector3 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector3(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Vector3Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector3(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Vector3Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector3(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, (double X, double Y, double Z) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, (double X, double Y, double Z) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenVector3(@target, new global::Godot.Vector3((float)to.X, (float)to.Y, (float)to.Z), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector3(Godot.Node,Godot.Vector3,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector3> TweenVector3(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenVector3(@target, global::tweens.gd.EndpointComponents.ToVector3(to), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,System.Double,System.Action{tweens.gd.Vector4Tween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, (double X, double Y, double Z, double W) @to, double @duration, global::System.Action<global::tweens.gd.Vector4Tween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,tweens.gd.Duration,System.Action{tweens.gd.Vector4Tween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, (double X, double Y, double Z, double W) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Vector4Tween>? @configure = default)
         => TweenVector4(@target, new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,System.Double,System.Action{tweens.gd.Vector4Tween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Vector4Tween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,tweens.gd.Duration,System.Action{tweens.gd.Vector4Tween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Vector4Tween>? @configure = default)
         => TweenVector4(@target, global::tweens.gd.EndpointComponents.ToVector4(to), @duration, @configure);
 
     /// <summary>Starts a Vector4Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::Godot.Vector4 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::Godot.Vector4 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector4(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Vector4Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, (double X, double Y, double Z, double W) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, (double X, double Y, double Z, double W) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector4(@target, new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Vector4Tween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVector4(@target, global::tweens.gd.EndpointComponents.ToVector4(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, (double X, double Y, double Z, double W) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, (double X, double Y, double Z, double W) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenVector4(@target, new global::Godot.Vector4((float)to.X, (float)to.Y, (float)to.Z, (float)to.W), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenVector4(Godot.Node,Godot.Vector4,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Node, global::Godot.Vector4> TweenVector4(this global::Godot.Node @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenVector4(@target, global::tweens.gd.EndpointComponents.ToVector4(to), @duration, @options);
 
     /// <summary>Starts a LabelVisibleCharactersTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label, int> TweenVisibleCharacters(this global::Godot.Label @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label, int> TweenVisibleCharacters(this global::Godot.Label @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVisibleCharacters(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a RichTextLabelVisibleCharactersTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.RichTextLabel, int> TweenVisibleCharacters(this global::Godot.RichTextLabel @target, int @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.RichTextLabel, int> TweenVisibleCharacters(this global::Godot.RichTextLabel @target, int @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVisibleCharacters(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a LabelVisibleRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Label, float> TweenVisibleRatio(this global::Godot.Label @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Label, float> TweenVisibleRatio(this global::Godot.Label @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVisibleRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a RichTextLabelVisibleRatioTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.RichTextLabel, float> TweenVisibleRatio(this global::Godot.RichTextLabel @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.RichTextLabel, float> TweenVisibleRatio(this global::Godot.RichTextLabel @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVisibleRatio(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioVolumeDbTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer, float> TweenVolumeDb(this global::Godot.AudioStreamPlayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer, float> TweenVolumeDb(this global::Godot.AudioStreamPlayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVolumeDb(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioVolumeDb2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenVolumeDb(this global::Godot.AudioStreamPlayer2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenVolumeDb(this global::Godot.AudioStreamPlayer2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVolumeDb(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioVolumeDb3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenVolumeDb(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenVolumeDb(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVolumeDb(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioVolumeLinearTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer, float> TweenVolumeLinear(this global::Godot.AudioStreamPlayer @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer, float> TweenVolumeLinear(this global::Godot.AudioStreamPlayer @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVolumeLinear(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioVolumeLinear2DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenVolumeLinear(this global::Godot.AudioStreamPlayer2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer2D, float> TweenVolumeLinear(this global::Godot.AudioStreamPlayer2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVolumeLinear(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a AudioVolumeLinear3DTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenVolumeLinear(this global::Godot.AudioStreamPlayer3D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.AudioStreamPlayer3D, float> TweenVolumeLinear(this global::Godot.AudioStreamPlayer3D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenVolumeLinear(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Line2DWidthTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, float> TweenWidth(this global::Godot.Line2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Line2D, float> TweenWidth(this global::Godot.Line2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenWidth(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Camera2DZoomTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, (double X, double Y) @to, double @duration, global::System.Action<global::tweens.gd.Camera2DZoomTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Camera2DZoomTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Camera2DZoomTween>? @configure = default)
         => TweenZoom(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @configure);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,System.Double,System.Action{tweens.gd.Camera2DZoomTween})"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::System.Action<global::tweens.gd.Camera2DZoomTween>? @configure = default)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,System.Action{tweens.gd.Camera2DZoomTween})"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::System.Action<global::tweens.gd.Camera2DZoomTween>? @configure = default)
         => TweenZoom(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @configure);
 
     /// <summary>Starts a Camera2DZoomTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::Godot.Vector2 @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::Godot.Vector2 @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenZoom(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DZoomTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenZoom(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DZoomTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenZoom(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, (double X, double Y) @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, (double X, double Y) @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenZoom(@target, new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @options);
 
-    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,System.Double,tweens.gd.TweenOptions)"/>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, double @duration, global::tweens.gd.TweenOptions @options)
+    /// <inheritdoc cref="M:tweens.gd.TweenExtensions.TweenZoom(Godot.Camera2D,Godot.Vector2,tweens.gd.Duration,tweens.gd.TweenOptions)"/>
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, global::Godot.Vector2> TweenZoom(this global::Godot.Camera2D @target, global::System.ReadOnlySpan<double> @to, global::tweens.gd.Duration @duration, global::tweens.gd.TweenOptions @options)
         => TweenZoom(@target, global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @options);
 
     /// <summary>Starts a Camera2DZoomXTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenZoomX(this global::Godot.Camera2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenZoomX(this global::Godot.Camera2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenZoomX(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 
     /// <summary>Starts a Camera2DZoomYTween with an easing and a delay.</summary>
-    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenZoomY(this global::Godot.Camera2D @target, double @to, double @duration, global::tweens.gd.EaseType @ease, double @delay = 0)
+    public static global::tweens.gd.TweenInstance<global::Godot.Camera2D, float> TweenZoomY(this global::Godot.Camera2D @target, double @to, global::tweens.gd.Duration @duration, global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default)
         => TweenZoomY(@target, @to, @duration, definition => { definition.Ease = @ease; definition.Delay = @delay; });
 }

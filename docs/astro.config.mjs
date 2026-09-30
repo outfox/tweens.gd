@@ -123,7 +123,6 @@ export default defineConfig({
 			description: "A tweening library for Godot (that doesn't suck.)",
 			tableOfContents: false,
 			customCss: [
-				'@fontsource-variable/bricolage-grotesque/standard.css',
 				'@fontsource-variable/figtree',
 				'@fontsource-variable/jetbrains-mono',
 				'./src/styles/theme.css',

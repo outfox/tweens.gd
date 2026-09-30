@@ -24,17 +24,18 @@ public class StructuredGeneratorTests
         namespace tweens.gd
         {
             public enum EaseType { Linear }
+            public readonly record struct Duration(double Seconds);
             public readonly record struct TweenOptions
             {
                 public EaseType Ease { get; init; }
-                public double Duration { get; init; }
+                public Duration Duration { get; init; }
                 public Func<float, float>? EaseFunction { get; init; }
                 internal void CopyTo(TweenOptionsBuilder target) { }
             }
             public class TweenOptionsBuilder
             {
                 public EaseType Ease { get; set; }
-                public double Duration { get; set; }
+                public Duration Duration { get; set; }
                 public Func<float, float>? EaseFunction { get; set; }
                 public static int Ignored { get; set; }
                 public int ReadOnly => 0;
@@ -180,18 +181,18 @@ public class StructuredGeneratorTests
                     internal static Godot.Color ToColor(System.ReadOnlySpan<double> to) => default;
                 }
                 public enum Mode { A, B }
-                public class Configurable { public EaseType Ease { get; set; } public double Delay { get; set; } }
+                public class Configurable { public EaseType Ease { get; set; } public Duration Delay { get; set; } }
                 public static partial class TweenExtensions
                 {
                     public static TweenInstance<Targets.Widget, Godot.Vector2> TweenScale(this Targets.Widget target,
-                        Godot.Vector2 to, double duration, System.Action<Configurable>? configure = null, int count = 2,
+                        Godot.Vector2 to, Duration duration, System.Action<Configurable>? configure = null, int count = 2,
                         bool flag = true, Mode mode = Mode.B, float factor = 1.5f, string? label = "x") => new();
                     public static TweenInstance<Targets.Widget, Godot.Color> TweenTint(this Targets.Widget target,
-                        Godot.Color to, double duration, TweenOptions options) => new();
+                        Godot.Color to, Duration duration, TweenOptions options) => new();
                     public static TweenInstance<Targets.Widget, float> TweenFade(this Targets.Widget target,
-                        double to, double duration, System.Action<Configurable>? configure = null) => new();
+                        double to, Duration duration, System.Action<Configurable>? configure = null) => new();
                     public static TweenInstance<Targets.Widget, TValue> TweenAny<TValue>(this Targets.Widget target,
-                        TValue to, double duration) where TValue : struct => new();
+                        TValue to, Duration duration) where TValue : struct => new();
                 }
             }
             """;
@@ -216,7 +217,9 @@ public class StructuredGeneratorTests
             .Single(method => method.Parameters[1].Type.ToDisplayString() == "Godot.Vector2" && method.Parameters.Any(p => p.Name == "ease"));
         Assert.Equal(["target", "to", "duration", "ease", "delay", "count", "flag", "mode", "factor", "label"],
             eased.Parameters.Select(parameter => parameter.Name));
-        Assert.Equal(new object?[] { 0d, 2, true, 1, 1.5f, "x" }, eased.Parameters.Skip(4).Select(parameter => parameter.ExplicitDefaultValue));
+        Assert.Equal(new object?[] { null, 2, true, 1, 1.5f, "x" }, eased.Parameters.Skip(4).Select(parameter => parameter.ExplicitDefaultValue));
+        Assert.Equal("tweens.gd.Duration", eased.Parameters[2].Type.ToDisplayString());
+        Assert.Equal("tweens.gd.Duration", eased.Parameters[4].Type.ToDisplayString());
         Assert.False(eased.Parameters[3].HasExplicitDefaultValue);
     }
 
@@ -225,7 +228,7 @@ public class StructuredGeneratorTests
     {
         var compilation = CreateCompilation(Contracts, Adapter);
         var (driver, _, _) = Run(compilation);
-        var changedContracts = Contracts.Replace("public double Duration", "public double Delay");
+        var changedContracts = Contracts.Replace("public Duration Duration", "public Duration Delay");
         compilation = compilation.ReplaceSyntaxTree(compilation.SyntaxTrees.First(), Parse(changedContracts));
         var changed = Run(compilation, driver);
         var definition = changed.Output.GetTypeByMetadataName("Tweens.Opacity")!;

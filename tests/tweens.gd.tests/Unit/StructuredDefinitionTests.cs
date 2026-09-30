@@ -17,8 +17,8 @@ public class StructuredDefinitionTests
 
     private static readonly Dictionary<string, object?> OptionValues = new()
     {
-        ["Duration"] = 1.25, ["FactorDuration"] = 2.0, ["DeltaDuration"] = 0.25, ["Delay"] = 0.5, ["FactorDelay"] = 3.0, ["DeltaDelay"] = 0.125, ["PingPongInterval"] = 0.25, ["RepeatInterval"] = 0.75,
-        ["Offset"] = 0.125, ["Repeats"] = 2, ["UsePingPong"] = true, ["UseUnscaledTime"] = true,
+        ["Duration"] = (Duration)1.25, ["FactorDuration"] = 2.0, ["DeltaDuration"] = (Duration)0.25, ["Delay"] = (Duration)0.5, ["FactorDelay"] = 3.0, ["DeltaDelay"] = (Duration)0.125, ["PingPongInterval"] = (Duration)0.25, ["RepeatInterval"] = (Duration)0.75,
+        ["Offset"] = (Duration)0.125, ["Repeats"] = 2, ["UsePingPong"] = true, ["UseUnscaledTime"] = true,
         ["Fill"] = FillMode.None, ["Ease"] = EaseType.QuadIn, ["Skew"] = 2.0, ["Weks"] = 0.5, ["EaseFunction"] = Ease, ["Curve"] = null,
         ["ProcessMode"] = TweenProcessMode.Physics, ["PauseMode"] = TweenPauseMode.Always,
         ["SuppressCallbacksWhenTargetInvalid"] = true,
@@ -103,7 +103,7 @@ public class StructuredDefinitionTests
         var binding = Binding(typeof(TDefinition));
         var primary = Primary(typeof(TDefinition), typeof(TValue));
         object endpoint = Endpoint(typeof(TDefinition), typeof(TValue)) == typeof(double) && to is float single ? (double)single : to;
-        var given = (TDefinition)primary.Invoke([.. binding, endpoint, 1.25, EaseType.QuadIn, 0.5]);
+        var given = (TDefinition)primary.Invoke([.. binding, endpoint, (Duration)1.25, EaseType.QuadIn, (Duration)0.5]);
         Assert.Equal(to, Get(given, "To"));
         Assert.Null(Get(given, "From"));
         Assert.Equal(timing, Get(given, "Options"));
@@ -125,7 +125,7 @@ public class StructuredDefinitionTests
         foreach (var constructor in shorthands)
         {
             var (argument, expected) = Shorthands.Create(constructor.GetParameters()[0].ParameterType, to);
-            var shorthand = (TDefinition)Shorthands.Invoke(constructor, [argument, 1.25, EaseType.QuadIn, 0.5])!;
+            var shorthand = (TDefinition)Shorthands.Invoke(constructor, [argument, (Duration)1.25, EaseType.QuadIn, (Duration)0.5])!;
             Assert.Equal(expected, Get(shorthand, "To"));
             Assert.Equal(timing, Get(shorthand, "Options"));
         }
@@ -171,7 +171,7 @@ public class StructuredDefinitionTests
 
         var structured = (TDefinition)boxed;
         var options = (TweenOptions)typeof(TDefinition).GetProperty("Options")!.GetValue(structured)!;
-        Assert.Equal(1.25, options.Duration);
+        Assert.Equal((Duration)1.25, options.Duration);
         Assert.Equal(FillMode.None, options.Fill);
 
         var playback = structured.CreatePlayback();

@@ -12,15 +12,15 @@ namespace Tweens;
 public readonly record struct Polygon2DTextureScale : ITweenDefinition<global::Godot.Polygon2D, global::Godot.Vector2>
 {
     public TweenOptions Options { get; init; }
-    public double @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
+    public global::tweens.gd.Duration @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
     public double @FactorDuration { get => Options.@FactorDuration; init => Options = Options with { @FactorDuration = value }; }
-    public double @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
-    public double @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
+    public global::tweens.gd.Duration @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
+    public global::tweens.gd.Duration @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
     public double @FactorDelay { get => Options.@FactorDelay; init => Options = Options with { @FactorDelay = value }; }
-    public double @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
-    public double @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
-    public double @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
-    public double @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
+    public global::tweens.gd.Duration @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
+    public global::tweens.gd.Duration @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
+    public global::tweens.gd.Duration @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
+    public global::tweens.gd.Duration @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
     public int @Repeats { get => Options.@Repeats; init => Options = Options with { @Repeats = value }; }
     public bool @UsePingPong { get => Options.@UsePingPong; init => Options = Options with { @UsePingPong = value }; }
     public bool @UseUnscaledTime { get => Options.@UseUnscaledTime; init => Options = Options with { @UseUnscaledTime = value }; }
@@ -63,22 +63,22 @@ public readonly record struct Polygon2DTextureScale : ITweenDefinition<global::G
     public Action<TweenInstance<global::Godot.Polygon2D, global::Godot.Vector2>>? OnFinally { get; init; }
 
     /// <summary>Sets the endpoint and common timing.</summary>
-    public Polygon2DTextureScale(global::Godot.Vector2 to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public Polygon2DTextureScale(global::Godot.Vector2 to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 
     /// <summary>Sets the endpoint from components and common timing.</summary>
-    public Polygon2DTextureScale((double X, double Y) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public Polygon2DTextureScale((double X, double Y) to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(new global::Godot.Vector2((float)to.X, (float)to.Y), @duration, @ease, @delay) { }
 
     /// <summary>Sets the endpoint from a component collection and common timing.</summary>
-    public Polygon2DTextureScale(global::System.ReadOnlySpan<double> to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public Polygon2DTextureScale(global::System.ReadOnlySpan<double> to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(global::tweens.gd.EndpointComponents.ToVector2(to), @duration, @ease, @delay) { }
 
     /// <summary>Sets the endpoint from one value for every axis and common timing.</summary>
-    public Polygon2DTextureScale(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public Polygon2DTextureScale(double to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(new global::Godot.Vector2((float)to, (float)to), @duration, @ease, @delay) { }
 
     TweenDefinition<global::Godot.Polygon2D, global::Godot.Vector2> ITweenDefinition<global::Godot.Polygon2D, global::Godot.Vector2>.CreatePlayback()

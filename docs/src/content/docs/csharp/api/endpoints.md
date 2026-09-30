@@ -28,9 +28,9 @@ when the tween starts, each value becomes factor × value + delta. See
 | `FactorFrom`, `FactorTo`, `FactorBy` | `double` | `1` | Multiply `From`, `To`, or `By` when the tween starts |
 | `DeltaFrom`, `DeltaTo`, `DeltaBy` | `TValue?` | `null` | Then add this; `null` adds nothing |
 | `FactorDuration` | `double` | `1` | Multiply `Duration` |
-| `DeltaDuration` | `double` | `0` | Then add these seconds |
+| `DeltaDuration` | `Duration` | `0` | Then add these seconds |
 | `FactorDelay` | `double` | `1` | Multiply `Delay` |
-| `DeltaDelay` | `double` | `0` | Then add these seconds, as in a per-start stagger |
+| `DeltaDelay` | `Duration` | `0` | Then add these seconds, as in a per-start stagger |
 | `Skew` | `double` | `1` | Forward progress exponent before easing: above 1 starts slower, below 1 faster |
 | `Weks` | `double` | `1` | Independent exponent for descending ping-pong return progress before easing; set equal to `Skew` to retrace |
 

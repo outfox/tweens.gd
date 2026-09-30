@@ -12,15 +12,15 @@ namespace Tweens;
 public readonly record struct SpotAngle : ITweenDefinition<global::Godot.SpotLight3D, float>
 {
     public TweenOptions Options { get; init; }
-    public double @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
+    public global::tweens.gd.Duration @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
     public double @FactorDuration { get => Options.@FactorDuration; init => Options = Options with { @FactorDuration = value }; }
-    public double @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
-    public double @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
+    public global::tweens.gd.Duration @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
+    public global::tweens.gd.Duration @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
     public double @FactorDelay { get => Options.@FactorDelay; init => Options = Options with { @FactorDelay = value }; }
-    public double @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
-    public double @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
-    public double @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
-    public double @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
+    public global::tweens.gd.Duration @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
+    public global::tweens.gd.Duration @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
+    public global::tweens.gd.Duration @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
+    public global::tweens.gd.Duration @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
     public int @Repeats { get => Options.@Repeats; init => Options = Options with { @Repeats = value }; }
     public bool @UsePingPong { get => Options.@UsePingPong; init => Options = Options with { @UsePingPong = value }; }
     public bool @UseUnscaledTime { get => Options.@UseUnscaledTime; init => Options = Options with { @UseUnscaledTime = value }; }
@@ -63,7 +63,7 @@ public readonly record struct SpotAngle : ITweenDefinition<global::Godot.SpotLig
     public Action<TweenInstance<global::Godot.SpotLight3D, float>>? OnFinally { get; init; }
 
     /// <summary>Sets the endpoint and common timing.</summary>
-    public SpotAngle(double to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public SpotAngle(double to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
     {
         To = (float)to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };

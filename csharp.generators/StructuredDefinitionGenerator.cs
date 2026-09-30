@@ -304,7 +304,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
     {
         count++;
         var parameters = method.Parameters.Select((parameter, index) =>
-            SymbolEqualityComparer.Default.Equals(parameter, configure) ? "global::tweens.gd.EaseType @ease, double @delay = 0"
+            SymbolEqualityComparer.Default.Equals(parameter, configure) ? "global::tweens.gd.EaseType @ease, global::tweens.gd.Duration @delay = default"
             : (index == 0 ? "this " : "")
                 + (SymbolEqualityComparer.Default.Equals(parameter, to) ? form : parameter.Type.ToDisplayString(TypeFormat))
                 + " @" + parameter.Name + DefaultValue(parameter));

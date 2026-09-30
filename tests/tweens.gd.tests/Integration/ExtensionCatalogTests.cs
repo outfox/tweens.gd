@@ -20,6 +20,27 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
     private static readonly TweenOptions Options = new() { Duration = 99, Delay = 0.25, Fill = FillMode.Both };
 
     [Fact]
+    public void TimeSpanWorksThroughExtensionsAndGeneratedShorthands()
+    {
+        using var scope = new SceneScope(godot);
+        var duration = TimeSpan.FromSeconds(1);
+        var delay = TimeSpan.FromMilliseconds(250);
+        var configured = scope.Add(new Node2D()).TweenPositionX(8, duration, d => d.Delay = delay);
+        var options = scope.Add(new Node2D()).TweenPositionX(8, duration, new TweenOptions { Delay = delay });
+        var eased = scope.Add(new Node2D()).TweenPositionX(8, duration, Out.Linear, delay);
+        var tuple = scope.Add(new Node2D()).TweenPosition((8, 16), duration, Out.Linear, delay);
+        var span = scope.Add(new Node2D()).TweenPosition([8, 16], duration, Out.Linear, delay);
+        var structured = scope.Add(new Node2D()).Tween(new Tweens.Position2D((8, 16), duration, Out.Linear, delay));
+        scope.Advance(0.75);
+        Assert.Equal(4, configured.Value);
+        Assert.Equal(4, options.Value);
+        Assert.Equal(4, eased.Value);
+        Assert.Equal(new Vector2(4, 8), tuple.Value);
+        Assert.Equal(tuple.Value, span.Value);
+        Assert.Equal(tuple.Value, structured.Value);
+    }
+
+    [Fact]
     public void SkewWorksThroughOptionsConfiguratorsAndGeneratedDefinitions()
     {
         using var scope = new SceneScope(godot);
@@ -146,14 +167,14 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
         var arguments = new object?[parameters.Length];
         arguments[0] = target;
         arguments[1] = to;
-        arguments[2] = 1d;
+        arguments[2] = (Duration)1d;
         for (var i = 3; i < parameters.Length; i++)
         {
             var type = parameters[i].ParameterType;
             arguments[i] = type == typeof(SceneTree) ? scope.Tree
                 : type == typeof(TweenOptions) ? Options
                 : type == typeof(EaseType) ? EaseType.QuadIn
-                : type == typeof(double) ? 0.25
+                : type == typeof(Duration) ? (Duration)0.25
                 : type == typeof(Node) ? parameters[i].IsOptional ? owner : scope.Root
                 : configure is null ? null
                 : typeof(ExtensionCatalogTests).GetMethod(nameof(Forward), BindingFlags.NonPublic | BindingFlags.Static)!

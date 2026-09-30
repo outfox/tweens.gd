@@ -83,7 +83,7 @@ public sealed class TweenScheduler : IDisposable
     }
 
     /// <summary>Advance one lane. New tweens added during callbacks wait for the next Update.</summary>
-    public void Update(double delta, double? unscaledDelta = null, TweenProcessMode mode = TweenProcessMode.Process)
+    public void Update(Duration delta, Duration? unscaledDelta = null, TweenProcessMode mode = TweenProcessMode.Process)
     {
         EnsureThread();
         ObjectDisposedException.ThrowIf(disposed, this);

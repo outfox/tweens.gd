@@ -1,13 +1,13 @@
 ---
 title: Syntax sugar
-description: Shorter ways to write endpoints, easing, and definitions in C#.
+description: Shorter ways to write endpoints, durations, easing, and definitions in C#.
 ---
 
 Most tweens fit on one line. Each shortcut here means exactly the same as its
 longer form, so pick whichever reads best to you.
 
-Examples use `using Godot;` and `using tweens.gd;`, with an in-tree `Sprite2D`
-named `sprite` and a `Label` named `label`.
+Examples use `using System;`, `using Godot;`, and `using tweens.gd;`, with an
+in-tree `Sprite2D` named `sprite` and a `Label` named `label`.
 
 ## Endpoints
 
@@ -36,6 +36,19 @@ number of components throws an `ArgumentException` when the tween is created.
 
 ## Easing and delay
 
+Pass a `TimeSpan` wherever a duration is expected, or keep using numeric seconds:
+
+```csharp
+sprite.TweenPosition((400, 180), 0.6);
+sprite.TweenPosition((400, 180), 0.6f);
+sprite.TweenPosition((400, 180), TimeSpan.FromMilliseconds(600));
+```
+
+The `Duration` value type converts implicitly from `float`, `double`, and
+`TimeSpan`, so no cast or `.TotalSeconds` is needed. This also works for delays,
+repeat and ping-pong intervals, offsets, and the `DeltaDuration` and `DeltaDelay`
+adjustments in options and definitions.
+
 Shorthand methods take an ease and a delay after the duration:
 
 ```csharp
@@ -44,6 +57,7 @@ sprite.TweenPosition((400, 180), 0.6, Out.Cubic);
 
 sprite.TweenPosition((400, 180), 0.6, options => { options.Ease = Out.Cubic; options.Delay = 0.2; });
 sprite.TweenPosition((400, 180), 0.6, Out.Cubic, 0.2);
+sprite.TweenPosition((400, 180), TimeSpan.FromMilliseconds(600), Out.Cubic, TimeSpan.FromMilliseconds(200));
 ```
 
 Combine a start and a finish with `|`, as in `In.Sine | Out.Cubic`; `InOut.Sine`
@@ -59,6 +73,7 @@ duration, ease, delay.
 ```csharp
 var longer = new Tweens.Position2D { To = new Vector2(400, 180), Duration = 0.6, Ease = Out.Cubic };
 var shorter = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
+var timed = new Tweens.Position2D((400, 180), TimeSpan.FromMilliseconds(600), Out.Cubic);
 ```
 
 Set anything else in an initializer after the arguments:

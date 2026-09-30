@@ -9,15 +9,21 @@ How long a tween plays, how often it repeats, and how it eases between its endpo
 
 See [timing and loops](/csharp/timing/).
 
+`Duration` is a readonly record struct in `tweens.gd` that stores `double`
+seconds. It accepts `float` and `double` seconds or a `TimeSpan` implicitly, so
+existing numeric calls still work. Read its `Seconds` property or convert it
+implicitly to `double` to get seconds back. Its default value is zero seconds.
+See [syntax sugar](/csharp/syntax-sugar/#easing-and-delay) for examples.
+
 | Member | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `Duration` | `double` | `0` | Seconds per leg |
-| `Delay` | `double` | `0` | Seconds before the first leg |
-| `Offset` | `double` | `0` | Seconds to skip at the start of the first leg |
+| `Duration` | `Duration` | `0` | Seconds per leg |
+| `Delay` | `Duration` | `0` | Seconds before the first leg |
+| `Offset` | `Duration` | `0` | Seconds to skip at the start of the first leg |
 | `Repeats` | `int` | `0` | Cycles after the first; `TweenOptions.Infinite` repeats until cancelled |
 | `UsePingPong` | `bool` | `false` | Play each cycle forward, then back |
-| `PingPongInterval` | `double` | `0` | Seconds to wait before returning |
-| `RepeatInterval` | `double` | `0` | Seconds between cycles |
+| `PingPongInterval` | `Duration` | `0` | Seconds to wait before returning |
+| `RepeatInterval` | `Duration` | `0` | Seconds between cycles |
 | `Fill` | `FillMode` | `RetainFinalValue` | What the property shows during the delay and after the end |
 
 ## Easing

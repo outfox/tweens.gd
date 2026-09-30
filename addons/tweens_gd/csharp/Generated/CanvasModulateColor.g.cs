@@ -12,15 +12,15 @@ namespace Tweens;
 public readonly record struct CanvasModulateColor : ITweenDefinition<global::Godot.CanvasModulate, global::Godot.Color>
 {
     public TweenOptions Options { get; init; }
-    public double @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
+    public global::tweens.gd.Duration @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }
     public double @FactorDuration { get => Options.@FactorDuration; init => Options = Options with { @FactorDuration = value }; }
-    public double @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
-    public double @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
+    public global::tweens.gd.Duration @DeltaDuration { get => Options.@DeltaDuration; init => Options = Options with { @DeltaDuration = value }; }
+    public global::tweens.gd.Duration @Delay { get => Options.@Delay; init => Options = Options with { @Delay = value }; }
     public double @FactorDelay { get => Options.@FactorDelay; init => Options = Options with { @FactorDelay = value }; }
-    public double @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
-    public double @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
-    public double @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
-    public double @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
+    public global::tweens.gd.Duration @DeltaDelay { get => Options.@DeltaDelay; init => Options = Options with { @DeltaDelay = value }; }
+    public global::tweens.gd.Duration @PingPongInterval { get => Options.@PingPongInterval; init => Options = Options with { @PingPongInterval = value }; }
+    public global::tweens.gd.Duration @RepeatInterval { get => Options.@RepeatInterval; init => Options = Options with { @RepeatInterval = value }; }
+    public global::tweens.gd.Duration @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
     public int @Repeats { get => Options.@Repeats; init => Options = Options with { @Repeats = value }; }
     public bool @UsePingPong { get => Options.@UsePingPong; init => Options = Options with { @UsePingPong = value }; }
     public bool @UseUnscaledTime { get => Options.@UseUnscaledTime; init => Options = Options with { @UseUnscaledTime = value }; }
@@ -63,26 +63,26 @@ public readonly record struct CanvasModulateColor : ITweenDefinition<global::God
     public Action<TweenInstance<global::Godot.CanvasModulate, global::Godot.Color>>? OnFinally { get; init; }
 
     /// <summary>Sets the endpoint and common timing.</summary>
-    public CanvasModulateColor(global::Godot.Color to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public CanvasModulateColor(global::Godot.Color to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
     {
         To = to;
         Options = new TweenOptions { @Duration = @duration, @Ease = @ease, @Delay = @delay };
     }
 
     /// <summary>Sets the endpoint from components and common timing.</summary>
-    public CanvasModulateColor((double R, double G, double B) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public CanvasModulateColor((double R, double G, double B) to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(new global::Godot.Color((float)to.R, (float)to.G, (float)to.B), @duration, @ease, @delay) { }
 
     /// <summary>Sets the endpoint from components and common timing.</summary>
-    public CanvasModulateColor((double R, double G, double B, double A) to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public CanvasModulateColor((double R, double G, double B, double A) to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(new global::Godot.Color((float)to.R, (float)to.G, (float)to.B, (float)to.A), @duration, @ease, @delay) { }
 
     /// <summary>Sets the endpoint from a component collection and common timing.</summary>
-    public CanvasModulateColor(global::System.ReadOnlySpan<double> to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public CanvasModulateColor(global::System.ReadOnlySpan<double> to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(global::tweens.gd.EndpointComponents.ToColor(to), @duration, @ease, @delay) { }
 
     /// <summary>Sets the endpoint from an HTML color code or color name and common timing.</summary>
-    public CanvasModulateColor(string to, double @duration = default, global::tweens.gd.EaseType @ease = default, double @delay = default)
+    public CanvasModulateColor(string to, global::tweens.gd.Duration @duration = default, global::tweens.gd.EaseType @ease = default, global::tweens.gd.Duration @delay = default)
         : this(new global::Godot.Color(to), @duration, @ease, @delay) { }
 
     TweenDefinition<global::Godot.CanvasModulate, global::Godot.Color> ITweenDefinition<global::Godot.CanvasModulate, global::Godot.Color>.CreatePlayback()
