@@ -109,4 +109,9 @@ deploys the site automatically from a repository webhook; no workflow is needed 
 `public/_headers` sets statichost's response headers. Files whose names carry a content
 hash (Astro's `/_astro/` output, Pagefind's fragments and index chunks) are cached as
 immutable, so a page navigation doesn't revalidate its stylesheets, scripts, and fonts.
-Pages and unhashed files keep statichost's default, revalidated on every request.
+Pages and unhashed files stay fresh for 60 seconds, then revalidate. This short window
+lets Firefox reuse a hovered link's prefetched HTML instead of making another network
+request on click; published changes can take up to a minute to appear in an existing cache.
+`Head.astro` keeps Speculation Rules prefetch for browsers that support it and opts
+eligible links into Astro's hover/focus prefetch in other browsers. Shared-page language
+toggles, downloads, external links, and current-page anchors are excluded from the fallback.

@@ -100,10 +100,9 @@ const preloadImports = {
 export default defineConfig({
 	site: 'https://tweens.gd',
 	redirects,
-	// Starlight turns on Astro's link prefetch by default. Firefox can't reuse those prefetches for pages served
-	// with max-age=0, so each one doubled the request and could hold up the click. Head.astro uses Speculation
-	// Rules instead.
-	prefetch: false,
+	// Head.astro opts links into Astro's hover prefetch only when Speculation Rules aren't supported.
+	// public/_headers gives HTML a short freshness window so Firefox can reuse the prefetched response.
+	prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
 	vite: {
 		build: {
 			// A demo's own small stylesheet goes inline, so a first visit doesn't wait on a render-blocking request

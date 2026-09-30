@@ -12,7 +12,7 @@ const track = trackOf(Astro.locals.starlightRoute.id);
 const searchLanguages = track ? [track] : Object.keys(LANGS);
 
 // Browsers with Speculation Rules fetch a page once the pointer rests on its link, into a cache meant for navigations;
-// the others ignore the rules. Prefetch only: a prerender would run this page's scripts before the click.
+// the others use Astro's hover prefetch below. Prefetch only: a prerender would run scripts before the click.
 // Shared pages' language switches are buttons, not navigations.
 const speculation = {
 	prefetch: [
@@ -27,6 +27,30 @@ const speculation = {
 <Default />
 {searchLanguages.map((lang) => <meta data-pagefind-filter="code-language[content]" content={lang} />)}
 <script type="speculationrules" is:inline set:html={JSON.stringify(speculation)} />
+<script>
+	// Keep Chromium's navigation cache; use the HTTP cache in Firefox and Safari. Astro supplies hover/focus
+	// debounce, URL deduplication, and the offline/data-saver checks. Its automatic all-link prefetch is off.
+	if (!HTMLScriptElement.supports?.('speculationrules')) {
+		const enable = (link: HTMLAnchorElement) => {
+			if (link.hasAttribute('data-astro-prefetch') || link.hasAttribute('download') ||
+				link.closest('[data-shared]') || (link.target && link.target !== '_self')) return;
+			const url = new URL(link.href);
+			if (url.origin !== location.origin ||
+				(url.pathname === location.pathname && url.search === location.search)) return;
+			link.dataset.astroPrefetch = 'hover';
+		};
+		const scan = (node: ParentNode) => node.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(enable);
+		scan(document);
+		// Search results are inserted after page load. Astro also observes new links and attaches its listeners.
+		new MutationObserver((mutations) => {
+			for (const mutation of mutations) for (const node of mutation.addedNodes) {
+				if (!(node instanceof Element)) continue;
+				if (node instanceof HTMLAnchorElement && node.hasAttribute('href')) enable(node);
+				scan(node);
+			}
+		}).observe(document.body, { childList: true, subtree: true });
+	}
+</script>
 <!-- Language pages set the language and remember it; shared pages use the remembered one (C# by default).
      Runs before first paint so language-specific blocks never flash. -->
 <script is:inline>
