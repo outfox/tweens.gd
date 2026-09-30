@@ -28,8 +28,8 @@ await Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2)).end
 await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
 ```
 
-Each step reads its `null` `from_value` when you start it, so it continues from
-wherever the previous step left the property.
+Since each definition has no `from_value`, it continues from wherever the
+previous step left the property.
 
 These examples ignore completion reasons. If interruption should stop the sequence,
 check the result before starting the next step; [cancellation](/gdscript/cancellation/)
@@ -100,9 +100,9 @@ func reveal() -> void:
 are still waiting stay hidden instead of showing at full opacity first.
 
 :::caution[Stagger different targets, not one property]
-A tween reads its `null` `from_value` when you start it, not when its delay ends. A
-delayed tween on the same property starts from the value captured at the start,
-and snaps the property back to it:
+With no `from_value`, a tween starts from the property's value when you start
+it, before its delay. A delayed tween on the same property therefore snaps it
+back to that value:
 
 ```gdscript
 # Wrong: the second tween captured the start position, not (400, 180).

@@ -13,8 +13,8 @@ Where a tween starts and ends, and how a variant derives from those values.
 
 | Member | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `From` | `TValue?` | `null` | Start value; `null` reads the property when the tween starts |
-| `To` | `TValue?` | `null` | End value; `null` reads the property when the tween starts |
+| `From` | `TValue?` | `null` | Start value; with no `From`, the tween uses the property's value at start |
+| `To` | `TValue?` | `null` | End value; with no `To`, the tween uses the property's value at start |
 | `By` | `TValue?` | `null` | [Offset](/csharp/definitions/#move-by-an-offset-with-by) instead of `To`, added on top of other changes to the property while it plays |
 
 ## Variations
@@ -49,9 +49,8 @@ when the tween starts, each value becomes factor × value + delta. See
 
 ## Callback endpoints
 
-Callback value tweens such
-as `Tweens.Float` have no property to read, so their omitted endpoints fall back
-to zero, transparent black, or identity.
+Callback value tweens such as `Tweens.Float` animate no property. With no `From`
+or `To`, they use zero, transparent black, or identity for that endpoint.
 
 ## When tweens compete
 

@@ -131,8 +131,9 @@ await together.end
 ```
 
 Factory arguments are `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
-delay = 0.0)`. Null endpoints capture the initial value. Set `by_value` (or call
-`with_by()`) instead of `to_value` for relative motion that keeps other changes to
+delay = 0.0)`. With no `from_value` or `to_value`, the tween uses the initial
+value for that endpoint. Set `by_value` (or call `with_by()`) instead of
+`to_value` for relative motion that keeps other changes to
 the property; each repeat adds it again. `factor_to`/`delta_to` and their `from`, `by`,
 `duration` and `delay` counterparts (and `with_*()` methods) turn a value into factor × value + delta
 at start. `float_value`, `double_value`, `vector2_value`, `vector3_value`,
@@ -150,9 +151,10 @@ optional value components, such as `position:x`, `modulate:a`, or `region_rect:s
 Paths cannot cross into another Object/resource or traverse nodes. Pass that
 object as the target with an owner instead.
 
-The initial property is captured at start, before `on_add`. Null `from_value`
-or `to_value` endpoints use the captured value. An empty property path creates
-a callback-only tween; its omitted endpoints use `initial_value` (default `0.0`).
+The initial property value is captured at start, before `on_add`. With no
+`from_value` or `to_value`, the tween uses that value for that endpoint. An empty
+property path creates a callback-only tween; with no `from_value` or `to_value`,
+it uses `initial_value` (default `0.0`) for that endpoint.
 
 ```gdscript
 var score := Tweens.value(0.0, 100.0, 1.0)

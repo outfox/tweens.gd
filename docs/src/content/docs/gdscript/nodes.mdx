@@ -41,8 +41,9 @@ await Tweens.group([movement, fade]).end
 ```
 
 Every helper takes `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR,
-delay = 0.0)`. A `null` endpoint captures the property's current value when the
-tween starts, and vectors and colors can be arrays such as `[400, 180]`; see
+delay = 0.0)`. If a definition has no `from_value` or `to_value`, it uses the
+property's value when the tween starts for that endpoint. Vectors and colors
+can be arrays such as `[400, 180]`; see
 [syntax sugar](/gdscript/syntax-sugar/). The returned definition exposes the same fields as one made with
 `Tweens.property()`, including `from_value`, timing, easing, and callbacks; set
 them before calling `play()`, or vary a shared one with `with_*()` copies. See

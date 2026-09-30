@@ -84,8 +84,9 @@ own delay and adds each item's offset to it.
 
 ## Vary the current value
 
-An omitted `From` or `To` is read from the property when the tween starts. A
-factor or delta then makes the motion relative to wherever the property is:
+If a definition has no `From` or `To`, it uses the property's value when the
+tween starts for that endpoint. A factor or delta then makes the motion
+relative to that value:
 
 ```csharp title="Heart.cs"
 public partial class Heart : Sprite2D

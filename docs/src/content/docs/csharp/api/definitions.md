@@ -32,8 +32,9 @@ is required and never `null`; the timing after it is optional:
 | `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations, then the same four |
 
 Set anything else in an initializer after the arguments:
-`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`. To read the
-start value instead, leave `To` unset: `new Tweens.Position2D { Duration = 0.4 }`,
+`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`. To use the
+property's value at start instead, leave `To` out:
+`new Tweens.Position2D { Duration = 0.4 }`,
 or `new Tweens.ShaderParameter<float>("dissolve") { By = 0.5f }`.
 
 ### Shorter endpoints

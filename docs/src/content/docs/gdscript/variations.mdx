@@ -77,9 +77,9 @@ offset to it.
 
 ## Vary the current value
 
-A `null` `from_value` or `to_value` is read from the property when the tween
-starts. A factor or delta then makes the motion relative to wherever the property
-is:
+If a definition has no `from_value` or `to_value`, it uses the property's value
+when the tween starts for that endpoint. A factor or delta then makes the motion
+relative to that value:
 
 ```gdscript title="heart.gd"
 extends Sprite2D

@@ -60,5 +60,6 @@ func celebrate() -> void:
 	Tweens.play(label, pop.with_delay(0.1))
 ```
 
-A `null` endpoint reads the property when the tween starts, so
-`Tweens.position_2d(null, 0.4).with_from([0, 0])` ends where the node was.
+With no `to_value`,
+`Tweens.position_2d(null, 0.4).with_from([0, 0])` ends at the node's position
+when you start the tween.

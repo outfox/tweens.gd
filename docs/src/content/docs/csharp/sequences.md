@@ -28,8 +28,8 @@ await sprite.TweenScale(1.2, 0.2).End;
 await sprite.TweenModulateAlpha(0, 0.3).End;
 ```
 
-Each step reads its omitted `From` when you start it, so it continues from wherever
-the previous step left the property.
+Since each definition has no `From`, it continues from wherever the previous
+step left the property.
 
 These examples ignore completion reasons. If interruption should stop the sequence,
 check the result before starting the next step; [cancellation](/csharp/cancellation/)
@@ -93,9 +93,9 @@ public partial class Menu : VBoxContainer
 waiting stay hidden instead of showing at full opacity first.
 
 :::caution[Stagger different targets, not one property]
-A tween reads its omitted `From` when you start it, not when its delay ends. A
-delayed tween on the same property starts from the value captured at the start,
-and snaps the property back to it:
+With no `From`, a tween starts from the property's value when you start it,
+before its delay. A delayed tween on the same property therefore snaps it
+back to that value:
 
 ```csharp
 // Wrong: the second tween captured From = the start position, not (400, 180).

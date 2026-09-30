@@ -48,8 +48,9 @@ Use `To` for a destination, or `From` for an entrance:
 | `new Tweens.Position2D { To = new Vector2(400, 180), Duration = 0.4 }` | Move from the current position to a fixed destination |
 | `new Tweens.Scale2D { From = Vector2.Zero, Duration = 0.4 }` | Grow from zero to the scale set in the scene |
 
-An omitted endpoint is read from the property **when you start the tween**, before
-any delay. Set both endpoints when both must be fixed.
+If a definition has no `From` or `To`, it uses the property's value
+**when you start the tween** for that endpoint, before any delay. Set both
+endpoints when both must be fixed.
 
 ## Move by an offset with `By`
 

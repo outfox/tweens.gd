@@ -8,8 +8,8 @@
 	<description>
 		Create definitions with [code]Tweens.position_2d(...)[/code] or another factory, then start them with
 		[code]Tweens.play(target, definition)[/code]. Changes affect future starts only. Use [method copy] or
-		[code]with_*()[/code] to vary a copy, like C# record [code]with[/code] expressions. Null endpoints use the value
-		captured at start, before any delay.
+		[code]with_*()[/code] to vary a copy, like C# record [code]with[/code] expressions. With no [member from_value]
+		or [member to_value], the tween uses the value captured at start for that endpoint, before any delay.
 		[codeblock]
 		var move := Tweens.position_2d(Vector2(400, 180), 0.6, Out.CUBIC)
 		await Tweens.play(sprite, move.with_delay(0.2)).end
@@ -441,7 +441,8 @@
 			concurrent property changes removes only its own offset when restoring.
 		</member>
 		<member name="from_value" type="Variant" setter="set_from_value" getter="get_from_value" default="null">
-			Start value. Null uses the value captured at start, before the delay. C# equivalent: [code]From[/code].
+			Start value. If the definition has no [member from_value], it uses the value captured at start,
+			before the delay. C# equivalent: [code]From[/code].
 		</member>
 		<member name="initial_value" type="Variant" setter="set_initial_value" getter="get_initial_value" default="0.0">
 			Initial value for callback-only definitions that have neither a property nor an adapter. Defaults to 0.0;
@@ -502,8 +503,8 @@
 			automatically.
 		</member>
 		<member name="to_value" type="Variant" setter="set_to_value" getter="get_to_value" default="null">
-			End value. Null uses the value captured at start. Mutually exclusive with [member by_value]. C# equivalent:
-			[code]To[/code].
+			End value. If the definition has no [member to_value], it uses the value captured at start.
+			Mutually exclusive with [member by_value]. C# equivalent: [code]To[/code].
 		</member>
 		<member name="use_ping_pong" type="bool" setter="set_use_ping_pong" getter="get_use_ping_pong" default="false">
 			Return to the start after each forward leg. Duration applies to each leg; defaults to false.

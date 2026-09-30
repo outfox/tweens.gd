@@ -8,7 +8,8 @@ Where a tween starts and ends, and how a variant derives from those values.
 
 ## Endpoints
 
-A `null` endpoint reads the property when the tween starts. See
+If a definition has no `from_value` or `to_value`, it uses the property's value
+when the tween starts for that endpoint. See
 [reusable definitions](/gdscript/definitions/#leave-out-from_value-or-to_value).
 An array of numbers can stand in for a vector or color endpoint, delta, or offset:
 `[400, 180]` for a `Vector2`, and `[1, 0.5, 0]` or `[1, 0.5, 0, 0.8]` for a
@@ -55,11 +56,11 @@ when the tween starts, each value becomes factor × value + delta. See
 
 ## Callback endpoints
 
-Callback-only definitions,
-such as `Tweens.value()` and `Tweens.float_value()`, have no property to read,
-so their `null` endpoints use `initial_value` instead: the `from` you pass to
-`Tweens.value()`, or zero, transparent black, or identity for the named value
-helpers.
+Callback-only definitions, such as `Tweens.value()` and `Tweens.float_value()`,
+animate no property.
+With no `from_value` or `to_value`, they use `initial_value` for that endpoint:
+the `from` you pass to `Tweens.value()`, or zero, transparent black, or identity
+for the named value helpers.
 
 ## When tweens compete
 
