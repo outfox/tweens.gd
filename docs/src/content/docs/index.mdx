@@ -55,9 +55,7 @@ import Variants from '../../components/Variants.astro';
 
 ## Compared with Godot's Tween
 
-The same move, written with Godot's built-in `Tween` and with tweens.gd. The
-tweens.gd version is shorter to type, and it reads in the order you think about
-motion: what moves, where to, how long, and how it eases.
+I'mma just let the code speak for itself here. Dook, dook!
 
 <Lang only="csharp">
 
@@ -66,9 +64,8 @@ motion: what moves, where to, how long, and how it eases.
 <Compare>
 
 ```csharp title="Godot's Tween"
-var target = new Vector2(400, 180);
 var tween = sprite.CreateTween();
-tween.TweenProperty(sprite, "position", target, 0.6)
+tween.TweenProperty(sprite, "position", new Vector2(400, 180), 0.6)
     .SetTrans(Tween.TransitionType.Cubic)
     .SetEase(Tween.EaseType.Out);
 
@@ -77,11 +74,7 @@ GD.Print("Arrived");
 ```
 
 ```csharp title="tweens.gd"
-var target = new Vector2(400, 180);
-var movement = sprite.TweenPosition(target, 0.6,
-    options => options.Ease = EaseType.CubicOut);
-
-await movement.End;
+await sprite.TweenPosition((400, 180), 0.6, Out.Cubic).End;
 GD.Print("Arrived");
 ```
 
@@ -90,20 +83,18 @@ GD.Print("Arrived");
 <Compare>
 
 ```csharp title="Godot's Tween"
-var target = new Vector2(400, 180);
-
 var tween1 = sprite1.CreateTween();
-tween1.TweenProperty(sprite1, "position", target, 0.6)
+tween1.TweenProperty(sprite1, "position", new Vector2(400, 180), 0.6)
     .SetTrans(Tween.TransitionType.Cubic)
     .SetEase(Tween.EaseType.Out);
 
 var tween2 = sprite2.CreateTween();
-tween2.TweenProperty(sprite2, "position", target, 0.8)
+tween2.TweenProperty(sprite2, "position", new Vector2(400, 180), 0.8)
     .SetTrans(Tween.TransitionType.Cubic)
     .SetEase(Tween.EaseType.Out);
 
 var tween3 = sprite3.CreateTween();
-tween3.TweenProperty(sprite3, "position", target, 1.0)
+tween3.TweenProperty(sprite3, "position", new Vector2(400, 180), 1.0)
     .SetTrans(Tween.TransitionType.Cubic)
     .SetEase(Tween.EaseType.Out);
 
@@ -112,9 +103,7 @@ GD.Print("Arrived");
 ```
 
 ```csharp title="tweens.gd"
-var target = new Vector2(400, 180);
-var arrive = new Tweens.Position2D(target, 0.6,
-    EaseType.CubicOut);
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
 
 sprite1.Tween(arrive);
 sprite2.Tween(arrive with { Duration = 0.8 });
@@ -135,19 +124,16 @@ GD.Print("Arrived");
 <Compare>
 
 ```gdscript title="Godot's Tween"
-var target := Vector2(400, 180)
 var tween := sprite.create_tween()
 tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-tween.tween_property(sprite, "position", target, 0.6)
+tween.tween_property(sprite, "position", Vector2(400, 180), 0.6)
 
 await tween.finished
 print("Arrived")
 ```
 
 ```gdscript title="tweens.gd"
-var target := Vector2(400, 180)
-var arrive := Tweens.position_2d(target, 0.6,
-	Tweens.Ease.CUBIC_OUT)
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Out.CUBIC)
 
 await Tweens.play(sprite, arrive).end
 print("Arrived")
@@ -158,28 +144,24 @@ print("Arrived")
 <Compare>
 
 ```gdscript title="Godot's Tween"
-var target := Vector2(400, 180)
-
 var tween1 := sprite1.create_tween()
 tween1.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-tween1.tween_property(sprite1, "position", target, 0.6)
+tween1.tween_property(sprite1, "position", Vector2(400, 180), 0.6)
 
 var tween2 := sprite2.create_tween()
 tween2.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-tween2.tween_property(sprite2, "position", target, 0.8)
+tween2.tween_property(sprite2, "position", Vector2(400, 180), 0.8)
 
 var tween3 := sprite3.create_tween()
 tween3.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-tween3.tween_property(sprite3, "position", target, 1.0)
+tween3.tween_property(sprite3, "position", Vector2(400, 180), 1.0)
 
 await tween3.finished
 print("Arrived")
 ```
 
 ```gdscript title="tweens.gd"
-var target := Vector2(400, 180)
-var arrive := Tweens.position_2d(target, 0.6,
-	Tweens.Ease.CUBIC_OUT)
+var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Tweens.Out.CUBIC)
 
 Tweens.play(sprite1, arrive)
 Tweens.play(sprite2, arrive.with_duration(0.8))
