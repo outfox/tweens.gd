@@ -26,12 +26,7 @@ using Godot;
 using tweens.gd;
 
 // Call from _Ready or later, on Godot's main thread.
-var movement = sprite.Tween(new Tweens.Position2D
-{
-    To = new Vector2(400, 180),
-    Duration = 0.6,
-    Ease = EaseType.CubicOut,
-});
+var movement = sprite.Tween(new Tweens.Position2D((400, 180), 0.6, Out.Cubic));
 
 await movement.End;
 GD.Print("Movement ended");
@@ -39,7 +34,8 @@ GD.Print("Movement ended");
 
 The first tween installs a runner automatically. No autoload is required.
 Definitions are readonly record structs in the root `Tweens` namespace. Their
-constructors take `(to, duration, ease, delay)`, all optional. Store a
+constructors take `(to, duration, ease, delay)`; everything after `to` is optional,
+and vectors and colors also take tuples such as `(400, 180)`. Store a
 definition in a readonly field and use `definition with { Delay = 0.2 }` to vary
 a copy for one playback. Set `By` instead of `To` for relative motion that
 keeps other changes to the property. `TweenOptions` is an immutable value too; mutable

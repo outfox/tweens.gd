@@ -30,7 +30,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 				<line class="now" data-now x1="32" x2="32" y1="16" y2="272" />
 				<circle class="tracer" data-tracer r="6" cx="32" cy="230" />
 			</svg>
-			<div class="legend"><span class="in-key">In half</span><span class="out-key">Out half</span><span class="result-key">Result</span><span class="zone-key">Join window</span></div>
+			<div class="legend"><span class="in-key">In half</span><span class="out-key">Out half</span><span class="result-key">Result</span><span class="zone-key">Blend window</span></div>
 			<svg class="lane" viewBox="0 0 496 48" aria-hidden="true">
 				<path class="rail" data-rail d="M76 24H420" />
 				{Array.from({length: 11}, () => <circle class="ghost" data-ghost cy="24" r="5" />)}
@@ -58,8 +58,8 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			</div>
 			<label class="tw-field"><span>Duration <output data-duration-out>2.0 s</output></span><input type="range" min="0.2" max="5" step="0.1" value="2" data-duration /></label>
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
-			<label class="tw-field"><span>Join method</span><select data-blend aria-label="Join method"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
-			<label class="tw-field"><span>Join width <output data-width-out>20%</output></span><input aria-label="Join width" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
+			<label class="tw-field"><span>Blend type</span><select data-blend aria-label="Blend type"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
+			<label class="tw-field"><span>Blend width <output data-width-out>20%</output></span><input aria-label="Blend width" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
 			<p class="hint" data-hint>A single selected curve runs over the full duration. Choose both curves to join them.</p>
 			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
 		</div>
@@ -69,7 +69,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>,
     <span data-code-ease><span class="ty">Out</span>.ELASTIC</span>)
 <span class="comment" data-code-option="skew"><span data-comment># </span>move.skew = <span class="num" data-code-skew>1.00</span></span>
-<span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">Tweens.BlendType</span>.<span data-code-blend-type>MAKIMA</span></span>
+<span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span>
 <span class="comment" data-code-option="blend"><span data-comment># </span>move.blend = <span class="num" data-code-blend>0.20</span></span>
 <span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
 		) : (
@@ -242,6 +242,9 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	.selectors { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .5rem; align-items: end; }
 	.join { font: 1.25rem var(--sl-font-mono); color: var(--tw-muted); padding-bottom: .4rem; }
 	select { width: 100%; min-width: 0; color: var(--tw-text); background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .5rem; padding: .65rem .4rem; font: .85rem var(--sl-font-mono); }
+	/* Blend controls only apply when two different curves meet. */
+	.tw-field:has(:disabled) { opacity: .5; }
+	.tw-field :disabled { cursor: not-allowed; }
 	select:focus-visible { outline: 2px solid var(--tw-mint); outline-offset: 2px; }
 	.hint, .footnote { color: var(--tw-muted); font-size: .8rem; line-height: 1.6; margin: 0; }
 	.recipe { display: flex; gap: .75rem; align-items: start; background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .75rem; padding: 1rem; }

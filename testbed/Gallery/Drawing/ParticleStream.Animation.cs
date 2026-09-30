@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 
 using System.Threading.Tasks;
-using Godot;
 using tweens.gd;
 namespace testbed;
 
@@ -13,7 +12,7 @@ public sealed partial class ParticleStream
     {
         await Group.Of([
             particles.TweenSpread(75, Seconds, Cycle),
-            particles.TweenGravity(new Vector2(15, -55), Seconds, Cycle),
+            particles.TweenGravity((15, -55), Seconds, Cycle),
             particles.TweenColor(Palette.Amber, Seconds, Cycle),
             particles.TweenPositionY(-30, Seconds, Cycle),
         ]).End;

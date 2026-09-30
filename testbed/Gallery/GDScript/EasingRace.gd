@@ -4,8 +4,8 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 # Scene objects are supplied by the matching C# scene setup file.
 
 func animate() -> void:
-	var easings = [Tweens.Ease.LINEAR, Tweens.Ease.SINE_IN_OUT, Tweens.Ease.CUBIC_IN_OUT,
-		Tweens.Ease.EXPO_IN_OUT, Tweens.Ease.BACK_IN_OUT, Tweens.Ease.ELASTIC_OUT, Tweens.Ease.BOUNCE_OUT]
+	var easings = [InOut.LINEAR, InOut.SINE, InOut.CUBIC, InOut.EXPO,
+		Tweens.Ease.BACK_IN_OUT, Tweens.Ease.ELASTIC_OUT, Tweens.Ease.BOUNCE_OUT]
 	var handles: Array = []
 	for lane in targets.racers.size():
 		for position in targets.racers[lane].size():
@@ -17,7 +17,7 @@ func animate() -> void:
 	await Tweens.group(handles).wait()
 
 func cycle(definition, delay: float = 0.0):
-	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.ease = InOut.CUBIC
 	definition.use_ping_pong = true
 	definition.repeats = Tweens.INFINITE
 	definition.repeat_interval = 0.25

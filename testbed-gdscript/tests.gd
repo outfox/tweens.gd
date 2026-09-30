@@ -147,7 +147,7 @@ func _composed_easing() -> void:
 	for sample in data.cases:
 		var a: int = entries[String(sample["in"]).replace("Step", "_Step").to_upper()]
 		var b: int = exits[String(sample["out"]).replace("Step", "_Step").to_upper()]
-		near(T.Easing.evaluate(a | b, pow(sample.progress, sample.skew), T.BlendType[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.get("blend", 0.2)), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
+		near(T.Easing.evaluate(a | b, pow(sample.progress, sample.skew), _constants(BlendType)[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.get("blend", 0.2)), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
 	for family in pairs:
 		check(pairs[family] == (entries[family] | exits[family]), "matching ease alias")
 		if family.begins_with("BACK") or family.begins_with("ELASTIC") or family.begins_with("BOUNCE") or family.begins_with("JUMP"): continue
@@ -170,7 +170,7 @@ func _composed_easing() -> void:
 				var expected := lerpf(a, b, smoothstep(0.4, 0.6, t))
 				if entry == 0: expected = b
 				if exit == 0: expected = a
-				near(T.Easing.evaluate(combined, t, T.BlendType.SMOOTH_STEP), expected, "smoothstep comparison")
+				near(T.Easing.evaluate(combined, t, BlendType.SMOOTH_STEP), expected, "smoothstep comparison")
 				var actual := T.Easing.evaluate(combined, t)
 				check(is_finite(actual), "finite default composition")
 				if exit == 0 or (entry and t <= 0.4): near(actual, a, "original In half")
@@ -246,21 +246,21 @@ func _composed_easing() -> void:
 			for legacy in T.Ease.values():
 				if legacy != 0: check(is_nan(T.Easing.evaluate(curves[i] | legacy, 0.5)), "reject legacy flag mix")
 	for width in [-0.1, 1.1, INF, NAN]:
-		check(is_nan(T.Easing.evaluate(InOut.SINE, 0.5, T.BlendType.HERMITE, width)), "invalid blend width")
+		check(is_nan(T.Easing.evaluate(InOut.SINE, 0.5, BlendType.HERMITE, width)), "invalid blend width")
 		check(not T.value(0.0, 1.0, 1.0).with_blend(width).validate().is_empty(), "validate width")
-	for method in [-1, T.BlendType.LINEAR + 1, 99]:
+	for method in [-1, BlendType.LINEAR + 1, 99]:
 		check(is_nan(T.Easing.evaluate(InOut.SINE, 0.5, method)), "invalid blend method")
 		check(not T.value(0.0, 1.0, 1.0).with_blend_type(method).validate().is_empty(), "validate blend")
 	near(T.value(0.0, 1.0, 1.0).blend, 0.2, "default blend width")
-	check(T.value(0.0, 1.0, 1.0).blend_type == T.BlendType.MAKIMA, "default blend method")
+	check(T.value(0.0, 1.0, 1.0).blend_type == BlendType.MAKIMA, "default blend method")
 	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45), 0.4041956521739131, "default evaluator blend")
-	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45, T.BlendType.HERMITE), 0.40125, "hermite evaluator blend")
-	var custom := T.value(0.0, 1.0, 1.0, In.QUAD | Out.CUBIC).with_blend_type(T.BlendType.LINEAR).with_blend(0.4)
+	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45, BlendType.HERMITE), 0.40125, "hermite evaluator blend")
+	var custom := T.value(0.0, 1.0, 1.0, In.QUAD | Out.CUBIC).with_blend_type(BlendType.LINEAR).with_blend(0.4)
 	var custom_scheduler := TweensGdScheduler.new()
 	var custom_handle := custom_scheduler.add(self, custom)
 	custom.blend = 1.0
 	custom_scheduler.update(0.45)
-	near(custom_handle.value, T.Easing.evaluate(custom.ease, 0.45, T.BlendType.LINEAR, 0.4), "blend settings snapshot")
+	near(custom_handle.value, T.Easing.evaluate(custom.ease, 0.45, BlendType.LINEAR, 0.4), "blend settings snapshot")
 	for elastic in [In.ELASTIC, Out.ELASTIC, In.BOUNCE50, Out.BOUNCE50, In.BOUNCE20 | Out.BOUNCE40,
 			In.JUMP50, Out.JUMP, Out.JUMP20, Out.JUMP30, Out.JUMP40, Out.JUMP50, In.JUMP20 | Out.JUMP40]:
 		var elastic_handle := custom_scheduler.add(self, T.value(0.0, 1.0, 1.0, elastic))

@@ -9,15 +9,15 @@ static func run(owner: Node) -> String:
 	var results: Array = []
 	for count in [1000, 10000]:
 		for profile in [
-			["linear", T.Ease.LINEAR, T.BlendType.MAKIMA],
-			["legacy_sine", T.Ease.SINE_IN_OUT, T.BlendType.MAKIMA],
-			["paired_sine", InOut.SINE, T.BlendType.MAKIMA],
-			["mixed_makima", In.QUAD | Out.CUBIC, T.BlendType.MAKIMA],
-			["mixed_hermite", In.QUAD | Out.CUBIC, T.BlendType.HERMITE],
-			["mixed_smoothstep", In.QUAD | Out.CUBIC, T.BlendType.SMOOTH_STEP],
-			["mixed_linear", In.QUAD | Out.CUBIC, T.BlendType.LINEAR],
-			["back30_bounce20", In.BACK30 | Out.BOUNCE20, T.BlendType.MAKIMA],
-			["solo_jump30", Out.JUMP30, T.BlendType.MAKIMA],
+			["linear", T.Ease.LINEAR, BlendType.MAKIMA],
+			["legacy_sine", T.Ease.SINE_IN_OUT, BlendType.MAKIMA],
+			["paired_sine", InOut.SINE, BlendType.MAKIMA],
+			["mixed_makima", In.QUAD | Out.CUBIC, BlendType.MAKIMA],
+			["mixed_hermite", In.QUAD | Out.CUBIC, BlendType.HERMITE],
+			["mixed_smoothstep", In.QUAD | Out.CUBIC, BlendType.SMOOTH_STEP],
+			["mixed_linear", In.QUAD | Out.CUBIC, BlendType.LINEAR],
+			["back30_bounce20", In.BACK30 | Out.BOUNCE20, BlendType.MAKIMA],
+			["solo_jump30", Out.JUMP30, BlendType.MAKIMA],
 		]: results.append(_measure(owner, count, profile))
 	return JSON.stringify({"engine": Engine.get_version_info(), "os": OS.get_name(),
 		"cpu": OS.get_processor_name(), "debug_build": OS.is_debug_build(),

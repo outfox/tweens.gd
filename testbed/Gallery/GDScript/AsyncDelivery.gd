@@ -5,12 +5,12 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 
 func animate() -> void:
 	report(0, "1 / Position")
-	if await Tweens.play(targets.courier, options(Tweens.position_2d_x(150.0, seconds), Tweens.Ease.CUBIC_IN_OUT)).wait() != Tweens.Reason.COMPLETED:
+	if await Tweens.play(targets.courier, options(Tweens.position_2d_x(150.0, seconds), InOut.CUBIC)).wait() != Tweens.Reason.COMPLETED:
 		return
 	report(1, "2 / Position + rotation")
 	if await Tweens.group([
-		Tweens.play(targets.courier, options(Tweens.position_2d_x(-150.0, seconds), Tweens.Ease.CUBIC_IN_OUT)),
-		Tweens.play(targets.courier, options(Tweens.rotation_2d(TAU, seconds), Tweens.Ease.CUBIC_IN_OUT)),
+		Tweens.play(targets.courier, options(Tweens.position_2d_x(-150.0, seconds), InOut.CUBIC)),
+		Tweens.play(targets.courier, options(Tweens.rotation_2d(TAU, seconds), InOut.CUBIC)),
 	]).wait() != Tweens.Reason.COMPLETED:
 		return
 	await report(2, "3 / Complete")
@@ -20,10 +20,10 @@ func report(step: int, text: String) -> void:
 	var handles: Array = []
 	for i in targets.steps.size():
 		handles.append(Tweens.play(targets.steps[i], Tweens.polygon_2d_color(MINT if i <= step else OUTLINE, 0.2)))
-	handles.append(Tweens.play(targets.steps[step], options(Tweens.scale_2d(Vector2.ONE, 0.5), Tweens.Ease.ELASTIC_OUT, Vector2(2, 2))))
+	handles.append(Tweens.play(targets.steps[step], options(Tweens.scale_2d(Vector2.ONE, 0.5), Tweens.Ease.ELASTIC_OUT, [2, 2])))
 	await Tweens.group(handles).wait()
 
-func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

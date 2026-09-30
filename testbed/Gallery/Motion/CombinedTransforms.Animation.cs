@@ -15,10 +15,10 @@ public sealed partial class CombinedTransforms
         var tweens = new List<TweenInstance>();
         foreach (var target in new[] { shape, shadow })
         {
-            tweens.Add(target.TweenSkew(0.5f, Seconds, Cycle));
+            tweens.Add(target.TweenSkew(0.5, Seconds, Cycle));
             tweens.Add(target.TweenRotation(Mathf.Pi, Seconds, Cycle));
-            tweens.Add(target.TweenScaleX(1.8f, Seconds, Cycle));
-            tweens.Add(target.TweenScaleY(0.6f, Seconds, Cycle));
+            tweens.Add(target.TweenScaleX(1.8, Seconds, Cycle));
+            tweens.Add(target.TweenScaleY(0.6, Seconds, Cycle));
         }
         await Group.Of([.. tweens]).End;
     }

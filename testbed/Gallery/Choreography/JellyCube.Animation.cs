@@ -34,10 +34,10 @@ public sealed partial class JellyCube
     private static readonly Color[] Shades = [Palette.Blue, Palette.Amber, Palette.Mint];
 
     private TweenInstance Crouch() =>
-        feet.TweenScale(Crouched, 0.3 * Tempo, options => options.Ease = EaseType.SineOut);
+        feet.TweenScale(Crouched, 0.3 * Tempo, Out.Sine);
 
     private TweenInstance Launch() =>
-        feet.TweenScale(Launched, 0.09 * Tempo, options => options.Ease = EaseType.QuadOut);
+        feet.TweenScale(Launched, 0.09 * Tempo, Out.Quad);
 
     private TweenInstance Turn(double duration)
     {
@@ -45,31 +45,31 @@ public sealed partial class JellyCube
         return tumble.TweenRotation(turn, duration, options =>
         {
             options.From = Vector3.Zero;
-            options.Ease = EaseType.CubicInOut;
+            options.Ease = InOut.Cubic;
         });
     }
 
     private async Task<bool> Rise(double air)
     {
         return await Group.Of([
-            feet.TweenPositionY(Apex, air, options => options.Ease = EaseType.QuadOut),
-            feet.TweenScale(Vector3.One, air, options => options.Ease = EaseType.QuadOut),
+            feet.TweenPositionY(Apex, air, Out.Quad),
+            feet.TweenScale(Vector3.One, air, Out.Quad),
         ]).End == Reason.Completed;
     }
 
     private async Task<bool> Fall(double air)
     {
         return await Group.Of([
-            feet.TweenPositionY(Ground, air, options => options.Ease = EaseType.QuadIn),
-            feet.TweenScale(Falling, air, options => options.Ease = EaseType.QuadIn),
+            feet.TweenPositionY(Ground, air, In.Quad),
+            feet.TweenScale(Falling, air, In.Quad),
         ]).End == Reason.Completed;
     }
 
     private TweenInstance Squash() =>
-        feet.TweenScale(Squashed, 0.06 * Tempo, options => options.Ease = EaseType.QuadOut);
+        feet.TweenScale(Squashed, 0.06 * Tempo, Out.Quad);
 
     private TweenInstance Recover() =>
-        feet.TweenScale(Vector3.One, 0.8 * Tempo, options => options.Ease = EaseType.ElasticOut);
+        feet.TweenScale(Vector3.One, 0.8 * Tempo, EaseType.ElasticOut);
 
     /// <summary>Shifts the cube's color, sends a shockwave over the floor and shakes the camera.</summary>
     private async Task Land()
@@ -78,22 +78,22 @@ public sealed partial class JellyCube
         var shake = 0.4 * Tempo;
         await Group.Of([
             jelly.TweenAlbedoColor(Shades[landings++ % Shades.Length], 0.3 * Tempo, Stage),
-            wave.TweenScale(new Vector3(2.6f, 1, 2.6f), spread, options =>
+            wave.TweenScale((2.6, 1, 2.6), spread, options =>
             {
                 options.From = new Vector3(0.9f, 1, 0.9f);
-                options.Ease = EaseType.QuartOut;
+                options.Ease = Out.Quart;
             }),
             ripple.TweenAlbedoAlpha(0, spread, Stage, options =>
             {
                 options.From = 0.9f;
-                options.Ease = EaseType.QuadIn;
+                options.Ease = In.Quad;
             }),
-            camera.TweenVOffset(0.06f, shake, options =>
+            camera.TweenVOffset(0.06, shake, options =>
             {
                 options.From = 0;
                 options.EaseFunction = Shake;
             }),
-            camera.TweenHOffset(0.035f, shake, options =>
+            camera.TweenHOffset(0.035, shake, options =>
             {
                 options.From = 0;
                 options.EaseFunction = w => Shake(MathF.Min(1, w * 1.3f));

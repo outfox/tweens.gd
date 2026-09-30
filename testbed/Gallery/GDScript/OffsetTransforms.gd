@@ -5,13 +5,13 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 
 func animate() -> void:
 	await Tweens.group([
-		Tweens.play(targets.featured, cycle(Tweens.control_offset_transform_position(Vector2(0, -22), seconds))),
+		Tweens.play(targets.featured, cycle(Tweens.control_offset_transform_position([0, -22], seconds))),
 		Tweens.play(targets.featured, cycle(Tweens.control_offset_transform_rotation(0.18, seconds))),
-		Tweens.play(targets.featured, cycle(Tweens.control_offset_transform_scale(Vector2(1.13, 1.13), seconds))),
+		Tweens.play(targets.featured, cycle(Tweens.control_offset_transform_scale([1.13, 1.13], seconds))),
 	]).wait()
 
 func cycle(definition, delay: float = 0.0):
-	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.ease = InOut.CUBIC
 	definition.use_ping_pong = true
 	definition.repeats = Tweens.INFINITE
 	definition.repeat_interval = 0.25

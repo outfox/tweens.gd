@@ -12,7 +12,7 @@ public sealed partial class SharedMaterial
     {
         await Group.Of([
             material.TweenAlbedoColor(Palette.Amber, Seconds, Stage, Cycle),
-            material.TweenRoughness(0.95f, Seconds, Stage, Cycle),
+            material.TweenRoughness(0.95, Seconds, Stage, Cycle),
         ]).End;
     }
 

@@ -51,7 +51,7 @@ public:
 		SMOOTHER_STEP = 120,
 	};
 
-	// Matches Tweens.BlendType in types.gd.
+	// Matches BlendType in blend_type.gd and BlendType.cs.
 	enum BlendType : int64_t {
 		BLEND_MAKIMA,
 		BLEND_HERMITE,

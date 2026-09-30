@@ -21,7 +21,7 @@ public sealed partial class PolygonEchoes
     {
         await Group.Of(
             target.TweenColor(Palette.Amber, Seconds, timing),
-            target.TweenOffset(new Vector2(40, 0), Seconds, timing),
+            target.TweenOffset((40, 0), Seconds, timing),
             target.TweenRotation(Mathf.Pi, Seconds * 2, timing)
         ).End;
     }

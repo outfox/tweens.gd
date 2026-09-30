@@ -12,7 +12,7 @@ public sealed partial class CameraLens
     {
         await Group.Of([
             camera.TweenFov(65, Seconds, Cycle),
-            camera.TweenHOffset(0.7f, Seconds, Cycle),
+            camera.TweenHOffset(0.7, Seconds, Cycle),
         ]).End;
     }
 

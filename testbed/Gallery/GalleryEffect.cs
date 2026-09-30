@@ -12,7 +12,7 @@ namespace testbed;
 public abstract partial class GalleryEffect
 {
     private const double DefaultSeconds = 1.8;
-    protected const EaseType DefaultEase = EaseType.CubicInOut;
+    protected const EaseType DefaultEase = InOut.Cubic;
     private readonly List<Resource> resources = [];
     private GalleryGDScript? gdscript;
     public GalleryLanguage Language { get; private set; }

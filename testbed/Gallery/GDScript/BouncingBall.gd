@@ -19,16 +19,16 @@ func bounce() -> bool:
 	if abs(ball.position.x + direction * STRIDE) > BOUNDS:
 		direction = -direction
 	var destination = ball.position.x + direction * STRIDE
-	if await Tweens.play(ball, options(Tweens.scale_2d(Vector2(0.72, 1.32), 0.07 * tempo), Tweens.Ease.QUAD_OUT)).wait() != Tweens.Reason.COMPLETED:
+	if await Tweens.play(ball, options(Tweens.scale_2d([0.72, 1.32], 0.07 * tempo), Out.QUAD)).wait() != Tweens.Reason.COMPLETED:
 		return false
 	travel(destination, air * 2.0)
-	if not await flight(APEX, Vector2.ONE, Vector2(0.4, 0.4), air, Tweens.Ease.QUAD_OUT):
+	if not await flight(APEX, Vector2.ONE, Vector2(0.4, 0.4), air, Out.QUAD):
 		return false
-	if not await flight(GROUND, Vector2(0.8, 1.25), Vector2.ONE, air, Tweens.Ease.QUAD_IN):
+	if not await flight(GROUND, Vector2(0.8, 1.25), Vector2.ONE, air, In.QUAD):
 		return false
 	ripple(destination)
 	kick_up_dust(destination)
-	return await Tweens.play(ball, options(Tweens.scale_2d(Vector2(1.55, 0.55), 0.06 * tempo), Tweens.Ease.QUAD_OUT)).wait() == Tweens.Reason.COMPLETED
+	return await Tweens.play(ball, options(Tweens.scale_2d([1.55, 0.55], 0.06 * tempo), Out.QUAD)).wait() == Tweens.Reason.COMPLETED
 
 func travel(destination: float, duration: float) -> void:
 	await Tweens.group([
@@ -47,8 +47,8 @@ func flight(height: float, scale: Vector2, shadow_scale: Vector2, duration: floa
 func ripple(x: float) -> void:
 	targets.ring.position = Vector2(x, GROUND)
 	await Tweens.group([
-		Tweens.play(targets.ring, options(Tweens.scale_2d(Vector2(2.2, 2.2), 0.5 * tempo), Tweens.Ease.QUART_OUT, Vector2(0.4, 0.4))),
-		Tweens.play(targets.ring, options(Tweens.modulate_alpha(0.0, 0.5 * tempo), Tweens.Ease.QUAD_IN, 1.0)),
+		Tweens.play(targets.ring, options(Tweens.scale_2d([2.2, 2.2], 0.5 * tempo), Out.QUART, [0.4, 0.4])),
+		Tweens.play(targets.ring, options(Tweens.modulate_alpha(0.0, 0.5 * tempo), In.QUAD, 1.0)),
 	]).wait()
 
 func kick_up_dust(x: float) -> void:
@@ -60,11 +60,11 @@ func kick_up_dust(x: float) -> void:
 		var dust = targets.dust[i]
 		dust.position = Vector2(x + side * 14, GROUND - 3)
 		dust.scale = Vector2.ONE * (1.4 - row * 0.3)
-		handles.append(Tweens.play(dust, options(Tweens.position_2d(landing, 0.45 * tempo), Tweens.Ease.QUART_OUT)))
-		handles.append(Tweens.play(dust, options(Tweens.modulate_alpha(0.0, 0.45 * tempo), Tweens.Ease.QUAD_IN, 0.9)))
+		handles.append(Tweens.play(dust, options(Tweens.position_2d(landing, 0.45 * tempo), Out.QUART)))
+		handles.append(Tweens.play(dust, options(Tweens.modulate_alpha(0.0, 0.45 * tempo), In.QUAD, 0.9)))
 	await Tweens.group(handles).wait()
 
-func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

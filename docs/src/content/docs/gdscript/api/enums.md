@@ -105,5 +105,5 @@ flags. [Easing](/gdscript/easing/) includes the composer and migration details.
 
 ## BlendType
 
-Choose `Tweens.BlendType.MAKIMA` (default), `HERMITE`, `SMOOTH_STEP`, or `LINEAR`.
+Choose `BlendType.MAKIMA` (default), `HERMITE`, `SMOOTH_STEP`, or `LINEAR`.
 The centered join width defaults to 0.2. See [easing](/gdscript/api/easing/#choose-the-method-and-width).

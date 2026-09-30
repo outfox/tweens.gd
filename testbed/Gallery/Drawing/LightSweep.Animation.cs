@@ -11,7 +11,7 @@ public sealed partial class LightSweep
     private async Task AnimateAsync()
     {
         await Group.Of([
-            light.TweenTextureScale(2.5f, Seconds, Cycle),
+            light.TweenTextureScale(2.5, Seconds, Cycle),
             light.TweenEnergy(2, Seconds, Cycle),
             light.TweenPositionX(100, Seconds, Cycle),
         ]).End;

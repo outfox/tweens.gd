@@ -133,7 +133,7 @@ public partial class GallerySourceView : VBoxContainer
             "int long float double string object out ref params get set init record struct switch case default try catch throw typeof with yield").Split(' '))
             highlighter.AddKeywordColor(word, new Color("d5a6ef"));
         foreach (var word in ("Vector2 Vector3 Vector4 Vector2I Color Colors Math MathF Mathf Task Tweens TweenOptions TweenOptionsBuilder TweenInstance " +
-            "Group EaseType TweenState Reason Node Node2D Node3D Control Stage Palette GalleryEffect " +
+            "Group EaseType In Out InOut TweenState Reason Node Node2D Node3D Control Stage Palette GalleryEffect " +
             "Polygon2D Line2D ShaderMaterial StandardMaterial3D Camera2D Camera3D IEnumerable").Split(' '))
             highlighter.AddKeywordColor(word, Palette.Mint);
         highlighter.AddColorRegion(gdscript ? "#" : "//", "", Palette.Muted, true);

@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 
 using System.Threading.Tasks;
-using Godot;
 using tweens.gd;
 namespace testbed;
 
@@ -12,9 +11,9 @@ public sealed partial class OffsetTransforms
     private async Task AnimateAsync()
     {
         await Group.Of([
-            featured.TweenOffsetTransformPosition(new Vector2(0, -22), Seconds, Cycle),
-            featured.TweenOffsetTransformRotation(0.18f, Seconds, Cycle),
-            featured.TweenOffsetTransformScale(new Vector2(1.13f, 1.13f), Seconds, Cycle),
+            featured.TweenOffsetTransformPosition((0, -22), Seconds, Cycle),
+            featured.TweenOffsetTransformRotation(0.18, Seconds, Cycle),
+            featured.TweenOffsetTransformScale(1.13, Seconds, Cycle),
         ]).End;
     }
 

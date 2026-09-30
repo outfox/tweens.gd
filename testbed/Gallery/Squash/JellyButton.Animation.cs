@@ -32,29 +32,29 @@ public sealed partial class JellyButton
     {
         var flash = 0.6 * Tempo;
         await Group.Of([
-            shaker.TweenPosition(new Vector2(9, 5), 0.4 * Tempo, options =>
+            shaker.TweenPosition((9, 5), 0.4 * Tempo, options =>
             {
                 options.From = Vector2.Zero;
                 options.EaseFunction = Tweens.FX.Punch(frequency: 3.0f);
             }),
-            burst.TweenScale(new Vector2(2.1f, 2.1f), flash, options =>
+            burst.TweenScale(2.1, flash, options =>
             {
                 options.From = new Vector2(0.7f, 0.7f);
-                options.Ease = EaseType.QuartOut;
+                options.Ease = Out.Quart;
             }),
             burst.TweenModulateAlpha(0, flash, options =>
             {
                 options.From = 1;
-                options.Ease = EaseType.QuadIn;
+                options.Ease = In.Quad;
             }),
         ]).End;
     }
 
     private TweenInstance Flatten() =>
-        button.TweenScale(new Vector2(1.3f, 0.7f), 0.07 * Tempo, options => options.Ease = EaseType.QuadOut);
+        button.TweenScale((1.3, 0.7), 0.07 * Tempo, Out.Quad);
 
     private TweenInstance SpringBack() =>
-        button.TweenScale(Vector2.One, 0.8 * Tempo, options => options.Ease = EaseType.ElasticOut);
+        button.TweenScale(Vector2.One, 0.8 * Tempo, EaseType.ElasticOut);
 
     private async Task Throw(Polygon2D shard)
     {
@@ -69,13 +69,13 @@ public sealed partial class JellyButton
         shard.Rotation = angle;
         shard.Modulate = Colors.White;
         await Group.Of([
-            shard.TweenPositionX(landing.X, flight, options => options.Ease = EaseType.QuartOut),
+            shard.TweenPositionX(landing.X, flight, Out.Quart),
             shard.TweenPositionY(landing.Y, flight, options =>
             {
                 // This curve dips below zero before landing at 1, forming a launch arc.
                 options.EaseFunction = progress => (2 + lift) * progress * progress - (1 + lift) * progress;
             }),
-            shard.TweenRotation(spin, flight, options => options.Ease = EaseType.QuadOut),
+            shard.TweenRotation(spin, flight, Out.Quad),
             shard.TweenModulateAlpha(0, 0.3 * Tempo, options => options.Delay = 0.6 * Tempo),
         ]).End;
     }
@@ -87,7 +87,7 @@ public sealed partial class JellyButton
             bonus.TweenPositionY(-95, 0.7 * Tempo, options =>
             {
                 options.From = -50;
-                options.Ease = EaseType.QuartOut;
+                options.Ease = Out.Quart;
             }),
             bonus.TweenModulateAlpha(0, 0.3 * Tempo, options => options.Delay = 0.4 * Tempo),
         ]).End;
@@ -101,7 +101,7 @@ public sealed partial class JellyButton
             Stage.TweenFloat(total, 0.5 * Tempo, options =>
             {
                 options.From = shown;
-                options.Ease = EaseType.CubicOut;
+                options.Ease = Out.Cubic;
                 options.OnUpdate = (_, value) =>
                 {
                     shown = value;

@@ -11,7 +11,7 @@ public sealed partial class AlbedoFade
     private async Task AnimateAsync()
     {
         await Group.Of([
-            material.TweenAlbedoAlpha(0.08f, Seconds, Stage, Cycle),
+            material.TweenAlbedoAlpha(0.08, Seconds, Stage, Cycle),
         ]).End;
     }
 

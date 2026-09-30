@@ -56,7 +56,7 @@ class FlipCompletion:
 		return successful
 
 func flip(card: Dictionary, delay: float, face_up: bool, completion: FlipCompletion) -> void:
-	if await Tweens.play(card.body, options(Tweens.scale_2d_x(0.0, 0.1 * tempo), Tweens.Ease.QUAD_IN, null, delay)).wait() != Tweens.Reason.COMPLETED:
+	if await Tweens.play(card.body, options(Tweens.scale_2d_x(0.0, 0.1 * tempo), In.QUAD, null, delay)).wait() != Tweens.Reason.COMPLETED:
 		completion.finish(false)
 		return
 	show_face(card, face_up)
@@ -77,7 +77,7 @@ func lift_hero() -> bool:
 	var hero = targets.deck[-1].body
 	return await Tweens.group([
 		Tweens.play(hero, options(Tweens.position_2d_y(hero.position.y - 26.0, 0.35 * tempo), Tweens.Ease.BACK_OUT)),
-		Tweens.play(hero, options(Tweens.scale_2d(Vector2(1.18, 1.18), 0.35 * tempo), Tweens.Ease.BACK_OUT)),
+		Tweens.play(hero, options(Tweens.scale_2d([1.18, 1.18], 0.35 * tempo), Tweens.Ease.BACK_OUT)),
 		Tweens.play(hero, options(Tweens.rotation_2d(0.0, 0.35 * tempo), Tweens.Ease.BACK_OUT)),
 	]).wait() == Tweens.Reason.COMPLETED
 
@@ -86,19 +86,19 @@ func gather() -> bool:
 	for i in targets.deck.size():
 		var card = targets.deck[i].body
 		var delay = (targets.deck.size() - 1 - i) * 0.05 * tempo
-		for definition in [Tweens.position_2d(Vector2(0, -i * 2), 0.35 * tempo), Tweens.rotation_2d(0.0, 0.35 * tempo), Tweens.scale_2d(Vector2.ONE, 0.35 * tempo)]:
-			handles.append(Tweens.play(card, options(definition, Tweens.Ease.CUBIC_IN_OUT, null, delay)))
+		for definition in [Tweens.position_2d([0, -i * 2], 0.35 * tempo), Tweens.rotation_2d(0.0, 0.35 * tempo), Tweens.scale_2d(Vector2.ONE, 0.35 * tempo)]:
+			handles.append(Tweens.play(card, options(definition, InOut.CUBIC, null, delay)))
 	return await Tweens.group(handles).wait() == Tweens.Reason.COMPLETED
 
 func toss() -> bool:
 	var handles: Array = []
 	for i in targets.deck.size():
 		var card = targets.deck[i].body
-		handles.append(Tweens.play(card, options(Tweens.position_2d(Vector2((i - 2) * 30, -170), 0.45 * tempo), Tweens.Ease.BACK_IN, null, i * 0.04 * tempo)))
+		handles.append(Tweens.play(card, options(Tweens.position_2d([(i - 2) * 30, -170], 0.45 * tempo), Tweens.Ease.BACK_IN, null, i * 0.04 * tempo)))
 		handles.append(Tweens.play(card, options(Tweens.rotation_2d((i - 2) * 0.4, 0.45 * tempo), Tweens.Ease.BACK_IN, null, i * 0.04 * tempo)))
 	return await Tweens.group(handles).wait() == Tweens.Reason.COMPLETED
 
-func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

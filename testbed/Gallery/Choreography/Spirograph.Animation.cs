@@ -17,9 +17,9 @@ public sealed partial class Spirograph
         var pulse = 0.6 * Tempo;
         var revolution = 7 * Tempo;
         await Group.Of([
-            sun.TweenScale(new Vector2(1.35f, 1.35f), pulse, options =>
+            sun.TweenScale(1.35, pulse, options =>
             {
-                options.Ease = EaseType.SineInOut;
+                options.Ease = InOut.Sine;
                 options.UsePingPong = true;
                 options.Repeats = TweenOptions.Infinite;
             }),

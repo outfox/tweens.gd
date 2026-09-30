@@ -16,11 +16,11 @@ func animate() -> void:
 		handles.append(Tweens.play(targets.echoes[i], trailing_offset))
 	handles.append(Tweens.play(targets.leader, progress))
 	handles.append(Tweens.play(targets.leader, offset))
-	handles.append(Tweens.play(targets.ship, cycle(Tweens.scale_2d(Vector2(1.6, 1.6), seconds))))
+	handles.append(Tweens.play(targets.ship, cycle(Tweens.scale_2d([1.6, 1.6], seconds))))
 	await Tweens.group(handles).wait()
 
 func cycle(definition, delay: float = 0.0):
-	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.ease = InOut.CUBIC
 	definition.use_ping_pong = true
 	definition.repeats = Tweens.INFINITE
 	definition.repeat_interval = 0.25

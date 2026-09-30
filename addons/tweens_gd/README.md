@@ -32,7 +32,7 @@ with `./scripts/Pack-Addon.ps1` from the repository root.
 extends Node2D
 
 func _ready() -> void:
-	var move := Tweens.property(^"position", Vector2(400, 180), 0.6, Out.CUBIC)
+	var move := Tweens.property(^"position", [400, 180], 0.6, Out.CUBIC)
 	await Tweens.play(self, move).end
 	print("Movement ended")
 ```
@@ -53,7 +53,7 @@ Each `with_*()` method returns a copy with one field changed, like C#'s `with`,
 so a shared definition can vary a single start:
 
 ```gdscript
-var arrive := Tweens.position_2d(Vector2(400, 180), 0.6, Out.CUBIC)
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
 Tweens.play(first, arrive)
 Tweens.play(second, arrive.with_duration(0.8))
 Tweens.play(third, arrive.with_delay(0.2).with_duration(1.0))
@@ -92,7 +92,7 @@ Helpers return the same reusable definition type and validate the native target
 class and captured value type before playback:
 
 ```gdscript
-var move := Tweens.position_2d(Vector2(400, 180), 0.6, Out.CUBIC)
+var move := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
 var fade := Tweens.modulate_alpha(0.0, 0.3)
 var together := Tweens.play_all(sprite, [move, fade])
 await together.end
@@ -151,7 +151,7 @@ Tweens.play(sprite, move)
 `InOut.SINE` is `In.SINE | Out.SINE`. A single leg runs
 on its own. In and Out occupy the first and second halves. Their
 halves meet through a local Makima join between 40% and 60% of progress after
-skew. `blend_type` selects `Tweens.BlendType.MAKIMA`, `HERMITE`, `SMOOTH_STEP`, or `LINEAR`;
+skew. `blend_type` selects `BlendType.MAKIMA`, `HERMITE`, `SMOOTH_STEP`, or `LINEAR`;
 `blend` sets the centered window width in [0, 1] (default 0.2). Matching families use their paired profile directly.
 Choose one curve per side; `NONE` omits a side and
 `LINEAR` selects a straight line. `BACK` / `BACK10` and `ELASTIC` / `ELASTIC10`
@@ -321,7 +321,7 @@ Group existing handles to control and await parallel playback as one step:
 
 ```gdscript
 var motion := Tweens.group([
-	Tweens.play(sprite, Tweens.property(^"position", Vector2(400, 180), 0.6)),
+	Tweens.play(sprite, Tweens.property(^"position", [400, 180], 0.6)),
 	Tweens.play(sprite, Tweens.property(^"modulate:a", 0.0, 0.3)),
 ])
 motion.pause()

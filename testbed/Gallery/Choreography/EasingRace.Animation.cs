@@ -12,7 +12,7 @@ public sealed partial class EasingRace
     private const float StartLine = -120, FinishLine = 120, LaneHeight = 24;
     private static readonly (EaseType Ease, string Name)[] Lanes =
     [
-        (EaseType.Linear, "Linear"), (EaseType.SineInOut, "Sine"), (EaseType.CubicInOut, "Cubic"), (EaseType.ExpoInOut, "Expo"),
+        (InOut.Linear, "Linear"), (InOut.Sine, "Sine"), (InOut.Cubic, "Cubic"), (InOut.Expo, "Expo"),
         (EaseType.BackInOut, "Back"), (EaseType.ElasticOut, "Elastic"), (EaseType.BounceOut, "Bounce"),
     ];
 

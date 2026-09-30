@@ -62,16 +62,8 @@ public sealed partial class CardDeal
             var delay = i * 0.1 * Tempo;
             return new TweenInstance[]
             {
-                card.Body.TweenPosition(spot, duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.BackOut;
-                }),
-                card.Body.TweenRotation(offset * 0.13f, duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.BackOut;
-                }),
+                card.Body.TweenPosition(spot, duration, EaseType.BackOut, delay),
+                card.Body.TweenRotation(offset * 0.13f, duration, EaseType.BackOut, delay),
             };
         });
         return await Group.Of([.. tweens]).End == Reason.Completed;
@@ -82,9 +74,9 @@ public sealed partial class CardDeal
         var hero = deck[^1].Body;
         var duration = 0.35 * Tempo;
         return await Group.Of([
-            hero.TweenPositionY(hero.Position.Y - 26, duration, options => options.Ease = EaseType.BackOut),
-            hero.TweenScale(new Vector2(1.18f, 1.18f), duration, options => options.Ease = EaseType.BackOut),
-            hero.TweenRotation(0, duration, options => options.Ease = EaseType.BackOut),
+            hero.TweenPositionY(hero.Position.Y - 26, duration, EaseType.BackOut),
+            hero.TweenScale(1.18, duration, EaseType.BackOut),
+            hero.TweenRotation(0, duration, EaseType.BackOut),
         ]).End == Reason.Completed;
     }
 
@@ -97,21 +89,9 @@ public sealed partial class CardDeal
             var delay = (deck.Length - 1 - i) * 0.05 * Tempo;
             return new TweenInstance[]
             {
-                card.Body.TweenPosition(new Vector2(0, -i * 2), duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.CubicInOut;
-                }),
-                card.Body.TweenRotation(0, duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.CubicInOut;
-                }),
-                card.Body.TweenScale(Vector2.One, duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.CubicInOut;
-                }),
+                card.Body.TweenPosition((0, -i * 2), duration, InOut.Cubic, delay),
+                card.Body.TweenRotation(0, duration, InOut.Cubic, delay),
+                card.Body.TweenScale(Vector2.One, duration, InOut.Cubic, delay),
             };
         });
         return await Group.Of([.. tweens]).End == Reason.Completed;
@@ -126,28 +106,16 @@ public sealed partial class CardDeal
             var delay = i * 0.04 * Tempo;
             return new TweenInstance[]
             {
-                card.Body.TweenPosition(new Vector2((i - 2) * 30, -170), duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.BackIn;
-                }),
-                card.Body.TweenRotation((i - 2) * 0.4f, duration, options =>
-                {
-                    options.Delay = delay;
-                    options.Ease = EaseType.BackIn;
-                }),
+                card.Body.TweenPosition(((i - 2) * 30, -170), duration, EaseType.BackIn, delay),
+                card.Body.TweenRotation((i - 2) * 0.4f, duration, EaseType.BackIn, delay),
             };
         });
         return await Group.Of([.. tweens]).End == Reason.Completed;
     }
 
     private TweenInstance Fold(PlayingCard card, double delay) =>
-        card.Body.TweenScaleX(0, 0.1 * Tempo, options =>
-        {
-            options.Delay = delay;
-            options.Ease = EaseType.QuadIn;
-        });
+        card.Body.TweenScaleX(0, 0.1 * Tempo, In.Quad, delay);
 
     private TweenInstance Unfold(PlayingCard card) =>
-        card.Body.TweenScaleX(1, 0.22 * Tempo, options => options.Ease = EaseType.BackOut);
+        card.Body.TweenScaleX(1, 0.22 * Tempo, EaseType.BackOut);
 }

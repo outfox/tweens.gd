@@ -13,7 +13,7 @@ public sealed partial class RangeMeter
         await Group.Of([
             progress.TweenValue(100, Seconds, Cycle),
             swatch.TweenColor(Palette.Blue, Seconds, Cycle),
-            swatch.TweenSelfModulateAlpha(0.25f, Seconds, Cycle),
+            swatch.TweenSelfModulateAlpha(0.25, Seconds, Cycle),
         ]).End;
     }
 

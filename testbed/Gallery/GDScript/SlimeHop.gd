@@ -28,17 +28,17 @@ func hop() -> bool:
 		direction = -direction
 	var destination = slime.position.x + direction * STRIDE
 	Tweens.play(targets.pupils, options(Tweens.position_2d_x(direction * 3.0, 0.2 * tempo), Tweens.Ease.BACK_OUT))
-	if not await reshape(Vector2(1.38, 0.6), 0.32, Tweens.Ease.SINE_OUT):
+	if not await reshape(Vector2(1.38, 0.6), 0.32, Out.SINE):
 		return false
-	if not await reshape(Vector2(0.68, 1.45), 0.08, Tweens.Ease.QUAD_OUT):
+	if not await reshape(Vector2(0.68, 1.45), 0.08, Out.QUAD):
 		return false
 	travel(destination, air * 2.0)
-	if not await flight(APEX, Vector2.ONE, air, Tweens.Ease.QUAD_OUT):
+	if not await flight(APEX, Vector2.ONE, air, Out.QUAD):
 		return false
-	if not await flight(GROUND, Vector2(0.82, 1.25), air, Tweens.Ease.QUAD_IN):
+	if not await flight(GROUND, Vector2(0.82, 1.25), air, In.QUAD):
 		return false
 	splash(destination)
-	if not await reshape(Vector2(1.6, 0.5), 0.06, Tweens.Ease.QUAD_OUT):
+	if not await reshape(Vector2(1.6, 0.5), 0.06, Out.QUAD):
 		return false
 	return await reshape(Vector2.ONE, 0.75, Tweens.Ease.ELASTIC_OUT)
 
@@ -46,10 +46,10 @@ func reshape(scale: Vector2, duration: float, easing: int) -> bool:
 	return await Tweens.play(targets.slime, options(Tweens.scale_2d(scale, duration * tempo), easing)).wait() == Tweens.Reason.COMPLETED
 
 func travel(destination: float, duration: float) -> void:
-	var handles = [Tweens.play(targets.slime, options(Tweens.position_2d_x(destination, duration), Tweens.Ease.SINE_IN_OUT))]
+	var handles = [Tweens.play(targets.slime, options(Tweens.position_2d_x(destination, duration), InOut.SINE))]
 	hops += 1
 	if hops % 2 == 0:
-		handles.append(Tweens.play(targets.body, options(Tweens.rotation_2d(direction * TAU, duration), Tweens.Ease.CUBIC_IN_OUT, 0.0)))
+		handles.append(Tweens.play(targets.body, options(Tweens.rotation_2d(direction * TAU, duration), InOut.CUBIC, 0.0)))
 	await Tweens.group(handles).wait()
 
 func flight(height: float, scale: Vector2, duration: float, easing: int) -> bool:
@@ -67,11 +67,11 @@ func splash(x: float) -> void:
 		var drop = targets.drops[i]
 		drop.position = origin
 		drop.scale = Vector2.ONE * (1.0 if i % 2 == 0 else 0.7)
-		handles.append(Tweens.play(drop, options(Tweens.position_2d(landing, 0.4 * tempo), Tweens.Ease.QUART_OUT)))
-		handles.append(Tweens.play(drop, options(Tweens.modulate_alpha(0.0, 0.4 * tempo), Tweens.Ease.CUBIC_IN, 1.0)))
+		handles.append(Tweens.play(drop, options(Tweens.position_2d(landing, 0.4 * tempo), Out.QUART)))
+		handles.append(Tweens.play(drop, options(Tweens.modulate_alpha(0.0, 0.4 * tempo), In.CUBIC, 1.0)))
 	await Tweens.group(handles).wait()
 
-func options(definition, easing = Tweens.Ease.LINEAR, from = null, delay: float = 0.0):
+func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

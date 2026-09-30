@@ -6,8 +6,8 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 const TRAIL_LENGTH = 420
 
 func animate() -> void:
-	var pulse = cycle(Tweens.scale_2d(Vector2(1.35, 1.35), 0.6 * tempo))
-	pulse.ease = Tweens.Ease.SINE_IN_OUT
+	var pulse = cycle(Tweens.scale_2d([1.35, 1.35], 0.6 * tempo))
+	pulse.ease = InOut.SINE
 	pulse.repeat_interval = 0.0
 	pulse.ping_pong_interval = 0.0
 	var revolution = Tweens.value(0.0, 1.0, 7.0 * tempo)
@@ -37,7 +37,7 @@ func extend(trail: Line2D, tip: Vector2) -> void:
 		trail.remove_point(0)
 
 func cycle(definition, delay: float = 0.0):
-	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.ease = InOut.CUBIC
 	definition.use_ping_pong = true
 	definition.repeats = Tweens.INFINITE
 	definition.repeat_interval = 0.25

@@ -76,7 +76,7 @@ pair's join can reshape peaks inside its blend window.
 
 ## Choose the method and width
 
-Set `blend_type = Tweens.BlendType.MAKIMA` and `blend = 0.2` on the tween definition.
+Set `blend_type = BlendType.MAKIMA` and `blend = 0.2` on the tween definition.
 The width must be finite and in `[0, 1]`. A smaller window preserves more of
 each original leg; a larger window gives the join more room to reshape them.
 Width zero directly splices the halves and may produce a velocity jump.
@@ -93,7 +93,7 @@ crossfade approach; they can still inherit steep or singular midpoint slopes
 from a family such as Circ. Join settings do not alter a legacy ease, a single
 leg, a matching pair, or a custom function/Curve.
 
-Sample the same configuration with `Tweens.Easing.evaluate(ease, t, Tweens.BlendType.MAKIMA, 0.2)`.
+Sample the same configuration with `Tweens.Easing.evaluate(ease, t, BlendType.MAKIMA, 0.2)`.
 The copy helpers are `with_blend_type()` and `with_blend()`.
 
 Skew warps normalized time **before** the join. A value of 1 leaves time

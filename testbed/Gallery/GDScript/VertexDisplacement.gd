@@ -7,7 +7,7 @@ func animate() -> void:
 	await Tweens.play(targets.deformed, cycle(Tweens.instance_shader_parameter(&"amplitude", 0.22, seconds))).wait()
 
 func cycle(definition, delay: float = 0.0):
-	definition.ease = Tweens.Ease.CUBIC_IN_OUT
+	definition.ease = InOut.CUBIC
 	definition.use_ping_pong = true
 	definition.repeats = Tweens.INFINITE
 	definition.repeat_interval = 0.25

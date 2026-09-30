@@ -13,18 +13,18 @@ public sealed partial class CameraPan
     {
         const double pulse = 1.2;
         await Group.Of([
-            camera.TweenZoom(new Vector2(1.8f, 1.8f), Seconds, Cycle),
-            camera.TweenOffset(new Vector2(90, 25), Seconds, Cycle),
-            beacon.TweenScale(new Vector2(2.4f, 2.4f), pulse, options =>
+            camera.TweenZoom((1.8, 1.8), Seconds, Cycle),
+            camera.TweenOffset((90, 25), Seconds, Cycle),
+            beacon.TweenScale(2.4, pulse, options =>
             {
                 options.From = Vector2.One;
-                options.Ease = EaseType.QuartOut;
+                options.Ease = Out.Quart;
                 options.Repeats = TweenOptions.Infinite;
             }),
             beacon.TweenModulateAlpha(0, pulse, options =>
             {
                 options.From = 1;
-                options.Ease = EaseType.QuadIn;
+                options.Ease = In.Quad;
                 options.Repeats = TweenOptions.Infinite;
             }),
         ]).End;

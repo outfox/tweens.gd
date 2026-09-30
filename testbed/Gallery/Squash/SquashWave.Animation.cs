@@ -17,12 +17,12 @@ public sealed partial class SquashWave
         {
             var pill = pills[i];
             var delay = i * 0.07 * Tempo;
-            tweens.Add(pill.TweenScaleY(2.6f, beat, options =>
+            tweens.Add(pill.TweenScaleY(2.6, beat, options =>
             {
                 Cycle(options);
                 options.Delay = delay;
             }));
-            tweens.Add(pill.TweenScaleX(0.62f, beat, options =>
+            tweens.Add(pill.TweenScaleX(0.62, beat, options =>
             {
                 Cycle(options);
                 options.Delay = delay;
