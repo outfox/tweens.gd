@@ -9,7 +9,7 @@ tableOfContents: true
 be assigned directly to `ease_function`:
 
 ```gdscript
-var recoil := Tweens.position_2d(null, 0.4).with_by(Vector2(9, 5))
+var recoil := Tweens.position_2d(null, 0.4).with_by([9, 5])
 recoil.ease_function = Tweens.FX.punch(6.0)
 Tweens.play(sprite, recoil)
 ```

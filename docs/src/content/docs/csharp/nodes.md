@@ -24,16 +24,16 @@ The example assumes `using Godot;` and `using tweens.gd;`.
 
 ```csharp
 // sprite: Sprite2D, camera: Camera2D, label: Label; all inside the tree.
-var movement = sprite.TweenPosition(new Vector2(300, 120), 0.5,
-    options => options.Ease = EaseType.CubicOut);
+var movement = sprite.TweenPosition((300, 120), 0.5, Out.Cubic);
 var fade = sprite.TweenModulateAlpha(0, 0.2);
-var zoom = camera.TweenZoom(new Vector2(2, 2), 0.4);
+var zoom = camera.TweenZoom((2, 2), 0.4);
 var reveal = label.TweenVisibleRatio(1, 1.5, options => options.From = 0);
 await Group.Of(movement, fade).End;
 ```
 
-Each shorthand method, such as `TweenPosition`, takes `(to, duration, configure = null)`
-or `(to, duration, options)`. The configure callback runs before playback starts
+Each shorthand method, such as `TweenPosition`, takes `(to, duration, configure = null)`,
+`(to, duration, ease, delay = 0)`, or `(to, duration, options)`; [syntax sugar](/csharp/syntax-sugar/)
+shows the shorter endpoint forms. The configure callback runs before playback starts
 and can set `From`, `To`, `Duration`, or any other definition setting, including
 callbacks. For motion you reuse, start a definition instead:
 `sprite.Tween(new Tweens.Position2D(to, 0.5))`. Both forms return the same kind

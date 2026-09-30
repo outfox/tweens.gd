@@ -27,7 +27,7 @@ public partial class Enemy : Sprite2D
     {
         By = -12,
         Duration = 0.2,
-        Ease = EaseType.QuadOut,
+        Ease = Out.Quad,
         UsePingPong = true,
     };
 
@@ -94,7 +94,7 @@ public partial class Heart : Sprite2D
     {
         FactorTo = 1.2,
         Duration = 0.15,
-        Ease = EaseType.SmootherStep,
+        Ease = InOut.SmootherStep,
         UsePingPong = true,
     };
 
@@ -121,11 +121,8 @@ time `t` becomes `t` to the power of `Skew` before the ease sees it:
 - The default, 1, leaves the ease unchanged.
 
 ```csharp
-var movement = sprite.Tween(new Tweens.Position2D
+var movement = sprite.Tween(new Tweens.Position2D((300, 120), 0.5, Out.Cubic)
 {
-    To = new Vector2(300, 120),
-    Duration = 0.5,
-    Ease = EaseType.CubicOut,
     Skew = 2,
     Weks = 0.5,
     UsePingPong = true,

@@ -25,7 +25,7 @@ Use an early return before a follow-up animation or a gameplay action that requi
 arrival. This also prevents the next step from using a target that has been freed.
 
 ```csharp
-var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);
+var movement = sprite.TweenPosition((400, 180), 0.6);
 if (await movement.End != Reason.Completed)
     return;
 
@@ -62,7 +62,7 @@ that fires when a menu closes. The token cancels only that wait: other waiters
 and playback continue unless you call `Cancel()`.
 
 ```csharp
-var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);
+var movement = sprite.TweenPosition((400, 180), 0.6);
 try
 {
     await movement.AwaitDecommissionAsync(cancellationToken);

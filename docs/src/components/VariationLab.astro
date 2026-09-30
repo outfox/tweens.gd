@@ -38,7 +38,7 @@ const gd = lang === 'gdscript';
 			{
 				gd ? (
 					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num" data-base-duration>0.2</span>,
-    Tweens.Ease.QUAD_OUT) <span class="cont">\</span>
+    Out.QUAD) <span class="cont">\</span>
     .<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>) <span class="cont">\</span>
     .<span class="fn">with_ping_pong</span>()</pre>
 				) : (
@@ -46,7 +46,7 @@ const gd = lang === 'gdscript';
 {'{'}
     By = <span class="num" data-base-by>-12</span>,
     Duration = <span class="num" data-base-duration>0.2</span>,
-    Ease = EaseType.QuadOut,
+    Ease = Out.Quad,
     UsePingPong = <span class="kw">true</span>,
 {'}'};</pre>
 				)

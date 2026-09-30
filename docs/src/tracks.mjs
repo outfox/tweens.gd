@@ -26,6 +26,7 @@ export const PATH = [
 		art: 'curve',
 		collapsed: true,
 		pages: [
+			{ slug: 'syntax-sugar', label: 'Syntax sugar' },
 			{ slug: 'easing', label: 'Easing' },
 			{ slug: 'timing', label: 'Timing & loops' },
 			{ slug: 'variations', label: 'Variations' },

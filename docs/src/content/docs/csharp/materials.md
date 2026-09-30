@@ -22,14 +22,13 @@ an owner node:
 var fade = material.TweenAlbedoAlpha(0, 0.5, GetTree());
 
 // Stops when mesh leaves the tree.
-var roughness = material.TweenRoughness(0.2f, 1, mesh);
+var roughness = material.TweenRoughness(0.2, 1, mesh);
 
-// Shorthand methods take the usual configure callback after the tree or owner.
-var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(),
-    options => options.Ease = EaseType.CubicOut);
+// Shorthand methods take an ease, or a configure callback, after the tree or owner.
+var emission = material.TweenEmissionEnergyMultiplier(3, 1, GetTree(), Out.Cubic);
 
 // One definition works with either lifetime.
-var definition = new Tweens.MaterialRoughness(0.5f, 1);
+var definition = new Tweens.MaterialRoughness(0.5, 1);
 material.Tween(definition, GetTree());
 material.Tween(definition, mesh);
 mesh.Tween(material, definition); // The same as the line above, owner first.
@@ -82,7 +81,7 @@ once during scene setup, assign the duplicate, and use that for later tweens:
 var unique = (StandardMaterial3D)shared.Duplicate();
 mesh.MaterialOverride = unique;
 unique.TweenAlbedoColor(Colors.Red, 1, mesh);
-unique.TweenRoughness(0.2f, 1, mesh);
+unique.TweenRoughness(0.2, 1, mesh);
 ```
 
 Continue with [shader uniforms](/csharp/shaders/) for shared and per-instance parameters.

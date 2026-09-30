@@ -26,7 +26,7 @@ short script and run it in a scene.
 
 <Moves>
 
-```csharp title="MoveAndFade.cs" {"1":8-13} {"2":15} {"3":16} {"4":18}
+```csharp title="MoveAndFade.cs" {"1":8} {"2":10} {"3":11} {"4":13}
 using Godot;
 using tweens.gd;
 
@@ -34,12 +34,7 @@ public partial class MoveAndFade : Sprite2D
 {
     public override async void _Ready()
     {
-        var arrive = new Tweens.Position2D
-        {
-            To = Position + new Vector2(240, 0),
-            Duration = 0.6,
-            Ease = Out.Cubic,
-        };
+        var arrive = new Tweens.Position2D(Position + new Vector2(240, 0), 0.6, Out.Cubic);
 
         var movement = this.Tween(arrive);
         await movement.End;

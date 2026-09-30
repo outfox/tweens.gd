@@ -37,11 +37,8 @@ tween2.TweenProperty(sprite2, "scale", Vector2.One, 0.8);
 ```
 
 ```csharp title="tweens.gd"
-var pulse = new Tweens.Scale2D
+var pulse = new Tweens.Scale2D(1.1, 0.8, InOut.Sine)
 {
-    To = new Vector2(1.1f, 1.1f),
-    Duration = 0.8,
-    Ease = EaseType.SineInOut,
     UsePingPong = true,
     Repeats = TweenOptions.Infinite,
 };

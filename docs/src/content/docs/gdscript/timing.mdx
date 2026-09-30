@@ -38,12 +38,8 @@ tween2.tween_property(sprite2, "scale", Vector2.ONE, 0.8)
 ```
 
 ```gdscript title="tweens.gd"
-var big := Vector2(1.1, 1.1)
-
-var pulse := Tweens.scale_2d(big, 0.8,
-	Tweens.Ease.SINE_IN_OUT)
-pulse.use_ping_pong = true
-pulse.repeats = Tweens.INFINITE
+var pulse := Tweens.scale_2d([1.1, 1.1], 0.8, InOut.SINE) \
+	.with_ping_pong().with_repeats(Tweens.INFINITE)
 
 Tweens.play(sprite1, pulse)
 Tweens.play(sprite2, pulse)
@@ -68,7 +64,7 @@ All times are in seconds, as GDScript `float` values.
 | `offset` | `0.0` | Start this many seconds into the first forward leg, between zero and `duration`. The delay still comes first. |
 
 The helper factories set `duration` and `delay` from their second and fourth
-arguments, as in `Tweens.position_2d_y(to, 0.8, Tweens.Ease.SINE_IN_OUT, 0.2)`.
+arguments, as in `Tweens.position_2d_y(to, 0.8, InOut.SINE, 0.2)`.
 Set the other fields on the returned definition, or vary a shared one with
 `with_*()` copies such as `with_repeats(2)`.
 

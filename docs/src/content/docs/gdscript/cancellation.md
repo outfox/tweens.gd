@@ -25,7 +25,7 @@ Use an early return before a follow-up animation or a gameplay action that requi
 arrival. This also prevents the next step from using a target that has been freed.
 
 ```gdscript
-var movement := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
+var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 if await movement.end != Tweens.Reason.COMPLETED:
 	return
 
@@ -63,7 +63,7 @@ which returns `WAIT_CANCELLED`; other waiters and playback continue unless you
 call `cancel()`.
 
 ```gdscript
-var movement := Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
+var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 var cancellation := TweensGdCancellation.new()
 get_tree().create_timer(0.25).timeout.connect(cancellation.cancel)
 if await movement.wait(cancellation) == Tweens.Reason.WAIT_CANCELLED:

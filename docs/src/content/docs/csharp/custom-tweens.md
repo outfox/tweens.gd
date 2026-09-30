@@ -39,7 +39,7 @@ public partial class HealthBar : Node2D
 
     static readonly Tweens.Property<HealthBar, float> Drain = new(
         bar => bar.Fill, (bar, value) => bar.Fill = value, Interpolators.Float)
-        { Duration = 0.4, Ease = EaseType.SmootherStep };
+        { Duration = 0.4, Ease = InOut.SmootherStep };
 
     public void SetHealth(float fraction) => this.Tween(Drain with { To = fraction });
 }
@@ -112,7 +112,7 @@ public sealed class UniformZoomTween : TweenDefinition<Camera2D, float>
 ```
 
 ```csharp
-camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = EaseType.SmootherStep });
+camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = InOut.SmootherStep });
 ```
 
 `By`, factors, and deltas ([variations](/csharp/variations/)) work with int,

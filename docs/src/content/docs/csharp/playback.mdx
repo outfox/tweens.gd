@@ -22,7 +22,7 @@ latest value. To cancel every tween a node owns, call `node.CancelTweens()`.
 ## Await playback
 
 ```csharp
-var movement = sprite.TweenPosition(new Vector2(400, 180), 0.6);
+var movement = sprite.TweenPosition((400, 180), 0.6);
 await movement.End;
 ```
 
@@ -35,7 +35,7 @@ and cancelling just one wait.
 playback has ended. You can also pass it to APIs that accept a task.
 
 To start a tween without waiting, call
-`sprite.TweenPosition(new Vector2(400, 180), 0.6);`. The handle itself is not
+`sprite.TweenPosition((400, 180), 0.6);`. The handle itself is not
 awaitable, so this also works in an async method without an unawaited-call warning.
 
 ## Callbacks
@@ -44,7 +44,7 @@ Definitions accept typed callbacks. Set them on a shared definition, or on one
 start with `with`:
 
 ```csharp
-var arrive = new Tweens.Position2D(new Vector2(400, 180), 0.6, EaseType.CubicOut);
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
 sprite.Tween(arrive with
 {
     OnStart = _ => GD.Print("Moving"),

@@ -63,9 +63,9 @@ To override one setting, list it after `Options`. Shorthand methods accept
 options too:
 
 ```csharp
-var snappy = new TweenOptions { Duration = 0.25, Ease = EaseType.BackOut };
+var snappy = new TweenOptions { Duration = 0.25, Ease = Out.Back };
 var slowPop = new Tweens.Scale2D { Options = snappy, Duration = 0.6 };
-sprite.TweenPosition(new Vector2(400, 180), 0.5, snappy);
+sprite.TweenPosition((400, 180), 0.5, snappy);
 ```
 
 :::caution[Order matters]

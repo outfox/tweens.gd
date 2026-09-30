@@ -27,7 +27,7 @@ var fade := Tweens.play(material, Tweens.material_albedo_alpha(0.0, 0.5), get_tr
 var roughness := Tweens.play(material, Tweens.material_roughness(0.2, 1.0), mesh)
 
 # Helpers take the ordinary timing and easing arguments.
-var emission := Tweens.material_emission_energy_multiplier(3.0, 1.0, Tweens.Ease.CUBIC_OUT)
+var emission := Tweens.material_emission_energy_multiplier(3.0, 1.0, Out.CUBIC)
 Tweens.play(material, emission, mesh)
 
 # One definition works with either lifetime.

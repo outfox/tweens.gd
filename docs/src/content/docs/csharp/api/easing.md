@@ -9,10 +9,7 @@ For choosing an ease and trying it visually, start with the [easing guide](/csha
 ## Compose an ease
 
 ```csharp
-sprite.TweenPositionX(300, 1.2, options =>
-{
-    options.Ease = In.Sine | Out.Cubic;
-});
+sprite.TweenPositionX(300, 1.2, In.Sine | Out.Cubic);
 ```
 
 `InOut.Sine` is exactly `In.Sine | Out.Sine`. Each selector is an `EaseType`
@@ -171,7 +168,7 @@ For a shape the built-in eases don't cover, pass a function that maps normalized
 progress to a weight:
 
 ```csharp
-var eased = sprite.TweenPosition(new Vector2(300, 120), 0.5,
+var eased = sprite.TweenPosition((300, 120), 0.5,
     options => options.EaseFunction = t => t * t);
 ```
 

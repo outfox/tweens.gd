@@ -80,7 +80,7 @@ var slow_pop := snappy(Tweens.scale_2d()).with_duration(0.6)
 ```
 
 A definition that shares its timing with nothing else can take it from the
-helper instead: `Tweens.modulate_alpha(0.0, 0.25, Tweens.Ease.BACK_OUT)`.
+helper instead: `Tweens.modulate_alpha(0.0, 0.25, Out.BACK)`.
 
 :::caution[Order matters]
 - Call the shared function first. It assigns every field it sets, so a value

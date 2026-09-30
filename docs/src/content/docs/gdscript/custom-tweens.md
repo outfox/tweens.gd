@@ -39,7 +39,7 @@ extends Node2D
 
 var fill := 1.0
 
-static var drain := Tweens.property(^"fill", null, 0.4, Tweens.Ease.SMOOTHER_STEP)
+static var drain := Tweens.property(^"fill", null, 0.4, InOut.SMOOTHER_STEP)
 
 func set_health(fraction: float) -> void:
 	Tweens.play(self, drain.with_to(fraction))

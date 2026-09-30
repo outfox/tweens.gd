@@ -23,8 +23,8 @@ the global `Tweens` class.
 Await each tween before starting the next:
 
 ```gdscript
-await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).end
-await Tweens.play(sprite, Tweens.scale_2d(Vector2(1.2, 1.2), 0.2)).end
+await Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6)).end
+await Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2)).end
 await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
 ```
 
@@ -41,7 +41,7 @@ A group plays tweens as one step. Start several definitions on one node with
 `Tweens.play_all()`:
 
 ```gdscript
-var grow := Tweens.scale_2d(Vector2(1.2, 1.2), 0.2)
+var grow := Tweens.scale_2d([1.2, 1.2], 0.2)
 var dim := Tweens.modulate_alpha(0.5, 0.2)
 await Tweens.play_all(sprite, [grow, dim]).end
 ```
@@ -51,7 +51,7 @@ Group tweens that are already playing, on any targets, with `Tweens.group()`.
 
 ```gdscript
 var step := Tweens.group([
-	Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)),
+	Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6)),
 	Tweens.play(label, Tweens.modulate_alpha(0.0, 0.6)),
 ])
 await step.end
@@ -106,8 +106,8 @@ and snaps the property back to it:
 
 ```gdscript
 # Wrong: the second tween captured the start position, not (400, 180).
-Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
-var rise := Tweens.position_2d(Vector2(400, 0), 0.4)
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
+var rise := Tweens.position_2d([400, 0], 0.4)
 rise.delay = 0.6
 Tweens.play(sprite, rise)
 ```
@@ -126,9 +126,9 @@ wait follows the same pause, time scale, and lifetime rules as the animation
 around it:
 
 ```gdscript
-await Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6)).end
+await Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6)).end
 await Tweens.play(sprite, Tweens.float_value(1.0, 0.5)).end
-await Tweens.play(sprite, Tweens.position_2d(Vector2(40, 180), 0.6)).end
+await Tweens.play(sprite, Tweens.position_2d([40, 180], 0.6)).end
 ```
 
 :::caution[Avoid `create_timer()` for holds]

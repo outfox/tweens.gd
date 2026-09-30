@@ -170,7 +170,7 @@ For a shape the built-in eases don't cover, assign a Callable that maps normaliz
 progress to a weight:
 
 ```gdscript
-var eased := Tweens.position_2d(Vector2(300, 120), 0.5)
+var eased := Tweens.position_2d([300, 120], 0.5)
 eased.ease_function = func(t: float) -> float: return t * t
 Tweens.play(sprite, eased)
 ```

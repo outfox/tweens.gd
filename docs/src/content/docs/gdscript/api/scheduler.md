@@ -9,7 +9,7 @@ that aren't nodes:
 
 ```gdscript
 var scheduler := TweensGdScheduler.new()
-var move := scheduler.add(sprite, Tweens.position_2d(Vector2(100, 0), 1.0))
+var move := scheduler.add(sprite, Tweens.position_2d([100, 0], 1.0))
 scheduler.update(0.5) # move.progress is now 0.5.
 scheduler.dispose()
 ```

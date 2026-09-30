@@ -9,7 +9,7 @@ plain C# objects:
 
 ```csharp
 using var scheduler = new TweenScheduler();
-var move = scheduler.Add(sprite, new Tweens.Position2D(new Vector2(100, 0), 1));
+var move = scheduler.Add(sprite, new Tweens.Position2D((100, 0), 1));
 scheduler.Update(0.5); // move.Progress is now 0.5.
 ```
 

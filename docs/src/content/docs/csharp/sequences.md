@@ -23,8 +23,8 @@ implicit usings for `System`, `System.Linq`, and `System.Threading.Tasks`.
 Await each tween before starting the next:
 
 ```csharp
-await sprite.TweenPosition(new Vector2(400, 180), 0.6).End;
-await sprite.TweenScale(new Vector2(1.2f, 1.2f), 0.2).End;
+await sprite.TweenPosition((400, 180), 0.6).End;
+await sprite.TweenScale(1.2, 0.2).End;
 await sprite.TweenModulateAlpha(0, 0.3).End;
 ```
 
@@ -42,15 +42,15 @@ A group plays tweens as one step. Start several definitions on one node with
 types:
 
 ```csharp
-var grow = new Tweens.Scale2D(new Vector2(1.2f, 1.2f), 0.2);
-var dim = new Tweens.ModulateAlpha(0.5f, 0.2);
+var grow = new Tweens.Scale2D(1.2, 0.2);
+var dim = new Tweens.ModulateAlpha(0.5, 0.2);
 await sprite.Tween(grow, dim).End;
 ```
 
 Group tweens that are already playing, on any targets, with `Group.Of`:
 
 ```csharp
-var step = Group.Of(sprite.TweenPosition(new Vector2(400, 180), 0.6), label.TweenModulateAlpha(0, 0.6));
+var step = Group.Of(sprite.TweenPosition((400, 180), 0.6), label.TweenModulateAlpha(0, 0.6));
 await step.End;
 ```
 
@@ -99,8 +99,8 @@ and snaps the property back to it:
 
 ```csharp
 // Wrong: the second tween captured From = the start position, not (400, 180).
-sprite.TweenPosition(new Vector2(400, 180), 0.6);
-sprite.TweenPosition(new Vector2(400, 0), 0.4, options => options.Delay = 0.6);
+sprite.TweenPosition((400, 180), 0.6);
+sprite.TweenPosition((400, 0), 0.4, options => options.Delay = 0.6);
 ```
 
 Await the first tween instead, give the delayed tween an explicit `From`, or
@@ -116,9 +116,9 @@ The `1` is the value it would report, and unused here. The wait follows the same
 pause, time scale, and lifetime rules as the animation around it:
 
 ```csharp
-await sprite.TweenPosition(new Vector2(400, 180), 0.6).End;
+await sprite.TweenPosition((400, 180), 0.6).End;
 await sprite.TweenFloat(1, 0.5).End;
-await sprite.TweenPosition(new Vector2(40, 180), 0.6).End;
+await sprite.TweenPosition((40, 180), 0.6).End;
 ```
 
 :::caution[Avoid `Task.Delay`]
