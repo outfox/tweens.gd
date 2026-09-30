@@ -1,5 +1,5 @@
 ---
-title: Groups and sequences
+title: Sequences
 description: Chain, group, stagger, wait, loop, and stop multi-step animations with ordinary GDScript coroutines.
 ---
 

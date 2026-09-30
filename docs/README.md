@@ -37,7 +37,7 @@ The overview, FAQ, compatibility, advanced development, and acknowledgements
 pages are shared; the sidebar lists all but the overview, which the site title links to.
 
 - Add a page to both paths at the same slug and register it once in `src/tracks.mjs`.
-  A language can relabel a page there (`gdscript: 'Groups & sequences'`).
+  A language can relabel a page there (`gdscript: 'Sequences'`).
 - The language switch (`LangSwitch.astro`) links each page to its twin. On shared pages it
   sets the remembered language instead, and `<Lang only="csharp|gdscript">` blocks show
   the matching content.

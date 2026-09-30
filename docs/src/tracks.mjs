@@ -17,7 +17,7 @@ export const PATH = [
 			{ slug: 'installation', label: 'Install' },
 			{ slug: 'quickstart', label: 'Your first tween' },
 			{ slug: 'definitions', label: 'Definitions' },
-			{ slug: 'sequences', label: 'Sequences', gdscript: 'Groups & sequences' },
+			{ slug: 'sequences', label: 'Sequences', gdscript: 'Sequences' },
 			{ slug: 'playback', label: 'Control & completion' },
 		],
 	},
