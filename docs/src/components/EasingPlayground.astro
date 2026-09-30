@@ -10,7 +10,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 ---
 
 <div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
-	<div class="ep-heading"><span class="eyebrow">EASING PLAYGROUND</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span></div>
+	<div class="ep-heading"><span class="eyebrow">EASING PLAYGROUND</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span><button type="button" class="tw-btn" data-reset>Reset</button></div>
 	<div class="composer">
 		<div class="visual">
 			<svg class="graph" viewBox="0 0 496 296" role="img" aria-label="In, Out, and blended easing curves over time">
@@ -25,16 +25,21 @@ const variants = sorted.filter(f => /\d$/.test(f));
 				<circle class="tracer" data-tracer r="6" cx="32" cy="230" />
 			</svg>
 			<div class="legend"><span class="in-key">In half</span><span class="out-key">Out half</span><span class="result-key">Result</span><span class="zone-key">Blend window</span></div>
-			<svg class="lane" viewBox="0 0 496 48" aria-hidden="true">
-				<path class="rail" data-rail d="M76 24H420" />
-				{Array.from({length: 11}, () => <circle class="ghost" data-ghost cy="24" r="5" />)}
-				<circle class="ball" data-ball cx="76" cy="24" r="10" />
-			</svg>
-			<svg class="velocity" viewBox="0 0 496 100" role="img" aria-label="Velocity over time">
-				<text x="32" y="13">Velocity</text><text x="464" y="13" text-anchor="end" data-speed-scale />
-				<path class="grid" data-speed-zero /><path class="result speed" data-speed />
-			</svg>
-			<label class="tw-field scrub"><span>Progress <output data-position-out>0.00 s · 0.000</output></span><input aria-label="Preview progress" type="range" min="0" max="1" step="0.001" value="0" data-progress /></label>
+			<div class="transport">
+				<button type="button" class="tw-btn is-primary play" data-play>
+					<svg class="play-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z" /></svg>
+					<svg class="stop-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1.5" /></svg>
+					<span data-play-label>Play</span>
+				</button>
+				<div class="preview" aria-hidden="true">
+					<span class="rail" data-rail></span>
+					{Array.from({length: 11}, () => <span class="ghost" data-ghost />)}
+					<span class="ball" data-ball></span>
+				</div>
+				<output class="value-out" data-value-out>0.000</output>
+				<input class="scrub" aria-label="Preview progress" type="range" min="0" max="1" step="0.001" value="0" data-progress />
+				<output class="time-out" data-time-out>0.00 s</output>
+			</div>
 		</div>
 		<div class="controls">
 			<div class="selectors">
@@ -54,27 +59,27 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
 			<label class="tw-field"><span>Blend type</span><select data-blend aria-label="Blend type"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
 			<label class="tw-field"><span>Blend &nbsp;<output data-width-out>20%</output></span><input aria-label="Blend" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
-			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
-			<p class="hint" data-hint>Source code recipe for this curve:</p>
+		</div>
+	</div>
 	<div class="recipe">
+		<div class="recipe-bar"><span class="hint">Source code recipe for this curve</span><button type="button" class="tw-btn" data-copy>Copy</button></div>
 		<pre>{gd ? (
-			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>, <span data-code-ease><span class="ty">Out</span>.ELASTIC</span>)
-<span class="comment" data-code-option="skew"><span data-comment># </span>move.skew = <span class="num" data-code-skew>1.00</span></span>
-<span class="comment" data-code-option="blend-type"><span data-comment># </span>move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span>
-<span class="comment" data-code-option="blend"><span data-comment># </span>move.blend = <span class="num" data-code-blend>0.20</span></span>
+			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>2.0</span>, <span data-code-ease><span class="ty">Out</span>.ELASTIC</span>)<span data-code-option="skew" hidden>
+move.skew = <span class="num" data-code-skew>1.00</span></span><span data-code-option="blend-type" hidden>
+move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
+move.blend = <span class="num" data-code-blend>0.20</span></span>
 <span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
 		) : (
-			<code data-code>sprite.<span class="fn">TweenPositionX</span>(<span class="num">300</span>, <span class="num" data-code-duration>2.0</span>, options <span class="kw">=&gt;</span>
+			<code data-code><span class="kw">var</span> move = <span class="kw">new</span> <span class="ty">Tweens</span>.<span class="ty">Position2DX</span>
 {'{'}
-    options.Ease = <span data-code-ease><span class="ty">Out</span>.Elastic</span>;
-    <span class="comment" data-code-option="skew"><span data-comment>// </span>options.Skew = <span class="num" data-code-skew>1.00</span>;</span>
-    <span class="comment" data-code-option="blend-type"><span data-comment>// </span>options.BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Makima</span>;</span>
-    <span class="comment" data-code-option="blend"><span data-comment>// </span>options.Blend = <span class="num" data-code-blend>0.20</span>;</span>
-{'}'});</code>
+    Duration = <span class="num" data-code-duration>2.0</span>,
+    Ease = <span data-code-ease><span class="ty">Out</span>.Elastic</span>,<span data-code-option="skew" hidden>
+    Skew = <span class="num" data-code-skew>1.00</span>,</span><span data-code-option="blend-type" hidden>
+    BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Makima</span>,</span><span data-code-option="blend" hidden>
+    Blend = <span class="num" data-code-blend>0.20</span>,</span>
+{'}'};
+sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To = <span class="num">300</span> {'}'});</code>
 		)}</pre>
-		<button type="button" class="tw-btn" data-copy>Copy</button>
-	</div>
-		</div>
 	</div>
 	<span class="sr-only" role="status" aria-live="polite" data-announce></span>
 </div>
@@ -94,9 +99,10 @@ const variants = sorted.filter(f => /\d$/.test(f));
 		const playButton = $<HTMLButtonElement>('[data-play]');
 		const gd = langOf(root) === 'gdscript';
 		let playing: TweenHandle | undefined;
-		let graphScale = 170, laneScale = 344;
+		let graphScale = 170, laneScale = 1;
 		const graphY = (v: number) => 145 - graphScale * (v - 0.5);
-		const laneX = (v: number) => 248 + laneScale * (v - 0.5);
+		// Fraction of the preview width, matching the progress thumb when nothing overshoots.
+		const laneX = (v: number) => String(0.5 + laneScale * (v - 0.5));
 		const value = (p: number) => composeEase(entry.value as EaseLeg, exit.value as EaseLeg, p, +skew.value, blend.value as BlendType, +width.value);
 		const path = (f: (t: number) => number, start = 0, end = 1) => Array.from({length: 241}, (_, i) => {
 			const t = start + (end - start) * i / 240;
@@ -108,28 +114,35 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			$('[data-tracer]').setAttribute('cy', String(graphY(w)));
 			$('[data-now]').setAttribute('x1', x);
 			$('[data-now]').setAttribute('x2', x);
-			$('[data-ball]').setAttribute('cx', String(laneX(w)));
+			$<HTMLElement>('[data-ball]').style.setProperty('--x', laneX(w));
 			progress.value = String(p);
-			$('[data-position-out]').textContent = `${(p * +duration.value).toFixed(2)} s · ${w.toFixed(3)}`;
+			$('[data-time-out]').textContent = `${(p * +duration.value).toFixed(2)} s`;
+			$('[data-value-out]').textContent = w.toFixed(3);
 		};
-		const stop = () => { playing?.cancel(); playing = undefined; playButton.textContent = 'Play'; };
+		const setPlaying = (handle?: TweenHandle) => {
+			playing = handle;
+			playButton.classList.toggle('is-playing', !!handle);
+			$('[data-play-label]').textContent = handle ? 'Stop' : 'Play';
+		};
+		const stop = () => { playing?.cancel(); setPlaying(); };
 		const update = () => {
 			stop();
 			const a = entry.value as EaseLeg, b = exit.value as EaseLeg, k = +skew.value;
 			const matching = canonicalFamily(a) === canonicalFamily(b);
 			// Keep the full overshoot and its motion preview visible, including the 50% curves.
-			let extent = 0.5;
+			let extent = 0.5, reach = 0.5;
 			for (let i = 0; i <= 1000; i++) {
 				const t = i / 1000, u = t ** k;
-				extent = Math.max(extent, Math.abs(value(t) - 0.5));
+				reach = Math.max(reach, Math.abs(value(t) - 0.5));
 				if (a !== 'None' && (b === 'None' || u <= 0.5)) extent = Math.max(extent, Math.abs((b === 'None' ? legEase(a, 'In', u) : pairedLegEase(a, u)) - 0.5));
 				if (b !== 'None' && (a === 'None' || u >= 0.5)) extent = Math.max(extent, Math.abs((a === 'None' ? legEase(b, 'Out', u) : pairedLegEase(b, u)) - 0.5));
 			}
-			graphScale = Math.min(170, 119 / extent);
-			laneScale = Math.min(344, 214 / extent);
+			graphScale = Math.min(170, 119 / Math.max(extent, reach));
+			laneScale = 0.5 / reach;
 			$('[data-value-grid]').setAttribute('d', [0, 0.5, 1].map(v => `M32 ${graphY(v)}H464`).join('') + 'M32 16V272M464 16V272');
 			root.querySelectorAll<SVGTextElement>('[data-value-tick]').forEach(tick => tick.setAttribute('y', String(graphY(+tick.dataset.valueTick!) + 4)));
-			$('[data-rail]').setAttribute('d', `M${laneX(0)} 24H${laneX(1)}`);
+			$<HTMLElement>('[data-rail]').style.setProperty('--x', laneX(0));
+			$<HTMLElement>('[data-rail]').style.setProperty('--to', laneX(1));
 			$('[data-curve]').setAttribute('d', path(value));
 			$('[data-entry]').setAttribute('d', a === 'None' ? '' : path(t => b === 'None' ? legEase(a, 'In', t ** k) : pairedLegEase(a, t ** k), 0, b === 'None' ? 1 : 0.5 ** (1/k)));
 			$('[data-exit]').setAttribute('d', b === 'None' ? '' : path(t => a === 'None' ? legEase(b, 'Out', t ** k) : pairedLegEase(b, t ** k), a === 'None' ? 0 : 0.5 ** (1/k), 1));
@@ -140,16 +153,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			$('[data-skew-out]').textContent = k.toFixed(2);
 			$('[data-width-out]').textContent = `${Math.round(+width.value*100)}%`;
 			blend.disabled = width.disabled = a === 'None' || b === 'None' || matching;
-			const velocities = Array.from({length: 241}, (_, i) => {
-				const l = Math.max(0, (i-0.5)/240), r = Math.min(1, (i+0.5)/240);
-				return (value(r)-value(l))/(r-l)/+duration.value;
-			});
-			const lo = Math.min(0, ...velocities), hi = Math.max(0.01, ...velocities);
-			const sy = (v: number) => 88 - 62*(v-lo)/(hi-lo);
-			$('[data-speed]').setAttribute('d', velocities.map((v,i) => `${i ? 'L' : 'M'}${32+432*i/240} ${sy(v)}`).join(''));
-			$('[data-speed-zero]').setAttribute('d', `M32 ${sy(0)}H464`);
-			$('[data-speed-scale]').textContent = `${lo.toFixed(1)} … ${hi.toFixed(1)} / s`;
-			root.querySelectorAll('[data-ghost]').forEach((g, i) => g.setAttribute('cx', String(laneX(value(i / 10)))));
+			root.querySelectorAll<HTMLElement>('[data-ghost]').forEach((g, i) => g.style.setProperty('--x', laneX(value(i / 10))));
 			const name = (leg: string, family: string): (Node | string)[] => {
 				const type = document.createElement('span');
 				type.className = 'ty';
@@ -164,31 +168,24 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			$('[data-code-blend-type]').textContent = gd ? constant(blend.value) : blend.value;
 			$('[data-code-blend]').textContent = (+width.value).toFixed(2);
 			root.querySelectorAll<HTMLElement>('[data-code-option]').forEach(line => {
-				// Options at their defaults stay commented out.
+				// Options at their defaults are left out.
 				const option = line.dataset.codeOption;
-				const commented = option === 'skew' ? k === 1
+				line.hidden = option === 'skew' ? k === 1
 					: blend.disabled || (option === 'blend-type' && blend.value === 'Makima') || (option === 'blend' && +width.value === 0.2);
-				line.classList.toggle('comment', commented);
-				line.querySelector('[data-comment]')!.textContent = commented ? (gd ? '# ' : '// ') : '';
 			});
-			root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.preset === `${a},${b}`)));
 			draw(+progress.value);
 		};
 		playButton.addEventListener('click', () => {
 			if (playing) { stop(); return; }
 			const handle = tween(+duration.value, (_, p) => draw(p), 'Linear');
-			playing = handle;
-			playButton.textContent = 'Stop';
-			handle.completion.then(() => { if (playing === handle) { playing = undefined; playButton.textContent = 'Play'; } });
+			setPlaying(handle);
+			handle.completion.then(() => { if (playing === handle) setPlaying(); });
 		});
 		for (const input of [entry, exit, duration, skew, blend, width]) input.addEventListener('input', update);
 		progress.addEventListener('input', () => { stop(); draw(+progress.value); });
-		root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach(button => button.addEventListener('click', () => {
-			[entry.value, exit.value] = button.dataset.preset!.split(','); update();
-		}));
 		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '2'; skew.value = '1'; blend.value = 'Makima'; width.value = '0.2'; progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
-			try { await navigator.clipboard.writeText($('[data-code]').textContent!); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
+			try { await navigator.clipboard.writeText($<HTMLElement>('[data-code]').innerText); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }
 		});
 		update();
@@ -197,36 +194,43 @@ const variants = sorted.filter(f => /\d$/.test(f));
 
 <style>
 	.ep { padding: 1.25rem; display: grid; gap: 1.25rem; }
-	.ep-heading, .buttons, .presets, .legend { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
-	.ep-heading { justify-content: space-between; }
+	.ep-heading, .legend { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
 	.eyebrow { font: 600 .75rem var(--sl-font-mono); letter-spacing: .13em; color: var(--tw-mint-ink); }
-	.badge { color: var(--tw-muted); font: .75rem var(--sl-font-mono); }
-	.presets .tw-btn { font-size: .8rem; }
-	.presets [aria-pressed='true'] { background: var(--tw-selected); border-color: var(--tw-mint); }
+	.badge { margin-left: auto; color: var(--tw-muted); font: .75rem var(--sl-font-mono); }
+	.ep-heading .tw-btn { min-height: 1.9rem; font-size: .75rem; }
 	.composer { display: grid; gap: 1.5rem; }
 	.visual { min-width: 0; }
-	.graph, .lane, .velocity { display: block; width: 100%; overflow: hidden; }
-	.graph { background: var(--tw-stage); border-radius: .75rem; }
-	.graph text, .velocity text { fill: var(--tw-muted); font: 11px var(--sl-font-mono); }
+	.graph { display: block; width: 100%; overflow: hidden; background: var(--tw-stage); border-radius: .75rem; }
+	.graph text { fill: var(--tw-muted); font: 11px var(--sl-font-mono); }
 	.blend-zone { fill: var(--tw-mint); opacity: .08; }
 	.grid { fill: none; stroke: var(--tw-grid); stroke-dasharray: 3 5; }
 	.source, .result { fill: none; stroke-linecap: round; stroke-linejoin: round; }
 	.source { stroke-width: 1.6; opacity: .8; }
-	.entry { stroke: var(--tw-amber); stroke-dasharray: 7 5; }
-	.exit { stroke: var(--tw-blue); stroke-dasharray: 2 4; }
-	.result { stroke: var(--tw-mint); stroke-width: 3; }
-	.graph .result { stroke: color-mix(in oklab, var(--tw-mint) 60%, black); stroke-width: 12; }
-	.speed { stroke-width: 2; opacity: .8; }
+	.entry { stroke: var(--tw-amber); stroke-dasharray: 7 5;  stroke-width: 3; }
+	.exit { stroke: var(--tw-blue); stroke-dasharray: 2 4; stroke-width: 3; }
+	.result { stroke: color-mix(in oklab, var(--tw-mint) 60%, black); stroke-width: 12; }
 	.now { stroke: var(--tw-muted); stroke-dasharray: 2 4; opacity: .5; }
 	.tracer { fill: var(--tw-stage); stroke: var(--tw-mint); stroke-width: 3; }
-	.legend { justify-content: center; gap: 1rem; font-size: .75rem; margin-top: .65rem; }
+	.legend { justify-content: center; gap: 1rem; font-size: .75rem; margin-top: .4rem; }
 	.in-key { color: var(--tw-amber-ink); }
 	.out-key { color: var(--tw-blue-ink); }
 	.result-key { color: var(--tw-mint-ink); }
 	.zone-key { color: var(--tw-muted); }
-	.rail { stroke: var(--tw-outline); stroke-width: 2; stroke-dasharray: 2 5; }
-	.ghost { fill: none; stroke: var(--tw-mint); opacity: .5; }
-	.ball { fill: var(--tw-mint); }
+	/* The preview sits on the progress track, so the ball starts and ends under the thumb. */
+	.transport { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: 'play preview value' 'play scrub time'; align-items: center; column-gap: 1rem; margin-top: 1.25rem; }
+	.play { grid-area: play; min-height: 3rem; padding: .5rem 1.4rem .5rem 1.1rem; font-size: var(--sl-text-base); box-shadow: 0 .4rem 1.2rem color-mix(in oklab, var(--tw-mint) 25%, transparent); }
+	.play svg { fill: currentColor; }
+	.play .stop-icon, .play.is-playing .play-icon { display: none; }
+	.play.is-playing .stop-icon { display: block; }
+	.preview { grid-area: preview; position: relative; height: 1.75rem; --pad: .5rem; }
+	.preview > * { position: absolute; top: 50%; left: calc(var(--pad) + (100% - 2 * var(--pad)) * var(--x, 0)); translate: -50% -50%; border-radius: 50%; }
+	.rail { translate: -1px -50%; width: calc((100% - 2 * var(--pad)) * (var(--to, 1) - var(--x, 0))); height: .75rem; border-radius: 0; border-inline: 2px solid color-mix(in oklab, var(--tw-muted) 60%, transparent); background: radial-gradient(circle, var(--tw-outline) 1px, transparent 1.5px) center / 7px 4px repeat-x; }
+	.ghost { width: .6rem; height: .6rem; border: 1.5px solid var(--tw-mint); opacity: .5; }
+	.ball { width: 1.25rem; height: 1.25rem; background: var(--tw-mint); }
+	.scrub { grid-area: scrub; width: 100%; margin: 0; }
+	.transport output { min-width: 6ch; font: .75rem var(--sl-font-mono); color: var(--tw-muted); text-align: right; }
+	.value-out { grid-area: value; }
+	.time-out { grid-area: time; }
 	.controls { display: grid; align-content: start; gap: 1.25rem; }
 	.selectors { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .5rem; align-items: end; }
 	.join { font: 1.25rem var(--sl-font-mono); color: var(--tw-muted); padding-bottom: .4rem; }
@@ -235,15 +239,18 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	.tw-field:has(:disabled) { opacity: .5; }
 	.tw-field :disabled { cursor: not-allowed; }
 	select:focus-visible { outline: 2px solid var(--tw-mint); outline-offset: 2px; }
-	.hint, .footnote { color: var(--tw-muted); font-size: .8rem; line-height: 1.6; margin: 0; }
-	.recipe { display: flex; gap: .75rem; align-items: start; background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .75rem; padding: 1rem; }
-	.recipe pre { flex: 1; min-width: 0; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .78rem; color: var(--tw-soft); }
+	.recipe { background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .75rem; overflow: hidden; }
+	.recipe-bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .4rem .5rem .4rem 1rem; border-bottom: 1px solid var(--tw-outline); }
+	.hint { color: var(--tw-muted); font-size: .8rem; }
+	.recipe-bar .tw-btn { min-height: 1.9rem; font-size: .75rem; }
+	.recipe pre { margin: 0; padding: 1rem; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85rem; line-height: 1.6; color: var(--tw-soft); }
 	.recipe :global(.kw) { color: var(--tw-blue-ink); }
 	.recipe :global(.ty) { color: var(--tw-mint-ink); }
 	.recipe :global(.fn), .recipe :global(.num) { color: var(--tw-amber-ink); }
-	.recipe :global(.comment), .recipe :global(.comment *) { color: var(--tw-muted); }
-	.recipe .tw-btn { font-size: .75rem; }
-	.scrub { font-size: .8rem; }
 	@media (min-width: 50rem) { .composer { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
-	@media (max-width: 30rem) { .ep { padding: .8rem; } .recipe { flex-direction: column; } }
+	@media (max-width: 30rem) {
+		.ep { padding: .8rem; }
+		.transport { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'preview value' 'scrub time' 'play play'; row-gap: .5rem; }
+		.play { justify-self: start; }
+	}
 </style>
