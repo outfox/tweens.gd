@@ -5,37 +5,17 @@ description: Choose how motion accelerates, compare curves, and combine a gentle
 
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
-Easing changes how speed varies during a tween. Start with `Out.CUBIC` for a
-motion that slows into place; duration still controls how long it takes.
+Ease functions change how speed and values vary during a tween.
 
-Examples use the global `Tweens` class, with an in-tree `Sprite2D`
-named `sprite` on Godot's main thread.
+In lieu of the common [Penner](https://easings.net/) easing functions, we use Hermite splines and use [Makima](https://www.mathworks.com/help/matlab/ref/makima.html)
+interpolation so you can freely mix and match how a tween starts and how it ends. 
 
-## Choose a family
-
-```gdscript
-var move := Tweens.position_2d_x(300.0, 0.6, Out.CUBIC)
-Tweens.play(sprite, move)
-```
-
-| Motion | Try |
-| --- | --- |
-| Arrive and settle | `Out.CUBIC` |
-| Accelerate away | `In.CUBIC` |
-| Move between resting positions | `InOut.SINE` |
-| Spring past the target, then settle | `Out.ELASTIC30` |
-| Keep a constant speed | `InOut.LINEAR` |
-
-`In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
-family's start and finish. These describe each traversal, not the forward and
-return legs of ping-pong.
-
-## Compare the curves
-
-**Try it:** play **Sine in & out**, then **Spring finish**. Watch how the spring
-passes its destination before settling. The generated code follows your choices.
+We still offer the usual suspects such as `InOut.QUINT` or `Out.BOUNCE`. In addition to these, you get some extra control over how far an overshoot goes, 
+e.g. `Out.BACK_40` for \~40% overshoot. And there's a bunch of brand new ones, like `Out.JUMP_30` which once you see it, you might wonder where it has been 
+our entire lives.
 
 <EasingPlayground lang="gdscript" />
+
 
 ## Compose an ease
 
@@ -47,9 +27,7 @@ Mixed families use a smooth Makima join by default. Most motions need no
 adjustment. `blend` sets the join width from 0 to 1; a smaller width preserves
 more of the original halves. Matching pairs and single curves ignore it.
 
-<span id="choose-the-method-and-width" />
-<span id="how-the-join-works" />
-<span id="migrate-existing-eases" />
+
 
 See the [easing reference](/gdscript/api/easing/) for join methods, curve
 percentages, and migration from legacy names. For changing the pacing without
@@ -74,3 +52,27 @@ option; each playback gets its own copy. Set only one of `ease_function` and `cu
 
 For ready-made punch, shake, and breathing motion, use the
 [effect factories](/gdscript/api/effects/), including vector and rotation effects.
+
+
+Examples use the global `Tweens` class, with an in-tree `Sprite2D`
+named `sprite` on Godot's main thread.
+
+## Choose a family
+
+```gdscript
+var move := Tweens.position_2d_x(300.0, 0.6, Out.CUBIC)
+Tweens.play(sprite, move)
+```
+
+| Motion | Try |
+| --- | --- |
+| Arrive and settle | `Out.CUBIC` |
+| Accelerate away | `In.CUBIC` |
+| Move between resting positions | `InOut.SINE` |
+| Spring past the target, then settle | `Out.ELASTIC30` |
+| Keep a constant speed | `InOut.LINEAR` |
+
+`In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
+family's start and finish. These describe each traversal, not the forward and
+return legs of ping-pong.
+

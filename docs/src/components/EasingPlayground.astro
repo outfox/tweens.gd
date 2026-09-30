@@ -10,7 +10,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 ---
 
 <div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
-	<div class="ep-heading"><span class="eyebrow">EASING COMPOSER</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span></div>
+	<div class="ep-heading"><span class="eyebrow">EASING PLAYGROUND</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span></div>
 	<div class="presets" aria-label="Easing presets">
 		<button class="tw-btn" type="button" data-preset="Sine,Cubic">Soft landing</button>
 		<button class="tw-btn" type="button" data-preset="Back,Bounce">Wind-up & bounce</button>
@@ -59,7 +59,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<label class="tw-field"><span>Duration <output data-duration-out>2.0 s</output></span><input type="range" min="0.2" max="5" step="0.1" value="2" data-duration /></label>
 			<label class="tw-field"><span>Skew <output data-skew-out>1.00</output></span><input type="range" min="0.25" max="4" step="0.05" value="1" data-skew /></label>
 			<label class="tw-field"><span>Blend type</span><select data-blend aria-label="Blend type"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
-			<label class="tw-field"><span>Blend width <output data-width-out>20%</output></span><input aria-label="Blend width" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
+			<label class="tw-field"><span>Blend &nbsp;<output data-width-out>20%</output></span><input aria-label="Blend" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
 			<p class="hint" data-hint>A single selected curve runs over the full duration. Choose both curves to join them.</p>
 			<div class="buttons"><button type="button" class="tw-btn is-primary" data-play>Play</button><button type="button" class="tw-btn" data-reset>Reset</button></div>
 		</div>
@@ -83,7 +83,6 @@ const variants = sorted.filter(f => /\d$/.test(f));
 		)}</pre>
 		<button type="button" class="tw-btn" data-copy>Copy</button>
 	</div>
-	<p class="footnote">Time runs left to right. Rings mark equal time intervals; wider gaps mean faster motion. The velocity plot shows changes in speed and direction. Skew warps time before both curves and their join.</p>
 	<span class="sr-only" role="status" aria-live="polite" data-announce></span>
 </div>
 
@@ -177,8 +176,10 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			$('[data-code-blend-type]').textContent = gd ? constant(blend.value) : blend.value;
 			$('[data-code-blend]').textContent = (+width.value).toFixed(2);
 			root.querySelectorAll<HTMLElement>('[data-code-option]').forEach(line => {
-				const commented = line.dataset.codeOption === 'skew' ? k === 1
-					: blend.disabled || (line.dataset.codeOption === 'blend' && +width.value === 0.2);
+				// Options at their defaults stay commented out.
+				const option = line.dataset.codeOption;
+				const commented = option === 'skew' ? k === 1
+					: blend.disabled || (option === 'blend-type' && blend.value === 'Makima') || (option === 'blend' && +width.value === 0.2);
 				line.classList.toggle('comment', commented);
 				line.querySelector('[data-comment]')!.textContent = commented ? (gd ? '# ' : '// ') : '';
 			});
