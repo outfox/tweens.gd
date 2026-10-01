@@ -45,5 +45,7 @@ godot --headless --path testbed-gdscript --doctool /absolute/path/to/gdextension
 ```
 
 Keep the shared terms **definition**, **playback handle**, **group**, and
-**sequence** aligned with the C# XML documentation. A sequence is ordinary awaits;
-a group is a parallel step. Explain language differences at the relevant member.
+**Chain** aligned with the C# XML documentation. A Chain links a flat list of
+definitions on one target; a group is a parallel step. Ordinary awaits coordinate
+completion and game logic without inheriting frame time. Explain language
+differences at the relevant member.

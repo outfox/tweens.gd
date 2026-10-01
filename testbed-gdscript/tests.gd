@@ -1015,6 +1015,16 @@ func _expected_rejection(start: Callable, message: String) -> TweensGdHandle:
 		check(errors[0].contains(handle.error), message + " preserves diagnostic details")
 	return handle
 
+func _expected_chain_rejection(start: Callable, message: String) -> TweensGdChain:
+	failures.append_array(_collector.take_errors())
+	var chain: TweensGdChain = start.call()
+	var errors := _collector.take_errors()
+	check(chain != null and chain.is_settled, message + " returns a settled Chain")
+	check(errors.size() == 1, message + " reports exactly one error")
+	if chain != null and errors.size() == 1:
+		check(errors[0].contains(chain.error), message + " preserves diagnostic details")
+	return chain
+
 func _rejected_starts() -> void:
 	var definition := T.value(0.0, 1.0, -1.0)
 	var callbacks: Array = []
@@ -1072,12 +1082,16 @@ func _rejected_starts() -> void:
 		var failed := _expected_rejection(starts[index], "automatic rejection %d" % index)
 		check(failed.is_settled and await failed.wait() == T.Reason.FAILED, "automatic rejection is safely awaitable without a tick")
 	check(callbacks.is_empty(), "automatic rejections run no definition callbacks")
+	var invalid_chain := _expected_chain_rejection(func(): return T.chain(null, [definition]), "invalid Chain target")
+	check(await invalid_chain.wait() == T.Reason.FAILED, "invalid Chain target remains awaitable")
+	_expected_chain_rejection(func(): return T.chain(detached, [definition]), "detached Chain owner")
 	detached.free()
 	var runner = get_tree().get_meta(RUNNER_KEY)
 	check(runner.scheduler.active_count == 0, "automatic rejection schedules no work")
 	runner.free()
 	get_tree().set_meta(CLOSING_KEY, true)
 	var closing := _expected_rejection(func(): return T.play(self, definition), "closing tree")
+	_expected_chain_rejection(func(): return T.chain(self, [definition]), "closing Chain tree")
 	get_tree().remove_meta(CLOSING_KEY)
 	check(await closing.wait() == T.Reason.FAILED, "closing tree needs no future tick to settle rejection")
 	check(not get_tree().has_meta(RUNNER_KEY), "closing tree rejection creates no runner")
@@ -1091,3 +1105,7 @@ func _rejected_starts() -> void:
 		worker.start(func(): return T.play(null, null))
 		return worker.wait_to_finish(), "worker thread")
 	check(await from_worker.wait() == T.Reason.FAILED, "worker-thread rejection is inspectable on main thread")
+	var chain_from_worker := _expected_chain_rejection(func():
+		worker.start(func(): return T.chain(null, []))
+		return worker.wait_to_finish(), "worker-thread Chain")
+	check(await chain_from_worker.wait() == T.Reason.FAILED, "worker-thread Chain rejection is inspectable on main thread")

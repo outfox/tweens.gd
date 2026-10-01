@@ -105,7 +105,7 @@ public class ShaderParameterTests(HeadlessFixture godot)
     }
 
     [Fact]
-    public void InvalidConfigurationsAreRejectedBeforePlayback()
+    public void InvalidShaderBindingsFailDuringDeferredPreparation()
     {
         using var scope = new SceneScope(godot);
         using var scheduler = new TweenScheduler();
@@ -113,11 +113,14 @@ public class ShaderParameterTests(HeadlessFixture godot)
         material.SetShaderParameter("scalar", 0f);
         void Reject<T>(Func<TweenInstance> start) where T : Exception
         {
-            TweenInstance handle;
-            try { handle = start(); }
-            catch (T) { return; }
+            var handle = start();
+            Assert.False(handle.IsTerminal);
+            Assert.Null(handle.Error);
+            Assert.Equal(1, scheduler.ActiveCount);
             scheduler.Update(0);
+            Assert.Equal(TweenState.Faulted, handle.State);
             Assert.IsType<T>(handle.Error);
+            Assert.Equal(0, scheduler.ActiveCount);
         }
         Reject<ArgumentException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>(" ")));
         Reject<ArgumentNullException>(() => scheduler.Add(material, new Tweens.ShaderParameter<float>(null!)));

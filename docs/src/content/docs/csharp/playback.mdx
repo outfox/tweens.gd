@@ -26,8 +26,9 @@ var movement = sprite.TweenPosition((400, 180), 0.6);
 await movement.End;
 ```
 
-Handles and groups expose an `End` task. You can ignore the returned reason;
-keep it only when your next action depends on how playback ended. See
+Handles and groups expose an `End` task. Completion waits for callbacks and
+cleanup, including release hooks. You can ignore the returned reason; keep it
+only when your next action depends on how playback ended. See
 [cancellation and completion reasons](/csharp/cancellation/) for guarded sequences
 and cancelling just one wait.
 
@@ -52,7 +53,10 @@ sprite.Tween(arrive with
 });
 ```
 
-They run in this order:
+Starting a tween snapshots its configuration. Preparation and capture happen at
+activation, before `OnAdd`.
+
+Callbacks run in this order:
 
 1. `OnAdd` at activation after capture.
 2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
@@ -64,8 +68,9 @@ They run in this order:
 
 The handle's terminal state is visible before terminal callbacks run, and each
 terminal callback runs at most once. A long frame doesn't replay the callbacks
-of skipped cycles. Tweens created in `OnUpdate` begin on the next update, while
-tweens created in `OnEnd` continue the finished tween's timeline exactly.
+of skipped cycles. Tweens started in callbacks or after an await are independent
+roots: they begin on the next eligible update with no inherited frame time. Use a
+[Chain](/csharp/sequences/) for linked timing.
 
 ## Errors
 
@@ -95,5 +100,3 @@ there, and ordinary Godot async code keeps its synchronization context.
 You have finished the five-step tutorial. Explore [easing](/csharp/easing/) to
 shape motion, [timing and loops](/csharp/timing/) for repeating animations, or the
 [property catalog](/csharp/nodes/) to find something else to animate.
-
-Starting snapshots configuration; capture and `OnAdd` occur at activation. Completion includes release hooks. Use a [Chain](/csharp/sequences/) for linked timing; callbacks and waits create independent roots with no frame-time inheritance.

@@ -144,8 +144,8 @@ func _rendering() -> void:
 		var instance_definition := T.instance_shader_parameter(&"pulse", 0.75, 1.0)
 		instance_definition.fill = T.Fill.NONE
 		var instance := scheduler.add(node, instance_definition)
-		check(not instance.is_terminal, "instance shader starts: " + str(spatial) + " " + instance.error)
 		scheduler.update(0.0)
+		check(not instance.is_terminal, "instance shader starts: " + str(spatial) + " " + instance.error)
 		host.near(instance.value if instance.value != null else -1.0, 0.25, "instance shader captures default")
 		scheduler.update(0.5)
 		host.near(node.get_instance_shader_parameter(&"pulse"), 0.5, "instance shader midpoint")
@@ -173,8 +173,8 @@ func _rendering() -> void:
 	parent.add_child(child)
 	await host.get_tree().process_frame
 	var inherited := scheduler.add(child, T.instance_shader_parameter(&"pulse", 1.0, 1.0))
-	check(not inherited.is_terminal, "inherited canvas material supplies instance uniform")
 	scheduler.update(0.0)
+	check(not inherited.is_terminal, "inherited canvas material supplies instance uniform")
 	parent.material = material(canvas_code)
 	scheduler.update(0.1)
 	check(inherited.completion_reason == T.Reason.FAILED, "inherited material replacement faults")
@@ -187,8 +187,8 @@ func _rendering() -> void:
 		host.add_child(mesh)
 		await host.get_tree().process_frame
 		var binding := scheduler.add(mesh, T.instance_shader_parameter(&"pulse", 1.0, 1.0))
-		check(not binding.is_terminal, "instance binding starts before " + change)
 		scheduler.update(0.0)
+		check(not binding.is_terminal, "instance binding starts before " + change)
 		match change:
 			"mesh": mesh.mesh = BoxMesh.new()
 			"overlay": mesh.material_overlay = StandardMaterial3D.new()

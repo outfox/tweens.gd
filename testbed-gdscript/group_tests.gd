@@ -8,7 +8,7 @@ var _host: Node
 
 func run(host: Node) -> bool:
 	_host = host
-	for test in [_conformance, _completion, _controls, _lifetimes, _failures, _reentrancy, _independent_roots, _references]:
+	for test in [_conformance, _completion, _controls, _lifetimes, _failures, _reentrancy, _mixed_clocks, _independent_roots, _references]:
 		check(test.call() == true, "group test returned normally: " + test.get_method())
 	await _waits_and_validation()
 	return true
@@ -182,10 +182,58 @@ func _reentrancy() -> bool:
 	scheduler.dispose()
 	return true
 
-func _continue(group, scheduler, results: Array, definition = null) -> void:
+func _continue(group, scheduler, results: Array, options: TweensGdPlaybackOptions = null) -> void:
 	var reason: int = await group.wait()
 	results.append(reason)
-	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0) if definition == null else definition))
+	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0), null, options))
+
+func _mixed_clocks() -> bool:
+	for mismatch in ["lane", "time", "scheduler", "next_lane", "next_time", "next_scheduler"]:
+		var scheduler := TweensGdScheduler.new()
+		var other := TweensGdScheduler.new()
+		var member_options := T.playback_options()
+		if mismatch == "lane": member_options.process_mode = T.Process.PHYSICS
+		if mismatch == "time": member_options.use_unscaled_time = true
+		var a := start(scheduler)
+		var member_scheduler: TweensGdScheduler = other if mismatch == "scheduler" else scheduler
+		var b := member_scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0), null, member_options)
+		var group := T.group([a, b])
+		var next: Array = []
+		var next_options := T.playback_options()
+		if mismatch in ["lane", "next_lane"]: next_options.process_mode = T.Process.PHYSICS
+		if mismatch in ["time", "next_time"]: next_options.use_unscaled_time = true
+		var next_scheduler: TweensGdScheduler = other if mismatch in ["scheduler", "next_scheduler"] else scheduler
+		_continue(group, next_scheduler, next, next_options)
+		match mismatch:
+			"lane":
+				scheduler.update(1.5, 2.0)
+				check(a.is_settled and b.value == null and not group.is_settled and next.is_empty(), "mixed group waits for physics member")
+				scheduler.update(1.5, 2.0, T.Process.PHYSICS)
+			"time":
+				scheduler.update(0.5, 1.5)
+				check(b.is_settled and not a.is_terminal and not group.is_settled and next.is_empty(), "mixed group waits for scaled member")
+				scheduler.update(1.0, 0.0)
+			"scheduler":
+				scheduler.update(1.5, 2.0)
+				check(a.is_settled and b.value == null and not group.is_settled and next.is_empty(), "mixed group waits for other scheduler")
+				other.update(1.5, 2.0)
+			_: scheduler.update(1.5, 2.0)
+		check(group.is_settled and group.completion_reason == T.Reason.COMPLETED and next.size() == 2, "mixed-clock group resumes: " + mismatch)
+		check(next[0] == T.Reason.COMPLETED and next[1].value == null and next[1].progress == 0.0, "continuation inherits no group credit: " + mismatch)
+		var wrong_lane: int = T.Process.PROCESS if next_options.process_mode == T.Process.PHYSICS else T.Process.PHYSICS
+		next_scheduler.update(0.4, 0.8, wrong_lane)
+		check(next[1].value == null and next[1].progress == 0.0, "continuation waits for eligible lane: " + mismatch)
+		var wrong_scheduler: TweensGdScheduler = scheduler if next_scheduler == other else other
+		wrong_scheduler.update(0.4, 0.8, next_options.process_mode)
+		check(next[1].value == null and next[1].progress == 0.0, "continuation waits for its scheduler: " + mismatch)
+		next_scheduler.update(0.0, 0.0, next_options.process_mode)
+		near(next[1].value, 0.0, "first eligible update starts without inherited time: " + mismatch)
+		near(next[1].progress, 0.0, "zero delta gives no continuation credit: " + mismatch)
+		next_scheduler.update(0.25, 0.5, next_options.process_mode)
+		near(next[1].value, 0.5 if next_options.use_unscaled_time else 0.25, "continuation uses only its own update clock: " + mismatch)
+		scheduler.dispose()
+		other.dispose()
+	return true
 
 func _independent_roots() -> bool:
 	var scheduler := TweensGdScheduler.new()

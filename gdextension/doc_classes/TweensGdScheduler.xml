@@ -39,6 +39,17 @@
 				and prevents later starts.
 			</description>
 		</method>
+		<method name="add_chain">
+			<return type="TweensGdChain" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definitions" type="Variant" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
+			<description>
+				Snapshots a nonempty flat list on one target. Each signed delay links to the previous entry's own end.
+				Binding and capture occur at activation. One Chain counts as one scheduler root.
+			</description>
+		</method>
 		<method name="cancel_all">
 			<return type="void" />
 			<description>
@@ -69,14 +80,6 @@
 				[param unscaled_delta] (-1) uses delta. Tweens added during callbacks advance on the next update.
 				Recursive updates are rejected. C# uses null instead of -1 for omitted unscaled delta.
 			</description>
-		</method>
-		<method name="add_chain">
-			<return type="TweensGdChain" />
-			<param index="0" name="target" type="Variant" />
-			<param index="1" name="definitions" type="Variant" />
-			<param index="2" name="owner" type="Variant" default="null" />
-			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
-			<description>Snapshots a nonempty flat list on one target. Each signed delay links to the previous entry's own end. Binding and capture occur at activation. One Chain counts as one scheduler root.</description>
 		</method>
 	</methods>
 	<members>

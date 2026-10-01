@@ -31,8 +31,9 @@ var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 await movement.end
 ```
 
-Handles and groups expose `end`. You can ignore the returned reason; keep it only
-when your next action depends on how playback ended. See
+Handles and groups expose `end`. Completion waits for callbacks and cleanup,
+including release hooks. You can ignore the returned reason; keep it only when
+your next action depends on how playback ended. See
 [cancellation and completion reasons](/gdscript/cancellation/) for guarded sequences
 and cancelling just one wait.
 
@@ -57,7 +58,10 @@ Tweens.play(sprite, arrive.with_on_start(func(_h): print("Moving")) \
 	.with_on_end(func(_h): print("Arrived")))
 ```
 
-They run synchronously, in this order:
+Starting a tween snapshots its configuration. Preparation and capture happen at
+activation, before `on_add`.
+
+Callbacks run synchronously, in this order:
 
 1. `on_add(handle)` at activation after capture.
 2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
@@ -71,8 +75,9 @@ They run synchronously, in this order:
 
 The handle's terminal state is visible inside terminal callbacks, and awaiting `end`
 resumes after them. A long frame doesn't replay the callbacks of skipped cycles.
-Tweens created in `on_update` begin on the next update, while tweens created in
-`on_end` continue the finished tween's timeline exactly.
+Tweens started in callbacks or after an await are independent roots: they begin
+on the next eligible update with no inherited frame time. Use a
+[Chain](/gdscript/sequences/) for linked timing.
 
 :::caution[Don't `await` inside callbacks]
 Callbacks must return before playback continues. Put anything that awaits in a
@@ -111,5 +116,3 @@ that has already failed, and `wait()` returns `FAILED`.
 You have finished the five-step tutorial. Explore [easing](/gdscript/easing/) to
 shape motion, [timing and loops](/gdscript/timing/) for repeating animations, or the
 [property catalog](/gdscript/nodes/) to find something else to animate.
-
-Starting snapshots configuration; capture and `on_add` occur at activation. Completion includes release hooks. Use a [Chain](/gdscript/sequences/) for linked timing; callbacks and waits create independent roots with no frame-time inheritance.

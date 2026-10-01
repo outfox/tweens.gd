@@ -104,28 +104,19 @@ public static partial class TweenExtensions
     /// </code></example>
     public static Group Tween<TTarget>(this TTarget target, ITweenDefinition<TTarget> first,
         ITweenDefinition<TTarget> second, params ITweenDefinition<TTarget>[] rest) where TTarget : Node
+        => Tween(target, default(PlaybackOptions), first, second, rest);
+
+    /// <summary>Starts several definitions in parallel on this node with one explicit playback policy.</summary>
+    /// <remarks>Options precede the definitions so a params list can retain arbitrary length.</remarks>
+    public static Group Tween<TTarget>(this TTarget target, PlaybackOptions options, ITweenDefinition<TTarget> first,
+        ITweenDefinition<TTarget> second, params ITweenDefinition<TTarget>[] rest) where TTarget : Node
     {
         ArgumentNullException.ThrowIfNull(rest);
         ITweenDefinition<TTarget>[] definitions = [first, second, .. rest];
         if (Array.IndexOf(definitions, null) >= 0)
             throw new ArgumentNullException(nameof(rest), "Definitions cannot be null.");
         var scheduler = TweenRuntime.GetRunner(target).Scheduler;
-        var started = new TweenInstance[definitions.Length];
-        var count = 0;
-        try
-        {
-            for (; count < definitions.Length; count++)
-            {
-                started[count] = definitions[count].Snapshot(scheduler, target, target, null, default);
-                scheduler.Enroll(started[count]);
-            }
-        }
-        catch
-        {
-            for (var i = 0; i < count; i++) started[i].Cancel();
-            throw;
-        }
-        return Group.Of(started);
+        return scheduler.AddAll(target, definitions, options: options);
     }
 
     /// <summary>Starts a flat, linked timeline on this node. Negative delays overlap the previous entry's end.</summary>

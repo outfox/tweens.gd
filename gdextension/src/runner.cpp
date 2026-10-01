@@ -140,6 +140,11 @@ Ref<TweensGdHandle> TweensGdRunner::reject(const String &p_message) {
 	return TweensGdHandle::rejected(p_message);
 }
 
+Ref<TweensGdChain> TweensGdRunner::reject_chain(const String &p_message) {
+	report(p_message);
+	return TweensGdChain::rejected(p_message);
+}
+
 Ref<TweensGdHandle> TweensGdRunner::play(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
 	if (!is_main_thread()) {
 		return reject("Use tweens.gd on Godot's main thread.");
@@ -189,10 +194,10 @@ Ref<TweensGdGroup> TweensGdRunner::play_all(const Variant &p_target, const Varia
 Ref<TweensGdChain> TweensGdRunner::chain(const Variant &p_target, const Variant &p_definitions,
 		const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
 	if (!is_main_thread()) {
-		return TweensGdChain::rejected("Use tweens.gd on Godot's main thread.");
+		return reject_chain("Use tweens.gd on Godot's main thread.");
 	}
 	if (p_target.get_validated_object() == nullptr) {
-		return TweensGdChain::rejected("The target is invalid.");
+		return reject_chain("The target is invalid.");
 	}
 	Variant owner = p_owner;
 	if (SceneTree *tree = Object::cast_to<SceneTree>(owner.get_validated_object())) {
@@ -203,11 +208,11 @@ Ref<TweensGdChain> TweensGdRunner::chain(const Variant &p_target, const Variant 
 	}
 	Node *node = Object::cast_to<Node>(owner.get_validated_object());
 	if (node == nullptr || !node->is_inside_tree() || node->is_queued_for_deletion()) {
-		return TweensGdChain::rejected("Automatic playback needs an owner inside the scene tree.");
+		return reject_chain("Automatic playback needs an owner inside the scene tree.");
 	}
 	SceneTree *tree = node->get_tree();
 	if (tree->has_meta(names().closing_key)) {
-		return TweensGdChain::rejected("The scene tree is shutting down.");
+		return reject_chain("The scene tree is shutting down.");
 	}
 	return acquire(tree)->scheduler->add_chain(p_target, p_definitions, owner, p_options);
 }

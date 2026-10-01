@@ -264,13 +264,12 @@ Callbacks are synchronous Callables: `on_add(handle)`, `on_start(handle)`,
 `on_finally(handle)`. Order is add, optional delay fill, start once, updates,
 end/cancel, finally, then the completion signal. Detected failures run finally.
 Terminal state is visible inside terminal callbacks. Calling cancel repeatedly is
-safe. New tweens created by callbacks first sample on the next eligible update.
+safe.
 
-Tweens started synchronously inside `on_end` or a resuming await of `end` inherit the
-finished tween's overshoot on the same scheduler, process lane and time scale.
-Unrelated starts, late waits on already-finished handles and continuations after
-another awaited signal do not inherit it. Check the reason before starting a next
-step when cancellation should stop a sequence.
+Tweens started in callbacks or after awaiting `end` are independent playback roots.
+They begin on the next eligible update with no inherited frame time. Use a
+[Chain](#chains-and-playback-policy) for linked timing. Check the reason before
+starting a next step when cancellation should stop a sequence.
 
 Use the API on Godot's main thread. Do not `await` inside callbacks; put sequences
 in a separate coroutine awaiting `end`. GDScript cannot catch arbitrary script

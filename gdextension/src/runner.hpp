@@ -26,6 +26,7 @@ class TweensGdRunner : public Node {
 	bool shutdown();
 	void tree_exiting();
 	static Ref<TweensGdHandle> reject(const String &p_message);
+	static Ref<TweensGdChain> reject_chain(const String &p_message);
 
 protected:
 	static void _bind_methods();

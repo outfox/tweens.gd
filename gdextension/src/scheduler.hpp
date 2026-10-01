@@ -28,7 +28,7 @@ class TweensGdScheduler : public RefCounted {
 	// The runner also prints its diagnostics; manual schedulers only record and signal them.
 	bool prints_errors = false;
 
-	Ref<TweensGdHandle> reject(const String &p_message, const TweenSettings *p_snapshot = nullptr);
+	Ref<TweensGdHandle> reject(const String &p_message);
 	String check_endpoint(const TweenSettings &p_snapshot, const Variant &p_initial, const Variant &p_endpoint) const;
 	void compact();
 

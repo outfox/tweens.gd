@@ -37,6 +37,15 @@ class FreeingCopy extends T.Adapter:
 		if is_instance_valid(victim): victim.free()
 		return super.copy()
 
+class RejectingCopy extends Probe:
+	var on_copy: Callable
+	var copied_refs: Array[WeakRef] = []
+	func copy() -> TweensGdAdapter:
+		var snapshot := super.copy()
+		copied_refs.append(weakref(snapshot))
+		on_copy.call()
+		return snapshot
+
 class Box extends RefCounted:
 	var amount := 2.0
 	var count := 2
@@ -148,6 +157,27 @@ func _custom() -> void:
 	copying.target_class = &"Node2D"
 	copying.to_value = 1.0
 	check(scheduler.add(doomed, copying).completion_reason == T.Reason.FAILED, "a copy() hook that frees the target is rejected")
+	for invalidation in ["target", "scheduler"]:
+		var rejected_scheduler := TweensGdScheduler.new()
+		var target := Node.new()
+		host.add_child(target)
+		var rejecting := RejectingCopy.new()
+		rejecting.fail_release = true
+		rejecting.on_copy = func():
+			if invalidation == "target": target.free()
+			else: rejected_scheduler.dispose()
+		var definition_copy := TweensGdDefinition.new()
+		definition_copy.adapter = rejecting
+		definition_copy.to_value = 1.0
+		var diagnostics: Array[String] = []
+		rejected_scheduler.error_reported.connect(func(message): diagnostics.append(message))
+		var copy_rejected := rejected_scheduler.add(target, definition_copy)
+		check(copy_rejected.is_settled and copy_rejected.completion_reason == T.Reason.FAILED, invalidation + " invalidation during copy rejects")
+		check(rejecting.events.is_empty(), invalidation + " rejection has no preparation or release hooks")
+		check(rejecting.copied_refs.size() == 1 and rejecting.copied_refs[0].get_ref() == null, invalidation + " rejection frees copied adapter reference")
+		check(diagnostics == [copy_rejected.error] and rejected_scheduler.last_error == copy_rejected.error, invalidation + " rejection preserves diagnostics")
+		if is_instance_valid(target): target.free()
+		rejected_scheduler.dispose()
 	var wrong := scheduler.add(box, T.property(^"amount", Vector2.ONE))
 	scheduler.update(0.0)
 	check(wrong.completion_reason == T.Reason.FAILED, "property endpoints remain type checked")

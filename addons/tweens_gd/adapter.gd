@@ -13,6 +13,8 @@ var _captured_type: int = TYPE_NIL
 
 ## Copies configuration for one playback. Captured Objects and Callables remain shared.
 ## Override to copy custom mutable data or omit transient playback state.
+## Allocate playback bindings in [method prepare]. An unprepared copy can be discarded
+## without calling [method release]; its RefCounted references are freed normally.
 func copy() -> TweensGdAdapter:
 	var result: TweensGdAdapter = get_script().new()
 	# Match definition snapshots: scalar configuration is copied; captured objects remain shared.
@@ -48,7 +50,8 @@ func validate_value(value: Variant) -> String:
 		return "Quaternion endpoints must have nonzero length."
 	return ""
 
-## Releases resources owned by this playback copy, including after failed preparation.
+## Releases bindings owned by this playback copy once preparation was attempted, including
+## after failed preparation. Copies discarded before preparation do not call this hook.
 ## Return an error string, empty on success. Captured shared Objects must remain usable.
 func release() -> String:
 	return ""

@@ -91,7 +91,7 @@ public class NodeTweenTests(HeadlessFixture godot)
     }
 
     [Fact]
-    public void GroupStartFailureCancelsTheTweensAlreadyStarted()
+    public void GroupStartFailureCancelsDeferredEnrollmentsBeforeOnAdd()
     {
         var node = Attach(new Node2D());
         try
@@ -101,6 +101,7 @@ public class NodeTweenTests(HeadlessFixture godot)
             var invalid = new Position2DYTween { To = 10, Duration = 1, Offset = 2 };
             Assert.Throws<ArgumentOutOfRangeException>(() => node.Tween(valid, invalid));
             Assert.Empty(started);
+            Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         }
         finally { node.Free(); }
     }

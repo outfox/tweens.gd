@@ -102,14 +102,14 @@ Ref<TweensGdHandle> TweensGdScheduler::make_handle(const Variant &p_target, cons
 	} owned{ p_definition->get_settings().snapshot() };
 	TweenSettings &snapshot = *owned.settings;
 	if (disposed) {
-		return reject("The scheduler was disposed while copying the definition.", &snapshot);
+		return reject("The scheduler was disposed while copying the definition.");
 	}
 	// The snapshot runs the adapter's overridable copy(), which can free the target or owner.
 	if (lifetime_ended()) {
-		return reject("The target or owner became invalid while copying the definition.", &snapshot);
+		return reject("The target or owner became invalid while copying the definition.");
 	}
 	if (p_definition->get_settings().adapter.is_valid() && snapshot.adapter.is_null()) {
-		return reject("The adapter copy must return an adapter.", &snapshot);
+		return reject("The adapter copy must return an adapter.");
 	}
 	SceneTree *tree = owner != nullptr ? owner->get_tree() : nullptr;
 	const auto instance = TweensGdHandle::start(this, p_target, owned.settings, owner, tree, policy);
@@ -486,7 +486,7 @@ String TweensGdScheduler::check_endpoint(const TweenSettings &p_snapshot, const 
 	return String();
 }
 
-Ref<TweensGdHandle> TweensGdScheduler::reject(const String &p_message, const TweenSettings *p_snapshot) {
+Ref<TweensGdHandle> TweensGdScheduler::reject(const String &p_message) {
 	String message = p_message;
 	report_error(message);
 	return TweensGdHandle::rejected(message);

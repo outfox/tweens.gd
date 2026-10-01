@@ -252,17 +252,20 @@ public class RuntimeTests(HeadlessFixture godot)
     }
 
     [Fact]
-    public void GroupStartValidatesDefinitionsAndCancelsPartialStarts()
+    public void GroupStartValidatesDefinitionsAndCancelsDeferredEnrollments()
     {
         using var scope = new SceneScope(godot);
         var node = scope.Add(new Node2D());
         var first = new Tweens.Position2DX { To = 10, Duration = 1 };
         Assert.Throws<ArgumentNullException>(() => node.Tween(first, first, null!));
+        Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         Assert.Throws<ArgumentNullException>(() => node.Tween<Node2D>(first, null!));
+        Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         var cancelled = 0;
-        var started = first with { OnCancel = _ => cancelled++ };
+        var deferred = first with { OnCancel = _ => cancelled++ };
         var invalid = new Position2DXTween { Duration = 1, EaseFunction = static x => x, Curve = scope.Track(new Curve()) };
-        Assert.Throws<ArgumentException>(() => node.Tween(started, started, invalid));
+        Assert.Throws<ArgumentException>(() => node.Tween(deferred, deferred, invalid));
         Assert.Equal(0, cancelled);
+        Assert.Equal(0, TweenRuntime.GetActiveCount(node));
     }
 }
