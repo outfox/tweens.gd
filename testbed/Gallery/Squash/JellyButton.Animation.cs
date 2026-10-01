@@ -22,10 +22,11 @@ public sealed partial class JellyButton
     private async Task Squish()
     {
         squish?.Cancel();
-        squish = Flatten();
-        if (await Group.Of(squish).End != Reason.Completed) return;
-        squish = SpringBack();
-        await Group.Of(squish).End;
+        squish = button.Chain([
+            new Tweens.ControlScale((1.3, 0.7), 0.07 * Tempo, Out.Quad),
+            new Tweens.ControlScale(Vector2.One, 0.8 * Tempo, EaseType.ElasticOut),
+        ]);
+        await squish.End;
     }
 
     private async Task Flash()
@@ -49,12 +50,6 @@ public sealed partial class JellyButton
             }),
         ]).End;
     }
-
-    private TweenInstance Flatten() =>
-        button.TweenScale((1.3, 0.7), 0.07 * Tempo, Out.Quad);
-
-    private TweenInstance SpringBack() =>
-        button.TweenScale(Vector2.One, 0.8 * Tempo, EaseType.ElasticOut);
 
     private async Task Throw(Polygon2D shard)
     {

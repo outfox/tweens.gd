@@ -74,8 +74,6 @@ void TweensGdGroupWatcher::accept(uint32_t p_index) {
 					}
 				}
 			}
-		} else {
-			include_stamp(member->get_stamp());
 		}
 	}
 	if (remaining == 0 && !settled) {
@@ -83,32 +81,8 @@ void TweensGdGroupWatcher::accept(uint32_t p_index) {
 		if (reason == REASON_NONE) {
 			reason = REASON_COMPLETED;
 		}
-		const CarryStamp previous = carry::enter(same_clock && reason == REASON_COMPLETED ? stamp : CarryStamp());
 		emit_signal(names().ended, reason);
 		disconnect_all(this, names().ended);
-		carry::leave(previous);
-	}
-}
-
-void TweensGdGroupWatcher::include_stamp(const CarryStamp &p_stamp) {
-	if (!same_clock) {
-		return;
-	}
-	if (!p_stamp.present) {
-		same_clock = false;
-		return;
-	}
-	if (!stamp.present) {
-		stamp = p_stamp;
-		return;
-	}
-	if (!p_stamp.same_clock(stamp)) {
-		same_clock = false;
-		return;
-	}
-	// Latest tick wins; on the same tick, the smallest overshoot finished last.
-	if (p_stamp.tick > stamp.tick || (p_stamp.tick == stamp.tick && p_stamp.seconds < stamp.seconds)) {
-		stamp = p_stamp;
 	}
 }
 

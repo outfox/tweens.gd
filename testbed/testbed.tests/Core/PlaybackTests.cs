@@ -37,7 +37,7 @@ public class PlaybackTests
         Assert.Equal(10, box.Value);
         Assert.Equal(Reason.Completed, await tween.End);
         Assert.True(terminalAtFinally);
-        Assert.Equal(new[] { "add", "start", "update", "update", "end", "finally" }, events);
+        Assert.Equal(new[] { "add", "start", "update", "update", "update", "end", "finally" }, events);
         Assert.Equal(0, scheduler.ActiveCount);
     }
 
@@ -51,6 +51,8 @@ public class PlaybackTests
         using var scheduler = new TweenScheduler();
         var box = new Box();
         scheduler.Add(box, new BoxTween { From = 0, To = 10, Delay = 1, Duration = 1, Fill = mode });
+        Assert.Equal(7, box.Value);
+        scheduler.Update(0);
         Assert.Equal(duringDelay, box.Value);
         scheduler.Update(2);
         Assert.Equal(final, box.Value);
@@ -70,7 +72,7 @@ public class PlaybackTests
         definition.To = 100;
         a.Value = -100;
         scheduler.Update(0.5);
-        Assert.Equal(3.5f, a.Value);
+        Assert.Equal(-50, a.Value);
         Assert.Equal(25, b.Value);
     }
 
@@ -266,8 +268,8 @@ public class PlaybackTests
         using var scheduler = new TweenScheduler();
         var a = new Box(); var b = new Box(); var c = new Box();
         scheduler.Add(a, new BoxTween { From = 0, To = 10, Duration = 1 });
-        scheduler.Add(b, new BoxTween { From = 0, To = 10, Duration = 1, UseUnscaledTime = true });
-        scheduler.Add(c, new BoxTween { From = 0, To = 10, Duration = 1, ProcessMode = TweenProcessMode.Physics });
+        scheduler.Add(b, new BoxTween { From = 0, To = 10, Duration = 1  }, new PlaybackOptions { UseUnscaledTime = true });
+        scheduler.Add(c, new BoxTween { From = 0, To = 10, Duration = 1  }, new PlaybackOptions { ProcessMode = TweenProcessMode.Physics });
         scheduler.Update(0.25, 0.5);
         Assert.Equal(2.5f, a.Value); Assert.Equal(5, b.Value); Assert.Equal(7, c.Value);
         scheduler.Update(0.5, mode: TweenProcessMode.Physics);
@@ -320,6 +322,7 @@ public class PlaybackTests
         var box = new Box();
         var cancelled = scheduler.Add(box, new BoxTween { OnAdd = t => t.Cancel(), From = 0, Delay = 1, Fill = FillMode.Both });
         Assert.Equal(7, box.Value);
+        scheduler.Update(0);
         Assert.True(cancelled.IsTerminal);
         scheduler.Add(box, new BoxTween { To = 10 });
         scheduler.Add(box, new BoxTween { To = 20 });
@@ -353,7 +356,7 @@ public class PlaybackTests
         var clock = new MonotonicClock(() => ticks);
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new BoxTween { From = 0, To = 10, Duration = 1, UseUnscaledTime = true });
+        var tween = scheduler.Add(box, new BoxTween { From = 0, To = 10, Duration = 1  }, new PlaybackOptions { UseUnscaledTime = true });
         ticks += 250_000; scheduler.Update(0, clock.Sample());
         Assert.Equal(2.5f, box.Value);
         tween.Pause();

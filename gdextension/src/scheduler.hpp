@@ -2,7 +2,8 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 #pragma once
 
-#include "handle.hpp"
+#include "chain.hpp"
+#include <variant>
 
 #include <godot_cpp/templates/local_vector.hpp>
 
@@ -16,15 +17,18 @@ class TweensGdScheduler : public RefCounted {
 
 	friend class TweensGdRunner;
 
-	LocalVector<Ref<TweensGdHandle>> instances;
+	using WorkItem = std::variant<Ref<TweensGdHandle>, Ref<TweensGdChain>>;
+	LocalVector<WorkItem> instances;
+	static TweensGdHandle *control(const WorkItem &p_item);
+	Ref<TweensGdHandle> make_handle(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition,
+			const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options, bool p_enroll);
 	String last_error;
 	bool updating = false;
 	bool disposed = false;
 	// The runner also prints its diagnostics; manual schedulers only record and signal them.
 	bool prints_errors = false;
-	int64_t ticks[2] = { 0, 0 };
 
-	Ref<TweensGdHandle> reject(const String &p_message, const TweenSettings *p_snapshot = nullptr);
+	Ref<TweensGdHandle> reject(const String &p_message);
 	String check_endpoint(const TweenSettings &p_snapshot, const Variant &p_initial, const Variant &p_endpoint) const;
 	void compact();
 
@@ -34,8 +38,8 @@ protected:
 public:
 	// Node targets bind to themselves. Other Objects can optionally bind to an owner.
 	// Always returns a handle. Invalid starts are already settled with Reason.FAILED.
-	Ref<TweensGdHandle> add(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner);
-	Ref<TweensGdGroup> add_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner);
+	Ref<TweensGdHandle> add(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options);
+	Ref<TweensGdGroup> add_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options);
 	// New playback created inside callbacks is first sampled on the next update.
 	void update(double p_delta, double p_unscaled_delta, int64_t p_mode);
 	void cancel_all();
@@ -45,9 +49,10 @@ public:
 	String get_last_error() const { return last_error; }
 	int64_t get_active_count() const;
 	bool is_disposed() const { return disposed; }
-	int64_t get_tick(int64_t p_mode) const { return ticks[p_mode]; }
 	void report_error(const String &p_message);
-	static bool has_carry();
+	String prepare_handle(TweensGdHandle &p_handle);
+	Ref<TweensGdChain> add_chain(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner,
+			const Ref<TweensGdPlaybackOptions> &p_options);
 };
 
 } // namespace godot

@@ -84,7 +84,7 @@ public class RuntimeTests(HeadlessFixture godot)
         var process = scope.Add(new Node2D());
         var physics = scope.Add(new Node2D());
         var a = process.TweenPositionX(100, 10);
-        var b = physics.TweenPositionX(100, 10, d => d.ProcessMode = TweenProcessMode.Physics);
+        var b = physics.TweenPositionX(100, 10, playback: new PlaybackOptions { ProcessMode = TweenProcessMode.Physics });
         var runner = TweenRuntime.GetRunner(godot.Tree);
         var ticks = runner.Ticks;
         scope.FramesUntil(() => a.Progress > 0 && b.Progress > 0);
@@ -96,12 +96,8 @@ public class RuntimeTests(HeadlessFixture godot)
     {
         using var scope = new SceneScope(godot);
         var scaled = scope.Add(new Node2D()).TweenPositionX(100, 10);
-        var unscaled = scope.Add(new Node2D()).TweenPositionX(100, 10, d => d.UseUnscaledTime = true);
-        var unscaledPhysics = scope.Add(new Node2D()).TweenPositionX(100, 10, d =>
-        {
-            d.UseUnscaledTime = true;
-            d.ProcessMode = TweenProcessMode.Physics;
-        });
+        var unscaled = scope.Add(new Node2D()).TweenPositionX(100, 10, playback: new PlaybackOptions { UseUnscaledTime = true });
+        var unscaledPhysics = scope.Add(new Node2D()).TweenPositionX(100, 10, playback: new PlaybackOptions { UseUnscaledTime = true, ProcessMode = TweenProcessMode.Physics });
         scope.Frames();
         var scale = Engine.TimeScale;
         try
@@ -256,17 +252,20 @@ public class RuntimeTests(HeadlessFixture godot)
     }
 
     [Fact]
-    public void GroupStartValidatesDefinitionsAndCancelsPartialStarts()
+    public void GroupStartValidatesDefinitionsAndCancelsDeferredEnrollments()
     {
         using var scope = new SceneScope(godot);
         var node = scope.Add(new Node2D());
         var first = new Tweens.Position2DX { To = 10, Duration = 1 };
         Assert.Throws<ArgumentNullException>(() => node.Tween(first, first, null!));
+        Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         Assert.Throws<ArgumentNullException>(() => node.Tween<Node2D>(first, null!));
+        Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         var cancelled = 0;
-        var started = first with { OnCancel = _ => cancelled++ };
+        var deferred = first with { OnCancel = _ => cancelled++ };
         var invalid = new Position2DXTween { Duration = 1, EaseFunction = static x => x, Curve = scope.Track(new Curve()) };
-        Assert.Throws<ArgumentException>(() => node.Tween(started, started, invalid));
-        Assert.Equal(2, cancelled);
+        Assert.Throws<ArgumentException>(() => node.Tween(deferred, deferred, invalid));
+        Assert.Equal(0, cancelled);
+        Assert.Equal(0, TweenRuntime.GetActiveCount(node));
     }
 }

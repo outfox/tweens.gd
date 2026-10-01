@@ -21,17 +21,23 @@ void Timeline::configure(const TweenSettings &p_settings) {
 }
 
 void Timeline::advance(double p_delta) {
-	elapsed = MIN(MAX_TIME, elapsed + p_delta);
-	if (elapsed < delay) {
+	sample_at(MIN(MAX_TIME, elapsed + p_delta));
+}
+
+void Timeline::sample_at(double p_local_time) {
+	elapsed = p_local_time;
+	started = completed = returning = false;
+	progress = cycle = 0.0;
+	state = STATE_DELAYED;
+	if (elapsed < inner_delay()) {
 		return;
 	}
 	started = true;
-	const double time = MIN(MAX_TIME, elapsed - delay + offset);
+	const double time = MIN(MAX_TIME, elapsed - inner_delay() + offset);
 	if (time >= total) {
 		returning = ping_pong;
 		progress = ping_pong ? 0.0 : 1.0;
 		cycle = double(repeats);
-		overshoot = time - total;
 		completed = true;
 		state = STATE_COMPLETED;
 		return;
@@ -67,19 +73,17 @@ void TweensGdPlayback::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_returning"), &TweensGdPlayback::is_returning);
 	ClassDB::bind_method(D_METHOD("is_started"), &TweensGdPlayback::is_started);
 	ClassDB::bind_method(D_METHOD("is_completed"), &TweensGdPlayback::is_completed);
-	ClassDB::bind_method(D_METHOD("get_overshoot"), &TweensGdPlayback::get_overshoot);
 	ClassDB::bind_method(D_METHOD("get_cycle"), &TweensGdPlayback::get_cycle);
 	ClassDB::bind_method(D_METHOD("get_state"), &TweensGdPlayback::get_state);
 	ClassDB::bind_method(D_METHOD("get_elapsed"), &TweensGdPlayback::get_elapsed);
-	ClassDB::bind_method(D_METHOD("set_elapsed", "elapsed"), &TweensGdPlayback::set_elapsed);
+	ClassDB::bind_method(D_METHOD("sample_at", "local_time"), &TweensGdPlayback::sample_at);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "progress"), "", "get_progress");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "returning"), "", "is_returning");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "started"), "", "is_started");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "completed"), "", "is_completed");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "overshoot"), "", "get_overshoot");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "cycle"), "", "get_cycle");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "state"), "", "get_state");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "elapsed"), "set_elapsed", "get_elapsed");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "elapsed"), "", "get_elapsed");
 }
 
 Ref<TweensGdPlayback> TweensGdPlayback::create(const Ref<TweensGdDefinition> &p_definition) {

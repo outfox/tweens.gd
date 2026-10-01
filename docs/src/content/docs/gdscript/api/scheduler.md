@@ -21,13 +21,15 @@ scheduler.dispose()
 | `add(target, definition, owner = null)` | `TweensGdHandle` | Add playback; a node target becomes its own owner |
 | `add_all(target, definitions, owner = null)` | `TweensGdGroup` | Add several definitions on one target as one step |
 | `update(delta, unscaled_delta = -1.0, mode = Tweens.Process.PROCESS)` | `void` | Advance every tween in the given process mode |
-| `active_count` | `int` | Number of tweens that haven't ended |
+| `active_count` | `int` | Number of unfinished roots; each Chain counts once |
 | `cancel_all()` | `void` | Cancel every tween in this scheduler |
 | `cancel_owner(owner, include_children = false)` | `void` | Cancel this scheduler's tweens owned by a node |
 | `last_error` | `String` | The latest rejection or failure message |
 | `error_reported(message)` | signal | Emitted for each reported error |
 | `is_disposed` | `bool` | True after `dispose()` |
 | `dispose()` | `void` | Stop and settle the remaining playback |
+
+Linked starts use `add_chain(target, definitions, owner = null, options = null)`. All starts accept playback options separately from definitions. Independent roots created during an update first advance on the next eligible update, with no inherited time.
 
 ## Rules
 

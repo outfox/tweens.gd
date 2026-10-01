@@ -161,15 +161,15 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         using var scheduler = new TweenScheduler();
         var parent = new Control { Size = new Vector2(1000, 1000) };
         godot.Tree.Root.AddChild(parent);
-        var node = new Control(); parent.AddChild(node);
+        var node = new Control { AnchorRight = 1, AnchorBottom = 1 }; parent.AddChild(node);
         try
         {
-            scheduler.Add(node, new ControlAnchorMinTween { To = new Vector2(0.2f, 0.4f), Duration = 1 });
-            scheduler.Add(node, new ControlAnchorMaxTween { To = new Vector2(0.6f, 0.8f), Duration = 1 });
+            scheduler.Add(node, new ControlAnchorMinTween { From = Vector2.Zero, To = new Vector2(0.2f, 0.4f), Duration = 1 });
+            scheduler.Add(node, new ControlAnchorMaxTween { From = Vector2.One, To = new Vector2(0.6f, 0.8f), Duration = 1 });
             scheduler.Add(node, new ControlOffsetsTween { From = Vector4.Zero, To = new Vector4(10, 20, 30, 40), Duration = 1 });
             scheduler.Update(0.5);
             Assert.Equal(0.1f, node.AnchorLeft); Assert.Equal(0.2f, node.AnchorTop);
-            Assert.Equal(0.3f, node.AnchorRight); Assert.Equal(0.4f, node.AnchorBottom);
+            Assert.Equal(0.8f, node.AnchorRight); Assert.Equal(0.9f, node.AnchorBottom);
             Assert.Equal(5, node.OffsetLeft); Assert.Equal(10, node.OffsetTop);
             Assert.Equal(15, node.OffsetRight); Assert.Equal(20, node.OffsetBottom);
         }

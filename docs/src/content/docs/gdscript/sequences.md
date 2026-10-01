@@ -1,196 +1,109 @@
 ---
 title: Sequences
-description: Chain, group, stagger, wait, loop, and stop multi-step animations with ordinary GDScript coroutines.
+description: Link one-target motions with Chains, overlap entries with signed delays, and await completion.
 ---
 
-A sequence is an ordinary GDScript coroutine. Await each step before starting the
-next, play steps together as a group, and add delays between them.
+Use a **Chain** when definitions on one target should share a timeline. Use a
+**Group** for independent tweens playing together. Ordinary awaits coordinate
+completion and other game logic; playback started by a continuation first
+advances on the next eligible scheduler update.
 
-| Goal | Tool |
-| --- | --- |
-| Run B after A | `await a.end`, then start B |
-| Run A and B together | `Tweens.play_all(node, [a, b])` or `Tweens.group(handles)`, then `await group.end` |
-| Offset tweens within a step | `delay` on copies for different targets or properties |
-| Wait between steps | `await Tweens.play(node, Tweens.float_value(1.0, seconds)).end` |
-| Stop the sequence | [Cancel and check the result](/gdscript/cancellation/) |
-
-Snippets run in a node script function with in-tree `sprite` (`Sprite2D`) and
-`label` (`Label`) nodes, and assume
-the global `Tweens` class.
-
-## One step after another
-
-Await each tween before starting the next:
+## Link definitions
 
 ```gdscript
-await Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6)).end
-await Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2)).end
-await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
-```
-
-Since each definition has no `from_value`, it continues from wherever the
-previous step left the property.
-
-These examples ignore completion reasons. If interruption should stop the sequence,
-check the result before starting the next step; [cancellation](/gdscript/cancellation/)
-shows that pattern.
-
-## Steps that run together
-
-A group plays tweens as one step. Start several definitions on one node with
-`Tweens.play_all()`:
-
-```gdscript
-var grow := Tweens.scale_2d([1.2, 1.2], 0.2)
-var dim := Tweens.modulate_alpha(0.5, 0.2)
-await Tweens.play_all(sprite, [grow, dim]).end
-```
-
-Group tweens that are already playing, on any targets, with `Tweens.group()`.
-`TweensGdGroup.of()` is the same function:
-
-```gdscript
-var step := Tweens.group([
-	Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6)),
-	Tweens.play(label, Tweens.modulate_alpha(0.0, 0.6)),
+var animation := Tweens.chain(sprite, [
+    Tweens.position_2d([400, 180], 0.6),
+    Tweens.scale_2d([1.2, 1.2], 0.2),
+    Tweens.modulate_alpha(0.0, 0.3),
 ])
-await step.end
+await animation.end
 ```
 
-A group completes after every member settles, including its callbacks and
-cleanup. If one member stops early (cancelled, freed, or failed), the group
-cancels the others and reports that member's reason. `pause()`, `resume()`, and
-`cancel()` act on every member. Members that already completed keep their result.
+`Tweens.chain(sprite, definitions, owner = null, options = null)` snapshots the entire flat list. Each entry links to the previous
+entry's own end. Changing a duration before creating the Chain moves following
+links automatically. Repeats, ping-pong intervals, repeat intervals, and offset
+contribute to that entry's span.
 
-`play_all()` stops starting definitions at the first one that fails to start,
-and the returned group cancels the ones it already started. `Tweens.group()`
-takes handles, not definitions: start definitions with `Tweens.play()` first.
-An empty array returns a group that has already failed.
+The first entry captures the target on its first eligible update. Later entries
+capture when they activate, after existing entries have sampled that boundary
+and run their completion callbacks and cleanup. A successor therefore sees the
+preceding endpoint and any changes made by its completion callback.
 
-:::tip[Prefer a group to awaiting each handle]
-Awaiting several handles one after another also waits for all of them, but it
-lets the others keep running when one stops, and it can hand the next step a
-slightly wrong start time. See [timing between steps](#timing-between-steps).
-:::
+## Overlap and gaps
 
-## Stagger with delay
-
-`delay` offsets tweens inside one step, exact to the frame. Give each start a
-copy of one definition with its own delay, from `with_delay()`, to fade in a
-whole menu, one item after another:
-
-```gdscript title="menu.gd"
-extends VBoxContainer
-
-static var fade_in := Tweens.modulate_alpha(null, 0.3) \
-	.with_from(0.0).with_fill(Tweens.Fill.BOTH)
-
-func reveal() -> void:
-	var reveals := []
-	for item in get_children():
-		if item is Control:
-			var delay := reveals.size() * 0.05
-			reveals.append(Tweens.play(item, fade_in.with_delay(delay)))
-	if reveals.is_empty():
-		return
-	await Tweens.group(reveals).end
-```
-
-`fill = Tweens.Fill.BOTH` applies `from_value` during the delay, so items that
-are still waiting stay hidden instead of showing at full opacity first.
-
-:::caution[Stagger different targets, not one property]
-With no `from_value`, a tween starts from the property's value when you start
-it, before its delay. A delayed tween on the same property therefore snaps it
-back to that value:
+A positive delay captures at the preceding entry's end, then waits before moving.
+A negative delay starts before that end. The next entry follows the overlapped
+entry's own end, even while an earlier tail is still playing:
 
 ```gdscript
-# Wrong: the second tween captured the start position, not (400, 180).
-Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
-var rise := Tweens.position_2d([400, 0], 0.4)
-rise.delay = 0.6
-Tweens.play(sprite, rise)
+var animation := Tweens.chain(sprite, [
+    Tweens.position_2d_x(100.0, 1.0),
+    Tweens.modulate_alpha(0.0, 0.2).with_delay(-0.6),
+    Tweens.scale_2d([1.2, 1.2], 0.1),
+])
 ```
 
-Await the first tween instead, give the delayed tween an explicit `from_value`,
-or move it with [`by_value`](/gdscript/definitions/#move-by-an-offset-with-by_value),
-which starts from wherever the property is when the tween plays.
-:::
+| Entry | Starts | Ends |
+| --- | --- | --- |
+| Position | 0.0 | 1.0 |
+| Fade | 0.4 | 0.6 |
+| Scale | 0.6 | 0.7 |
 
-## Wait between steps
+The Chain completes at 1.0, after every tail ends. When entries write the same
+property, later definitions write last while both are active. An earlier tail
+can become visible again after a later entry completes. Each entry keeps its
+usual fill and relative-value behavior. If signed delays reorder starts, an older
+entry can activate after a later entry. Higher-priority active entries are sampled
+again at that timestamp after activation, preserving capture order and write
+priority; their setters and update callbacks can therefore run again.
 
-`Tweens.float_value()` makes a [callback-only](/gdscript/custom-tweens/#callback-values)
-tween, which writes no property, so `Tweens.float_value(1.0, 0.5)` is a
-half-second wait. The `1.0` is the value it would report, and unused here. The
-wait follows the same pause, time scale, and lifetime rules as the animation
-around it:
+## Pre-roll
 
-```gdscript
-await Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6)).end
-await Tweens.play(sprite, Tweens.float_value(1.0, 0.5)).end
-await Tweens.play(sprite, Tweens.position_2d([40, 180], 0.6)).end
-```
+If a signed delay places work before visible time zero, the Chain simulates
+that history on its first eligible update. A one-second first entry with delay
+-0.25 is already 25% through its motion at visible time zero. Crossed lifecycle
+callbacks run chronologically; declaration order resolves simultaneous events.
 
-:::caution[Avoid `create_timer()` for holds]
-A timer from `get_tree().create_timer()` isn't tied to the node's lifetime, and by
-default it keeps running while the tree is paused. The sequence can resume
-against a paused or freed scene.
-:::
+The target's current value at the earliest activation supplies the synthetic
+initial state. External systems are not rewound. Callbacks can have real
+side effects. An entirely past Chain completes on the first eligible update,
+after its hooks and cleanup; its visible duration is zero. Pausing before that
+update defers all preparation, capture, and replay.
 
-## Loops and cancellation
+Signed delays also work for a standalone tween. Offset selects progress inside
+a leaf; pre-roll executes crossed history in the composed timeline.
 
-For one repeating motion, use `repeats` as described in [timing](/gdscript/timing/).
-To repeat a multi-step sequence or stop it when interrupted, see
-[cancellation and completion reasons](/gdscript/cancellation/).
+## Control and completion
 
-## Pause a sequence
+`pause()`, `resume()`, and `cancel()` control the whole Chain. An active leaf handle passed to a callback
+forwards these controls to its Chain; controls on a terminal leaf do nothing.
+Completion waits for every entry, callback, and release hook. Cancellation,
+owner exit, or failure stops active leaves and discards pending entries without
+preparing them or running their playback or release hooks.
 
-`pause()` on a handle or group pauses only that step. If your code starts the
-next step while that one is paused, the new tweens play normally. To pause every
-current and future step, pause the node the tweens are bound to. With the default
-[pause mode](/gdscript/lifetime/#pausing), `Tweens.Pause.BOUND`, tweens follow the node's `can_process()`:
+Pausing inside a callback stops at the current timestamp. Resume finishes that
+boundary without replaying completed hooks. The unused part of the interrupted
+frame is discarded. A long update can visit multiple boundaries and invoke
+setters and update callbacks several times.
 
-```gdscript
-sprite.process_mode = Node.PROCESS_MODE_DISABLED # Pauses every tween bound to sprite.
-sprite.process_mode = Node.PROCESS_MODE_INHERIT
-```
+Await `end` to learn when the Chain settles. Check the completion reason
+when later logic depends on success. C# completion faults on detected exceptions;
+GDScript keeps diagnostics in `error` and `errors`. Cancelling a wait leaves
+playback running, using the same wait helpers as individual handles.
 
-Pausing the scene tree also pauses bound tweens, unless their node processes
-while paused. `set_process(false)` alone doesn't pause them.
+## Completion-driven logic
 
-## Errors
+Ordinary awaits remain useful for conditional work, user input, and transitions
+between different targets. They do not transfer leftover frame time to playback
+started in a callback, signal, task continuation, or late wait. Independent
+roots first sample on their next eligible update.
 
-A tween that fails ends with `FAILED`, and `handle.error` describes the problem.
-A group containing it fails too, and `group.errors` lists each member's message.
-A start that can't be accepted, such as a target outside the tree, returns a
-handle that has already failed, so `await handle.end` returns `FAILED` at once instead of
-the sequence hanging.
+A Chain currently accepts one target and a flat list, including different
+properties and value types on that target. Multiple targets, nested Chains,
+explicit parallel steps, and repeating a whole Chain are future composition work.
+A final infinitely repeating entry is allowed; a successor after an infinite
+entry is rejected. Empty lists, invalid definitions, and overflowed schedules
+reject before playback.
 
-:::caution[Script errors aren't caught]
-tweens.gd detects invalid configuration, stale Callables, and non-finite easing
-or interpolation results. An error inside your own callback or property setter
-stays an ordinary Godot script error, and isn't guaranteed to become `FAILED`.
-See [errors](/gdscript/playback/#errors).
-:::
-
-## Timing between steps
-
-When a step completes, the code awaiting it resumes immediately, inside the same
-scheduler update. Tweens it starts inherit the time by which the finished step
-overshot its end. They appear from the next frame at exactly the point a gapless
-timeline would put them, so long sequences don't drift. For a group, the time
-comes from the member that finished last.
-
-The handover applies when all of these hold:
-
-- You await the handle's or the group's `end` before it finishes. An await
-  on a handle that has already finished returns at once and hands over no time,
-  which is why awaiting several handles in turn can lose it.
-- The next tweens start before the sequence awaits anything else.
-- They use the same scheduler, `process_mode`, and time base
-  (`use_unscaled_time`) as the step they follow.
-
-Tweens started from an `on_end` callback continue the finishing tween's timeline
-in the same way. Callbacks can't check a reason as easily as a coroutine, and they
-mustn't `await`, so prefer a coroutine for anything longer than a single
-follow-up.
+See [Chain members](/gdscript/api/chains/), [timing](/gdscript/timing/),
+and [cancellation](/gdscript/cancellation/) for the detailed contract.

@@ -196,7 +196,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         var contract = "ITweenDefinition<" + target + ", " + value + ">";
         var source = new StringBuilder(Header + "using global::System;\nusing global::tweens.gd;\n\nnamespace Tweens;\n\n");
         source.Append("/// <summary>Reusable immutable ").Append(name)
-            .Append(" definition. Each start snapshots configuration and captures the current value.</summary>\n")
+            .Append(" definition. Each start snapshots configuration; activation captures the current value.</summary>\n")
             .Append("public readonly record struct ").Append(name).Append(generic).Append(" : ").Append(contract);
         if (kind == DefinitionKind.CustomProperty) source.Append("\n    where TTarget : class where TValue : struct");
         else if (kind == DefinitionKind.ShaderParameter) source.Append("\n    where TValue : struct");

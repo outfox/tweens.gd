@@ -42,6 +42,7 @@
 			<param index="0" name="target" type="Variant" />
 			<param index="1" name="definition" type="TweensGdDefinition" />
 			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
 			<description>
 				Starts one definition and returns its playback handle. Node targets own their playback; other Objects
 				require an in-tree Node or SceneTree owner. A rejected start returns a failed handle. Prefer
@@ -53,10 +54,19 @@
 			<param index="0" name="target" type="Variant" />
 			<param index="1" name="definitions" type="Variant" />
 			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
 			<description>
 				Starts an Array of definitions in parallel and returns a group. Ownership follows [method play]. A
 				rejected start cancels earlier members and prevents later starts. Prefer [code]Tweens.play_all[/code].
 			</description>
+		</method>
+		<method name="chain" qualifiers="static">
+			<return type="TweensGdChain" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definitions" type="Variant" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
+			<description>Starts a linked flat list on one target, with signed delays and one root playback policy. Prefer Tweens.chain.</description>
 		</method>
 	</methods>
 	<members>

@@ -58,9 +58,9 @@ public class SequenceTimingTests
 
     private static BoxTween Leg(double duration, float to = 10) => new() { From = 0, To = to, Duration = duration };
 
-    // Godot resumes awaits inline; a continuation posted for later starts fresh.
-    [Theory, InlineData(false, 5), InlineData(true, 3)]
-    public void AwaitedCompletionHandsItsOvershootToTheNextTween(bool posted, float expected)
+    // Completion waits never transfer unused frame time.
+    [Theory, InlineData(false, 3), InlineData(true, 3)]
+    public void AwaitedCompletionStartsAnIndependentRoot(bool posted, float expected)
     {
         using var run = new Harness(posted);
         Box first = new(), second = new();
@@ -81,7 +81,7 @@ public class SequenceTimingTests
     }
 
     [Fact]
-    public void GroupCreditsTheMemberThatFinishedLast()
+    public void GroupCompletionStartsAnIndependentRoot()
     {
         using var run = new Harness(posted: false);
         Box early = new(), late = new(), next = new();
@@ -90,7 +90,7 @@ public class SequenceTimingTests
         run.Update(0.6);
         run.Update(0.6);
         run.Update(0.3);
-        Assert.Equal(3.5f, next.Value, 3);
+        Assert.Equal(3f, next.Value, 3);
         Assert.True(sequence.IsCompletedSuccessfully);
 
         static async Task SequenceAsync(TweenScheduler scheduler, Box earlyTarget, Box lateTarget, Box nextTarget)
@@ -101,7 +101,7 @@ public class SequenceTimingTests
     }
 
     [Fact]
-    public void CarryExpiresOnceItsLaneUpdatesAgain()
+    public void StartingAfterAnExtraAwaitStartsFresh()
     {
         using var run = new Harness(posted: false);
         Box first = new(), second = new();
@@ -124,7 +124,7 @@ public class SequenceTimingTests
     }
 
     [Fact]
-    public void CarryRequiresTheSameLaneAndTimeBase()
+    public void IndependentRootsUseTheirOwnLaneAndTimeBase()
     {
         using var run = new Harness(posted: false);
         Box first = new(), physics = new(), unscaled = new();
@@ -141,16 +141,14 @@ public class SequenceTimingTests
         {
             if (await scheduler.Add(start, Leg(1)).End != Reason.Completed) return;
             var toPhysics = Leg(1);
-            toPhysics.ProcessMode = TweenProcessMode.Physics;
-            scheduler.Add(physicsTarget, toPhysics);
+            scheduler.Add(physicsTarget, toPhysics, new PlaybackOptions { ProcessMode = TweenProcessMode.Physics });
             var toUnscaled = Leg(1);
-            toUnscaled.UseUnscaledTime = true;
-            scheduler.Add(unscaledTarget, toUnscaled);
+            scheduler.Add(unscaledTarget, toUnscaled, new PlaybackOptions { UseUnscaledTime = true });
         }
     }
 
     [Theory, InlineData(false), InlineData(true)]
-    public void OnEndContinuesTheTimelineButUnrelatedTweensDoNot(bool posted)
+    public void CallbackAndUnrelatedRootsBothStartFresh(bool posted)
     {
         using var run = new Harness(posted);
         Box first = new(), chained = new(), unrelated = new();
@@ -162,16 +160,16 @@ public class SequenceTimingTests
         run.Update(0.6);
         run.Scheduler.Add(unrelated, Leg(1));
         run.Update(0.3);
-        Assert.Equal(5, chained.Value, 3);
+        Assert.Equal(3, chained.Value, 3);
         Assert.Equal(3, unrelated.Value, 3);
         Assert.True(sequence.IsCompletedSuccessfully);
 
-        // A carry handed to an awaiting method ends when the continuation yields.
+        // Await observes completion without defining a timeline link.
         static async Task SequenceAsync(TweenScheduler scheduler) => await scheduler.Add(new Box(), Leg(1)).End;
     }
 
     [Fact]
-    public void CreditConsumesTheNextTweensDelayFirst()
+    public void IndependentRootKeepsItsWholeDelay()
     {
         using var run = new Harness(posted: false);
         Box first = new(), second = new();
@@ -179,7 +177,7 @@ public class SequenceTimingTests
         run.Update(0.6);
         run.Update(0.6);
         run.Update(0.3);
-        Assert.Equal(4, second.Value, 3);
+        Assert.Equal(2, second.Value, 3);
         Assert.True(sequence.IsCompletedSuccessfully);
 
         static async Task SequenceAsync(TweenScheduler scheduler, Box start, Box next)

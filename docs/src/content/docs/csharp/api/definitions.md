@@ -112,7 +112,7 @@ value. Reusable configure callbacks take a `TweenOptionsBuilder`.
 
 ## What each start copies
 
-Starting a definition snapshots it and captures the property's current value.
+Starting a definition snapshots its configuration. Preparation and property capture happen on the first eligible update, before any positive delay.
 Later `with` copies never reach running playback. Delegates and the objects they
 capture stay shared, but Godot `Curve` resources are duplicated for each playback.
 

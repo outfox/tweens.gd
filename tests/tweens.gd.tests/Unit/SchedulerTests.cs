@@ -55,7 +55,7 @@ public class SchedulerTests
         using var scheduler = new TweenScheduler();
         var scaled = new Box(); var unscaled = new Box();
         scheduler.Add(scaled, new PlainTween { To = 1, Duration = 1 });
-        scheduler.Add(unscaled, new PlainTween { To = 1, Duration = 1, UseUnscaledTime = true });
+        scheduler.Add(unscaled, new PlainTween { To = 1, Duration = 1  }, new PlaybackOptions { UseUnscaledTime = true });
         scheduler.Update(0.25);
         Assert.Equal(0.25f, unscaled.Value);
         scheduler.Update(0.25, 0.5);
@@ -92,6 +92,7 @@ public class SchedulerTests
             OnCancel = t => survivors.Add(t.Scheduler.Add(new Box(), new PlainTween { Duration = 1 })),
         });
         scheduler.Add(new Box(), new PlainTween { Duration = 1 });
+        scheduler.Update(0);
         scheduler.CancelAll();
         Assert.Single(survivors);
         Assert.False(survivors[0].IsTerminal);
@@ -148,6 +149,8 @@ public class SchedulerTests
             Preparing = _ => scheduler.Dispose(),
             Releasing = () => released = true,
         });
+        Assert.False(released);
+        scheduler.Update(0);
         Assert.Equal(Reason.RunnerDisposed, tween.CompletionReason);
         Assert.True(released);
         Assert.True(tween.End.IsCompletedSuccessfully);

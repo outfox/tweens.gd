@@ -18,8 +18,9 @@ void TweensGdRunner::_bind_methods() {
 	const char *name = "TweensGdRunner";
 	ClassDB::bind_static_method(name, D_METHOD("find", "tree"), &TweensGdRunner::find);
 	ClassDB::bind_static_method(name, D_METHOD("acquire", "tree"), &TweensGdRunner::acquire);
-	ClassDB::bind_static_method(name, D_METHOD("play", "target", "definition", "owner"), &TweensGdRunner::play, DEFVAL(Variant()));
-	ClassDB::bind_static_method(name, D_METHOD("play_all", "target", "definitions", "owner"), &TweensGdRunner::play_all, DEFVAL(Variant()));
+	ClassDB::bind_static_method(name, D_METHOD("play", "target", "definition", "owner", "options"), &TweensGdRunner::play, DEFVAL(Variant()), DEFVAL(Ref<TweensGdPlaybackOptions>()));
+	ClassDB::bind_static_method(name, D_METHOD("play_all", "target", "definitions", "owner", "options"), &TweensGdRunner::play_all, DEFVAL(Variant()), DEFVAL(Ref<TweensGdPlaybackOptions>()));
+	ClassDB::bind_static_method(name, D_METHOD("chain", "target", "definitions", "owner", "options"), &TweensGdRunner::chain, DEFVAL(Variant()), DEFVAL(Ref<TweensGdPlaybackOptions>()));
 	ClassDB::bind_static_method(name, D_METHOD("cancel_tweens", "owner", "include_children"), &TweensGdRunner::cancel_tweens, DEFVAL(false));
 }
 
@@ -139,7 +140,12 @@ Ref<TweensGdHandle> TweensGdRunner::reject(const String &p_message) {
 	return TweensGdHandle::rejected(p_message);
 }
 
-Ref<TweensGdHandle> TweensGdRunner::play(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner) {
+Ref<TweensGdChain> TweensGdRunner::reject_chain(const String &p_message) {
+	report(p_message);
+	return TweensGdChain::rejected(p_message);
+}
+
+Ref<TweensGdHandle> TweensGdRunner::play(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
 	if (!is_main_thread()) {
 		return reject("Use tweens.gd on Godot's main thread.");
 	}
@@ -161,10 +167,10 @@ Ref<TweensGdHandle> TweensGdRunner::play(const Variant &p_target, const Ref<Twee
 	if (tree->has_meta(names().closing_key)) {
 		return reject("The scene tree is shutting down.");
 	}
-	return acquire(tree)->scheduler->add(p_target, p_definition, owner);
+	return acquire(tree)->scheduler->add(p_target, p_definition, owner, p_options);
 }
 
-Ref<TweensGdGroup> TweensGdRunner::play_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner) {
+Ref<TweensGdGroup> TweensGdRunner::play_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
 	if (!is_main_thread() || p_definitions.get_type() != Variant::ARRAY || Array(p_definitions).is_empty()) {
 		return TweensGdGroup::of(Array());
 	}
@@ -176,13 +182,39 @@ Ref<TweensGdGroup> TweensGdRunner::play_all(const Variant &p_target, const Varia
 	}
 	Array handles;
 	for (int64_t index = 0; index < definitions.size(); index++) {
-		const Ref<TweensGdHandle> handle = play(p_target, definitions[index], p_owner);
+		const Ref<TweensGdHandle> handle = play(p_target, definitions[index], p_owner, p_options);
 		handles.push_back(handle);
 		if (handle->get_completion_reason() == REASON_FAILED) {
 			break;
 		}
 	}
 	return TweensGdGroup::of(handles);
+}
+
+Ref<TweensGdChain> TweensGdRunner::chain(const Variant &p_target, const Variant &p_definitions,
+		const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
+	if (!is_main_thread()) {
+		return reject_chain("Use tweens.gd on Godot's main thread.");
+	}
+	if (p_target.get_validated_object() == nullptr) {
+		return reject_chain("The target is invalid.");
+	}
+	Variant owner = p_owner;
+	if (SceneTree *tree = Object::cast_to<SceneTree>(owner.get_validated_object())) {
+		owner = tree->get_root();
+	}
+	if (owner.get_type() == Variant::NIL && Object::cast_to<Node>(p_target.get_validated_object()) != nullptr) {
+		owner = p_target;
+	}
+	Node *node = Object::cast_to<Node>(owner.get_validated_object());
+	if (node == nullptr || !node->is_inside_tree() || node->is_queued_for_deletion()) {
+		return reject_chain("Automatic playback needs an owner inside the scene tree.");
+	}
+	SceneTree *tree = node->get_tree();
+	if (tree->has_meta(names().closing_key)) {
+		return reject_chain("The scene tree is shutting down.");
+	}
+	return acquire(tree)->scheduler->add_chain(p_target, p_definitions, owner, p_options);
 }
 
 void TweensGdRunner::cancel_tweens(Node *p_owner, bool p_include_children) {

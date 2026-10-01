@@ -52,7 +52,7 @@ public class RelativeTests
         scheduler.Update(0.5);
         Assert.Equal(4, tween.Value);
         scheduler.Update(0.5);
-        Assert.Equal([4f, 5f], updates);
+        Assert.Equal([3f, 4f, 5f], updates);
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public class RelativeTests
         scheduler.Add(new Box(), new Signal { By = 10, Duration = 1, OnUpdate = (_, value) => updates.Add(value) });
         scheduler.Update(0.5);
         scheduler.Update(0.5);
-        Assert.Equal([7f, 12f], updates);
+        Assert.Equal([2f, 7f, 12f], updates);
     }
 
     [Fact]

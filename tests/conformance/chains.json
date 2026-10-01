@@ -1,0 +1,354 @@
+{
+  "tolerance": 1e-06,
+  "cases": [
+    {
+      "name": "links capture endpoints and end mutations",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 1,
+          "end_set": 12
+        },
+        {
+          "to": 20,
+          "duration": 1
+        }
+      ],
+      "samples": [
+        {
+          "delta": 1.5,
+          "value": 16,
+          "trace": [
+            "add:0",
+            "start:0",
+            "end:0",
+            "add:1",
+            "start:1"
+          ]
+        },
+        {
+          "delta": 0.5,
+          "value": 20,
+          "trace": [
+            "add:0",
+            "start:0",
+            "end:0",
+            "add:1",
+            "start:1",
+            "end:1"
+          ]
+        }
+      ],
+      "duration": 2
+    },
+    {
+      "name": "editing duration moves links",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 2
+        },
+        {
+          "to": 20,
+          "duration": 1
+        }
+      ],
+      "samples": [
+        {
+          "delta": 2.5,
+          "value": 15
+        },
+        {
+          "delta": 0.5,
+          "value": 20
+        }
+      ],
+      "duration": 3
+    },
+    {
+      "name": "positive gap captures before waiting",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 1
+        },
+        {
+          "to": 20,
+          "duration": 1,
+          "delay": 0.5
+        }
+      ],
+      "samples": [
+        {
+          "delta": 1.25,
+          "value": 10
+        },
+        {
+          "set": 99,
+          "value": 99
+        },
+        {
+          "delta": 0.75,
+          "value": 15
+        },
+        {
+          "delta": 0.5,
+          "value": 20
+        }
+      ],
+      "duration": 2.5
+    },
+    {
+      "name": "own-end links and surviving overlap tail",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 1
+        },
+        {
+          "to": 20,
+          "duration": 0.2,
+          "delay": -0.6
+        },
+        {
+          "to": 30,
+          "duration": 0.1
+        }
+      ],
+      "samples": [
+        {
+          "delta": 0.5,
+          "value": 12
+        },
+        {
+          "delta": 0.25,
+          "value": 7.5
+        },
+        {
+          "delta": 0.25,
+          "value": 10
+        }
+      ],
+      "duration": 1
+    },
+    {
+      "name": "pre-roll runs crossed callbacks chronologically",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 1,
+          "delay": -0.25
+        },
+        {
+          "to": 20,
+          "duration": 0.25
+        }
+      ],
+      "samples": [
+        {
+          "delta": 0,
+          "value": 2.5,
+          "trace": [
+            "add:0",
+            "start:0"
+          ]
+        },
+        {
+          "delta": 1,
+          "value": 20,
+          "trace": [
+            "add:0",
+            "start:0",
+            "end:0",
+            "add:1",
+            "start:1",
+            "end:1"
+          ]
+        }
+      ],
+      "duration": 1
+    },
+    {
+      "name": "reordered starts and entirely past newer entries",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 1
+        },
+        {
+          "to": 20,
+          "duration": 0.5,
+          "delay": -2
+        },
+        {
+          "to": 30,
+          "duration": 0.25,
+          "delay": 0.125
+        }
+      ],
+      "samples": [
+        {
+          "delta": 0,
+          "value": 30,
+          "trace": [
+            "add:1",
+            "start:1",
+            "end:1",
+            "add:2",
+            "start:2",
+            "end:2",
+            "add:0",
+            "start:0"
+          ]
+        },
+        {
+          "delta": 1,
+          "value": 10
+        }
+      ],
+      "duration": 1
+    },
+    {
+      "name": "all-before-zero settles on first update",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 0.25,
+          "delay": -1
+        },
+        {
+          "to": 20,
+          "duration": 0.25
+        }
+      ],
+      "samples": [
+        {
+          "delta": 0,
+          "value": 20,
+          "trace": [
+            "add:0",
+            "start:0",
+            "end:0",
+            "add:1",
+            "start:1",
+            "end:1"
+          ]
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "name": "zero-time entries complete before successor capture",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 0,
+          "end_set": 12
+        },
+        {
+          "to": 20,
+          "duration": 0
+        },
+        {
+          "to": 30,
+          "duration": 1
+        }
+      ],
+      "samples": [
+        {
+          "delta": 0.5,
+          "value": 25,
+          "trace": [
+            "add:0",
+            "start:0",
+            "end:0",
+            "add:1",
+            "start:1",
+            "end:1",
+            "add:2",
+            "start:2"
+          ]
+        },
+        {
+          "delta": 0.5,
+          "value": 30
+        }
+      ],
+      "duration": 1
+    },
+    {
+      "name": "repeat ping-pong offset and intervals share the profile",
+      "entries": [
+        {
+          "to": 10,
+          "duration": 1,
+          "offset": 0.5,
+          "use_ping_pong": true,
+          "ping_pong_interval": 0.25,
+          "repeat_interval": 0.5,
+          "repeats": 1
+        },
+        {
+          "to": 20,
+          "duration": 1
+        }
+      ],
+      "samples": [
+        {
+          "delta": 4.5,
+          "value": 0
+        },
+        {
+          "delta": 0.5,
+          "value": 10
+        },
+        {
+          "delta": 0.5,
+          "value": 20
+        }
+      ],
+      "duration": 5.5
+    },
+    {
+      "name": "later definition keeps priority when older entry activates after it",
+      "duration": 1.5,
+      "entries": [
+        {
+          "from": 0,
+          "to": 10,
+          "duration": 1
+        },
+        {
+          "from": 0,
+          "to": 20,
+          "duration": 2,
+          "delay": -1.5
+        }
+      ],
+      "samples": [
+        {
+          "delta": 0,
+          "value": 5,
+          "trace": [
+            "add:1",
+            "start:1",
+            "add:0",
+            "start:0"
+          ]
+        },
+        {
+          "delta": 0.5,
+          "value": 10
+        },
+        {
+          "delta": 0.5,
+          "value": 15
+        },
+        {
+          "delta": 0.5,
+          "value": 20
+        }
+      ]
+    }
+  ]
+}

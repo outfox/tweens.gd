@@ -44,9 +44,11 @@ public sealed partial class CardDeal
     /// <summary>Squeezes the card to zero width, swaps its side, then springs it back open.</summary>
     private async Task<bool> Flip(PlayingCard card, double delay, bool faceUp)
     {
-        if (await Fold(card, delay).End != Reason.Completed) return false;
-        card.Show(faceUp);
-        return await Unfold(card).End == Reason.Completed;
+        var fold = new Tweens.Scale2DX(0, 0.1 * Tempo, In.Quad, delay) {
+            OnEnd = _ => card.Show(faceUp),
+        };
+        return await card.Body.Chain([fold,
+            new Tweens.Scale2DX(1, 0.22 * Tempo, EaseType.BackOut)]).End == Reason.Completed;
     }
 
     private static readonly Vector2 DeckPosition = new(0, 170);
@@ -113,9 +115,4 @@ public sealed partial class CardDeal
         return await Group.Of([.. tweens]).End == Reason.Completed;
     }
 
-    private TweenInstance Fold(PlayingCard card, double delay) =>
-        card.Body.TweenScaleX(0, 0.1 * Tempo, In.Quad, delay);
-
-    private TweenInstance Unfold(PlayingCard card) =>
-        card.Body.TweenScaleX(1, 0.22 * Tempo, EaseType.BackOut);
 }

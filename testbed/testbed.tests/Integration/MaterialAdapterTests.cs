@@ -124,8 +124,8 @@ public class MaterialAdapterTests(HeadlessFixture godot)
                             prop.SetValue(material, initial);
                             var treeScoped = method.GetParameters()[3].ParameterType == typeof(SceneTree);
                             var automatic = (TweenInstance)method.Invoke(null, treeScoped
-                                ? [material, to, (Duration)1d, godot.Tree, null, null]
-                                : [material, to, (Duration)1d, owner, null])!;
+                                ? [material, to, (Duration)1d, godot.Tree, null, null, default(PlaybackOptions)]
+                                : [material, to, (Duration)1d, owner, null, default(PlaybackOptions)])!;
                             TweenRuntime.GetRunner(godot.Tree).Scheduler.Update(0.5);
                             Close(midpoint, prop.GetValue(material)!);
                             TweenRuntime.GetRunner(godot.Tree).Scheduler.Update(0.5);

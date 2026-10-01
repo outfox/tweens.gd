@@ -88,14 +88,14 @@ public static class TweenRuntime
 public static partial class TweenExtensions
 {
     /// <summary>Starts one definition on this node and returns its playback handle.</summary>
-    /// <remarks>Snapshots configuration and captures the current value before any delay. The node must
+    /// <remarks>Snapshots configuration now; captures the value on the first eligible update, before a positive delay. The node must
     /// be in the tree and owns playback. In GDScript, use Tweens.play(target, definition).</remarks>
     public static TweenInstance<TTarget, TValue> Tween<TTarget, TValue>(this TTarget target,
-        ITweenDefinition<TTarget, TValue> definition) where TTarget : Node where TValue : struct
-        => TweenRuntime.GetRunner(target).Scheduler.Add(target, definition);
+        ITweenDefinition<TTarget, TValue> definition, PlaybackOptions options = default) where TTarget : Node where TValue : struct
+        => TweenRuntime.GetRunner(target).Scheduler.Add(target, definition, options);
 
     /// <summary>Starts several definitions in parallel on this node and returns their group handle.</summary>
-    /// <remarks>Each member honors its own timing and modes. If starting a definition throws, earlier
+    /// <remarks>Each member honors its own motion timing under the supplied playback policy. If starting a definition throws, earlier
     /// members are cancelled. Await the group's End before starting the next step.
     /// In GDScript, use Tweens.play_all(target, [first, second, ...]).</remarks>
     /// <example><code>
@@ -104,24 +104,32 @@ public static partial class TweenExtensions
     /// </code></example>
     public static Group Tween<TTarget>(this TTarget target, ITweenDefinition<TTarget> first,
         ITweenDefinition<TTarget> second, params ITweenDefinition<TTarget>[] rest) where TTarget : Node
+        => Tween(target, default(PlaybackOptions), first, second, rest);
+
+    /// <summary>Starts several definitions in parallel on this node with one explicit playback policy.</summary>
+    /// <remarks>Options precede the definitions so a params list can retain arbitrary length.</remarks>
+    public static Group Tween<TTarget>(this TTarget target, PlaybackOptions options, ITweenDefinition<TTarget> first,
+        ITweenDefinition<TTarget> second, params ITweenDefinition<TTarget>[] rest) where TTarget : Node
     {
         ArgumentNullException.ThrowIfNull(rest);
         ITweenDefinition<TTarget>[] definitions = [first, second, .. rest];
         if (Array.IndexOf(definitions, null) >= 0)
             throw new ArgumentNullException(nameof(rest), "Definitions cannot be null.");
         var scheduler = TweenRuntime.GetRunner(target).Scheduler;
-        var started = new TweenInstance[definitions.Length];
-        var count = 0;
-        try
-        {
-            for (; count < definitions.Length; count++) started[count] = definitions[count].AddTo(scheduler, target);
-        }
-        catch
-        {
-            for (var i = 0; i < count; i++) started[i].Cancel();
-            throw;
-        }
-        return Group.Of(started);
+        return scheduler.AddAll(target, definitions, options: options);
+    }
+
+    /// <summary>Starts a flat, linked timeline on this node. Negative delays overlap the previous entry's end.</summary>
+    public static Chain Chain<TTarget>(this TTarget target, IReadOnlyList<ITweenDefinition<TTarget>> definitions,
+        PlaybackOptions options = default) where TTarget : Node
+        => TweenRuntime.GetRunner(target).Scheduler.AddChain(target, definitions, options: options);
+
+    /// <summary>Starts definitions in parallel with one playback policy.</summary>
+    public static Group Tween<TTarget>(this TTarget target, IReadOnlyList<ITweenDefinition<TTarget>> definitions,
+        PlaybackOptions options = default) where TTarget : Node
+    {
+        var scheduler = TweenRuntime.GetRunner(target).Scheduler;
+        return scheduler.AddAll(target, definitions, options: options);
     }
 
     /// <summary>Cancels active tweens owned by this node, optionally including descendant owners.</summary>

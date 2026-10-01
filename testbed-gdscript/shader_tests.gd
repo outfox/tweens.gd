@@ -40,6 +40,7 @@ func _materials() -> void:
 		var definition := T.shader_parameter(entry[0], entry[2], 1.0)
 		definition.fill = T.Fill.NONE
 		var h := scheduler.add(m, definition)
+		scheduler.update(0.0)
 		check(not h.is_terminal and watched(m.shader), "shader metadata binding: " + entry[0])
 		scheduler.update(0.5)
 		var expected: Variant = TweensGdInterpolation.interpolate(entry[1], entry[2], 0.5, typeof(entry[1]))
@@ -64,21 +65,27 @@ func _materials() -> void:
 		T.shader_parameter(&"amount", NAN), T.shader_parameter(&"count", 2147483648),
 		T.shader_parameter(&"amount").with_by(NAN), T.shader_parameter(&"count").with_by(1.0)]:
 		var rejected := scheduler.add(m, invalid)
+		scheduler.update(0.0)
 		check(rejected.is_settled and rejected.completion_reason == T.Reason.FAILED, "invalid shader definition is rejected")
 		check(not watched(m.shader), "rejected shader preparation cleans up")
-	check(scheduler.add(ShaderMaterial.new(), T.shader_parameter(&"amount", 1.0)).is_settled, "missing shader is rejected")
+	var missing := scheduler.add(ShaderMaterial.new(), T.shader_parameter(&"amount", 1.0))
+	scheduler.update(0.0)
+	check(missing.is_settled, "missing shader is rejected")
 	var no_default := material("shader_type canvas_item; uniform float amount = 0.25;")
 	var default_handle := scheduler.add(no_default, T.shader_parameter(&"amount", 1.0))
+	scheduler.update(0.0)
 	if DisplayServer.get_name() == "headless":
 		check(default_handle.completion_reason == T.Reason.FAILED, "dummy renderer never invents unavailable shader defaults")
 	default_handle.cancel()
 	var original := m.shader
 	var changed := scheduler.add(m, T.shader_parameter(&"amount", 4.0, 1.0))
+	scheduler.update(0.0)
 	check(watched(original), "live shader is watched")
 	original.emit_changed()
 	scheduler.update(0.5)
 	check(changed.completion_reason == T.Reason.FAILED and not watched(original), "shader change faults and releases binding")
 	var replacement := scheduler.add(m, T.shader_parameter(&"amount", 4.0, 1.0))
+	scheduler.update(0.0)
 	m.shader = no_default.shader
 	scheduler.update(0.5)
 	check(replacement.completion_reason == T.Reason.FAILED and not watched(original), "shader replacement faults before writing")
@@ -111,6 +118,7 @@ func _rendering() -> void:
 	var definition := T.shader_parameter(&"amount", 0.75, 1.0)
 	definition.fill = T.Fill.NONE
 	var h := scheduler.add(m, definition)
+	scheduler.update(0.0)
 	host.near(h.value, 0.25, "real renderer captures declared shader default")
 	scheduler.update(0.5)
 	RenderingServer.force_draw(false)
@@ -136,6 +144,7 @@ func _rendering() -> void:
 		var instance_definition := T.instance_shader_parameter(&"pulse", 0.75, 1.0)
 		instance_definition.fill = T.Fill.NONE
 		var instance := scheduler.add(node, instance_definition)
+		scheduler.update(0.0)
 		check(not instance.is_terminal, "instance shader starts: " + str(spatial) + " " + instance.error)
 		host.near(instance.value if instance.value != null else -1.0, 0.25, "instance shader captures default")
 		scheduler.update(0.5)
@@ -147,6 +156,7 @@ func _rendering() -> void:
 		scheduler.update(1.0)
 		check(_has_override(node) and node.get_instance_shader_parameter(&"pulse") == 0.25, "explicit instance default preserved")
 		var replaced := scheduler.add(node, instance_definition)
+		scheduler.update(0.0)
 		if spatial: node.material_override = material(code)
 		else: node.material = material(code)
 		scheduler.update(0.5)
@@ -163,6 +173,7 @@ func _rendering() -> void:
 	parent.add_child(child)
 	await host.get_tree().process_frame
 	var inherited := scheduler.add(child, T.instance_shader_parameter(&"pulse", 1.0, 1.0))
+	scheduler.update(0.0)
 	check(not inherited.is_terminal, "inherited canvas material supplies instance uniform")
 	parent.material = material(canvas_code)
 	scheduler.update(0.1)
@@ -176,6 +187,7 @@ func _rendering() -> void:
 		host.add_child(mesh)
 		await host.get_tree().process_frame
 		var binding := scheduler.add(mesh, T.instance_shader_parameter(&"pulse", 1.0, 1.0))
+		scheduler.update(0.0)
 		check(not binding.is_terminal, "instance binding starts before " + change)
 		match change:
 			"mesh": mesh.mesh = BoxMesh.new()

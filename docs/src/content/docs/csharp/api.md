@@ -11,7 +11,7 @@ Definitions such as `Tweens.Position2D` live in the root `Tweens` namespace, so
 they need no `using`.
 
 The GDScript API uses the same model: reusable definitions, independent playback
-handles, groups for parallel steps, and ordinary awaits for sequences.
+handles, groups for parallel steps, and Chains for linked timelines. Awaits wait for completion.
 `node.Tween(a, b)` corresponds to `Tweens.play_all(node, [a, b])`; `Group.Of(a, b)`
 corresponds to `TweensGdGroup.of([a, b])`. Member names map from PascalCase to
 snake_case; `From`, `To`, and `By` become `from_value`, `to_value`, and `by_value`.
@@ -23,11 +23,16 @@ See the [GDScript core API](/gdscript/api/) for its entry points.
 | --- | --- | --- |
 | `node.Tween(definition)` | `TweenInstance<TTarget, TValue>` | Start one definition on an in-tree node |
 | `node.Tween(first, second, ...)` | `Group` | Start several definitions as one step |
+| `node.Tween(options, first, second, ...rest)` | `Group` | Start several definitions as one step with a shared playback policy |
 | `node.TweenPosition(to, duration, configure)` | `TweenInstance<TTarget, TValue>` | Shorthand for one definition; every catalog definition has one, such as `TweenModulateAlpha` |
 | `node.TweenPosition(to, duration, options)` | `TweenInstance<TTarget, TValue>` | Shorthand that copies a shared `TweenOptions`; the `duration` argument wins |
 
 `TTarget` is the class the definition targets, which can be a base class of the
 node: `sprite.TweenPosition(...)` returns `TweenInstance<Node2D, Vector2>`.
+
+For the varargs overload, pass `PlaybackOptions` before the definitions:
+`node.Tween(options, first, second, ...rest)`. The remaining definitions form the
+final `params` argument. Omitting the policy uses the default playback options.
 
 ## Start on a resource
 
@@ -39,6 +44,12 @@ an owner node that decides when it stops. See [materials](/csharp/materials/).
 | `resource.Tween(definition, tree)` | `TweenInstance<TResource, TValue>` | Follow the scene tree's pause and lifetime |
 | `resource.Tween(definition, owner)` | `TweenInstance<TResource, TValue>` | Stop when the owner node leaves the tree |
 | `owner.Tween(resource, definition)` | `TweenInstance<TResource, TValue>` | The same, written owner first |
+
+## Linked playback
+
+`node.Chain(definitions, options = default)` returns a `Chain`. Resource Chains take an owner; manual schedulers expose `AddChain`. Clock policy is supplied as `PlaybackOptions` to single, parallel-list, varargs, and Chain starts.
+
+See [Chains](/csharp/api/chains/).
 
 ## Group and cancel
 
@@ -60,6 +71,7 @@ an owner node that decides when it stops. See [materials](/csharp/materials/).
 | [Enums](/csharp/api/enums/) | Every value of `FillMode`, `TweenState`, `Reason`, and the modes |
 | [Handles](/csharp/api/handles/) | What starting returns: control it, read its state, await it |
 | [Groups](/csharp/api/groups/) | Several tweens controlled and awaited as one step |
+| [Chains](/csharp/api/chains/) | Linked definitions on one target, controlled and awaited as one timeline |
 | [Scheduler](/csharp/api/scheduler/) | `TweenScheduler`, to advance playback yourself |
 | [Custom definitions](/csharp/api/custom/) | The members to override, `Interpolators`, and class-based definitions |
 | [Catalog](/csharp/nodes/) | Every built-in definition and its shorthand method |

@@ -2,9 +2,11 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 #pragma once
 
-#include "carry.hpp"
 #include "interpolation.hpp"
 #include "playback.hpp"
+#include "playback_options.hpp"
+#include <godot_cpp/templates/local_vector.hpp>
+#include <memory>
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
@@ -13,6 +15,10 @@ namespace godot {
 
 class TweensGdCancellation;
 class TweensGdScheduler;
+class TweensGdChain;
+namespace tweens {
+class ExecutionPlan;
+}
 
 // A single playback. Await end, including after playback has ended.
 class TweensGdHandle : public RefCounted {
@@ -20,6 +26,8 @@ class TweensGdHandle : public RefCounted {
 
 	friend class TweensGdScheduler;
 	friend class TweensGdGroupWatcher;
+	friend class TweensGdChain;
+	friend class tweens::ExecutionPlan;
 
 	ObjectID scheduler_id;
 	// Holds RefCounted targets like the GDScript implementation's typed Object field did.
@@ -58,7 +66,16 @@ class TweensGdHandle : public RefCounted {
 	bool settled = false;
 	bool paused = false;
 	int depth = 0;
-	CarryStamp stamp;
+	ObjectID coordinator_id;
+	bool coordinator_root = false;
+	bool prepared = false, initialized = false, delay_filled = false;
+	bool update_pending = false, restore_prepared = false;
+	Variant restore_value;
+	double sampled_time = -1.0;
+	int sample_phase = 0;
+	int binding_phase = 0, binding_index = 0, adjustment_phase = 0;
+	Variant binding_initial, binding_adjusted;
+	std::unique_ptr<tweens::ExecutionPlan> plan;
 	bool target_is_node = false;
 	bool target_is_owner = false;
 	// Settings are immutable until finish(), so the per-frame path tests plain flags.
@@ -72,10 +89,15 @@ class TweensGdHandle : public RefCounted {
 
 	void initialize_playback();
 	void advance(double p_delta);
-	void advance_inner(double p_delta);
+	void sample_at(double p_local_time);
+	void advance_inner(double p_local_time);
+	void bind_values(const Variant &p_initial);
+	void bind_lifetime();
+	TweensGdChain *coordinator() const;
 	Variant interpolate_values(const Variant &p_from, const Variant &p_to, double p_weight);
 	bool follow();
 	void apply(Variant p_sample, bool p_restoring = false);
+	void notify_update();
 	bool invalid_target() const;
 	bool invalid_owner() const;
 	bool check_target();
@@ -86,7 +108,6 @@ class TweensGdHandle : public RefCounted {
 	void finish(int64_t p_reason);
 	void end_operation();
 	void settle();
-	CarryStamp completion_stamp() const;
 	void release_options();
 
 protected:
@@ -99,7 +120,7 @@ public:
 	static Ref<TweensGdHandle> rejected(const String &p_message);
 	// Takes ownership of p_options.
 	static Ref<TweensGdHandle> start(TweensGdScheduler *p_scheduler, const Variant &p_target, TweenSettings *p_options,
-			const Variant &p_initial, Node *p_owner, SceneTree *p_tree);
+			Node *p_owner, SceneTree *p_tree, const PlaybackPolicy &p_policy);
 
 	Object *get_target() const;
 	int64_t get_state() const { return state; }
@@ -111,9 +132,8 @@ public:
 	double get_progress() const { return has_clock ? clock.progress : 0.0; }
 	bool is_terminal() const { return state >= tweens::STATE_COMPLETED; }
 	bool is_settled() const { return settled; }
-	bool is_paused() const { return paused; }
+	bool is_paused() const;
 	void set_paused(bool p_paused);
-	const CarryStamp &get_stamp() const { return stamp; }
 	int64_t get_mode() const { return mode; }
 	bool uses_unscaled_time() const { return unscaled; }
 	Node *get_owner_node() const;

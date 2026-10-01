@@ -53,6 +53,7 @@ export const PATH = [
 				{ slug: 'api/enums', label: 'Enums', gdscript: 'Constants' },
 				{ slug: 'api/handles', label: 'Handles' },
 				{ slug: 'api/groups', label: 'Groups' },
+				{ slug: 'api/chains', label: 'Chains' },
 				{ slug: 'api/scheduler', label: 'Scheduler' },
 				{ slug: 'api/custom', label: 'Custom definitions', gdscript: 'Adapters' },
 			] },

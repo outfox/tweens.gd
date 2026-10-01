@@ -26,8 +26,9 @@ var movement = sprite.TweenPosition((400, 180), 0.6);
 await movement.End;
 ```
 
-Handles and groups expose an `End` task. You can ignore the returned reason;
-keep it only when your next action depends on how playback ended. See
+Handles and groups expose an `End` task. Completion waits for callbacks and
+cleanup, including release hooks. You can ignore the returned reason; keep it
+only when your next action depends on how playback ended. See
 [cancellation and completion reasons](/csharp/cancellation/) for guarded sequences
 and cancelling just one wait.
 
@@ -52,20 +53,24 @@ sprite.Tween(arrive with
 });
 ```
 
-They run in this order:
+Starting a tween snapshots its configuration. Preparation and capture happen at
+activation, before `OnAdd`.
 
-1. `OnAdd` when the tween is added.
+Callbacks run in this order:
+
+1. `OnAdd` at activation after capture.
 2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
 3. `OnStart` once, when the delay ends and playback begins.
-4. `OnUpdate` once per eligible frame with the sampled value, plus once more when
+4. `OnUpdate` at each sampled timeline boundary and eligible update, plus once more when
    completion [restores the initial value](/csharp/timing/#fill-and-restoration).
 5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.
 6. `OnFinally` in every case, including faults.
 
 The handle's terminal state is visible before terminal callbacks run, and each
 terminal callback runs at most once. A long frame doesn't replay the callbacks
-of skipped cycles. Tweens created in `OnUpdate` begin on the next update, while
-tweens created in `OnEnd` continue the finished tween's timeline exactly.
+of skipped cycles. Tweens started in callbacks or after an await are independent
+roots: they begin on the next eligible update with no inherited frame time. Use a
+[Chain](/csharp/sequences/) for linked timing.
 
 ## Errors
 

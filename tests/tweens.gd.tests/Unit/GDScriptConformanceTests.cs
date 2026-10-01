@@ -95,14 +95,12 @@ public class GDScriptConformanceTests
                 UsePingPong = o.TryGetProperty("use_ping_pong", out var ping) && ping.GetBoolean(),
             };
             var clock = new Playback(options);
-            if (test.TryGetProperty("credit", out var credit)) clock.Credit(credit.GetDouble());
+            if (test.TryGetProperty("local_time", out var localTime)) clock.SampleAt(localTime.GetDouble());
             foreach (var sample in test.GetProperty("samples").EnumerateArray())
             {
                 clock.Advance(sample.GetProperty("delta").GetDouble());
                 Assert.True(Math.Abs(clock.Progress - sample.GetProperty("progress").GetDouble()) <= tolerance, test.GetProperty("name").GetString());
                 Assert.Equal(sample.GetProperty("state").GetInt32(), (int)clock.State);
-                if (sample.TryGetProperty("overshoot", out var overshoot))
-                    Assert.InRange(Math.Abs(clock.Overshoot - overshoot.GetDouble()), 0, tolerance);
                 if (sample.TryGetProperty("cycle", out var cycle)) Assert.Equal(cycle.GetDouble(), clock.Cycle);
             }
         }

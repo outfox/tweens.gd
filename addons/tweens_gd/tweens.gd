@@ -5,12 +5,11 @@ extends "catalog.gd"
 ## Creates reusable definitions and starts independent playback handles.
 ##
 ## A definition describes one motion; a handle controls one playback; a group controls
-## several handles as one parallel step. Build sequences with ordinary [code]await[/code]:
+## several handles as one parallel step. A Chain links definitions on one target:
 ## [codeblock]
 ## var move := Tweens.position_2d(Vector2(400, 180), 0.6, Out.CUBIC)
 ## var fade := Tweens.modulate_alpha(0.0, 0.6)
-## await Tweens.play_all(sprite, [move, fade]).end
-## await Tweens.play(sprite, Tweens.scale_2d(Vector2.ONE, 0.2)).end
+## await Tweens.chain(sprite, [move, fade]).end
 ## [/codeblock]
 ## C# equivalents: [code]new Tweens.Position2D(...)[/code], [code]sprite.Tween(move, fade)[/code],
 ## and [code]await handle.End[/code]. Member names use snake_case here and PascalCase in C#.
@@ -49,7 +48,7 @@ const Ease = Types.Ease
 # Definitions: configure first, then play as often as needed.
 
 ## Creates a reusable definition for a property or component path, such as [code]^"position:x"[/code].
-## [param to] is the endpoint; [code]null[/code] captures the current value at start, before the delay.
+## [param to] is the endpoint; [code]null[/code] captures the current value at activation, before any positive delay.
 ## Duration and delay are in seconds. Paths stay on the target; pass a Resource as its own target.
 ## Vector and Color endpoints also accept numeric component Arrays, resolved to the captured type at start.
 static func property(path: NodePath, to: Variant, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
@@ -107,16 +106,33 @@ static func instance_shader_parameter(parameter: StringName, to: Variant = null,
 ## Snapshots configuration and captures the current value before any delay. Nodes must be in the tree
 ## and own their playback. Other Objects need an in-tree Node or [SceneTree] as [param owner].
 ## A rejected start returns an ended handle with [code]Reason.FAILED[/code] and a nonempty [code]error[/code].
-static func play(target: Variant, definition: TweensGdDefinition, owner: Variant = null) -> TweensGdHandle:
-	return TweensGdRunner.play(target, definition, owner)
+static func play(target: Variant, definition: TweensGdDefinition, owner: Variant = null,
+		options: TweensGdPlaybackOptions = null) -> TweensGdHandle:
+	return TweensGdRunner.play(target, definition, owner, options)
 
 ## Starts an Array of definitions in parallel on one target and returns their group handle.
 ## Each member honors its own timing and modes; ownership follows [method play].
 ## Invalid Array entries reject the group before any start. A rejected start cancels earlier members
 ## and prevents later starts. C# node equivalent: [code]node.Tween(first, second, ...)[/code].
 ## C# resource playback uses separate starts combined with [code]Group.Of[/code].
-static func play_all(target: Variant, definitions: Variant, owner: Variant = null) -> TweensGdGroup:
-	return TweensGdRunner.play_all(target, definitions, owner)
+static func play_all(target: Variant, definitions: Variant, owner: Variant = null,
+		options: TweensGdPlaybackOptions = null) -> TweensGdGroup:
+	return TweensGdRunner.play_all(target, definitions, owner, options)
+
+## Links a flat list on one target. Each delay is relative to the previous entry's own end.
+## Negative delays overlap; entries before zero replay their crossed callbacks on the first update.
+static func chain(target: Variant, definitions: Variant, owner: Variant = null,
+		options: TweensGdPlaybackOptions = null) -> TweensGdChain:
+	return TweensGdRunner.chain(target, definitions, owner, options)
+
+## Creates root playback policy, independently of reusable motion definitions.
+static func playback_options(process_mode: int = Process.PROCESS, pause_mode: int = Pause.BOUND,
+		use_unscaled_time: bool = false) -> TweensGdPlaybackOptions:
+	var options := TweensGdPlaybackOptions.new()
+	options.process_mode = process_mode
+	options.pause_mode = pause_mode
+	options.use_unscaled_time = use_unscaled_time
+	return options
 
 ## Groups existing playback handles, including handles on different targets. Starts no new tweens.
 ## [param members] must be a nonempty Array. If a member stops early or fails, its siblings are cancelled.

@@ -7,8 +7,10 @@
 	</brief_description>
 	<description>
 		Created by [code]Tweens.play_all(target, definitions)[/code] or [method of]. Each member honors its own timing
-		and modes. If one stops early or fails, the group cancels its siblings. Build sequences by awaiting [member end]
-		before starting the next step. Controls use Godot's main thread. C# equivalent: [code]Group[/code].
+		and a separately supplied playback policy. If one stops early or fails, the group cancels its siblings.
+		Await [member end] to coordinate completion; use a [TweensGdChain] for linked timing.
+		Controls use Godot's main thread.
+		C# equivalent: [code]Group[/code].
 		[codeblock]
 		var move := Tweens.position_2d(Vector2(400, 180), 0.6)
 		var fade := Tweens.modulate_alpha(0.0, 0.6)
@@ -74,9 +76,8 @@
 		<member name="end" type="Variant" setter="" getter="get_end">
 			Shared completion. Await this value: it is a Signal while running and the integer completion reason after
 			settlement, so late awaits are safe. Cancellation returns a reason; failure returns
-			[code]Tweens.Reason.FAILED[/code] with [member error]. Natural completion carries unused frame time into the
-			next step when scheduler, process mode, and time scale match. C# equivalent: [code]End[/code], a Task that
-			faults on errors. Prefer this to awaiting [signal ended], which cannot replay past emissions.
+			[code]Tweens.Reason.FAILED[/code] with [member error]. Independent playback created by callbacks or awaits
+			starts on the next eligible update with no inherited time. Use [TweensGdChain] for linked timing.
 		</member>
 		<member name="error" type="String" setter="" getter="get_error">
 			All member failure messages joined by newlines, or an empty string. C# uses an Exception or

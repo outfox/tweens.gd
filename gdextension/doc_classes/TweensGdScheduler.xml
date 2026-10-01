@@ -19,6 +19,7 @@
 			<param index="0" name="target" type="Variant" />
 			<param index="1" name="definition" type="TweensGdDefinition" />
 			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
 			<description>
 				Starts one definition and returns its playback handle. Node targets must be in the tree and own their
 				playback. Other Objects may use an in-tree Node owner or run without an owner under this manual
@@ -31,10 +32,22 @@
 			<param index="0" name="target" type="Variant" />
 			<param index="1" name="definitions" type="Variant" />
 			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
 			<description>
 				Starts an Array of definitions in parallel on one target and returns a group. Ownership follows
 				[method add]. Invalid Array entries reject before any start; a rejected start cancels earlier members
 				and prevents later starts.
+			</description>
+		</method>
+		<method name="add_chain">
+			<return type="TweensGdChain" />
+			<param index="0" name="target" type="Variant" />
+			<param index="1" name="definitions" type="Variant" />
+			<param index="2" name="owner" type="Variant" default="null" />
+			<param index="3" name="options" type="TweensGdPlaybackOptions" default="null" />
+			<description>
+				Snapshots a nonempty flat list on one target. Each signed delay links to the previous entry's own end.
+				Binding and capture occur at activation. One Chain counts as one scheduler root.
 			</description>
 		</method>
 		<method name="cancel_all">

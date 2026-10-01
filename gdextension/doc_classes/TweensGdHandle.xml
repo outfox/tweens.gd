@@ -66,9 +66,7 @@
 		<member name="end" type="Variant" setter="" getter="get_end">
 			Shared completion. Await this value: it is a Signal while running and the integer completion reason after
 			settlement, so late awaits are safe. Cancellation returns a reason; failure returns
-			[code]Tweens.Reason.FAILED[/code] with [member error]. Natural completion carries unused frame time into the
-			next step when scheduler, process mode, and time scale match. C# equivalent: [code]End[/code], a Task that
-			faults on errors. Prefer this to awaiting [signal ended], which cannot replay past emissions.
+			[code]Tweens.Reason.FAILED[/code] with [member error]. Independent playback created by callbacks or awaits starts on the next eligible update with no inherited time. Use [TweensGdChain] for linked timing.
 		</member>
 		<member name="error" type="String" setter="" getter="get_error">
 			Failure message, or an empty string. C# uses an Exception or null.

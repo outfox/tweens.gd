@@ -42,8 +42,6 @@ public sealed class Group
     }
 
     /// <summary>Shared completion task. Returns the completion reason; member errors fault the task.</summary>
-    /// <remarks>Natural completion carries the last member's unused frame time into the next step
-    /// when both steps use the same scheduler, process mode, and time scale.</remarks>
     public Task<Reason> End
     {
         get
@@ -126,27 +124,7 @@ public sealed class Group
             [var single] => single,
             _ => new AggregateException(errors),
         };
-        // Awaiting code resumes inline here; tweens it starts continue from the member that finished last.
-        using var scope = TweenCarry.Enter(Error is null && CompletionReason == Reason.Completed ? LastToFinish() : null);
         SetCompletion();
-    }
-
-    // The latest update decides; within it, the smallest overshoot finished last. Mixed lanes carry nothing.
-    private Carry? LastToFinish()
-    {
-        Carry? last = null;
-        foreach (var member in members)
-        {
-            if (member.Stamp is not { } stamp) return null;
-            if (last is null)
-            {
-                last = stamp;
-                continue;
-            }
-            if (stamp.Scheduler != last.Scheduler || stamp.Mode != last.Mode || stamp.Unscaled != last.Unscaled) return null;
-            if (stamp.Tick > last.Tick || (stamp.Tick == last.Tick && stamp.Overshoot < last.Overshoot)) last = stamp;
-        }
-        return last;
     }
 
     private void SetCompletion()

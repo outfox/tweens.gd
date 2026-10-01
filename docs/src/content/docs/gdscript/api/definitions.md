@@ -33,7 +33,7 @@ one field changed. Binding fields (`property`, `adapter`, `target_class`, and
 
 - Endpoint fields drop `_value`: `with_from()`, `with_to()`, and `with_by()`.
   `with_initial_value()` keeps its name.
-- `with_ping_pong()` and `with_unscaled_time()` drop `use_`. They and
+- `with_ping_pong()` drops `use_`. It and
   `with_suppress_callbacks_when_target_invalid()` default to `true`.
 
 They chain, as in `pop.with_delay(0.1).with_duration(0.4)`.
@@ -108,8 +108,8 @@ target instead.
 
 ## What each start copies
 
-Starting a definition snapshots its configuration and captures the property's
-current value. Later changes to the definition never reach running playback.
+Starting a definition snapshots its configuration. Preparation and property capture
+happen on the first eligible update, before any positive delay. Later changes to the definition never reach running playback.
 Callables and the objects they capture stay shared, but `curve` resources are
 duplicated for each start. Each `copy()` and `with_*()` call creates a new
 definition object.

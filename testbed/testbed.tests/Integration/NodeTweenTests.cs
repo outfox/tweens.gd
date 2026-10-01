@@ -91,7 +91,7 @@ public class NodeTweenTests(HeadlessFixture godot)
     }
 
     [Fact]
-    public void GroupStartFailureCancelsTheTweensAlreadyStarted()
+    public void GroupStartFailureCancelsDeferredEnrollmentsBeforeOnAdd()
     {
         var node = Attach(new Node2D());
         try
@@ -100,7 +100,8 @@ public class NodeTweenTests(HeadlessFixture godot)
             var valid = new Position2DXTween { To = 10, Duration = 1, OnAdd = started.Add };
             var invalid = new Position2DYTween { To = 10, Duration = 1, Offset = 2 };
             Assert.Throws<ArgumentOutOfRangeException>(() => node.Tween(valid, invalid));
-            Assert.Equal(TweenState.Cancelled, Assert.Single(started).State);
+            Assert.Empty(started);
+            Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         }
         finally { node.Free(); }
     }
@@ -171,7 +172,7 @@ public class NodeTweenTests(HeadlessFixture godot)
         try
         {
             var bound = scheduler.Add(node, new Position2DXTween { To = 10, Duration = 1 });
-            var always = scheduler.Add(node, new Position2DYTween { To = 10, Duration = 1, PauseMode = TweenPauseMode.Always });
+            var always = scheduler.Add(node, new Position2DYTween { To = 10, Duration = 1  }, new PlaybackOptions { PauseMode = TweenPauseMode.Always });
             godot.Tree.Paused = true;
             scheduler.Update(0.5);
             Assert.Equal(new Vector2(0, 5), node.Position);
@@ -259,11 +260,11 @@ public class NodeTweenTests(HeadlessFixture godot)
         {
             Engine.TimeScale = 0;
             var scaled = node.Tween(new FloatTween { From = 0, To = 1, Duration = 1 });
-            var unscaled = node.Tween(new FloatTween { From = 0, To = 1, Duration = 1, UseUnscaledTime = true });
+            var unscaled = node.Tween(new FloatTween { From = 0, To = 1, Duration = 1  }, new PlaybackOptions { UseUnscaledTime = true });
             for (var i = 0; i < 10; i++) godot.Engine.Iteration();
             Assert.Equal(0, scaled.Progress);
             Assert.True(unscaled.Progress > 0);
-            var physics = node.Tween(new FloatTween { Duration = 0, ProcessMode = TweenProcessMode.Physics });
+            var physics = node.Tween(new FloatTween { Duration = 0  }, new PlaybackOptions { ProcessMode = TweenProcessMode.Physics });
             // Drive the runner callback deterministically; normal engine pumping is covered above.
             TweenRuntime.GetRunner(node)._PhysicsProcess(0);
             Assert.Equal(TweenState.Completed, physics.State);

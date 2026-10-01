@@ -26,6 +26,7 @@ class TweensGdRunner : public Node {
 	bool shutdown();
 	void tree_exiting();
 	static Ref<TweensGdHandle> reject(const String &p_message);
+	static Ref<TweensGdChain> reject_chain(const String &p_message);
 
 protected:
 	static void _bind_methods();
@@ -46,8 +47,10 @@ public:
 	static TweensGdRunner *acquire(SceneTree *p_tree);
 	// Node targets bind to themselves; Resources/Objects need an explicit owner.
 	// Always returns an awaitable handle, including an already-failed handle on rejection.
-	static Ref<TweensGdHandle> play(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner);
-	static Ref<TweensGdGroup> play_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner);
+	static Ref<TweensGdHandle> play(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options);
+	static Ref<TweensGdGroup> play_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options);
+	static Ref<TweensGdChain> chain(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner,
+			const Ref<TweensGdPlaybackOptions> &p_options);
 	static void cancel_tweens(Node *p_owner, bool p_include_children);
 };
 

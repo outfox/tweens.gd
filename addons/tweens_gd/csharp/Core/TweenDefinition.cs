@@ -13,7 +13,7 @@ namespace tweens.gd;
 /// <summary>A reusable definition for <typeparamref name="TTarget"/>, regardless of its value type.</summary>
 public interface ITweenDefinition<in TTarget> where TTarget : class
 {
-    internal TweenInstance AddTo(TweenScheduler scheduler, TTarget target);
+    internal TweenInstance Snapshot(TweenScheduler scheduler, TTarget target, Godot.Node? owner, Godot.SceneTree? tree, PlaybackOptions options);
 }
 
 /// <summary>A reusable definition with a typed target and value. Each start creates independent playback.</summary>
@@ -21,10 +21,11 @@ public interface ITweenDefinition<TTarget, TValue> : ITweenDefinition<TTarget>
     where TTarget : class where TValue : struct
 {
     internal TweenDefinition<TTarget, TValue> CreatePlayback();
-    TweenInstance ITweenDefinition<TTarget>.AddTo(TweenScheduler scheduler, TTarget target) => scheduler.Add(target, this);
+    TweenInstance ITweenDefinition<TTarget>.Snapshot(TweenScheduler scheduler, TTarget target, Godot.Node? owner, Godot.SceneTree? tree, PlaybackOptions options)
+        => new TweenInstance<TTarget, TValue>(scheduler, target, CreatePlayback(), owner, tree, options);
 }
 
-/// <summary>A mutable, reusable definition. Each start snapshots its configuration and captures the current value.</summary>
+/// <summary>A mutable, reusable definition. Starting snapshots configuration; activation captures the current value.</summary>
 /// <remarks>Override <see cref="Read"/>, <see cref="Write"/>, and <see cref="Interpolate"/> for custom storage.
 /// In GDScript, use TweensGdDefinition with a TweensGdAdapter. Immutable C# definitions live in the Tweens namespace.</remarks>
 public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, ITweenDefinition<TTarget, TValue>
@@ -52,7 +53,7 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     public double FactorBy { get; set; } = 1;
     /// <inheritdoc cref="FactorBy"/>
     public TValue? DeltaBy { get; set; }
-    /// <summary>Called once when playback is added, before any delay fill is applied. Receives the handle.</summary>
+    /// <summary>Called once at activation after capture, before any delay fill is applied. Receives the handle.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnAdd { get; set; }
     /// <summary>Called once when playback reaches its first active update, after the delay. Receives the handle.</summary>
     public Action<TweenInstance<TTarget, TValue>>? OnStart { get; set; }

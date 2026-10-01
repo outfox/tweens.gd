@@ -92,6 +92,7 @@ public class GroupTests
         var several = Group.Of(
             Start(scheduler, 1, d => d.OnStart = _ => throw new FormatException()),
             Start(scheduler, 1, d => d.OnCancel = _ => throw new InvalidCastException()));
+        several.Members[1].Initialize();
         scheduler.Update(0.5);
         Assert.IsType<FormatException>(single.Error);
         Assert.Equal(Reason.Cancelled, single.CompletionReason);

@@ -9,12 +9,12 @@ field of the definitions you start and every member of the handles you get back.
 Use the addon's global class `Tweens` once the editor has imported the addon;
 no preload is needed. The classes the API uses come from the addon's GDExtension and
 are global too: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`,
-`TweensGdScheduler`, and `TweensGdCancellation`. Use these names in type annotations.
+`TweensGdChain`, `TweensGdPlaybackOptions`, `TweensGdScheduler`, and `TweensGdCancellation`. Use these names in type annotations.
 `TweensGdAdapter`, the adapter base class, is a GDScript class. Use the API on
 Godot's main thread.
 
 The C# API uses the same model: reusable definitions, independent playback
-handles, groups for parallel steps, and ordinary awaits for sequences.
+handles, groups for parallel steps, and Chains for linked timelines. Awaits wait for completion.
 `Tweens.play_all(node, [a, b])` corresponds to `node.Tween(a, b)`;
 `TweensGdGroup.of([a, b])` corresponds to `Group.Of(a, b)`. Member names map from
 snake_case to PascalCase; `from_value`, `to_value`, and `by_value` become `From`,
@@ -25,8 +25,8 @@ See the [C# core API](/csharp/api/) for its entry points.
 
 | Entry point | Returns | Purpose |
 | --- | --- | --- |
-| `Tweens.play(target, definition, owner = null)` | `TweensGdHandle` | Start one definition; a node target is its own owner |
-| `Tweens.play_all(target, definitions, owner = null)` | `TweensGdGroup` | Start an array of definitions on one target as one step |
+| `Tweens.play(target, definition, owner = null, options = null)` | `TweensGdHandle` | Start one definition; a node target is its own owner |
+| `Tweens.play_all(target, definitions, owner = null, options = null)` | `TweensGdGroup` | Start an array of definitions on one target as one step |
 
 A resource or other non-node target needs an `owner`: an in-tree `Node`, or a
 `SceneTree`, which binds playback to the tree's root. See
@@ -36,6 +36,12 @@ A resource or other non-node target needs an `owner`: an in-tree `Node`, or a
 or group that has already ended with `Tweens.Reason.FAILED`, so
 `await Tweens.play(target, definition).end` needs no null check. `play_all()`
 stops at the first rejected start and cancels the definitions it already started.
+
+## Linked playback
+
+`Tweens.chain(target, definitions, owner = null, options = null)` returns a `TweensGdChain`. Supply `TweensGdPlaybackOptions` as the last argument to `play`, `play_all`, or `chain` to choose process, pause, and unscaled-time policy.
+
+See [Chains](/gdscript/api/chains/).
 
 ## Group and cancel
 

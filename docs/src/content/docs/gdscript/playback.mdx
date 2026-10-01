@@ -31,8 +31,9 @@ var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 await movement.end
 ```
 
-Handles and groups expose `end`. You can ignore the returned reason; keep it only
-when your next action depends on how playback ended. See
+Handles and groups expose `end`. Completion waits for callbacks and cleanup,
+including release hooks. You can ignore the returned reason; keep it only when
+your next action depends on how playback ended. See
 [cancellation and completion reasons](/gdscript/cancellation/) for guarded sequences
 and cancelling just one wait.
 
@@ -57,13 +58,16 @@ Tweens.play(sprite, arrive.with_on_start(func(_h): print("Moving")) \
 	.with_on_end(func(_h): print("Arrived")))
 ```
 
-They run synchronously, in this order:
+Starting a tween snapshots its configuration. Preparation and capture happen at
+activation, before `on_add`.
 
-1. `on_add(handle)` when the tween is added.
+Callbacks run synchronously, in this order:
+
+1. `on_add(handle)` at activation after capture.
 2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
    it during the delay.
 3. `on_start(handle)` once, when the delay ends and playback begins.
-4. `on_update(handle, value)` once per eligible frame with the sampled value,
+4. `on_update(handle, value)` at each sampled timeline boundary and eligible update,
    plus once more when completion [restores the initial value](/gdscript/timing/#fill-and-restoration).
 5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
    stops early.
@@ -71,8 +75,9 @@ They run synchronously, in this order:
 
 The handle's terminal state is visible inside terminal callbacks, and awaiting `end`
 resumes after them. A long frame doesn't replay the callbacks of skipped cycles.
-Tweens created in `on_update` begin on the next update, while tweens created in
-`on_end` continue the finished tween's timeline exactly.
+Tweens started in callbacks or after an await are independent roots: they begin
+on the next eligible update with no inherited frame time. Use a
+[Chain](/gdscript/sequences/) for linked timing.
 
 :::caution[Don't `await` inside callbacks]
 Callbacks must return before playback continues. Put anything that awaits in a
