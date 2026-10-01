@@ -48,9 +48,6 @@ struct TweenSettings {
 	double weks = 1.0;
 	Callable ease_function;
 	Ref<Curve> curve;
-	int64_t process_mode = tweens::LANE_PROCESS;
-	int64_t pause_mode = tweens::PAUSE_BOUND;
-	bool use_unscaled_time = false;
 	bool suppress_callbacks_when_target_invalid = false;
 	Callable on_add;
 	Callable on_start;
@@ -151,12 +148,6 @@ public:
 	Callable get_ease_function() const { return settings.ease_function; }
 	void set_curve(const Ref<Curve> &p_value) { settings.curve = p_value; }
 	Ref<Curve> get_curve() const { return settings.curve; }
-	void set_process_mode(int64_t p_value) { settings.process_mode = p_value; }
-	int64_t get_process_mode() const { return settings.process_mode; }
-	void set_pause_mode(int64_t p_value) { settings.pause_mode = p_value; }
-	int64_t get_pause_mode() const { return settings.pause_mode; }
-	void set_use_unscaled_time(bool p_value) { settings.use_unscaled_time = p_value; }
-	bool get_use_unscaled_time() const { return settings.use_unscaled_time; }
 	void set_suppress_callbacks_when_target_invalid(bool p_value) { settings.suppress_callbacks_when_target_invalid = p_value; }
 	bool get_suppress_callbacks_when_target_invalid() const { return settings.suppress_callbacks_when_target_invalid; }
 	void set_on_add(const Callable &p_value) { settings.on_add = p_value; }
@@ -202,9 +193,6 @@ public:
 	Ref<TweensGdDefinition> with_weks(double p_exponent) const;
 	Ref<TweensGdDefinition> with_ease_function(const Callable &p_function) const;
 	Ref<TweensGdDefinition> with_curve(const Ref<Curve> &p_shape) const;
-	Ref<TweensGdDefinition> with_process_mode(int64_t p_mode) const;
-	Ref<TweensGdDefinition> with_pause_mode(int64_t p_mode) const;
-	Ref<TweensGdDefinition> with_unscaled_time(bool p_enabled) const;
 	Ref<TweensGdDefinition> with_suppress_callbacks_when_target_invalid(bool p_enabled) const;
 	Ref<TweensGdDefinition> with_on_add(const Callable &p_callback) const;
 	Ref<TweensGdDefinition> with_on_start(const Callable &p_callback) const;

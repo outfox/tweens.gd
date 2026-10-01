@@ -141,12 +141,12 @@ public class TweenInstanceTests
             OnFinally = t => events.Add($"finally {t.IsTerminal}"),
         });
         Assert.Same(box, tween.Target);
-        Assert.Equal(2, tween.Value);
+        Assert.Equal(0, tween.Value);
         scheduler.Update(0.5);
         Assert.Equal(0.5f, tween.Progress);
         scheduler.Update(0.5);
         Assert.Equal(Reason.Completed, await tween.End);
-        Assert.Equal(["add Delayed", "start Playing", "update 4 4", "update 6 6", "end Completed Completed", "finally True"], events);
+        Assert.Equal(["add Delayed", "start Playing", "update 2 2", "update 4 4", "update 6 6", "end Completed Completed", "finally True"], events);
         Assert.Null(tween.Error);
     }
 
@@ -223,7 +223,7 @@ public class TweenInstanceTests
     }
 
     [Fact]
-    public void DelayedApplyFromWritesAtAdditionOnlyWhenRequested()
+    public void DelayedApplyFromWritesAtActivationOnlyWhenRequested()
     {
         using var scheduler = new TweenScheduler();
         var applied = new Box { Value = 5 };
@@ -232,9 +232,11 @@ public class TweenInstanceTests
         scheduler.Add(applied, new PlainTween { From = 1, To = 2, Delay = 1, Duration = 1, Fill = FillMode.ApplyFromDuringDelay });
         scheduler.Add(retained, new PlainTween { From = 1, To = 2, Delay = 1, Duration = 1 });
         scheduler.Add(immediate, new PlainTween { From = 1, To = 2, Duration = 1, Fill = FillMode.Both });
+        Assert.Equal(5, applied.Value);
+        scheduler.Update(0.5);
         Assert.Equal(1, applied.Value);
         Assert.Equal(5, retained.Value);
-        Assert.Equal(5, immediate.Value);
+        Assert.Equal(1.5f, immediate.Value);
         scheduler.Update(0.5);
         Assert.Equal(TweenState.Delayed, scheduler.Add(new Box(), new PlainTween { Delay = 1 }).State);
     }
@@ -248,7 +250,7 @@ public class TweenInstanceTests
         scheduler.Add(box, new PlainTween { To = 9, Duration = 1, Fill = FillMode.None, OnUpdate = (_, v) => updates.Add(v) });
         scheduler.Update(1);
         Assert.Equal(3, box.Value);
-        Assert.Equal([9f, 3f], updates);
+        Assert.Equal([3f, 9f, 3f], updates);
     }
 
     [Fact]
@@ -288,7 +290,7 @@ public class TweenInstanceTests
             Writer = (b, v) => { b.Value = v; current!.Cancel(); },
         });
         scheduler.Update(0.5);
-        Assert.Equal(3, box.Value);
+        Assert.Equal(1, box.Value);
         Assert.Equal(0, updates);
     }
 
@@ -314,7 +316,7 @@ public class TweenInstanceTests
         {
             To = 5, Duration = 1, Fill = FillMode.None,
             Restoring = (b, v) => { b.Value = v; current!.Cancel(); },
-            OnUpdate = (_, v) => { if (v == 0) restoredReports++; },
+            OnUpdate = (_, v) => { if (v == 0 && current!.Progress == 1) restoredReports++; },
         });
         scheduler.Update(1);
         reasons.Add(current.CompletionReason);
@@ -324,7 +326,7 @@ public class TweenInstanceTests
         current = scheduler.Add(new Box(), new PlainTween
         {
             To = 5, Duration = 1, Fill = FillMode.None,
-            OnUpdate = (t, v) => { if (v == 0) t.Cancel(); },
+            OnUpdate = (t, v) => { if (v == 0 && t.Progress == 1) t.Cancel(); },
         });
         scheduler.Update(1);
         reasons.Add(current.CompletionReason);
@@ -342,18 +344,21 @@ public class TweenInstanceTests
     }
 
     [Fact]
-    public void OnAddFailuresAndCancellationsSettleImmediately()
+    public void OnAddFailuresAndCancellationsSettleAtActivation()
     {
         using var scheduler = new TweenScheduler();
         var finals = 0;
         var box = new Box { Value = 1 };
         var failed = scheduler.Add(box, new PlainTween { OnAdd = _ => throw new FormatException(), OnFinally = _ => finals++ });
+        Assert.Equal(TweenState.Delayed, failed.State);
+        scheduler.Update(0);
         Assert.Equal(TweenState.Faulted, failed.State);
         Assert.IsType<FormatException>(failed.Error);
         var cancelled = scheduler.Add(box, new PlainTween
         {
             From = 7, Delay = 1, Fill = FillMode.Both, OnAdd = t => t.Cancel(), OnFinally = _ => finals++,
         });
+        scheduler.Update(0);
         Assert.Equal(TweenState.Cancelled, cancelled.State);
         Assert.Equal(1, box.Value);
         Assert.Equal(2, finals);
@@ -364,18 +369,25 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var released = 0;
-        Assert.Throws<FormatException>(() => scheduler.Add(new Box(), new ProbeTween
+        var preparation = scheduler.Add(new Box(), new ProbeTween
         {
             Preparing = _ => throw new FormatException(), Releasing = () => released++,
-        }));
+        });
+        Assert.Equal(0, released);
+        scheduler.Update(0);
+        Assert.IsType<FormatException>(preparation.Error);
         Assert.Equal(1, released);
-        var both = Assert.Throws<AggregateException>(() => scheduler.Add(new Box(), new ProbeTween
+        var failing = scheduler.Add(new Box(), new ProbeTween
         {
             Preparing = _ => throw new FormatException(), Releasing = () => throw new InvalidCastException(),
-        }));
+        });
+        scheduler.Update(0);
+        var both = Assert.IsType<AggregateException>(failing.Error);
         Assert.IsType<FormatException>(both.InnerExceptions[0]);
         Assert.IsType<InvalidCastException>(both.InnerExceptions[1]);
-        Assert.Throws<FormatException>(() => scheduler.Add(new Box(), new ProbeTween { Reader = _ => throw new FormatException() }));
+        var reader = scheduler.Add(new Box(), new ProbeTween { Reader = _ => throw new FormatException() });
+        scheduler.Update(0);
+        Assert.IsType<FormatException>(reader.Error);
         Assert.Equal(0, scheduler.ActiveCount);
     }
 
@@ -396,6 +408,7 @@ public class TweenInstanceTests
         var faultingDefinition = Recording("c");
         faultingDefinition.OnStart = _ => throw new FormatException();
         var faulted = scheduler.Add(new Box(), faultingDefinition);
+        cancelled.Initialize();
         cancelled.Cancel();
         scheduler.Update(1);
         Assert.Equal(["b cancel", "b finally", "a end", "a finally", "c finally"], events);
@@ -415,6 +428,7 @@ public class TweenInstanceTests
         {
             OnEnd = _ => throw new FormatException(), OnFinally = _ => throw new InvalidCastException(),
         });
+        cancel.Initialize();
         cancel.Cancel();
         scheduler.Update(0);
         foreach (var tween in new TweenInstance[] { end, cancel, final })
@@ -515,6 +529,7 @@ public class TweenInstanceTests
         {
             Duration = 1, SuppressCallbacksWhenTargetInvalid = true, OnCancel = _ => cancelled = true,
         });
+        tween.Initialize();
         tween.Cancel();
         Assert.True(cancelled);
     }
@@ -548,6 +563,7 @@ public class TweenInstanceTests
         var tween = scheduler.Add(new Box(), new PlainTween { Duration = 1 });
         tween.Settled += _ => throw new FormatException();
         Assert.False(tween.IsSettled);
+        tween.Initialize();
         tween.Cancel();
         Assert.True(tween.IsSettled);
         Assert.IsType<FormatException>(Assert.Single(reports));
@@ -559,7 +575,7 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new PlainTween { To = 1, Duration = 1, PauseMode = TweenPauseMode.Always });
+        var tween = scheduler.Add(box, new PlainTween { To = 1, Duration = 1  }, new PlaybackOptions { PauseMode = TweenPauseMode.Always });
         tween.IsPaused = true;
         Assert.True(tween.IsPaused);
         scheduler.Update(0.5);

@@ -68,10 +68,13 @@ String TweenSettings::validate() const {
 	}
 	const double seconds = effective_duration();
 	const double wait = effective_delay();
-	for (const double time : { duration, seconds, delay, wait, offset, ping_pong_interval, repeat_interval }) {
+	for (const double time : { duration, seconds, offset, ping_pong_interval, repeat_interval }) {
 		if (!Math::is_finite(time) || time < 0.0) {
 			return "Timing must be finite and nonnegative.";
 		}
+	}
+	if (!Math::is_finite(delay) || !Math::is_finite(wait)) {
+		return "Delay must be finite.";
 	}
 	if (offset > seconds) {
 		return "Offset must not exceed duration.";
@@ -85,15 +88,11 @@ String TweenSettings::validate() const {
 	if (!Math::is_finite(weks) || weks <= 0.0) {
 		return "Weks must be finite and positive.";
 	}
-	if (blend_type < TweensGdEasing::BLEND_MAKIMA || blend_type > TweensGdEasing::BLEND_LINEAR || !Math::is_finite(blend)
-			|| blend < 0.0 || blend > 1.0) {
+	if (blend_type < TweensGdEasing::BLEND_MAKIMA || blend_type > TweensGdEasing::BLEND_LINEAR || !Math::is_finite(blend) || blend < 0.0 || blend > 1.0) {
 		return "Invalid easing blend: use a known method and width in [0, 1].";
 	}
 	if (!is_known_ease(ease)) {
 		return "Unknown easing function.";
-	}
-	if (process_mode < LANE_PROCESS || process_mode > LANE_PHYSICS || pause_mode < PAUSE_BOUND || pause_mode > PAUSE_ALWAYS) {
-		return "Unknown process or pause mode.";
 	}
 	if (fill < FILL_NONE || fill > FILL_BOTH) {
 		return "Unknown fill flags.";
@@ -138,9 +137,9 @@ void TweensGdDefinition::_bind_methods() {
 	ClassDB::bind_static_method("TweensGdDefinition",
 			D_METHOD("named", "path", "target_class", "value_type", "to", "seconds", "easing", "delay"), &TweensGdDefinition::named);
 
-#define BIND_SETTING(m_info, m_name)                                                                  \
-	ClassDB::bind_method(D_METHOD("set_" #m_name, "value"), &TweensGdDefinition::set_##m_name);      \
-	ClassDB::bind_method(D_METHOD("get_" #m_name), &TweensGdDefinition::get_##m_name);               \
+#define BIND_SETTING(m_info, m_name) \
+	ClassDB::bind_method(D_METHOD("set_" #m_name, "value"), &TweensGdDefinition::set_##m_name); \
+	ClassDB::bind_method(D_METHOD("get_" #m_name), &TweensGdDefinition::get_##m_name); \
 	ADD_PROPERTY(m_info, "set_" #m_name, "get_" #m_name);
 #define VARIANT_INFO(m_name) \
 	PropertyInfo(Variant::NIL, #m_name, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT)
@@ -178,9 +177,6 @@ void TweensGdDefinition::_bind_methods() {
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "weks"), weks);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "ease_function"), ease_function);
 	BIND_SETTING(PropertyInfo(Variant::OBJECT, "curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), curve);
-	BIND_SETTING(PropertyInfo(Variant::INT, "process_mode"), process_mode);
-	BIND_SETTING(PropertyInfo(Variant::INT, "pause_mode"), pause_mode);
-	BIND_SETTING(PropertyInfo(Variant::BOOL, "use_unscaled_time"), use_unscaled_time);
 	BIND_SETTING(PropertyInfo(Variant::BOOL, "suppress_callbacks_when_target_invalid"), suppress_callbacks_when_target_invalid);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "on_add"), on_add);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "on_start"), on_start);
@@ -220,9 +216,6 @@ void TweensGdDefinition::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("with_weks", "exponent"), &TweensGdDefinition::with_weks);
 	ClassDB::bind_method(D_METHOD("with_ease_function", "function"), &TweensGdDefinition::with_ease_function);
 	ClassDB::bind_method(D_METHOD("with_curve", "shape"), &TweensGdDefinition::with_curve);
-	ClassDB::bind_method(D_METHOD("with_process_mode", "mode"), &TweensGdDefinition::with_process_mode);
-	ClassDB::bind_method(D_METHOD("with_pause_mode", "mode"), &TweensGdDefinition::with_pause_mode);
-	ClassDB::bind_method(D_METHOD("with_unscaled_time", "enabled"), &TweensGdDefinition::with_unscaled_time, DEFVAL(true));
 	ClassDB::bind_method(D_METHOD("with_suppress_callbacks_when_target_invalid", "enabled"),
 			&TweensGdDefinition::with_suppress_callbacks_when_target_invalid, DEFVAL(true));
 	ClassDB::bind_method(D_METHOD("with_on_add", "callback"), &TweensGdDefinition::with_on_add);
@@ -261,11 +254,11 @@ Ref<TweensGdDefinition> TweensGdDefinition::named(const NodePath &p_path, const 
 	return result;
 }
 
-#define DEFINE_WITH(m_method, m_type, m_field)                                    \
+#define DEFINE_WITH(m_method, m_type, m_field) \
 	Ref<TweensGdDefinition> TweensGdDefinition::m_method(m_type p_value) const { \
-		Ref<TweensGdDefinition> result = copy();                                  \
-		result->settings.m_field = p_value;                                       \
-		return result;                                                            \
+		Ref<TweensGdDefinition> result = copy(); \
+		result->settings.m_field = p_value; \
+		return result; \
 	}
 
 DEFINE_WITH(with_from, const Variant &, from_value)
@@ -297,9 +290,6 @@ DEFINE_WITH(with_skew, double, skew)
 DEFINE_WITH(with_weks, double, weks)
 DEFINE_WITH(with_ease_function, const Callable &, ease_function)
 DEFINE_WITH(with_curve, const Ref<Curve> &, curve)
-DEFINE_WITH(with_process_mode, int64_t, process_mode)
-DEFINE_WITH(with_pause_mode, int64_t, pause_mode)
-DEFINE_WITH(with_unscaled_time, bool, use_unscaled_time)
 DEFINE_WITH(with_suppress_callbacks_when_target_invalid, bool, suppress_callbacks_when_target_invalid)
 DEFINE_WITH(with_on_add, const Callable &, on_add)
 DEFINE_WITH(with_on_start, const Callable &, on_start)

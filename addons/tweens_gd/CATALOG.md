@@ -3,7 +3,7 @@
 Generated from the C# property catalog. Each helper returns a reusable definition:
 `Tweens.position_2d(destination, seconds, In.SINE | Out.CUBIC)`. All helpers accept
 `(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.
-Native target and value types are checked at start.
+Native target and value types are checked at activation.
 
 Property is the path each helper tweens. Compound helpers write several properties together, and
 callback-value helpers write none.

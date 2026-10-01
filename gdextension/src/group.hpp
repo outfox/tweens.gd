@@ -23,13 +23,10 @@ class TweensGdGroupWatcher : public RefCounted {
 	LocalVector<bool> pending;
 	uint32_t remaining = 0;
 	bool stopping = false;
-	CarryStamp stamp;
-	bool same_clock = true;
 
 	void setup(const TypedArray<TweensGdHandle> &p_members, const String &p_rejection);
 	void deliver(int64_t p_reason, const Variant &p_keep_alive, int64_t p_index);
 	void accept(uint32_t p_index);
-	void include_stamp(const CarryStamp &p_stamp);
 
 protected:
 	static void _bind_methods();

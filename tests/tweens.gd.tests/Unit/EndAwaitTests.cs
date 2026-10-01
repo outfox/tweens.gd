@@ -66,7 +66,7 @@ public class EndAwaitTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void EndAwaitPreservesInlineSequenceTiming(bool grouped)
+    public void EndAwaitStartsAnIndependentRoot(bool grouped)
     {
         using var scheduler = new TweenScheduler();
         var next = new Box();
@@ -82,7 +82,7 @@ public class EndAwaitTests
         finally { SynchronizationContext.SetSynchronizationContext(previous); }
         Assert.True(sequence.IsCompletedSuccessfully);
         scheduler.Update(0.25);
-        Assert.Equal(0.5f, next.Value);
+        Assert.Equal(0.25f, next.Value);
 
         async Task Continue()
         {

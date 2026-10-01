@@ -18,11 +18,9 @@ public sealed class TweenScheduler : IDisposable
     private readonly List<TweenInstance> instances = [];
     private readonly int thread = System.Environment.CurrentManagedThreadId;
     private bool updating, disposed;
-    // Updates started per lane; a carry is only valid until its lane updates again.
-    private readonly long[] ticks = new long[2];
     /// <summary>Reported after a failed tween is cleaned up. Exceptions in observers are ignored.</summary>
     public event Action<Exception>? UnhandledException;
-    /// <summary>Number of unfinished tweens, including paused tweens.</summary>
+    /// <summary>Number of unfinished roots, including paused roots. Each Chain counts once.</summary>
     public int ActiveCount
     {
         get
@@ -37,25 +35,33 @@ public sealed class TweenScheduler : IDisposable
     /// <summary>Starts one definition and returns its playback handle. Node targets own their playback.</summary>
     /// <remarks>Non-node targets need no owner for manual playback. The GDScript counterpart is scheduler.add.</remarks>
     public TweenInstance<TTarget, TValue> Add<TTarget, TValue>(TTarget target,
-        ITweenDefinition<TTarget, TValue> definition) where TTarget : class where TValue : struct
-        => AddCore(target, definition, target as Node, null);
+        ITweenDefinition<TTarget, TValue> definition, PlaybackOptions options = default) where TTarget : class where TValue : struct
+        => AddCore(target, definition, target as Node, null, options);
 
     /// <summary>Animate a separate target, binding playback to an in-tree owner node.</summary>
     public TweenInstance<TTarget, TValue> Add<TTarget, TValue>(TTarget target,
-        ITweenDefinition<TTarget, TValue> definition, Node owner) where TTarget : class where TValue : struct
+        ITweenDefinition<TTarget, TValue> definition, Node owner, PlaybackOptions options = default) where TTarget : class where TValue : struct
     {
         ArgumentNullException.ThrowIfNull(owner);
-        return AddCore(target, definition, owner, null);
+        return AddCore(target, definition, owner, null, options);
     }
 
     internal TweenInstance<TTarget, TValue> AddCore<TTarget, TValue>(TTarget target,
-        ITweenDefinition<TTarget, TValue> definition, Node? owner, SceneTree? tree)
+        ITweenDefinition<TTarget, TValue> definition, Node? owner, SceneTree? tree, PlaybackOptions options = default)
         where TTarget : class where TValue : struct
+    {
+        ValidateStart(target, owner, tree, options);
+        ArgumentNullException.ThrowIfNull(definition);
+        var instance = new TweenInstance<TTarget, TValue>(this, target, definition.CreatePlayback(), owner, tree, options);
+        Enroll(instance);
+        return instance;
+    }
+
+    internal void ValidateStart(object target, Node? owner, SceneTree? tree, PlaybackOptions options)
     {
         EnsureThread();
         ObjectDisposedException.ThrowIf(disposed, this);
         ArgumentNullException.ThrowIfNull(target);
-        ArgumentNullException.ThrowIfNull(definition);
         if (target is GodotObject native)
         {
             TweenRuntime.EnsureMainThread();
@@ -68,21 +74,71 @@ public sealed class TweenScheduler : IDisposable
         if (tree is not null) TweenRuntime.ValidateTree(tree);
         if (owner is not null && tree is not null && owner.GetTree() != tree)
             throw new ArgumentException("The owner must belong to the supplied scene tree.", nameof(owner));
-        var instance = new TweenInstance<TTarget, TValue>(this, target, definition.CreatePlayback(), owner, tree);
-        if (TweenCarry.TryGet(this, instance.Mode, instance.Unscaled, out var credit)) instance.ApplyCredit(credit);
-        if (disposed)
-        {
-            instance.Finish(Reason.RunnerDisposed);
-            return instance;
-        }
-        // A custom getter may remove/dispose an owner or target. Observe this before binding signals.
+        options.Validate();
+    }
+
+    internal void Enroll(TweenInstance instance)
+    {
         instances.Add(instance);
-        if (instance.CheckTarget())
+        if (instance.CheckTarget()) instance.BindLifetime();
+    }
+
+    /// <summary>Snapshots a linked list of definitions on one target. Each delay is relative to the previous entry's own end.</summary>
+    public Chain AddChain<TTarget>(TTarget target, System.Collections.Generic.IReadOnlyList<ITweenDefinition<TTarget>> definitions,
+        Node? owner = null, PlaybackOptions options = default) where TTarget : class
+        => AddChainCore(target, definitions, owner ?? target as Node, null, options);
+
+    internal Chain AddChainCore<TTarget>(TTarget target, System.Collections.Generic.IReadOnlyList<ITweenDefinition<TTarget>> definitions,
+        Node? owner, SceneTree? tree, PlaybackOptions options) where TTarget : class
+    {
+        ValidateStart(target, owner, tree, options);
+        ArgumentNullException.ThrowIfNull(definitions);
+        if (definitions.Count == 0) throw new ArgumentException("A Chain needs at least one definition.", nameof(definitions));
+        var root = new Chain.Root(this, target, owner, tree, options);
+        var leaves = new TweenInstance[definitions.Count];
+        try
         {
-            instance.BindLifetime();
-            instance.Initialize();
+            for (var i = 0; i < leaves.Length; i++)
+            {
+                ArgumentNullException.ThrowIfNull(definitions[i]);
+                leaves[i] = definitions[i].Snapshot(this, target, owner, tree, options);
+                leaves[i].Coordinate(root);
+            }
+            root.Plan = new ExecutionPlan(root, leaves);
         }
-        return instance;
+        catch
+        {
+            foreach (var leaf in leaves) leaf?.Finish(Reason.Cancelled);
+            throw;
+        }
+        Enroll(root);
+        return new Chain(root);
+    }
+
+    /// <summary>Starts a list in parallel with one playback policy.</summary>
+    public Group AddAll<TTarget>(TTarget target, IReadOnlyList<ITweenDefinition<TTarget>> definitions,
+        Node? owner = null, PlaybackOptions options = default) where TTarget : class
+    {
+        owner ??= target as Node;
+        ValidateStart(target, owner, null, options);
+        ArgumentNullException.ThrowIfNull(definitions);
+        if (definitions.Count == 0) throw new ArgumentException("A Group needs at least one definition.");
+        var started = new TweenInstance[definitions.Count];
+        try
+        {
+            for (var i = 0; i < started.Length; i++)
+            {
+                ArgumentNullException.ThrowIfNull(definitions[i]);
+                started[i] = definitions[i].Snapshot(this, target, owner, null, options);
+                Enroll(started[i]);
+            }
+        }
+        catch
+        {
+            foreach (var leaf in started) leaf?.Cancel();
+            throw;
+        }
+        return Group.Of(started);
     }
 
     /// <summary>Advances one process mode by a finite, nonnegative delta in seconds.</summary>
@@ -97,7 +153,6 @@ public sealed class TweenScheduler : IDisposable
         if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
         if (updating) throw new InvalidOperationException("Recursive scheduler updates are not supported.");
         updating = true;
-        ticks[(int)mode]++;
         try
         {
             var count = instances.Count;
@@ -145,7 +200,6 @@ public sealed class TweenScheduler : IDisposable
         if (kept < instances.Count) instances.RemoveRange(kept, instances.Count - kept);
     }
 
-    internal long Tick(TweenProcessMode mode) => ticks[(int)mode];
 
     internal void EnsureThread()
     {

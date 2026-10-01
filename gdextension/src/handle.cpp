@@ -3,6 +3,7 @@
 #include "handle.hpp"
 
 #include "awaiting.hpp"
+#include "chain.hpp"
 #include "easing.hpp"
 #include "interpolation.hpp"
 #include "scheduler.hpp"
@@ -60,7 +61,7 @@ Ref<TweensGdHandle> TweensGdHandle::rejected(const String &p_message) {
 }
 
 Ref<TweensGdHandle> TweensGdHandle::start(TweensGdScheduler *p_scheduler, const Variant &p_target, TweenSettings *p_options,
-		const Variant &p_initial, Node *p_owner, SceneTree *p_tree) {
+		Node *p_owner, SceneTree *p_tree, const PlaybackPolicy &p_policy) {
 	Ref<TweensGdHandle> handle;
 	handle.instantiate();
 	TweensGdHandle &h = *handle.ptr();
@@ -80,12 +81,21 @@ Ref<TweensGdHandle> TweensGdHandle::start(TweensGdScheduler *p_scheduler, const 
 	}
 	h.options = p_options;
 	const TweenSettings &options = *p_options;
+	h.clock.configure(options);
+	h.has_clock = true;
+	h.mode = p_policy.process_mode;
+	h.pause_mode = p_policy.pause_mode;
+	h.unscaled = p_policy.use_unscaled_time;
+	return handle;
+}
+
+void TweensGdHandle::bind_values(const Variant &p_initial) {
+	auto &h = *this;
+	const TweenSettings &options = *h.options;
 	h.adapter = options.adapter;
 	if (h.adapter.is_valid()) {
 		h.adapter->set(names().captured_type, int64_t(p_initial.get_type()));
 	}
-	h.clock.configure(options);
-	h.has_clock = true;
 	h.initial = p_initial;
 	h.value = p_initial;
 	h.from = options.from_value.get_type() == Variant::NIL ? p_initial : options.from_value;
@@ -100,16 +110,26 @@ Ref<TweensGdHandle> TweensGdHandle::start(TweensGdScheduler *p_scheduler, const 
 		h.origin = h.from;
 		h.applied = h.zero;
 	}
-	h.mode = options.process_mode;
-	h.pause_mode = options.pause_mode;
-	h.unscaled = options.use_unscaled_time;
 	h.has_property = !options.property.is_empty();
 	h.has_update = !options.on_update.is_null();
 	h.has_start = !options.on_start.is_null();
 	h.has_ease_function = !options.ease_function.is_null();
 	h.has_curve = options.curve.is_valid();
 	h.typed = h.adapter.is_null() && !h.relative && h.lerp.prepare(h.from, h.to, p_initial.get_type());
-	return handle;
+}
+void TweensGdHandle::bind_lifetime() {
+	if (check_target() && is_alive(owner_id)) {
+		owner_exit = callable_mp(this, &TweensGdHandle::owner_exiting);
+		owner->connect(names().tree_exiting, owner_exit);
+	}
+}
+
+TweensGdChain *TweensGdHandle::coordinator() const {
+	return Object::cast_to<TweensGdChain>(ObjectDB::get_instance(coordinator_id));
+}
+bool TweensGdHandle::is_paused() const {
+	auto *chain = coordinator();
+	return chain != nullptr && !coordinator_root ? chain->is_paused() : paused;
 }
 
 Object *TweensGdHandle::get_target() const {
@@ -128,13 +148,23 @@ Variant TweensGdHandle::get_end() {
 }
 
 void TweensGdHandle::set_paused(bool p_paused) {
-	if (require_main_thread()) {
+	if (require_main_thread() && !is_terminal()) {
+		auto *chain = coordinator();
+		if (chain != nullptr && !coordinator_root) {
+			chain->root->set_paused(p_paused);
+			return;
+		}
 		paused = p_paused;
 	}
 }
 
 void TweensGdHandle::cancel() {
-	if (require_main_thread()) {
+	if (require_main_thread() && !is_terminal()) {
+		auto *chain = coordinator();
+		if (chain != nullptr && !coordinator_root) {
+			chain->cancel();
+			return;
+		}
 		finish(REASON_CANCELLED);
 	}
 }
@@ -150,15 +180,32 @@ Variant TweensGdHandle::wait(const Ref<TweensGdCancellation> &p_cancellation) {
 }
 
 void TweensGdHandle::initialize_playback() {
+	if (is_terminal() || (initialized && delay_filled)) {
+		return;
+	}
 	depth++;
 	if (check_target()) {
-		if (is_alive(owner_id)) {
-			owner_exit = callable_mp(this, &TweensGdHandle::owner_exiting);
-			owner->connect(names().tree_exiting, owner_exit);
+		if (binding_phase < 6) {
+			prepared = true;
+			auto *scheduler = Object::cast_to<TweensGdScheduler>(ObjectDB::get_instance(scheduler_id));
+			if (scheduler == nullptr) {
+				finish(REASON_RUNNER_DISPOSED);
+			} else {
+				const String preparation = scheduler->prepare_handle(*this);
+				if (!preparation.is_empty() && !is_terminal()) {
+					fail(preparation);
+				}
+			}
 		}
-		invoke(options->on_add);
-		if (check_target() && options->effective_delay() > 0.0 && (options->fill & FILL_APPLY_FROM_DURING_DELAY)) {
-			apply(from);
+		if (check_target() && can_advance() && binding_phase == 6 && !initialized) {
+			initialized = true;
+			invoke(options->on_add);
+		}
+		if (check_target() && can_advance() && !delay_filled) {
+			delay_filled = true;
+			if (clock.inner_delay() > 0.0 && (options->fill & FILL_APPLY_FROM_DURING_DELAY)) {
+				apply(from);
+			}
 		}
 	}
 	end_operation();
@@ -166,12 +213,31 @@ void TweensGdHandle::initialize_playback() {
 
 void TweensGdHandle::advance(double p_delta) {
 	depth++;
-	advance_inner(p_delta);
+	plan->advance(p_delta);
 	end_operation();
 }
 
-void TweensGdHandle::advance_inner(double p_delta) {
-	clock.advance(p_delta);
+void TweensGdHandle::sample_at(double p_local_time) {
+	depth++;
+	initialize_playback();
+	if (check_target() && can_advance()) {
+		notify_update();
+		if (check_target() && can_advance()) {
+			advance_inner(p_local_time);
+		}
+	}
+	if (!is_terminal() && can_advance()) {
+		sampled_time = -1.0;
+	}
+	end_operation();
+}
+
+void TweensGdHandle::advance_inner(double p_local_time) {
+	if (sampled_time != p_local_time) {
+		sampled_time = p_local_time;
+		sample_phase = 0;
+		clock.sample_at(p_local_time);
+	}
 	state = clock.completed ? STATE_PLAYING : clock.state;
 	if (!clock.started) {
 		return;
@@ -180,103 +246,115 @@ void TweensGdHandle::advance_inner(double p_delta) {
 		started = true;
 		if (has_start) {
 			invoke(options->on_start);
-			if (!check_target()) {
+			if (!check_target() || !can_advance()) {
 				return;
 			}
 		}
 	}
-	double time = CLAMP(clock.progress, 0.0, 1.0);
-	const double exponent = clock.returning ? options->weks : options->skew;
-	if (exponent != 1.0) {
-		time = std::pow(time, exponent);
-	}
-	double weight;
-	if (has_curve) {
-		weight = options->curve->sample(time);
-	} else if (has_ease_function) {
-		const Callable function = options->ease_function;
-		if (!function.is_valid()) {
-			fail("The easing Callable is no longer valid.");
-			return;
+	if (sample_phase == 0) {
+		double time = CLAMP(clock.progress, 0.0, 1.0);
+		const double exponent = clock.returning ? options->weks : options->skew;
+		if (exponent != 1.0) {
+			time = std::pow(time, exponent);
 		}
-		const Variant result = function.call(time);
-		if (!check_target()) {
-			return;
+		double weight;
+		if (has_curve) {
+			weight = options->curve->sample(time);
+		} else if (has_ease_function) {
+			const Callable function = options->ease_function;
+			if (!function.is_valid()) {
+				fail("The easing Callable is no longer valid.");
+				return;
+			}
+			const Variant result = function.call(time);
+			if (!check_target() || !can_advance()) {
+				return;
+			}
+			const Variant::Type type = result.get_type();
+			if (type != Variant::FLOAT && type != Variant::INT) {
+				fail("Easing must return a finite number.");
+				return;
+			}
+			weight = result;
+		} else {
+			weight = TweensGdEasing::evaluate(options->ease, time, options->blend_type, options->blend);
 		}
-		const Variant::Type type = result.get_type();
-		if (type != Variant::FLOAT && type != Variant::INT) {
+		if (!Math::is_finite(weight)) {
 			fail("Easing must return a finite number.");
 			return;
 		}
-		weight = result;
-	} else {
-		weight = TweensGdEasing::evaluate(options->ease, time, options->blend_type, options->blend);
-	}
-	if (!Math::is_finite(weight)) {
-		fail("Easing must return a finite number.");
-		return;
-	}
-	Variant sample;
-	if (relative) {
-		// Everything by_value has added so far: one offset per finished cycle, unless ping-pong brought it back.
-		if (!follow()) {
-			return;
-		}
-		const Variant offset_value = interpolate_values(zero, by, weight);
-		if (!check_target()) {
-			return;
-		}
-		Variant cycles = zero;
-		if (!ping_pong && clock.cycle > 0.0) {
-			cycles = interpolate_values(zero, by, clock.cycle);
-			if (!check_target()) {
+		Variant sample;
+		if (relative) {
+			// Everything by_value has added so far: one offset per finished cycle, unless ping-pong brought it back.
+			if (!follow() || !can_advance()) {
+				return;
+			}
+			const Variant offset_value = interpolate_values(zero, by, weight);
+			if (!check_target() || !can_advance()) {
+				return;
+			}
+			Variant cycles = zero;
+			if (!ping_pong && clock.cycle > 0.0) {
+				cycles = interpolate_values(zero, by, clock.cycle);
+				if (!check_target() || !can_advance()) {
+					return;
+				}
+			}
+			if (!TweensGdInterpolation::compatible(initial, offset_value) || !TweensGdInterpolation::compatible(initial, cycles)) {
+				fail("Interpolation changed the value type.");
+				return;
+			}
+			applied = TweensGdInterpolation::add(cycles, offset_value);
+			sample = TweensGdInterpolation::add(origin, applied);
+		} else if (typed) {
+			if (!lerp.sample(weight, sample)) {
+				fail("Interpolation produced a non-finite value.");
+				return;
+			}
+		} else {
+			sample = interpolate_values(from, to, weight);
+			// Only adapters run user code while interpolating.
+			if (adapter.is_valid() && (!check_target() || !can_advance())) {
 				return;
 			}
 		}
-		if (!TweensGdInterpolation::compatible(initial, offset_value) || !TweensGdInterpolation::compatible(initial, cycles)) {
-			fail("Interpolation changed the value type.");
-			return;
-		}
-		applied = TweensGdInterpolation::add(cycles, offset_value);
-		sample = TweensGdInterpolation::add(origin, applied);
-	} else if (typed) {
-		if (!lerp.sample(weight, sample)) {
+		if (adapter.is_valid()) {
+			const Ref<RefCounted> hooks = adapter;
+			const String sample_error = hook_error(hooks->call(names().validate_value, sample), "validate_value");
+			if (!check_target() || !can_advance()) {
+				return;
+			}
+			if (!sample_error.is_empty() || !TweensGdInterpolation::compatible(initial, sample)) {
+				fail(!sample_error.is_empty() ? sample_error : String("Interpolation changed the value type."));
+				return;
+			}
+		} else if (!typed && !TweensGdInterpolation::finite(sample)) {
 			fail("Interpolation produced a non-finite value.");
 			return;
 		}
-	} else {
-		sample = interpolate_values(from, to, weight);
-		// Only adapters run user code while interpolating.
-		if (adapter.is_valid() && !check_target()) {
-			return;
-		}
+		sample_phase = 1;
+		apply(std::move(sample));
 	}
-	if (adapter.is_valid()) {
-		const Ref<RefCounted> hooks = adapter;
-		const String sample_error = hook_error(hooks->call(names().validate_value, sample), "validate_value");
-		if (!check_target()) {
-			return;
-		}
-		if (!sample_error.is_empty() || !TweensGdInterpolation::compatible(initial, sample)) {
-			fail(!sample_error.is_empty() ? sample_error : String("Interpolation changed the value type."));
-			return;
-		}
-	} else if (!typed && !TweensGdInterpolation::finite(sample)) {
-		fail("Interpolation produced a non-finite value.");
+	if (is_terminal() || !can_advance() || !clock.completed) {
 		return;
 	}
-	apply(std::move(sample));
-	if (is_terminal() || !clock.completed) {
-		return;
-	}
-	if (!(options->fill & FILL_RETAIN_FINAL_VALUE)) {
-		// A following by_value tween takes only its own offset back out.
-		if (!follow()) {
-			return;
+	if (sample_phase == 1) {
+		if (!(options->fill & FILL_RETAIN_FINAL_VALUE)) {
+			if (!restore_prepared) {
+				if (!follow()) {
+					return;
+				}
+				restore_value = follows ? origin : initial;
+				restore_prepared = true;
+			}
+			if (!check_target() || !can_advance()) {
+				return;
+			}
+			apply(restore_value, true);
 		}
-		apply(follows ? origin : initial, true);
+		sample_phase = 2;
 	}
-	if (!is_terminal()) {
+	if (!is_terminal() && can_advance()) {
 		finish(REASON_COMPLETED);
 	}
 }
@@ -338,6 +416,15 @@ void TweensGdHandle::apply(Variant p_sample, bool p_restoring) {
 	} else {
 		value = std::move(p_sample);
 	}
+	update_pending = has_update;
+	notify_update();
+}
+
+void TweensGdHandle::notify_update() {
+	if (!update_pending || !check_target() || !can_advance()) {
+		return;
+	}
+	update_pending = false;
 	if (has_update) {
 		// The callback can end this playback and clear the settings that own the Callable.
 		const Callable update = options->on_update;
@@ -377,7 +464,7 @@ bool TweensGdHandle::check_target() {
 }
 
 bool TweensGdHandle::can_advance() const {
-	if (paused) {
+	if (is_paused()) {
 		return false;
 	}
 	if (pause_mode == PAUSE_ALWAYS) {
@@ -420,32 +507,25 @@ void TweensGdHandle::fail(const String &p_message) {
 	}
 }
 
-CarryStamp TweensGdHandle::completion_stamp() const {
-	return reason == REASON_COMPLETED ? stamp : CarryStamp();
-}
-
 void TweensGdHandle::finish(int64_t p_reason) {
 	if (is_terminal()) {
 		return;
 	}
 	const Ref<TweensGdHandle> keep(this);
+	// Owner-exit callbacks can dispose the scheduler and drop its last Chain reference.
+	const Ref<TweensGdChain> keep_coordinator(coordinator_root ? coordinator() : nullptr);
 	reason = p_reason;
 	state = p_reason == REASON_COMPLETED ? STATE_COMPLETED : STATE_CANCELLED;
 	if (p_reason == REASON_FAILED) {
 		state = STATE_FAULTED;
 	}
-	TweensGdScheduler *scheduler = Object::cast_to<TweensGdScheduler>(ObjectDB::get_instance(scheduler_id));
-	if (p_reason == REASON_COMPLETED && scheduler != nullptr) {
-		stamp.present = true;
-		stamp.scheduler = scheduler_id;
-		stamp.mode = mode;
-		stamp.unscaled = unscaled;
-		stamp.tick = scheduler->get_tick(mode);
-		stamp.seconds = clock.overshoot;
+	if (coordinator_root) {
+		auto *chain = coordinator();
+		if (chain != nullptr) {
+			chain->stop(p_reason);
+		}
 	}
-	const CarryStamp previous = carry::enter(completion_stamp());
-	const bool suppress = options->suppress_callbacks_when_target_invalid &&
-			(invalid_target() || invalid_owner() || p_reason == REASON_TARGET_FREED || p_reason == REASON_OWNER_EXITED);
+	const bool suppress = !initialized || options == nullptr || (options->suppress_callbacks_when_target_invalid && (invalid_target() || invalid_owner() || p_reason == REASON_TARGET_FREED || p_reason == REASON_OWNER_EXITED));
 	if (!suppress) {
 		if (p_reason == REASON_COMPLETED) {
 			invoke(options->on_end);
@@ -454,7 +534,7 @@ void TweensGdHandle::finish(int64_t p_reason) {
 		}
 		invoke(options->on_finally);
 	}
-	if (is_alive(owner_id) && owner->is_connected(names().tree_exiting, owner_exit)) {
+	if (!owner_exit.is_null() && is_alive(owner_id) && owner->is_connected(names().tree_exiting, owner_exit)) {
 		owner->disconnect(names().tree_exiting, owner_exit);
 	}
 	owner_exit = Callable();
@@ -462,7 +542,6 @@ void TweensGdHandle::finish(int64_t p_reason) {
 	has_start = false;
 	has_ease_function = false;
 	has_curve = false;
-	carry::leave(previous);
 	if (depth == 0) {
 		settle();
 	}
@@ -491,10 +570,16 @@ void TweensGdHandle::settle() {
 		return;
 	}
 	const Ref<TweensGdHandle> keep(this);
+	if (coordinator_root) {
+		auto *chain = coordinator();
+		if (chain != nullptr && chain->plan) {
+			chain->plan->release();
+		}
+	}
 	// Released only now, once reentrant setters and callbacks have returned.
 	release_options();
 	// Wait until reentrant setters/interpolators have returned before releasing bindings.
-	if (adapter.is_valid()) {
+	if (prepared && adapter.is_valid()) {
 		const Ref<RefCounted> hooks = adapter;
 		adapter.unref();
 		const String cleanup = hook_error(hooks->call(names().release), "release");
@@ -504,13 +589,11 @@ void TweensGdHandle::settle() {
 	}
 	settled = true;
 	TweensGdScheduler *scheduler = Object::cast_to<TweensGdScheduler>(ObjectDB::get_instance(scheduler_id));
-	if (!error.is_empty() && scheduler != nullptr) {
+	if (!error.is_empty() && scheduler != nullptr && (coordinator_root || !coordinator_id.is_valid())) {
 		scheduler->report_error(error);
 	}
-	const CarryStamp previous = carry::enter(completion_stamp());
 	emit_signal(names().ended, reason);
 	disconnect_all(this, names().ended);
-	carry::leave(previous);
 }
 
 } // namespace godot

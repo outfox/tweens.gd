@@ -30,6 +30,20 @@ public abstract class TweenInstance
     private readonly TweenPauseMode pauseMode;
     internal readonly bool Unscaled;
     private protected readonly Playback Clock;
+    internal Playback Timing => Clock;
+    internal void AccumulateError(Exception error)
+    {
+        var existing = Error is AggregateException aggregate ? aggregate.Flatten().InnerExceptions.ToArray()
+            : Error is null ? [] : new[] { Error };
+        var incoming = error is AggregateException multiple ? multiple.Flatten().InnerExceptions.ToArray() : new[] { error };
+        var errors = existing.Concat(incoming).Distinct().ToArray();
+        Error = errors.Length == 1 ? errors[0] : new AggregateException(errors);
+        State = TweenState.Faulted;
+    }
+    private WeakReference<TweenInstance>? coordinator;
+    internal void Coordinate(TweenInstance root) => coordinator = new(root);
+    private TweenInstance? Coordinator => coordinator is not null && coordinator.TryGetTarget(out var root) ? root : null;
+    internal bool PlaybackInterrupted => !(Coordinator?.CanAdvance() ?? CanAdvance());
 
     /// <summary>Current timeline state. Explicit pausing does not change it.</summary>
     public TweenState State { get; protected set; } = TweenState.Delayed;
@@ -41,21 +55,17 @@ public abstract class TweenInstance
     public Exception? Error { get; private set; }
     /// <summary>Uneased progress in [0, 1]. Decreases on the ping-pong return leg.</summary>
     public float Progress => Clock.Progress;
-    /// <summary>Set on natural completion; continuations started from it inherit the overshoot.</summary>
-    internal Carry? Stamp { get; private set; }
-    internal bool IsSettled => settled;
+    public bool IsSettled => settled;
     /// <summary>Raised once the tween has settled, before its completion task is resolved.</summary>
     internal event Action<TweenInstance>? Settled;
     /// <summary>Explicit playback pause. Owner and scene pause modes apply separately.</summary>
     public bool IsPaused
     {
-        get => paused;
-        set { Scheduler.EnsureThread(); paused = value; }
+        get => Coordinator?.IsPaused ?? paused;
+        set { Scheduler.EnsureThread(); if (IsTerminal) return; if (Coordinator is { } root) root.IsPaused = value; else paused = value; }
     }
 
     /// <summary>Shared completion task. Returns the completion reason; playback errors fault the task.</summary>
-    /// <remarks>Natural completion carries unused frame time into the next step when both steps use the
-    /// same scheduler, process mode, and time scale. In GDScript, await handle.end.</remarks>
     public Task<Reason> End
     {
         get
@@ -70,15 +80,16 @@ public abstract class TweenInstance
         }
     }
 
-    internal TweenInstance(TweenScheduler scheduler, TweenOptionsBuilder options, Node? owner, GodotObject? nativeTarget, SceneTree? tree)
+    internal TweenInstance(TweenScheduler scheduler, TweenOptionsBuilder options, Node? owner, GodotObject? nativeTarget, SceneTree? tree, PlaybackOptions playback = default)
     {
         Scheduler = scheduler;
         Owner = owner;
         this.nativeTarget = nativeTarget;
         this.tree = tree;
-        Mode = options.ProcessMode;
-        pauseMode = options.PauseMode;
-        Unscaled = options.UseUnscaledTime;
+        playback.Validate();
+        Mode = playback.ProcessMode;
+        pauseMode = playback.PauseMode;
+        Unscaled = playback.UseUnscaledTime;
         Clock = new Playback(options.ToOptions());
     }
 
@@ -90,7 +101,8 @@ public abstract class TweenInstance
     public void Cancel()
     {
         Scheduler.EnsureThread();
-        Finish(Reason.Cancelled);
+        if (!IsTerminal && Coordinator is { } root) root.Finish(Reason.Cancelled);
+        else Finish(Reason.Cancelled);
     }
 
     /// <summary>Waits for playback to end. The token cancels this wait, leaving playback running.</summary>
@@ -136,10 +148,10 @@ public abstract class TweenInstance
         return tree is null || !tree.Paused;
     }
 
-    internal void ApplyCredit(double seconds) => Clock.Credit(seconds);
 
     internal abstract void Initialize();
     internal abstract void Advance(double delta);
+    internal virtual bool SampleAt(double localTime) => throw new NotSupportedException();
     /// <summary>Runs the terminal callbacks before completion resolves.</summary>
     protected abstract void InvokeTerminal(Reason reason, bool faulted);
     /// <summary>Releases resources owned by this playback.</summary>
@@ -169,12 +181,8 @@ public abstract class TweenInstance
         Error = error;
         State = error is not null ? TweenState.Faulted : reason == Reason.Completed
             ? TweenState.Completed : TweenState.Cancelled;
-        if (State == TweenState.Completed)
-            Stamp = new Carry(Scheduler, Mode, Unscaled, Scheduler.Tick(Mode), Clock.Overshoot);
         try
         {
-            // Tweens started by OnEnd continue this timeline.
-            using var scope = TweenCarry.Enter(Stamp);
             InvokeTerminal(reason, error is not null);
         }
         catch (Exception callbackError)
@@ -187,25 +195,23 @@ public abstract class TweenInstance
             if (exitHandler is not null && GodotObject.IsInstanceValid(Owner))
                 Owner!.TreeExiting -= exitHandler;
             exitHandler = null;
-            try { Release(); }
-            catch (Exception releaseError)
-            {
-                Error = Error is null ? releaseError : new AggregateException(Error, releaseError);
-                State = TweenState.Faulted;
-            }
-            finally { if (operationDepth == 0) Settle(); }
+            if (operationDepth == 0) Settle();
         }
     }
 
     private void Settle()
     {
+        try { Release(); }
+        catch (Exception releaseError)
+        {
+            Error = Error is null ? releaseError : new AggregateException(Error, releaseError);
+            State = TweenState.Faulted;
+        }
         settled = true;
-        if (Error is not null) Scheduler.Report(Error);
+        if (Error is not null && Coordinator is null) Scheduler.Report(Error);
         try { Settled?.Invoke(this); }
         catch (Exception error) { Scheduler.Report(error); }
         Settled = null;
-        // Awaiting code resumes inline here; tweens it starts continue this timeline.
-        using var scope = TweenCarry.Enter(Error is null ? Stamp : null);
         SetCompletion();
     }
 
@@ -223,19 +229,23 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     private TweenDefinition<TTarget, TValue>? definition;
     private Func<float, float>? ease;
     private Curve? curve;
-    private readonly TValue initial, from, to, by;
+    private TValue initial, from, to, by;
     // A By tween writes origin + applied. Following tweens move origin along with outside changes to the property.
-    private readonly bool relative, follows, pingPong;
+    private bool relative, follows, pingPong;
     private TValue origin, applied;
-    private bool started;
+    private bool started, prepared, initialized, delayFilled, updatePending, restorePrepared;
+    private TValue restoreValue;
+    private double sampledTime = double.NaN;
+    private int samplePhase, bindingPhase;
+    private ExecutionPlan? plan;
     /// <summary>The target animated by this playback.</summary>
     public TTarget Target { get; }
     /// <summary>Last sampled value, including easing and delay fill.</summary>
     public TValue Value { get; private set; }
 
     internal TweenInstance(TweenScheduler scheduler, TTarget target,
-        TweenDefinition<TTarget, TValue> source, Node? owner, SceneTree? tree)
-        : base(scheduler, source, owner, target as GodotObject, tree)
+        TweenDefinition<TTarget, TValue> source, Node? owner, SceneTree? tree, PlaybackOptions playback = default)
+        : base(scheduler, source, owner, target as GodotObject, tree, playback)
     {
         Target = target;
         definition = source;
@@ -256,45 +266,69 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 throw new ArgumentOutOfRangeException(nameof(source), "Factors must be finite.");
             if ((definition.By is not null || adjustsFrom || adjustsTo) && !Offsets<TValue>.Supported)
                 throw Offsets<TValue>.Unsupported();
-            definition.PrepareTarget(target);
-            if (InvalidTargetOrOwner)
-                throw new ArgumentException("The target or owner became invalid during tween preparation.", nameof(target));
-            initial = definition.ReadValue(target);
-            Value = initial;
-            from = Adjust(definition.From ?? initial, definition.FactorFrom, definition.DeltaFrom);
-            to = Adjust(definition.To ?? initial, definition.FactorTo, definition.DeltaTo);
-            if (definition.By is { } offset)
-            {
-                (relative, by, origin, applied) = (true, Adjust(offset, definition.FactorBy, definition.DeltaBy), from,
-                    Offsets<TValue>.Zero);
-                // An adjusted start is fixed, like an explicit From.
-                follows = definition.From is null && !adjustsFrom && definition.FollowsTarget;
-                pingPong = definition.UsePingPong;
-            }
             ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend);
+            plan = new ExecutionPlan(this, [this]);
             if (definition.Curve is not null)
             {
                 curve = (Curve)definition.Curve.Duplicate();
                 ease = curve.Sample;
             }
         }
-        catch (Exception preparationError)
+        catch
         {
             curve?.Dispose();
-            try { definition.ReleaseSnapshot(); }
-            catch (Exception releaseError) { throw new AggregateException(preparationError, releaseError); }
             throw;
         }
     }
 
     internal override void Initialize()
     {
+        if (IsTerminal || initialized && delayFilled) return;
         BeginOperation();
         try
         {
-            definition!.OnAdd?.Invoke(this);
-            if (!CheckTarget()) return;
-            if (Clock.HasDelay && definition.Fill.HasFlag(FillMode.ApplyFromDuringDelay)) Apply(from);
+            // Each binding hook is consumed once, even if it pauses its coordinator.
+            while (bindingPhase < 5)
+            {
+                switch (bindingPhase++)
+                {
+                    case 0:
+                        prepared = true;
+                        definition!.PrepareTarget(Target);
+                        break;
+                    case 1:
+                        Value = initial = definition!.ReadValue(Target);
+                        break;
+                    case 2:
+                        from = Adjust(definition!.From ?? initial, definition.FactorFrom, definition.DeltaFrom);
+                        break;
+                    case 3:
+                        to = Adjust(definition!.To ?? initial, definition.FactorTo, definition.DeltaTo);
+                        break;
+                    case 4:
+                        if (definition!.By is { } offset)
+                        {
+                            (relative, by, origin, applied) = (true, Adjust(offset, definition.FactorBy, definition.DeltaBy),
+                                from, Offsets<TValue>.Zero);
+                            follows = definition.From is null && definition.FactorFrom == 1 &&
+                                definition.DeltaFrom is null && definition.FollowsTarget;
+                            pingPong = definition.UsePingPong;
+                        }
+                        break;
+                }
+                if (!CheckTarget() || PlaybackInterrupted) return;
+            }
+            if (!initialized)
+            {
+                initialized = true;
+                definition!.OnAdd?.Invoke(this);
+                if (!CheckTarget() || PlaybackInterrupted) return;
+            }
+            if (!delayFilled)
+            {
+                delayFilled = true;
+                if (Clock.HasDelay && definition!.Fill.HasFlag(FillMode.ApplyFromDuringDelay)) Apply(from);
+            }
         }
         catch (Exception error) { Finish(Reason.Cancelled, error); }
         finally { EndOperation(); }
@@ -302,32 +336,58 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
 
     internal override void Advance(double delta)
     {
+        plan ??= new ExecutionPlan(this, [this]);
+        plan.Advance(delta);
+    }
+
+    internal override bool SampleAt(double localTime)
+    {
         BeginOperation();
         try
         {
-            Clock.Advance(delta);
-            State = Clock.State == TweenState.Completed ? TweenState.Playing : Clock.State;
-            if (!Clock.Started) return;
+            Initialize();
+            if (!CheckTarget() || PlaybackInterrupted) return false;
+            NotifyUpdate();
+            if (!CheckTarget() || PlaybackInterrupted) return false;
+            if (sampledTime != localTime)
+            {
+                sampledTime = localTime;
+                samplePhase = 0;
+                Clock.SampleAt(localTime);
+                State = Clock.State == TweenState.Completed ? TweenState.Playing : Clock.State;
+            }
+            if (!Clock.Started) { sampledTime = double.NaN; return true; }
             if (!started)
             {
                 started = true;
                 definition!.OnStart?.Invoke(this);
-                if (!CheckTarget()) return;
+                if (!CheckTarget() || PlaybackInterrupted) return false;
             }
-            var time = Math.Clamp(Progress, 0, 1);
-            var exponent = Clock.Returning ? definition!.Weks : definition!.Skew;
-            if (exponent != 1) time = (float)Math.Pow(time, exponent);
-            var weight = ease!(time);
-            if (!float.IsFinite(weight)) throw new InvalidOperationException("Easing returned a non-finite value.");
-            if (!CheckTarget()) return;
-            var value = relative ? Offset(weight) : definition!.InterpolateValue(from, to, weight);
-            if (!CheckTarget()) return;
-            Apply(value);
-            if (!CheckTarget() || !Clock.Completed) return;
-            if (!definition!.Fill.HasFlag(FillMode.RetainFinalValue)) RestoreInitial();
-            if (CheckTarget()) Finish(Reason.Completed);
+            if (samplePhase == 0)
+            {
+                var time = Math.Clamp(Progress, 0, 1);
+                var exponent = Clock.Returning ? definition!.Weks : definition!.Skew;
+                if (exponent != 1) time = (float)Math.Pow(time, exponent);
+                var weight = ease!(time);
+                if (!float.IsFinite(weight)) throw new InvalidOperationException("Easing returned a non-finite value.");
+                if (!CheckTarget() || PlaybackInterrupted) return false;
+                var value = relative ? Offset(weight) : definition!.InterpolateValue(from, to, weight);
+                if (!CheckTarget() || PlaybackInterrupted) return false;
+                samplePhase = 1;
+                Apply(value);
+                if (!CheckTarget() || PlaybackInterrupted) return false;
+            }
+            if (!Clock.Completed) { sampledTime = double.NaN; return true; }
+            if (samplePhase == 1)
+            {
+                if (!definition!.Fill.HasFlag(FillMode.RetainFinalValue) && !RestoreInitial()) return false;
+                samplePhase = 2;
+                if (!CheckTarget() || PlaybackInterrupted) return false;
+            }
+            Finish(Reason.Completed);
+            return true;
         }
-        catch (Exception error) { Finish(Reason.Cancelled, error); }
+        catch (Exception error) { Finish(Reason.Cancelled, error); return false; }
         finally { EndOperation(); }
     }
 
@@ -336,7 +396,8 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         if (!CheckTarget()) return;
         definition!.WriteValue(Target, value);
         Value = value;
-        if (CheckTarget()) definition!.OnUpdate?.Invoke(this, value);
+        updatePending = true;
+        NotifyUpdate();
     }
 
     // factor * value + delta. The factor scales away from zero; for a quaternion that scales its rotation angle.
@@ -350,7 +411,9 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     private TValue Offset(float weight)
     {
         Follow();
+        if (!CheckTarget() || PlaybackInterrupted) return Value;
         var offset = definition!.InterpolateValue(Offsets<TValue>.Zero, by, weight);
+        if (!CheckTarget() || PlaybackInterrupted) return Value;
         if (!pingPong && Clock.Cycle > 0)
             offset = Offsets<TValue>.Add(definition.InterpolateValue(Offsets<TValue>.Zero, by, (float)Clock.Cycle), offset);
         applied = offset;
@@ -365,21 +428,35 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         if (!EqualityComparer<TValue>.Default.Equals(current, Value)) origin = Offsets<TValue>.Remove(current, applied);
     }
 
-    private void RestoreInitial()
+    private void NotifyUpdate()
     {
-        if (!CheckTarget()) return;
-        // A following By tween takes only its own offset back out.
-        Follow();
-        if (!CheckTarget()) return;
-        var value = follows ? origin : initial;
-        definition!.RestoreValue(Target, value);
-        Value = value;
-        if (CheckTarget()) definition.OnUpdate?.Invoke(this, value);
+        if (!updatePending || !CheckTarget() || PlaybackInterrupted) return;
+        updatePending = false;
+        definition!.OnUpdate?.Invoke(this, Value);
+    }
+
+    private bool RestoreInitial()
+    {
+        if (!CheckTarget() || PlaybackInterrupted) return false;
+        if (!restorePrepared)
+        {
+            // A following By tween takes only its own offset back out.
+            Follow();
+            restoreValue = follows ? origin : initial;
+            restorePrepared = true;
+            if (!CheckTarget() || PlaybackInterrupted) return false;
+        }
+        definition!.RestoreValue(Target, restoreValue);
+        Value = restoreValue;
+        updatePending = true;
+        NotifyUpdate();
+        return true;
     }
 
     protected override void InvokeTerminal(Reason reason, bool faulted)
     {
         var snapshot = definition!;
+        if (!initialized || snapshot is null) return;
         if (snapshot.SuppressCallbacksWhenTargetInvalid &&
             (InvalidTargetOrOwner || reason is Reason.TargetFreed or Reason.OwnerExited)) return;
         Exception? failure = null;
@@ -399,7 +476,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
 
     protected override void Release()
     {
-        try { definition?.ReleaseSnapshot(); }
+        try { if (prepared) definition?.ReleaseSnapshot(); }
         finally
         {
             definition = null;

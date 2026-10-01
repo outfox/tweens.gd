@@ -23,11 +23,11 @@ func pop() -> void:
 
 func squish_button() -> void:
 	if squish != null: squish.cancel()
-	squish = Tweens.play(targets.button, options(Tweens.control_scale([1.3, 0.7], 0.07 * tempo), Out.QUAD))
-	if await Tweens.group([squish]).wait() != Tweens.Reason.COMPLETED:
-		return
-	squish = Tweens.play(targets.button, options(Tweens.control_scale(Vector2.ONE, 0.8 * tempo), Tweens.Ease.ELASTIC_OUT))
-	await Tweens.group([squish]).wait()
+	squish = Tweens.chain(targets.button, [
+		options(Tweens.control_scale([1.3, 0.7], 0.07 * tempo), Out.QUAD),
+		options(Tweens.control_scale(Vector2.ONE, 0.8 * tempo), Tweens.Ease.ELASTIC_OUT),
+	])
+	await squish.end
 
 func flash() -> void:
 	var movement = options(Tweens.control_position([9, 5], 0.4 * tempo), InOut.LINEAR, Vector2.ZERO)

@@ -18,7 +18,7 @@ See [syntax sugar](/csharp/syntax-sugar/#easing-and-delay) for examples.
 | Member | Type | Default | Meaning |
 | --- | --- | --- | --- |
 | `Duration` | `Duration` | `0` | Seconds per leg |
-| `Delay` | `Duration` | `0` | Seconds before the first leg |
+| `Delay` | `Duration` | `0` | Signed gap before the first leg; negative values pre-roll |
 | `Offset` | `Duration` | `0` | Seconds to skip at the start of the first leg |
 | `Repeats` | `int` | `0` | Cycles after the first; `TweenOptions.Infinite` repeats until cancelled |
 | `UsePingPong` | `bool` | `false` | Play each cycle forward, then back |

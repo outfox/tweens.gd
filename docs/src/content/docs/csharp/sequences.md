@@ -1,183 +1,109 @@
 ---
 title: Sequences
-description: Chain, group, stagger, wait, loop, and stop multi-step animations with ordinary async C#.
+description: Link one-target motions with Chains, overlap entries with signed delays, and await completion.
 ---
 
-A sequence is ordinary async C#. Await each step before starting the next, play
-steps together as a group, and add delays between them.
+Use a **Chain** when definitions on one target should share a timeline. Use a
+**Group** for independent tweens playing together. Ordinary awaits coordinate
+completion and other game logic; playback started by a continuation first
+advances on the next eligible scheduler update.
 
-| Goal | Tool |
-| --- | --- |
-| Run B after A | `await a.End`, then start B |
-| Run A and B together | `node.Tween(a, b)` for definitions, or `Group.Of(handleA, handleB)` for tweens already playing; then await the group's `End` |
-| Offset tweens within a step | `Delay` on different targets or properties |
-| Wait between steps | `await node.TweenFloat(1, seconds).End` |
-| Stop the sequence | [Cancel and check the result](/csharp/cancellation/) |
-
-Snippets run in an async Node method with in-tree `sprite` (`Sprite2D`) and
-`label` (`Label`) nodes. They assume `using Godot;`, `using tweens.gd;`, and
-implicit usings for `System`, `System.Linq`, and `System.Threading.Tasks`.
-
-## One step after another
-
-Await each tween before starting the next:
+## Link definitions
 
 ```csharp
-await sprite.TweenPosition((400, 180), 0.6).End;
-await sprite.TweenScale(1.2, 0.2).End;
-await sprite.TweenModulateAlpha(0, 0.3).End;
+var animation = sprite.Chain([
+    new Tweens.Position2D((400, 180), 0.6),
+    new Tweens.Scale2D(Vector2.One * 1.2f, 0.2),
+    new Tweens.ModulateAlpha(0, 0.3),
+]);
+await animation.End;
 ```
 
-Since each definition has no `From`, it continues from wherever the previous
-step left the property.
+`sprite.Chain(definitions, options = default)` snapshots the entire flat list. Each entry links to the previous
+entry's own end. Changing a duration before creating the Chain moves following
+links automatically. Repeats, ping-pong intervals, repeat intervals, and offset
+contribute to that entry's span.
 
-These examples ignore completion reasons. If interruption should stop the sequence,
-check the result before starting the next step; [cancellation](/csharp/cancellation/)
-shows that pattern.
+The first entry captures the target on its first eligible update. Later entries
+capture when they activate, after existing entries have sampled that boundary
+and run their completion callbacks and cleanup. A successor therefore sees the
+preceding endpoint and any changes made by its completion callback.
 
-## Steps that run together
+## Overlap and gaps
 
-A group plays tweens as one step. Start several definitions on one node with
-`node.Tween(first, second, ...)`. It also accepts definitions for the node's base
-types:
+A positive delay captures at the preceding entry's end, then waits before moving.
+A negative delay starts before that end. The next entry follows the overlapped
+entry's own end, even while an earlier tail is still playing:
 
 ```csharp
-var grow = new Tweens.Scale2D(1.2, 0.2);
-var dim = new Tweens.ModulateAlpha(0.5, 0.2);
-await sprite.Tween(grow, dim).End;
+var animation = sprite.Chain([
+    new Tweens.Position2DX(100, 1.0),
+    new Tweens.ModulateAlpha(0, 0.2) { Delay = -0.6 },
+    new Tweens.Scale2D(Vector2.One * 1.2f, 0.1),
+]);
 ```
 
-Group tweens that are already playing, on any targets, with `Group.Of`:
+| Entry | Starts | Ends |
+| --- | --- | --- |
+| Position | 0.0 | 1.0 |
+| Fade | 0.4 | 0.6 |
+| Scale | 0.6 | 0.7 |
 
-```csharp
-var step = Group.Of(sprite.TweenPosition((400, 180), 0.6), label.TweenModulateAlpha(0, 0.6));
-await step.End;
-```
+The Chain completes at 1.0, after every tail ends. When entries write the same
+property, later definitions write last while both are active. An earlier tail
+can become visible again after a later entry completes. Each entry keeps its
+usual fill and relative-value behavior. If signed delays reorder starts, an older
+entry can activate after a later entry. Higher-priority active entries are sampled
+again at that timestamp after activation, preserving capture order and write
+priority; their setters and update callbacks can therefore run again.
 
-A group completes when every member completes. If one member stops early
-(cancelled, freed, or faulted), the group cancels the others and reports that
-member's reason, or faults. `Pause()`, `Resume()`, and `Cancel()` act on every
-member.
+## Pre-roll
 
-:::tip[Prefer a group to `Task.WhenAll`]
-`Task.WhenAll` also waits for several tweens, but it lets the others keep running
-when one stops, and it can hand the next step a slightly wrong start time. See
-[timing between steps](#timing-between-steps).
-:::
+If a signed delay places work before visible time zero, the Chain simulates
+that history on its first eligible update. A one-second first entry with delay
+-0.25 is already 25% through its motion at visible time zero. Crossed lifecycle
+callbacks run chronologically; declaration order resolves simultaneous events.
 
-## Stagger with Delay
+The target's current value at the earliest activation supplies the synthetic
+initial state. External systems are not rewound. Callbacks can have real
+side effects. An entirely past Chain completes on the first eligible update,
+after its hooks and cleanup; its visible duration is zero. Pausing before that
+update defers all preparation, capture, and replay.
 
-`Delay` offsets tweens inside one step, exact to the frame. Combine it with a
-definition and `with` to fade in a whole menu, one item after another:
+Signed delays also work for a standalone tween. Offset selects progress inside
+a leaf; pre-roll executes crossed history in the composed timeline.
 
-```csharp title="Menu.cs"
-public partial class Menu : VBoxContainer
-{
-    static readonly Tweens.ModulateAlpha FadeIn = new()
-    {
-        From = 0,
-        Duration = 0.3,
-        Fill = FillMode.Both,
-    };
+## Control and completion
 
-    public async Task Reveal()
-    {
-        var items = GetChildren().OfType<Control>();
-        var reveals = items.Select((item, i) => item.Tween(FadeIn with { Delay = i * 0.05 }));
-        if (items.Any()) await Group.Of([.. reveals]).End;
-    }
-}
-```
+`Pause()`, `Resume()`, and `Cancel()` control the whole Chain. An active leaf handle passed to a callback
+forwards these controls to its Chain; controls on a terminal leaf do nothing.
+Completion waits for every entry, callback, and release hook. Cancellation,
+owner exit, or failure stops active leaves and discards pending entries without
+preparing them or running their playback or release hooks.
 
-`Fill = FillMode.Both` applies `From` during the delay, so items that are still
-waiting stay hidden instead of showing at full opacity first.
+Pausing inside a callback stops at the current timestamp. Resume finishes that
+boundary without replaying completed hooks. The unused part of the interrupted
+frame is discarded. A long update can visit multiple boundaries and invoke
+setters and update callbacks several times.
 
-:::caution[Stagger different targets, not one property]
-With no `From`, a tween starts from the property's value when you start it,
-before its delay. A delayed tween on the same property therefore snaps it
-back to that value:
+Await `End` to learn when the Chain settles. Check the completion reason
+when later logic depends on success. C# completion faults on detected exceptions;
+GDScript keeps diagnostics in `error` and `errors`. Cancelling a wait leaves
+playback running, using the same wait helpers as individual handles.
 
-```csharp
-// Wrong: the second tween captured From = the start position, not (400, 180).
-sprite.TweenPosition((400, 180), 0.6);
-sprite.TweenPosition((400, 0), 0.4, options => options.Delay = 0.6);
-```
+## Completion-driven logic
 
-Await the first tween instead, give the delayed tween an explicit `From`, or
-move it with [`By`](/csharp/definitions/#move-by-an-offset-with-by), which
-starts from wherever the property is when the tween plays.
-:::
+Ordinary awaits remain useful for conditional work, user input, and transitions
+between different targets. They do not transfer leftover frame time to playback
+started in a callback, signal, task continuation, or late wait. Independent
+roots first sample on their next eligible update.
 
-## Wait between steps
+A Chain currently accepts one target and a flat list, including different
+properties and value types on that target. Multiple targets, nested Chains,
+explicit parallel steps, and repeating a whole Chain are future composition work.
+A final infinitely repeating entry is allowed; a successor after an infinite
+entry is rejected. Empty lists, invalid definitions, and overflowed schedules
+reject before playback.
 
-`TweenFloat` starts a [callback value](/csharp/custom-tweens/#callback-values)
-tween, which writes no property, so `TweenFloat(1, 0.5)` is a half-second wait.
-The `1` is the value it would report, and unused here. The wait follows the same
-pause, time scale, and lifetime rules as the animation around it:
-
-```csharp
-await sprite.TweenPosition((400, 180), 0.6).End;
-await sprite.TweenFloat(1, 0.5).End;
-await sprite.TweenPosition((40, 180), 0.6).End;
-```
-
-:::caution[Avoid `Task.Delay`]
-`Task.Delay` ignores tree pause, `Engine.TimeScale`, and node lifetime. The
-sequence can resume against a paused or freed scene.
-:::
-
-## Loops and cancellation
-
-For one repeating motion, use `Repeats` as described in [timing](/csharp/timing/).
-To repeat a multi-step sequence or stop it when interrupted, see
-[cancellation and completion reasons](/csharp/cancellation/).
-
-## Pause a sequence
-
-`Pause()` on a tween or group pauses only that step. If your code starts the next
-step while that one is paused, the new tweens play normally. To pause every
-current and future step, pause the node the tweens are bound to. With the default
-[pause mode](/csharp/lifetime/#pausing), `TweenPauseMode.Bound`, tweens follow the node's `CanProcess()`:
-
-```csharp
-sprite.ProcessMode = ProcessModeEnum.Disabled; // Pauses every tween bound to sprite.
-sprite.ProcessMode = ProcessModeEnum.Inherit;
-```
-
-Pausing the scene tree also pauses bound tweens, unless their node processes
-while paused.
-
-## Errors
-
-A faulted tween makes its `End` throw when awaited, and a group containing it
-faults too.
-
-:::caution[Catch errors in `async void` callbacks]
-Wrap a sequence in `try`/`catch` when it starts from an `async void` Godot
-callback such as `_Ready`. Otherwise the exception is lost to the
-synchronization context. See [errors](/csharp/playback/#errors).
-:::
-
-## Timing between steps
-
-When a step completes, the code awaiting it resumes immediately, inside the same
-scheduler update. Tweens it starts inherit the time by which the finished step
-overshot its end. They appear from the next frame at exactly the point a gapless
-timeline would put them, so long sequences don't drift. For a group, the time
-comes from the member that finished last.
-
-The handover applies when all of these hold:
-
-- You await the tween's or group's `End` task. With `Task.WhenAll`, the
-  time comes from whichever member the scheduler settled last, which isn't
-  necessarily the last to finish.
-- The next tweens start before the sequence awaits anything else.
-- They use the same `ProcessMode` and time base (`UseUnscaledTime`) as the step
-  they follow.
-- The await resumes inline, which is the default on Godot's main thread. A
-  continuation posted for later, for example from another synchronization
-  context, starts its tweens without the handover.
-
-Tweens started from an `OnEnd` callback continue the finishing tween's timeline in
-the same way. Callbacks can't check a reason as easily as async code, so prefer
-async code for anything longer than a single follow-up.
+See [Chain members](/csharp/api/chains/), [timing](/csharp/timing/),
+and [cancellation](/csharp/cancellation/) for the detailed contract.

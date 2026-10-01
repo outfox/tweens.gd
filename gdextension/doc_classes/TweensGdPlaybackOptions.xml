@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class name="TweensGdPlaybackOptions" inherits="RefCounted" api_type="extension">
+	<brief_description>Clock and pause policy for one playback root.</brief_description>
+	<description>Supplied separately from definitions as the last argument to play, play_all, chain, or scheduler starts. Tweens.playback_options(process_mode, pause_mode, use_unscaled_time) creates it. Settings are snapshotted at the factory; later changes do not affect playback. A Chain uses one policy for all leaves. C# equivalent: PlaybackOptions.</description>
+	<tutorials><link title="Modes">https://tweens.gd/gdscript/api/modes/</link></tutorials>
+	<members>
+		<member name="process_mode" type="int" setter="set_process_mode" getter="get_process_mode" default="0">PROCESS or PHYSICS.</member>
+		<member name="pause_mode" type="int" setter="set_pause_mode" getter="get_pause_mode" default="0">BOUND, SCENE_TREE, or ALWAYS. Explicit pause always applies.</member>
+		<member name="use_unscaled_time" type="bool" setter="set_use_unscaled_time" getter="get_use_unscaled_time" default="false">Ignores Engine.time_scale. Physics uses fixed simulation steps.</member>
+	</members>
+</class>

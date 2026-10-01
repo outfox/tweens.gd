@@ -82,14 +82,22 @@ public class InstanceShaderParameterTests(HeadlessFixture godot)
         using var scope = new SceneScope(godot);
         using var scheduler = new TweenScheduler();
         var node = Node(scope, spatial, Material(scope, spatial));
+        void Reject<T>(Func<TweenInstance> start) where T : Exception
+        {
+            TweenInstance handle;
+            try { handle = start(); }
+            catch (T) { return; }
+            scheduler.Update(0);
+            Assert.IsType<T>(handle.Error);
+        }
         void Rejects<TException>(string parameter, float? from = null, bool vector = false) where TException : Exception
         {
             if (node is CanvasItem canvas)
-                Assert.Throws<TException>(() => vector
+        Reject<TException>(() => vector
                     ? scheduler.Add(canvas, new Tweens.CanvasItemInstanceShaderParameter<Quaternion>(parameter))
                     : scheduler.Add(canvas, new Tweens.CanvasItemInstanceShaderParameter<float>(parameter) { From = from }));
             else
-                Assert.Throws<TException>(() => vector
+                Reject<TException>(() => vector
                     ? scheduler.Add((GeometryInstance3D)node, new Tweens.GeometryInstanceShaderParameter<Quaternion>(parameter))
                     : scheduler.Add((GeometryInstance3D)node, new Tweens.GeometryInstanceShaderParameter<float>(parameter) { From = from }));
         }
@@ -100,8 +108,8 @@ public class InstanceShaderParameterTests(HeadlessFixture godot)
         Rejects<NotSupportedException>("amount", vector: true);
         if (node is CanvasItem item)
         {
-            Assert.Throws<ArgumentException>(() => scheduler.Add(item, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { To = float.NaN }));
-            Assert.Throws<ArgumentException>(() => scheduler.Add(item, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { By = float.NaN }));
+            Reject<ArgumentException>(() => scheduler.Add(item, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { To = float.NaN }));
+            Reject<ArgumentException>(() => scheduler.Add(item, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { By = float.NaN }));
         }
         Assert.Equal(0, scheduler.ActiveCount);
     }
@@ -117,6 +125,7 @@ public class InstanceShaderParameterTests(HeadlessFixture godot)
         TweenInstance tween = node is CanvasItem canvas
             ? scheduler.Add(canvas, new Tweens.CanvasItemInstanceShaderParameter<float>("amount") { To = 1, Duration = 1 })
             : scheduler.Add((GeometryInstance3D)node, new Tweens.GeometryInstanceShaderParameter<float>("amount") { To = 1, Duration = 1 });
+        scheduler.Update(0);
         var replacement = Material(scope, spatial);
         if (node is CanvasItem item) item.Material = replacement;
         else ((GeometryInstance3D)node).MaterialOverride = replacement;

@@ -8,6 +8,21 @@ public class PlaybackTests
     private static Playback Create(TweenOptions options) => new(options);
 
     [Fact]
+    public void ExplicitSamplingDoesNotDependOnPreviousSamples()
+    {
+        var playback = Create(new TweenOptions { Duration = 1, Delay = 0.5 });
+        playback.SampleAt(2);
+        Assert.True(playback.Completed);
+        playback.SampleAt(0.75);
+        Assert.False(playback.Completed);
+        Assert.Equal(0.25f, playback.Progress);
+        playback.SampleAt(0.25);
+        Assert.False(playback.Started);
+        Assert.Equal(TweenState.Delayed, playback.State);
+        Assert.Equal(0, playback.Progress);
+    }
+
+    [Fact]
     public void DelayHoldsTheTimelineUntilItElapses()
     {
         var playback = Create(new TweenOptions { Duration = 1, Delay = 0.5 });
@@ -21,14 +36,13 @@ public class PlaybackTests
     }
 
     [Fact]
-    public void CompletionReportsOvershootAndFinalProgress()
+    public void CompletionReportsFinalProgress()
     {
         var playback = Create(new TweenOptions { Duration = 1 });
         playback.Advance(1.25);
         Assert.True(playback.Completed);
         Assert.Equal(TweenState.Completed, playback.State);
         Assert.Equal(1, playback.Progress);
-        Assert.Equal(0.25, playback.Overshoot, 9);
     }
 
     [Fact]
@@ -108,11 +122,10 @@ public class PlaybackTests
     }
 
     [Fact]
-    public void CreditStartsTheTimelineLater()
+    public void SamplingUsesExplicitLocalTime()
     {
         var playback = Create(new TweenOptions { Duration = 1, Delay = 0.5 });
-        playback.Credit(0.75);
-        playback.Advance(0);
+        playback.SampleAt(0.75);
         Assert.Equal(0.25f, playback.Progress);
     }
 
@@ -142,7 +155,7 @@ public class PlaybackTests
     public void EveryDurationLikeOptionRejectsInvalidValues(double invalid)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { Duration = invalid }));
-        Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { Delay = invalid }));
+        if (!double.IsFinite(invalid)) Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { Delay = invalid }));
         Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { PingPongInterval = invalid }));
         Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { RepeatInterval = invalid }));
         Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { Duration = 1, Offset = invalid }));
@@ -153,8 +166,8 @@ public class PlaybackTests
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { Duration = 1, Offset = 2 }));
         Assert.Throws<ArgumentOutOfRangeException>(() => Create(new TweenOptions { Repeats = -2 }));
-        Assert.Throws<ArgumentException>(() => Create(new TweenOptions { ProcessMode = (TweenProcessMode)7 }));
-        Assert.Throws<ArgumentException>(() => Create(new TweenOptions { PauseMode = (TweenPauseMode)7 }));
+        Assert.Throws<ArgumentException>(() => (new PlaybackOptions { ProcessMode = (TweenProcessMode)7 }).Validate());
+        Assert.Throws<ArgumentException>(() => (new PlaybackOptions { PauseMode = (TweenPauseMode)7 }).Validate());
         Assert.Throws<ArgumentException>(() => Create(new TweenOptions { Fill = (FillMode)4 }));
         Assert.Throws<ArgumentException>(() => Create(new TweenOptions { Repeats = TweenOptions.Infinite }));
     }

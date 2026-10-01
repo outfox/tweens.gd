@@ -18,6 +18,8 @@ public class ShaderDefaultTests(Fixture godot)
         using var material = new ShaderMaterial { Shader = shader };
         using var scheduler = new TweenScheduler();
         var tween = scheduler.Add(material, new Tweens.ShaderParameter<float>("amount") { To = 1, Duration = 1, Fill = FillMode.None });
+        Assert.Equal(0, tween.Value);
+        scheduler.Update(0);
         Assert.Equal(0.25f, tween.Value);
         scheduler.Update(0.5);
         Assert.Equal(0.625f, material.GetShaderParameter("amount").AsSingle());

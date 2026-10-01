@@ -29,6 +29,11 @@
 				valid definition; null creates the default zero-duration clock.
 			</description>
 		</method>
+		<method name="sample_at">
+			<return type="void" />
+			<param index="0" name="local_time" type="float" />
+			<description>Samples a validated timeline at explicit local time. Writes no target values.</description>
+		</method>
 	</methods>
 	<members>
 		<member name="completed" type="bool" setter="" getter="is_completed">
@@ -37,11 +42,8 @@
 		<member name="cycle" type="float" setter="" getter="get_cycle">
 			Zero-based current cycle index.
 		</member>
-		<member name="elapsed" type="float" setter="set_elapsed" getter="get_elapsed">
-			Elapsed seconds, including initial delay. Setting this credits time; call [method advance] to update state.
-		</member>
-		<member name="overshoot" type="float" setter="" getter="get_overshoot">
-			Unused seconds beyond the final cycle in the completing update.
+		<member name="elapsed" type="float" setter="" getter="get_elapsed">
+			Last sampled local time, including any positive inner delay.
 		</member>
 		<member name="progress" type="float" setter="" getter="get_progress">
 			Uneased progress in [code][0, 1][/code]. Decreases on the ping-pong return leg.

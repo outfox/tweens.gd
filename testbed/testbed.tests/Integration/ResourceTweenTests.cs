@@ -72,7 +72,7 @@ public class ResourceTweenTests(HeadlessFixture godot)
         {
             var tree = material.TweenRoughness(1, 1, godot.Tree);
             var bound = material.TweenMetallic(1, 1, godot.Tree, owner: owner);
-            var always = material.TweenMetallicSpecular(1, 1, godot.Tree, d => d.PauseMode = TweenPauseMode.Always);
+            var always = material.TweenMetallicSpecular(1, 1, godot.Tree, playback: new PlaybackOptions { PauseMode = TweenPauseMode.Always });
             godot.Tree.Paused = true;
             var scheduler = TweenRuntime.GetRunner(godot.Tree).Scheduler;
             scheduler.Update(0.5);
@@ -92,6 +92,7 @@ public class ResourceTweenTests(HeadlessFixture godot)
         var material = new StandardMaterial3D(); var calls = 0;
         var tween = scheduler.Add(material, new MaterialRoughnessTween { Duration = 10,
             SuppressCallbacksWhenTargetInvalid = suppress, OnFinally = _ => calls++ });
+        scheduler.Update(0);
         tween.Pause(); material.Dispose(); scheduler.Update(0);
         Assert.Equal(Reason.TargetFreed, await tween.End);
         Assert.Equal(suppress ? 0 : 1, calls);
@@ -189,7 +190,9 @@ public class ResourceTweenTests(HeadlessFixture godot)
         using var scheduler = new TweenScheduler();
         var material = new StandardMaterial3D();
         var released = 0;
-        Assert.Throws<ArgumentException>(() => scheduler.Add(material, new DisposingDefinition(() => released++)));
+        var tween = scheduler.Add(material, new DisposingDefinition(() => released++));
+        scheduler.Update(0);
+        Assert.Equal(Reason.TargetFreed, tween.CompletionReason);
         Assert.Equal(1, released); Assert.Equal(0, scheduler.ActiveCount);
     }
     private sealed class DisposingDefinition(Action release) : TweenDefinition<StandardMaterial3D, float>

@@ -8,7 +8,7 @@ using global::tweens.gd;
 
 namespace Tweens;
 
-/// <summary>Reusable immutable Parallax2DScrollScaleY definition. Each start snapshots configuration and captures the current value.</summary>
+/// <summary>Reusable immutable Parallax2DScrollScaleY definition. Each start snapshots configuration; activation captures the current value.</summary>
 public readonly record struct Parallax2DScrollScaleY : ITweenDefinition<global::Godot.Parallax2D, float>
 {
     /// <summary>Shared timing, easing, and playback modes. Individual option properties forward to this value.</summary>
@@ -35,8 +35,6 @@ public readonly record struct Parallax2DScrollScaleY : ITweenDefinition<global::
     public int @Repeats { get => Options.@Repeats; init => Options = Options with { @Repeats = value }; }
     /// <inheritdoc cref="TweenOptions.UsePingPong"/>
     public bool @UsePingPong { get => Options.@UsePingPong; init => Options = Options with { @UsePingPong = value }; }
-    /// <inheritdoc cref="TweenOptions.UseUnscaledTime"/>
-    public bool @UseUnscaledTime { get => Options.@UseUnscaledTime; init => Options = Options with { @UseUnscaledTime = value }; }
     /// <inheritdoc cref="TweenOptions.Fill"/>
     public global::tweens.gd.FillMode @Fill { get => Options.@Fill; init => Options = Options with { @Fill = value }; }
     /// <inheritdoc cref="TweenOptions.Ease"/>
@@ -53,10 +51,6 @@ public readonly record struct Parallax2DScrollScaleY : ITweenDefinition<global::
     public global::System.Func<float, float>? @EaseFunction { get => Options.@EaseFunction; init => Options = Options with { @EaseFunction = value }; }
     /// <inheritdoc cref="TweenOptions.Curve"/>
     public global::Godot.Curve? @Curve { get => Options.@Curve; init => Options = Options with { @Curve = value }; }
-    /// <inheritdoc cref="TweenOptions.ProcessMode"/>
-    public global::tweens.gd.TweenProcessMode @ProcessMode { get => Options.@ProcessMode; init => Options = Options with { @ProcessMode = value }; }
-    /// <inheritdoc cref="TweenOptions.PauseMode"/>
-    public global::tweens.gd.TweenPauseMode @PauseMode { get => Options.@PauseMode; init => Options = Options with { @PauseMode = value }; }
     /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
     public bool @SuppressCallbacksWhenTargetInvalid { get => Options.@SuppressCallbacksWhenTargetInvalid; init => Options = Options with { @SuppressCallbacksWhenTargetInvalid = value }; }
 

@@ -11,7 +11,7 @@ Definitions such as `Tweens.Position2D` live in the root `Tweens` namespace, so
 they need no `using`.
 
 The GDScript API uses the same model: reusable definitions, independent playback
-handles, groups for parallel steps, and ordinary awaits for sequences.
+handles, groups for parallel steps, and Chains for linked timelines. Awaits wait for completion.
 `node.Tween(a, b)` corresponds to `Tweens.play_all(node, [a, b])`; `Group.Of(a, b)`
 corresponds to `TweensGdGroup.of([a, b])`. Member names map from PascalCase to
 snake_case; `From`, `To`, and `By` become `from_value`, `to_value`, and `by_value`.
@@ -39,6 +39,12 @@ an owner node that decides when it stops. See [materials](/csharp/materials/).
 | `resource.Tween(definition, tree)` | `TweenInstance<TResource, TValue>` | Follow the scene tree's pause and lifetime |
 | `resource.Tween(definition, owner)` | `TweenInstance<TResource, TValue>` | Stop when the owner node leaves the tree |
 | `owner.Tween(resource, definition)` | `TweenInstance<TResource, TValue>` | The same, written owner first |
+
+## Linked playback
+
+`node.Chain(definitions, options = default)` returns a `Chain`. Resource Chains take an owner; manual schedulers expose `AddChain`. Clock policy is supplied as `PlaybackOptions` to single, parallel-list, and Chain starts.
+
+See [Chains](/csharp/api/chains/).
 
 ## Group and cancel
 

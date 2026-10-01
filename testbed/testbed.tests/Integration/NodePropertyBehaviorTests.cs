@@ -24,10 +24,10 @@ public class NodePropertyBehaviorTests(HeadlessFixture godot)
         foreach (var definition in definitions)
         {
             var value = definition.BaseType!.GetGenericArguments()[1];
-            var configured = Assert.Single(typeof(TweenExtensions).GetMethods(), m => m.GetParameters().Length == 4 &&
+            var configured = Assert.Single(typeof(TweenExtensions).GetMethods(), m => m.GetParameters().Length == 5 &&
                 m.GetParameters()[3].ParameterType == typeof(Action<>).MakeGenericType(definition) &&
                 m.GetParameters()[1].ParameterType == (value == typeof(float) ? typeof(double) : value));
-            var parameters = configured.GetParameters().Take(3).Select(p => p.ParameterType).Append(typeof(TweenOptions));
+            var parameters = configured.GetParameters().Take(3).Select(p => p.ParameterType).Append(typeof(TweenOptions)).Append(typeof(PlaybackOptions));
             Assert.NotNull(typeof(TweenExtensions).GetMethod(configured.Name, parameters.ToArray()));
         }
     }

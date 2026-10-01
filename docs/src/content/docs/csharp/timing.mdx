@@ -57,7 +57,7 @@ All times are double-precision seconds.
 | --- | --- | --- |
 | `Duration` | `0` | Seconds per leg. Zero completes on the first eligible update. |
 | `FactorDuration`, `DeltaDuration` | `1`, `0` | Scale and shift `Duration` for [variations](/csharp/variations/): the tween lasts `FactorDuration × Duration + DeltaDuration`. |
-| `Delay` | `0` | Initial wait before the first leg. |
+| `Delay` | `0` | Signed gap before the first leg; negative values pre-roll. |
 | `FactorDelay`, `DeltaDelay` | `1`, `0` | Scale and shift `Delay` for [variations](/csharp/variations/), such as a stagger: the tween waits `FactorDelay × Delay + DeltaDelay`. |
 | `Repeats` | `0` | Cycles after the first. `TweenOptions.Infinite` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
 | `UsePingPong` | `false` | A forward and a backward leg form one cycle. |
@@ -71,7 +71,7 @@ and one 0.3-second gap. Drag the timeline to see each phase:
 
 <TimingLab />
 
-Negative and non-finite values are rejected. A long frame advances to the correct
+Non-finite times and negative durations, intervals, and offsets are rejected. A long frame advances to the correct
 phase, even across several cycles, without losing time at boundaries, but it
 doesn't replay the callbacks of the cycles it skipped.
 
@@ -98,6 +98,8 @@ restoration also preserves whether an explicit override existed (see
 
 ## Process and physics
 
+These fields belong to `PlaybackOptions`, supplied at the start call. Definitions contain motion settings only.
+
 `ProcessMode` defaults to `TweenProcessMode.Process`. Choose
 `TweenProcessMode.Physics` to update with physics instead. The automatic runner
 uses process and physics priority `1000`, so it runs after nodes with default
@@ -113,3 +115,5 @@ Neither option changes pause or ownership rules.
 A handle's `Progress` is the current leg's position from 0 to 1, before easing. It
 runs backwards during a ping-pong return, and it isn't the fraction of all cycles
 completed.
+
+Signed delays place Chain entries relative to the preceding entry's end; see [Chains](/csharp/sequences/).

@@ -72,7 +72,6 @@ public class DurationTests
             expected.Advance(0.125);
             Assert.Equal(expected.Progress, actual.Progress);
             Assert.Equal(expected.State, actual.State);
-            Assert.Equal(expected.Overshoot, actual.Overshoot);
         }
         Assert.True(actual.Completed);
     }
@@ -84,7 +83,7 @@ public class DurationTests
         var definition = new Tweens.Property<Box, float>(b => b.Value, (b, value) => b.Value = value,
             Interpolators.Float, 10, TimeSpan.FromSeconds(1), delay: TimeSpan.FromMilliseconds(250));
         var scaled = scheduler.Add(new Box(), definition);
-        var unscaled = scheduler.Add(new Box(), definition with { UseUnscaledTime = true });
+        var unscaled = scheduler.Add(new Box(), definition with {  }, new PlaybackOptions { UseUnscaledTime = true });
         scheduler.Update(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(750));
         Assert.Equal(2.5f, scaled.Value);
         Assert.Equal(5f, unscaled.Value);

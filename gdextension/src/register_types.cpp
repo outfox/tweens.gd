@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 #include "awaiting.hpp"
+#include "chain.hpp"
 #include "common.hpp"
 #include "definition.hpp"
 #include "easing.hpp"
@@ -9,6 +10,7 @@
 #include "handle.hpp"
 #include "interpolation.hpp"
 #include "playback.hpp"
+#include "playback_options.hpp"
 #include "runner.hpp"
 #include "scheduler.hpp"
 
@@ -24,6 +26,8 @@ static void initialize_tweens_gd(ModuleInitializationLevel p_level) {
 	}
 	tweens::initialize();
 	GDREGISTER_CLASS(TweensGdDefinition);
+	GDREGISTER_CLASS(TweensGdPlaybackOptions);
+	GDREGISTER_ABSTRACT_CLASS(TweensGdChain);
 	GDREGISTER_CLASS(TweensGdScheduler);
 	GDREGISTER_CLASS(TweensGdCancellation);
 	// Created by the engine, never with new().

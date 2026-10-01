@@ -291,7 +291,8 @@ public class StructuredDefinitionTests
         using var scheduler = new TweenScheduler();
         var box = new Box();
         ITweenDefinition<Box> untyped = movement;
-        var tween = untyped.AddTo(scheduler, box);
+        var tween = untyped.Snapshot(scheduler, box, null, null, default);
+        scheduler.Enroll(tween);
         scheduler.Update(0.5);
         Assert.Equal(5, box.Value);
         Assert.IsType<TweenInstance<Box, float>>(tween);

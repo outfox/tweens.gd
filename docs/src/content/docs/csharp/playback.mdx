@@ -54,10 +54,10 @@ sprite.Tween(arrive with
 
 They run in this order:
 
-1. `OnAdd` when the tween is added.
+1. `OnAdd` at activation after capture.
 2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
 3. `OnStart` once, when the delay ends and playback begins.
-4. `OnUpdate` once per eligible frame with the sampled value, plus once more when
+4. `OnUpdate` at each sampled timeline boundary and eligible update, plus once more when
    completion [restores the initial value](/csharp/timing/#fill-and-restoration).
 5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.
 6. `OnFinally` in every case, including faults.
@@ -95,3 +95,5 @@ there, and ordinary Godot async code keeps its synchronization context.
 You have finished the five-step tutorial. Explore [easing](/csharp/easing/) to
 shape motion, [timing and loops](/csharp/timing/) for repeating animations, or the
 [property catalog](/csharp/nodes/) to find something else to animate.
+
+Starting snapshots configuration; capture and `OnAdd` occur at activation. Completion includes release hooks. Use a [Chain](/csharp/sequences/) for linked timing; callbacks and waits create independent roots with no frame-time inheritance.

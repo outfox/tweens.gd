@@ -20,7 +20,7 @@ public static partial class TweenExtensions
     }
 
     // The explicit duration argument takes precedence over options.Duration.
-    private static TDefinition ApplyOptions<TDefinition>(TDefinition definition, TweenOptions options)
+    private static TDefinition ApplyOptions<TDefinition>(TDefinition definition, TweenOptions options, PlaybackOptions playback = default)
         where TDefinition : TweenOptionsBuilder
     {
         var duration = definition.Duration;

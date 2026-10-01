@@ -75,9 +75,13 @@ public class AdjustmentTests
         // A delay that comes only from the delta still applies From while waiting.
         var filled = new Box { Value = 4 };
         scheduler.Add(filled, new PlainTween { From = 0, To = 8, Duration = 1, DeltaDelay = 1, Fill = FillMode.Both });
+        Assert.Equal(4, filled.Value);
+        scheduler.Update(0);
         Assert.Equal(0, filled.Value);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box, new PlainTween { Delay = 1, DeltaDelay = -2 }));
+        var signed = scheduler.Add(box, new PlainTween { To = 8, Duration = 2, Delay = 1, DeltaDelay = -2 });
+        scheduler.Update(0);
+        Assert.Equal(6.5f, signed.Value);
         Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box, new PlainTween { Delay = 1, FactorDelay = double.NaN }));
         Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Add(box, new PlainTween { DeltaDelay = double.PositiveInfinity }));
     }

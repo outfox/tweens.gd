@@ -21,8 +21,8 @@ bool is_null(const Variant &p_value) {
 } // namespace
 
 void TweensGdScheduler::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("add", "target", "definition", "owner"), &TweensGdScheduler::add, DEFVAL(Variant()));
-	ClassDB::bind_method(D_METHOD("add_all", "target", "definitions", "owner"), &TweensGdScheduler::add_all, DEFVAL(Variant()));
+	ClassDB::bind_method(D_METHOD("add", "target", "definition", "owner", "options"), &TweensGdScheduler::add, DEFVAL(Variant()), DEFVAL(Ref<TweensGdPlaybackOptions>()));
+	ClassDB::bind_method(D_METHOD("add_all", "target", "definitions", "owner", "options"), &TweensGdScheduler::add_all, DEFVAL(Variant()), DEFVAL(Ref<TweensGdPlaybackOptions>()));
 	ClassDB::bind_method(D_METHOD("update", "delta", "unscaled_delta", "mode"), &TweensGdScheduler::update, DEFVAL(-1.0),
 			DEFVAL(LANE_PROCESS));
 	ClassDB::bind_method(D_METHOD("cancel_all"), &TweensGdScheduler::cancel_all);
@@ -31,14 +31,20 @@ void TweensGdScheduler::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_last_error"), &TweensGdScheduler::get_last_error);
 	ClassDB::bind_method(D_METHOD("get_active_count"), &TweensGdScheduler::get_active_count);
 	ClassDB::bind_method(D_METHOD("is_disposed"), &TweensGdScheduler::is_disposed);
-	ClassDB::bind_static_method("TweensGdScheduler", D_METHOD("_has_carry"), &TweensGdScheduler::has_carry);
+	ClassDB::bind_method(D_METHOD("add_chain", "target", "definitions", "owner", "options"), &TweensGdScheduler::add_chain, DEFVAL(Variant()), DEFVAL(Ref<TweensGdPlaybackOptions>()));
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "last_error"), "", "get_last_error");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "active_count"), "", "get_active_count");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_disposed"), "", "is_disposed");
 	ADD_SIGNAL(MethodInfo("error_reported", PropertyInfo(Variant::STRING, "message")));
 }
 
-Ref<TweensGdHandle> TweensGdScheduler::add(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner) {
+Ref<TweensGdHandle> TweensGdScheduler::add(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
+	auto handle = make_handle(p_target, p_definition, p_owner, p_options, true);
+	return handle;
+}
+
+Ref<TweensGdHandle> TweensGdScheduler::make_handle(const Variant &p_target, const Ref<TweensGdDefinition> &p_definition,
+		const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options, bool p_enroll) {
 	if (!require_main_thread()) {
 		return TweensGdHandle::rejected("Use tweens.gd on Godot's main thread.");
 	}
@@ -56,6 +62,10 @@ Ref<TweensGdHandle> TweensGdScheduler::add(const Variant &p_target, const Ref<Tw
 	const String validation = p_definition->validate();
 	if (!validation.is_empty()) {
 		return reject(validation);
+	}
+	const PlaybackPolicy policy = p_options.is_valid() ? p_options->snapshot() : PlaybackPolicy();
+	if (!policy.validate().is_empty()) {
+		return reject(policy.validate());
 	}
 	const bool has_owner = !is_null(p_owner);
 	Object *target = p_target.get_validated_object();
@@ -91,107 +101,161 @@ Ref<TweensGdHandle> TweensGdScheduler::add(const Variant &p_target, const Ref<Tw
 		}
 	} owned{ p_definition->get_settings().snapshot() };
 	TweenSettings &snapshot = *owned.settings;
+	if (disposed) {
+		return reject("The scheduler was disposed while copying the definition.", &snapshot);
+	}
 	// The snapshot runs the adapter's overridable copy(), which can free the target or owner.
 	if (lifetime_ended()) {
 		return reject("The target or owner became invalid while copying the definition.", &snapshot);
 	}
-	if (!snapshot.target_class.is_empty() && !target->is_class(snapshot.target_class)) {
-		return reject(vformat("This definition requires a %s target.", snapshot.target_class));
-	}
-	if (snapshot.adapter.is_valid()) {
-		const String preparation = hook_error(snapshot.adapter->call(names().prepare, p_target), "prepare");
-		if (!preparation.is_empty()) {
-			return reject(preparation, &snapshot);
-		}
-	}
-	if (lifetime_ended()) {
-		return reject("The target or owner became invalid during adapter preparation.", &snapshot);
-	}
-	Variant initial;
-	if (snapshot.adapter.is_valid()) {
-		initial = snapshot.adapter->call(names().read, p_target);
-	} else {
-		initial = snapshot.property.is_empty() ? snapshot.initial_value : TweensGdInterpolation::read_property(target, snapshot.property);
-	}
-	if (lifetime_ended()) {
-		return reject("The target or owner became invalid while reading the property.", &snapshot);
-	}
-	if (snapshot.adapter.is_null() && !TweensGdInterpolation::supported(initial)) {
-		return reject("The property is missing or its value type is unsupported.");
-	}
-	if (snapshot.value_type != Variant::NIL && initial.get_type() != snapshot.value_type) {
-		return reject("The captured value does not match the definition's value type.", &snapshot);
-	}
-	for (Variant *endpoint : { &snapshot.from_value, &snapshot.to_value, &snapshot.by_value, &snapshot.delta_from,
-				 &snapshot.delta_to, &snapshot.delta_by }) {
-		*endpoint = TweensGdInterpolation::coerce(*endpoint, initial.get_type());
-	}
-	const bool adjusts[3] = {
-		snapshot.factor_from != 1.0 || !is_null(snapshot.delta_from),
-		snapshot.factor_to != 1.0 || !is_null(snapshot.delta_to),
-		snapshot.factor_by != 1.0 || !is_null(snapshot.delta_by),
-	};
-	if ((!is_null(snapshot.by_value) || adjusts[0] || adjusts[1] || adjusts[2]) && is_null(TweensGdInterpolation::zero(initial.get_type()))) {
-		return reject("by_value, factors and deltas need an int, float, vector, Color, Quaternion or Rect2 value.", &snapshot);
-	}
-	for (const Variant *endpoint : { &initial, &snapshot.from_value, &snapshot.to_value, &snapshot.by_value, &snapshot.delta_from,
-				 &snapshot.delta_to, &snapshot.delta_by }) {
-		if (is_null(*endpoint) && !is_null(initial)) {
-			continue;
-		}
-		const String endpoint_error = check_endpoint(snapshot, initial, *endpoint);
-		if (!endpoint_error.is_empty()) {
-			return reject(endpoint_error, &snapshot);
-		}
-	}
-	// Apply factor * value + delta once. An adjusted endpoint becomes explicit, so an adjusted start is fixed.
-	Variant *fields[3] = { &snapshot.from_value, &snapshot.to_value, &snapshot.by_value };
-	const double factors[3] = { snapshot.factor_from, snapshot.factor_to, snapshot.factor_by };
-	const Variant *deltas[3] = { &snapshot.delta_from, &snapshot.delta_to, &snapshot.delta_by };
-	for (int index = 0; index < 3; index++) {
-		if (!adjusts[index]) {
-			continue;
-		}
-		Variant adjusted = is_null(*fields[index]) ? initial : *fields[index];
-		if (factors[index] != 1.0) {
-			const Variant zero = TweensGdInterpolation::zero(initial.get_type());
-			if (snapshot.adapter.is_valid()) {
-				snapshot.adapter->set(names().captured_type, int64_t(initial.get_type()));
-				adjusted = snapshot.adapter->call(names().interpolate, zero, adjusted, factors[index]);
-			} else {
-				adjusted = TweensGdInterpolation::interpolate(zero, adjusted, factors[index], initial.get_type());
-			}
-			if (!TweensGdInterpolation::compatible(initial, adjusted)) {
-				return reject("A factor changed the value type.", &snapshot);
-			}
-		}
-		if (!is_null(*deltas[index])) {
-			adjusted = TweensGdInterpolation::add(adjusted, *deltas[index]);
-		}
-		const String adjusted_error = check_endpoint(snapshot, initial, adjusted);
-		if (!adjusted_error.is_empty()) {
-			return reject(adjusted_error, &snapshot);
-		}
-		*fields[index] = adjusted;
-	}
-	// Custom validation can reenter and invalidate the target/owner too.
-	if (lifetime_ended()) {
-		return reject("The target or owner became invalid during validation.", &snapshot);
+	if (p_definition->get_settings().adapter.is_valid() && snapshot.adapter.is_null()) {
+		return reject("The adapter copy must return an adapter.", &snapshot);
 	}
 	SceneTree *tree = owner != nullptr ? owner->get_tree() : nullptr;
-	const Ref<TweensGdHandle> instance = TweensGdHandle::start(this, p_target, owned.settings, initial, owner, tree);
+	const auto instance = TweensGdHandle::start(this, p_target, owned.settings, owner, tree, policy);
 	owned.settings = nullptr;
-	instance->clock.elapsed = carry::credit(ObjectID(get_instance_id()), instance->mode, instance->unscaled, ticks[instance->mode]);
-	if (disposed) {
-		instance->finish(REASON_RUNNER_DISPOSED);
+	instance->plan = std::make_unique<ExecutionPlan>(instance.ptr());
+	LocalVector<Ref<TweensGdHandle>> leaves;
+	leaves.push_back(instance);
+	const String schedule_error = instance->plan->compile(leaves, false);
+	if (!schedule_error.is_empty()) {
+		instance->fail(schedule_error);
 		return instance;
 	}
-	instances.push_back(instance);
-	instance->initialize_playback();
+	if (p_enroll) {
+		instances.push_back(instance);
+		instance->bind_lifetime();
+	}
 	return instance;
 }
 
-Ref<TweensGdGroup> TweensGdScheduler::add_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner) {
+String TweensGdScheduler::prepare_handle(TweensGdHandle &handle) {
+	TweenSettings &settings = *handle.options;
+	auto eligible = [&]() { return handle.check_target() && handle.can_advance(); };
+	if (handle.binding_phase == 0) {
+		handle.adapter = settings.adapter;
+		if (!settings.target_class.is_empty() && !handle.target_object->is_class(settings.target_class)) {
+			return vformat("This definition requires a %s target.", settings.target_class);
+		}
+		handle.binding_phase = 1;
+		if (settings.adapter.is_valid()) {
+			const String error = hook_error(settings.adapter->call(names().prepare, handle.target), "prepare");
+			if (!error.is_empty()) {
+				return error;
+			}
+		}
+		if (!eligible()) {
+			return String();
+		}
+	}
+	if (handle.binding_phase == 1) {
+		handle.binding_phase = 2;
+		handle.binding_initial = settings.adapter.is_valid() ? settings.adapter->call(names().read, handle.target)
+				: settings.property.is_empty()				 ? settings.initial_value
+															 : TweensGdInterpolation::read_property(handle.target_object, settings.property);
+		if (!eligible()) {
+			return String();
+		}
+	}
+	const Variant &initial = handle.binding_initial;
+	const bool adjusts[3] = {
+		settings.factor_from != 1.0 || !is_null(settings.delta_from),
+		settings.factor_to != 1.0 || !is_null(settings.delta_to),
+		settings.factor_by != 1.0 || !is_null(settings.delta_by),
+	};
+	if (handle.binding_phase == 2) {
+		if (settings.adapter.is_null() && !TweensGdInterpolation::supported(initial)) {
+			return "The property is missing or its value type is unsupported.";
+		}
+		if (settings.value_type != Variant::NIL && initial.get_type() != settings.value_type) {
+			return "The captured value does not match the definition's value type.";
+		}
+		for (Variant *endpoint : { &settings.from_value, &settings.to_value, &settings.by_value,
+					 &settings.delta_from, &settings.delta_to, &settings.delta_by }) {
+			*endpoint = TweensGdInterpolation::coerce(*endpoint, initial.get_type());
+		}
+		if ((!is_null(settings.by_value) || adjusts[0] || adjusts[1] || adjusts[2]) &&
+				is_null(TweensGdInterpolation::zero(initial.get_type()))) {
+			return "by_value, factors and deltas need an int, float, vector, Color, Quaternion or Rect2 value.";
+		}
+		handle.binding_phase = 3;
+	}
+	if (handle.binding_phase == 3) {
+		const Variant *endpoints[] = { &initial, &settings.from_value, &settings.to_value, &settings.by_value,
+			&settings.delta_from, &settings.delta_to, &settings.delta_by };
+		while (handle.binding_index < 7) {
+			const Variant &endpoint = *endpoints[handle.binding_index++];
+			if (is_null(endpoint) && !is_null(initial)) {
+				continue;
+			}
+			const String error = check_endpoint(settings, initial, endpoint);
+			if (!error.is_empty()) {
+				return error;
+			}
+			if (!eligible()) {
+				return String();
+			}
+		}
+		handle.binding_index = 0;
+		handle.binding_phase = 4;
+	}
+	if (handle.binding_phase == 4) {
+		Variant *fields[] = { &settings.from_value, &settings.to_value, &settings.by_value };
+		const double factors[] = { settings.factor_from, settings.factor_to, settings.factor_by };
+		const Variant *deltas[] = { &settings.delta_from, &settings.delta_to, &settings.delta_by };
+		while (handle.binding_index < 3) {
+			const int i = handle.binding_index;
+			if (!adjusts[i]) {
+				handle.binding_index++;
+				continue;
+			}
+			if (handle.adjustment_phase == 0) {
+				handle.binding_adjusted = is_null(*fields[i]) ? initial : *fields[i];
+				handle.adjustment_phase = 1;
+				if (factors[i] != 1.0) {
+					const Variant zero = TweensGdInterpolation::zero(initial.get_type());
+					if (settings.adapter.is_valid()) {
+						settings.adapter->set(names().captured_type, int64_t(initial.get_type()));
+						handle.binding_adjusted = settings.adapter->call(names().interpolate, zero, handle.binding_adjusted, factors[i]);
+					} else {
+						handle.binding_adjusted = TweensGdInterpolation::interpolate(zero, handle.binding_adjusted, factors[i], initial.get_type());
+					}
+					if (!TweensGdInterpolation::compatible(initial, handle.binding_adjusted)) {
+						return "A factor changed the value type.";
+					}
+				}
+				if (!eligible()) {
+					return String();
+				}
+			}
+			if (handle.adjustment_phase == 1) {
+				if (!is_null(*deltas[i])) {
+					handle.binding_adjusted = TweensGdInterpolation::add(handle.binding_adjusted, *deltas[i]);
+				}
+				handle.adjustment_phase = 2;
+				const String error = check_endpoint(settings, initial, handle.binding_adjusted);
+				if (!error.is_empty()) {
+					return error;
+				}
+				if (!eligible()) {
+					return String();
+				}
+			}
+			*fields[i] = handle.binding_adjusted;
+			handle.adjustment_phase = 0;
+			handle.binding_index++;
+		}
+		handle.binding_phase = 5;
+	}
+	if (handle.binding_phase == 5) {
+		handle.bind_values(initial);
+		handle.binding_initial = handle.binding_adjusted = Variant();
+		handle.binding_phase = 6;
+	}
+	return String();
+}
+
+Ref<TweensGdGroup> TweensGdScheduler::add_all(const Variant &p_target, const Variant &p_definitions, const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
 	if (!require_main_thread()) {
 		return TweensGdGroup::of(Array::make(TweensGdHandle::rejected("Use tweens.gd on Godot's main thread.")));
 	}
@@ -208,7 +272,7 @@ Ref<TweensGdGroup> TweensGdScheduler::add_all(const Variant &p_target, const Var
 	}
 	Array handles;
 	for (int64_t index = 0; index < definitions.size(); index++) {
-		const Ref<TweensGdHandle> handle = add(p_target, definitions[index], p_owner);
+		const Ref<TweensGdHandle> handle = add(p_target, definitions[index], p_owner, p_options);
 		handles.push_back(handle);
 		if (handle->get_completion_reason() == REASON_FAILED) {
 			break;
@@ -240,17 +304,22 @@ void TweensGdScheduler::update(double p_delta, double p_unscaled_delta, int64_t 
 		return;
 	}
 	updating = true;
-	ticks[p_mode] += 1;
 	const uint32_t count = instances.size();
 	for (uint32_t index = 0; index < count; index++) {
 		if (disposed) {
 			break;
 		}
 		// The vector keeps its references for the whole update; callbacks may still move its storage.
-		TweensGdHandle *instance = instances[index].ptr();
+		const WorkItem item = instances[index];
+		TweensGdHandle *instance = control(item);
 		// Lifetime checks run even for paused tweens and the other process lane.
 		if (instance->check_target() && instance->mode == p_mode && instance->can_advance()) {
-			instance->advance(instance->unscaled ? p_unscaled_delta : p_delta);
+			const double delta = instance->unscaled ? p_unscaled_delta : p_delta;
+			if (const auto *chain = std::get_if<Ref<TweensGdChain>>(&item)) {
+				(*chain)->advance(delta);
+			} else {
+				instance->advance(delta);
+			}
 		}
 	}
 	updating = false;
@@ -262,9 +331,9 @@ void TweensGdScheduler::cancel_all() {
 		return;
 	}
 	const Ref<TweensGdScheduler> keep(this);
-	const LocalVector<Ref<TweensGdHandle>> snapshot(instances);
-	for (const Ref<TweensGdHandle> &instance : snapshot) {
-		instance->cancel();
+	const LocalVector<WorkItem> snapshot(instances);
+	for (const WorkItem &item : snapshot) {
+		control(item)->cancel();
 	}
 	if (!updating) {
 		compact();
@@ -279,10 +348,11 @@ void TweensGdScheduler::cancel_owner(Node *p_owner, bool p_include_children) {
 	const ObjectID owner_id(p_owner->get_instance_id());
 	// Cancel callbacks can free the owner, so every match is decided before any playback is cancelled.
 	LocalVector<Ref<TweensGdHandle>> matches;
-	for (const Ref<TweensGdHandle> &instance : instances) {
+	for (const WorkItem &item : instances) {
+		TweensGdHandle *instance = control(item);
 		Node *instance_owner = instance->get_owner_node();
 		if (instance->owner_id == owner_id || (p_include_children && instance_owner != nullptr && p_owner->is_ancestor_of(instance_owner))) {
-			matches.push_back(instance);
+			matches.push_back(Ref<TweensGdHandle>(instance));
 		}
 	}
 	for (const Ref<TweensGdHandle> &instance : matches) {
@@ -299,9 +369,9 @@ void TweensGdScheduler::dispose() {
 	}
 	const Ref<TweensGdScheduler> keep(this);
 	disposed = true;
-	const LocalVector<Ref<TweensGdHandle>> snapshot(instances);
-	for (const Ref<TweensGdHandle> &instance : snapshot) {
-		instance->finish(REASON_RUNNER_DISPOSED);
+	const LocalVector<WorkItem> snapshot(instances);
+	for (const WorkItem &item : snapshot) {
+		control(item)->finish(REASON_RUNNER_DISPOSED);
 	}
 	if (!updating) {
 		instances.clear();
@@ -310,7 +380,8 @@ void TweensGdScheduler::dispose() {
 
 int64_t TweensGdScheduler::get_active_count() const {
 	int64_t count = 0;
-	for (const Ref<TweensGdHandle> &instance : instances) {
+	for (const WorkItem &item : instances) {
+		TweensGdHandle *instance = control(item);
 		if (!instance->is_terminal()) {
 			count++;
 		}
@@ -326,14 +397,68 @@ void TweensGdScheduler::report_error(const String &p_message) {
 	}
 }
 
-bool TweensGdScheduler::has_carry() {
-	return carry::is_active();
+TweensGdHandle *TweensGdScheduler::control(const WorkItem &p_item) {
+	if (const auto *single = std::get_if<Ref<TweensGdHandle>>(&p_item)) {
+		return single->ptr();
+	}
+	return std::get<Ref<TweensGdChain>>(p_item)->root.ptr();
+}
+
+Ref<TweensGdChain> TweensGdScheduler::add_chain(const Variant &p_target, const Variant &p_definitions,
+		const Variant &p_owner, const Ref<TweensGdPlaybackOptions> &p_options) {
+	const Ref<TweensGdScheduler> keep(this);
+	if (!require_main_thread()) {
+		return TweensGdChain::rejected("Use tweens.gd on Godot's main thread.");
+	}
+	const auto reject_chain = [&](const String &message) {
+		report_error(message);
+		return TweensGdChain::rejected(message);
+	};
+	if (p_definitions.get_type() != Variant::ARRAY || Array(p_definitions).is_empty()) {
+		return reject_chain("A Chain needs a nonempty Array of definitions.");
+	}
+	const Array definitions = p_definitions;
+	for (int64_t i = 0; i < definitions.size(); i++) {
+		if (Object::cast_to<TweensGdDefinition>(definitions[i].get_validated_object()) == nullptr) {
+			return reject_chain("Every Chain entry must be a definition.");
+		}
+	}
+	Ref<TweensGdDefinition> empty;
+	empty.instantiate();
+	Ref<TweensGdChain> chain;
+	chain.instantiate();
+	chain->root = make_handle(p_target, empty, p_owner, p_options, false);
+	if (chain->root->is_terminal()) {
+		return TweensGdChain::rejected(chain->root->error);
+	}
+	chain->root->plan.reset();
+	LocalVector<Ref<TweensGdHandle>> leaves;
+	for (int64_t i = 0; i < definitions.size(); i++) {
+		auto leaf = make_handle(p_target, definitions[i], p_owner, p_options, false);
+		leaf->plan.reset();
+		if (leaf->is_terminal()) {
+			return TweensGdChain::rejected(leaf->error);
+		}
+		leaf->coordinator_id = ObjectID(chain->get_instance_id());
+		leaves.push_back(leaf);
+	}
+	chain->plan = std::make_unique<ExecutionPlan>(chain->root.ptr());
+	const String failure = chain->plan->compile(leaves, true);
+	if (!failure.is_empty()) {
+		return reject_chain(failure);
+	}
+	chain->root->coordinator_id = ObjectID(chain->get_instance_id());
+	chain->root->coordinator_root = true;
+	chain->root->connect(names().ended, callable_mp(chain.ptr(), &TweensGdChain::on_ended));
+	instances.push_back(chain);
+	chain->root->bind_lifetime();
+	return chain;
 }
 
 void TweensGdScheduler::compact() {
 	uint32_t kept = 0;
 	for (uint32_t index = 0; index < instances.size(); index++) {
-		if (!instances[index]->is_terminal()) {
+		if (!control(instances[index])->is_terminal()) {
 			if (kept != index) {
 				instances[kept] = instances[index];
 			}
@@ -363,12 +488,6 @@ String TweensGdScheduler::check_endpoint(const TweenSettings &p_snapshot, const 
 
 Ref<TweensGdHandle> TweensGdScheduler::reject(const String &p_message, const TweenSettings *p_snapshot) {
 	String message = p_message;
-	if (p_snapshot != nullptr && p_snapshot->adapter.is_valid()) {
-		const String cleanup = hook_error(p_snapshot->adapter->call(names().release), "release");
-		if (!cleanup.is_empty()) {
-			message += "\n" + cleanup;
-		}
-	}
 	report_error(message);
 	return TweensGdHandle::rejected(message);
 }

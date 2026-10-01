@@ -12,8 +12,8 @@ public class TweenOptionsTests
     private static TweenOptions Everything() => new()
     {
         Duration = 1.5, FactorDuration = 2, DeltaDuration = -0.5, Delay = 0.25, FactorDelay = 3, DeltaDelay = 0.125, PingPongInterval = 0.5, RepeatInterval = 0.75, Offset = 0.125, Repeats = 3,
-        UsePingPong = true, UseUnscaledTime = true, Fill = FillMode.Both, Ease = EaseType.BounceOut,
-        Skew = 2, Weks = 0.5, EaseFunction = Ease, ProcessMode = TweenProcessMode.Physics, PauseMode = TweenPauseMode.Always,
+        UsePingPong = true, Fill = FillMode.Both, Ease = EaseType.BounceOut,
+        Skew = 2, Weks = 0.5, EaseFunction = Ease,
         SuppressCallbacksWhenTargetInvalid = true,
     };
 
@@ -60,15 +60,12 @@ public class TweenOptionsTests
         Assert.Equal((Duration)0.125, builder.Offset);
         Assert.Equal(3, builder.Repeats);
         Assert.True(builder.UsePingPong);
-        Assert.True(builder.UseUnscaledTime);
         Assert.Equal(FillMode.Both, builder.Fill);
         Assert.Equal(EaseType.BounceOut, builder.Ease);
         Assert.Equal(2, builder.Skew);
         Assert.Equal(0.5, builder.Weks);
         Assert.Same(Ease, builder.EaseFunction);
         Assert.Null(builder.Curve);
-        Assert.Equal(TweenProcessMode.Physics, builder.ProcessMode);
-        Assert.Equal(TweenPauseMode.Always, builder.PauseMode);
         Assert.True(builder.SuppressCallbacksWhenTargetInvalid);
         Assert.Equal(options, builder.ToOptions());
     }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SPDX-License-Identifier: MIT -->
+<!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
+<class name="TweensGdChain" inherits="RefCounted" api_type="extension">
+	<brief_description>A linked timeline of definitions on one target.</brief_description>
+	<description>Created by Tweens.chain(target, definitions, owner, options) or TweensGdScheduler.add_chain. A signed delay links to the previous entry's own end; negative gaps overlap. Completion waits for all tails. Entries capture at activation after existing writes and completion callbacks. Negative starts pre-roll crossed lifecycle hooks chronologically on the first eligible update. Pause and cancellation control the root, including through active leaf handles. Pending discarded entries run no playback or prepare/release hooks. C# equivalent: Chain. Multiple-target and nested composition are not supported.</description>
+	<tutorials><link title="Chains">https://tweens.gd/gdscript/sequences/</link></tutorials>
+	<methods>
+		<method name="pause"><return type="void" /><description>Controls the entire Chain.</description></method>
+		<method name="resume"><return type="void" /><description>Controls the entire Chain.</description></method>
+		<method name="cancel"><return type="void" /><description>Controls the entire Chain.</description></method>
+		<method name="wait"><return type="Variant" /><param index="0" name="cancellation" type="TweensGdCancellation" default="null" /><description>Waits for settlement. Cancellation affects only this wait.</description></method>
+	</methods>
+	<members>
+		<member name="end" type="Variant" setter="" getter="get_end">The ended signal while running, or the stored reason after settlement.</member>
+		<member name="completion_reason" type="int" setter="" getter="get_completion_reason">Stored terminal reason, NONE while running.</member>
+		<member name="error" type="String" setter="" getter="get_error">Detected errors, joined with newlines.</member>
+		<member name="errors" type="Array[String]" setter="" getter="get_errors">A copy of individual leaf diagnostics.</member>
+		<member name="elapsed" type="float" setter="" getter="get_elapsed">Visible consumed time, clamped at zero during pre-roll.</member>
+		<member name="duration" type="float" setter="" getter="get_duration">Last scheduled end, clamped at zero; may be infinite.</member>
+		<member name="entry_count" type="int" setter="" getter="get_entry_count">Number of authored entries.</member>
+		<member name="active_count" type="int" setter="" getter="get_active_count">Unfinished active entries.</member>
+		<member name="pending_count" type="int" setter="" getter="get_pending_count">Entries not yet activated. Zero once terminal.</member>
+		<member name="is_terminal" type="bool" setter="" getter="is_terminal">True when stopped.</member>
+		<member name="is_settled" type="bool" setter="" getter="is_settled">True after all callbacks and cleanup.</member>
+		<member name="is_paused" type="bool" setter="" getter="is_paused">Explicit root pause.</member>
+	</members>
+	<signals><signal name="ended"><param index="0" name="reason" type="int" /><description>Emitted once after settlement. Prefer awaiting end, which also works after completion.</description></signal></signals>
+</class>

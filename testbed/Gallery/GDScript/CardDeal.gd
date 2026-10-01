@@ -56,11 +56,12 @@ class FlipCompletion:
 		return successful
 
 func flip(card: Dictionary, delay: float, face_up: bool, completion: FlipCompletion) -> void:
-	if await Tweens.play(card.body, options(Tweens.scale_2d_x(0.0, 0.1 * tempo), In.QUAD, null, delay)).wait() != Tweens.Reason.COMPLETED:
-		completion.finish(false)
-		return
-	show_face(card, face_up)
-	var result = await Tweens.play(card.body, options(Tweens.scale_2d_x(1.0, 0.22 * tempo), Tweens.Ease.BACK_OUT)).wait()
+	var fold = options(Tweens.scale_2d_x(0.0, 0.1 * tempo), In.QUAD, null, delay)
+	fold.on_end = func(_h): show_face(card, face_up)
+	var result = await Tweens.chain(card.body, [
+		fold,
+		options(Tweens.scale_2d_x(1.0, 0.22 * tempo), Tweens.Ease.BACK_OUT),
+	]).end
 	completion.finish(result == Tweens.Reason.COMPLETED)
 
 func spread() -> bool:

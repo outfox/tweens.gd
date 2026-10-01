@@ -17,7 +17,7 @@ public sealed partial class JellyButton : GalleryEffect
     private Line2D burst = null!;
     private Polygon2D[] shards = [];
     private Label bonus = null!, score = null!;
-    private TweenInstance? squish;
+    private Chain? squish;
     private float total, shown;
 
     public override string Title => "Jelly Button";

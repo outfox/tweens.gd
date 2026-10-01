@@ -46,7 +46,7 @@ func check_end() -> void:
 		scheduler.update(0.75)
 		scheduler.update(0.0)
 		host.check(after.size() == 1, "end continues a sequence")
-		host.near(after[0].value, 0.25, "end preserves sequence overshoot")
+		host.near(after[0].value, 0.0, "end starts an independent root")
 	scheduler.dispose()
 
 func run(owner: Node) -> bool:
@@ -77,7 +77,7 @@ func run(owner: Node) -> bool:
 	scheduler.update(0.5)
 	host.check(completing.cancelled.get_connections().is_empty(), "successful wait releases token subscription")
 	scheduler.update(0.0)
-	host.near(after[0].value, 0.25, "token-aware waits preserve continuation overshoot")
+	host.near(after[0].value, 0.0, "token-aware waits start an independent root")
 	var definitions := [T.value(0.0, 1.0, 1.0), T.value(0.0, 2.0, 2.0)]
 	var batch := scheduler.add_all(RefCounted.new(), definitions)
 	scheduler.update(2.0)
@@ -88,7 +88,7 @@ func run(owner: Node) -> bool:
 	var invalid := scheduler.add_all(RefCounted.new(), [definition, null])
 	host.check(invalid.is_settled and invalid.completion_reason == T.Reason.FAILED and starts.is_empty(), "multi-start validates array before running callbacks")
 	var failed := scheduler.add_all(RefCounted.new(), [definition, T.value(0.0, 1.0, -1.0), definition])
-	host.check(failed.is_settled and failed.completion_reason == T.Reason.FAILED and starts.size() == 1, "failed multi-start cancels preceding siblings and stops starting definitions")
+	host.check(failed.is_settled and failed.completion_reason == T.Reason.FAILED and starts.is_empty(), "failed multi-start cancels preceding siblings and stops starting definitions")
 	scheduler.dispose()
 	# Exercise automatic resource playback bound to the SceneTree itself.
 	var resource := Gradient.new()

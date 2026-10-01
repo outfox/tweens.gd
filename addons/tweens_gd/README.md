@@ -30,8 +30,9 @@ with `./scripts/Pack-Addon.ps1` from the repository root.
 
 Both languages use the same model: a **definition** describes one motion, a
 **playback handle** controls one start, a **group** controls a parallel step, and a
-**sequence** is ordinary awaits. Factories configure definitions; starting them
-snapshots configuration and captures the current value before any delay.
+**Chain** links a flat list on one target. Starting snapshots configuration;
+preparation, capture, and `on_add` happen on the first eligible update or Chain activation,
+before any positive delay. Ordinary awaits coordinate completion and game logic.
 
 | Operation | C# | GDScript |
 | --- | --- | --- |
@@ -40,6 +41,7 @@ snapshots configuration and captures the current value before any delay.
 | Start one tween | `sprite.Tween(move)` | `Tweens.play(sprite, move)` |
 | Start a parallel step | `sprite.Tween(move, fade)` | `Tweens.play_all(sprite, [move, fade])` |
 | Group existing handles | `Group.Of(a, b)` | `TweensGdGroup.of([a, b])` |
+| Link definitions | `sprite.Chain([move, fade])` | `Tweens.chain(sprite, [move, fade])` |
 | Await a step | `await handle.End` | `await handle.end` |
 | Control playback | `Pause()`, `Resume()`, `Cancel()` | `pause()`, `resume()`, `cancel()` |
 | Configure endpoints | `From`, `To`, `By` | `from_value`, `to_value`, `by_value` |
@@ -75,7 +77,7 @@ run `godot --headless --editor --import` once to populate the script-class cache
 
 `property(path, to, seconds, easing, delay)` and `value(from, to, seconds, easing, delay)`
 create mutable `TweensGdDefinition` objects; everything after `to` is optional.
-`play(target, definition, owner = null)` snapshots the configuration and always
+`play(target, definition, owner = null, options = null)` snapshots the configuration and always
 returns a `TweensGdHandle`. Change a definition for future starts without changing
 existing playback; `definition.copy()` creates a separate configuration. Curves are
 duplicated; Callables and their captured objects are shared references.
@@ -94,8 +96,7 @@ Tweens.play(third, arrive.with_delay(0.2).with_duration(1.0))
 There is one per configuration field: `with_from`, `with_to`, `with_initial_value`,
 `with_duration`, `with_delay`, `with_offset`, `with_repeats`, `with_ping_pong`,
 `with_ping_pong_interval`, `with_repeat_interval`, `with_fill`, `with_ease`,
-`with_skew`, `with_weks`, `with_ease_function`, `with_curve`, `with_process_mode`,
-`with_pause_mode`, `with_unscaled_time`, `with_suppress_callbacks_when_target_invalid`,
+`with_skew`, `with_weks`, `with_ease_function`, `with_curve`, `with_suppress_callbacks_when_target_invalid`,
 and `with_on_add` through `with_on_finally`.
 
 Node targets must be inside the tree and use their own lifetime. Resource/Object
@@ -151,7 +152,7 @@ optional value components, such as `position:x`, `modulate:a`, or `region_rect:s
 Paths cannot cross into another Object/resource or traverse nodes. Pass that
 object as the target with an owner instead.
 
-The initial property value is captured at start, before `on_add`. With no
+The initial property value is captured at activation, before `on_add`. With no
 `from_value` or `to_value`, the tween uses that value for that endpoint. An empty
 property path creates a callback-only tween; with no `from_value` or `to_value`,
 it uses `initial_value` (default `0.0`) for that endpoint.
@@ -199,10 +200,13 @@ Legacy `Tweens.Ease` names retain their old shapes. The [easing composer](https:
 
 ## Timing configuration
 
+Motion fields belong to definitions. The three clock fields below belong to
+separately supplied playback options.
+
 | Field | Default and behavior |
 | --- | --- |
 | `duration` | `0.0`; seconds per leg; zero completes on the first eligible update |
-| `delay` | `0.0`; initial wait, preserving unused delta |
+| `delay` | `0.0`; signed gap; negative values overlap or pre-roll |
 | `offset` | `0.0`; seconds into the first leg, between zero and duration; delay comes first |
 | `repeats` | `0`; cycles after the first; `Tweens.INFINITE` (`-1`) repeats until cancelled |
 | `use_ping_pong` | `false`; forward and return legs form one cycle |
@@ -218,7 +222,8 @@ Legacy `Tweens.Ease` names retain their old shapes. The [easing composer](https:
 | `use_unscaled_time` | `false`; automatic process uses monotonic ticks; physics uses `1 / Engine.physics_ticks_per_second` |
 | `suppress_callbacks_when_target_invalid` | `false`; optionally suppress terminal callbacks for invalid targets/owners |
 
-Timing must be finite and nonnegative. Infinite zero-time cycles are rejected.
+Times must be finite. Durations, intervals, and offsets must be nonnegative;
+delays may be signed. Infinite zero-time cycles are rejected.
 Large deltas skip cycles arithmetically. `progress` is the current leg position,
 reversing on return, rather than overall completion. A sample at an exact cycle
 boundary displays the previous endpoint. Skipped cycles do not synthesize callbacks.
@@ -385,11 +390,8 @@ An empty array or a non-handle member logs an error and returns an already-settl
 null. Groups contain playback handles; definitions must be started with `play()`
 or `scheduler.add()` first.
 
-Successful inline group continuations inherit the overshoot of the member that
-finished last: the latest update, then the smallest overshoot within that update.
-Every member and the continuation must share a scheduler, process lane and time
-scale. Mixed-clock groups and interrupted groups carry no overshoot. New playback
-still first samples on the next eligible update.
+Independent playback created by callbacks or waits first samples on the next eligible
+update with no inherited frame time. Use a Chain for linked timing.
 
 ## Manual scheduling and diagnostics
 
@@ -427,3 +429,45 @@ to C# exception tasks, runtime target/value checks in place of C# generics, and
 GDScript's numeric representations. Wider browser/device coverage and performance
 profiling remain future work; the accepted 1,000-tween baseline has not been retuned.
 The GDScript runtime remains independent of the bundled C# implementation.
+
+## Chains and playback policy
+
+```gdscript
+var animation := Tweens.chain(sprite, [
+    Tweens.position_2d([100, 0], 1.0),
+    Tweens.modulate_alpha(0.0, 0.2).with_delay(-0.6),
+    Tweens.scale_2d([1.2, 1.2], 0.1),
+])
+await animation.end
+```
+
+Each delay links to the previous entry's own end. These entries occupy [0, 1],
+[0.4, 0.6], and [0.6, 0.7]; completion waits until 1 for the earlier tail.
+Later definitions write last during overlap. New entries capture after existing
+entries have sampled their activation boundary and completed callbacks and cleanup.
+Positive gaps capture before waiting. Signed delays also work for standalone playback.
+
+Negative starts pre-roll from the earliest activation on the first eligible update.
+Crossed lifecycle callbacks run chronologically with definition-order ties, using
+the current target state as synthetic history. Pausing before that update defers it.
+Entirely past Chains complete on their first eligible update with duration zero.
+
+Pause/resume/cancel control the whole Chain, including through an active leaf
+callback handle. Interrupted updates discard unused delta. Pending entries cancelled
+before activation run no playback or prepare/release hooks. Completion waits for
+callbacks and cleanup. `entry_count`, `active_count`, `pending_count`, `elapsed`, and
+`duration` expose inspection data. Dropping a controller does not cancel it.
+V1 has one target and a flat list; multiple-target composition and explicit
+parallel steps remain future work.
+
+Clock settings belong to `PlaybackOptions` in C# and `TweensGdPlaybackOptions`
+in GDScript, supplied to each start independently of reusable motion definitions:
+
+```gdscript
+var clock := Tweens.playback_options(Tweens.Process.PHYSICS, Tweens.Pause.BOUND, true)
+Tweens.chain(sprite, definitions, null, clock)
+```
+
+C#: `sprite.Chain(definitions, new PlaybackOptions { ProcessMode = TweenProcessMode.Physics })`.
+Resource C#: `material.Chain(definitions, owner, options)`.
+Manual schedulers expose `AddChain` / `add_chain`.

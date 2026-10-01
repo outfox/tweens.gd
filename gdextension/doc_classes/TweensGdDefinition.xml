@@ -275,14 +275,6 @@
 				[code]definition with { OnUpdate = value }[/code].
 			</description>
 		</method>
-		<method name="with_pause_mode" qualifiers="const">
-			<return type="TweensGdDefinition" />
-			<param index="0" name="mode" type="int" />
-			<description>
-				Returns a copy with [member pause_mode] changed. The original definition is unchanged. C# equivalent:
-				[code]definition with { PauseMode = value }[/code].
-			</description>
-		</method>
 		<method name="with_ping_pong" qualifiers="const">
 			<return type="TweensGdDefinition" />
 			<param index="0" name="enabled" type="bool" default="true" />
@@ -297,14 +289,6 @@
 			<description>
 				Returns a copy with [member ping_pong_interval] changed. The original definition is unchanged. C#
 				equivalent: [code]definition with { PingPongInterval = value }[/code].
-			</description>
-		</method>
-		<method name="with_process_mode" qualifiers="const">
-			<return type="TweensGdDefinition" />
-			<param index="0" name="mode" type="int" />
-			<description>
-				Returns a copy with [member process_mode] changed. The original definition is unchanged. C# equivalent:
-				[code]definition with { ProcessMode = value }[/code].
 			</description>
 		</method>
 		<method name="with_repeat_interval" qualifiers="const">
@@ -347,14 +331,6 @@
 				[code]definition with { To = value }[/code].
 			</description>
 		</method>
-		<method name="with_unscaled_time" qualifiers="const">
-			<return type="TweensGdDefinition" />
-			<param index="0" name="enabled" type="bool" default="true" />
-			<description>
-				Returns a copy with [member use_unscaled_time] changed. The original definition is unchanged. C#
-				equivalent: [code]definition with { UseUnscaledTime = value }[/code].
-			</description>
-		</method>
 		<method name="with_weks" qualifiers="const">
 			<return type="TweensGdDefinition" />
 			<param index="0" name="exponent" type="float" />
@@ -385,7 +361,7 @@
 			[member ease_function].
 		</member>
 		<member name="delay" type="float" setter="set_delay" getter="get_delay" default="0.0">
-			Wait before the first leg, in seconds. Defaults to zero; initial values are captured before it.
+			Signed gap before the first leg. Positive values wait after capture; negative values overlap or pre-roll.
 		</member>
 		<member name="delta_by" type="Variant" setter="set_delta_by" getter="get_delta_by" default="null">
 			Added to the by value at start, after [member factor_by]. Null means no adjustment. Requires
@@ -421,7 +397,7 @@
 		</member>
 		<member name="factor_delay" type="float" setter="set_factor_delay" getter="get_factor_delay" default="1.0">
 			Scales [member delay] once at start: [code]factor_delay * delay + delta_delay[/code]. Defaults to 1; the
-			result must be finite and nonnegative.
+			result must be finite. Negative delays overlap or pre-roll.
 		</member>
 		<member name="factor_duration" type="float" setter="set_factor_duration" getter="get_factor_duration" default="1.0">
 			Scales [member duration] once at start: [code]factor_duration * duration + delta_duration[/code]. Defaults
@@ -441,8 +417,8 @@
 			concurrent property changes removes only its own offset when restoring.
 		</member>
 		<member name="from_value" type="Variant" setter="set_from_value" getter="get_from_value" default="null">
-			Start value. If the definition has no [member from_value], it uses the value captured at start,
-			before the delay. C# equivalent: [code]From[/code].
+			Start value. If the definition has no [member from_value], it uses the value captured at activation,
+			before any positive delay. C# equivalent: [code]From[/code].
 		</member>
 		<member name="initial_value" type="Variant" setter="set_initial_value" getter="get_initial_value" default="0.0">
 			Initial value for callback-only definitions that have neither a property nor an adapter. Defaults to 0.0;
@@ -452,7 +428,7 @@
 			Start this many seconds into the first leg, after the delay. Must not exceed the adjusted duration.
 		</member>
 		<member name="on_add" type="Callable" setter="set_on_add" getter="get_on_add" default="Callable()">
-			Called once when playback is added, before any delay fill is applied. Receives the handle.
+			Called once at activation after capture, before any delay fill is applied. Receives the handle.
 		</member>
 		<member name="on_cancel" type="Callable" setter="set_on_cancel" getter="get_on_cancel" default="Callable()">
 			Called when playback stops early without a fault, such as cancellation or owner exit. Receives the handle.
@@ -471,15 +447,8 @@
 		<member name="on_update" type="Callable" setter="set_on_update" getter="get_on_update" default="Callable()">
 			Called after each value write, including delay fill. Receives the handle and value.
 		</member>
-		<member name="pause_mode" type="int" setter="set_pause_mode" getter="get_pause_mode" default="0">
-			Follow the owner (BOUND), scene tree (SCENE_TREE), or neither (ALWAYS) when paused. Uses
-			[code]Tweens.Pause[/code]; defaults to BOUND. Explicit handle pauses always apply.
-		</member>
 		<member name="ping_pong_interval" type="float" setter="set_ping_pong_interval" getter="get_ping_pong_interval" default="0.0">
 			Hold between the forward and return legs, in seconds. Defaults to zero.
-		</member>
-		<member name="process_mode" type="int" setter="set_process_mode" getter="get_process_mode" default="0">
-			Update on process or physics ticks. Uses [code]Tweens.Process[/code]; defaults to PROCESS.
 		</member>
 		<member name="property" type="NodePath" setter="set_property" getter="get_property" default="NodePath(&quot;&quot;)">
 			Property or component path on the target, such as [code]^"position:x"[/code]. Cannot cross Objects or
@@ -508,9 +477,6 @@
 		</member>
 		<member name="use_ping_pong" type="bool" setter="set_use_ping_pong" getter="get_use_ping_pong" default="false">
 			Return to the start after each forward leg. Duration applies to each leg; defaults to false.
-		</member>
-		<member name="use_unscaled_time" type="bool" setter="set_use_unscaled_time" getter="get_use_unscaled_time" default="false">
-			Use the scheduler's unscaled delta instead of its scaled delta. Defaults to false.
 		</member>
 		<member name="value_type" type="int" setter="set_value_type" getter="get_value_type" default="0">
 			Captured value type checked at start. TYPE_NIL disables the type check. Named helpers set it automatically.

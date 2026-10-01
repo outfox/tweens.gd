@@ -90,10 +90,10 @@ public readonly record struct TweenOptions
     public double FactorDuration { get => factorDuration ?? 1; init => factorDuration = value == 1 ? null : value; }
     /// <summary>Added to <see cref="Duration"/> at start, after <see cref="FactorDuration"/>.</summary>
     public Duration DeltaDuration { get; init; }
-    /// <summary>Wait before the first leg, in seconds. Defaults to zero; initial values are captured before it.</summary>
+    /// <summary>Signed gap before the first leg. Positive values wait after capture; negative values overlap or pre-roll.</summary>
     public Duration Delay { get; init; }
     private readonly double? factorDelay;
-    /// <summary>Scales <see cref="Delay"/> at start: the tween waits FactorDelay * Delay + DeltaDelay.</summary>
+    /// <summary>Scales the signed gap at start: FactorDelay * Delay + DeltaDelay.</summary>
     public double FactorDelay { get => factorDelay ?? 1; init => factorDelay = value == 1 ? null : value; }
     /// <summary>Added to <see cref="Delay"/> at start, after <see cref="FactorDelay"/>.</summary>
     public Duration DeltaDelay { get; init; }
@@ -107,8 +107,6 @@ public readonly record struct TweenOptions
     public int Repeats { get; init; }
     /// <summary>Return to the start after each forward leg. Duration applies to each leg; defaults to false.</summary>
     public bool UsePingPong { get; init; }
-    /// <summary>Use the scheduler's unscaled delta instead of its scaled delta. Defaults to false.</summary>
-    public bool UseUnscaledTime { get; init; }
     private readonly FillMode fill;
     // Encode the default so default(TweenOptions) and new TweenOptions() behave identically.
     /// <summary>Value behavior during delay and after natural completion. Defaults to RetainFinalValue.</summary>
@@ -130,10 +128,6 @@ public readonly record struct TweenOptions
     public Func<float, float>? EaseFunction { get; init; }
     /// <summary>Custom progress-to-weight curve instead of Ease. Copied per playback; mutually exclusive with EaseFunction.</summary>
     public Godot.Curve? Curve { get; init; }
-    /// <summary>Update on process or physics ticks. Defaults to Process.</summary>
-    public TweenProcessMode ProcessMode { get; init; }
-    /// <summary>Follow the owner, the scene tree, or neither when paused. Defaults to Bound.</summary>
-    public TweenPauseMode PauseMode { get; init; }
     /// <summary>Skip callbacks after the target or owner becomes invalid. Defaults to false.</summary>
     public bool SuppressCallbacksWhenTargetInvalid { get; init; }
 
@@ -150,7 +144,6 @@ public readonly record struct TweenOptions
         target.Offset = Offset;
         target.Repeats = Repeats;
         target.UsePingPong = UsePingPong;
-        target.UseUnscaledTime = UseUnscaledTime;
         target.Fill = Fill;
         target.Ease = Ease;
         target.BlendType = BlendType;
@@ -159,8 +152,6 @@ public readonly record struct TweenOptions
         target.Weks = Weks;
         target.EaseFunction = EaseFunction;
         target.Curve = Curve;
-        target.ProcessMode = ProcessMode;
-        target.PauseMode = PauseMode;
         target.SuppressCallbacksWhenTargetInvalid = SuppressCallbacksWhenTargetInvalid;
     }
 }
@@ -193,8 +184,6 @@ public class TweenOptionsBuilder
     public int Repeats { get; set; }
     /// <inheritdoc cref="TweenOptions.UsePingPong"/>
     public bool UsePingPong { get; set; }
-    /// <inheritdoc cref="TweenOptions.UseUnscaledTime"/>
-    public bool UseUnscaledTime { get; set; }
     /// <inheritdoc cref="TweenOptions.Fill"/>
     public FillMode Fill { get; set; } = FillMode.RetainFinalValue;
     /// <inheritdoc cref="TweenOptions.Ease"/>
@@ -211,10 +200,6 @@ public class TweenOptionsBuilder
     public Func<float, float>? EaseFunction { get; set; }
     /// <inheritdoc cref="TweenOptions.Curve"/>
     public Godot.Curve? Curve { get; set; }
-    /// <inheritdoc cref="TweenOptions.ProcessMode"/>
-    public TweenProcessMode ProcessMode { get; set; }
-    /// <inheritdoc cref="TweenOptions.PauseMode"/>
-    public TweenPauseMode PauseMode { get; set; }
     /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
     public bool SuppressCallbacksWhenTargetInvalid { get; set; }
 
@@ -231,7 +216,6 @@ public class TweenOptionsBuilder
         Offset = Offset,
         Repeats = Repeats,
         UsePingPong = UsePingPong,
-        UseUnscaledTime = UseUnscaledTime,
         Fill = Fill,
         Ease = Ease,
         BlendType = BlendType,
@@ -240,8 +224,6 @@ public class TweenOptionsBuilder
         Weks = Weks,
         EaseFunction = EaseFunction,
         Curve = Curve,
-        ProcessMode = ProcessMode,
-        PauseMode = PauseMode,
         SuppressCallbacksWhenTargetInvalid = SuppressCallbacksWhenTargetInvalid,
     };
 }
@@ -252,6 +234,9 @@ internal sealed class Playback
     private readonly bool pingPong;
     private readonly int repeats;
     private double elapsed;
+    internal double Gap => delay;
+    internal double InnerDelay => Math.Max(0, delay);
+    internal double Remaining => total - offset;
     internal float Progress { get; private set; }
     /// <summary>True on the ping-pong return leg and its final hold.</summary>
     internal bool Returning { get; private set; }
@@ -259,8 +244,6 @@ internal sealed class Playback
     internal double Cycle { get; private set; }
     internal bool Started { get; private set; }
     internal bool Completed { get; private set; }
-    /// <summary>Time past the end of the timeline in the completing update.</summary>
-    internal double Overshoot { get; private set; }
     internal TweenState State { get; private set; } = TweenState.Delayed;
     /// <summary>Whether the adjusted delay is longer than zero.</summary>
     internal bool HasDelay => delay > 0;
@@ -272,10 +255,11 @@ internal sealed class Playback
         if (!double.IsFinite(options.FactorDuration)) throw new ArgumentOutOfRangeException(nameof(options.FactorDuration));
         if (!double.IsFinite(options.DeltaDuration)) throw new ArgumentOutOfRangeException(nameof(options.DeltaDuration));
         duration =Nonnegative(options.FactorDuration * options.Duration + options.DeltaDuration, nameof(options.Duration));
-        Nonnegative(options.Delay, nameof(options.Delay));
+        if (!double.IsFinite(options.Delay)) throw new ArgumentOutOfRangeException(nameof(options.Delay));
         if (!double.IsFinite(options.FactorDelay)) throw new ArgumentOutOfRangeException(nameof(options.FactorDelay));
         if (!double.IsFinite(options.DeltaDelay)) throw new ArgumentOutOfRangeException(nameof(options.DeltaDelay));
-        delay = Nonnegative(options.FactorDelay * options.Delay + options.DeltaDelay, nameof(options.Delay));
+        delay = options.FactorDelay * options.Delay + options.DeltaDelay;
+        if (!double.IsFinite(delay)) throw new ArgumentOutOfRangeException(nameof(options.Delay));
         turn = Nonnegative(options.PingPongInterval, nameof(options.PingPongInterval));
         var repeat = Nonnegative(options.RepeatInterval, nameof(options.RepeatInterval));
         offset = Nonnegative(options.Offset, nameof(options.Offset));
@@ -285,8 +269,7 @@ internal sealed class Playback
             throw new ArgumentOutOfRangeException(nameof(options.Weks), "Weks must be finite and greater than zero.");
         if (offset > duration) throw new ArgumentOutOfRangeException(nameof(options.Offset));
         if (options.Repeats < TweenOptions.Infinite) throw new ArgumentOutOfRangeException(nameof(options.Repeats));
-        if (!Enum.IsDefined(options.ProcessMode) || !Enum.IsDefined(options.PauseMode) ||
-            (options.Fill & ~FillMode.Both) != 0)
+        if ((options.Fill & ~FillMode.Both) != 0)
             throw new ArgumentException("Invalid tween mode.", nameof(options));
         pingPong = options.UsePingPong;
         repeats = options.Repeats;
@@ -300,8 +283,6 @@ internal sealed class Playback
             throw new ArgumentException("An infinite tween must have a nonzero cycle duration.", nameof(options));
     }
 
-    /// <summary>Starts the timeline this many seconds in, e.g. where a predecessor's timeline ended.</summary>
-    internal void Credit(double seconds) => elapsed = seconds;
 
     internal static double Nonnegative(double value, string name)
     {
@@ -309,19 +290,23 @@ internal sealed class Playback
         return value;
     }
 
-    internal void Advance(double delta)
+    internal void Advance(double delta) => SampleAt(Math.Min(double.MaxValue, elapsed + delta));
+
+    internal void SampleAt(double localTime)
     {
-        // Saturation also makes extremely large finite deltas well-defined.
-        elapsed = Math.Min(double.MaxValue, elapsed + delta);
-        if (elapsed < delay) return;
+        elapsed = localTime;
+        Started = Completed = Returning = false;
+        Progress = 0;
+        Cycle = 0;
+        State = TweenState.Delayed;
+        if (elapsed < InnerDelay) return;
         Started = true;
-        var time = Math.Min(double.MaxValue, elapsed - delay + offset);
+        var time = Math.Min(double.MaxValue, elapsed - InnerDelay + offset);
         if (time >= total)
         {
             Returning = pingPong;
             Progress = pingPong ? 0 : 1;
             Cycle = repeats;
-            Overshoot = time - total;
             Completed = true;
             State = TweenState.Completed;
             return;

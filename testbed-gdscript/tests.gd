@@ -8,6 +8,7 @@ const RUNNER_KEY := &"_tweens_gd_runner"
 const CLOSING_KEY := &"_tweens_gd_closing"
 const ErrorCollector = preload("error_collector.gd")
 const Benchmark = preload("benchmark.gd")
+const ChainTests = preload("chain_tests.gd")
 const GroupTests = preload("group_tests.gd")
 const AdapterTests = preload("adapter_tests.gd")
 const ShaderTests = preload("shader_tests.gd")
@@ -95,8 +96,9 @@ func run_tests() -> void:
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
+	check(ChainTests.new().run(self), "chain suite returned normally")
 	if trace_runs: print("suite: groups and adapters")
-	await _await_and_carry()
+	await _await_independent_roots()
 	check(await GroupTests.new().run(self) == true, "group suite returned normally")
 	check(AdapterTests.new().run(self), "adapter suite returned normally")
 	check(FXTests.new().run(self), "FX suite returned normally")
@@ -115,12 +117,11 @@ func _conformance() -> bool:
 		for key in test.options: definition.set(key, test.options[key])
 		check(definition.validate().is_empty(), test.name + " validates")
 		var clock := TweensGdPlayback.create(definition)
-		clock.elapsed = test.get("credit", 0.0)
+		if test.has("local_time"): clock.sample_at(test.local_time)
 		for sample in test.samples:
 			clock.advance(sample.delta)
 			near(clock.progress, sample.progress, test.name)
 			check(clock.state == int(sample.state), test.name + " state")
-			if sample.has("overshoot"): near(clock.overshoot, sample.overshoot, test.name + " overshoot")
 			if sample.has("cycle"): near(clock.cycle, sample.cycle, test.name + " cycle")
 	for sample in data.easing:
 		near(T.Easing.evaluate(int(sample.ease), sample.t), sample.value, "ease %d" % sample.ease)
@@ -295,47 +296,52 @@ func _composed_easing() -> void:
 func _constants(script: Script) -> Dictionary:
 	return script.get_script_constant_map()
 
+func _activated_add(scheduler: TweensGdScheduler, target: Variant, definition: TweensGdDefinition, owner: Variant = null) -> TweensGdHandle:
+	var handle := scheduler.add(target, definition, owner)
+	scheduler.update(0.0)
+	return handle
+
 func _validation() -> bool:
 	var scheduler := TweensGdScheduler.new()
 	var target := RefCounted.new()
 	for field in ["duration", "delay", "offset", "ping_pong_interval", "repeat_interval"]:
-		for invalid in [-1.0, INF, NAN]:
+		for invalid in ([INF, NAN] if field == "delay" else [-1.0, INF, NAN]):
 			var definition := T.value(0.0, 1.0, 1.0)
 			definition.set(field, invalid)
-			check(scheduler.add(target, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
+			check(_activated_add(scheduler, target, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
 	for pair in [["offset", 2.0], ["repeats", -2], ["skew", 0.0], ["skew", INF],
-			["fill", 4], ["ease", 999], ["pause_mode", 99], ["process_mode", 99]]:
+			["fill", 4], ["ease", 999]]:
 		var definition := T.value(0.0, 1.0, 1.0)
 		definition.set(pair[0], pair[1])
-		check(scheduler.add(target, definition).completion_reason == T.Reason.FAILED, "reject " + pair[0])
+		check(_activated_add(scheduler, target, definition).completion_reason == T.Reason.FAILED, "reject " + pair[0])
 	for field in ["skew", "weks"]:
 		for invalid in [0.0, -1.0, INF, -INF, NAN]:
 			var probe := ResourceProbe.new()
 			probe.when_read = func(): check(false, "invalid exponent must not read target")
 			var definition := T.property(^"amount", 1.0, 1.0)
 			definition.set(field, invalid)
-			check(scheduler.add(probe, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
+			check(_activated_add(scheduler, probe, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
 	var zero := T.value(0.0, 1.0)
 	zero.repeats = T.INFINITE
-	check(scheduler.add(target, zero).completion_reason == T.Reason.FAILED, "reject zero infinite timeline")
-	check(scheduler.add(target, T.value(Vector2.ZERO, Color.WHITE, 1.0)).completion_reason == T.Reason.FAILED, "reject mixed types")
-	check(scheduler.add(target, T.value([], [], 1.0)).completion_reason == T.Reason.FAILED, "reject shared mutable endpoints")
-	check(scheduler.add(target, T.value(Quaternion(0, 0, 0, 0), Quaternion.IDENTITY)).completion_reason == T.Reason.FAILED, "reject zero quaternion")
-	check(scheduler.add(target, T.property(^"missing", 1.0)).completion_reason == T.Reason.FAILED, "reject missing property")
+	check(_activated_add(scheduler, target, zero).completion_reason == T.Reason.FAILED, "reject zero infinite timeline")
+	check(_activated_add(scheduler, target, T.value(Vector2.ZERO, Color.WHITE, 1.0)).completion_reason == T.Reason.FAILED, "reject mixed types")
+	check(_activated_add(scheduler, target, T.value([], [], 1.0)).completion_reason == T.Reason.FAILED, "reject shared mutable endpoints")
+	check(_activated_add(scheduler, target, T.value(Quaternion(0, 0, 0, 0), Quaternion.IDENTITY)).completion_reason == T.Reason.FAILED, "reject zero quaternion")
+	check(_activated_add(scheduler, target, T.property(^"missing", 1.0)).completion_reason == T.Reason.FAILED, "reject missing property")
 	check(scheduler.active_count == 0, "invalid starts do not register work")
 	var listing := DynamicProbe.new()
 	listing.listed = true
-	var dynamic := scheduler.add(listing, T.property(^"dynamic", 2.0, 1.0))
+	var dynamic := _activated_add(scheduler, listing, T.property(^"dynamic", 2.0, 1.0))
 	check(dynamic.completion_reason != T.Reason.FAILED, "an instance's own property list admits its property")
 	dynamic.cancel()
-	check(scheduler.add(DynamicProbe.new(), T.property(^"dynamic", 2.0, 1.0)).completion_reason == T.Reason.FAILED,
+	check(_activated_add(scheduler, DynamicProbe.new(), T.property(^"dynamic", 2.0, 1.0)).completion_reason == T.Reason.FAILED,
 		"another instance's property list does not admit a property")
-	var valid := scheduler.add(target, T.value(0.0, 1.0, 1.0))
+	var valid := _activated_add(scheduler, target, T.value(0.0, 1.0, 1.0))
 	scheduler.update(-0.1)
 	near(valid.value, 0.0, "invalid update does not advance")
 	scheduler.dispose()
 	check(valid.completion_reason == T.Reason.RUNNER_DISPOSED, "dispose settles handles")
-	check(scheduler.add(target, T.value(0.0, 1.0)).completion_reason == T.Reason.FAILED, "disposed scheduler rejects starts")
+	check(_activated_add(scheduler, target, T.value(0.0, 1.0)).completion_reason == T.Reason.FAILED, "disposed scheduler rejects starts")
 	return true
 
 func _snapshots_and_fill() -> bool:
@@ -367,9 +373,11 @@ func _snapshots_and_fill() -> bool:
 	fill.fill = T.Fill.APPLY_FROM_DURING_DELAY
 	fill.on_update = func(_h, v): updates.append(v)
 	var filled := scheduler.add(first, fill)
-	near(first.position.x, 1.0, "delay fills immediately")
+	near(first.position.x, 6.0, "factory defers fill")
+	scheduler.update(0.0)
+	near(first.position.x, 1.0, "delay fills at activation")
 	scheduler.update(1.5)
-	check(updates == [1.0, 20.0, 6.0], "completion samples endpoint then restores captured value")
+	check(updates == [1.0, 1.0, 20.0, 6.0], "completion samples endpoint then restores captured value")
 	check(filled.completion_reason == T.Reason.COMPLETED, "fill completes")
 	if trace_runs: print("snapshots: curve")
 	var curve := Curve.new()
@@ -484,8 +492,6 @@ func _factories_and_with() -> bool:
 			["with_ease", T.Ease.BACK_OUT, "ease"], ["with_skew", 2.0, "skew"],
 			["with_weks", 0.5, "weks"],
 			["with_ease_function", callback, "ease_function"], ["with_curve", curve, "curve"],
-			["with_process_mode", T.Process.PHYSICS, "process_mode"], ["with_pause_mode", T.Pause.ALWAYS, "pause_mode"],
-			["with_unscaled_time", true, "use_unscaled_time"],
 			["with_suppress_callbacks_when_target_invalid", true, "suppress_callbacks_when_target_invalid"],
 			["with_on_add", callback, "on_add"], ["with_on_start", callback, "on_start"],
 			["with_on_update", callback, "on_update"], ["with_on_end", callback, "on_end"],
@@ -545,7 +551,7 @@ func _array_endpoints() -> bool:
 	check(spatial.position == Vector3(1, 2.5, -3), "arrays are Vector3 endpoints")
 	check(holder.corners == Vector4(1, 2, 3, 4), "arrays are Vector4 endpoints")
 	for rejected in [T.position_2d([1, 2, 3], 1.0), T.position_2d(["1", 2], 1.0), T.property(^"rotation", [1, 2], 1.0)]:
-		check(scheduler.add(node, rejected).completion_reason == T.Reason.FAILED, "arrays must match the captured type")
+		check(_activated_add(scheduler, node, rejected).completion_reason == T.Reason.FAILED, "arrays must match the captured type")
 	node.free()
 	spatial.free()
 	scheduler.dispose()
@@ -601,7 +607,7 @@ func _relative() -> bool:
 	scheduler.add(self, T.float_value(null, 1.0).with_initial_value(2.0).with_by(10.0).with_on_update(func(_h, v): samples.append(v)))
 	scheduler.update(0.5)
 	scheduler.update(0.5)
-	check(samples == [7.0, 12.0], "callback values add to the captured start: %s" % [samples])
+	check(samples == [2.0, 7.0, 12.0], "callback values add to the captured start: %s" % [samples])
 
 	holder.amount = 1.0
 	scheduler.add(holder, T.custom(func(t): return t.amount, func(t, v): t.amount = v, null, 1.0).with_by(2.0))
@@ -623,7 +629,7 @@ func _relative() -> bool:
 			T.value(0.0, null, 1.0).with_by(NAN), T.value(Quaternion.IDENTITY, null, 1.0).with_by(Quaternion(0, 0, 0, 0)),
 			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
 				.with_by(Transform2D.IDENTITY)]:
-		check(scheduler.add(holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid by_value")
+		check(_activated_add(scheduler, holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid by_value")
 	scheduler.dispose()
 	return true
 
@@ -655,11 +661,11 @@ func _adjustments() -> bool:
 			T.value(0.0, 1.0, 1.0).with_factor_from(NAN), T.value(0.0, 1.0, 1.0).with_factor_to(INF),
 			T.value(0.0, 1.0, 1.0).with_factor_duration(NAN), T.value(0.0, 1.0, 1.0).with_delta_duration(-2.0),
 			T.value(0.0, 1.0, 1.0).with_factor_duration(0.5).with_offset(0.75),
-			T.value(0.0, 1.0, 1.0).with_delta_delay(-1.0), T.value(0.0, 1.0, 1.0).with_factor_delay(NAN),
+			T.value(0.0, 1.0, 1.0).with_factor_delay(NAN),
 			T.value(0.0, 1.0, 1.0).with_delta_to(Vector2.ONE), T.value(0.0, 1.0, 1.0).with_delta_from(NAN),
 			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
 				.with_factor_to(2.0)]:
-		check(scheduler.add(holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid factors and deltas")
+		check(_activated_add(scheduler, holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid factors and deltas")
 	scheduler.dispose()
 	return true
 
@@ -726,13 +732,14 @@ func _callbacks() -> bool:
 	handle.ended.connect(func(_r): events.append("signal"))
 	scheduler.update(2.0)
 	handle.cancel()
-	check(events == ["add", "start", "update", "end", "finally", "signal"], "terminal ordering/idempotence")
+	check(events == ["add", "start", "update", "update", "end", "finally", "signal"], "terminal ordering/idempotence")
 	events.clear()
 	var cancel := T.value(0.0, 1.0)
 	cancel.on_add = func(h): h.cancel()
 	cancel.on_cancel = func(_h): events.append("cancel")
 	cancel.on_finally = func(_h): events.append("finally")
 	var cancelled := scheduler.add(self, cancel)
+	scheduler.update(0.0)
 	check(cancelled.is_settled and events == ["cancel", "finally"], "cancel during on_add settles")
 	var spawned: Array = []
 	var parent := T.value(0.0, 1.0, 1.0)
@@ -742,7 +749,7 @@ func _callbacks() -> bool:
 		scheduler.update(99.0)
 	scheduler.add(self, parent)
 	scheduler.update(0.5)
-	check(spawned.size() == 1 and spawned[0].value == 0.0, "callback additions wait for next tick")
+	check(spawned.size() == 1 and spawned[0].value == null, "callback additions wait for next tick")
 	check(scheduler.last_error.contains("Recursive"), "recursive updates rejected")
 	scheduler.update(0.5)
 	near(spawned[0].value, 5.0, "spawned tween gets next delta")
@@ -807,17 +814,19 @@ func _setter_reentrancy() -> bool:
 	target.when_written = h.cancel
 	scheduler.update(0.5)
 	check(h.completion_reason == T.Reason.CANCELLED, "setter can cancel its own tween")
-	near(h.value, 5.0, "last sample remains inspectable after setter cancellation")
+	near(h.value, 0.0, "start-boundary sample remains inspectable after setter cancellation")
 	target.when_written = Callable()
 	var exit := T.property(^"amount", 10.0, 1.0)
 	exit.on_start = func(instance): instance.target.get_parent().remove_child(instance.target)
 	var exited := scheduler.add(target, exit)
 	scheduler.update(0.5)
 	check(exited.completion_reason == T.Reason.OWNER_EXITED, "on_start exit prevents property write")
-	near(target.amount, 5.0, "no write after on_start exit")
+	near(target.amount, 0.0, "no write after on_start exit")
 	add_child(target)
 	target.when_read = func(): remove_child(target)
-	check(scheduler.add(target, T.property(^"amount", 10.0, 1.0)).completion_reason == T.Reason.FAILED, "getter invalidation is rejected before lifetime binding")
+	var removed_during_read := scheduler.add(target, T.property(^"amount", 10.0, 1.0))
+	scheduler.update(0.0)
+	check(removed_during_read.completion_reason == T.Reason.OWNER_EXITED, "getter invalidation interrupts activation")
 	target.when_read = Callable()
 	target.free()
 	var holder: Array = []
@@ -843,18 +852,12 @@ func _pause_and_lanes() -> bool:
 	add_child(node)
 	node.process_mode = Node.PROCESS_MODE_DISABLED
 	var bound := scheduler.add(node, T.value(0.0, 1.0, 1.0))
-	var tree_def := T.value(0.0, 1.0, 1.0)
-	tree_def.pause_mode = T.Pause.SCENE_TREE
-	var tree_bound := scheduler.add(node, tree_def)
-	var always_def := tree_def.copy()
-	always_def.pause_mode = T.Pause.ALWAYS
-	always_def.process_mode = T.Process.PHYSICS
-	always_def.use_unscaled_time = true
-	var always := scheduler.add(node, always_def)
+	var tree_bound := scheduler.add(node, T.value(0.0, 1.0, 1.0), null, T.playback_options(T.Process.PROCESS, T.Pause.SCENE_TREE))
+	var always := scheduler.add(node, T.value(0.0, 1.0, 1.0), null, T.playback_options(T.Process.PHYSICS, T.Pause.ALWAYS, true))
 	scheduler.update(0.25, 0.5)
-	near(bound.value, 0.0, "bound honors disabled owner")
+	check(bound.value == null, "bound pause defers activation")
 	near(tree_bound.value, 0.25, "tree policy ignores owner process mode")
-	near(always.value, 0.0, "physics tween ignores process lane")
+	check(always.value == null, "other lane defers activation")
 	get_tree().paused = true
 	scheduler.update(0.25, 0.5, T.Process.PHYSICS)
 	near(always.value, 0.5, "always physics uses unscaled delta while paused")
@@ -933,7 +936,7 @@ func _sequence(scheduler) -> void:
 	await first.wait()
 	_sequence_handles.append(scheduler.add(self, T.value(0.0, 1.0, 1.0)))
 
-func _await_and_carry() -> void:
+func _await_independent_roots() -> void:
 	var scheduler := TweensGdScheduler.new()
 	var h := scheduler.add(self, T.value(0.0, 1.0, 1.0))
 	_record_wait(h)
@@ -945,9 +948,9 @@ func _await_and_carry() -> void:
 	_sequence(scheduler)
 	scheduler.update(0.5)
 	check(_sequence_handles.size() == 2, "await continuation starts next step")
-	near(_sequence_handles[1].value, 0.0, "continuation waits for next update")
+	check(_sequence_handles[1].value == null, "continuation defers capture until next update")
 	scheduler.update(0.0)
-	near(_sequence_handles[1].value, 0.25, "continuation carries predecessor overshoot")
+	near(_sequence_handles[1].value, 0.0, "continuation starts with no inherited time")
 	var cancel := scheduler.add(self, T.value(0.0, 1.0, 1.0))
 	_record_wait(cancel)
 	cancel.cancel()
@@ -1003,6 +1006,8 @@ func _expected_rejection(start: Callable, message: String) -> TweensGdHandle:
 	# Keep unrelated errors visible; only consume the expected diagnostic for this call.
 	failures.append_array(_collector.take_errors())
 	var handle: TweensGdHandle = start.call()
+	if handle != null and not handle.is_settled:
+		TweensGdRunner.find(get_tree()).scheduler.update(0.0)
 	var errors := _collector.take_errors()
 	check(handle != null, message + " returns a handle")
 	check(errors.size() == 1, message + " reports exactly one error")
@@ -1041,7 +1046,8 @@ func _rejected_starts() -> void:
 	var resource := ResourceProbe.new()
 	resource.when_read = func(): owner.free()
 	var getter_failure := getter_scheduler.add(resource, T.property(^"amount", 1.0), owner)
-	check(await getter_failure.wait() == T.Reason.FAILED, "owner freed by a getter still returns a failed handle")
+	getter_scheduler.update(0.0)
+	check(await getter_failure.wait() == T.Reason.OWNER_EXITED, "owner freed during activation interrupts the handle")
 	getter_scheduler.dispose()
 	var detached := Node2D.new()
 	var starts: Array[Callable] = [

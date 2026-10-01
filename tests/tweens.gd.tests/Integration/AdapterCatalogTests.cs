@@ -49,6 +49,7 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         TValue Read()
         {
             var probe = scheduler.Add(target, Create());
+            probe.Initialize();
             probe.Cancel();
             return probe.Value;
         }
@@ -116,6 +117,7 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         definition.Duration = 1;
         definition.OnUpdate = (_, value) => reported.Add(value);
         var tween = scheduler.Add(node, definition);
+        tween.Initialize();
         var start = tween.Value;
         var to = (TValue)Values.Perturb(start);
         tween.Cancel();
@@ -123,9 +125,9 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         scheduler.Add(node, definition);
         scheduler.Update(0.5);
         scheduler.Update(0.5);
-        Assert.Equal(2, reported.Count);
-        Values.AssertClose(Values.Interpolate(start, to, 0.5f), reported[0], adapter.Name);
-        Values.AssertClose(to, reported[1], adapter.Name);
+        Assert.Equal(3, reported.Count);
+        Values.AssertClose(Values.Interpolate(start, to, 0.5f), reported[1], adapter.Name);
+        Values.AssertClose(to, reported[2], adapter.Name);
 
         // With nothing to read back, By adds to the captured start.
         reported.Clear();
@@ -135,7 +137,7 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         scheduler.Update(0.5);
         scheduler.Update(0.5);
         Values.AssertClose(Offsets<TValue>.Add(start, definition.InterpolateValue(Offsets<TValue>.Zero, definition.By.Value, 0.5f)),
-            reported[0], adapter.Name);
-        Values.AssertClose(Offsets<TValue>.Add(start, definition.By.Value), reported[1], adapter.Name);
+            reported[1], adapter.Name);
+        Values.AssertClose(Offsets<TValue>.Add(start, definition.By.Value), reported[2], adapter.Name);
     }
 }

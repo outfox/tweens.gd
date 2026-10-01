@@ -20,10 +20,12 @@ scheduler.Update(0.5); // move.Progress is now 0.5.
 | `Add(target, definition)` | `TweenInstance<TTarget, TValue>` | Add playback; a node target becomes its own owner |
 | `Add(target, definition, owner)` | `TweenInstance<TTarget, TValue>` | Bind a separate target to an in-tree owner |
 | `Update(delta, unscaledDelta = null, mode = TweenProcessMode.Process)` | `void` | Advance every tween in the given process mode |
-| `ActiveCount` | `int` | Number of tweens that haven't ended |
+| `ActiveCount` | `int` | Number of unfinished roots; each Chain counts once |
 | `CancelAll()` | `void` | Cancel every tween in this scheduler |
 | `UnhandledException` | `event Action<Exception>` | Receives errors once failing tweens are cleaned up |
 | `Dispose()` | `void` | Stop and settle the remaining playback |
+
+Linked starts use `AddChain(target, definitions, owner = null, options = default)`. All starts accept playback options separately from definitions. Independent roots created during an update first advance on the next eligible update, with no inherited time.
 
 ## Rules
 

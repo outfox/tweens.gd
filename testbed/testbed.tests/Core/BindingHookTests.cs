@@ -45,7 +45,9 @@ public class BindingHookTests
     {
         var state = new State();
         using var scheduler = new TweenScheduler();
-        var error = Assert.Throws<AggregateException>(() => scheduler.Add(state, new Definition(state) {FailPrepare = true, FailRelease = true}));
+        var handle = scheduler.Add(state, new Definition(state) {FailPrepare = true, FailRelease = true});
+        scheduler.Update(0);
+        var error = Assert.IsType<AggregateException>(handle.Error);
         Assert.Equal(["prepare", "release"], error.InnerExceptions.Select(e => e.Message));
         Assert.Equal(1, state.Released);
         Assert.Equal(0, scheduler.ActiveCount);
@@ -84,6 +86,7 @@ public class BindingHookTests
                 return s.Value;
             },
             (s, v) => s.Value = v, (a, _, _) => a));
+        scheduler.Update(0);
         Assert.Equal(Reason.RunnerDisposed, tween.CompletionReason);
         Assert.True(tween.End.IsCompletedSuccessfully);
     }

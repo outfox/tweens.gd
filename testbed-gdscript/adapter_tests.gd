@@ -99,11 +99,12 @@ func _custom() -> void:
 	adapter.path = ^"missing"
 	scheduler.update(1.0)
 	check(cloned.completion_reason == T.Reason.COMPLETED and box.amount == 2.0, "subclass configuration snapshots independently")
-	check(adapter.events == ["prepare", "read", "write", "restore", "write", "finally", "release"], "adapter lifecycle and cleanup order")
+	check(adapter.events == ["prepare", "read", "write", "write", "restore", "write", "finally", "release"], "adapter lifecycle and cleanup order")
 	adapter.events.clear()
 	adapter.path = ^"amount"
 	adapter.fail_prepare = true
 	var rejected := scheduler.add(box, source)
+	scheduler.update(0.0)
 	check(rejected.is_settled and rejected.error == "prepare failed" and adapter.events == ["prepare", "release"], "failed preparation releases partial bindings without callbacks")
 	adapter.events.clear()
 	adapter.fail_prepare = false
@@ -129,10 +130,14 @@ func _custom() -> void:
 	var stale := Node.new()
 	var stale_definition := T.custom(func(t): return t.amount, stale.set_meta.bind(&"sample").unbind(2), 1.0)
 	stale.free()
-	check(scheduler.add(box, stale_definition).completion_reason == T.Reason.FAILED, "stale custom Callable rejected before playback")
+	var stale_handle := scheduler.add(box, stale_definition)
+	scheduler.update(0.0)
+	check(stale_handle.completion_reason == T.Reason.FAILED, "stale custom Callable rejected before playback")
 	var wrong_target := Node2D.new()
 	host.add_child(wrong_target)
-	check(scheduler.add(wrong_target, T.position_3d(Vector3.ONE)).completion_reason == T.Reason.FAILED, "named helpers validate native target class")
+	var wrong_kind := scheduler.add(wrong_target, T.position_3d(Vector3.ONE))
+	scheduler.update(0.0)
+	check(wrong_kind.completion_reason == T.Reason.FAILED, "named helpers validate native target class")
 	wrong_target.free()
 	var doomed := Node2D.new()
 	host.add_child(doomed)
@@ -144,6 +149,7 @@ func _custom() -> void:
 	copying.to_value = 1.0
 	check(scheduler.add(doomed, copying).completion_reason == T.Reason.FAILED, "a copy() hook that frees the target is rejected")
 	var wrong := scheduler.add(box, T.property(^"amount", Vector2.ONE))
+	scheduler.update(0.0)
 	check(wrong.completion_reason == T.Reason.FAILED, "property endpoints remain type checked")
 	scheduler.dispose()
 
@@ -216,6 +222,7 @@ func _close(a: Variant, b: Variant) -> bool:
 
 func _read(scheduler, target, factory: String) -> Variant:
 	var probe: TweensGdHandle = scheduler.add(target, factories.call(factory))
+	scheduler.update(0.0)
 	probe.cancel()
 	return probe.value
 
@@ -227,6 +234,7 @@ func _catalog() -> void:
 		var target := _create(entry.target)
 		var definition: TweensGdDefinition = factories.call(entry.name)
 		var probe := scheduler.add(target, definition)
+		scheduler.update(0.0)
 		check(probe.completion_reason != T.Reason.FAILED, entry.name + " starts: " + probe.error)
 		if probe.completion_reason != T.Reason.FAILED:
 			var initial: Variant = probe.value

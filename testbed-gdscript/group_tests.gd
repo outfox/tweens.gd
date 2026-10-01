@@ -8,7 +8,7 @@ var _host: Node
 
 func run(host: Node) -> bool:
 	_host = host
-	for test in [_conformance, _completion, _controls, _lifetimes, _failures, _reentrancy, _carry, _references]:
+	for test in [_conformance, _completion, _controls, _lifetimes, _failures, _reentrancy, _independent_roots, _references]:
 		check(test.call() == true, "group test returned normally: " + test.get_method())
 	await _waits_and_validation()
 	return true
@@ -64,7 +64,7 @@ func _controls() -> bool:
 	group.pause()
 	check(group.is_paused and a.is_paused and b.is_paused, "group pauses every active member")
 	scheduler.update(2.0)
-	near(a.value, 0.0, "group pause prevents advancement")
+	check(a.value == null, "group pause defers activation")
 	group.is_paused = false
 	check(not a.is_paused and not b.is_paused, "group pause property resumes members")
 	scheduler.update(1.0)
@@ -117,8 +117,9 @@ func _failures() -> bool:
 	var stale_owner := Node.new()
 	var cancellation := T.value(0.0, 1.0, 1.0)
 	cancellation.on_cancel = stale_owner.set_process.bind(true).unbind(1)
-	var a := scheduler.add(RefCounted.new(), faulty)
 	var b := scheduler.add(RefCounted.new(), cancellation)
+	scheduler.update(0.0)
+	var a := scheduler.add(RefCounted.new(), faulty)
 	var group := T.group([a, b])
 	stale_owner.free()
 	scheduler.update(0.5)
@@ -186,33 +187,7 @@ func _continue(group, scheduler, results: Array, definition = null) -> void:
 	results.append(reason)
 	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0) if definition == null else definition))
 
-func _carry() -> bool:
-	for mismatch in ["lane", "time", "scheduler", "next_lane", "next_time", "next_scheduler"]:
-		var scheduler := TweensGdScheduler.new()
-		var other := TweensGdScheduler.new()
-		var definition := T.value(0.0, 1.0, 1.0)
-		if mismatch == "lane": definition.process_mode = T.Process.PHYSICS
-		if mismatch == "time": definition.use_unscaled_time = true
-		var a := start(scheduler)
-		var b := (other if mismatch == "scheduler" else scheduler).add(RefCounted.new(), definition)
-		var group := T.group([a, b])
-		var next: Array = []
-		var next_definition := T.value(0.0, 1.0, 1.0)
-		if mismatch in ["lane", "next_lane"]: next_definition.process_mode = T.Process.PHYSICS
-		if mismatch in ["time", "next_time"]: next_definition.use_unscaled_time = true
-		var next_scheduler = other if mismatch in ["scheduler", "next_scheduler"] else scheduler
-		_continue(group, next_scheduler, next, next_definition)
-		if mismatch == "scheduler": scheduler.update(1.5)
-		if mismatch == "scheduler": other.update(1.5)
-		else:
-			scheduler.update(1.5)
-			if mismatch == "lane": scheduler.update(1.5, 1.5, T.Process.PHYSICS)
-		check(next.size() == 2, "mixed-clock group resumes: " + mismatch)
-		next_scheduler.update(0.25, 0.25, next_definition.process_mode)
-		near(next[1].value, 0.25, "mixed clock carries no overshoot: " + mismatch)
-		scheduler.dispose()
-		other.dispose()
-	# A cancelled group emitted inside an unrelated success must mask that success's carry.
+func _independent_roots() -> bool:
 	var scheduler := TweensGdScheduler.new()
 	var other := TweensGdScheduler.new()
 	var group := T.group([start(other)])
@@ -225,10 +200,10 @@ func _carry() -> bool:
 		after.append(start(scheduler))
 	scheduler.add(RefCounted.new(), definition)
 	scheduler.update(0.75)
+	check(next[1].value == null and after[0].value == null, "callback roots defer capture")
 	scheduler.update(0.0)
-	near(next[1].value, 0.0, "cancelled group masks unrelated scheduler carry")
-	near(after[0].value, 0.25, "nested group scope restores outer carry")
-	check(not TweensGdScheduler._has_carry(), "carry scope restored after all signals")
+	near(next[1].value, 0.0, "group continuation starts fresh")
+	near(after[0].value, 0.0, "callback root starts fresh")
 	scheduler.dispose()
 	other.dispose()
 	return true
@@ -249,9 +224,9 @@ func _conformance() -> bool:
 			check(group.is_settled == sample.settled, test.name + " settlement")
 			check((next.size() == 2) == sample.settled, test.name + " continuation")
 		check(next[0] == T.Reason.COMPLETED, test.name + " reason")
-		near(next[1].value, 0.0, test.name + " continuation waits for next update")
+		check(next[1].value == null, test.name + " continuation waits for next update")
 		scheduler.update(test.next_delta)
-		check(absf(next[1].value - test.next_value) <= data.tolerance, test.name + " overshoot carry")
+		check(absf(next[1].value - test.next_value) <= data.tolerance, test.name + " independent root delta")
 		scheduler.dispose()
 	return true
 

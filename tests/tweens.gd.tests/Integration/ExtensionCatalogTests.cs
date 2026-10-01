@@ -121,6 +121,7 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
         {
             using var scheduler = new TweenScheduler();
             var probe = scheduler.Add(target, (TweenDefinition<TTarget, TValue>)Activator.CreateInstance(adapter)!);
+            probe.Initialize();
             probe.Cancel();
             return probe.Value;
         }
@@ -139,7 +140,7 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
                 var current = Read();
                 var tween = (TweenInstance<TTarget, TValue>)Shorthands.Invoke(method, arguments)!;
                 Assert.Same(target, tween.Target);
-                Assert.Equal(current, tween.Value);
+                Assert.Equal(default, tween.Value);
                 if (Configure(method) is null)
                 {
                     // Delay from the options or argument, duration from the argument.
@@ -172,6 +173,7 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
         {
             var type = parameters[i].ParameterType;
             arguments[i] = type == typeof(SceneTree) ? scope.Tree
+                : type == typeof(PlaybackOptions) ? default(PlaybackOptions)
                 : type == typeof(TweenOptions) ? Options
                 : type == typeof(EaseType) ? EaseType.QuadIn
                 : type == typeof(Duration) ? (Duration)0.25

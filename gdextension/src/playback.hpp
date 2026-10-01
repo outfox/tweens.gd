@@ -15,7 +15,6 @@ struct Timeline {
 	bool returning = false;
 	bool started = false;
 	bool completed = false;
-	double overshoot = 0.0;
 	// Index of the current cycle; relative tweens add one full offset per cycle before it.
 	double cycle = 0.0;
 	int64_t state = tweens::STATE_DELAYED;
@@ -23,6 +22,10 @@ struct Timeline {
 
 	void configure(const TweenSettings &p_settings);
 	void advance(double p_delta);
+	void sample_at(double p_local_time);
+	double gap() const { return delay; }
+	double inner_delay() const { return delay > 0.0 ? delay : 0.0; }
+	double remaining() const { return total - offset; }
 
 private:
 	double duration = 0.0;
@@ -51,11 +54,10 @@ public:
 	bool is_returning() const { return timeline.returning; }
 	bool is_started() const { return timeline.started; }
 	bool is_completed() const { return timeline.completed; }
-	double get_overshoot() const { return timeline.overshoot; }
 	double get_cycle() const { return timeline.cycle; }
 	int64_t get_state() const { return timeline.state; }
 	double get_elapsed() const { return timeline.elapsed; }
-	void set_elapsed(double p_elapsed) { timeline.elapsed = p_elapsed; }
+	void sample_at(double p_local_time) { timeline.sample_at(p_local_time); }
 };
 
 } // namespace godot

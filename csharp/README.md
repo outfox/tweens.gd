@@ -88,3 +88,22 @@ full-range percentages, followed by two smaller bounces. `Jump` / `Jump10` throu
 peaks, with the same percentage convention. Legacy `EaseType` names
 keep their original shapes. Try the
 [easing composer](https://tweens.gd/csharp/easing/).
+
+## Linked playback
+
+Use a Chain for one target and a flat list of definitions:
+
+```csharp
+var animation = sprite.Chain([
+    new Tweens.Position2D((100, 0), 1),
+    new Tweens.ModulateAlpha(0, 0.2) { Delay = -0.6 },
+]);
+await animation.End;
+```
+
+Signed delays link to the previous entry's own end. Negative starts pre-roll
+crossed callbacks on the first eligible update; completion waits for every tail.
+Starting snapshots configuration; capture and OnAdd happen at activation.
+Use `PlaybackOptions` at the start call for process, pause, and unscaled-time policy.
+Ordinary awaits wait for completion; independent follow-ups start on their next
+eligible update with no inherited frame time. Multi-target composition is future work.

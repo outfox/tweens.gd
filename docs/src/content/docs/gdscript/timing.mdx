@@ -55,7 +55,7 @@ All times are in seconds, as GDScript `float` values.
 | --- | --- | --- |
 | `duration` | `0.0` | Seconds per leg. Zero completes on the first eligible update. |
 | `factor_duration`, `delta_duration` | `1.0`, `0.0` | Scale and shift `duration` for [variations](/gdscript/variations/): the tween lasts `factor_duration × duration + delta_duration`. |
-| `delay` | `0.0` | Initial wait before the first leg. |
+| `delay` | `0.0` | Signed gap before the first leg; negative values pre-roll. |
 | `factor_delay`, `delta_delay` | `1.0`, `0.0` | Scale and shift `delay` for [variations](/gdscript/variations/), such as a stagger: the tween waits `factor_delay × delay + delta_delay`. |
 | `repeats` | `0` | Cycles after the first. `Tweens.INFINITE` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
 | `use_ping_pong` | `false` | A forward and a backward leg form one cycle. |
@@ -74,7 +74,7 @@ and one 0.3-second gap. Drag the timeline to see each phase:
 
 <TimingLab lang="gdscript" />
 
-Negative and non-finite values reject the start, and `Tweens.play()` returns an
+Non-finite times and negative durations, intervals, and offsets reject the start, and `Tweens.play()` returns an
 already-settled handle whose `end` reports `Tweens.Reason.FAILED` when awaited. A long frame
 advances to the correct phase, even across several cycles, without losing time at
 boundaries, but it doesn't replay the callbacks of the cycles it skipped.
@@ -102,6 +102,8 @@ restoration also preserves whether an explicit override existed (see
 
 ## Process and physics
 
+These fields belong to `TweensGdPlaybackOptions`, supplied at the start call. Definitions contain motion settings only.
+
 `process_mode` defaults to `Tweens.Process.PROCESS`. Choose
 `Tweens.Process.PHYSICS` to update with physics instead. The automatic runner uses
 process and physics priority `1000`, so it runs after nodes with default priority.
@@ -116,3 +118,5 @@ Neither field changes pause or ownership rules.
 A handle's `progress` is the current leg's position from 0 to 1, before easing. It
 runs backwards during a ping-pong return, and it isn't the fraction of all cycles
 completed.
+
+Signed delays place Chain entries relative to the preceding entry's end; see [Chains](/gdscript/sequences/).

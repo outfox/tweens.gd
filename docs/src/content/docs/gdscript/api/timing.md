@@ -12,7 +12,7 @@ See [timing and loops](/gdscript/timing/).
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
 | `duration` | `float` | `0.0` | Seconds per leg |
-| `delay` | `float` | `0.0` | Seconds before the first leg |
+| `delay` | `float` | `0.0` | Signed gap before the first leg; negative values pre-roll |
 | `offset` | `float` | `0.0` | Seconds to skip at the start of the first leg |
 | `repeats` | `int` | `0` | Cycles after the first; `Tweens.INFINITE` repeats until cancelled |
 | `use_ping_pong` | `bool` | `false` | Play each cycle forward, then back |

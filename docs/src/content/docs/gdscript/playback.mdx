@@ -59,11 +59,11 @@ Tweens.play(sprite, arrive.with_on_start(func(_h): print("Moving")) \
 
 They run synchronously, in this order:
 
-1. `on_add(handle)` when the tween is added.
+1. `on_add(handle)` at activation after capture.
 2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
    it during the delay.
 3. `on_start(handle)` once, when the delay ends and playback begins.
-4. `on_update(handle, value)` once per eligible frame with the sampled value,
+4. `on_update(handle, value)` at each sampled timeline boundary and eligible update,
    plus once more when completion [restores the initial value](/gdscript/timing/#fill-and-restoration).
 5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
    stops early.
@@ -111,3 +111,5 @@ that has already failed, and `wait()` returns `FAILED`.
 You have finished the five-step tutorial. Explore [easing](/gdscript/easing/) to
 shape motion, [timing and loops](/gdscript/timing/) for repeating animations, or the
 [property catalog](/gdscript/nodes/) to find something else to animate.
+
+Starting snapshots configuration; capture and `on_add` occur at activation. Completion includes release hooks. Use a [Chain](/gdscript/sequences/) for linked timing; callbacks and waits create independent roots with no frame-time inheritance.
