@@ -114,15 +114,16 @@ Ref<TweensGdHandle> TweensGdScheduler::make_handle(const Variant &p_target, cons
 	SceneTree *tree = owner != nullptr ? owner->get_tree() : nullptr;
 	const auto instance = TweensGdHandle::start(this, p_target, owned.settings, owner, tree, policy);
 	owned.settings = nullptr;
-	instance->plan = std::make_unique<ExecutionPlan>(instance.ptr());
-	LocalVector<Ref<TweensGdHandle>> leaves;
-	leaves.push_back(instance);
-	const String schedule_error = instance->plan->compile(leaves, false);
-	if (!schedule_error.is_empty()) {
-		instance->fail(schedule_error);
-		return instance;
-	}
 	if (p_enroll) {
+		// Chain entries are compiled together by add_chain, without individual plans.
+		instance->plan = std::make_unique<ExecutionPlan>(instance.ptr());
+		LocalVector<Ref<TweensGdHandle>> leaves;
+		leaves.push_back(instance);
+		const String schedule_error = instance->plan->compile(leaves, false);
+		if (!schedule_error.is_empty()) {
+			instance->fail(schedule_error);
+			return instance;
+		}
 		instances.push_back(instance);
 		instance->bind_lifetime();
 	}
@@ -431,11 +432,9 @@ Ref<TweensGdChain> TweensGdScheduler::add_chain(const Variant &p_target, const V
 	if (chain->root->is_terminal()) {
 		return TweensGdChain::rejected(chain->root->error);
 	}
-	chain->root->plan.reset();
 	LocalVector<Ref<TweensGdHandle>> leaves;
 	for (int64_t i = 0; i < definitions.size(); i++) {
 		auto leaf = make_handle(p_target, definitions[i], p_owner, p_options, false);
-		leaf->plan.reset();
 		if (leaf->is_terminal()) {
 			return TweensGdChain::rejected(leaf->error);
 		}

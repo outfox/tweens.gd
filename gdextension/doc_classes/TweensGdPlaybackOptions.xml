@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- SPDX-License-Identifier: MIT -->
 <!-- SPDX-FileCopyrightText: 2026 Moritz Voss -->
-<class name="TweensGdPlaybackOptions" inherits="RefCounted" api_type="extension">
+<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TweensGdPlaybackOptions" inherits="RefCounted" api_type="extension" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>Clock and pause policy for one playback root.</brief_description>
 	<description>
 		Supplied separately from definitions as the last argument to play, play_all, chain, or scheduler starts.

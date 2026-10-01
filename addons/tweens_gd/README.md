@@ -200,8 +200,9 @@ Legacy `Tweens.Ease` names retain their old shapes. The [easing composer](https:
 
 ## Timing configuration
 
-Motion fields belong to definitions. The three clock fields below belong to
-separately supplied playback options.
+Motion fields belong to definitions. The clock fields `process_mode`,
+`pause_mode`, and `use_unscaled_time` belong to separately supplied playback
+options.
 
 | Field | Default and behavior |
 | --- | --- |

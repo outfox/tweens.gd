@@ -7,7 +7,10 @@ class Box extends RefCounted:
 	var amount := 0.0
 
 func run(suite: Object) -> bool:
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/chains.json"))
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/chains.json"))
+	var fixture_valid: bool = data is Dictionary and data.get("cases") is Array
+	suite.check(fixture_valid, "chain conformance fixture parses as a Dictionary with a cases Array")
+	if not fixture_valid: return false
 	for test in data.cases:
 		var scheduler := TweensGdScheduler.new()
 		var box := Box.new()
@@ -84,7 +87,8 @@ func _controls(suite: Object) -> void:
 	scheduler.update(0.75)
 	suite.check(solo.is_settled, "negative standalone completes")
 	var invalid := scheduler.add_chain(box, [T.property(^"amount", 1.0, 1.0).with_repeats(T.INFINITE), definition])
-	suite.check(invalid.end == T.Reason.FAILED, "successor after infinite anchor rejects")
+	suite.check(invalid.is_settled and invalid.end == T.Reason.FAILED, "successor after infinite anchor rejects")
+	suite.check(scheduler.active_count == 0, "successor after infinite anchor registers no root")
 	scheduler.dispose()
 
 

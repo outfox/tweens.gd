@@ -314,6 +314,15 @@ func _validation() -> bool:
 		var definition := T.value(0.0, 1.0, 1.0)
 		definition.set(pair[0], pair[1])
 		check(_activated_add(scheduler, target, definition).completion_reason == T.Reason.FAILED, "reject " + pair[0])
+	for field in ["process_mode", "pause_mode"]:
+		var options := T.playback_options()
+		options.set(field, 999)
+		var definition := T.value(0.0, 1.0, 1.0)
+		var handle := scheduler.add(target, definition, null, options)
+		check(handle.is_settled and handle.completion_reason == T.Reason.FAILED, "reject invalid " + field + " for standalone playback")
+		var chain := scheduler.add_chain(target, [definition], null, options)
+		check(chain.is_settled and chain.completion_reason == T.Reason.FAILED, "reject invalid " + field + " for Chain playback")
+		check(scheduler.active_count == 0, "invalid " + field + " registers no work")
 	for field in ["skew", "weks"]:
 		for invalid in [0.0, -1.0, INF, -INF, NAN]:
 			var probe := ResourceProbe.new()
