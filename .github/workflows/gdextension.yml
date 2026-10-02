@@ -35,6 +35,8 @@ jobs:
     env:
       # Web side modules must match the Emscripten version godot-cpp 10 targets.
       EM_VERSION: 4.0.11
+      # r28b; godot-cpp's default ndk_version, which it looks up under $ANDROID_HOME/ndk.
+      NDK_VERSION: 28.1.13356709
       SCONS_VERSION: 4.10.1
     defaults:
       run:
@@ -52,11 +54,10 @@ jobs:
       - name: Install 32-bit toolchain
         if: matrix.platform == 'linux' && matrix.arch == 'x86_32'
         run: sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib
-      - uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1.6.0
+      - name: Install Android NDK
         if: matrix.platform == 'android'
-        with:
-          ndk-version: r28b
-          link-to-sdk: true
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;$NDK_VERSION"
       - name: Install Emscripten
         if: matrix.platform == 'web'
         run: |
