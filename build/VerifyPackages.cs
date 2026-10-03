@@ -22,7 +22,7 @@ public sealed class VerifyPackages : Task
                 Require(symbols, "lib/" + framework + "/tweens.gd.pdb");
         using (var package = ZipFile.OpenRead(Path.Combine(Directory, "tweens.gd." + Version + ".nupkg")))
         {
-            foreach (var name in new[] { "LICENSE", "README.md", "THIRD-PARTY-NOTICES.md" })
+            foreach (var name in new[] { "LICENSE", "README.md", "THIRD-PARTY-NOTICES.md", "ferret-tweens.svg" })
                 Require(package, name);
             foreach (var framework in Frameworks)
             {

@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/public/ferret-tweens.svg" alt="tweens.gd" width="640"></p>
+
 # tweens.gd
 
 tweens.gd is a Godot addon for C# and GDScript. Reuse tween definitions, control

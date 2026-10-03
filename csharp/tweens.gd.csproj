@@ -45,6 +45,7 @@
         <!-- Multi-targeted packs evaluate without default items, so include the readme explicitly. -->
         <None Remove="README.md" />
         <None Include="README.md" Pack="true" PackagePath="/" />
+        <None Include="../docs/public/ferret-tweens.svg" Pack="true" PackagePath="/" />
         <None Include="../LICENSE" Pack="true" PackagePath="/" />
         <None Include="../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
     </ItemGroup>

@@ -1,3 +1,5 @@
+![tweens.gd](https://raw.githubusercontent.com/outfox/tweens.gd/main/docs/public/ferret-tweens.svg)
+
 # tweens.gd for C#
 
 Beta C# support for tweening in GodotSharp and 2dog. APIs may change during beta.
