@@ -1,0 +1,35 @@
+---
+// Starlight 0.42.4's theme provider, but dark unless the reader picked light; the system color scheme is ignored.
+import { Icon } from '@astrojs/starlight/components';
+---
+
+{/* This is intentionally inlined to avoid FOUC. */}
+<script is:inline>
+	window.StarlightThemeProvider = (() => {
+		const theme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme') === 'light' ? 'light' : 'dark';
+		document.documentElement.dataset.theme = theme;
+		return {
+			updatePickers(next = theme) {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = next;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector('#theme-icons');
+					const newIcon = tmpl && tmpl.content.querySelector('.' + next);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script>
+
+<template id="theme-icons">
+	<Icon name="sun" class="light" />
+	<Icon name="moon" class="dark" />
+</template>

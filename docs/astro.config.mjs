@@ -134,6 +134,8 @@ export default defineConfig({
 				MarkdownContent: './src/components/overrides/MarkdownContent.astro',
 				Header: './src/components/overrides/Header.astro',
 				Sidebar: './src/components/overrides/Sidebar.astro',
+				ThemeProvider: './src/components/overrides/ThemeProvider.astro',
+				ThemeSelect: './src/components/overrides/ThemeSelect.astro',
 			},
 			expressiveCode: {
 				themes: [tweensDark, tweensLight],

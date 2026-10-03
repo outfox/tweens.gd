@@ -1,0 +1,52 @@
+---
+// Starlight 0.42.4's theme select without the Auto choice. ThemeProvider.astro starts every reader on dark.
+import Select from '@astrojs/starlight/components/Select.astro';
+---
+
+<starlight-theme-select>
+	<Select
+		icon="moon"
+		label={Astro.locals.t('themeSelect.accessibleLabel')}
+		options={[
+			{ label: Astro.locals.t('themeSelect.dark'), selected: true, value: 'dark' },
+			{ label: Astro.locals.t('themeSelect.light'), selected: false, value: 'light' },
+		]}
+		width="6.25em"
+	/>
+</starlight-theme-select>
+
+{/* Inlined to avoid FOUC. Uses global scope from `ThemeProvider.astro` */}
+<script is:inline>
+	StarlightThemeProvider.updatePickers();
+</script>
+
+<script>
+	type Theme = 'dark' | 'light';
+
+	const storageKey = 'starlight-theme';
+
+	// Anything but an explicit light pick, including Starlight's stored '' for auto, means dark.
+	const parseTheme = (theme: unknown): Theme => (theme === 'light' ? 'light' : 'dark');
+
+	const loadTheme = (): Theme =>
+		parseTheme(typeof localStorage !== 'undefined' && localStorage.getItem(storageKey));
+
+	function onThemeChange(theme: Theme): void {
+		StarlightThemeProvider.updatePickers(theme);
+		document.documentElement.dataset.theme = theme;
+		if (typeof localStorage !== 'undefined') localStorage.setItem(storageKey, theme);
+	}
+
+	class StarlightThemeSelect extends HTMLElement {
+		constructor() {
+			super();
+			onThemeChange(loadTheme());
+			this.querySelector('select')?.addEventListener('change', (e) => {
+				if (e.currentTarget instanceof HTMLSelectElement) {
+					onThemeChange(parseTheme(e.currentTarget.value));
+				}
+			});
+		}
+	}
+	customElements.define('starlight-theme-select', StarlightThemeSelect);
+</script>
