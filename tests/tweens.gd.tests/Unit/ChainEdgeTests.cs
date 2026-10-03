@@ -214,7 +214,7 @@ public class ChainEdgeTests
         Assert.Equal(20, box.Value);
         scheduler.Update(1.5);
 
-        Assert.Equal(Reason.Completed, await chain.AwaitDecommissionAsync());
+        Assert.Equal(Reason.Completed, await chain.AwaitDecommissionAsync(TestContext.Current.CancellationToken));
         chain.Pause();
         chain.Resume();
         chain.Cancel();

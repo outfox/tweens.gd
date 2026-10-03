@@ -82,7 +82,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Obtain a short-lived NuGet API key
-        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
         id: login
         with:
           user: thygrrr
