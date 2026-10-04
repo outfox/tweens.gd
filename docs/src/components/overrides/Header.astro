@@ -1,5 +1,6 @@
 ---
-// Starlight's header with the language switch beside the site title. Pagefind search is always enabled on this site.
+// Starlight's header with the language switch beside the site title, at every width (on phones the title's word
+// yields to it). Pagefind search is always enabled on this site.
 import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro';
 import Search from './Search.astro';
 import SocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
@@ -11,7 +12,7 @@ import SiteTitle from './SiteTitle.astro';
 <div class="header">
 	<div class="title-wrapper sl-flex">
 		<SiteTitle />
-		<div class="lang sl-hidden md:sl-flex print:hidden">
+		<div class="lang sl-flex print:hidden">
 			<LangSwitch />
 		</div>
 	</div>
@@ -74,6 +75,31 @@ import SiteTitle from './SiteTitle.astro';
 					auto;
 				align-content: center;
 			}
+		}
+	}
+
+	/* Outside the layer, so these win over the switch's and Starlight's own styles. The switch keeps its size. On
+	   phones it sits closer to the logo and a little smaller. */
+	.lang {
+		flex: none;
+	}
+	@media (max-width: 30rem) {
+		.title-wrapper {
+			gap: 0.75rem;
+		}
+		.lang :global(.lang-switch) {
+			font-size: 0.75rem;
+		}
+		.lang :global(.lang-switch a) {
+			padding-inline: 0.55rem;
+		}
+	}
+	@media (max-width: 21.25rem) {
+		.title-wrapper {
+			gap: 0.5rem;
+		}
+		.lang :global(.lang-switch a) {
+			padding-inline: 0.35rem;
 		}
 	}
 </style>

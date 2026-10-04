@@ -1,6 +1,7 @@
 ---
 // Adapted from Starlight 0.42.4 Search.astro (MIT; see THIRD-PARTY-NOTICES.md).
-// Retain its dialog, keyboard shortcuts, and styling while filtering by the site's code language.
+// Retain its dialog, keyboard shortcuts, and styling while filtering by the site's code language. The button's name
+// includes the shortcut hint, so it contains all of the button's visible text.
 // Every Astro build checks upstream drift via scripts/check-search-upstream.mjs.
 import { Icon } from '@astrojs/starlight/components';
 import project from 'virtual:starlight/project-context';
@@ -22,13 +23,13 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
 	<button
 		data-open-modal
 		disabled
-		aria-label={Astro.locals.t('search.label')}
+		aria-label={`${Astro.locals.t('search.label')} ${Astro.locals.t('search.ctrlKey')} K`}
 		aria-keyshortcuts="Control+K"
 	>
 		<Icon name="magnifier" />
-		<span class="sl-hidden md:sl-block" aria-hidden="true">{Astro.locals.t('search.label')}</span>
+		<span class="sl-hidden md:sl-block" aria-hidden="true">{Astro.locals.t('search.label')}</span>{' '}
 		<kbd class="sl-hidden md:sl-flex" style="display: none;">
-			<kbd>{Astro.locals.t('search.ctrlKey')}</kbd><kbd>K</kbd>
+			<kbd>{Astro.locals.t('search.ctrlKey')}</kbd>{' '}<kbd>K</kbd>
 		</kbd>
 	</button>
 
@@ -69,6 +70,7 @@ if (project.trailingSlash === 'never') dataAttributes['data-strip-trailing-slash
 		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
 		const platformKey = shortcut.querySelector('kbd');
 		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			openBtn.setAttribute('aria-label', openBtn.getAttribute('aria-label').replace(platformKey.textContent, '⌘'));
 			platformKey.textContent = '⌘';
 			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
 		}

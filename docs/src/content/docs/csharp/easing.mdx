@@ -3,6 +3,7 @@ title: Easing
 description: Choose how motion accelerates, compare curves, and combine a gentle start with a different finish.
 ---
 
+import CurvePreview from '../../../components/CurvePreview.astro';
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
 Ease functions change how speed and values vary during a tween.
@@ -64,3 +65,9 @@ sprite.TweenPositionX(300, 0.6, Out.Cubic);
 `In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
 family's start and finish. These describe each traversal, not the forward and
 return legs of ping-pong.
+
+## Try an ease
+
+Pick an ease and watch the ball follow its curve.
+
+<CurvePreview />

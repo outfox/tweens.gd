@@ -481,8 +481,9 @@ h4,
 	text-wrap: pretty;
 }
 
-/* Pages without a sidebar have no mobile menu, so their header keeps the social links at every width. */
-@media (max-width: 50rem) {
+/* Pages without a sidebar have no mobile menu, so their header keeps the social links, except on phones, where the
+   language switch needs the room (the landing page's hero links to both). */
+@media (min-width: 30rem) and (max-width: 50rem) {
 	:root:not([data-has-sidebar]) .header .right-group {
 		display: flex;
 	}
