@@ -58,7 +58,6 @@
 	--tw-mint-ink: #79deb4;
 	--tw-amber-ink: #f2bc74;
 	--tw-blue-ink: #a9bfff;
-	--tw-on-accent: #0b1a17;
 	--tw-grid: color-mix(in oklab, var(--tw-outline) 55%, transparent);
 	--tw-shadow: 0 1px 2px rgb(3 8 14 / 0.4), 0 12px 32px -12px rgb(3 8 14 / 0.7);
 
@@ -70,10 +69,10 @@
 	--sl-color-gray-5: var(--tw-raised);
 	--sl-color-gray-6: var(--tw-stage);
 	--sl-color-black: var(--tw-bg);
-	--sl-color-accent-low: var(--tw-selected);
-	--sl-color-accent: var(--tw-mint);
-	--sl-color-accent-high: #bff3dc;
-	--sl-color-text-accent: var(--tw-mint);
+	--sl-color-accent-low: var(--tw-accent-low);
+	--sl-color-accent: var(--tw-accent);
+	--sl-color-accent-high: #c4dcf4;
+	--sl-color-text-accent: var(--tw-accent-ink);
 	--sl-color-bg-nav: color-mix(in oklab, var(--tw-bg) 86%, transparent);
 	--sl-color-bg-sidebar: var(--tw-bg);
 	--sl-color-bg-inline-code: var(--tw-raised);
@@ -104,7 +103,6 @@
 	--tw-mint-ink: #0d7353;
 	--tw-amber-ink: #95550a;
 	--tw-blue-ink: #3552c7;
-	--tw-on-accent: #ffffff;
 	--tw-shadow: 0 1px 2px rgb(20 40 70 / 0.08), 0 12px 32px -14px rgb(20 40 70 / 0.28);
 
 	--sl-color-white: #0b121b;
@@ -116,16 +114,50 @@
 	--sl-color-gray-6: var(--tw-stage);
 	--sl-color-gray-7: #eef3f8;
 	--sl-color-black: var(--tw-bg);
-	--sl-color-accent-low: var(--tw-selected);
-	--sl-color-accent: #1f9e74;
-	--sl-color-accent-high: var(--tw-mint-ink);
-	--sl-color-text-accent: var(--tw-mint-ink);
+	--sl-color-accent-low: var(--tw-accent-low);
+	--sl-color-accent: #2f7cc0;
+	--sl-color-accent-high: var(--tw-accent-ink);
+	--sl-color-text-accent: var(--tw-accent-ink);
 	--sl-color-bg-nav: color-mix(in oklab, var(--tw-bg) 88%, transparent);
 	--sl-color-bg-sidebar: var(--tw-bg);
 	--sl-color-bg-inline-code: var(--tw-raised);
 	--sl-color-hairline-light: var(--tw-outline);
 	--sl-color-hairline: var(--tw-raised);
 	--sl-color-hairline-shade: var(--tw-outline);
+}
+
+/* The accent follows the reader's language (data-lang, set before first paint in Head.astro): C# takes the Godot blue
+   of the "tweens" letters in ferret-tweens.svg, GDScript the gallery mint. Links, focus rings, selection, buttons, and
+   controls use the accent, and code blocks take a faint tint of it; demos draw their data in the fixed gallery
+   palette above. */
+:root {
+	--tw-accent: #67a2dd;
+	--tw-accent-ink: #8fbdea;
+	--tw-accent-low: #1a3a5c;
+	--tw-on-accent: #08131f;
+	--tw-code-tint: 10%;
+	--tw-code-bg: color-mix(in oklab, var(--tw-accent) var(--tw-code-tint), var(--tw-stage));
+	/* Code panels set into a demo widget, a step darker than the widget. */
+	--tw-code-inset: color-mix(in oklab, var(--tw-accent) var(--tw-code-tint), var(--tw-bg));
+}
+:root[data-theme='light'] {
+	--tw-accent: #4a8fd0;
+	--tw-accent-ink: #1f5f9e;
+	--tw-accent-low: #d6e8f8;
+	--tw-on-accent: #ffffff;
+	--tw-code-tint: 7%;
+}
+:root[data-lang='gdscript'] {
+	--tw-accent: var(--tw-mint);
+	--tw-accent-ink: var(--tw-mint-ink);
+	--tw-accent-low: var(--tw-selected);
+	--tw-on-accent: #0b1a17;
+	--sl-color-accent-high: #bff3dc;
+}
+:root[data-theme='light'][data-lang='gdscript'] {
+	--tw-on-accent: #ffffff;
+	--sl-color-accent: #1f9e74;
+	--sl-color-accent-high: var(--tw-accent-ink);
 }
 
 @media (min-width: 50em) {
@@ -138,12 +170,12 @@
 
 /* Browser surfaces */
 ::selection {
-	background: color-mix(in oklab, var(--tw-mint) 38%, transparent);
+	background: color-mix(in oklab, var(--tw-accent) 38%, transparent);
 	color: var(--sl-color-white);
 }
 html {
-	accent-color: var(--tw-mint);
-	caret-color: var(--tw-mint);
+	accent-color: var(--tw-accent);
+	caret-color: var(--tw-accent);
 	scrollbar-color: var(--tw-outline) transparent;
 	/* Short pages keep the scrollbar's space, so the layout doesn't shift sideways between pages or language twins. */
 	scrollbar-gutter: stable;
@@ -153,7 +185,7 @@ body {
 	background: var(--tw-bg);
 }
 :focus-visible {
-	outline: 2px solid var(--tw-mint);
+	outline: 2px solid var(--tw-accent);
 	outline-offset: 3px;
 	border-radius: 4px;
 }
@@ -184,7 +216,7 @@ h4,
 	--track-w: 4.5rem;
 	padding-bottom: 0.7rem;
 	background:
-		radial-gradient(circle, var(--tw-mint) 0 4px, transparent 4.5px) no-repeat,
+		radial-gradient(circle, var(--tw-accent) 0 4px, transparent 4.5px) no-repeat,
 		linear-gradient(var(--tw-outline), var(--tw-outline)) no-repeat;
 	background-size: 9px 9px, var(--track-w) 2px;
 	background-position: calc(var(--track-w) - 9px) calc(100% - 0px), 0 calc(100% - 3.5px);
@@ -199,7 +231,7 @@ h4,
 
 /* Links: underline tweens thicker and changes color with an overshoot. */
 .sl-markdown-content a:not(:where(.not-content *)) {
-	color: var(--tw-mint-ink);
+	color: var(--tw-accent-ink);
 	text-decoration-color: color-mix(in oklab, currentColor 45%, transparent);
 	text-decoration-thickness: 1.5px;
 	text-underline-offset: 0.22em;
@@ -259,7 +291,7 @@ h4,
 	letter-spacing: 0;
 }
 .sl-markdown-content tbody tr {
-	background: linear-gradient(90deg, color-mix(in oklab, var(--tw-mint) 12%, transparent), transparent 60%) no-repeat;
+	background: linear-gradient(90deg, color-mix(in oklab, var(--tw-accent) 12%, transparent), transparent 60%) no-repeat;
 	background-size: 0% 100%;
 	transition: background-size 0.5s var(--ease-expo-out);
 }
@@ -374,7 +406,7 @@ h4,
 	height: 0.6rem;
 	rotate: 45deg;
 	border-radius: 2px;
-	border: 2px solid var(--tw-mint);
+	border: 2px solid var(--tw-accent);
 	background: var(--tw-bg);
 	transition:
 		scale 0.45s var(--ease-back-out),
@@ -384,10 +416,10 @@ h4,
 .sl-markdown-content .members tbody tr:is(:hover, :target)::before {
 	scale: 1.35;
 	rotate: 225deg;
-	background: var(--tw-mint);
+	background: var(--tw-accent);
 }
 .sl-markdown-content .members tbody tr:target {
-	background: color-mix(in oklab, var(--tw-mint) 11%, transparent);
+	background: color-mix(in oklab, var(--tw-accent) 11%, transparent);
 }
 .sl-markdown-content .members td {
 	margin: 0;
@@ -414,7 +446,7 @@ h4,
 	text-decoration-color: transparent;
 }
 .sl-markdown-content .members td:first-child a:hover {
-	text-decoration-color: var(--tw-mint);
+	text-decoration-color: var(--tw-accent);
 }
 /* Type and default read as a signature line beside the name: muted mono, no pill, the default after an `=`. */
 .sl-markdown-content .members td:not(:first-child, :last-child) {
@@ -472,7 +504,7 @@ header.header {
 		inset-inline: 0;
 		bottom: -1px;
 		height: 2px;
-		background: linear-gradient(90deg, var(--tw-mint), var(--tw-blue));
+		background: linear-gradient(90deg, var(--tw-accent), var(--tw-blue));
 		transform-origin: 0 50%;
 		animation: tw-playhead linear both;
 		animation-timeline: scroll(root);
@@ -506,7 +538,7 @@ header.header {
 }
 .sidebar-content a:not([data-lang-choice])[aria-current='page'],
 .sidebar-content a:not([data-lang-choice])[aria-current='page']:hover {
-	background: var(--tw-selected);
+	background: var(--tw-accent-low);
 	color: var(--sl-color-white);
 	font-weight: 650;
 	padding-inline-start: 1.6rem;
@@ -521,7 +553,7 @@ header.header {
 	height: 8px;
 	margin-top: -4px;
 	border-radius: 50%;
-	background: var(--tw-mint);
+	background: var(--tw-accent);
 }
 .sidebar-content summary .group-label {
 	font-family: var(--tw-font-display);
@@ -548,17 +580,17 @@ header.header {
 		background-color 0.2s;
 }
 .sl-link-button.primary {
-	background: var(--tw-mint);
-	border-color: var(--tw-mint);
+	background: var(--tw-accent);
+	border-color: var(--tw-accent);
 	color: var(--tw-on-accent);
 }
 :root[data-theme='light'] .sl-link-button.primary {
-	background: var(--tw-mint-ink);
-	border-color: var(--tw-mint-ink);
+	background: var(--tw-accent-ink);
+	border-color: var(--tw-accent-ink);
 }
 .sl-link-button:hover {
 	translate: 0 -3px;
-	box-shadow: 0 10px 22px -10px color-mix(in oklab, var(--tw-mint) 70%, transparent);
+	box-shadow: 0 10px 22px -10px color-mix(in oklab, var(--tw-accent) 70%, transparent);
 }
 .sl-link-button svg:last-child {
 	transition: translate 0.45s var(--ease-elastic-out);
@@ -577,13 +609,13 @@ header.header {
 }
 .pagination-links a:hover {
 	translate: 0 -4px;
-	border-color: var(--tw-mint);
+	border-color: var(--tw-accent);
 	box-shadow: var(--tw-shadow);
 }
 
 /* Starlight tabs */
 .sl-markdown-content [role='tablist'] a[aria-selected='true'] {
-	color: var(--tw-mint-ink);
+	color: var(--tw-accent-ink);
 }
 
 /* Shared widget chrome for the interactive diagrams. */
@@ -628,7 +660,7 @@ header.header {
 	scale: 0.94;
 }
 .tw-btn:focus-visible {
-	outline: 2px solid var(--tw-mint);
+	outline: 2px solid var(--tw-accent);
 	outline-offset: 2px;
 }
 .tw-btn[disabled] {
@@ -637,11 +669,11 @@ header.header {
 	translate: 0 0;
 }
 .tw-btn.is-primary {
-	background: var(--tw-mint);
+	background: var(--tw-accent);
 	color: var(--tw-on-accent);
 }
 :root[data-theme='light'] .tw-btn.is-primary {
-	background: var(--tw-mint-ink);
+	background: var(--tw-accent-ink);
 }
 .tw-btn svg {
 	width: 1em;
@@ -712,13 +744,13 @@ kbd {
 	font-variant-ligatures: none;
 }
 
-/* Marked code lines point at what the prose explains: a faint mint band, a mint edge, and a numbered tab
+/* Marked code lines point at what the prose explains: a faint accent band, an accent edge, and a numbered tab
    that matches the numbered notes beside the code (Moves.astro). */
 :root .expressive-code .ec-line.mark {
-	--tmLineBgCol: color-mix(in oklab, var(--tw-mint) 8%, transparent);
+	--tmLineBgCol: color-mix(in oklab, var(--tw-accent) 8%, transparent);
 }
 :root .expressive-code .ec-line.mark .code {
-	--ecLineBrdCol: color-mix(in oklab, var(--tw-mint) 70%, transparent);
+	--ecLineBrdCol: color-mix(in oklab, var(--tw-accent) 70%, transparent);
 }
 :root .expressive-code pre:has(.tm-label) {
 	--ec-codePadInl: 2.25rem;
@@ -727,12 +759,12 @@ kbd {
 	min-width: 1.35rem;
 	padding-inline: 0.3rem;
 	border-radius: 0 0.4rem 0.4rem 0;
-	background: var(--tw-mint);
+	background: var(--tw-accent);
 	color: var(--tw-on-accent);
 	font-weight: 700;
 }
 :root[data-theme='light'] .expressive-code .ec-line.mark.tm-label .code::before {
-	background: var(--tw-mint-ink);
+	background: var(--tw-accent-ink);
 }
 
 .sl-badge {

@@ -136,11 +136,11 @@ const slug = track ? slugOf(id) : firstSlug;
 		inset: 3px auto 3px 3px;
 		width: calc(50% - 3px);
 		border-radius: 999px;
-		background: var(--tw-mint);
+		background: var(--tw-accent);
 		transition: translate 0.45s var(--ease-back-out);
 	}
 	:global(:root[data-theme='light']) .lang-switch::before {
-		background: var(--tw-mint-ink);
+		background: var(--tw-accent-ink);
 	}
 	/* The indicator and the lit label follow data-lang. On arrival from a twin page, data-lang-from holds them on the
 	   previous language for the first frame (Head.astro), so the indicator slides over instead of snapping. */
@@ -175,7 +175,7 @@ const slug = track ? slugOf(id) : firstSlug;
 		color: var(--tw-on-accent);
 	}
 	a:focus-visible {
-		outline: 2px solid var(--tw-mint);
+		outline: 2px solid var(--tw-accent);
 		outline-offset: 2px;
 	}
 	@media (pointer: coarse) {

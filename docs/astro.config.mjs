@@ -144,7 +144,7 @@ export default defineConfig({
 					borderColor: 'var(--tw-outline)',
 					codeFontFamily: 'var(--__sl-font-mono)',
 					uiFontFamily: 'var(--__sl-font)',
-					codeBackground: 'var(--tw-stage)',
+					codeBackground: 'var(--tw-code-bg)',
 					frames: {
 						editorTabBarBackground: 'var(--tw-surface)',
 						// The theme's accent stripe on the active tab gets clipped by the frame's corner radius.

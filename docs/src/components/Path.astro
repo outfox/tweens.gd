@@ -78,7 +78,7 @@ const steps = LEARN.map((page) => ({
 		transition: background-color 0.2s;
 	}
 	a:hover { background-color: var(--tw-surface); }
-	a:focus-visible { outline: 2px solid var(--tw-mint-ink); outline-offset: 3px; }
+	a:focus-visible { outline: 2px solid var(--tw-accent-ink); outline-offset: 3px; }
 	.number {
 		position: relative;
 		z-index: 2;
@@ -96,21 +96,21 @@ const steps = LEARN.map((page) => ({
 	.step-copy { display: grid; gap: 0.4rem; }
 	.title { font: 700 1.15rem / 1.3 var(--tw-font-display); }
 	.description { color: var(--tw-soft); font-size: var(--sl-text-sm); line-height: 1.5; }
-	.arrow { align-self: center; color: var(--tw-mint-ink); font-size: 1.25rem; }
-	li:first-child a { background: var(--tw-selected); }
-	li:first-child a:hover { background: color-mix(in oklab, var(--tw-mint) 12%, var(--tw-selected)); }
+	.arrow { align-self: center; color: var(--tw-accent-ink); font-size: 1.25rem; }
+	li:first-child a { background: var(--tw-accent-low); }
+	li:first-child a:hover { background: color-mix(in oklab, var(--tw-accent) 12%, var(--tw-accent-low)); }
 	li:first-child .number {
-		background: var(--tw-mint-ink);
-		border-color: var(--tw-mint-ink);
+		background: var(--tw-accent-ink);
+		border-color: var(--tw-accent-ink);
 		color: var(--tw-on-accent);
 	}
-	a:hover .title { color: var(--tw-mint-ink); }
+	a:hover .title { color: var(--tw-accent-ink); }
 	.begin {
 		grid-column: 2 / -1;
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		color: var(--tw-mint-ink);
+		color: var(--tw-accent-ink);
 		font-size: var(--sl-text-sm);
 		font-weight: 700;
 	}
