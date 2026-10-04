@@ -133,6 +133,7 @@ export default defineConfig({
 				SiteTitle: './src/components/overrides/SiteTitle.astro',
 				MarkdownContent: './src/components/overrides/MarkdownContent.astro',
 				Header: './src/components/overrides/Header.astro',
+				Footer: './src/components/overrides/Footer.astro',
 				Sidebar: './src/components/overrides/Sidebar.astro',
 				ThemeProvider: './src/components/overrides/ThemeProvider.astro',
 				ThemeSelect: './src/components/overrides/ThemeSelect.astro',

@@ -1,0 +1,42 @@
+---
+// Starlight's footer (edit link, pagination) followed by the site's credits, on every page.
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default />
+<div class="credits">
+	<p>
+		tweens.gd is made with tweens &amp; ferrets, copyright © 2026{' '}
+		<a href="https://github.com/outfox/tweens.gd/graphs/contributors">its contributors</a>.
+	</p>
+	<p>
+		tweens.gd is released under the{' '}
+		<a href="https://github.com/outfox/tweens.gd?tab=MIT-1-ov-file">MIT License</a>.
+	</p>
+	<p>Illustrations drawn by <a href="https://www.fiverr.com/foxy_maria">foxy_maria</a>.</p>
+</div>
+
+<style>
+	.credits {
+		margin-top: 3rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--tw-outline);
+		font-size: var(--sl-text-xs);
+		line-height: 1.6;
+		color: var(--tw-muted);
+		text-align: center;
+	}
+	.credits p {
+		margin: 0;
+	}
+	.credits a {
+		color: inherit;
+		text-decoration: underline;
+		text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+		text-underline-offset: 0.2em;
+	}
+	.credits a:hover {
+		color: var(--sl-color-white);
+		text-decoration-color: currentColor;
+	}
+</style>
