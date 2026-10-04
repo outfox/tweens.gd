@@ -9,7 +9,17 @@ const facts = data.facts ?? [];
 <div class="hero">
 	<h1 id="_top" data-page-title>
 		{/* The wordmark animates itself; its SVG honors reduced motion. */}
-		<img src="/ferret-tweens.svg" alt={title} width="2015" height="860" fetchpriority="high" />
+		<img id="hero-logo" src="/ferret-tweens.svg" alt={title} width="2015" height="860" fetchpriority="high" />
+		{/* Devices with 4 GB of memory or less, and readers saving data, get the logo at rest (the same file's #still
+		    view). ?logo=still or ?logo=animated overrides the choice, for testing. */}
+		<script is:inline>
+			(() => {
+				const logo = document.getElementById('hero-logo');
+				const pick = new URLSearchParams(location.search).get('logo');
+				const modest = (navigator.deviceMemory ?? Infinity) <= 4 || navigator.connection?.saveData === true;
+				if (pick === 'still' || (pick !== 'animated' && modest)) logo.src = '/ferret-tweens.svg#still';
+			})();
+		</script>
 	</h1>
 	{tagline && <p class="tagline" set:html={tagline} />}
 	{
