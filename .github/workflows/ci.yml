@@ -67,6 +67,8 @@ jobs:
         run: dotnet build tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release --no-restore -p:TestSuite=Lifecycle -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION
       - name: Test
         run: dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release --no-build --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/test-results
+      - name: Test playground
+        run: dotnet test playground/playground.tests/playground.tests.csproj -c Release --logger 'trx;LogFileName=playground.trx' --results-directory artifacts/test-results
       - name: Test library with coverage
         run: dotnet msbuild build/Coverage.proj -p:Configuration=Release -p:NoBuild=true
       # Godot 4.7 projects target net8.0 and roll forward; run the library's net8.0 build on .NET 10 the same way.
@@ -111,4 +113,62 @@ jobs:
             artifacts/test-results/*.trx
             artifacts/coverage/**/*.trx
             artifacts/coverage/**/coverage.cobertura.xml
+          if-no-files-found: ignore
+
+  rendering:
+    name: Rendering tests
+    needs: gdextension
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 20
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: gdextension-*
+          path: addons/tweens_gd/bin
+          merge-multiple: true
+      # Godot renders on a virtual X display through Mesa's software drivers: lavapipe for Vulkan, llvmpipe for OpenGL.
+      # Tests fail on any Godot warning, so audio gets ALSA's null device and Vulkan sees only lavapipe.
+      - name: Install software rendering
+        run: |
+          sudo apt-get update
+          packages=(xvfb xauth mesa-vulkan-drivers libvulkan1 libgl1 libegl1 libgl1-mesa-dri libasound2t64
+            libxcursor1 libxinerama1 libxrandr2 libxi6 libxkbcommon0)
+          sudo apt-get install -y --no-install-recommends "${packages[@]}"
+          echo 'pcm.!default { type null }' > ~/.asoundrc
+          echo "VK_DRIVER_FILES=$(ls /usr/share/vulkan/icd.d/lvp_icd*.json)" >> "$GITHUB_ENV"
+      - name: Test library rendering
+        run: >-
+          xvfb-run -a -s '-screen 0 1920x1080x24'
+          dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release -p:TestSuite=Rendering --blame-hang-timeout 2m
+          --logger 'trx;LogFileName=library-rendering.trx' --results-directory artifacts/test-results
+      - name: Test testbed rendering
+        run: >-
+          xvfb-run -a -s '-screen 0 1920x1080x24'
+          dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true --blame-hang-timeout 2m
+          --logger 'trx;LogFileName=testbed-rendering.trx' --results-directory artifacts/test-results
+      - name: Test playground rendering
+        run: >-
+          xvfb-run -a -s '-screen 0 1920x1080x24'
+          dotnet test playground/playground.tests/playground.tests.csproj -c Release -p:RenderingTests=true --blame-hang-timeout 2m
+          --logger 'trx;LogFileName=playground-rendering.trx' --results-directory artifacts/test-results
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: rendering-test-results
+          path: |
+            artifacts/test-results/*.trx
+            **/TestResults/**/*.dmp
           if-no-files-found: ignore
