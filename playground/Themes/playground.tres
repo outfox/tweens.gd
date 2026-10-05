@@ -1,0 +1,263 @@
+[gd_resource type="Theme" load_steps=13 format=3]
+
+[ext_resource type="FontFile" path="res://Fonts/JetBrainsMono-Regular.ttf" id="1_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Button"]
+resource_name = "Button"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.054902, 0.0823529, 0.1137255, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ButtonHover"]
+resource_name = "ButtonHover"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.110745, 0.170824, 0.234196, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ButtonPressed"]
+resource_name = "ButtonPressed"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.145647, 0.226118, 0.309490, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Focus"]
+resource_name = "Focus"
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4039216, 0.6352941, 0.8666667, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Panel"]
+resource_name = "Panel"
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.0705882, 0.1058824, 0.1411765, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Code"]
+resource_name = "Code"
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.089804, 0.137647, 0.189020, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Graph"]
+resource_name = "Graph"
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.054902, 0.0823529, 0.1137255, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Popup"]
+resource_name = "Popup"
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.0705882, 0.1058824, 0.1411765, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Slider"]
+resource_name = "Slider track"
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_SliderFill"]
+resource_name = "Slider fill"
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.4039216, 0.6352941, 0.8666667, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_LanguageSelected"]
+resource_name = "Selected language"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.4039216, 0.6352941, 0.8666667, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[resource]
+resource_name = "Playground"
+default_font_size = 15
+Button/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+Button/colors/font_hover_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+Button/colors/font_pressed_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+Button/colors/font_disabled_color = Color(0.5529412, 0.6156863, 0.6666667, 0.45)
+Button/styles/normal = SubResource("StyleBoxFlat_Button")
+Button/styles/hover = SubResource("StyleBoxFlat_ButtonHover")
+Button/styles/pressed = SubResource("StyleBoxFlat_ButtonPressed")
+Button/styles/disabled = SubResource("StyleBoxFlat_Button")
+Button/styles/focus = SubResource("StyleBoxFlat_Focus")
+OptionButton/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+OptionButton/colors/font_hover_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+OptionButton/colors/font_pressed_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+OptionButton/colors/font_disabled_color = Color(0.5529412, 0.6156863, 0.6666667, 0.45)
+OptionButton/styles/normal = SubResource("StyleBoxFlat_Button")
+OptionButton/styles/hover = SubResource("StyleBoxFlat_ButtonHover")
+OptionButton/styles/pressed = SubResource("StyleBoxFlat_ButtonPressed")
+OptionButton/styles/disabled = SubResource("StyleBoxFlat_Button")
+OptionButton/styles/focus = SubResource("StyleBoxFlat_Focus")
+Label/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_Panel")
+PopupMenu/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+PopupMenu/constants/v_separation = 6
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_Popup")
+HSlider/styles/slider = SubResource("StyleBoxFlat_Slider")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_SliderFill")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_SliderFill")
+TextEdit/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+TextEdit/colors/font_readonly_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+TextEdit/font_sizes/font_size = 14
+TextEdit/fonts/font = ExtResource("1_font")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_Code")
+TextEdit/styles/read_only = SubResource("StyleBoxFlat_Code")
+GraphPanel/base_type = &"PanelContainer"
+GraphPanel/styles/panel = SubResource("StyleBoxFlat_Graph")
+BrandLabel/base_type = &"Label"
+BrandLabel/colors/font_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+BrandLabel/font_sizes/font_size = 16
+TitleLabel/base_type = &"Label"
+TitleLabel/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+TitleLabel/font_sizes/font_size = 30
+HintLabel/base_type = &"Label"
+HintLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+HintLabel/font_sizes/font_size = 15
+FieldLabel/base_type = &"Label"
+FieldLabel/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+FieldLabel/font_sizes/font_size = 14
+InLabel/base_type = &"Label"
+InLabel/colors/font_color = Color(1, 0.7529412, 0.4705882, 1)
+InLabel/font_sizes/font_size = 14
+OutLabel/base_type = &"Label"
+OutLabel/colors/font_color = Color(0.5333333, 0.7490196, 1, 1)
+OutLabel/font_sizes/font_size = 14
+LegendInLabel/base_type = &"Label"
+LegendInLabel/colors/font_color = Color(1, 0.7529412, 0.4705882, 1)
+LegendInLabel/font_sizes/font_size = 13
+LegendOutLabel/base_type = &"Label"
+LegendOutLabel/colors/font_color = Color(0.5333333, 0.7490196, 1, 1)
+LegendOutLabel/font_sizes/font_size = 13
+LegendResultLabel/base_type = &"Label"
+LegendResultLabel/colors/font_color = Color(0.4509804, 0.8862745, 0.7411765, 1)
+LegendResultLabel/font_sizes/font_size = 13
+LegendMutedLabel/base_type = &"Label"
+LegendMutedLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+LegendMutedLabel/font_sizes/font_size = 13
+ReadoutLabel/base_type = &"Label"
+ReadoutLabel/colors/font_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+ReadoutLabel/font_sizes/font_size = 14
+TimeLabel/base_type = &"Label"
+TimeLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+TimeLabel/font_sizes/font_size = 13
+ValueLabel/base_type = &"Label"
+ValueLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+ValueLabel/font_sizes/font_size = 14
+FootnoteLabel/base_type = &"Label"
+FootnoteLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+FootnoteLabel/font_sizes/font_size = 13
+CaptionLabel/base_type = &"Label"
+CaptionLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+CaptionLabel/font_sizes/font_size = 14
+CopyStatusLabel/base_type = &"Label"
+CopyStatusLabel/colors/font_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+CopyStatusLabel/font_sizes/font_size = 12
+InPicker/base_type = &"OptionButton"
+InPicker/colors/font_color = Color(1, 0.7529412, 0.4705882, 1)
+OutPicker/base_type = &"OptionButton"
+OutPicker/colors/font_color = Color(0.5333333, 0.7490196, 1, 1)
+PlayButton/base_type = &"Button"
+PlayButton/colors/font_color = Color(0.5607843, 0.7411765, 0.9176471, 1)
+EasingGraph/colors/background = Color(0.054902, 0.0823529, 0.1137255, 1)
+EasingGraph/colors/grid = Color(0.1607843, 0.2235294, 0.2745098, 1)
+EasingGraph/colors/labels = Color(0.5529412, 0.6156863, 0.6666667, 1)
+EasingGraph/colors/entry = Color(1, 0.7529412, 0.4705882, 1)
+EasingGraph/colors/exit = Color(0.5333333, 0.7490196, 1, 1)
+EasingGraph/colors/result = Color(0.4509804, 0.8862745, 0.7411765, 1)
+LanguageMode/colors/accent = Color(0.4039216, 0.6352941, 0.8666667, 1)
+LanguageMode/colors/accent_ink = Color(0.5607843, 0.7411765, 0.9176471, 1)
+LanguageButton/base_type = &"Button"
+LanguageButton/colors/font_pressed_color = Color(0.0313725, 0.0745098, 0.1215686, 1)
+LanguageButton/colors/font_hover_pressed_color = Color(0.0313725, 0.0745098, 0.1215686, 1)
+LanguageButton/styles/pressed = SubResource("StyleBoxFlat_LanguageSelected")
+LanguageButton/styles/hover_pressed = SubResource("StyleBoxFlat_LanguageSelected")

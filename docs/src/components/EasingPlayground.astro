@@ -15,7 +15,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 		<div class="visual">
 			<svg class="graph" viewBox="0 0 496 296" role="img" aria-label="In, Out, and blended easing curves over time">
 				<rect class="blend-zone" data-zone x="162" y="16" width="172" height="256" rx="8" />
-				<path class="grid" data-value-grid d="M32 60H464M32 145H464M32 230H464M32 16V272M464 16V272" />
+				<path class="grid" data-value-grid d="M32 60H464M32 145H464M32 230H464M32 16V272M104 16V272M176 16V272M248 16V272M320 16V272M392 16V272M464 16V272" />
 				<text x="12" y="64" data-value-tick="1">1</text><text x="4" y="149" data-value-tick="0.5">0.5</text><text x="12" y="234" data-value-tick="0">0</text>
 				<text x="32" y="290">0 s</text><text x="464" y="290" text-anchor="end" data-end-time>1.5 s</text>
 				<path class="result" data-curve />
@@ -58,7 +58,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<label class="tw-field"><span>Duration <output data-duration-out>1.5 s</output></span><input type="range" min="0.2" max="4" step="0.1" value="1.5" data-duration /></label>
 			<div class="pacing">
 				<label class="tw-field"><span>Skew <output data-skew-out>0.50</output></span><input type="range" min="0" max="1" step="0.01" value="0.5" data-skew /></label>
-				<label class="tw-field"><span>Blend &nbsp;<output data-width-out>20%</output></span><input aria-label="Blend" type="range" min="0" max="1" step="0.02" value="0.2" data-width /></label>
+				<label class="tw-field"><span>Blend &nbsp;<output data-width-out>10%</output></span><input aria-label="Blend" aria-valuetext="10%" type="range" min="0" max="1" step="any" value={Math.log(11) / Math.log(101)} data-width /></label>
 			</div>
 			<label class="tw-field"><span>Blend type</span><select data-blend aria-label="Blend type"><option value="Makima">Makima · match velocity</option><option value="Hermite">Hermite · match acceleration</option><option value="SmoothStep">SmoothStep · crossfade</option><option value="Linear">Linear · crossfade</option></select></label>
 		</div>
@@ -69,7 +69,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>1.5</span>, <span data-code-ease><span class="ty">InOut</span>.ELASTIC</span>)<span data-code-option="skew" hidden>
 move.skew = <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
 move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
-move.blend = <span class="num" data-code-blend>0.20</span></span>
+move.blend = <span class="num" data-code-blend>0.10</span></span>
 <span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
 		) : (
 			<code data-code><span class="kw">var</span> move = <span class="kw">new</span> <span class="ty">Tweens</span>.<span class="ty">Position2DX</span>
@@ -78,7 +78,7 @@ move.blend = <span class="num" data-code-blend>0.20</span></span>
     Ease = <span data-code-ease><span class="ty">InOut</span>.Elastic</span>,<span data-code-option="skew" hidden>
     Skew = <span class="num" data-code-skew>0.50</span>,</span><span data-code-option="blend-type" hidden>
     BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Makima</span>,</span><span data-code-option="blend" hidden>
-    Blend = <span class="num" data-code-blend>0.20</span>,</span>
+    Blend = <span class="num" data-code-blend>0.10</span>,</span>
 {'}'};
 sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To = <span class="num">300</span> {'}'});</code>
 		)}</pre>
@@ -89,6 +89,12 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 <script>
 	import { composeEase, legEase, splitLegEase, canonicalFamily, type EaseLeg, type BlendType, tween, type TweenHandle } from '../scripts/motion';
 	import { constant, langOf } from '../scripts/lang';
+	// Match Godot's logarithmic 1..101 slider range, offset to include zero blend.
+	const blendFromSlider = (position: number) => Math.round(Math.pow(101, position) - 1) / 100;
+	const blendToSlider = (blend: number) => String(Math.log(1 + 100 * blend) / Math.log(101));
+	const gridIntervalSeconds = 0.25;
+	const initialBlend = 0.1;
+	const libraryDefaultBlend = 0.2;
 	for (const root of document.querySelectorAll<HTMLElement>('[data-easing-playground]')) {
 		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
 		const entry = $<HTMLSelectElement>('[data-in]');
@@ -105,7 +111,8 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 		const graphY = (v: number) => 145 - graphScale * (v - 0.5);
 		// Fraction of the preview width, matching the progress thumb when nothing overshoots.
 		const laneX = (v: number) => String(0.5 + laneScale * (v - 0.5));
-		const value = (p: number) => composeEase(entry.value as EaseLeg, exit.value as EaseLeg, p, +skew.value, blend.value as BlendType, +width.value);
+		const blendWidth = () => blendFromSlider(+width.value);
+		const value = (p: number) => composeEase(entry.value as EaseLeg, exit.value as EaseLeg, p, +skew.value, blend.value as BlendType, blendWidth());
 		const path = (f: (t: number) => number, start = 0, end = 1) => Array.from({length: 241}, (_, i) => {
 			const t = start + (end - start) * i / 240;
 			return `${i ? 'L' : 'M'}${(32 + 432 * t).toFixed(2)} ${(graphY(f(t))).toFixed(2)}`;
@@ -130,6 +137,8 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 		const stop = () => { playing?.cancel(); setPlaying(); };
 		const update = () => {
 			stop();
+			// Snap the thumb as well as the value to a whole percentage on the logarithmic scale.
+			width.value = blendToSlider(blendWidth());
 			const a = entry.value as EaseLeg, b = exit.value as EaseLeg, k = +skew.value;
 			const matching = canonicalFamily(a) === canonicalFamily(b);
 			// Keep the full overshoot and its motion preview visible, including the 50% curves.
@@ -142,19 +151,25 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			}
 			graphScale = Math.min(170, 119 / Math.max(extent, reach));
 			laneScale = 0.5 / reach;
-			$('[data-value-grid]').setAttribute('d', [0, 0.5, 1].map(v => `M32 ${graphY(v)}H464`).join('') + 'M32 16V272M464 16V272');
+			const timeGrid = Array.from({ length: Math.floor(+duration.value / gridIntervalSeconds) + 1 }, (_, tick) => {
+				const x = 32 + 432 * tick * gridIntervalSeconds / +duration.value;
+				return `M${x} 16V272`;
+			}).join('');
+			$('[data-value-grid]').setAttribute('d', [0, 0.5, 1].map(v => `M32 ${graphY(v)}H464`).join('') + timeGrid);
 			root.querySelectorAll<SVGTextElement>('[data-value-tick]').forEach(tick => tick.setAttribute('y', String(graphY(+tick.dataset.valueTick!) + 4)));
 			$<HTMLElement>('[data-rail]').style.setProperty('--x', laneX(0));
 			$<HTMLElement>('[data-rail]').style.setProperty('--to', laneX(1));
 			$('[data-curve]').setAttribute('d', path(value));
 			$('[data-entry]').setAttribute('d', a === 'None' ? '' : path(t => b === 'None' ? legEase(a, 'In', t) : splitLegEase(a, t, k), 0, b === 'None' ? 1 : k));
 			$('[data-exit]').setAttribute('d', b === 'None' ? '' : path(t => a === 'None' ? legEase(b, 'Out', t) : splitLegEase(b, t, k), a === 'None' ? 0 : k, 1));
-			const halfWidth = +width.value * Math.min(k, 1-k), start = k-halfWidth, end = k+halfWidth;
+			const halfWidth = blendWidth() * Math.min(k, 1-k), start = k-halfWidth, end = k+halfWidth;
 			$('[data-zone]').setAttribute('x', String(32 + 432 * start));
 			$('[data-zone]').setAttribute('width', String(a === 'None' || b === 'None' || matching ? 0 : 432 * (end - start)));
 			$('[data-duration-out]').textContent = $<Element>('[data-end-time]').textContent = `${(+duration.value).toFixed(1)} s`;
 			$('[data-skew-out]').textContent = k.toFixed(2);
-			$('[data-width-out]').textContent = `${Math.round(+width.value*100)}%`;
+			const widthLabel = `${Math.round(blendWidth() * 100)}%`;
+			$('[data-width-out]').textContent = widthLabel;
+			width.setAttribute('aria-valuetext', widthLabel);
 			skew.disabled = a === 'None' || b === 'None';
 			blend.disabled = width.disabled = skew.disabled || matching || k === 0 || k === 1;
 			root.querySelectorAll<HTMLElement>('[data-ghost]').forEach((g, i) => g.style.setProperty('--x', laneX(value(i / 10))));
@@ -170,12 +185,12 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			$('[data-code-duration]').textContent = (+duration.value).toFixed(1);
 			$('[data-code-skew]').textContent = k.toFixed(2);
 			$('[data-code-blend-type]').textContent = gd ? constant(blend.value) : blend.value;
-			$('[data-code-blend]').textContent = (+width.value).toFixed(2);
+			$('[data-code-blend]').textContent = String(blendWidth());
 			root.querySelectorAll<HTMLElement>('[data-code-option]').forEach(line => {
-				// Options at their defaults are left out.
+				// Options at the library's defaults are left out.
 				const option = line.dataset.codeOption;
 				line.hidden = option === 'skew' ? skew.disabled || k === 0.5
-					: blend.disabled || (option === 'blend-type' && blend.value === 'Makima') || (option === 'blend' && +width.value === 0.2);
+					: blend.disabled || (option === 'blend-type' && blend.value === 'Makima') || (option === 'blend' && blendWidth() === libraryDefaultBlend);
 			});
 			draw(+progress.value);
 		};
@@ -186,8 +201,21 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			handle.completion.then(() => { if (playing === handle) setPlaying(); });
 		});
 		for (const input of [entry, exit, duration, skew, blend, width]) input.addEventListener('input', update);
+		width.addEventListener('keydown', event => {
+			// Native range keys step in thumb positions; here they must step in percentages.
+			const percent = Math.round(blendWidth() * 100);
+			const targets: Record<string, number> = {
+				ArrowLeft: percent - 1, ArrowDown: percent - 1,
+				ArrowRight: percent + 1, ArrowUp: percent + 1,
+				PageDown: percent - 10, PageUp: percent + 10, Home: 0, End: 100,
+			};
+			if (!(event.key in targets)) return;
+			event.preventDefault();
+			width.value = blendToSlider(Math.max(0, Math.min(100, targets[event.key])) / 100);
+			update();
+		});
 		progress.addEventListener('input', () => { stop(); draw(+progress.value); });
-		$('[data-reset]').addEventListener('click', () => { entry.value = 'Elastic'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = '0.2'; progress.value = '0'; update(); });
+		$('[data-reset]').addEventListener('click', () => { entry.value = 'Elastic'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(initialBlend); progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($<HTMLElement>('[data-code]').innerText); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }

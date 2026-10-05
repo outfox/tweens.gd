@@ -1,6 +1,31 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=8 format=3]
 
-[ext_resource type="Script" path="res://EasingPlayground.cs" id="1"]
+[ext_resource type="Theme" path="res://Themes/playground.tres" id="1_theme"]
+[ext_resource type="Script" path="res://EasingPlayground.cs" id="2_controller"]
+[ext_resource type="Script" path="res://EasingGraph.cs" id="3_graph"]
+[ext_resource type="Script" path="res://MotionPreview.cs" id="4_preview"]
+[ext_resource type="Theme" path="res://Themes/gdscript.tres" id="5_gdscript"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_Language"]
+resource_name = "Language mode"
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_Recipe"]
+resource_name = "Recipe syntax"
+number_color = Color(1, 0.7529412, 0.4705882, 1)
+symbol_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
+function_color = Color(0.4509804, 0.8862745, 0.7411765, 1)
+member_variable_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+keyword_colors = {
+"BlendType": Color(0.4509804, 0.8862745, 0.7411765, 1),
+"In": Color(0.4509804, 0.8862745, 0.7411765, 1),
+"InOut": Color(0.4509804, 0.8862745, 0.7411765, 1),
+"Out": Color(0.4509804, 0.8862745, 0.7411765, 1),
+"Position2DX": Color(0.4509804, 0.8862745, 0.7411765, 1),
+"Tweens": Color(0.4509804, 0.8862745, 0.7411765, 1),
+"new": Color(0.5333333, 0.7490196, 1, 1),
+"var": Color(0.5333333, 0.7490196, 1, 1),
+"with": Color(0.5333333, 0.7490196, 1, 1)
+}
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -9,4 +34,453 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1")
+theme = ExtResource("1_theme")
+script = ExtResource("2_controller")
+GDScriptAccentOverrides = ExtResource("5_gdscript")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0431373, 0.0588235, 0.0784314, 1)
+
+[node name="Decorations" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PageScroll" type="ScrollContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="PageMargin" type="MarginContainer" parent="PageScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Page" type="VBoxContainer" parent="PageScroll/PageMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Heading" type="HBoxContainer" parent="PageScroll/PageMargin/Page"]
+layout_mode = 2
+
+[node name="Title" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Heading"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Brand" type="Label" parent="PageScroll/PageMargin/Page/Heading/Title"]
+layout_mode = 2
+theme_type_variation = &"BrandLabel"
+text = "tweens.gd"
+
+[node name="PageTitle" type="Label" parent="PageScroll/PageMargin/Page/Heading/Title"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Easing playground"
+
+[node name="Reset" type="Button" parent="PageScroll/PageMargin/Page/Heading"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+text = "Reset"
+
+[node name="LanguageMode" type="HBoxContainer" parent="PageScroll/PageMargin/Page"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/LanguageMode"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"CaptionLabel"
+text = "Language"
+
+[node name="CSharpMode" type="Button" parent="PageScroll/PageMargin/Page/LanguageMode"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LanguageButton"
+tooltip_text = "C# recipes and blue accents"
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_Language")
+text = "C#"
+
+[node name="GDScriptMode" type="Button" parent="PageScroll/PageMargin/Page/LanguageMode"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LanguageButton"
+tooltip_text = "GDScript recipes and green accents"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_Language")
+text = "GDScript"
+
+[node name="Introduction" type="Label" parent="PageScroll/PageMargin/Page"]
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "Compose a curve. Watch it move. Take the code."
+
+[node name="Composer" type="GridContainer" parent="PageScroll/PageMargin/Page"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="Visual" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="GraphPanel" type="PanelContainer" parent="PageScroll/PageMargin/Page/Composer/Visual"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"GraphPanel"
+
+[node name="GraphContents" type="Control" parent="PageScroll/PageMargin/Page/Composer/Visual/GraphPanel"]
+custom_minimum_size = Vector2(300, 280)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CurveGraph" type="Control" parent="PageScroll/PageMargin/Page/Composer/Visual/GraphPanel/GraphContents"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_graph")
+
+[node name="GraphDecorations" type="Control" parent="PageScroll/PageMargin/Page/Composer/Visual/GraphPanel/GraphContents"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Legend" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/Visual"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="InKey" type="Label" parent="PageScroll/PageMargin/Page/Composer/Visual/Legend"]
+layout_mode = 2
+theme_type_variation = &"LegendInLabel"
+text = "In"
+
+[node name="OutKey" type="Label" parent="PageScroll/PageMargin/Page/Composer/Visual/Legend"]
+layout_mode = 2
+theme_type_variation = &"LegendOutLabel"
+text = "Out"
+
+[node name="ResultKey" type="Label" parent="PageScroll/PageMargin/Page/Composer/Visual/Legend"]
+layout_mode = 2
+theme_type_variation = &"LegendResultLabel"
+text = "Result"
+
+[node name="BlendKey" type="Label" parent="PageScroll/PageMargin/Page/Composer/Visual/Legend"]
+layout_mode = 2
+theme_type_variation = &"LegendMutedLabel"
+text = "Blend window"
+
+[node name="Transport" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/Visual"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Play" type="Button" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 64)
+layout_mode = 2
+theme_type_variation = &"PlayButton"
+text = "▶ Play"
+
+[node name="Motion" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MotionPreview" type="Control" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport/Motion"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+script = ExtResource("4_preview")
+
+[node name="Progress" type="HSlider" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport/Motion"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Scrub preview progress"
+max_value = 1.0
+step = 0.001
+
+[node name="Readouts" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport"]
+custom_minimum_size = Vector2(66, 0)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="WeightValue" type="Label" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport/Readouts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ReadoutLabel"
+text = "0.000"
+horizontal_alignment = 2
+
+[node name="ElapsedTimeValue" type="Label" parent="PageScroll/PageMargin/Page/Composer/Visual/Transport/Readouts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TimeLabel"
+text = "0.00 s"
+horizontal_alignment = 2
+
+[node name="CurveControls" type="PanelContainer" parent="PageScroll/PageMargin/Page/Composer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Fields" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="CurveSelectors" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="InField" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/CurveSelectors"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/CurveSelectors/InField"]
+layout_mode = 2
+theme_type_variation = &"InLabel"
+text = "In curve"
+
+[node name="InCurve" type="OptionButton" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/CurveSelectors/InField"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"InPicker"
+fit_to_longest_item = false
+selected = 0
+item_count = 1
+popup/item_0/text = "Elastic"
+popup/item_0/id = 10
+
+[node name="OutField" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/CurveSelectors"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/CurveSelectors/OutField"]
+layout_mode = 2
+theme_type_variation = &"OutLabel"
+text = "Out curve"
+
+[node name="OutCurve" type="OptionButton" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/CurveSelectors/OutField"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"OutPicker"
+fit_to_longest_item = false
+selected = 0
+item_count = 1
+popup/item_0/text = "Elastic"
+popup/item_0/id = 10
+
+[node name="DurationField" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/DurationField"]
+layout_mode = 2
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/DurationField/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"FieldLabel"
+text = "Duration"
+
+[node name="DurationValue" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/DurationField/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ValueLabel"
+text = "1.5 s"
+
+[node name="Duration" type="HSlider" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/DurationField"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.2
+max_value = 4.0
+step = 0.1
+value = 1.5
+
+[node name="Pacing" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SkewField" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/SkewField"]
+layout_mode = 2
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/SkewField/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"FieldLabel"
+text = "Skew"
+
+[node name="SkewValue" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/SkewField/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ValueLabel"
+text = "0.50"
+
+[node name="Skew" type="HSlider" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/SkewField"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "In/Out split along the timeline"
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="BlendField" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing"]
+modulate = Color(1, 1, 1, 0.45)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="HBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/BlendField"]
+layout_mode = 2
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/BlendField/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"FieldLabel"
+text = "Blend"
+
+[node name="BlendValue" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/BlendField/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ValueLabel"
+text = "10%"
+
+[node name="BlendWidth" type="HSlider" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/Pacing/BlendField"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Blend needs different In/Out curves and a skew between 0 and 1"
+min_value = 1.0
+max_value = 101.0
+step = 1.0
+value = 11.0
+exp_edit = true
+editable = false
+
+[node name="BlendTypeField" type="VBoxContainer" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields"]
+modulate = Color(1, 1, 1, 0.45)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/BlendTypeField"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Blend type"
+
+[node name="BlendType" type="OptionButton" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields/BlendTypeField"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Blend needs different In/Out curves and a skew between 0 and 1"
+disabled = true
+fit_to_longest_item = false
+selected = 0
+item_count = 4
+popup/item_0/text = "Makima · match velocity"
+popup/item_0/id = 0
+popup/item_1/text = "Hermite · match acceleration"
+popup/item_1/id = 1
+popup/item_2/text = "SmoothStep · crossfade"
+popup/item_2/id = 2
+popup/item_3/text = "Linear · crossfade"
+popup/item_3/id = 3
+
+[node name="Help" type="Label" parent="PageScroll/PageMargin/Page/Composer/CurveControls/Fields"]
+layout_mode = 2
+theme_type_variation = &"FootnoteLabel"
+text = "Skew moves the join. Blend reshapes the window where two different curves meet."
+autowrap_mode = 3
+
+[node name="RecipePanel" type="PanelContainer" parent="PageScroll/PageMargin/Page"]
+layout_mode = 2
+
+[node name="RecipeContents" type="VBoxContainer" parent="PageScroll/PageMargin/Page/RecipePanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RecipeBar" type="HBoxContainer" parent="PageScroll/PageMargin/Page/RecipePanel/RecipeContents"]
+layout_mode = 2
+
+[node name="Caption" type="Label" parent="PageScroll/PageMargin/Page/RecipePanel/RecipeContents/RecipeBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CaptionLabel"
+text = "Source code recipe"
+
+[node name="Copy" type="Button" parent="PageScroll/PageMargin/Page/RecipePanel/RecipeContents/RecipeBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Copy"
+
+[node name="Recipe" type="TextEdit" parent="PageScroll/PageMargin/Page/RecipePanel/RecipeContents"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "var move = new Tweens.Position2DX\n{\n    Duration = 1.5,\n    Ease = InOut.Elastic,\n};\nsprite.Tween(move with { To = 300 });"
+editable = false
+syntax_highlighter = SubResource("CodeHighlighter_Recipe")
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="CopyStatus" type="Label" parent="PageScroll/PageMargin/Page/RecipePanel/RecipeContents"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CopyStatusLabel"
+
+[node name="Footer" type="Label" parent="PageScroll/PageMargin/Page"]
+layout_mode = 2
+theme_type_variation = &"FootnoteLabel"
+text = "30 × 30 curves · Powered by tweens.gd + Godot / 2dog"

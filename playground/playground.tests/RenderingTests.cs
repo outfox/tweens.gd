@@ -18,8 +18,10 @@ public class RenderingTests(Fixture godot)
         window.AddChild(page);
         try
         {
-            foreach (var size in new[] { new Vector2I(1280, 800), new Vector2I(480, 900), new Vector2I(1280, 800) })
+            foreach (var gdscript in new[] { false, true })
+            foreach (var size in new[] { new Vector2I(1280, 1024), new Vector2I(480, 900), new Vector2I(1280, 1024) })
             {
+                page.SetLanguage(gdscript);
                 window.Size = size;
                 for (var i = 0; i < 8; i++) godot.Engine.Iteration();
                 var composer = (GridContainer)page.FindChild("Composer", true, false);
@@ -40,7 +42,8 @@ public class RenderingTests(Fixture godot)
                 {
                     Directory.CreateDirectory(output);
                     using var image = window.GetTexture().GetImage();
-                    Assert.Equal(Error.Ok, image.SavePng(Path.Combine(output, $"playground-{size.X}.png")));
+                    var language = gdscript ? "gdscript" : "csharp";
+                    Assert.Equal(Error.Ok, image.SavePng(Path.Combine(output, $"playground-{language}-{size.X}.png")));
                 }
             }
         }

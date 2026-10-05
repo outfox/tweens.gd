@@ -22,6 +22,135 @@ public class EasingPlaygroundTests(HeadlessFixture godot)
     private static T Find<T>(Node root, string name) where T : Node => (T)root.FindChild(name, true, false);
 
     [Fact]
+    public void AuthoredSceneIsCompleteBeforeReadyAndPreservesManualDecorations()
+    {
+        var page = GD.Load<PackedScene>("res://main.tscn").Instantiate<EasingPlayground>();
+        try
+        {
+            // These nodes and resources must exist before the controller's _Ready runs.
+            var authoredNodes = Descendants(page).ToArray();
+            Assert.All(authoredNodes, node => Assert.Equal(page, node.Owner));
+            Assert.IsType<EasingGraph>(page.GetNode<Control>("%CurveGraph"));
+            Assert.IsType<MotionPreview>(page.GetNode<Control>("%MotionPreview"));
+            Assert.Equal("res://Themes/playground.tres", page.Theme.ResourcePath);
+            Assert.Equal(new EasingSettings().Recipe(), page.GetNode<TextEdit>("%Recipe").Text);
+            Assert.NotNull(page.GetNode<TextEdit>("%Recipe").SyntaxHighlighter);
+            Assert.Equal(4, page.GetNode<OptionButton>("%BlendType").ItemCount);
+            Assert.True(page.GetNode<Button>("%CSharpMode").ButtonPressed);
+            Assert.Same(page.GetNode<Button>("%CSharpMode").ButtonGroup,
+                page.GetNode<Button>("%GDScriptMode").ButtonGroup);
+
+            var decorations = page.GetNode<Control>("%GraphDecorations");
+            Assert.Equal(1, decorations.AnchorRight);
+            Assert.Equal(1, decorations.AnchorBottom);
+            var artwork = new ColorRect { Name = "ManualArtwork", Color = Colors.Coral };
+            decorations.AddChild(artwork);
+            artwork.Owner = page;
+
+            godot.Tree.Root.AddChild(page);
+            page.ApplySettings(new() { Entry = Family("Sine"), Exit = Family("Cubic") });
+            page.Reset();
+
+            Assert.Equal(authoredNodes.Length + 1, Descendants(page).Count());
+            Assert.Equal(decorations, artwork.GetParent());
+            Assert.Equal(Colors.Coral, artwork.Color);
+            Assert.All(authoredNodes, node => Assert.True(GodotObject.IsInstanceValid(node)));
+        }
+        finally { page.Free(); }
+    }
+
+    private static IEnumerable<Node> Descendants(Node parent)
+    {
+        foreach (var child in parent.GetChildren())
+        {
+            yield return child;
+            foreach (var descendant in Descendants(child))
+                yield return descendant;
+        }
+    }
+
+    [Fact]
+    public void LanguageSwitchChangesRecipeAndAccentsWithoutInterruptingPlayback()
+    {
+        var page = Load();
+        var otherPage = Load();
+        try
+        {
+            Assert.Equal(1280, (int)ProjectSettings.GetSetting("display/window/size/viewport_width"));
+            Assert.Equal(1024, (int)ProjectSettings.GetSetting("display/window/size/viewport_height"));
+            Assert.False((bool)ProjectSettings.GetSetting("display/window/size/resizable"));
+
+            var csharpTheme = page.Theme;
+            var blue = Color.FromHtml("#67a2dd");
+            var green = Color.FromHtml("#79deb4");
+            Assert.True(blue.IsEqualApprox(page.Theme.GetColor("accent", "LanguageMode")));
+            page.ApplySettings(new() { Entry = Family("Sine"), Exit = Family("Cubic"), Duration = 2.5 });
+            page.TogglePlayback();
+            var playback = page.Playback;
+            var settings = page.Settings;
+
+            page.GetNode<Button>("%GDScriptMode").EmitSignal(Button.SignalName.Pressed);
+            Assert.True(page.UsesGDScript);
+            Assert.True(page.GetNode<Button>("%GDScriptMode").ButtonPressed);
+            Assert.False(page.GetNode<Button>("%CSharpMode").ButtonPressed);
+            Assert.Equal(settings.Recipe(true), page.GetNode<TextEdit>("%Recipe").Text);
+            Assert.True(green.IsEqualApprox(page.Theme.GetColor("accent", "LanguageMode")));
+            Assert.True(green.IsEqualApprox(page.GetNode<Button>("%Play").GetThemeColor("font_color")));
+            Assert.Same(playback, page.Playback);
+            Assert.True(page.IsPlaying);
+            Assert.Equal(settings, page.Settings);
+            Assert.True(blue.IsEqualApprox(otherPage.Theme.GetColor("accent", "LanguageMode")));
+
+            page.Reset();
+            Assert.True(page.UsesGDScript);
+            Assert.Equal(new EasingSettings().Recipe(true), page.Recipe);
+            page.GetNode<Button>("%CSharpMode").EmitSignal(Button.SignalName.Pressed);
+            Assert.False(page.UsesGDScript);
+            Assert.Same(csharpTheme, page.Theme);
+            Assert.Equal(new EasingSettings().Recipe(), page.Recipe);
+        }
+        finally { page.Free(); otherPage.Free(); }
+    }
+
+    [Fact]
+    public void LogarithmicBlendSliderSnapsToEveryWholePercentageIncludingTen()
+    {
+        var page = Load();
+        try
+        {
+            page.ApplySettings(new() { Entry = Family("Sine"), Exit = Family("Cubic") });
+            var slider = page.GetNode<HSlider>("%BlendWidth");
+            Assert.True(slider.ExpEdit);
+            Assert.Equal(0.1, page.Settings.Blend);
+            Assert.InRange(slider.Ratio, 0.51, 0.53);
+            Assert.Contains("Blend = 0.10", page.Recipe);
+            slider.Ratio = 0;
+            Assert.Equal(0, page.Settings.Blend);
+            slider.Ratio = 1;
+            Assert.Equal(1, page.Settings.Blend);
+            slider.Ratio = 0.5;
+            Assert.InRange(page.Settings.Blend, 0.085, 0.095);
+
+            for (var percent = 0; percent <= 100; percent++)
+            {
+                slider.Ratio = Math.Log(1 + percent) / Math.Log(101);
+                Assert.Equal(percent / 100.0, page.Settings.Blend);
+                Assert.Equal($"{percent}%", page.GetNode<Label>("%BlendValue").Text);
+            }
+
+            slider.Ratio = Math.Log(1 + 10.49) / Math.Log(101);
+            Assert.Equal(0.1, page.Settings.Blend);
+            Assert.Equal(11, slider.Value);
+            page.SetLanguage(gdscript: true);
+            Assert.Contains("move.blend = 0.10", page.Recipe);
+            page.Reset();
+            Assert.Equal(0.1, page.Settings.Blend);
+            Assert.Equal("10%", page.GetNode<Label>("%BlendValue").Text);
+        }
+        finally { page.Free(); }
+    }
+
+    [Fact]
     public void DefaultsAndResetMatchWebsite()
     {
         var page = Load();

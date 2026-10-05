@@ -1,0 +1,113 @@
+[gd_resource type="Theme" load_steps=7 format=3]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ButtonHover"]
+resource_name = "ButtonHover"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.122039, 0.208471, 0.208471, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ButtonPressed"]
+resource_name = "ButtonPressed"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.164, 0.287294, 0.267686, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Focus"]
+resource_name = "Focus"
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Code"]
+resource_name = "Code"
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.096863, 0.161176, 0.172941, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1607843, 0.2235294, 0.2745098, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_SliderFill"]
+resource_name = "Slider fill"
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_LanguageSelected"]
+resource_name = "Selected language"
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+
+[resource]
+resource_name = "GDScript accents"
+Button/colors/font_hover_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+Button/colors/font_pressed_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+OptionButton/colors/font_hover_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+OptionButton/colors/font_pressed_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+BrandLabel/colors/font_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+ReadoutLabel/colors/font_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+PlayButton/colors/font_color = Color(0.4745098, 0.8705882, 0.7058824, 1)
+LanguageMode/colors/accent = Color(0.4745098, 0.8705882, 0.7058824, 1)
+LanguageMode/colors/accent_ink = Color(0.4745098, 0.8705882, 0.7058824, 1)
+LanguageButton/colors/font_pressed_color = Color(0.0431373, 0.1019608, 0.0901961, 1)
+LanguageButton/colors/font_hover_pressed_color = Color(0.0431373, 0.1019608, 0.0901961, 1)
+LanguageButton/styles/pressed = SubResource("StyleBoxFlat_LanguageSelected")
+LanguageButton/styles/hover_pressed = SubResource("StyleBoxFlat_LanguageSelected")
+Button/styles/hover = SubResource("StyleBoxFlat_ButtonHover")
+Button/styles/pressed = SubResource("StyleBoxFlat_ButtonPressed")
+Button/styles/focus = SubResource("StyleBoxFlat_Focus")
+OptionButton/styles/hover = SubResource("StyleBoxFlat_ButtonHover")
+OptionButton/styles/pressed = SubResource("StyleBoxFlat_ButtonPressed")
+OptionButton/styles/focus = SubResource("StyleBoxFlat_Focus")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_SliderFill")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_SliderFill")
+TextEdit/styles/normal = SubResource("StyleBoxFlat_Code")
+TextEdit/styles/read_only = SubResource("StyleBoxFlat_Code")
