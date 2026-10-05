@@ -309,7 +309,7 @@
 		</method>
 		<method name="with_skew" qualifiers="const">
 			<return type="TweensGdDefinition" />
-			<param index="0" name="exponent" type="float" />
+			<param index="0" name="split" type="float" />
 			<description>
 				Returns a copy with [member skew] changed. The original definition is unchanged. C# equivalent:
 				[code]definition with { Skew = value }[/code].
@@ -333,7 +333,7 @@
 		</method>
 		<method name="with_weks" qualifiers="const">
 			<return type="TweensGdDefinition" />
-			<param index="0" name="exponent" type="float" />
+			<param index="0" name="split" type="float" />
 			<description>
 				Returns a copy with [member weks] changed. The original definition is unchanged. C# equivalent:
 				[code]definition with { Weks = value }[/code].
@@ -461,8 +461,8 @@
 			Cycles after the first, or [code]Tweens.INFINITE[/code] (-1). A ping-pong cycle includes both legs. Defaults
 			to zero.
 		</member>
-		<member name="skew" type="float" setter="set_skew" getter="get_skew" default="1.0">
-			Positive finite exponent applied to forward normalized time before easing. Defaults to 1 (identity).
+		<member name="skew" type="float" setter="set_skew" getter="get_skew" default="0.5">
+			In/Out split in [code][0, 1][/code]. Zero selects Out, 0.5 preserves the balanced pair, and 1 selects In. Applies to paired easing flags.
 		</member>
 		<member name="suppress_callbacks_when_target_invalid" type="bool" setter="set_suppress_callbacks_when_target_invalid" getter="get_suppress_callbacks_when_target_invalid" default="false">
 			Skip callbacks after the target or owner becomes invalid. Defaults to false.
@@ -481,8 +481,8 @@
 		<member name="value_type" type="int" setter="set_value_type" getter="get_value_type" default="0">
 			Captured value type checked at start. TYPE_NIL disables the type check. Named helpers set it automatically.
 		</member>
-		<member name="weks" type="float" setter="set_weks" getter="get_weks" default="1.0">
-			Positive finite exponent applied to descending ping-pong progress before easing. Defaults to 1,
+		<member name="weks" type="float" setter="set_weks" getter="get_weks" default="0.5">
+			Independent return split in [code][0, 1][/code]. Zero front-loads the return, 1 rear-loads it; defaults to 0.5,
 			independently of [member skew].
 		</member>
 	</members>

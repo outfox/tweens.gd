@@ -202,7 +202,7 @@ public class GalleryLanguageTests
                 var exit = targets["exit"].As<OptionButton>();
                 exit.Select(exit.GetItemIndex(4)); // Cubic
                 exit.EmitSignal(OptionButton.SignalName.ItemSelected, exit.Selected);
-                targets["skew"].As<HSlider>().Value = 2;
+                targets["skew"].As<HSlider>().Value = 0.75;
                 targets["blend"].As<OptionButton>().Select((int)BlendType.Linear);
                 targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, (int)BlendType.Linear);
                 targets["width"].As<HSlider>().Value = 0.8;
@@ -212,16 +212,16 @@ public class GalleryLanguageTests
                 targets = demo.CurrentPage!.Effects[0].SceneTargets;
                 Assert.Equal(3, targets["entry"].As<OptionButton>().GetSelectedId());
                 Assert.Equal(4, targets["exit"].As<OptionButton>().GetSelectedId());
-                Assert.Equal(2, targets["skew"].As<HSlider>().Value);
+                Assert.Equal(0.75, targets["skew"].As<HSlider>().Value);
                 Assert.Equal((int)BlendType.Linear, targets["blend"].As<OptionButton>().Selected);
                 Assert.Equal(0.8, targets["width"].As<HSlider>().Value);
                 // Reset again to remove wall-clock progress from Pump, then sample exactly halfway.
                 targets["entry"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, targets["entry"].As<OptionButton>().Selected);
                 if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(demo).Scheduler.Update(duration.Value / 2);
                 else GDScriptScheduler()!.Call("update", duration.Value / 2);
-                Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-154.6875)), 0, 0.001);
+                Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-200.0 / 3)), 0, 0.001);
                 var points = targets["resultCurve"].As<Line2D>().Points;
-                Assert.InRange(Math.Abs(points[120].Y - 51.046875), 0, 0.001);
+                Assert.InRange(Math.Abs(points[120].Y - 22), 0, 0.001);
             }
         }
         finally { demo.Free(); }
@@ -249,14 +249,14 @@ public class GalleryLanguageTests
                 ("Back50", "Back50", InOut.Back50),
                 ("None", "Elastic50", Out.Elastic50),
                 ("Elastic50", "Back20", In.Elastic50 | Out.Back20),
-                ("Elastic10", "Elastic", InOut.Elastic),
-                ("Back", "Back10", InOut.Back),
-                ("Bounce", "Bounce10", InOut.Bounce),
+                ("Elastic30", "Elastic", InOut.Elastic),
+                ("Back", "Back30", InOut.Back),
+                ("Bounce", "Bounce30", InOut.Bounce),
                 ("None", "Bounce50", Out.Bounce50),
                 ("Bounce50", "Bounce50", InOut.Bounce50),
                 ("Bounce20", "Bounce40", In.Bounce20 | Out.Bounce40),
                 ("None", "Jump50", Out.Jump50),
-                ("Jump", "Jump10", InOut.Jump),
+                ("Jump", "Jump30", InOut.Jump),
                 ("Jump50", "Jump50", InOut.Jump50),
                 ("Jump20", "Jump40", In.Jump20 | Out.Jump40),
                 ("Jump30", "Bounce20", In.Jump30 | Out.Bounce20),

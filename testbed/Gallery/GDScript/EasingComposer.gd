@@ -37,28 +37,30 @@ func refresh() -> void:
 	var a: int = entry_family[0]
 	var b: int = exit_family[1]
 	var ease: int = a | b
-	var exponent: float = targets.skew.value
+	var split: float = targets.skew.value
 	var method: int = targets.blend.selected
 	var width: float = targets.width.value
 	var single: bool = not a or not b or a == exit_family[0]
+	targets.skew.editable = a != 0 and b != 0
+	single = single or split == 0.0 or split == 1.0
 	targets.blend.disabled = single
 	targets.width.editable = not single
 	var entry_pair: int = a | entry_family[1] if b else a
 	var exit_pair: int = exit_family[0] | b if a else b
-	targets.entryCurve.points = sample(entry_pair, exponent, method, width, 0.0, 1.0 if not b else pow(0.5, 1.0/exponent)) if a else PackedVector2Array()
-	targets.exitCurve.points = sample(exit_pair, exponent, method, width, 0.0 if not a else pow(0.5, 1.0/exponent), 1.0) if b else PackedVector2Array()
-	targets.resultCurve.points = sample(ease, exponent, method, width)
+	targets.entryCurve.points = sample(entry_pair, split, method, width, 0.0, 1.0 if not b else split) if a else PackedVector2Array()
+	targets.exitCurve.points = sample(exit_pair, split, method, width, 0.0 if not a else split, 1.0) if b else PackedVector2Array()
+	targets.resultCurve.points = sample(ease, split, method, width)
 	targets.fit_preview.call()
-	var left := -200.0 + 400.0 * pow((1.0-width)/2.0, 1.0 / exponent)
-	var right := -200.0 + 400.0 * pow((1.0+width)/2.0, 1.0 / exponent)
+	var left := -200.0 + 400.0 * (split - width * minf(split,1.0-split))
+	var right := -200.0 + 400.0 * (split + width * minf(split,1.0-split))
 	targets.region.polygon = PackedVector2Array([Vector2(left, -110), Vector2(right, -110), Vector2(right, 85), Vector2(left, 85)])
 	targets.region.visible = not single
-	targets.recipe.text = "%s | %s    ·    Skew %.2f    ·    %s %d%%" % [targets.entry.get_item_text(targets.entry.selected), targets.exit.get_item_text(targets.exit.selected), exponent, targets.blend.get_item_text(method), roundi(width*100)]
+	targets.recipe.text = "%s | %s    ·    Skew %.2f    ·    %s %d%%" % [targets.entry.get_item_text(targets.entry.selected), targets.exit.get_item_text(targets.exit.selected), split, targets.blend.get_item_text(method), roundi(width*100)]
 	targets.tracer.position = Vector2(-200, 66)
 	var motion := Tweens.position_2d_x(200.0, seconds, ease)
 	# For example: In.SINE | Out.CUBIC, or InOut.SINE.
 	motion.from_value = -200.0
-	motion.skew = exponent
+	motion.skew = split
 	motion.blend_type = method
 	motion.blend = width
 	motion.repeats = Tweens.INFINITE
@@ -67,9 +69,9 @@ func refresh() -> void:
 		targets.tracer.position = Vector2(-200.0 + 400.0 * handle.progress, 66.0 - 132.0 * ((x + 200.0) / 400.0))
 	preview = Tweens.play(targets.ball, motion)
 
-func sample(ease: int, exponent: float, method: int, width: float, start: float = 0.0, end: float = 1.0) -> PackedVector2Array:
+func sample(ease: int, split: float, method: int, width: float, start: float = 0.0, end: float = 1.0) -> PackedVector2Array:
 	var points := PackedVector2Array()
 	for i in range(241):
 		var t := start + (end-start)*i/240.0
-		points.append(Vector2(-200.0 + 400.0 * t, 66.0 - 132.0 * Tweens.Easing.evaluate(ease, pow(t, exponent), method, width)))
+		points.append(Vector2(-200.0 + 400.0 * t, 66.0 - 132.0 * Tweens.Easing.evaluate(ease, t, method, width, split)))
 	return points

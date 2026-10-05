@@ -44,8 +44,8 @@ struct TweenSettings {
 	int64_t ease = 0;
 	int64_t blend_type = 0;
 	double blend = 0.2;
-	double skew = 1.0;
-	double weks = 1.0;
+	double skew = 0.5;
+	double weks = 0.5;
 	Callable ease_function;
 	Ref<Curve> curve;
 	bool suppress_callbacks_when_target_invalid = false;
@@ -189,8 +189,8 @@ public:
 	Ref<TweensGdDefinition> with_ease(int64_t p_easing) const;
 	Ref<TweensGdDefinition> with_blend_type(int64_t p_mode) const;
 	Ref<TweensGdDefinition> with_blend(double p_blend) const;
-	Ref<TweensGdDefinition> with_skew(double p_exponent) const;
-	Ref<TweensGdDefinition> with_weks(double p_exponent) const;
+	Ref<TweensGdDefinition> with_skew(double p_split) const;
+	Ref<TweensGdDefinition> with_weks(double p_split) const;
 	Ref<TweensGdDefinition> with_ease_function(const Callable &p_function) const;
 	Ref<TweensGdDefinition> with_curve(const Ref<Curve> &p_shape) const;
 	Ref<TweensGdDefinition> with_suppress_callbacks_when_target_invalid(bool p_enabled) const;

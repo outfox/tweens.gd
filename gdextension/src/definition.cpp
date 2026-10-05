@@ -82,11 +82,11 @@ String TweenSettings::validate() const {
 	if (repeats < INFINITE_REPEATS) {
 		return "Repeats must be -1 or nonnegative.";
 	}
-	if (!Math::is_finite(skew) || skew <= 0.0) {
-		return "Skew must be finite and positive.";
+	if (!Math::is_finite(skew) || skew < 0.0 || skew > 1.0) {
+		return "Skew must be finite and in [0, 1].";
 	}
-	if (!Math::is_finite(weks) || weks <= 0.0) {
-		return "Weks must be finite and positive.";
+	if (!Math::is_finite(weks) || weks < 0.0 || weks > 1.0) {
+		return "Weks must be finite and in [0, 1].";
 	}
 	if (blend_type < TweensGdEasing::BLEND_MAKIMA || blend_type > TweensGdEasing::BLEND_LINEAR || !Math::is_finite(blend) || blend < 0.0 || blend > 1.0) {
 		return "Invalid easing blend: use a known method and width in [0, 1].";
@@ -212,8 +212,8 @@ void TweensGdDefinition::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("with_ease", "easing"), &TweensGdDefinition::with_ease);
 	ClassDB::bind_method(D_METHOD("with_blend_type", "mode"), &TweensGdDefinition::with_blend_type);
 	ClassDB::bind_method(D_METHOD("with_blend", "blend"), &TweensGdDefinition::with_blend);
-	ClassDB::bind_method(D_METHOD("with_skew", "exponent"), &TweensGdDefinition::with_skew);
-	ClassDB::bind_method(D_METHOD("with_weks", "exponent"), &TweensGdDefinition::with_weks);
+	ClassDB::bind_method(D_METHOD("with_skew", "split"), &TweensGdDefinition::with_skew);
+	ClassDB::bind_method(D_METHOD("with_weks", "split"), &TweensGdDefinition::with_weks);
 	ClassDB::bind_method(D_METHOD("with_ease_function", "function"), &TweensGdDefinition::with_ease_function);
 	ClassDB::bind_method(D_METHOD("with_curve", "shape"), &TweensGdDefinition::with_curve);
 	ClassDB::bind_method(D_METHOD("with_suppress_callbacks_when_target_invalid", "enabled"),

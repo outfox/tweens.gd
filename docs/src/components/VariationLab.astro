@@ -1,5 +1,5 @@
 ---
-// The Recoil example from the Variations page, played with the library's QuadOut and skew math. Each start is a
+// The Recoil example from the Variations page, played with the library's InOut.Quad and skew math. Each start is a
 // variant of one shared definition: FactorBy and FactorDuration scale it with the damage, Skew and Weks reshape each leg,
 // and tuning the definition's own kick moves every variant with it.
 import type { Lang } from '../scripts/lang';
@@ -28,7 +28,7 @@ const gd = lang === 'gdscript';
 				<path class="return" data-return-curve></path>
 				<circle class="head" r="5" data-head cx="0" cy="110"></circle>
 			</svg>
-			<figcaption>Offset over time, outward then return: <span class="swatch base"></span> <code>QuadOut</code> <span class="swatch skewed"></span> {gd ? 'skew' : 'Skew'} <span class="swatch return"></span> {gd ? 'weks' : 'Weks'}</figcaption>
+			<figcaption>Offset over time, outward then return: <span class="swatch base"></span> <code>InOut.Quad</code> <span class="swatch skewed"></span> {gd ? 'skew' : 'Skew'} <span class="swatch return"></span> {gd ? 'weks' : 'Weks'}</figcaption>
 		</figure>
 	</div>
 
@@ -38,7 +38,7 @@ const gd = lang === 'gdscript';
 			{
 				gd ? (
 					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num" data-base-duration>0.2</span>,
-    Out.QUAD) <span class="cont">\</span>
+    InOut.QUAD) <span class="cont">\</span>
     .<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>) <span class="cont">\</span>
     .<span class="fn">with_ping_pong</span>()</pre>
 				) : (
@@ -46,7 +46,7 @@ const gd = lang === 'gdscript';
 {'{'}
     By = <span class="num" data-base-by>-12</span>,
     Duration = <span class="num" data-base-duration>0.2</span>,
-    Ease = Out.Quad,
+    Ease = InOut.Quad,
     UsePingPong = <span class="kw">true</span>,
 {'}'};</pre>
 				)
@@ -60,15 +60,15 @@ const gd = lang === 'gdscript';
 						<pre data-call-hit>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
     .<span class="fn">with_factor_by</span>(<span class="num" data-factor-by>2.0</span>) <span class="cont">\</span>
     .<span class="fn">with_factor_duration</span>(<span class="num" data-factor-duration>1.2</span>) <span class="cont">\</span>
-    .<span class="fn">with_skew</span>(<span class="num" data-skew-out>1.0</span>) <span class="cont">\</span>
-    .<span class="fn">with_weks</span>(<span class="num" data-weks-out>1.0</span>))</pre>
+    .<span class="fn">with_skew</span>(<span class="num" data-skew-out>0.5</span>) <span class="cont">\</span>
+    .<span class="fn">with_weks</span>(<span class="num" data-weks-out>0.5</span>))</pre>
 					) : (
 						<pre data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-factor-by>2</span>,
     FactorDuration = <span class="num" data-factor-duration>1.2</span>,
-    Skew = <span class="num" data-skew-out>1</span>,
-    Weks = <span class="num" data-weks-out>1</span>,
+    Skew = <span class="num" data-skew-out>0.5</span>,
+    Weks = <span class="num" data-weks-out>0.5</span>,
 {'}'});</pre>
 					)
 				}
@@ -76,14 +76,14 @@ const gd = lang === 'gdscript';
 					gd ? (
 						<pre data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
     .<span class="fn">with_factor_by</span>(<span class="num" data-crit-by>3.0</span>) <span class="cont">\</span>
-    .<span class="fn">with_skew</span>(<span class="num" data-crit-skew>0.50</span>) <span class="cont">\</span>
-    .<span class="fn">with_weks</span>(<span class="num" data-crit-weks>0.5</span>))</pre>
+    .<span class="fn">with_skew</span>(<span class="num" data-crit-skew>0.25</span>) <span class="cont">\</span>
+    .<span class="fn">with_weks</span>(<span class="num" data-crit-weks>0.75</span>))</pre>
 					) : (
 						<pre data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-crit-by>3</span>,
-    Skew = <span class="num" data-crit-skew>0.5</span>,
-    Weks = <span class="num" data-crit-weks>0.5</span>,
+    Skew = <span class="num" data-crit-skew>0.25</span>,
+    Weks = <span class="num" data-crit-weks>0.75</span>,
 {'}'});</pre>
 					)
 				}
@@ -100,11 +100,11 @@ const gd = lang === 'gdscript';
 				<input type="range" min="0" max="50" step="5" value="20" data-in="damage" />
 			</label>
 			<label class="tw-field">
-				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">1.00</output></span>
+				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">0.50</output></span>
 				<input type="range" min="0" max="1" step="0.01" value="0.5" data-in="skew" />
 			</label>
 			<label class="tw-field">
-				<span>{gd ? 'weks' : 'Weks'} <output data-out="weks">1.00</output></span>
+				<span>{gd ? 'weks' : 'Weks'} <output data-out="weks">0.50</output></span>
 				<input type="range" min="0" max="1" step="0.01" value="0.5" data-in="weks" />
 			</label>
 		</div>
@@ -115,12 +115,12 @@ const gd = lang === 'gdscript';
 				<input type="range" min="1" max="6" step="0.5" value="3" data-in="factor" />
 			</label>
 			<label class="tw-field">
-				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">0.50</output></span>
+				<span>{gd ? 'skew' : 'Skew'} <output data-out="skew">0.25</output></span>
 				<input type="range" min="0" max="1" step="0.01" value="0.25" data-in="skew" />
 			</label>
 			<label class="tw-field">
-				<span>{gd ? 'weks' : 'Weks'} <output data-out="weks">0.50</output></span>
-				<input type="range" min="0" max="1" step="0.01" value="0.25" data-in="weks" />
+				<span>{gd ? 'weks' : 'Weks'} <output data-out="weks">0.75</output></span>
+				<input type="range" min="0" max="1" step="0.01" value="0.75" data-in="weks" />
 			</label>
 		</div>
 		<div class="shared">
@@ -142,7 +142,7 @@ const gd = lang === 'gdscript';
 </div>
 
 <script>
-	import { EASES, reducedMotion } from '../scripts/motion';
+	import { composeEase, reducedMotion } from '../scripts/motion';
 	import { langOf } from '../scripts/lang';
 
 	const SLOW = 8;
@@ -150,15 +150,13 @@ const gd = lang === 'gdscript';
 	const H = 120;
 	const PAD = 10;
 
-	// The skew slider maps 0..1 onto 0.25..4 exponentially, so 0.5 sits at 1 and both directions get equal travel.
-	const skewOf = (v: number) => Math.pow(4, 2 * v - 1);
-	const weight = (progress: number, skew: number) => EASES.QuadOut(Math.pow(Math.min(1, Math.max(0, progress)), skew));
+	const weight = (progress: number, skew: number) => composeEase('Quad', 'Quad', progress, skew);
 	const path = (skew: number, returning = false) => {
 		let d = '';
 		for (let i = 0; i <= 80; i++) {
 			const t = i / 80;
 			const progress = returning ? 1 - t : t;
-			d += `${i ? 'L' : 'M'}${((t + (returning ? 1 : 0)) * W / 2).toFixed(1)} ${(H - PAD - weight(progress, skew) * (H - 2 * PAD)).toFixed(1)}`;
+			d += `${i ? 'L' : 'M'}${((t + (returning ? 1 : 0)) * W / 2).toFixed(1)} ${(H - PAD - weight(progress, returning ? 1-skew : skew) * (H - 2 * PAD)).toFixed(1)}`;
 		}
 		return d;
 	};
@@ -183,7 +181,7 @@ const gd = lang === 'gdscript';
 		const critCall = q<HTMLElement>('[data-call-crit]');
 		const result = q<HTMLElement>('[data-result]');
 		const announce = q<HTMLElement>('[data-announce]');
-		q<SVGPathElement>('[data-base-curve]').setAttribute('d', path(1) + ' ' + path(1, true));
+		q<SVGPathElement>('[data-base-curve]').setAttribute('d', path(.5) + ' ' + path(.5, true));
 
 		// One row per variant, each with its own button and sliders.
 		type Name = 'hit' | 'crit';
@@ -202,8 +200,8 @@ const gd = lang === 'gdscript';
 		// Each row's variant, computed as the library does at start: factor × value + delta.
 		const variant = (name: Name) => {
 			const base = -Number(baseIn.value);
-			const skew = skewOf(Number(rows[name].input('skew').value));
-			const weks = skewOf(Number(rows[name].input('weks').value));
+			const skew = Number(rows[name].input('skew').value);
+			const weks = Number(rows[name].input('weks').value);
 			const damage = Number(rows.hit.input('damage').value);
 			const factorBy = name === 'hit' ? damage / 10 : Number(rows.crit.input('factor').value);
 			const factorDuration = name === 'hit' ? 1 + damage / 100 : 1;
@@ -216,7 +214,7 @@ const gd = lang === 'gdscript';
 		const place = (offset: number, progress: number, skew: number, returning = false) => {
 			enemy.style.translate = `${offset * zoom()}px 0`;
 			head.setAttribute('cx', ((returning ? 2 - progress : progress) * W / 2).toFixed(1));
-			head.setAttribute('cy', (H - PAD - weight(progress, skew) * (H - 2 * PAD)).toFixed(1));
+			head.setAttribute('cy', (H - PAD - weight(progress, returning ? 1-skew : skew) * (H - 2 * PAD)).toFixed(1));
 		};
 
 		const sync = () => {
@@ -271,12 +269,12 @@ const gd = lang === 'gdscript';
 			const leg = v.duration * (slowIn.checked ? SLOW : 1) * 1000;
 			const start = performance.now();
 			const frame = (now: number) => {
-				// Ping-pong: each leg uses its own exponent before the same ease.
+				// Ping-pong: each leg uses its own In/Out split.
 				const t = (now - start) / leg;
 				const returning = t > 1;
 				const progress = Math.max(0, returning ? 2 - t : t);
-				const exponent = returning ? v.weks : v.skew;
-				place(v.by * weight(progress, exponent), progress, exponent, returning);
+				const split = returning ? v.weks : v.skew;
+				place(v.by * weight(progress, returning ? 1-split : split), progress, split, returning);
 				if (t < 2) raf = requestAnimationFrame(frame);
 				else place(0, 0, v.weks, true);
 			};

@@ -277,8 +277,8 @@ public class LifetimeTests(HeadlessFixture godot)
 
     [Theory]
     [InlineData(1, 0.5f)]
-    [InlineData(2, 0.25f)]
-    [InlineData(0.5, 0.70710677f)]
+    [InlineData(0, 0.5f)]
+    [InlineData(0.5, 0.5f)]
     public void CurveEasingSamplesAPrivateCopy(double skew, float sampleTime)
     {
         using var scope = new SceneScope(godot);

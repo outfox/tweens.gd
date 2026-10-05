@@ -45,7 +45,7 @@ Output weights aren't clamped; native property setters still apply their own lim
 
 Back and Elastic offer **10%, 20%, 30%, 40%, and 50%** peak overshoot:
 `BACK10` through `BACK50`, and `ELASTIC10` through `ELASTIC50`.
-`BACK` aliases `BACK10`; `ELASTIC` aliases `ELASTIC10`.
+`BACK` aliases `BACK30`; `ELASTIC` aliases `ELASTIC30`.
 Every variant is available in `In`, `Out`, and `InOut`.
 For example, use `In.BACK20 | Out.ELASTIC40` or `InOut.ELASTIC30`.
 
@@ -55,7 +55,7 @@ peaks at 130; its In counterpart dips to -30. `InOut.ELASTIC30` reaches both
 extremes. A mixed pair's join can reshape overshoot inside its blend window.
 Legacy `Tweens.Ease` curves keep their original shapes.
 
-Bounce offers `BOUNCE10` through `BOUNCE50`, with `BOUNCE` aliasing `BOUNCE10`.
+Bounce offers `BOUNCE10` through `BOUNCE50`, with `BOUNCE` aliasing `BOUNCE30`.
 The percentage is the **first rebound's depth** within the full tween range.
 A tween from 0 to 100 with `Out.BOUNCE30` first reaches 100, rebounds to
 70, then settles through two smaller bounces. Their depths are one-quarter
@@ -64,7 +64,7 @@ and one-sixteenth of the first. `In.BOUNCE30` mirrors this motion;
 A mixed pair's join may reshape rebounds inside its blend window.
 Legacy `Tweens.Ease.BOUNCE_OUT` retains its original 25% first rebound.
 
-Jump offers `JUMP10` through `JUMP50`, with `JUMP` aliasing `JUMP10`.
+Jump offers `JUMP10` through `JUMP50`, with `JUMP` aliasing `JUMP30`.
 It rebounds **above the target** in three parabolic arcs. From 0 to 100,
 `Out.JUMP30` rises directly to 130, lands at 100, then reaches 107.5 and
 101.875, landing at 100 after each peak. It stays above the target once it
@@ -96,15 +96,23 @@ leg, a matching pair, or a custom function/Curve.
 Sample the same configuration with `Tweens.Easing.evaluate(ease, t, BlendType.MAKIMA, 0.2)`.
 The copy helpers are `with_blend_type()` and `with_blend()`.
 
-Skew warps normalized time **before** the join. A value of 1 leaves time
-unchanged; values above 1 delay motion, and values between 0 and 1 bring it
-forward. Weks independently warps the ping-pong return. In and Out shape each
-traversal; they do not mean forward and ping-pong return.
-See [variations](/gdscript/variations/#change-the-pacing-with-skew).
+`skew` moves the In/Out split linearly from 0 to 1. The default, 0.5,
+preserves the balanced pair. At 0, the Out profile fills the duration; at 1,
+the In profile does. Intermediate values move the split in both time and value.
+The blend window follows it and shrinks near either endpoint.
+
+`weks` independently controls the ping-pong return: 0 front-loads the return,
+0.5 preserves it, and 1 rear-loads it. To retrace the outward curve, set
+`weks = 1 - skew`. Duration, intervals, and raw progress stay unchanged.
+
+These settings apply to paired In/Out flags. A single leg, legacy ease,
+custom function, or Godot Curve retains its authored profile. The numbered
+overshoot and rebound percentages describe the balanced pair and solo legs;
+moving the split also redistributes the paired legs' value ranges.
 
 ## How the join works
 
-In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
+At the neutral split (0.5), In owns progress and values from 0 to 0.5; Out owns 0.5 to 1. For example,
 the Sine halves are `0.5 * SineIn(2 * t)` and
 `0.5 + 0.5 * SineOut(2 * t - 1)`. Every pair passes through `(0.5, 0.5)`.
 Each family supplies an InOut half profile. Back, Elastic, and Jump are calibrated

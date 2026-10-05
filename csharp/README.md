@@ -73,20 +73,19 @@ MIT notice alongside its own license.
 sprite.TweenPositionX(300, 1.2, options =>
 {
     options.Ease = In.Sine | Out.Cubic;
-    options.Skew = 1.5;
+    options.Skew = 0.75;
 });
 ```
 
 `InOut.Sine` is `In.Sine | Out.Sine` and exactly preserves `EaseType.SineInOut`.
 Single legs run on their own; pairs use In on 0–0.5 and Out on 0.5–1, with a local
-Makima join over 40–60% of progress after skew. `BlendType` selects Makima,
+Makima join over 40–60% of progress around the Skew split. `BlendType` selects Makima,
 Hermite, SmoothStep, or Linear; `Blend` sets the window width in [0, 1].
-`Back` / `Back10` and `Elastic` / `Elastic10` have 10% peak overshoot. Both families
-offer `20` through `50` variants in `In`, `Out`, and `InOut`, measured against the
-full tween range for solo legs and matching pairs. `Bounce` aliases `Bounce10`;
+`Back` / `Back30` and `Elastic` / `Elastic30` have 30% peak overshoot. Both families
+offer `10` through `50` variants in `In`, `Out`, and `InOut`, measured against the
+full tween range for solo legs and matching pairs. `Bounce` aliases `Bounce30`;
 `Bounce10` through `Bounce50` measure the first rebound depth in the same
-full-range percentages, followed by two smaller bounces. `Jump` / `Jump10` through
-`Jump50` instead launch above the target and return to it between three diminishing
+full-range percentages, followed by two smaller bounces. `Jump10` through `Jump50` (default `Jump30`) instead launch above the target and return to it between three diminishing
 peaks, with the same percentage convention. Legacy `EaseType` names
 keep their original shapes. Try the
 [easing composer](https://tweens.gd/csharp/easing/).

@@ -253,10 +253,7 @@ void TweensGdHandle::advance_inner(double p_local_time) {
 	}
 	if (sample_phase == 0) {
 		double time = CLAMP(clock.progress, 0.0, 1.0);
-		const double exponent = clock.returning ? options->weks : options->skew;
-		if (exponent != 1.0) {
-			time = std::pow(time, exponent);
-		}
+		const double split = clock.returning ? 1.0 - options->weks : options->skew;
 		double weight;
 		if (has_curve) {
 			weight = options->curve->sample(time);
@@ -277,7 +274,7 @@ void TweensGdHandle::advance_inner(double p_local_time) {
 			}
 			weight = result;
 		} else {
-			weight = TweensGdEasing::evaluate(options->ease, time, options->blend_type, options->blend);
+			weight = TweensGdEasing::evaluate(options->ease, time, options->blend_type, options->blend, split);
 		}
 		if (!Math::is_finite(weight)) {
 			fail("Easing must return a finite number.");

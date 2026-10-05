@@ -12,10 +12,11 @@ namespace tweens.gd {
   /// <summary>Samples easing curves without starting playback.</summary>
   public static class Easing {
     /// <summary>Samples a curve at progress clamped to [0, 1]. Eased weight may overshoot.</summary>
-    /// <remarks>Blend is the centered transition width in [0, 1]; zero directly splices the halves.
-    /// In GDScript, use Tweens.Easing.evaluate(ease, progress, blend_type, blend).</remarks>
-    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Makima, double blend = 0.2)
-      => GetFunction(ease, blendType, blend)(Math.Clamp(progress, 0, 1));
+    /// <remarks>Skew moves the paired In/Out split in [0, 1]; 0.5 preserves the authored pair.
+    /// Blend is the transition width around that split; zero directly splices the legs.
+    /// In GDScript, use Tweens.Easing.evaluate(ease, progress, blend_type, blend, skew).</remarks>
+    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Makima, double blend = 0.2, double skew = 0.5)
+      => GetFunction(ease, blendType, blend, skew)(Math.Clamp(progress, 0, 1));
 
     const float ConstantA = 1.70158f;
     const float ConstantB = ConstantA * 1.525f;
@@ -48,8 +49,10 @@ namespace tweens.gd {
     // Back: peak = 4*s^3 / (27*(s+1)^2).
     static readonly float[] BackSolo = [1.701540198866824f, 2.5923889015162995f, 3.3940516581445603f, 4.155744652639195f, 4.894859521133737f];
     static readonly float[] BackPaired = [2.5923889015162995f, 4.155744652639195f, 5.619622918334311f, 7.042439379340937f, 8.44353560159325f];
-    const float ElasticSoloPeriod = 0.7553423501870573f;
-    const float ElasticPairPeriod = 0.5074981597799941f;
+    const float ElasticSoloDecay = 17.553423501870573f;
+    const float ElasticPairDecay = 15.074981597799942f;
+    const float ElasticSoloPeriod = 0.43031056027706766f;
+    const float ElasticPairPeriod = 0.33664927316001425f;
     static readonly float[] ElasticSoloKick = [0, 0.6853132138892408f, 1.1091787748281363f, 1.4696240828544362f, 1.8012905799033314f];
     static readonly float[] ElasticPairKick = [0, 0.8829462755133655f, 1.4362972653938577f, 1.9263692424370968f, 2.3898041023212153f];
     static readonly float[] BounceSoloRoot = [Mathf.Sqrt(0.1f), Mathf.Sqrt(0.2f), Mathf.Sqrt(0.3f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.5f)];
@@ -141,20 +144,87 @@ namespace tweens.gd {
       return (w1 * s1 + w2 * s2) / (w1 + w2);
     }
 
-    static Func<float, float> Compose(int i, int o, BlendType method, float blend) {
-      var entry = InOutCurves[i];
-      var exit = InOutCurves[o];
+    static Func<float, float> SplitProfile(int family, float split) {
+      var pair = InOutCurves[family];
+      var entry = InCurves[family];
+      var exit = OutCurves[family];
+      if (split == 0) return exit;
+      if (split == 1) return entry;
+      if (split == 0.5f) return pair;
+      return t => {
+        if (t == 0 || t == 1) return t;
+        if (t <= split) {
+          var x = t / split;
+          var solo = Math.Max(0, 2 * split - 1);
+          return split * ((1 - solo) * 2 * pair(x / 2) + solo * entry(x));
+        }
+        var span = 1 - split;
+        var u = (t - split) / span;
+        var mix = Math.Max(0, 2 * span - 1);
+        return split + span * ((1 - mix) * (2 * pair(0.5f + u / 2) - 1) + mix * exit(u));
+      };
+    }
+
+    static float SoloSlope(int family, float t, bool exit) {
+      if (exit) t = 1 - t;
+      if (family == 11) return 6 * t * (1 - t);
+      if (family == 12) return 30 * t * t * (1 - t) * (1 - t);
+      if (family == 1) return Mathf.Pi / 2 * Mathf.Sin(Mathf.Pi / 2 * t);
+      if (family == 6) return 10 * Mathf.Log(2) * Mathf.Pow(2, 10 * t - 10);
+      if (family == 7) return t / Mathf.Sqrt(1 - t * t);
+      if (family is 8 or >= 13 and <= 16) {
+        var s = BackSolo[family == 8 ? 0 : family - 12];
+        return 3 * (s + 1) * t * t - 2 * s * t;
+      }
+      if (family is 9 or >= 17 and <= 20) {
+        var u = 1 - t;
+        var omega = Mathf.Tau / ElasticSoloPeriod;
+        var decay = ElasticSoloDecay * Mathf.Log(2);
+        var kick = ElasticSoloKick[family == 9 ? 0 : family - 16];
+        return Mathf.Pow(2, -ElasticSoloDecay * u) * ((decay + kick * omega) * Mathf.Cos(omega * u)
+          + (omega - kick * decay) * Mathf.Sin(omega * u));
+      }
+      if (family is 10 or >= 21 and <= 29) {
+        var jump = family >= 25;
+        var level = jump ? family - 25 : family == 10 ? 0 : family - 20;
+        var r = BounceSoloRoot[level];
+        var a = jump ? JumpSoloLaunch[level] : 1;
+        var scale = jump ? a + 2.5f * r : 1 + 3.5f * r;
+        var u = (1 - t) * scale;
+        if (jump) return 2 * scale * ((u < a + r ? a : u < a + 2 * r ? a + 1.5f * r : a + 2.25f * r) - u);
+        if (u >= 1 + 3 * r) u -= 1 + 3.25f * r;
+        else if (u >= 1 + 2 * r) u -= 1 + 2.5f * r;
+        else if (u >= 1) u -= 1 + r;
+        return 2 * scale * u;
+      }
+      return family is >= 2 and <= 5 ? family * Mathf.Pow(t, family - 1) : 1;
+    }
+
+    static float SplitSlope(int family, float t, float split) {
+      if (split == 0.5f) return PairSlope(family, t);
+      var exit = t > split;
+      var span = exit ? 1 - split : split;
+      var x = exit ? (t - split) / span : t / span;
+      var mix = Math.Max(0, 2 * span - 1);
+      return (1 - mix) * PairSlope(family, exit ? 0.5f + x / 2 : x / 2) + mix * SoloSlope(family, x, exit);
+    }
+
+    static Func<float, float> Compose(int i, int o, BlendType method, float blend, float split = 0.5f) {
+      if (split == 0) return OutCurves[o];
+      if (split == 1) return InCurves[i];
+      var entry = SplitProfile(i, split);
+      var exit = SplitProfile(o, split);
       if (i == o) return entry;
-      var h = blend / 2;
-      var left = 0.5f - h;
-      var right = 0.5f + h;
-      if (left == 0.5f) return t => t <= 0.5f ? entry(t) : exit(t);
+      var h = blend * Math.Min(split, 1 - split);
+      var left = split - h;
+      var right = split + h;
+      if (left == split) return t => t <= split ? entry(t) : exit(t);
       var y0 = entry(left);
       var y1 = exit(right);
-      var v0 = PairSlope(i, left);
-      var v1 = PairSlope(o, right);
-      var d0 = (0.5f - y0) / h;
-      var d1 = (y1 - 0.5f) / h;
+      var v0 = SplitSlope(i, left, split);
+      var v1 = SplitSlope(o, right, split);
+      var d0 = (split - y0) / h;
+      var d1 = (y1 - split) / h;
       // Outer tangents stay exact. Hermite solves for equal acceleration at the midpoint, then limits
       // the shared tangent to avoid introducing reversals in monotone legs.
       var middle = method == BlendType.Makima ? MakimaSlope(v0, d0, d1, v1)
@@ -163,10 +233,10 @@ namespace tweens.gd {
         if (t <= left) return entry(t);
         if (t >= right) return exit(t);
         if (method is BlendType.Makima or BlendType.Hermite)
-          return t <= 0.5f
-            ? Hermite((t - left) / h, y0, 0.5f, h * v0, h * middle)
-            : Hermite((t - 0.5f) / h, 0.5f, y1, h * middle, h * v1);
-        var u = (t - left) / blend;
+          return t <= split
+            ? Hermite((t - left) / h, y0, split, h * v0, h * middle)
+            : Hermite((t - split) / h, split, y1, h * middle, h * v1);
+        var u = (t - left) / (2 * h);
         var weight = method == BlendType.SmoothStep ? SmoothStep(u) : u;
         return entry(t) * (1 - weight) + exit(t) * weight;
       };
@@ -177,8 +247,9 @@ namespace tweens.gd {
       if (!double.IsFinite(blend) || blend < 0 || blend > 1) throw new ArgumentOutOfRangeException(nameof(blend));
     }
 
-    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Makima, double blend = 0.2) {
+    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Makima, double blend = 0.2, double skew = 0.5) {
       ValidateBlend(blendType, blend);
+      if (!double.IsFinite(skew) || skew < 0 || skew > 1) throw new ArgumentOutOfRangeException(nameof(skew));
       var bits = (long)easeType;
       if (bits != 0 && (bits & ~CompositionMask) == 0) {
         var entry = LegBits(bits, false);
@@ -188,7 +259,7 @@ namespace tweens.gd {
           if (exit == 0) return InCurves[BitOperations.TrailingZeroCount(entry)];
           var i = BitOperations.TrailingZeroCount(entry);
           var o = BitOperations.TrailingZeroCount(exit);
-          return blendType == BlendType.Makima && blend == 0.2 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend);
+          return blendType == BlendType.Makima && blend == 0.2 && skew == 0.5 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend, (float)skew);
         }
       }
       return easeType switch {
@@ -400,12 +471,12 @@ namespace tweens.gd {
     }
 
     // A damped oscillator with an adjustable sine term keeps both endpoints fixed.
-    // The periods set the 10% baseline; the kicks set each larger peak analytically.
+    // Frequency and decay add one cycle while preserving the damping ratio and calibrated peaks.
     static float ElasticLegOut(float t, int level, bool paired = false) {
       if (t == 0 || t == 1) return t;
       var angle = Mathf.Tau * t / (paired ? ElasticPairPeriod : ElasticSoloPeriod);
       var kick = (paired ? ElasticPairKick : ElasticSoloKick)[level];
-      return 1 - Mathf.Pow(2, -10 * t) * (Mathf.Cos(angle) - kick * Mathf.Sin(angle));
+      return 1 - Mathf.Pow(2, -(paired ? ElasticPairDecay : ElasticSoloDecay) * t) * (Mathf.Cos(angle) - kick * Mathf.Sin(angle));
     }
 
     static float ElasticLegIn(float t, int level, bool paired = false) => 1 - ElasticLegOut(1 - t, level, paired);
@@ -414,9 +485,9 @@ namespace tweens.gd {
 
     static float ElasticSlope(float t, int level) {
       var omega = Mathf.Tau / ElasticPairPeriod;
-      var decay = 10 * Mathf.Log(2);
+      var decay = ElasticPairDecay * Mathf.Log(2);
       var kick = ElasticPairKick[level];
-      return Mathf.Pow(2, -10 * t) * ((decay + kick * omega) * Mathf.Cos(omega * t)
+      return Mathf.Pow(2, -ElasticPairDecay * t) * ((decay + kick * omega) * Mathf.Cos(omega * t)
         + (omega - kick * decay) * Mathf.Sin(omega * t));
     }
 

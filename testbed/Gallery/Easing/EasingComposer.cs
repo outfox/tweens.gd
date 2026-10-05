@@ -7,7 +7,7 @@ namespace testbed;
 
 public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.2)
 {
-    public static EasingSelection Default => new(0, 10, 1);
+    public static EasingSelection Default => new(0, 10, 0.5);
 }
 
 public sealed partial class EasingComposer : GalleryEffect
@@ -74,7 +74,7 @@ public sealed partial class EasingComposer : GalleryEffect
         footer.OffsetTop = -96;
         var row = footer.Add(new HBoxContainer());
         row.AddChild(GalleryTheme.Label("Skew", 14, Palette.Muted));
-        skew = row.Add(new HSlider { Name = "EasingSkew", MinValue = 0.25, MaxValue = 4, Step = 0.05, Value = InitialSelection.Skew,
+        skew = row.Add(new HSlider { Name = "EasingSkew", MinValue = 0, MaxValue = 1, Step = 0.01, Value = InitialSelection.Skew,
             SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, CustomMinimumSize = new(120, 24) });
         var join = footer.Add(new HBoxContainer());
         blend = join.Add(new OptionButton { Name = "EasingBlend" });

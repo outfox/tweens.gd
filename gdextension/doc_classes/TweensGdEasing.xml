@@ -20,9 +20,11 @@
 			<param index="1" name="progress" type="float" />
 			<param index="2" name="blend_type" type="int" default="0" />
 			<param index="3" name="blend" type="float" default="0.2" />
+			<param index="4" name="skew" type="float" default="0.5" />
 			<description>
 				Samples [param ease] at [param progress], clamped to [code][0, 1][/code]. Eased weight may overshoot.
-				[param blend] is the centered transition width in [code][0, 1][/code]; zero directly splices the halves.
+				[param skew] moves the In/Out split in [code][0, 1][/code]; 0.5 preserves the balanced pair.
+				[param blend] is the transition width centered on the split in [code][0, 1][/code]; zero directly splices the halves.
 				[param blend_type] uses [code]BlendType[/code]. C# equivalent: [code]Easing.Evaluate[/code].
 			</description>
 		</method>

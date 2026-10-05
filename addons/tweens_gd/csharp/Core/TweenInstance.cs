@@ -228,6 +228,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
 {
     private TweenDefinition<TTarget, TValue>? definition;
     private Func<float, float>? ease;
+    private Func<float, float>? returnEase;
     private Curve? curve;
     private TValue initial, from, to, by;
     // A By tween writes origin + applied. Following tweens move origin along with outside changes to the property.
@@ -266,12 +267,13 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 throw new ArgumentOutOfRangeException(nameof(source), "Factors must be finite.");
             if ((definition.By is not null || adjustsFrom || adjustsTo) && !Offsets<TValue>.Supported)
                 throw Offsets<TValue>.Unsupported();
-            ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend);
+            ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend, definition.Skew);
+            returnEase = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend, 1 - definition.Weks);
             plan = new ExecutionPlan(this, [this]);
             if (definition.Curve is not null)
             {
                 curve = (Curve)definition.Curve.Duplicate();
-                ease = curve.Sample;
+                ease = returnEase = curve.Sample;
             }
         }
         catch
@@ -366,9 +368,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
             if (samplePhase == 0)
             {
                 var time = Math.Clamp(Progress, 0, 1);
-                var exponent = Clock.Returning ? definition!.Weks : definition!.Skew;
-                if (exponent != 1) time = (float)Math.Pow(time, exponent);
-                var weight = ease!(time);
+                var weight = (Clock.Returning ? returnEase! : ease!)(time);
                 if (!float.IsFinite(weight)) throw new InvalidOperationException("Easing returned a non-finite value.");
                 if (!CheckTarget() || PlaybackInterrupted) return false;
                 var value = relative ? Offset(weight) : definition!.InterpolateValue(from, to, weight);
@@ -480,7 +480,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         finally
         {
             definition = null;
-            ease = null;
+            ease = returnEase = null;
             curve?.Dispose();
             curve = null;
         }

@@ -72,20 +72,20 @@ with `|`, for example `In.Sine | Out.Cubic`. `InOut.Sine` is `In.Sine | Out.Sine
 Both sides provide `None`, `Linear`, `Sine`, `Quad`, `Cubic`, `Quart`, `Quint`,
 `Expo`, `Circ`, `Back`, `Elastic`, `Bounce`, `Jump`, `SmoothStep`, and `SmootherStep`;
 `InOut` provides every matching pair except `None`. A single leg runs on its own;
-two half-duration legs meet through a local Makima join over 40–60% of progress
-after skew. Matching families use their paired profile directly.
+at the neutral split, two half-duration legs meet through a local Makima join
+over 40–60% of progress. Skew moves that split; matching families use their paired profile directly.
 
-`Back` aliases `Back10` and `Elastic` aliases `Elastic10`. Both families also
-provide `20`, `30`, `40`, and `50` variants (for example `Out.Elastic30`).
+`Back` aliases `Back30` and `Elastic` aliases `Elastic30`. Both families also
+provide `10`, `20`, `30`, `40`, and `50` variants (for example `Out.Elastic30`).
 The number is the peak overshoot percentage of the full tween range, for single
 legs and matching pairs.
 
-`Bounce` aliases `Bounce10`; `Bounce20` through `Bounce50` set the first
+`Bounce` aliases `Bounce30`; `Bounce10` through `Bounce50` set the first
 rebound depth to that percentage of the full tween range, in single legs and
 matching pairs. The next two rebounds have one-quarter and one-sixteenth of
 that depth. All variants are available in `In`, `Out`, and `InOut`.
 
-`Jump` aliases `Jump10`; `Jump20` through `Jump50` set the first peak above the
+`Jump` aliases `Jump30`; `Jump10` through `Jump50` set the first peak above the
 target to that percentage of the full tween range. Three peaks diminish to
 one-quarter and one-sixteenth of the first, touching the target between them.
 Use `In`, `Out`, or `InOut` for mirrored, outgoing, or paired motion.

@@ -73,17 +73,18 @@ export const ease = (name: EaseName, t: number) => EASES[name](Math.min(1, Math.
 export const FAMILIES = ['Linear', 'Sine', 'Quad', 'Cubic', 'Quart', 'Quint', 'Expo', 'Circ', 'Back', 'Elastic', 'Bounce', 'SmoothStep', 'SmootherStep', 'Back10', 'Back20', 'Back30', 'Back40', 'Back50', 'Elastic10', 'Elastic20', 'Elastic30', 'Elastic40', 'Elastic50', 'Bounce10', 'Bounce20', 'Bounce30', 'Bounce40', 'Bounce50', 'Jump', 'Jump10', 'Jump20', 'Jump30', 'Jump40', 'Jump50'] as const;
 export type EaseFamily = (typeof FAMILIES)[number];
 export type EaseLeg = EaseFamily | 'None';
-export const canonicalFamily = (family: EaseLeg): EaseLeg => family === 'Back10' ? 'Back' : family === 'Elastic10' ? 'Elastic' : family === 'Bounce10' ? 'Bounce' : family === 'Jump10' ? 'Jump' : family;
+export const canonicalFamily = (family: EaseLeg): EaseLeg => ['Back', 'Elastic', 'Bounce', 'Jump'].includes(family) ? (family + '30') as EaseLeg : family;
 const BACK_SOLO = [1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737];
 const BACK_PAIRED = [2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325];
-const ELASTIC_SOLO_PERIOD = 0.7553423501870573, ELASTIC_PAIR_PERIOD = 0.5074981597799941;
+const ELASTIC_SOLO_DECAY = 17.553423501870573, ELASTIC_PAIR_DECAY = 15.074981597799942;
+const ELASTIC_SOLO_PERIOD = 0.43031056027706766, ELASTIC_PAIR_PERIOD = 0.33664927316001425;
 const ELASTIC_SOLO_KICK = [0, 0.6853132138892408, 1.1091787748281363, 1.4696240828544362, 1.8012905799033314];
 const ELASTIC_PAIR_KICK = [0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153];
 const BOUNCE_SOLO_ROOT = [.1,.2,.3,.4,.5].map(Math.sqrt);
 const BOUNCE_PAIR_ROOT = [.2,.4,.6,.8,1].map(Math.sqrt);
 const JUMP_SOLO_LAUNCH = [1.1,1.2,1.3,1.4,1.5].map(Math.sqrt);
 const JUMP_PAIR_LAUNCH = [1.2,1.4,1.6,1.8,2].map(Math.sqrt);
-const strengthLevel = (family: EaseLeg) => +(family.match(/\d+$/)?.[0] ?? 10)/10-1;
+const strengthLevel = (family: EaseLeg) => +(family.match(/\d+$/)?.[0] ?? 30)/10-1;
 const isOvershoot = (family: EaseLeg) => family.startsWith('Back') || family.startsWith('Elastic');
 
 function overshootLeg(family: EaseLeg, direction: 'In' | 'Out', t: number, paired: boolean): number {
@@ -97,7 +98,7 @@ function overshootLeg(family: EaseLeg, direction: 'In' | 'Out', t: number, paire
 	const u = direction === 'In' ? 1-t : t;
 	const angle = 2*Math.PI*u/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
 	const kick = (paired ? ELASTIC_PAIR_KICK : ELASTIC_SOLO_KICK)[level];
-	const value = 2**(-10*u)*(Math.cos(angle)-kick*Math.sin(angle));
+	const value = 2**(-(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY)*u)*(Math.cos(angle)-kick*Math.sin(angle));
 	return direction === 'In' ? value : 1-value;
 }
 
@@ -127,27 +128,77 @@ function jumpLegOut(t: number, level: number, paired: boolean): number {
 
 /** Join half-duration profiles locally; crossfade modes are available for comparison. */
 export type BlendType = 'Makima' | 'Hermite' | 'SmoothStep' | 'Linear';
-export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 1, method: BlendType = 'Makima', width = 0.2): number {
+export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 0.5, method: BlendType = 'Makima', width = 0.2): number {
 	if (!['Makima', 'Hermite', 'SmoothStep', 'Linear'].includes(method) || !Number.isFinite(width) || width < 0 || width > 1) throw new RangeError('Invalid easing blend');
+	if (!Number.isFinite(skew) || skew < 0 || skew > 1) throw new RangeError('Invalid easing split');
 	entry = canonicalFamily(entry); exit = canonicalFamily(exit);
-	const t = Math.min(1, Math.max(0, progress)) ** skew;
+	const t = Math.min(1, Math.max(0, progress));
 	if (entry === 'None') return legEase(exit, 'Out', t);
 	if (exit === 'None') return legEase(entry, 'In', t);
-	if (entry === exit) return pairedLegEase(entry, t);
-	const h = width / 2, left = 0.5 - h, right = 0.5 + h;
-	if (t <= left) return pairedLegEase(entry, t);
-	if (t >= right) return pairedLegEase(exit, t);
+	if (entry === exit) return splitLegEase(entry, t, skew);
+	if (skew === 0) return legEase(exit,'Out',t);
+	if (skew === 1) return legEase(entry,'In',t);
+	const h = width * Math.min(skew,1-skew), left = skew - h, right = skew + h;
+	if (t <= left) return splitLegEase(entry, t, skew);
+	if (t >= right) return splitLegEase(exit, t, skew);
 	if (method === 'SmoothStep' || method === 'Linear') {
-		const u = (t - left) / width, w = method === 'SmoothStep' ? u * u * (3 - 2 * u) : u;
-		return pairedLegEase(entry, t) * (1 - w) + pairedLegEase(exit, t) * w;
+		const u = (t - left) / (2*h), w = method === 'SmoothStep' ? u * u * (3 - 2 * u) : u;
+		return splitLegEase(entry, t, skew) * (1 - w) + splitLegEase(exit, t, skew) * w;
 	}
-	const y0 = pairedLegEase(entry, left), y1 = pairedLegEase(exit, right);
-	const v0 = pairSlope(entry, left), v1 = pairSlope(exit, right);
-	const d0 = (0.5 - y0) / h, d1 = (y1 - 0.5) / h;
+	const y0 = splitLegEase(entry, left, skew), y1 = splitLegEase(exit, right, skew);
+	const v0 = splitSlope(entry, left, skew), v1 = splitSlope(exit, right, skew);
+	const d0 = (skew - y0) / h, d1 = (y1 - skew) / h;
 	const middle = method === 'Makima' ? makimaSlope(v0, d0, d1, v1)
 		: Math.min(3 * Math.max(0, Math.min(d0, d1)), Math.max(0, (3 * (d0 + d1) - v0 - v1) / 4));
-	return t <= 0.5 ? hermite((t - left) / h, y0, 0.5, h * v0, h * middle)
-		: hermite((t - 0.5) / h, 0.5, y1, h * middle, h * v1);
+	return t <= skew ? hermite((t - left) / h, y0, skew, h * v0, h * middle)
+		: hermite((t - skew) / h, skew, y1, h * middle, h * v1);
+}
+
+/** Linear In/Out split; neutral 0.5 preserves the authored paired profile. */
+export function splitLegEase(family: EaseLeg, t: number, split = .5): number {
+	if (split === 0) return legEase(family,'Out',t);
+	if (split === 1) return legEase(family,'In',t);
+	if (split === .5) return pairedLegEase(family,t);
+	if (t === 0 || t === 1) return t;
+	if (t <= split) {
+		const x=t/split, mix=Math.max(0,2*split-1);
+		return split*((1-mix)*2*pairedLegEase(family,x/2)+mix*legEase(family,'In',x));
+	}
+	const span=1-split,x=(t-split)/span,mix=Math.max(0,2*span-1);
+	return split+span*((1-mix)*(2*pairedLegEase(family,.5+x/2)-1)+mix*legEase(family,'Out',x));
+}
+
+function soloSlope(family: EaseLeg, t: number, out: boolean): number {
+	if (out) t=1-t;
+	if (family === 'SmoothStep') return 6*t*(1-t);
+	if (family === 'SmootherStep') return 30*t*t*(1-t)**2;
+	if (family === 'Sine') return Math.PI/2*Math.sin(Math.PI/2*t);
+	if (family === 'Expo') return 10*Math.LN2*2**(10*t-10);
+	if (family === 'Circ') return t/Math.sqrt(1-t*t);
+	const level=strengthLevel(family);
+	if (family.startsWith('Back')) { const s=BACK_SOLO[level]; return 3*(s+1)*t*t-2*s*t; }
+	if (family.startsWith('Elastic')) {
+		const u=1-t,omega=2*Math.PI/ELASTIC_SOLO_PERIOD,decay=ELASTIC_SOLO_DECAY*Math.LN2,kick=ELASTIC_SOLO_KICK[level];
+		return 2**(-ELASTIC_SOLO_DECAY*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
+	}
+	if (family.startsWith('Bounce') || family.startsWith('Jump')) {
+		const jump=family.startsWith('Jump'),r=BOUNCE_SOLO_ROOT[level],a=jump?JUMP_SOLO_LAUNCH[level]:1,scale=jump?a+2.5*r:1+3.5*r;
+		let u=(1-t)*scale;
+		if (jump) return 2*scale*((u<a+r?a:u<a+2*r?a+1.5*r:a+2.25*r)-u);
+		if (u>=1+3*r) u-=1+3.25*r;
+		else if (u>=1+2*r) u-=1+2.5*r;
+		else if (u>=1) u-=1+r;
+		return 2*scale*u;
+	}
+	const powers: Partial<Record<EaseLeg, number>> = { Quad: 2, Cubic: 3, Quart: 4, Quint: 5 };
+	const power = powers[family];
+	return power ? power*t**(power-1) : 1;
+}
+
+function splitSlope(family: EaseLeg, t: number, split: number): number {
+	if (split === .5) return pairSlope(family,t);
+	const out=t>split,span=out?1-split:split,x=out?(t-split)/span:t/span,mix=Math.max(0,2*span-1);
+	return (1-mix)*pairSlope(family,out?.5+x/2:x/2)+mix*soloSlope(family,x,out);
 }
 
 // Modified Akima (makima) slope at the midpoint from the four surrounding slopes. The legs' edge
@@ -165,8 +216,8 @@ function pairSlope(family: EaseLeg, time: number): number {
 	const t = Math.min(time, 1-time), x = 2*t, level = strengthLevel(family);
 	if (family.startsWith('Back')) { const s=BACK_PAIRED[level]; return 3*(s+1)*x*x-2*s*x; }
 	if (family.startsWith('Elastic')) {
-		const u=1-x, omega=2*Math.PI/ELASTIC_PAIR_PERIOD, decay=10*Math.LN2, kick=ELASTIC_PAIR_KICK[level];
-		return 2**(-10*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
+		const u=1-x, omega=2*Math.PI/ELASTIC_PAIR_PERIOD, decay=ELASTIC_PAIR_DECAY*Math.LN2, kick=ELASTIC_PAIR_KICK[level];
+		return 2**(-ELASTIC_PAIR_DECAY*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
 	}
 	if (family.startsWith('Bounce')) {
 		const r = BOUNCE_PAIR_ROOT[level], scale = 1+3.5*r;

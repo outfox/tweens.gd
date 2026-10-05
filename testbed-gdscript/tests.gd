@@ -92,7 +92,7 @@ func run_tests() -> void:
 	if trace_runs: print("suite: logger")
 	OS.add_logger(_collector)
 	for test in [_conformance, _validation, _snapshots_and_fill, _factories_and_with, _array_endpoints, _relative, _adjustments,
-			_leg_exponents, _interpolation,
+			_leg_splits, _interpolation,
 			_callbacks, _setter_reentrancy, _lifetime, _pause_and_lanes, _detected_faults, _reference_cleanup]:
 		if trace_runs: print("suite: " + test.get_method())
 		check(test.call() == true, "Test returned normally: " + test.get_method())
@@ -148,7 +148,7 @@ func _composed_easing() -> void:
 	for sample in data.cases:
 		var a: int = entries[String(sample["in"]).replace("Step", "_Step").to_upper()]
 		var b: int = exits[String(sample["out"]).replace("Step", "_Step").to_upper()]
-		near(T.Easing.evaluate(a | b, pow(sample.progress, sample.skew), _constants(BlendType)[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.get("blend", 0.2)), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
+		near(T.Easing.evaluate(a | b, sample.progress, _constants(BlendType)[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.get("blend", 0.2), sample.skew), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
 	for family in pairs:
 		check(pairs[family] == (entries[family] | exits[family]), "matching ease alias")
 		if family.begins_with("BACK") or family.begins_with("ELASTIC") or family.begins_with("BOUNCE") or family.begins_with("JUMP"): continue
@@ -177,7 +177,7 @@ func _composed_easing() -> void:
 				if exit == 0 or (entry and t <= 0.4): near(actual, a, "original In half")
 				if entry == 0 or (exit and t >= 0.6): near(actual, b, "original Out half")
 	for base in ["BACK", "ELASTIC", "JUMP"]:
-		check(entries[base] == entries[base + "10"] and exits[base] == exits[base + "10"] and pairs[base] == pairs[base + "10"], "10 percent aliases")
+		check(entries[base] == entries[base + "30"] and exits[base] == exits[base + "30"] and pairs[base] == pairs[base + "30"], "30 percent aliases")
 		for percent in [10, 20, 30, 40, 50]:
 			var family: String = base + str(percent)
 			var solo_low := 0.0
@@ -196,7 +196,7 @@ func _composed_easing() -> void:
 				pair_high = maxf(pair_high, pair)
 			for peak in [-solo_low, solo_high-1.0, -pair_low, pair_high-1.0]:
 				near(peak, percent/100.0, "named overshoot peak " + family)
-	check(In.BOUNCE10 == In.BOUNCE and Out.BOUNCE10 == Out.BOUNCE and InOut.BOUNCE10 == InOut.BOUNCE, "bounce 10 aliases")
+	check(In.BOUNCE30 == In.BOUNCE and Out.BOUNCE30 == Out.BOUNCE and InOut.BOUNCE30 == InOut.BOUNCE, "bounce 30 aliases")
 	for percent in [10, 20, 30, 40, 50]:
 		var family := "BOUNCE" + str(percent)
 		for paired in [false, true]:
@@ -278,14 +278,14 @@ func _composed_easing() -> void:
 	var target := Holder.new()
 	var combined: int = In.QUAD | Out.CUBIC
 	var definition := T.property(^"amount", 1.0, 2.0, combined)
-	definition.skew = 2.0
-	definition.weks = 0.5
+	definition.skew = 0.75
+	definition.weks = 0.25
 	definition.use_ping_pong = true
 	var handle := scheduler.add(target, definition)
 	scheduler.update(1.0)
-	near(target.amount, 0.125, "skew before blended easing")
+	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.2, 0.75), "split before blended easing")
 	scheduler.update(2.0)
-	near(target.amount, T.Easing.evaluate(combined, sqrt(0.5)), "independent return skew")
+	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.2, 0.75), "independent return skew")
 	scheduler.update(1.0)
 	near(target.amount, 0.0, "composed return endpoint")
 	check(handle.completion_reason == T.Reason.COMPLETED, "composed playback completes")
@@ -309,7 +309,7 @@ func _validation() -> bool:
 			var definition := T.value(0.0, 1.0, 1.0)
 			definition.set(field, invalid)
 			check(_activated_add(scheduler, target, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
-	for pair in [["offset", 2.0], ["repeats", -2], ["skew", 0.0], ["skew", INF],
+	for pair in [["offset", 2.0], ["repeats", -2], ["skew", 1.01], ["skew", INF],
 			["fill", 4], ["ease", 999]]:
 		var definition := T.value(0.0, 1.0, 1.0)
 		definition.set(pair[0], pair[1])
@@ -324,9 +324,9 @@ func _validation() -> bool:
 		check(chain.is_settled and chain.completion_reason == T.Reason.FAILED, "reject invalid " + field + " for Chain playback")
 		check(scheduler.active_count == 0, "invalid " + field + " registers no work")
 	for field in ["skew", "weks"]:
-		for invalid in [0.0, -1.0, INF, -INF, NAN]:
+		for invalid in [1.01, -1.0, INF, -INF, NAN]:
 			var probe := ResourceProbe.new()
-			probe.when_read = func(): check(false, "invalid exponent must not read target")
+			probe.when_read = func(): check(false, "invalid split must not read target")
 			var definition := T.property(^"amount", 1.0, 1.0)
 			definition.set(field, invalid)
 			check(_activated_add(scheduler, probe, definition).completion_reason == T.Reason.FAILED, "reject invalid " + field)
@@ -400,78 +400,37 @@ func _snapshots_and_fill() -> bool:
 	scheduler.update(0.5)
 	near(c.value, expected, "curve is duplicated per playback")
 	var skew := T.value(0.0, 1.0, 1.0)
-	skew.skew = 2.0
+	skew.skew = 0.75
 	var d := scheduler.add(self, skew)
 	scheduler.update(0.5)
-	near(d.value, 0.25, "skew precedes easing")
+	near(d.value, 0.5, "single linear profile stays linear")
 	scheduler.dispose()
 	first.free()
 	second.free()
 	return true
 
-func _leg_exponents() -> bool:
-	for exponents in [[1.0, 1.0, 0.25, 0.25], [2.0, 2.0, 0.0625, 0.0625],
-			[0.5, 0.5, 0.5, 0.5], [2.0, 1.0, 0.0625, 0.25],
-			[1.0, 2.0, 0.25, 0.0625], [2.0, 0.5, 0.0625, 0.5]]:
-		for easing in ["linear", "quad", "custom", "curve"]:
-			var scheduler := TweensGdScheduler.new()
-			var definition := T.value(0.0, 1.0, 1.0).with_ping_pong().with_skew(exponents[0]).with_weks(exponents[1])
-			var curve := Curve.new()
-			curve.add_point(Vector2.ZERO)
-			curve.add_point(Vector2(0.5, 0.8))
-			curve.add_point(Vector2.ONE)
-			if easing == "quad": definition.ease = T.Ease.QUAD_OUT
-			elif easing == "custom": definition.ease_function = func(t): return t + 1.0
-			elif easing == "curve": definition.curve = curve
-			var expected_curve := [curve.sample(exponents[2]), curve.sample(exponents[3])]
-			var handle := scheduler.add(self, definition)
-			definition.skew = 3.0
-			definition.weks = 3.0
-			curve.clear_points()
-			for index in range(2):
-				scheduler.update(0.25 if index == 0 else 1.5)
-				var t: float = exponents[2 + index]
-				var expected := t
-				if easing == "quad": expected = 1.0 - (1.0 - t) * (1.0 - t)
-				elif easing == "custom": expected = t + 1.0
-				elif easing == "curve": expected = expected_curve[index]
-				near(handle.progress, 0.25, "raw progress is unchanged")
-				near(handle.value, expected, "leg exponent precedes " + easing)
-			scheduler.update(0.25)
-			near(handle.value, 1.0 if easing == "custom" else 0.0, "return endpoint")
-			check(handle.completion_reason == T.Reason.COMPLETED, "ping-pong completes")
-			scheduler.dispose()
-	for relative in [false, true]:
+func _leg_splits() -> bool:
+	for sample in [[0.5, 0.5, 0.125, 0.125], [0.0, 0.0, 0.4375, 0.0625],
+			[1.0, 1.0, 0.0625, 0.4375], [0.25, 0.75, 0.25, 0.25], [0.75, 0.25, 1.0/12.0, 1.0/12.0]]:
 		var scheduler := TweensGdScheduler.new()
-		var definition := T.value(0.0, null if relative else 1.0, 1.0).with_ping_pong().with_skew(2.0).with_weks(0.5)
-		if relative: definition.by_value = 1.0
-		definition.delay = 0.5
-		definition.offset = 0.25
-		definition.ping_pong_interval = 0.5
-		definition.repeat_interval = 0.5
-		definition.repeats = 2
+		var definition := T.value(0.0, 1.0, 1.0, InOut.QUAD).with_ping_pong().with_skew(sample[0]).with_weks(sample[1])
 		var handle := scheduler.add(self, definition)
-		for sample in [[0.25, 0.0], [0.25, 0.0625], [0.875, 1.0], [1.125, 0.5],
-				[0.25, 0.0], [0.25, 0.0], [0.25, 0.0], [0.25, 0.0625],
-				[2.0, 0.5], [3.0, 0.5], [0.25, 0.0]]:
-			scheduler.update(sample[0])
-			near(handle.value, sample[1], "leg selection through intervals, repeats and jumps")
-		check(handle.completion_reason == T.Reason.COMPLETED, "repeats complete")
+		definition.skew = 0.5
+		definition.weks = 0.5
+		scheduler.update(0.25)
+		near(handle.value, sample[2], "outward split")
+		scheduler.update(1.5)
+		near(handle.progress, 0.25, "raw return progress")
+		near(handle.value, sample[3], "return split")
+		scheduler.update(0.25)
+		near(handle.value, 0.0, "return endpoint")
+		check(handle.completion_reason == T.Reason.COMPLETED, "split ping-pong completes")
 		scheduler.dispose()
-	var scheduler := TweensGdScheduler.new()
-	var forward := scheduler.add(self, T.value(0.0, 1.0, 1.0).with_repeats(2).with_skew(2.0).with_weks(0.5))
-	scheduler.update(1.25)
-	near(forward.value, 0.0625, "weks does not affect forward repeats")
-	for ping_pong in [false, true]:
-		var instant := scheduler.add(self, T.value(0.0, 1.0).with_ping_pong(ping_pong).with_skew(0.5).with_weks(2.0))
-		scheduler.update(0.0)
-		near(instant.value, 0.0 if ping_pong else 1.0, "zero-duration endpoint")
-	scheduler.dispose()
 	return true
 
 func _factories_and_with() -> bool:
 	var plain := T.position_2d()
-	check(plain.skew == 1.0 and plain.weks == 1.0, "independent identity exponents")
+	check(plain.skew == 0.5 and plain.weks == 0.5, "independent balanced splits")
 	check(plain.to_value == null and plain.duration == 0.0 and plain.ease == T.Ease.LINEAR and plain.delay == 0.0,
 		"helper defaults")
 	for definition in [T.position_2d(Vector2(4, 2), 0.5, T.Ease.CUBIC_OUT, 0.25),
@@ -498,7 +457,7 @@ func _factories_and_with() -> bool:
 			["with_delay", 0.5, "delay"], ["with_offset", 0.25, "offset"], ["with_repeats", 3, "repeats"],
 			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
 			["with_repeat_interval", 0.2, "repeat_interval"], ["with_fill", T.Fill.BOTH, "fill"],
-			["with_ease", T.Ease.BACK_OUT, "ease"], ["with_skew", 2.0, "skew"],
+			["with_ease", T.Ease.BACK_OUT, "ease"], ["with_skew", 0.75, "skew"],
 			["with_weks", 0.5, "weks"],
 			["with_ease_function", callback, "ease_function"], ["with_curve", curve, "curve"],
 			["with_suppress_callbacks_when_target_invalid", true, "suppress_callbacks_when_target_invalid"],

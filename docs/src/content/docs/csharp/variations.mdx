@@ -27,7 +27,7 @@ public partial class Enemy : Sprite2D
     {
         By = -12,
         Duration = 0.2,
-        Ease = Out.Quad,
+        Ease = InOut.Quad,
         UsePingPong = true,
     };
 
@@ -37,7 +37,7 @@ public partial class Enemy : Sprite2D
         FactorDuration = 1 + damage / 100,
     });
 
-    public void Crit() => this.Tween(Recoil with { FactorBy = 3, Skew = 0.5, Weks = 0.5 });
+    public void Crit() => this.Tween(Recoil with { FactorBy = 3, Skew = 0.25, Weks = 0.75 });
 }
 ```
 
@@ -46,8 +46,8 @@ public partial class Enemy : Sprite2D
 2. **Scale it per hit.** `FactorBy` scales the kick with the damage, and
    `FactorDuration` stretches the timing. A 20-damage hit kicks 24 pixels and
    takes 0.24 seconds each way.
-3. **Change the pacing.** `Skew = 0.5` front-loads the same ease, so a critical
-   hit lands sooner. `Weks = 0.5` keeps it near the far endpoint longer before returning.
+3. **Change the pacing.** `Skew = 0.25` front-loads the same ease, so a critical
+   hit lands sooner. `Weks = 0.75` keeps it near the far endpoint longer before returning.
 
 </Moves>
 
@@ -113,38 +113,19 @@ The heart grows to 120% of whatever scale it has and comes back.
 
 ## Change the pacing with `Skew`
 
-`Skew` reshapes when the motion happens without choosing another ease. Normalized
-time `t` becomes `t` to the power of `Skew` before the ease sees it:
+`Skew` moves the In/Out split linearly from 0 to 1. The default, 0.5,
+preserves the balanced pair. At 0, the Out profile fills the duration; at 1,
+the In profile does. Intermediate values move the split in both time and value.
+The blend window follows it and shrinks near either endpoint.
 
-- `Skew` above 1 rear-loads the ease: the motion starts slower and catches up.
-  At a quarter of the duration, `Skew = 2` passes 0.0625 to the ease.
-- `Skew` between 0 and 1 front-loads it: most of the motion happens early.
-- The default, 1, leaves the ease unchanged.
+`Weks` independently controls the ping-pong return: 0 front-loads the return,
+0.5 preserves it, and 1 rear-loads it. To retrace the outward curve, set
+`Weks = 1 - Skew`. Duration, intervals, and raw progress stay unchanged.
 
-```csharp
-var movement = sprite.Tween(new Tweens.Position2D((300, 120), 0.5, Out.Cubic)
-{
-    Skew = 2,
-    Weks = 0.5,
-    UsePingPong = true,
-});
-```
-
-`Skew` controls the outward leg; `Weks` controls the ping-pong return.
-Both default independently to `1`. On return, raw progress `t` runs from
-1 down to 0, and the ease receives `pow(t, Weks)`. For example, with
-`Weks = 2`, halfway back the ease receives 0.25. Above 1 moves the return
-earlier along the reversed curve; below 1 keeps it near the far endpoint longer.
-`Weks` has no effect on forward-only tweens.
-
-Both exponents apply to built-in eases, `EaseFunction`, and `Curve` samples.
-Duration, intervals, and the handle's raw `Progress` stay unchanged. For
-bounce, elastic, and other eases that aren't monotonic, the exponents shift when
-their bounces and overshoot happen but keep them.
-
-**Migration:** previously, `Skew` also shaped the return. Set
-`Weks` equal to `Skew` to preserve that behavior and retrace the same
-curve. Leave `Weks` at `1` for the unmodified return ease.
+These settings apply to paired In/Out flags. A single leg, legacy ease,
+custom function, or Godot Curve retains its authored profile. The numbered
+overshoot and rebound percentages describe the balanced pair and solo legs;
+moving the split also redistributes the paired legs' value ranges.
 
 ## Rules
 
@@ -158,4 +139,4 @@ curve. Leave `Weks` at `1` for the unmodified return ease.
 - The adjusted duration and delay must not be negative, and `Offset` must fit
   within the adjusted duration.
 - Factors, `DeltaDuration`, `DeltaDelay`, `Skew`, and `Weks` must be finite.
-  Both exponents must be greater than zero, even without ping-pong. Invalid values reject the start.
+  Both splits must be in `[0, 1]`, even without ping-pong. Invalid values reject the start.

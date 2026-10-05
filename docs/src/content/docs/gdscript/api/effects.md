@@ -102,5 +102,4 @@ These are functions, not playback controllers. Cancellation normally retains the
 last sample; the callback example explicitly clears its visual offset. Cancel a
 previous effect on that child before starting another. `by_value` retains its
 ordinary repeat accumulation semantics, so use a callback/custom-property tween
-for repeated return-to-rest effects. `skew`/`weks` warp the entire effect when used
-as easing; leave the callback driver linear to preserve the factory's timing.
+for repeated return-to-rest effects. Custom effect profiles retain their authored pacing.

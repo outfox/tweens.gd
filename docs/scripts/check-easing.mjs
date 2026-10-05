@@ -40,7 +40,7 @@ for (const method of ['Makima', 'Hermite']) {
   for (const a of monotone) for (const b of monotone) for (const width of [0, .01, .2, .4, .8, 1]) {
     let previous = 0;
     for (let i=0; i<=1000; i++) {
-      const y = composeEase(a,b,i/1000,1,method,width);
+      const y = composeEase(a,b,i/1000,.5,method,width);
       assert.ok(y >= previous-1e-12 && y <= 1+1e-12, JSON.stringify({method,a,b,width,i,y,previous}));
       previous=y;
     }
@@ -48,7 +48,7 @@ for (const method of ['Makima', 'Hermite']) {
   for (const a of FAMILIES) for (const b of FAMILIES) {
     if (canonicalFamily(a)===canonicalFamily(b)) continue; // Preserve authored corners/singularities in matching families.
     for (const width of [.1,.4,.8]) {
-      const h=1e-6, f=p=>composeEase(a,b,p,1,method,width);
+      const h=1e-6, f=p=>composeEase(a,b,p,.5,method,width);
       for (const t of [.5-width/2,.5,.5+width/2])
         assert.ok(Math.abs((f(t)-f(t-h))/h-(f(t+h)-f(t))/h)<.01, JSON.stringify({method,a,b,width,t}));
       if (method !== 'Makima') continue;
@@ -68,7 +68,7 @@ for (const base of ['Back', 'Elastic', 'Jump']) for (const percent of [10,20,30,
     assert.ok(Math.abs(a-(1-composeEase('None',family,1-t)))<1e-12);
     soloLow=Math.min(soloLow,a); soloHigh=Math.max(soloHigh,b);
     pairLow=Math.min(pairLow,pair); pairHigh=Math.max(pairHigh,pair);
-    if (percent===10) {
+    if (percent===30) {
       assert.equal(b,composeEase('None',base,t));
       assert.equal(pair,composeEase(base,family,t));
     }
@@ -90,9 +90,9 @@ for (const percent of [10,20,30,40,50]) {
     const t=i/1000, a=composeEase(family,'None',t), b=composeEase('None',family,t), pair=composeEase(family,family,t);
     assert.ok(Math.abs(a-(1-composeEase('None',family,1-t)))<1e-12);
     for (const y of [a,b,pair]) assert.ok(y>=-1e-12&&y<=1+1e-12);
-    if (percent===10) {
+    if (percent===30) {
       assert.equal(b,composeEase('None','Bounce',t));
-      assert.equal(pair,composeEase('Bounce','Bounce10',t));
+      assert.equal(pair,composeEase('Bounce','Bounce30',t));
     }
   }
 }
@@ -120,3 +120,18 @@ for (const percent of [10,20,30,40,50]) {
   }
 }
 console.log('Jump: three peaks above the target, diminishing heights, intervening landings and a direct launch passed.');
+
+for (const split of [0,.01,.25,.5,.75,.99,1]) {
+  for (const a of FAMILIES) for (const b of FAMILIES) {
+    for (let i=0;i<=100;i++) {
+      const t=i/100, y=composeEase(a,b,t,split);
+      assert.ok(Number.isFinite(y),JSON.stringify({a,b,t,split}));
+      assert.ok(Math.abs(y-(1-composeEase(b,a,1-t,1-split)))<1e-10);
+      if (split===0) assert.equal(y,legEase(b,'Out',t));
+      if (split===1) assert.equal(y,legEase(a,'In',t));
+    }
+    if (split>0&&split<1) assert.ok(Math.abs(composeEase(a,b,split,split)-split)<1e-12);
+  }
+}
+for (const invalid of [-1,1.01,NaN,Infinity]) assert.throws(()=>composeEase('Sine','Cubic',.5,invalid),RangeError);
+console.log('Linear splits: all pairs, endpoint profiles, shifted joins, mirrors and validation passed.');

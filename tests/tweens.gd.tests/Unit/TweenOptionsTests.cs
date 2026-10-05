@@ -13,7 +13,7 @@ public class TweenOptionsTests
     {
         Duration = 1.5, FactorDuration = 2, DeltaDuration = -0.5, Delay = 0.25, FactorDelay = 3, DeltaDelay = 0.125, PingPongInterval = 0.5, RepeatInterval = 0.75, Offset = 0.125, Repeats = 3,
         UsePingPong = true, Fill = FillMode.Both, Ease = EaseType.BounceOut,
-        Skew = 2, Weks = 0.5, EaseFunction = Ease,
+        Skew = 0.75, Weks = 0.5, EaseFunction = Ease,
         SuppressCallbacksWhenTargetInvalid = true,
     };
 
@@ -62,7 +62,7 @@ public class TweenOptionsTests
         Assert.True(builder.UsePingPong);
         Assert.Equal(FillMode.Both, builder.Fill);
         Assert.Equal(EaseType.BounceOut, builder.Ease);
-        Assert.Equal(2, builder.Skew);
+        Assert.Equal(0.75, builder.Skew);
         Assert.Equal(0.5, builder.Weks);
         Assert.Same(Ease, builder.EaseFunction);
         Assert.Null(builder.Curve);
@@ -84,27 +84,27 @@ public class TweenOptionsTests
     [Fact]
     public void SkewDefaultsToIdentityForOptionsBuildersAndGeneratedDefinitions()
     {
-        Assert.Equal(1, default(TweenOptions).Skew);
-        Assert.Equal(1, new TweenOptions().Skew);
-        Assert.Equal(1, new PlainTween().Skew);
-        Assert.Equal(1, default(Tweens.Float).Skew);
-        Assert.Equal(default, new TweenOptions { Skew = 1 });
-        Assert.Equal(default, (new TweenOptions { Skew = 2 }) with { Skew = 1 });
-        Assert.Equal(1, default(TweenOptions).Weks);
-        Assert.Equal(1, new TweenOptions().Weks);
-        Assert.Equal(1, new PlainTween().Weks);
-        Assert.Equal(1, default(Tweens.Float).Weks);
-        Assert.Equal(default, new TweenOptions { Weks = 1 });
-        Assert.Equal(default, (new TweenOptions { Weks = 2 }) with { Weks = 1 });
+        Assert.Equal(0.5, default(TweenOptions).Skew);
+        Assert.Equal(0.5, new TweenOptions().Skew);
+        Assert.Equal(0.5, new PlainTween().Skew);
+        Assert.Equal(0.5, default(Tweens.Float).Skew);
+        Assert.Equal(default, new TweenOptions { Skew = 0.5 });
+        Assert.Equal(default, (new TweenOptions { Skew = 0.75 }) with { Skew = 0.5 });
+        Assert.Equal(0.5, default(TweenOptions).Weks);
+        Assert.Equal(0.5, new TweenOptions().Weks);
+        Assert.Equal(0.5, new PlainTween().Weks);
+        Assert.Equal(0.5, default(Tweens.Float).Weks);
+        Assert.Equal(default, new TweenOptions { Weks = 0.5 });
+        Assert.Equal(default, (new TweenOptions { Weks = 0.75 }) with { Weks = 0.5 });
     }
 
     [Theory]
     [InlineData(double.Epsilon)]
     [InlineData(0.5)]
     [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(double.MaxValue)]
-    public void SkewPreservesTheConfiguredExponent(double skew)
+    [InlineData(0.75)]
+    [InlineData(0)]
+    public void SkewPreservesTheConfiguredSplit(double skew)
     {
         var options = new TweenOptions { Skew = skew, Weks = skew };
         Assert.Equal(skew, options.Skew);

@@ -119,11 +119,11 @@ public readonly record struct TweenOptions
     /// <summary>Centered transition width in [0, 1]. Defaults to 0.2 (40%–60%); zero directly splices the halves.</summary>
     public double Blend { get => blend ?? 0.2; init => blend = value == 0.2 ? null : value; }
     private readonly double? skew;
-    /// <summary>Positive finite exponent applied to forward normalized time before easing. Defaults to 1 (identity).</summary>
-    public double Skew { get => skew ?? 1; init => skew = value == 1 ? null : value; }
+    /// <summary>In/Out split in [0, 1]: 0 selects Out, 0.5 is balanced, 1 selects In. Applies to paired easing flags.</summary>
+    public double Skew { get => skew ?? 0.5; init => skew = value == 0.5 ? null : value; }
     private readonly double? weks;
-    /// <summary>Positive finite exponent applied to descending ping-pong progress before easing. Defaults to 1, independently of Skew.</summary>
-    public double Weks { get => weks ?? 1; init => weks = value == 1 ? null : value; }
+    /// <summary>Independent ping-pong return split in [0, 1]: 0 front-loads the return, 0.5 is balanced, 1 rear-loads it.</summary>
+    public double Weks { get => weks ?? 0.5; init => weks = value == 0.5 ? null : value; }
     /// <summary>Custom progress-to-weight function instead of Ease. Mutually exclusive with Curve.</summary>
     public Func<float, float>? EaseFunction { get; init; }
     /// <summary>Custom progress-to-weight curve instead of Ease. Copied per playback; mutually exclusive with EaseFunction.</summary>
@@ -193,9 +193,9 @@ public class TweenOptionsBuilder
     /// <inheritdoc cref="TweenOptions.Blend"/>
     public double Blend { get; set; } = 0.2;
     /// <inheritdoc cref="TweenOptions.Skew"/>
-    public double Skew { get; set; } = 1;
+    public double Skew { get; set; } = 0.5;
     /// <inheritdoc cref="TweenOptions.Weks"/>
-    public double Weks { get; set; } = 1;
+    public double Weks { get; set; } = 0.5;
     /// <inheritdoc cref="TweenOptions.EaseFunction"/>
     public Func<float, float>? EaseFunction { get; set; }
     /// <inheritdoc cref="TweenOptions.Curve"/>
@@ -263,10 +263,10 @@ internal sealed class Playback
         turn = Nonnegative(options.PingPongInterval, nameof(options.PingPongInterval));
         var repeat = Nonnegative(options.RepeatInterval, nameof(options.RepeatInterval));
         offset = Nonnegative(options.Offset, nameof(options.Offset));
-        if (!double.IsFinite(options.Skew) || options.Skew <= 0)
-            throw new ArgumentOutOfRangeException(nameof(options.Skew), "Skew must be finite and greater than zero.");
-        if (!double.IsFinite(options.Weks) || options.Weks <= 0)
-            throw new ArgumentOutOfRangeException(nameof(options.Weks), "Weks must be finite and greater than zero.");
+        if (!double.IsFinite(options.Skew) || options.Skew < 0 || options.Skew > 1)
+            throw new ArgumentOutOfRangeException(nameof(options.Skew), "Skew must be finite and in [0, 1].");
+        if (!double.IsFinite(options.Weks) || options.Weks < 0 || options.Weks > 1)
+            throw new ArgumentOutOfRangeException(nameof(options.Weks), "Weks must be finite and in [0, 1].");
         if (offset > duration) throw new ArgumentOutOfRangeException(nameof(options.Offset));
         if (options.Repeats < TweenOptions.Infinite) throw new ArgumentOutOfRangeException(nameof(options.Repeats));
         if ((options.Fill & ~FillMode.Both) != 0)

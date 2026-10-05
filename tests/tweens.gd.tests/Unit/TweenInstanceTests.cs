@@ -8,54 +8,51 @@ namespace tweens.gd.Tests.Unit;
 public class TweenInstanceTests
 {
     [Theory]
-    [InlineData(1, 1, 0.25f, 0.25f)]
-    [InlineData(2, 2, 0.0625f, 0.0625f)]
-    [InlineData(0.5, 0.5, 0.5f, 0.5f)]
-    [InlineData(2, 1, 0.0625f, 0.25f)]
-    [InlineData(1, 2, 0.25f, 0.0625f)]
-    [InlineData(2, 0.5, 0.0625f, 0.5f)]
-    public void SkewAndWeksWarpEachLegBeforeEasing(double skew, double weks, float quarterTime, float returnTime)
+    [InlineData(0.5, 0.5, 0.125f, 0.125f)]
+    [InlineData(0, 0, 0.4375f, 0.0625f)]
+    [InlineData(1, 1, 0.0625f, 0.4375f)]
+    [InlineData(0.25, 0.75, 0.25f, 0.25f)]
+    [InlineData(0.75, 0.25, 1f/12, 1f/12)]
+    public void SkewAndWeksMoveTheSplitAndSnapshotEachLeg(double skew, double weks, float outward, float returning)
     {
         using var scheduler = new TweenScheduler();
-        var linear = new Box();
-        var eased = new Box();
-        var custom = new Box();
-        var definition = new PlainTween { To = 1, Duration = 1, Skew = skew, Weks = weks, UsePingPong = true };
-        var tween = scheduler.Add(linear, definition);
-        definition.Ease = EaseType.QuadOut;
-        scheduler.Add(eased, definition);
-        definition.EaseFunction = static t => t + 1;
-        scheduler.Add(custom, definition);
-        definition.Skew = 3; // Active playbacks keep their captured exponent.
-        definition.Weks = 3;
-
+        var box = new Box();
+        var definition = new PlainTween { To = 1, Duration = 1, Ease = InOut.Quad, Skew = skew, Weks = weks, UsePingPong = true };
+        var tween = scheduler.Add(box, definition);
+        definition.Skew = definition.Weks = 0.5;
         scheduler.Update(0);
-        Assert.Equal(0, linear.Value);
-        Assert.Equal(0, eased.Value);
-        Assert.Equal(1, custom.Value);
+        Assert.Equal(0, box.Value);
         scheduler.Update(0.25);
         Assert.Equal(0.25f, tween.Progress);
-        Assert.Equal(quarterTime, linear.Value);
-        Assert.Equal(1 - (1 - quarterTime) * (1 - quarterTime), eased.Value);
-        Assert.Equal(1 + quarterTime, custom.Value); // Easing output remains unclamped.
+        Assert.Equal(outward, box.Value, 6);
         scheduler.Update(0.75);
-        Assert.Equal(1, linear.Value);
-        Assert.Equal(1, eased.Value);
-        Assert.Equal(2, custom.Value);
+        Assert.Equal(1, box.Value);
         scheduler.Update(0.75);
         Assert.Equal(0.25f, tween.Progress);
-        Assert.Equal(returnTime, linear.Value);
-        Assert.Equal(1 - (1 - returnTime) * (1 - returnTime), eased.Value);
-        Assert.Equal(1 + returnTime, custom.Value);
+        Assert.Equal(returning, box.Value, 6);
         scheduler.Update(0.25);
-        Assert.Equal(0, linear.Value);
-        Assert.Equal(0, eased.Value);
-        Assert.Equal(1, custom.Value);
+        Assert.Equal(0, box.Value);
         Assert.Equal(Reason.Completed, tween.CompletionReason);
     }
 
+    [Fact]
+    public void SingleLegacyAndCustomProfilesRetainTheirAuthoredShape()
+    {
+        using var scheduler = new TweenScheduler();
+        var solo = new Box();
+        var legacy = new Box();
+        var custom = new Box();
+        scheduler.Add(solo, new PlainTween { To = 1, Duration = 1, Ease = Out.Quad, Skew = 1 });
+        scheduler.Add(legacy, new PlainTween { To = 1, Duration = 1, Ease = EaseType.QuadOut, Skew = 0 });
+        scheduler.Add(custom, new PlainTween { To = 1, Duration = 1, EaseFunction = t => t + 1, Skew = 0 });
+        scheduler.Update(.25);
+        Assert.Equal(.4375f, solo.Value);
+        Assert.Equal(solo.Value, legacy.Value);
+        Assert.Equal(1.25f, custom.Value);
+    }
+
     [Theory]
-    [InlineData(0)]
+    [InlineData(1.01)]
     [InlineData(-1)]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]
@@ -81,7 +78,7 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new PlainTween { To = 1, Skew = 0.5, Weks = 2, UsePingPong = pingPong });
+        var tween = scheduler.Add(box, new PlainTween { To = 1, Skew = 0.5, Weks = 1, UsePingPong = pingPong });
         scheduler.Update(0);
         Assert.Equal(expected, box.Value);
         Assert.Equal(Reason.Completed, tween.CompletionReason);
@@ -90,7 +87,7 @@ public class TweenInstanceTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void LegExponentsSurviveIntervalsRepeatsAndLargeSteps(bool relative)
+    public void LegSplitsSurviveIntervalsRepeatsAndLargeSteps(bool relative)
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
@@ -99,14 +96,14 @@ public class TweenInstanceTests
             To = relative ? null : 1, By = relative ? 1 : null,
             Duration = 1, Delay = 0.5, Offset = 0.25,
             UsePingPong = true, PingPongInterval = 0.5, RepeatInterval = 0.5, Repeats = 2,
-            Skew = 2, Weks = 0.5,
+            Ease = InOut.Quad, Skew = 1, Weks = 0,
         });
         foreach (var (delta, expected) in new (double, float)[]
         {
             (0.25, 0), (0.25, 0.0625f), (0.875, 1), // delay, offset, turn hold
-            (1.125, 0.5f), (0.25, 0), (0.25, 0), (0.25, 0), // return and repeat hold/boundary
-            (0.25, 0.0625f), (2, 0.5f), // next forward and a jump to return
-            (3, 0.5f), (0.25, 0), // skip a repeat boundary, then finish
+            (1.125, 0.0625f), (0.25, 0), (0.25, 0), (0.25, 0), // return and repeat hold/boundary
+            (0.25, 0.0625f), (2, 0.0625f), // next forward and a jump to return
+            (3, 0.0625f), (0.25, 0), // skip a repeat boundary, then finish
         })
         {
             scheduler.Update(delta);
@@ -120,7 +117,7 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        scheduler.Add(box, new PlainTween { To = 1, Duration = 1, Repeats = 2, Skew = 2, Weks = 0.5 });
+        scheduler.Add(box, new PlainTween { To = 1, Duration = 1, Repeats = 2, Ease = InOut.Quad, Skew = 1, Weks = 0 });
         scheduler.Update(1.25);
         Assert.Equal(0.0625f, box.Value);
     }

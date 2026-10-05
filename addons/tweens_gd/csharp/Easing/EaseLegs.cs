@@ -25,20 +25,20 @@ public static class In
     public const EaseType Expo = (EaseType)(1L << 14);
     /// <summary>Circular easing.</summary>
     public const EaseType Circ = (EaseType)(1L << 15);
-    /// <summary>Back with 10% overshoot of the full tween range.</summary>
-    public const EaseType Back = (EaseType)(1L << 16);
-    /// <summary>Elastic with 10% overshoot of the full tween range.</summary>
-    public const EaseType Elastic = (EaseType)(1L << 17);
-    /// <summary>Bounce with a first rebound depth of 10% of the full tween range.</summary>
-    public const EaseType Bounce = (EaseType)(1L << 18);
+    /// <summary>Alias for the default 30% Back curve.</summary>
+    public const EaseType Back = Back30;
+    /// <summary>Alias for the default 30% Elastic curve.</summary>
+    public const EaseType Elastic = Elastic30;
+    /// <summary>Alias for the default 30% Bounce curve.</summary>
+    public const EaseType Bounce = Bounce30;
     /// <summary>Cubic smoothing with zero endpoint velocity.</summary>
     public const EaseType SmoothStep = (EaseType)(1L << 19);
     /// <summary>Quintic smoothing with zero endpoint velocity and acceleration.</summary>
     public const EaseType SmootherStep = (EaseType)(1L << 20);
-    /// <summary>Alias for the default 10% Back curve.</summary>
-    public const EaseType Back10 = Back;
-    /// <summary>Alias for the default 10% Elastic curve.</summary>
-    public const EaseType Elastic10 = Elastic;
+    /// <summary>Back with 10% overshoot of the full tween range.</summary>
+    public const EaseType Back10 = (EaseType)(1L << 16);
+    /// <summary>Elastic with 10% overshoot of the full tween range.</summary>
+    public const EaseType Elastic10 = (EaseType)(1L << 17);
     /// <summary>Back with 20% overshoot of the full tween range.</summary>
     public const EaseType Back20 = (EaseType)(1L << 34);
     /// <summary>Back with 30% overshoot of the full tween range.</summary>
@@ -55,8 +55,8 @@ public static class In
     public const EaseType Elastic40 = (EaseType)(1L << 40);
     /// <summary>Elastic with 50% overshoot of the full tween range.</summary>
     public const EaseType Elastic50 = (EaseType)(1L << 41);
-    /// <summary>Alias for the default 10% first-rebound depth, relative to the full tween range.</summary>
-    public const EaseType Bounce10 = Bounce;
+    /// <summary>Bounce with a first rebound depth of 10% of the full tween range.</summary>
+    public const EaseType Bounce10 = (EaseType)(1L << 18);
     /// <summary>Bounce with a first rebound depth of 20% of the full tween range.</summary>
     public const EaseType Bounce20 = (EaseType)(1L << 50);
     /// <summary>Bounce with 30% first rebound depth of the full tween range.</summary>
@@ -65,10 +65,10 @@ public static class In
     public const EaseType Bounce40 = (EaseType)(1L << 52);
     /// <summary>Bounce with 50% first rebound depth of the full tween range.</summary>
     public const EaseType Bounce50 = (EaseType)(1L << 53);
-    /// <summary>Mirrored Jump motion; the largest dip is 10% of the full tween range below the start.</summary>
-    public const EaseType Jump = (EaseType)((1L << 58) | (1L << 59));
+    /// <summary>Alias for the default 30% Jump curve.</summary>
+    public const EaseType Jump = Jump30;
     /// <summary>Jump with 10% overshoot of the full tween range.</summary>
-    public const EaseType Jump10 = Jump;
+    public const EaseType Jump10 = (EaseType)((1L << 58) | (1L << 59));
     /// <summary>Jump with 20% overshoot of the full tween range.</summary>
     public const EaseType Jump20 = (EaseType)((1L << 58) | (1L << 60));
     /// <summary>Jump with 30% overshoot of the full tween range.</summary>
@@ -100,20 +100,20 @@ public static class Out
     public const EaseType Expo = (EaseType)(1L << 27);
     /// <summary>Circular easing.</summary>
     public const EaseType Circ = (EaseType)(1L << 28);
-    /// <summary>Back with 10% overshoot of the full tween range.</summary>
-    public const EaseType Back = (EaseType)(1L << 29);
-    /// <summary>Elastic with 10% overshoot of the full tween range.</summary>
-    public const EaseType Elastic = (EaseType)(1L << 30);
-    /// <summary>Bounce with a first rebound depth of 10% of the full tween range.</summary>
-    public const EaseType Bounce = (EaseType)(1L << 31);
+    /// <summary>Alias for the default 30% Back curve.</summary>
+    public const EaseType Back = Back30;
+    /// <summary>Alias for the default 30% Elastic curve.</summary>
+    public const EaseType Elastic = Elastic30;
+    /// <summary>Alias for the default 30% Bounce curve.</summary>
+    public const EaseType Bounce = Bounce30;
     /// <summary>Cubic smoothing with zero endpoint velocity.</summary>
     public const EaseType SmoothStep = (EaseType)(1L << 32);
     /// <summary>Quintic smoothing with zero endpoint velocity and acceleration.</summary>
     public const EaseType SmootherStep = (EaseType)(1L << 33);
-    /// <summary>Alias for the default 10% Back curve.</summary>
-    public const EaseType Back10 = Back;
-    /// <summary>Alias for the default 10% Elastic curve.</summary>
-    public const EaseType Elastic10 = Elastic;
+    /// <summary>Back with 10% overshoot of the full tween range.</summary>
+    public const EaseType Back10 = (EaseType)(1L << 29);
+    /// <summary>Elastic with 10% overshoot of the full tween range.</summary>
+    public const EaseType Elastic10 = (EaseType)(1L << 30);
     /// <summary>Back with 20% overshoot of the full tween range.</summary>
     public const EaseType Back20 = (EaseType)(1L << 42);
     /// <summary>Back with 30% overshoot of the full tween range.</summary>
@@ -130,8 +130,8 @@ public static class Out
     public const EaseType Elastic40 = (EaseType)(1L << 48);
     /// <summary>Elastic with 50% overshoot of the full tween range.</summary>
     public const EaseType Elastic50 = (EaseType)(1L << 49);
-    /// <summary>Alias for the default 10% first-rebound depth, relative to the full tween range.</summary>
-    public const EaseType Bounce10 = Bounce;
+    /// <summary>Bounce with a first rebound depth of 10% of the full tween range.</summary>
+    public const EaseType Bounce10 = (EaseType)(1L << 31);
     /// <summary>Bounce with a first rebound depth of 20% of the full tween range.</summary>
     public const EaseType Bounce20 = (EaseType)(1L << 54);
     /// <summary>Bounce with 30% first rebound depth of the full tween range.</summary>
@@ -140,10 +140,10 @@ public static class Out
     public const EaseType Bounce40 = (EaseType)(1L << 56);
     /// <summary>Bounce with 50% first rebound depth of the full tween range.</summary>
     public const EaseType Bounce50 = (EaseType)(1L << 57);
-    /// <summary>Three peaks above the target; the first is 10% of the full tween range.</summary>
-    public const EaseType Jump = (EaseType)((1L << 62) | (1L << 63));
+    /// <summary>Alias for the default 30% Jump curve.</summary>
+    public const EaseType Jump = Jump30;
     /// <summary>Jump with 10% overshoot of the full tween range.</summary>
-    public const EaseType Jump10 = Jump;
+    public const EaseType Jump10 = (EaseType)((1L << 62) | (1L << 63));
     /// <summary>Jump with 20% overshoot of the full tween range.</summary>
     public const EaseType Jump20 = (EaseType)((1L << 62) | (1L << 6));
     /// <summary>Jump with 30% overshoot of the full tween range.</summary>
@@ -173,20 +173,20 @@ public static class InOut
     public const EaseType Expo = In.Expo | Out.Expo;
     /// <summary>Circular easing.</summary>
     public const EaseType Circ = In.Circ | Out.Circ;
-    /// <summary>Back with 10% overshoot of the full tween range.</summary>
-    public const EaseType Back = In.Back | Out.Back;
-    /// <summary>Elastic with 10% overshoot of the full tween range.</summary>
-    public const EaseType Elastic = In.Elastic | Out.Elastic;
-    /// <summary>Bounce with a first rebound depth of 10% of the full tween range.</summary>
-    public const EaseType Bounce = In.Bounce | Out.Bounce;
+    /// <summary>Alias for the default 30% Back curve.</summary>
+    public const EaseType Back = Back30;
+    /// <summary>Alias for the default 30% Elastic curve.</summary>
+    public const EaseType Elastic = Elastic30;
+    /// <summary>Alias for the default 30% Bounce curve.</summary>
+    public const EaseType Bounce = Bounce30;
     /// <summary>Cubic smoothing with zero endpoint velocity.</summary>
     public const EaseType SmoothStep = In.SmoothStep | Out.SmoothStep;
     /// <summary>Quintic smoothing with zero endpoint velocity and acceleration.</summary>
     public const EaseType SmootherStep = In.SmootherStep | Out.SmootherStep;
     /// <summary>Back with 10% overshoot of the full tween range.</summary>
-    public const EaseType Back10 = Back;
+    public const EaseType Back10 = In.Back10 | Out.Back10;
     /// <summary>Elastic with 10% overshoot of the full tween range.</summary>
-    public const EaseType Elastic10 = Elastic;
+    public const EaseType Elastic10 = In.Elastic10 | Out.Elastic10;
     /// <summary>Back with 20% overshoot of the full tween range.</summary>
     public const EaseType Back20 = In.Back20 | Out.Back20;
     /// <summary>Back with 30% overshoot of the full tween range.</summary>
@@ -203,8 +203,8 @@ public static class InOut
     public const EaseType Elastic40 = In.Elastic40 | Out.Elastic40;
     /// <summary>Elastic with 50% overshoot of the full tween range.</summary>
     public const EaseType Elastic50 = In.Elastic50 | Out.Elastic50;
-    /// <summary>Alias for the default 10% first-rebound depth, relative to the full tween range.</summary>
-    public const EaseType Bounce10 = Bounce;
+    /// <summary>Bounce with a first rebound depth of 10% of the full tween range.</summary>
+    public const EaseType Bounce10 = In.Bounce10 | Out.Bounce10;
     /// <summary>Bounce with a first rebound depth of 20% of the full tween range.</summary>
     public const EaseType Bounce20 = In.Bounce20 | Out.Bounce20;
     /// <summary>Bounce with 30% first rebound depth of the full tween range.</summary>
@@ -213,10 +213,10 @@ public static class InOut
     public const EaseType Bounce40 = In.Bounce40 | Out.Bounce40;
     /// <summary>Bounce with 50% first rebound depth of the full tween range.</summary>
     public const EaseType Bounce50 = In.Bounce50 | Out.Bounce50;
-    /// <summary>Matching Jump legs with 10% peak overshoot relative to the full tween range.</summary>
-    public const EaseType Jump = In.Jump | Out.Jump;
+    /// <summary>Alias for the default 30% Jump curve.</summary>
+    public const EaseType Jump = Jump30;
     /// <summary>Jump with 10% overshoot of the full tween range.</summary>
-    public const EaseType Jump10 = Jump;
+    public const EaseType Jump10 = In.Jump10 | Out.Jump10;
     /// <summary>Jump with 20% overshoot of the full tween range.</summary>
     public const EaseType Jump20 = In.Jump20 | Out.Jump20;
     /// <summary>Jump with 30% overshoot of the full tween range.</summary>

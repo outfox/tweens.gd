@@ -44,17 +44,17 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
     public void SkewWorksThroughOptionsConfiguratorsAndGeneratedDefinitions()
     {
         using var scope = new SceneScope(godot);
-        var options = scope.Add(new Node2D()).TweenPositionX(16, 1, new TweenOptions { Skew = 2, Weks = 0.5, UsePingPong = true });
-        var configured = scope.Add(new Node2D()).TweenPositionX(16, 1, d => { d.Skew = 0.5; d.Weks = 2; d.UsePingPong = true; });
-        var generated = scope.Add(new Node2D()).Tween(new Tweens.Position2DX { To = 16, Duration = 1, Skew = 2, Weks = 0.5, UsePingPong = true });
+        var options = scope.Add(new Node2D()).TweenPositionX(16, 1, new TweenOptions { Ease = InOut.Quad, Skew = 1, Weks = 1, UsePingPong = true });
+        var configured = scope.Add(new Node2D()).TweenPositionX(16, 1, d => { d.Ease = InOut.Quad; d.Skew = 0; d.Weks = 0; d.UsePingPong = true; });
+        var generated = scope.Add(new Node2D()).Tween(new Tweens.Position2DX { To = 16, Duration = 1, Ease = InOut.Quad, Skew = 1, Weks = 1, UsePingPong = true });
         scope.Advance(0.25);
         Assert.Equal(1, options.Value);
-        Assert.Equal(8, configured.Value);
+        Assert.Equal(7, configured.Value);
         Assert.Equal(1, generated.Value);
         scope.Advance(1.5);
-        Assert.Equal(8, options.Value);
+        Assert.Equal(7, options.Value);
         Assert.Equal(1, configured.Value);
-        Assert.Equal(8, generated.Value);
+        Assert.Equal(7, generated.Value);
     }
 
     private static Dictionary<string, MethodInfo[]> Families() => typeof(TweenExtensions)

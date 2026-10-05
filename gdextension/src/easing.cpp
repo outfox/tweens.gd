@@ -42,8 +42,10 @@ int64_t leg_bits(int64_t bits, bool out) {
 // Peak-calibrated parameters for 10%, 20%, ... 50% over the full tween range.
 constexpr double BACK_SOLO[] = {1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737};
 constexpr double BACK_PAIRED[] = {2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325};
-constexpr double ELASTIC_SOLO_PERIOD = 0.7553423501870573;
-constexpr double ELASTIC_PAIR_PERIOD = 0.5074981597799941;
+constexpr double ELASTIC_SOLO_DECAY = 17.553423501870573;
+constexpr double ELASTIC_PAIR_DECAY = 15.074981597799942;
+constexpr double ELASTIC_SOLO_PERIOD = 0.43031056027706766;
+constexpr double ELASTIC_PAIR_PERIOD = 0.33664927316001425;
 constexpr double ELASTIC_SOLO_KICK[] = {0, 0.6853132138892408, 1.1091787748281363, 1.4696240828544362, 1.8012905799033314};
 constexpr double ELASTIC_PAIR_KICK[] = {0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153};
 
@@ -83,7 +85,7 @@ double elastic_out(double t, int level, bool paired) {
 	if (t == 0.0 || t == 1.0) return t;
 	const double angle = Math::TAU*t/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
 	const double kick = (paired ? ELASTIC_PAIR_KICK : ELASTIC_SOLO_KICK)[level];
-	return 1.0 - std::pow(2.0, -10.0*t)*(std::cos(angle)-kick*std::sin(angle));
+	return 1.0 - std::pow(2.0, -(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY)*t)*(std::cos(angle)-kick*std::sin(angle));
 }
 // Constant acceleration; three rebound depths h, h/4, h/16, with flight times
 // 2*sqrt(h), sqrt(h), sqrt(h)/2 after the unit-duration initial fall.
@@ -131,8 +133,8 @@ double pair_slope(int64_t family, double time) {
 	const int back = back_level(int(family)), elastic = elastic_level(int(family)), bounce = bounce_level(int(family));
 	if (back >= 0) { const double s = BACK_PAIRED[back]; return 3.0*(s+1.0)*x*x - 2.0*s*x; }
 	if (elastic >= 0) {
-		const double u = 1.0-x, omega = Math::TAU/ELASTIC_PAIR_PERIOD, decay = 10.0*std::log(2.0), kick = ELASTIC_PAIR_KICK[elastic];
-		return std::pow(2.0, -10.0*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
+		const double u = 1.0-x, omega = Math::TAU/ELASTIC_PAIR_PERIOD, decay = ELASTIC_PAIR_DECAY*std::log(2.0), kick = ELASTIC_PAIR_KICK[elastic];
+		return std::pow(2.0, -ELASTIC_PAIR_DECAY*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
 	}
 	if (bounce >= 0) {
 		const double r = BOUNCE_PAIR_ROOT[bounce], scale = 1.0+3.5*r;
@@ -161,6 +163,54 @@ double pair_slope(int64_t family, double time) {
 		case 12: return 30.0 * t * t * (1.0 - t) * (1.0 - t);
 		default: return 1.0;
 	}
+}
+
+// Linear time/value scaling moves the authored split; larger legs approach their solo profiles.
+double split_profile(int family, double t, double split) {
+    if (split == 0.0) return family_leg(family, true, t);
+    if (split == 1.0) return family_leg(family, false, t);
+    if (split == 0.5) return family_pair(family, t);
+    if (t == 0.0 || t == 1.0) return t;
+    if (t <= split) {
+        const double x = t / split, mix = MAX(0.0, 2.0 * split - 1.0);
+        return split * ((1.0 - mix) * 2.0 * family_pair(family, x / 2.0) + mix * family_leg(family, false, x));
+    }
+    const double span = 1.0 - split, x = (t - split) / span, mix = MAX(0.0, 2.0 * span - 1.0);
+    return split + span * ((1.0 - mix) * (2.0 * family_pair(family, 0.5 + x / 2.0) - 1.0) + mix * family_leg(family, true, x));
+}
+
+double solo_slope(int family, double t, bool out) {
+    if (out) t = 1.0 - t;
+    if (family == 11) return 6.0*t*(1.0-t);
+    if (family == 12) return 30.0*t*t*(1.0-t)*(1.0-t);
+    if (family == 1) return Math::PI/2.0*std::sin(Math::PI/2.0*t);
+    if (family == 6) return 10.0*std::log(2.0)*std::pow(2.0,10.0*t-10.0);
+    if (family == 7) return t/std::sqrt(1.0-t*t);
+    const int back = back_level(family), elastic = elastic_level(family), bounce = bounce_level(family), jump = jump_level(family);
+    if (back >= 0) { const double s = BACK_SOLO[back]; return 3.0*(s+1.0)*t*t-2.0*s*t; }
+    if (elastic >= 0) {
+        const double u = 1.0-t, omega = Math::TAU/ELASTIC_SOLO_PERIOD, decay = ELASTIC_SOLO_DECAY*std::log(2.0), kick = ELASTIC_SOLO_KICK[elastic];
+        return std::pow(2.0,-ELASTIC_SOLO_DECAY*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
+    }
+    if (bounce >= 0 || jump >= 0) {
+        const int level = jump >= 0 ? jump : bounce;
+        const double r = BOUNCE_SOLO_ROOT[level], a = jump >= 0 ? JUMP_SOLO_LAUNCH[level] : 1.0;
+        const double scale = jump >= 0 ? a+2.5*r : 1.0+3.5*r;
+        double u = (1.0-t)*scale;
+        if (jump >= 0) return 2.0*scale*((u < a+r ? a : u < a+2.0*r ? a+1.5*r : a+2.25*r)-u);
+        if (u >= 1.0+3.0*r) u -= 1.0+3.25*r;
+        else if (u >= 1.0+2.0*r) u -= 1.0+2.5*r;
+        else if (u >= 1.0) u -= 1.0+r;
+        return 2.0*scale*u;
+    }
+    return family >= 2 && family <= 5 ? family*std::pow(t,family-1) : 1.0;
+}
+
+double split_slope(int family, double t, double split) {
+    if (split == 0.5) return pair_slope(family,t);
+    const bool out = t > split;
+    const double span = out ? 1.0-split : split, x = out ? (t-split)/span : t/span, mix = MAX(0.0,2.0*span-1.0);
+    return (1.0-mix)*pair_slope(family,out ? 0.5+x/2.0 : x/2.0)+mix*solo_slope(family,x,out);
 }
 
 double hermite(double u, double y0, double y1, double m0, double m1) {
@@ -195,7 +245,7 @@ double bounce_out(double t) {
 } // namespace
 
 void TweensGdEasing::_bind_methods() {
-	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress", "blend_type", "blend"), &TweensGdEasing::evaluate, DEFVAL(0), DEFVAL(0.2));
+	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress", "blend_type", "blend", "skew"), &TweensGdEasing::evaluate, DEFVAL(0), DEFVAL(0.2), DEFVAL(0.5));
 }
 
 bool tweens::is_known_ease(int64_t p_ease) {
@@ -209,8 +259,8 @@ bool tweens::is_known_ease(int64_t p_ease) {
 	return p_ease >= Ease::SINE_IN && p_ease <= Ease::BOUNCE_IN_OUT && p_ease % 10 <= 2;
 }
 
-double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type, double p_blend) {
-	if (p_blend_type < BLEND_MAKIMA || p_blend_type > BLEND_LINEAR || !std::isfinite(p_blend) || p_blend < 0.0 || p_blend > 1.0) return Math::NaN;
+double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type, double p_blend, double p_skew) {
+	if (p_blend_type < BLEND_MAKIMA || p_blend_type > BLEND_LINEAR || !std::isfinite(p_blend) || p_blend < 0.0 || p_blend > 1.0 || !std::isfinite(p_skew) || p_skew < 0.0 || p_skew > 1.0) return Math::NaN;
 	using std::cos;
 	using std::pow;
 	using std::sin;
@@ -226,22 +276,24 @@ double TweensGdEasing::evaluate(int64_t p_ease, double p_progress, int64_t p_ble
 		if (entry == 0) return family_leg(leg_slot(exit), true, t);
 		if (exit == 0) return family_leg(leg_slot(entry), false, t);
 		const int in_pair = leg_slot(entry), out_pair = leg_slot(exit);
-		const double h = p_blend / 2.0, left = 0.5 - h, right = 0.5 + h;
-		if (entry == exit || t <= left) return family_pair(in_pair, t);
-		if (t >= right) return family_pair(out_pair, t);
+		if (p_skew == 0.0) return family_leg(out_pair, true, t);
+        if (p_skew == 1.0) return family_leg(in_pair, false, t);
+        const double h = p_blend * MIN(p_skew,1.0-p_skew), left = p_skew - h, right = p_skew + h;
+		if (entry == exit || t <= left) return split_profile(in_pair, t, p_skew);
+		if (t >= right) return split_profile(out_pair, t, p_skew);
 		if (p_blend_type == BLEND_SMOOTH_STEP || p_blend_type == BLEND_LINEAR) {
-			const double u = (t - left) / p_blend;
+			const double u = (t - left) / (2.0*h);
 			const double w = p_blend_type == BLEND_SMOOTH_STEP ? u*u*(3.0 - 2.0*u) : u;
-			return family_pair(in_pair, t)*(1.0-w) + family_pair(out_pair, t)*w;
+			return split_profile(in_pair, t, p_skew)*(1.0-w) + split_profile(out_pair, t, p_skew)*w;
 		}
-		const double y0 = family_pair(in_pair, left), y1 = family_pair(out_pair, right);
-		const double v0 = pair_slope(in_pair, left), v1 = pair_slope(out_pair, right);
-		const double d0 = (0.5-y0)/h, d1 = (y1-0.5)/h;
+		const double y0 = split_profile(in_pair, left, p_skew), y1 = split_profile(out_pair, right, p_skew);
+		const double v0 = split_slope(in_pair, left, p_skew), v1 = split_slope(out_pair, right, p_skew);
+		const double d0 = (p_skew-y0)/h, d1 = (y1-p_skew)/h;
 		// Hermite's shared midpoint tangent solves equal acceleration, limited against new reversals.
 		const double middle = p_blend_type == BLEND_MAKIMA ? makima_slope(v0, d0, d1, v1)
 			: CLAMP((3.0*(d0+d1)-v0-v1)/4.0, 0.0, 3.0*MAX(0.0, MIN(d0,d1)));
-		return t <= 0.5 ? hermite((t-left)/h, y0, 0.5, h*v0, h*middle)
-			: hermite((t-0.5)/h, 0.5, y1, h*middle, h*v1);
+		return t <= p_skew ? hermite((t-left)/h, y0, p_skew, h*v0, h*middle)
+			: hermite((t-p_skew)/h, p_skew, y1, h*middle, h*v1);
 	}
 	switch (p_ease) {
 		case LINEAR:

@@ -60,7 +60,7 @@ public:
 	};
 
 	// Unknown easing functions return NaN.
-	static double evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type = BLEND_MAKIMA, double p_blend = 0.2);
+	static double evaluate(int64_t p_ease, double p_progress, int64_t p_blend_type = BLEND_MAKIMA, double p_blend = 0.2, double p_skew = 0.5);
 };
 
 namespace tweens {

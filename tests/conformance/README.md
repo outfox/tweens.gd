@@ -11,11 +11,11 @@ These fixtures establish timing/easing agreement, not full API or export parity.
 Engine lifetime, callbacks and property writes have separate integration tests.
 
 `easing.json` supplies composed In/Out samples at the blend boundaries, inside
-the transition, with missing legs and with skew. Optional `blendType` and `blend`
+the transition, with missing legs and with a linear In/Out split. The neutral split is 0.5; 0 and 1 select the full Out and In profiles. Optional `blendType` and `blend`
 select the method and centered window (defaults: Makima and 0.2). Non-polynomial
 samples also exercise the analytic derivatives used to construct the cubic join. C#, native GDScript, and the
 website's `npm run check:easing` consume the same samples. Each implementation
-also checks every family pairing. Back/Elastic fixtures cover aliases, 10%–50%
+also checks every family pairing. Bare calibrated names alias their 30% variants; Elastic adds one oscillation while preserving peak strengths. Back/Elastic fixtures cover aliases, 10%–50%
 variants, and mixed joins; independent peak tests verify the named overshoot
 against the full tween range for solo curves and matching pairs. Bounce fixtures
 cover the same 10%–50% variants; separate tests find the first rebound depth,

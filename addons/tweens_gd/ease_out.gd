@@ -23,20 +23,20 @@ const QUINT := 1 << 26
 const EXPO := 1 << 27
 ## Circular easing.
 const CIRC := 1 << 28
-## Back with 10% overshoot of the full tween range.
-const BACK := 1 << 29
-## Elastic with 10% overshoot of the full tween range.
-const ELASTIC := 1 << 30
-## Bounce with a first rebound depth of 10% of the full tween range.
-const BOUNCE := 1 << 31
+## Alias for the default 30% Back curve.
+const BACK := 1 << 43
+## Alias for the default 30% Elastic curve.
+const ELASTIC := 1 << 47
+## Alias for the default 30% Bounce curve.
+const BOUNCE := 1 << 55
 ## Cubic smoothing with zero endpoint velocity.
 const SMOOTH_STEP := 1 << 32
 ## Quintic smoothing with zero endpoint velocity and acceleration.
 const SMOOTHER_STEP := 1 << 33
 ## Back with 10% overshoot of the full tween range.
-const BACK10 := BACK
+const BACK10 := 1 << 29
 ## Elastic with 10% overshoot of the full tween range.
-const ELASTIC10 := ELASTIC
+const ELASTIC10 := 1 << 30
 ## Back with 20% overshoot of the full tween range.
 const BACK20 := 1 << 42
 ## Back with 30% overshoot of the full tween range.
@@ -54,7 +54,7 @@ const ELASTIC40 := 1 << 48
 ## Elastic with 50% overshoot of the full tween range.
 const ELASTIC50 := 1 << 49
 ## Bounce with a first rebound depth of 10% of the full tween range.
-const BOUNCE10 := BOUNCE
+const BOUNCE10 := 1 << 31
 ## Bounce with a first rebound depth of 20% of the full tween range.
 const BOUNCE20 := 1 << 54
 ## Bounce with a first rebound depth of 30% of the full tween range.
@@ -63,10 +63,10 @@ const BOUNCE30 := 1 << 55
 const BOUNCE40 := 1 << 56
 ## Bounce with a first rebound depth of 50% of the full tween range.
 const BOUNCE50 := 1 << 57
+## Alias for the default 30% Jump curve.
+const JUMP := (1 << 63) | (1 << 6)
 ## Jump with 10% overshoot of the full tween range.
-const JUMP := (1 << 62) | (1 << 63)
-## Jump with 10% overshoot of the full tween range.
-const JUMP10 := JUMP
+const JUMP10 := (1 << 62) | (1 << 63)
 ## Jump with 20% overshoot of the full tween range.
 const JUMP20 := (1 << 62) | (1 << 6)
 ## Jump with 30% overshoot of the full tween range.

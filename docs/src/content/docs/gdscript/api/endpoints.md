@@ -37,8 +37,8 @@ when the tween starts, each value becomes factor × value + delta. See
 | `delta_duration` | `float` | `0.0` | Then add these seconds |
 | `factor_delay` | `float` | `1.0` | Multiply `delay` |
 | `delta_delay` | `float` | `0.0` | Then add these seconds, as in a per-start stagger |
-| `skew` | `float` | `1.0` | Forward progress exponent before easing: above 1 starts slower, below 1 faster |
-| `weks` | `float` | `1.0` | Independent exponent for descending ping-pong return progress before easing; set equal to `skew` to retrace |
+| `skew` | `float` | `0.5` | In/Out split in `[0, 1]`: 0 front-loads, 0.5 balances, 1 rear-loads |
+| `weks` | `float` | `0.5` | Independent return split in `[0, 1]`; set to `1 - skew` to retrace |
 
 ## Relative offsets
 

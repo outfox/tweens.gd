@@ -60,27 +60,29 @@ public sealed partial class EasingComposer
         var a = Families[entry.GetSelectedId()];
         var b = Families[exit.GetSelectedId()];
         var ease = a.In | b.Out;
-        var exponent = skew.Value;
+        var split = skew.Value;
         var method = (BlendType)blend.Selected;
         var joinWidth = width.Value;
         var single = a.In == 0 || b.Out == 0 || a.In == b.In;
+        skew.Editable = a.In != 0 && b.Out != 0;
+        single |= split == 0 || split == 1;
         blend.Disabled = single;
         width.Editable = !single;
-        entryCurve.Points = a.In == 0 ? [] : Sample(b.Out == 0 ? a.In : a.In | a.Out, exponent, end: b.Out == 0 ? 1 : Math.Pow(0.5, 1/exponent));
-        exitCurve.Points = b.Out == 0 ? [] : Sample(a.In == 0 ? b.Out : b.In | b.Out, exponent, start: a.In == 0 ? 0 : Math.Pow(0.5, 1/exponent));
-        resultCurve.Points = Sample(ease, exponent, method, joinWidth);
+        entryCurve.Points = a.In == 0 ? [] : Sample(b.Out == 0 ? a.In : a.In | a.Out, split, end: b.Out == 0 ? 1 : split);
+        exitCurve.Points = b.Out == 0 ? [] : Sample(a.In == 0 ? b.Out : b.In | b.Out, split, start: a.In == 0 ? 0 : split);
+        resultCurve.Points = Sample(ease, split, method, joinWidth);
         FitPreview();
-        var left = -200 + 400 * (float)Math.Pow((1-joinWidth)/2, 1 / exponent);
-        var right = -200 + 400 * (float)Math.Pow((1+joinWidth)/2, 1 / exponent);
+        var left = -200 + 400 * (float)(split - joinWidth * Math.Min(split,1-split));
+        var right = -200 + 400 * (float)(split + joinWidth * Math.Min(split,1-split));
         region.Polygon = [new(left, -110), new(right, -110), new(right, 85), new(left, 85)];
         region.Visible = !single;
-        recipe.Text = $"{a.Name} | {b.Name}    ·    Skew {exponent:0.00}    ·    {method} {joinWidth:P0}";
+        recipe.Text = $"{a.Name} | {b.Name}    ·    Skew {split:0.00}    ·    {method} {joinWidth:P0}";
         tracer.Position = new(-200, 66);
         preview = ball.TweenPositionX(200, Seconds, options =>
         {
             options.From = -200;
             options.Ease = ease; // For example: In.Sine | Out.Cubic, or InOut.Sine.
-            options.Skew = exponent;
+            options.Skew = split;
             options.BlendType = method;
             options.Blend = joinWidth;
             options.Repeats = TweenOptions.Infinite;
@@ -95,7 +97,7 @@ public sealed partial class EasingComposer
         for (var i = 0; i < points.Length; i++)
         {
             var t = (float)(start + (end-start)*i/240);
-            points[i] = new(-200 + 400 * t, 66 - 132 * Easing.Evaluate(ease, (float)Math.Pow(t, skew), blendType, blend));
+            points[i] = new(-200 + 400 * t, 66 - 132 * Easing.Evaluate(ease, (float)t, blendType, blend, skew));
         }
         return points;
     }

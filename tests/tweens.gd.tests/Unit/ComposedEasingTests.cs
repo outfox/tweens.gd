@@ -8,14 +8,63 @@ namespace tweens.gd.Tests.Unit;
 public class ComposedEasingTests
 {
     [Fact]
+    public void LinearSplitsMoveTheJoinAndResolveToSoloProfilesAtBothEnds()
+    {
+        foreach (var entry in Families)
+        foreach (var exit in Families)
+        {
+            var a = Flag(typeof(In), entry);
+            var b = Flag(typeof(Out), exit);
+            foreach (var split in new[] { 0f, .01f, .25f, .5f, .75f, .99f, 1f })
+            {
+                Assert.Equal(0, Easing.Evaluate(a | b, 0, skew: split), 5);
+                Assert.Equal(1, Easing.Evaluate(a | b, 1, skew: split), 5);
+                if (split > 0 && split < 1)
+                    Assert.Equal(split, Easing.Evaluate(a | b, split, skew: split), 5);
+                for (var i = 0; i <= 20; i++)
+                {
+                    var t = i / 20f;
+                    var value = Easing.Evaluate(a | b, t, skew: split);
+                    Assert.True(float.IsFinite(value), $"{entry} | {exit}, split {split}, t {t}");
+                    if (split == 0) Assert.Equal(Easing.Evaluate(b, t), value);
+                    if (split == 1) Assert.Equal(Easing.Evaluate(a, t), value);
+                    Assert.InRange(Math.Abs(1 - Easing.Evaluate(Flag(typeof(In), exit) | Flag(typeof(Out), entry), 1-t, skew: 1-split) - value), 0, 0.00001f);
+                }
+            }
+        }
+    }
+
+    [Fact]
+    public void ElasticAddsOneCompleteOscillationToEveryStrength()
+    {
+        foreach (var paired in new[] { false, true })
+        foreach (var percent in new[] { 10, 20, 30, 40, 50 })
+        {
+            var ease = Flag(paired ? typeof(InOut) : typeof(Out), "Elastic" + percent);
+            var crossings = 0;
+            var peak = 1f;
+            var counted = false;
+            for (var i = 1; i < 10000; i++)
+            {
+                var value = Easing.Evaluate(ease, (paired ? .5f : 0) + (paired ? .5f : 1) * i / 10000f);
+                peak = Math.Max(peak, value);
+                if (peak > 1.0000001f && value < peak - 0.0000001f && !counted) { crossings++; counted = true; }
+                if (value < 0.9999999f) { peak = 1; counted = false; }
+            }
+            // The old solo 10% profile had one peak; stronger variants and paired profiles had two.
+            Assert.Equal(!paired && percent == 10 ? 2 : 3, crossings);
+        }
+    }
+
+    [Fact]
     public void SharedSamplesMatchNativeAndWebsiteContract()
     {
         using var data = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "conformance", "easing.json")));
         foreach (var sample in data.RootElement.GetProperty("cases").EnumerateArray())
         {
             var ease = Flag(typeof(In), sample.GetProperty("in").GetString()!) | Flag(typeof(Out), sample.GetProperty("out").GetString()!);
-            var t = Math.Pow(sample.GetProperty("progress").GetDouble(), sample.GetProperty("skew").GetDouble());
-            Assert.InRange(Math.Abs(Easing.Evaluate(ease, (float)t, sample.TryGetProperty("blendType", out var blendType) ? Enum.Parse<BlendType>(blendType.GetString()!) : BlendType.Makima, sample.TryGetProperty("blend", out var blend) ? blend.GetDouble() : 0.2) - sample.GetProperty("expected").GetDouble()),
+            var t = sample.GetProperty("progress").GetDouble();
+            Assert.InRange(Math.Abs(Easing.Evaluate(ease, (float)t, sample.TryGetProperty("blendType", out var blendType) ? Enum.Parse<BlendType>(blendType.GetString()!) : BlendType.Makima, sample.TryGetProperty("blend", out var blend) ? blend.GetDouble() : 0.2, sample.GetProperty("skew").GetDouble()) - sample.GetProperty("expected").GetDouble()),
                 0, data.RootElement.GetProperty("tolerance").GetDouble());
         }
     }
@@ -111,7 +160,7 @@ public class ComposedEasingTests
     public void NamedOvershootLevelsApplyToSoloAndPairedCurves(string family)
     {
         foreach (var type in new[] { typeof(In), typeof(Out), typeof(InOut) })
-            Assert.Equal(Flag(type, family), Flag(type, family + "10"));
+            Assert.Equal(Flag(type, family), Flag(type, family + "30"));
         foreach (var percent in new[] { 10, 20, 30, 40, 50 })
         {
             var entry = Flag(typeof(In), family + percent);
@@ -240,10 +289,10 @@ public class ComposedEasingTests
     public void BounceAliasesPreserveFlagValuesAndLegacyCurvesKeepTheirDepth()
     {
         foreach (var type in new[] { typeof(In), typeof(Out), typeof(InOut) })
-            Assert.Equal(Flag(type, "Bounce"), Flag(type, "Bounce10"));
-        Assert.Equal(1L << 18, (long)In.Bounce);
-        Assert.Equal(1L << 31, (long)Out.Bounce);
-        Assert.Equal(InOut.Bounce, In.Bounce10 | Out.Bounce);
+            Assert.Equal(Flag(type, "Bounce"), Flag(type, "Bounce30"));
+        Assert.Equal(1L << 18, (long)In.Bounce10);
+        Assert.Equal(1L << 31, (long)Out.Bounce10);
+        Assert.Equal(InOut.Bounce, In.Bounce30 | Out.Bounce);
         Assert.Equal(0.75f, Easing.Evaluate(EaseType.BounceOut, 6f/11), 6);
         Assert.Equal(0.875f, Easing.Evaluate(EaseType.BounceInOut, 17f/22), 6);
     }
@@ -251,11 +300,11 @@ public class ComposedEasingTests
     [Fact]
     public void OriginalFlagValuesAndLegacyElasticStrengthRemainStable()
     {
-        Assert.Equal(1L << 16, (long)In.Back);
-        Assert.Equal(1L << 30, (long)Out.Elastic);
+        Assert.Equal(1L << 16, (long)In.Back10);
+        Assert.Equal(1L << 30, (long)Out.Elastic10);
         Assert.InRange(Easing.Evaluate(EaseType.ElasticOut, 0.13474f), 1.37f, 1.38f);
-        Assert.Equal(InOut.Elastic, In.Elastic10 | Out.Elastic);
-        Assert.Equal(InOut.Back, In.Back | Out.Back10);
+        Assert.Equal(InOut.Elastic, In.Elastic30 | Out.Elastic);
+        Assert.Equal(InOut.Back, In.Back | Out.Back30);
     }
 
     [Theory]
@@ -265,7 +314,7 @@ public class ComposedEasingTests
     [InlineData(Out.Bounce50)]
     [InlineData(In.Bounce20 | Out.Bounce40)]
     [InlineData(In.Jump50)]
-    [InlineData(Out.Jump)]
+    [InlineData(Out.Jump10)]
     [InlineData(Out.Jump20)]
     [InlineData(Out.Jump30)]
     [InlineData(Out.Jump40)]
@@ -395,16 +444,16 @@ public class ComposedEasingTests
         Assert.Throws<ArgumentOutOfRangeException>(() => Easing.Evaluate(InOut.Sine, 0.5f, (BlendType)99));
 
     [Fact]
-    public void FlagsWorkThroughPlaybackAndSkewPrecedesTheBlend()
+    public void FlagsWorkThroughPlaybackAndIndependentSplits()
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
         var ease = In.Quad | Out.Cubic;
-        var handle = scheduler.Add(box, new PlainTween { To = 1, Duration = 2, Ease = ease, Skew = 2, Weks = 0.5, UsePingPong = true });
+        var handle = scheduler.Add(box, new PlainTween { To = 1, Duration = 2, Ease = ease, Skew = 0.75, Weks = 0.25, UsePingPong = true });
         scheduler.Update(1);
-        Assert.Equal(Easing.Evaluate(ease, 0.25f), box.Value);
+        Assert.Equal(Easing.Evaluate(ease, 0.5f, skew: 0.75), box.Value);
         scheduler.Update(2);
-        Assert.Equal(Easing.Evaluate(ease, MathF.Sqrt(0.5f)), box.Value, 5);
+        Assert.Equal(Easing.Evaluate(ease, 0.5f, skew: 0.75), box.Value, 5);
         scheduler.Update(1);
         Assert.Equal(0, box.Value);
         Assert.True(handle.IsTerminal);
