@@ -6,67 +6,27 @@ description: Choose how motion accelerates, compare curves, and combine a gentle
 import CurvePreview from '../../../components/CurvePreview.astro';
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
-Ease functions change how values vary over the duration of a tween.
-
-*"[Penner](https://easings.net/) easings are all washed up! Ferrets use Hermite splines and [Makima](https://www.mathworks.com/help/matlab/ref/makima.html).*
+*"Yo! The [Penner](https://easings.net/) easings are washed up. Ferrets prefer Hermite splines and [Makima](https://www.mathworks.com/help/matlab/ref/makima.html).*
 
 <EasingPlayground />
 
-## Compose an ease
+### Effects
+For ready-made punch, shake, and breathing motion, use
+[effect factories](/csharp/api/effects/).
 
-Combine one In family and one Out family with `|`: `In.Sine | Out.Cubic` starts gently
-and finishes with Cubic. Choose at most one from each side. A single selection
-runs over the whole duration; a matching pair is the same as `InOut`.
-
-Mixed families use a smooth Makima join by default. Most motions need no
-adjustment. `Blend` sets the join width from 0 to 1; a smaller width preserves
-more of the original halves. Matching pairs and single curves ignore it.
-
-See the [easing reference](/csharp/api/easing/) for join methods, curve
-percentages, and migration from legacy names. For changing the pacing without
-changing families, see [`Skew` and `Weks`](/csharp/variations/#change-the-pacing-with-skew).
-
-## Custom functions and curves
+### Custom functions and curves
 
 For a shape the built-in families don't cover, supply a function from normalized
 progress to an interpolation weight:
 
 ```csharp
-sprite.TweenPositionX(300, 0.6, options => options.EaseFunction = t => t * t);
+var move = Tweens.Position2DX(300, 0.6) 
+{
+    EaseFunction = t => t * t,
+};
+sprite.Tween(move);
 ```
 
-`EaseFunction` overrides `Ease`. A Godot `Curve` assigned to `Curve` is another
-option; each playback gets its own copy. Set only one of `EaseFunction` and `Curve`.
+`EaseFunction` overrides `Ease`. 
 
-<span id="effect-factories" />
-<span id="independent-axes-and-rotations" />
-
-For ready-made punch, shake, and breathing motion, use the
-[effect factories](/csharp/api/effects/), including vector and rotation effects.
-
-Examples use `using Godot;` and `using tweens.gd;`, with an in-tree `Sprite2D`
-named `sprite` on Godot's main thread.
-
-## Choose a family
-
-```csharp
-sprite.TweenPositionX(300, 0.6, Out.Cubic);
-```
-
-| Motion | Try |
-| --- | --- |
-| Arrive and settle | `Out.Cubic` |
-| Accelerate away | `In.Cubic` |
-| Move between resting positions | `InOut.Sine` |
-| Spring past the target, then settle | `Out.Elastic30` |
-| Keep a constant speed | `InOut.Linear` |
-
-`In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
-family's start and finish. These describe each traversal, not the forward and
-return legs of ping-pong.
-
-## Try an ease
-
-Pick an ease and watch the ball follow its curve.
-
-<CurvePreview />
+A Godot `Curve` assigned to `Curve` is another option; each playback gets its own copy. Set only one of `EaseFunction` and `Curve`.

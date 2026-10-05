@@ -45,7 +45,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 			<div class="selectors">
 				<label class="tw-field"><span class="in-key">In curve</span><select data-in aria-label="In curve">
 					<option value="None">None (Out only)</option><hr />
-					{curves.map(f => <option value={f} selected={f === 'Elastic'}>{f}</option>)}<hr />
+					{curves.map(f => <option value={f} selected={f === 'None'}>{f}</option>)}<hr />
 					{variants.map(f => <option value={f}>{f}</option>)}
 				</select></label>
 				<span class="join" aria-hidden="true">|</span>
@@ -66,18 +66,18 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	<div class="recipe">
 		<div class="recipe-bar"><span class="hint">Source code recipe for this curve</span><button type="button" class="tw-btn" data-copy>Copy</button></div>
 		<pre class="tw-code">{gd ? (
-			<code data-code><span class="kw">var</span> move := <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>1.5</span>, <span data-code-ease><span class="ty">InOut</span>.ELASTIC</span>)<span data-code-option="skew" hidden>
-move.skew = <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
-move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
-move.blend = <span class="num" data-code-blend>0.10</span></span>
-<span class="ty">Tweens</span>.<span class="fn">play</span>(sprite, move)</code>
+			<code data-code><span class="kw">var</span> move <span class="pn">:=</span> <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span><span class="pn">(</span><span class="num">300.0</span><span class="pn">,</span> <span class="num" data-code-duration>1.5</span><span class="pn">,</span> <span data-code-ease><span class="ty">InOut</span><span class="pn">.</span><span class="mb">ELASTIC</span></span><span class="pn">)</span><span data-code-option="skew" hidden>
+move<span class="pn">.</span><span class="mb">skew</span> <span class="pn">=</span> <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
+move<span class="pn">.</span><span class="mb">blend_type</span> <span class="pn">=</span> <span class="ty">BlendType</span><span class="pn">.</span><span class="mb" data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
+move<span class="pn">.</span><span class="mb">blend</span> <span class="pn">=</span> <span class="num" data-code-blend>0.10</span></span>
+<span class="ty">Tweens</span>.<span class="fn">play</span><span class="pn">(</span>sprite<span class="pn">,</span> move<span class="pn">)</span></code>
 		) : (
 			<code data-code><span class="kw">var</span> move = <span class="kw">new</span> <span class="ty">Tweens</span>.<span class="ty">Position2DX</span>
 {'{'}
     Duration = <span class="num" data-code-duration>1.5</span>,
-    Ease = <span data-code-ease><span class="ty">InOut</span>.Elastic</span>,<span data-code-option="skew" hidden>
+    Ease = <span data-code-ease>InOut.<span class="mb">Elastic</span></span>,<span data-code-option="skew" hidden>
     Skew = <span class="num" data-code-skew>0.50</span>,</span><span data-code-option="blend-type" hidden>
-    BlendType = <span class="ty">BlendType</span>.<span data-code-blend-type>Makima</span>,</span><span data-code-option="blend" hidden>
+    BlendType = BlendType.<span class="mb" data-code-blend-type>Makima</span>,</span><span data-code-option="blend" hidden>
     Blend = <span class="num" data-code-blend>0.10</span>,</span>
 {'}'};
 sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To = <span class="num">300</span> {'}'});</code>
@@ -173,14 +173,14 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			skew.disabled = a === 'None' || b === 'None';
 			blend.disabled = width.disabled = skew.disabled || matching || k === 0 || k === 1;
 			root.querySelectorAll<HTMLElement>('[data-ghost]').forEach((g, i) => g.style.setProperty('--x', laneX(value(i / 10))));
-			const name = (leg: string, family: string): (Node | string)[] => {
-				const type = document.createElement('span');
-				type.className = 'ty';
-				type.textContent = leg;
-				return [type, `.${gd ? constant(family) : family}`];
-			};
+			// Colored as Expressive Code colors the same source: C# leaves the leg type and operators plain.
+			const span = (className: string, text: string) => Object.assign(document.createElement('span'), { className, textContent: text });
+			const name = (leg: string, family: string): (Node | string)[] => gd
+				? [span('ty', leg), span('pn', '.'), span('mb', constant(family))]
+				: [`${leg}.`, span('mb', family)];
+			const or = gd ? [' ', span('pn', '|'), ' '] : [' | '];
 			const expression = matching && a !== 'None' ? name('InOut', a)
-				: a === 'None' ? name('Out', b) : b === 'None' ? name('In', a) : [...name('In', a), ' | ', ...name('Out', b)];
+				: a === 'None' ? name('Out', b) : b === 'None' ? name('In', a) : [...name('In', a), ...or, ...name('Out', b)];
 			$('[data-code-ease]').replaceChildren(...expression);
 			$('[data-code-duration]').textContent = (+duration.value).toFixed(1);
 			$('[data-code-skew]').textContent = k.toFixed(2);
@@ -273,11 +273,13 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 	.tw-field:has(:disabled) { opacity: .5; }
 	.tw-field :disabled { cursor: not-allowed; }
 	select:focus-visible { outline: 2px solid var(--tw-accent); outline-offset: 2px; }
-	.recipe { background: var(--tw-code-bg); border: 1px solid var(--tw-outline); border-radius: .75rem; overflow: hidden; }
-	.recipe-bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .4rem .5rem .4rem 1rem; border-bottom: 1px solid var(--tw-outline); }
+	/* Framed like the site's code blocks (expressiveCode in astro.config.mjs). */
+	.recipe { background: var(--tw-code-bg-cs); border: 1px solid var(--tw-outline); border-radius: .9rem; overflow: hidden; }
+	[data-code-lang='gdscript'] .recipe { background: var(--tw-code-bg-gd); }
+	.recipe-bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .4rem .5rem .4rem 1rem; border-bottom: 1px solid var(--tw-outline); background: var(--tw-surface); }
 	.hint { color: var(--tw-muted); font-size: .8rem; }
 	.recipe-bar .tw-btn { min-height: 1.9rem; font-size: .75rem; }
-	.recipe pre { margin: 0; padding: 1rem; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
+	.recipe pre { margin: 0; padding: 1rem 1.35rem; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
 	@media (min-width: 50rem) { .composer { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
 	@media (max-width: 30rem) {
 		.ep { padding: .8rem; }

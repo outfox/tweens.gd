@@ -60,7 +60,7 @@ public sealed record EasingSettings
         new("Jump50", In.Jump50, Out.Jump50),
     });
 
-    public EaseFamily Entry { get; init; } = Families.Single(family => family.Name == "Elastic");
+    public EaseFamily Entry { get; init; } = Families.Single(family => family.Name == "None");
     public EaseFamily Exit { get; init; } = Families.Single(family => family.Name == "Elastic");
     public double Duration { get; init; } = 1.5;
     public double Skew { get; init; } = 0.5;

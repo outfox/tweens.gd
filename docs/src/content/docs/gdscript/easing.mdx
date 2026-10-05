@@ -6,30 +6,19 @@ description: Choose how motion accelerates, compare curves, and combine a gentle
 import CurvePreview from '../../../components/CurvePreview.astro';
 import EasingPlayground from '../../../components/EasingPlayground.astro';
 
-Ease functions change how values vary over the duration of a tween.
-
-*"[Penner](https://easings.net/) easings are all washed up! Ferrets use Hermite splines and [Makima](https://www.mathworks.com/help/matlab/ref/makima.html).*
+*"Yo! The [Penner](https://easings.net/) easings are washed up. Ferrets prefer Hermite splines and [Makima](https://www.mathworks.com/help/matlab/ref/makima.html).*
 
 <EasingPlayground lang="gdscript" />
-
-
-## Compose an ease
-
-Combine one In family and one Out family with `|`: `In.SINE | Out.CUBIC` starts gently
-and finishes with Cubic. Choose at most one from each side. A single selection
-runs over the whole duration; a matching pair is the same as `InOut`.
-
-Mixed families use a smooth Makima join by default. Most motions need no
-adjustment. `blend` sets the join width from 0 to 1; a smaller width preserves
-more of the original halves. Matching pairs and single curves ignore it.
-
-
 
 See the [easing reference](/gdscript/api/easing/) for join methods, curve
 percentages, and migration from legacy names. For changing the pacing without
 changing families, see [`skew` and `weks`](/gdscript/variations/#change-the-pacing-with-skew).
 
-## Custom functions and curves
+### Effects
+For ready-made punch, shake, and breathing motion, use
+[effect factories](/gdscript/api/effects/).
+
+### Custom functions and curves
 
 For a shape the built-in families don't cover, supply a function from normalized
 progress to an interpolation weight:
@@ -40,40 +29,8 @@ move.ease_function = func(t: float) -> float: return t * t
 Tweens.play(sprite, move)
 ```
 
-`ease_function` overrides `ease`. A Godot `Curve` assigned to `curve` is another
+`ease_function` overrides `ease`. 
+
+A Godot `Curve` assigned to `curve` is another
 option; each playback gets its own copy. Set only one of `ease_function` and `curve`.
 
-<span id="effect-factories" />
-<span id="independent-axes-and-rotations" />
-
-For ready-made punch, shake, and breathing motion, use the
-[effect factories](/gdscript/api/effects/), including vector and rotation effects.
-
-
-Examples use the global `Tweens` class, with an in-tree `Sprite2D`
-named `sprite` on Godot's main thread.
-
-## Choose a family
-
-```gdscript
-var move := Tweens.position_2d_x(300.0, 0.6, Out.CUBIC)
-Tweens.play(sprite, move)
-```
-
-| Motion | Try |
-| --- | --- |
-| Arrive and settle | `Out.CUBIC` |
-| Accelerate away | `In.CUBIC` |
-| Move between resting positions | `InOut.SINE` |
-| Spring past the target, then settle | `Out.ELASTIC30` |
-| Keep a constant speed | `InOut.LINEAR` |
-
-`In` accelerates into the motion; `Out` eases out of it. `InOut` combines a
-family's start and finish. These describe each traversal, not the forward and
-return legs of ping-pong.
-
-## Try an ease
-
-Pick an ease and watch the ball follow its curve.
-
-<CurvePreview />
