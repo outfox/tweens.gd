@@ -205,7 +205,7 @@ public class ShaderTweenTests(Fixture godot)
     {
         TweenInstance handle;
         try { handle = start(); }
-        catch (T) { return; }
+        catch (T error) { Assert.IsType<T>(error); return; }
         scheduler.Update(0);
         Assert.IsType<T>(handle.Error);
         if (reported) godot.Errors.Expect(handle.Error.Message);
