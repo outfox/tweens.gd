@@ -131,22 +131,72 @@
    controls use the accent, and code blocks take a faint tint of it; demos draw their data in the fixed gallery
    palette above. */
 :root {
-	--tw-accent: #67a2dd;
+	--tw-accent-cs: #67a2dd;
+	--tw-accent: var(--tw-accent-cs);
 	--tw-accent-ink: #8fbdea;
 	--tw-accent-low: #1a3a5c;
 	--tw-on-accent: #08131f;
 	--tw-code-tint: 10%;
 	--tw-code-bg: color-mix(in oklab, var(--tw-accent) var(--tw-code-tint), var(--tw-stage));
+	/* Code blocks tint by their own language, so a C# block on a GDScript page stays blue. */
+	--tw-code-bg-cs: color-mix(in oklab, var(--tw-accent-cs) var(--tw-code-tint), var(--tw-stage));
+	--tw-code-bg-gd: color-mix(in oklab, var(--tw-mint) var(--tw-code-tint), var(--tw-stage));
 	/* Code panels set into a demo widget, a step darker than the widget. */
 	--tw-code-inset: color-mix(in oklab, var(--tw-accent) var(--tw-code-tint), var(--tw-bg));
+	/* 12.5px at the default 16px root; rem follows the reader's font size setting and zoom. */
+	--sl-text-code: 0.78125rem;
 }
 :root[data-theme='light'] {
-	--tw-accent: #4a8fd0;
+	--tw-accent-cs: #4a8fd0;
 	--tw-accent-ink: #1f5f9e;
 	--tw-accent-low: #d6e8f8;
 	--tw-on-accent: #ffffff;
 	--tw-code-tint: 7%;
 }
+
+/* Syntax colors for hand-highlighted demo code, matching the code block themes (code-themes.mjs): Rider's Islands for
+   C#, the Godot script editor for GDScript. */
+:root {
+	--tw-syn-fg: #bcbec4;
+	--tw-syn-kw: #6c95eb;
+	--tw-syn-ty: #c191ff;
+	--tw-syn-fn: #39cc9b;
+	--tw-syn-member: #66c3cc;
+	--tw-syn-num: #ed94c0;
+	--tw-syn-cm: #85c46c;
+	--tw-syn-punct: #bcbec4;
+}
+:root[data-theme='light'] {
+	--tw-syn-fg: #1e1f22;
+	--tw-syn-kw: #1849c2;
+	--tw-syn-ty: #7036b5;
+	--tw-syn-fn: #08735a;
+	--tw-syn-member: #0b6b80;
+	--tw-syn-num: #b0226b;
+	--tw-syn-cm: #3f7a2c;
+	--tw-syn-punct: #1e1f22;
+}
+:root[data-lang='gdscript'] {
+	--tw-syn-fg: #cdcfd2;
+	--tw-syn-kw: #ff7085;
+	--tw-syn-ty: #8fffdb;
+	--tw-syn-fn: #57b3ff;
+	--tw-syn-member: #bce0ff;
+	--tw-syn-num: #a1ffe0;
+	--tw-syn-cm: #8a9196;
+	--tw-syn-punct: #abc9ff;
+}
+:root[data-theme='light'][data-lang='gdscript'] {
+	--tw-syn-fg: #1f2329;
+	--tw-syn-kw: #c4155a;
+	--tw-syn-ty: #11705a;
+	--tw-syn-fn: #1b4fc4;
+	--tw-syn-member: #0c5d94;
+	--tw-syn-num: #08735a;
+	--tw-syn-cm: #5f666d;
+	--tw-syn-punct: #29408f;
+}
+
 :root[data-lang='gdscript'] {
 	--tw-accent: var(--tw-mint);
 	--tw-accent-ink: var(--tw-mint-ink);
@@ -743,6 +793,34 @@ code,
 pre,
 kbd {
 	font-variant-ligatures: none;
+}
+/* GDScript shows JetBrains Mono's ligatures, as Godot's script editor does; C# keeps plain glyphs, as Rider does. */
+pre[data-language='gdscript'],
+pre[data-language='gdscript'] code,
+:root[data-lang='gdscript'] .tw-code {
+	font-variant-ligatures: normal;
+}
+/* Hand-highlighted demo code: one font and size for both languages, colored like the code blocks. */
+.tw-code {
+	font-family: var(--sl-font-mono);
+	font-size: var(--sl-text-code);
+	font-variant-ligatures: none;
+	color: var(--tw-syn-fg);
+}
+.tw-code .kw {
+	color: var(--tw-syn-kw);
+}
+.tw-code .ty {
+	color: var(--tw-syn-ty);
+}
+.tw-code .fn {
+	color: var(--tw-syn-fn);
+}
+.tw-code :is(.num, .val) {
+	color: var(--tw-syn-num);
+}
+.tw-code .cm {
+	color: var(--tw-syn-cm);
 }
 
 /* Marked code lines point at what the prose explains: a faint accent band, an accent edge, and a numbered tab

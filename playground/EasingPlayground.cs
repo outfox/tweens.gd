@@ -13,6 +13,8 @@ namespace playground;
 public partial class EasingPlayground : Control
 {
     [Export] public Theme GDScriptAccentOverrides { get; set; } = null!;
+    [Export] public CodeHighlighter CSharpSyntax { get; set; } = null!;
+    [Export] public CodeHighlighter GDScriptSyntax { get; set; } = null!;
 
     public EasingSettings Settings { get; private set; } = new();
     public TweenInstance? Playback { get; private set; }
@@ -142,7 +144,6 @@ public partial class EasingPlayground : Control
         csharpTheme = Theme;
         gdscriptTheme = (Theme)csharpTheme.Duplicate();
         gdscriptTheme.MergeWith(GDScriptAccentOverrides);
-        recipeEditor.SyntaxHighlighter = (SyntaxHighlighter)recipeEditor.SyntaxHighlighter.Duplicate();
     }
 
     public void SetLanguage(bool gdscript)
@@ -152,12 +153,7 @@ public partial class EasingPlayground : Control
         gdscriptModeButton.SetPressedNoSignal(gdscript);
         Theme = gdscript ? gdscriptTheme : csharpTheme;
 
-        var ink = Theme.GetColor("accent_ink", "LanguageMode");
-        var highlighter = (CodeHighlighter)recipeEditor.SyntaxHighlighter;
-        highlighter.FunctionColor = ink;
-        foreach (var keyword in new[] { "BlendType", "In", "InOut", "Out", "Position2DX", "Tweens" })
-            highlighter.AddKeywordColor(keyword, ink);
-        highlighter.ClearHighlightingCache();
+        recipeEditor.SyntaxHighlighter = gdscript ? GDScriptSyntax : CSharpSyntax;
 
         UpdateRecipe();
         curveGraph.QueueRedraw();

@@ -1,6 +1,14 @@
-[gd_resource type="Theme" load_steps=13 format=3]
+[gd_resource type="Theme" load_steps=14 format=3]
 
 [ext_resource type="FontFile" path="res://Fonts/JetBrainsMono-Regular.ttf" id="1_font"]
+
+[sub_resource type="FontVariation" id="FontVariation_Code"]
+resource_name = "Code without ligatures"
+base_font = ExtResource("1_font")
+opentype_features = {
+1667329140: 0,
+1818847073: 0
+}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Button"]
 resource_name = "Button"
@@ -186,10 +194,10 @@ PopupMenu/styles/panel = SubResource("StyleBoxFlat_Popup")
 HSlider/styles/slider = SubResource("StyleBoxFlat_Slider")
 HSlider/styles/grabber_area = SubResource("StyleBoxFlat_SliderFill")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_SliderFill")
-TextEdit/colors/font_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
-TextEdit/colors/font_readonly_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
-TextEdit/font_sizes/font_size = 14
-TextEdit/fonts/font = ExtResource("1_font")
+TextEdit/colors/font_color = Color(0.7372549, 0.745098, 0.7686275, 1)
+TextEdit/colors/font_readonly_color = Color(0.7372549, 0.745098, 0.7686275, 1)
+TextEdit/font_sizes/font_size = 13
+TextEdit/fonts/font = SubResource("FontVariation_Code")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_Code")
 TextEdit/styles/read_only = SubResource("StyleBoxFlat_Code")
 GraphPanel/base_type = &"PanelContainer"
@@ -255,7 +263,6 @@ EasingGraph/colors/entry = Color(1, 0.7529412, 0.4705882, 1)
 EasingGraph/colors/exit = Color(0.5333333, 0.7490196, 1, 1)
 EasingGraph/colors/result = Color(0.4509804, 0.8862745, 0.7411765, 1)
 LanguageMode/colors/accent = Color(0.4039216, 0.6352941, 0.8666667, 1)
-LanguageMode/colors/accent_ink = Color(0.5607843, 0.7411765, 0.9176471, 1)
 LanguageButton/base_type = &"Button"
 LanguageButton/colors/font_pressed_color = Color(0.0313725, 0.0745098, 0.1215686, 1)
 LanguageButton/colors/font_hover_pressed_color = Color(0.0313725, 0.0745098, 0.1215686, 1)

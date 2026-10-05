@@ -35,10 +35,11 @@ should not intercept clicks.
 
 [Themes/playground.tres](Themes/playground.tres) contains the shared styles,
 fonts, label variations, and graph colors, with blue C# accents by default.
-[Themes/gdscript.tres](Themes/gdscript.tres) overrides only the language accents;
-the controller merges it into the base theme. Plotted curves keep the fixed
-gallery colors in both modes. The recipe's syntax highlighter is a
-scene subresource. The graph and motion preview have C# tool scripts that draw
+[Themes/gdscript.tres](Themes/gdscript.tres) overrides only the language accents
+and the recipe's code font; the controller merges it into the base theme. Plotted
+curves keep the fixed gallery colors in both modes. The recipe has one syntax
+highlighter per language, both scene subresources: C# follows Rider's Islands Dark
+colors without ligatures, GDScript the Godot script editor's colors with them. The graph and motion preview have C# tool scripts that draw
 the default Elastic curve directly in the editor after the project is built.
 
 [EasingPlayground.cs](EasingPlayground.cs) binds scene-unique node names and

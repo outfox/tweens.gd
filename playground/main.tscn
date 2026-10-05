@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Theme" path="res://Themes/playground.tres" id="1_theme"]
 [ext_resource type="Script" path="res://EasingPlayground.cs" id="2_controller"]
@@ -9,22 +9,44 @@
 [sub_resource type="ButtonGroup" id="ButtonGroup_Language"]
 resource_name = "Language mode"
 
-[sub_resource type="CodeHighlighter" id="CodeHighlighter_Recipe"]
-resource_name = "Recipe syntax"
-number_color = Color(1, 0.7529412, 0.4705882, 1)
-symbol_color = Color(0.5529412, 0.6156863, 0.6666667, 1)
-function_color = Color(0.4509804, 0.8862745, 0.7411765, 1)
-member_variable_color = Color(0.8862745, 0.9294118, 0.9529412, 1)
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_CSharp"]
+resource_local_to_scene = true
+resource_name = "C# syntax"
+number_color = Color(0.9294118, 0.5803922, 0.7529412, 1)
+symbol_color = Color(0.7372549, 0.745098, 0.7686275, 1)
+function_color = Color(0.2235294, 0.8, 0.6078431, 1)
+member_variable_color = Color(0.4, 0.7647059, 0.8, 1)
 keyword_colors = {
-"BlendType": Color(0.4509804, 0.8862745, 0.7411765, 1),
-"In": Color(0.4509804, 0.8862745, 0.7411765, 1),
-"InOut": Color(0.4509804, 0.8862745, 0.7411765, 1),
-"Out": Color(0.4509804, 0.8862745, 0.7411765, 1),
-"Position2DX": Color(0.4509804, 0.8862745, 0.7411765, 1),
-"Tweens": Color(0.4509804, 0.8862745, 0.7411765, 1),
-"new": Color(0.5333333, 0.7490196, 1, 1),
-"var": Color(0.5333333, 0.7490196, 1, 1),
-"with": Color(0.5333333, 0.7490196, 1, 1)
+"Blend": Color(0.4, 0.7647059, 0.8, 1),
+"BlendType": Color(0.7568627, 0.5686275, 1, 1),
+"Duration": Color(0.4, 0.7647059, 0.8, 1),
+"Ease": Color(0.4, 0.7647059, 0.8, 1),
+"In": Color(0.7568627, 0.5686275, 1, 1),
+"InOut": Color(0.7568627, 0.5686275, 1, 1),
+"new": Color(0.4235294, 0.5843137, 0.9215686, 1),
+"Out": Color(0.7568627, 0.5686275, 1, 1),
+"Position2DX": Color(0.7568627, 0.5686275, 1, 1),
+"Skew": Color(0.4, 0.7647059, 0.8, 1),
+"To": Color(0.4, 0.7647059, 0.8, 1),
+"Tweens": Color(0.7568627, 0.5686275, 1, 1),
+"var": Color(0.4235294, 0.5843137, 0.9215686, 1),
+"with": Color(0.4235294, 0.5843137, 0.9215686, 1)
+}
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_GDScript"]
+resource_local_to_scene = true
+resource_name = "GDScript syntax"
+number_color = Color(0.6313725, 1, 0.8784314, 1)
+symbol_color = Color(0.6705882, 0.7882353, 1, 1)
+function_color = Color(0.3411765, 0.7019608, 1, 1)
+member_variable_color = Color(0.7372549, 0.8784314, 1, 1)
+keyword_colors = {
+"BlendType": Color(0.5607843, 1, 0.8588235, 1),
+"In": Color(0.5607843, 1, 0.8588235, 1),
+"InOut": Color(0.5607843, 1, 0.8588235, 1),
+"Out": Color(0.5607843, 1, 0.8588235, 1),
+"Tweens": Color(0.5607843, 1, 0.8588235, 1),
+"var": Color(1, 0.4392157, 0.5215686, 1)
 }
 
 [node name="Main" type="Control"]
@@ -37,6 +59,8 @@ grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_controller")
 GDScriptAccentOverrides = ExtResource("5_gdscript")
+CSharpSyntax = SubResource("CodeHighlighter_CSharp")
+GDScriptSyntax = SubResource("CodeHighlighter_GDScript")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -471,7 +495,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "var move = new Tweens.Position2DX\n{\n    Duration = 1.5,\n    Ease = InOut.Elastic,\n};\nsprite.Tween(move with { To = 300 });"
 editable = false
-syntax_highlighter = SubResource("CodeHighlighter_Recipe")
+syntax_highlighter = SubResource("CodeHighlighter_CSharp")
 wrap_mode = 1
 scroll_fit_content_height = true
 

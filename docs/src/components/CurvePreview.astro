@@ -6,7 +6,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 ---
 
 <figure class="stage not-content" data-stage>
-	<figcaption class="code">
+	<figcaption class="code tw-code">
 		<span data-lang-only="csharp">
 			<span class="t-kw">var</span> <span class="t-var">hop</span> = <span class="t-kw">new</span> <span class="t-ty">Tweens.Position2D</span>(to, <span class="t-num">0.9</span>, <span class="code-ease">Out.<span class="t-ease" data-ease-label="csharp">{eases[0]}</span>);</span><br />
 			<span class="t-var">sprite</span>.<span class="t-fn">Tween</span>(<span class="t-var">hop</span>);
@@ -198,11 +198,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 		min-width: 0;
 	}
 	.code {
-		font-family: var(--sl-font-mono);
-		font-variant-ligatures: none;
-		font-size: 0.8125rem;
 		line-height: 1.6;
-		color: var(--tw-muted);
 		padding: 0.75rem;
 		border-radius: 0.8rem;
 		background: color-mix(in oklab, var(--tw-code-inset) 70%, transparent);
@@ -211,24 +207,21 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 	.code-ease {
 		display: inline-block;
 	}
-	.t-var {
-		color: var(--sl-color-white);
-	}
 	.t-kw {
-		color: var(--tw-blue-ink);
+		color: var(--tw-syn-kw);
 	}
 	.t-ty {
-		color: var(--tw-mint-ink);
+		color: var(--tw-syn-ty);
 	}
 	.t-fn {
-		color: var(--tw-amber-ink);
+		color: var(--tw-syn-fn);
 	}
 	.t-num {
-		color: var(--tw-amber-ink);
+		color: var(--tw-syn-num);
 	}
 	.t-ease {
 		display: inline-block;
-		color: var(--tw-mint-ink);
+		color: var(--tw-syn-member);
 		font-weight: 700;
 	}
 	.motion {
@@ -366,9 +359,6 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 		}
 	}
 	@container (max-width: 24rem) {
-		.code {
-			font-size: 0.75rem;
-		}
 		.motion {
 			gap: 0.5rem;
 		}

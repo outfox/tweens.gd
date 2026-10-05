@@ -10,7 +10,7 @@ const gd = lang === 'gdscript';
 		<div class="lane"><span>Original · 0.2 s</span><div class="track"><i data-node /></div></div>
 		<div class="lane"><span>Copy · <output data-duration-label>0.6 s</output></span><div class="track"><i data-node /></div></div>
 	</div>
-	<pre><code data-start-code>{gd
+	<pre class="tw-code"><code data-start-code>{gd
 		? 'Tweens.play(first, nudge)\nTweens.play(second, nudge.with_duration(0.6))'
 		: 'first.Tween(Nudge);\nsecond.Tween(Nudge with { Duration = 0.6 });'}</code></pre>
 	<div class="controls">
@@ -71,7 +71,7 @@ const gd = lang === 'gdscript';
 	i { display: block; width: 28px; height: 28px; border-radius: 0.5rem; background: var(--tw-mint); }
 	.lane:last-child i { background: var(--tw-amber); }
 	pre { margin: 0; padding: 1rem; min-width: 0; overflow-x: auto; border-radius: 0.7rem; background: var(--tw-code-bg); }
-	code { font: 0.8rem/1.7 var(--sl-font-mono); color: var(--sl-color-white); }
+	code { line-height: 1.7; }
 	.controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
 	label { flex: 1 1 10rem; max-width: 18rem; }
 	p { margin: 0; font-size: var(--sl-text-sm); color: var(--tw-soft); }

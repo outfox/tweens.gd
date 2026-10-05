@@ -1,5 +1,6 @@
 ---
 // Two code blocks side by side in a landscape window. In portrait, side by side only when both fit without scrolling.
+// Code keeps the site's one code size; a line too long for its half scrolls inside its block.
 const html = await Astro.slots.render('default');
 
 // Longest lines, in characters, from each block's copy text (lines joined by U+007F). The first line is
@@ -23,9 +24,6 @@ const rest = Math.max(0, ...lines.flatMap((block) => block.slice(1)));
 		/* JetBrains Mono advances 0.6em per character. Add the copy button's 2rem, the padding, and the border. */
 		--char: calc(0.6 * var(--sl-text-code));
 		--column: calc(max(var(--first) * var(--char) + 2rem, var(--rest) * var(--char)) + 2rem + 2px);
-		/* The longest line in characters; the first line also leaves room for the copy button. */
-		--longest: max(var(--first) + 4, var(--rest));
-		container-type: inline-size;
 		margin-top: 1.5rem;
 	}
 	.grid {
@@ -37,14 +35,10 @@ const rest = Math.max(0, ...lines.flatMap((block) => block.slice(1)));
 		min-width: 0;
 		margin: 0;
 	}
-	/* A landscape window always compares side by side. The code shrinks, down to 0.7rem, until each half fits its
-	   longest line; a line that still doesn't fit scrolls inside its block. */
+	/* A landscape window always compares side by side. */
 	@media (orientation: landscape) and (min-width: 40rem) {
 		.grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-		.grid :global(.expressive-code) {
-			--ec-codeFontSize: clamp(0.7rem, (50cqi - 0.75rem - 2rem - 2px) / (0.6 * var(--longest)), var(--sl-text-code));
 		}
 	}
 </style>

@@ -37,12 +37,12 @@ const gd = lang === 'gdscript';
 			<p class="pane-label">The shared definition</p>
 			{
 				gd ? (
-					<pre><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num" data-base-duration>0.2</span>,
+					<pre class="tw-code"><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num" data-base-duration>0.2</span>,
     InOut.QUAD) <span class="cont">\</span>
     .<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>) <span class="cont">\</span>
     .<span class="fn">with_ping_pong</span>()</pre>
 				) : (
-					<pre><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DX</span> Recoil = <span class="kw">new</span>()
+					<pre class="tw-code"><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DX</span> Recoil = <span class="kw">new</span>()
 {'{'}
     By = <span class="num" data-base-by>-12</span>,
     Duration = <span class="num" data-base-duration>0.2</span>,
@@ -57,13 +57,13 @@ const gd = lang === 'gdscript';
 			<div class="calls">
 				{
 					gd ? (
-						<pre data-call-hit>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
+						<pre class="tw-code" data-call-hit>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
     .<span class="fn">with_factor_by</span>(<span class="num" data-factor-by>2.0</span>) <span class="cont">\</span>
     .<span class="fn">with_factor_duration</span>(<span class="num" data-factor-duration>1.2</span>) <span class="cont">\</span>
     .<span class="fn">with_skew</span>(<span class="num" data-skew-out>0.5</span>) <span class="cont">\</span>
     .<span class="fn">with_weks</span>(<span class="num" data-weks-out>0.5</span>))</pre>
 					) : (
-						<pre data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
+						<pre class="tw-code" data-call-hit><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-factor-by>2</span>,
     FactorDuration = <span class="num" data-factor-duration>1.2</span>,
@@ -74,12 +74,12 @@ const gd = lang === 'gdscript';
 				}
 				{
 					gd ? (
-						<pre data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
+						<pre class="tw-code" data-call-crit hidden>Tweens.<span class="fn">play</span>(self, recoil <span class="cont">\</span>
     .<span class="fn">with_factor_by</span>(<span class="num" data-crit-by>3.0</span>) <span class="cont">\</span>
     .<span class="fn">with_skew</span>(<span class="num" data-crit-skew>0.25</span>) <span class="cont">\</span>
     .<span class="fn">with_weks</span>(<span class="num" data-crit-weks>0.75</span>))</pre>
 					) : (
-						<pre data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
+						<pre class="tw-code" data-call-crit hidden><span class="kw">this</span>.<span class="fn">Tween</span>(Recoil <span class="kw">with</span>
 {'{'}
     FactorBy = <span class="num" data-crit-by>3</span>,
     Skew = <span class="num" data-crit-skew>0.25</span>,
@@ -465,8 +465,7 @@ const gd = lang === 'gdscript';
 		border-radius: 0.7rem;
 		background: color-mix(in oklab, var(--tw-code-inset) 75%, transparent);
 		border: 1px solid color-mix(in oklab, var(--tw-outline) 60%, transparent);
-		font: 0.76rem/1.7 var(--sl-font-mono);
-		color: var(--sl-color-white);
+		line-height: 1.7;
 		overflow-x: auto;
 	}
 	/* Both starts share one cell, so the box keeps the taller one's height and nothing below shifts on switching. */
@@ -480,17 +479,7 @@ const gd = lang === 'gdscript';
 		display: block;
 		visibility: hidden;
 	}
-	.kw {
-		color: var(--tw-blue-ink);
-	}
-	.ty {
-		color: var(--tw-mint-ink);
-	}
-	.fn {
-		color: var(--tw-amber-ink);
-	}
 	.num {
-		color: var(--tw-amber-ink);
 		font-weight: 700;
 	}
 	/* GDScript needs the line continuations, but they carry no meaning worth reading. */

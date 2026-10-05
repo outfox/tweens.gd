@@ -65,7 +65,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	</div>
 	<div class="recipe">
 		<div class="recipe-bar"><span class="hint">Source code recipe for this curve</span><button type="button" class="tw-btn" data-copy>Copy</button></div>
-		<pre>{gd ? (
+		<pre class="tw-code">{gd ? (
 			<code data-code><span class="kw">var</span> move = <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span>(<span class="num">300.0</span>, <span class="num" data-code-duration>1.5</span>, <span data-code-ease><span class="ty">InOut</span>.ELASTIC</span>)<span data-code-option="skew" hidden>
 move.skew = <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
 move.blend_type = <span class="ty">BlendType</span>.<span data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
@@ -277,10 +277,7 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 	.recipe-bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .4rem .5rem .4rem 1rem; border-bottom: 1px solid var(--tw-outline); }
 	.hint { color: var(--tw-muted); font-size: .8rem; }
 	.recipe-bar .tw-btn { min-height: 1.9rem; font-size: .75rem; }
-	.recipe pre { margin: 0; padding: 1rem; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85rem; line-height: 1.6; color: var(--tw-soft); }
-	.recipe :global(.kw) { color: var(--tw-blue-ink); }
-	.recipe :global(.ty) { color: var(--tw-mint-ink); }
-	.recipe :global(.fn), .recipe :global(.num) { color: var(--tw-amber-ink); }
+	.recipe pre { margin: 0; padding: 1rem; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
 	@media (min-width: 50rem) { .composer { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
 	@media (max-width: 30rem) {
 		.ep { padding: .8rem; }

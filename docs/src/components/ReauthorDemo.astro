@@ -21,11 +21,11 @@ const sites = [
 	<div class="def">
 		{
 			gd ? (
-				<pre class="code" aria-label="Definition"><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(Vector2.ONE, <span class="val" data-duration-out>0.6</span>,
+				<pre class="code tw-code" aria-label="Definition"><span class="kw">var</span> pop := Tweens.<span class="fn">scale_2d</span>(Vector2.ONE, <span class="val" data-duration-out>0.6</span>,
     Tweens.Ease.<span class="val" data-ease-out>ELASTIC_OUT</span>)
 pop.from_value = Vector2.ZERO</pre>
 			) : (
-				<pre class="code" aria-label="Definition"><span class="kw">static readonly</span> <span class="ty">Tweens.Scale2D</span> Pop = <span class="kw">new</span>()
+				<pre class="code tw-code" aria-label="Definition"><span class="kw">static readonly</span> <span class="ty">Tweens.Scale2D</span> Pop = <span class="kw">new</span>()
 {'{'}
     From = Vector2.Zero,
     To = Vector2.One,
@@ -177,25 +177,14 @@ pop.from_value = Vector2.ZERO</pre>
 		padding: 0.9rem 1rem;
 		border-radius: 0.8rem;
 		background: color-mix(in oklab, var(--tw-code-inset) 75%, transparent);
-		font: 0.8rem/1.75 var(--sl-font-mono);
-		color: var(--sl-color-white);
+		line-height: 1.75;
 		overflow-x: auto;
-	}
-	.kw {
-		color: var(--tw-blue-ink);
-	}
-	.fn {
-		color: var(--tw-amber-ink);
-	}
-	.ty {
-		color: var(--tw-mint-ink);
 	}
 	.val {
 		display: inline-block;
 		padding-inline: 0.2rem;
 		margin-inline: -0.2rem;
 		border-radius: 0.25rem;
-		color: var(--tw-amber-ink);
 		font-weight: 700;
 	}
 	.edit {

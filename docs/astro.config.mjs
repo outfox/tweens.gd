@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import { tweensDark, tweensLight } from './src/styles/code-themes.mjs';
+import { codeThemeSelector, csharpDark, csharpLight, gdscriptDark, gdscriptLight } from './src/styles/code-themes.mjs';
 import { redirects, sidebar } from './src/tracks.mjs';
 import { checkSearchUpstream } from './scripts/check-search-upstream.mjs';
 
@@ -139,13 +139,14 @@ export default defineConfig({
 				ThemeSelect: './src/components/overrides/ThemeSelect.astro',
 			},
 			expressiveCode: {
-				themes: [tweensDark, tweensLight],
+				themes: [csharpDark, csharpLight, gdscriptDark, gdscriptLight],
+				themeCssSelector: codeThemeSelector,
 				styleOverrides: {
 					borderRadius: '0.9rem',
 					borderColor: 'var(--tw-outline)',
 					codeFontFamily: 'var(--__sl-font-mono)',
 					uiFontFamily: 'var(--__sl-font)',
-					codeBackground: 'var(--tw-code-bg)',
+					codeBackground: ({ theme }) => (theme.name.startsWith('gdscript') ? 'var(--tw-code-bg-gd)' : 'var(--tw-code-bg-cs)'),
 					frames: {
 						editorTabBarBackground: 'var(--tw-surface)',
 						// The theme's accent stripe on the active tab gets clipped by the frame's corner radius.
