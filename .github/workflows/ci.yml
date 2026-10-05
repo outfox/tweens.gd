@@ -147,7 +147,9 @@ jobs:
             libxcursor1 libxinerama1 libxrandr2 libxi6 libxkbcommon0)
           sudo apt-get install -y --no-install-recommends "${packages[@]}"
           echo 'pcm.!default { type null }' > ~/.asoundrc
-          echo "VK_DRIVER_FILES=$(ls /usr/share/vulkan/icd.d/lvp_icd*.json)" >> "$GITHUB_ENV"
+          icds=(/usr/share/vulkan/icd.d/lvp_icd*.json)
+          if [ ${#icds[@]} -ne 1 ] || [ ! -f "${icds[0]}" ]; then echo "Expected one lavapipe ICD: ${icds[*]}"; exit 1; fi
+          echo "VK_DRIVER_FILES=${icds[0]}" >> "$GITHUB_ENV"
       - name: Test library rendering
         run: >-
           xvfb-run -a -s '-screen 0 1920x1080x24'
