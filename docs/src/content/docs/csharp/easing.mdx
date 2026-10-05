@@ -20,7 +20,7 @@ For a shape the built-in families don't cover, supply a function from normalized
 progress to an interpolation weight:
 
 ```csharp
-var move = Tweens.Position2DX(300, 0.6) 
+var move = new Tweens.Position2DX(300, 0.6)
 {
     EaseFunction = t => t * t,
 };

@@ -66,7 +66,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	<div class="recipe">
 		<div class="recipe-bar"><span class="hint">Source code recipe for this curve</span><button type="button" class="tw-btn" data-copy>Copy</button></div>
 		<pre class="tw-code">{gd ? (
-			<code data-code><span class="kw">var</span> move <span class="pn">:=</span> <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span><span class="pn">(</span><span class="num">300.0</span><span class="pn">,</span> <span class="num" data-code-duration>1.5</span><span class="pn">,</span> <span data-code-ease><span class="ty">InOut</span><span class="pn">.</span><span class="mb">ELASTIC</span></span><span class="pn">)</span><span data-code-option="skew" hidden>
+			<code data-code><span class="kw">var</span> move <span class="pn">:=</span> <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span><span class="pn">(</span><span class="num">300.0</span><span class="pn">,</span> <span class="num" data-code-duration>1.5</span><span class="pn">,</span> <span data-code-ease><span class="ty">Out</span><span class="pn">.</span><span class="mb">ELASTIC</span></span><span class="pn">)</span><span data-code-option="skew" hidden>
 move<span class="pn">.</span><span class="mb">skew</span> <span class="pn">=</span> <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
 move<span class="pn">.</span><span class="mb">blend_type</span> <span class="pn">=</span> <span class="ty">BlendType</span><span class="pn">.</span><span class="mb" data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
 move<span class="pn">.</span><span class="mb">blend</span> <span class="pn">=</span> <span class="num" data-code-blend>0.10</span></span>
@@ -75,7 +75,7 @@ move<span class="pn">.</span><span class="mb">blend</span> <span class="pn">=</s
 			<code data-code><span class="kw">var</span> move = <span class="kw">new</span> <span class="ty">Tweens</span>.<span class="ty">Position2DX</span>
 {'{'}
     Duration = <span class="num" data-code-duration>1.5</span>,
-    Ease = <span data-code-ease>InOut.<span class="mb">Elastic</span></span>,<span data-code-option="skew" hidden>
+    Ease = <span data-code-ease>Out.<span class="mb">Elastic</span></span>,<span data-code-option="skew" hidden>
     Skew = <span class="num" data-code-skew>0.50</span>,</span><span data-code-option="blend-type" hidden>
     BlendType = BlendType.<span class="mb" data-code-blend-type>Makima</span>,</span><span data-code-option="blend" hidden>
     Blend = <span class="num" data-code-blend>0.10</span>,</span>
@@ -215,7 +215,7 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			update();
 		});
 		progress.addEventListener('input', () => { stop(); draw(+progress.value); });
-		$('[data-reset]').addEventListener('click', () => { entry.value = 'Elastic'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(initialBlend); progress.value = '0'; update(); });
+		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(initialBlend); progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($<HTMLElement>('[data-code]').innerText); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }

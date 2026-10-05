@@ -125,7 +125,7 @@ public sealed record EasingSettings
     {
         var lines = new List<string>
         {
-            $"var move = Tweens.position_2d_x(300.0, {Number(Duration, "0.0")}, {EaseExpression(gdscript: true)})",
+            $"var move := Tweens.position_2d_x(300.0, {Number(Duration, "0.0")}, {EaseExpression(gdscript: true)})",
         };
 
         if (HasBothLegs && Skew != 0.5)

@@ -157,7 +157,7 @@ public class EasingPlaygroundTests(HeadlessFixture godot)
         try
         {
             Assert.Equal(new EasingSettings(), page.Settings);
-            Assert.Equal(InOut.Elastic, page.Settings.Ease);
+            Assert.Equal(Out.Elastic, page.Settings.Ease);
             Assert.True(Find<OptionButton>(page, "BlendType").Disabled);
             page.ApplySettings(new() { Entry = Family("Sine"), Exit = Family("Jump50"), Duration = 3, Skew = 0.3, Blend = 0.6 });
             page.Scrub(0.7f);
@@ -309,7 +309,7 @@ public class EasingPlaygroundTests(HeadlessFixture godot)
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
             var defaults = new EasingSettings();
             Assert.Contains("Duration = 1.5", defaults.Recipe());
-            Assert.Contains("Ease = InOut.Elastic", defaults.Recipe());
+            Assert.Contains("Ease = Out.Elastic", defaults.Recipe());
             Assert.DoesNotContain("Skew =", defaults.Recipe());
             Assert.DoesNotContain("Blend =", defaults.Recipe());
             var settings = defaults with { Entry = Family("SmoothStep"), Exit = Family("SmootherStep"), Skew = 0.3, Blend = 0.6, BlendType = BlendType.SmoothStep };

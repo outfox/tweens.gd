@@ -17,17 +17,8 @@ symbol_color = Color(0.7372549, 0.745098, 0.7686275, 1)
 function_color = Color(0.2235294, 0.8, 0.6078431, 1)
 member_variable_color = Color(0.4, 0.7647059, 0.8, 1)
 keyword_colors = {
-"Blend": Color(0.4, 0.7647059, 0.8, 1),
-"BlendType": Color(0.7568627, 0.5686275, 1, 1),
-"Duration": Color(0.4, 0.7647059, 0.8, 1),
-"Ease": Color(0.4, 0.7647059, 0.8, 1),
-"In": Color(0.7568627, 0.5686275, 1, 1),
-"InOut": Color(0.7568627, 0.5686275, 1, 1),
 "new": Color(0.4235294, 0.5843137, 0.9215686, 1),
-"Out": Color(0.7568627, 0.5686275, 1, 1),
 "Position2DX": Color(0.7568627, 0.5686275, 1, 1),
-"Skew": Color(0.4, 0.7647059, 0.8, 1),
-"To": Color(0.4, 0.7647059, 0.8, 1),
 "Tweens": Color(0.7568627, 0.5686275, 1, 1),
 "var": Color(0.4235294, 0.5843137, 0.9215686, 1),
 "with": Color(0.4235294, 0.5843137, 0.9215686, 1)
@@ -493,7 +484,7 @@ text = "Copy"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "var move = new Tweens.Position2DX\n{\n    Duration = 1.5,\n    Ease = InOut.Elastic,\n};\nsprite.Tween(move with { To = 300 });"
+text = "var move = new Tweens.Position2DX\n{\n    Duration = 1.5,\n    Ease = Out.Elastic,\n};\nsprite.Tween(move with { To = 300 });"
 editable = false
 syntax_highlighter = SubResource("CodeHighlighter_CSharp")
 wrap_mode = 1
