@@ -76,16 +76,23 @@ export type EaseLeg = EaseFamily | 'None';
 export const canonicalFamily = (family: EaseLeg): EaseLeg => ['Back', 'Elastic', 'Bounce', 'Jump'].includes(family) ? (family + '30') as EaseLeg : family;
 const BACK_SOLO = [1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737];
 const BACK_PAIRED = [2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325];
-const ELASTIC_SOLO_DECAY = 17.553423501870573, ELASTIC_PAIR_DECAY = 15.074981597799942;
-const ELASTIC_SOLO_PERIOD = 0.43031056027706766, ELASTIC_PAIR_PERIOD = 0.33664927316001425;
-const ELASTIC_SOLO_KICK = [0, 0.6853132138892408, 1.1091787748281363, 1.4696240828544362, 1.8012905799033314];
-const ELASTIC_PAIR_KICK = [0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153];
+// Reproduce these peak calibrations with scripts/calibrate-elastic.mjs at the repository root.
+const ELASTIC_SOLO_DECAY = 17.553423501870573, ELASTIC_SOLO_TAIL = 8, ELASTIC_PAIR_DECAY = 7.537490798899971;
+const ELASTIC_SOLO_PERIOD = 0.43031056027706766, ELASTIC_PAIR_PERIOD = 0.6732985463200285;
+const ELASTIC_SOLO_KICK = [-0.2974298881021775, 0.5992618094300022, 1.036207742895828, 1.3991518140146244, 1.730459189003298];
+const ELASTIC_PAIR_KICK = [0.054242444203084675, 0.9078807808396336, 1.4611442537053763, 1.9533326533438204, 2.419656309841953];
 const BOUNCE_SOLO_ROOT = [.1,.2,.3,.4,.5].map(Math.sqrt);
 const BOUNCE_PAIR_ROOT = [.2,.4,.6,.8,1].map(Math.sqrt);
 const JUMP_SOLO_LAUNCH = [1.1,1.2,1.3,1.4,1.5].map(Math.sqrt);
 const JUMP_PAIR_LAUNCH = [1.2,1.4,1.6,1.8,2].map(Math.sqrt);
 const strengthLevel = (family: EaseLeg) => +(family.match(/\d+$/)?.[0] ?? 30)/10-1;
 const isOvershoot = (family: EaseLeg) => family.startsWith('Back') || family.startsWith('Elastic');
+
+function elasticScale(kick: number, paired: boolean): number {
+	const omega = 2*Math.PI/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
+	const residual = 2**(-(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY-ELASTIC_SOLO_TAIL))*(Math.cos(omega)-kick*Math.sin(omega));
+	return 1/(1-residual);
+}
 
 function overshootLeg(family: EaseLeg, direction: 'In' | 'Out', t: number, paired: boolean): number {
 	if (t === 0 || t === 1) return t;
@@ -98,8 +105,9 @@ function overshootLeg(family: EaseLeg, direction: 'In' | 'Out', t: number, paire
 	const u = direction === 'In' ? 1-t : t;
 	const angle = 2*Math.PI*u/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
 	const kick = (paired ? ELASTIC_PAIR_KICK : ELASTIC_SOLO_KICK)[level];
-	const value = 2**(-(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY)*u)*(Math.cos(angle)-kick*Math.sin(angle));
-	return direction === 'In' ? value : 1-value;
+	const exponent = -(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY)*u+(paired ? 0 : ELASTIC_SOLO_TAIL*u*u);
+	const value = elasticScale(kick, paired)*(1-2**exponent*(Math.cos(angle)-kick*Math.sin(angle)));
+	return direction === 'In' ? 1-value : value;
 }
 
 // Three rebounds at h, h/4, h/16; one acceleration fixes their relative flight times.
@@ -178,8 +186,8 @@ function soloSlope(family: EaseLeg, t: number, out: boolean): number {
 	const level=strengthLevel(family);
 	if (family.startsWith('Back')) { const s=BACK_SOLO[level]; return 3*(s+1)*t*t-2*s*t; }
 	if (family.startsWith('Elastic')) {
-		const u=1-t,omega=2*Math.PI/ELASTIC_SOLO_PERIOD,decay=ELASTIC_SOLO_DECAY*Math.LN2,kick=ELASTIC_SOLO_KICK[level];
-		return 2**(-ELASTIC_SOLO_DECAY*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
+		const u=1-t,omega=2*Math.PI/ELASTIC_SOLO_PERIOD,decay=(ELASTIC_SOLO_DECAY-2*ELASTIC_SOLO_TAIL*u)*Math.LN2,kick=ELASTIC_SOLO_KICK[level];
+		return elasticScale(kick,false)*2**(-ELASTIC_SOLO_DECAY*u+ELASTIC_SOLO_TAIL*u*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
 	}
 	if (family.startsWith('Bounce') || family.startsWith('Jump')) {
 		const jump=family.startsWith('Jump'),r=BOUNCE_SOLO_ROOT[level],a=jump?JUMP_SOLO_LAUNCH[level]:1,scale=jump?a+2.5*r:1+3.5*r;
@@ -217,7 +225,7 @@ function pairSlope(family: EaseLeg, time: number): number {
 	if (family.startsWith('Back')) { const s=BACK_PAIRED[level]; return 3*(s+1)*x*x-2*s*x; }
 	if (family.startsWith('Elastic')) {
 		const u=1-x, omega=2*Math.PI/ELASTIC_PAIR_PERIOD, decay=ELASTIC_PAIR_DECAY*Math.LN2, kick=ELASTIC_PAIR_KICK[level];
-		return 2**(-ELASTIC_PAIR_DECAY*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
+		return elasticScale(kick,true)*2**(-ELASTIC_PAIR_DECAY*u)*((decay+kick*omega)*Math.cos(omega*u)+(omega-kick*decay)*Math.sin(omega*u));
 	}
 	if (family.startsWith('Bounce')) {
 		const r = BOUNCE_PAIR_ROOT[level], scale = 1+3.5*r;

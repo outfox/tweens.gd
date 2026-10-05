@@ -196,6 +196,21 @@ func _composed_easing() -> void:
 				pair_high = maxf(pair_high, pair)
 			for peak in [-solo_low, solo_high-1.0, -pair_low, pair_high-1.0]:
 				near(peak, percent/100.0, "named overshoot peak " + family)
+	for percent in [10, 20, 30, 40, 50]:
+		var family := "ELASTIC" + str(percent)
+		for paired in [false, true]:
+			var values: Array[float] = []
+			for i in range(10001):
+				values.append(T.Easing.evaluate(pairs[family] if paired else exits[family], (0.5 if paired else 0.0) + (0.5 if paired else 1.0)*i/10000.0))
+			var peaks: Array[int] = []
+			for i in range(1, values.size()-1):
+				if values[i] > 1.0001 and values[i] > values[i-1] and values[i] >= values[i+1]: peaks.append(i)
+			check(peaks.size() == 2, "elastic has two visible broad swings")
+			if peaks.size() == 2:
+				var spacing := (peaks[1]-peaks[0])/10000.0*(0.5 if paired else 1.0)
+				check(spacing > 0.33 and spacing < 0.34 if paired else spacing > 0.44 and spacing < 0.46, "elastic swing spacing")
+				if not paired: check(values[peaks[1]] > 1.003, "elastic solo follow-through stays visible")
+			check(absf(values[-2]-1.0) < 0.00002, "elastic endpoint is continuous")
 	check(In.BOUNCE30 == In.BOUNCE and Out.BOUNCE30 == Out.BOUNCE and InOut.BOUNCE30 == InOut.BOUNCE, "bounce 30 aliases")
 	for percent in [10, 20, 30, 40, 50]:
 		var family := "BOUNCE" + str(percent)

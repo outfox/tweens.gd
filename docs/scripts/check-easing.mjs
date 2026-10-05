@@ -78,6 +78,18 @@ for (const base of ['Back', 'Elastic', 'Jump']) for (const percent of [10,20,30,
 assert.ok(ease('ElasticOut',.13474)>1.37);
 console.log('Back/Elastic/Jump: 10%-50% solo and paired peaks, symmetry, aliases, and legacy preservation passed.');
 
+for (const percent of [10,20,30,40,50]) for (const paired of [false,true]) {
+  const family='Elastic'+percent;
+  const values=Array.from({length:10001},(_,i)=>composeEase(paired?family:'None',family,(paired?.5:0)+(paired?.5:1)*i/10000));
+  const peaks=values.flatMap((v,i)=>i>0&&i<values.length-1&&v>1.0001&&v>values[i-1]&&v>=values[i+1]?[i/10000*(paired?.5:1)]:[]);
+  assert.equal(peaks.length,2);
+  const spacing=peaks[1]-peaks[0];
+  assert.ok(paired?spacing>.33&&spacing<.34:spacing>.44&&spacing<.46);
+  if (!paired) assert.ok(values[Math.round(peaks[1]*10000)]>1.003);
+  assert.ok(Math.abs(values.at(-2)-1)<.00002);
+}
+console.log('Elastic: broader paired swings, visible solo follow-through and continuous endpoints passed.');
+
 for (const percent of [10,20,30,40,50]) {
   const family='Bounce'+percent;
   for (const paired of [false,true]) {

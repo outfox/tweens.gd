@@ -50,11 +50,14 @@ namespace tweens.gd {
     static readonly float[] BackSolo = [1.701540198866824f, 2.5923889015162995f, 3.3940516581445603f, 4.155744652639195f, 4.894859521133737f];
     static readonly float[] BackPaired = [2.5923889015162995f, 4.155744652639195f, 5.619622918334311f, 7.042439379340937f, 8.44353560159325f];
     const float ElasticSoloDecay = 17.553423501870573f;
-    const float ElasticPairDecay = 15.074981597799942f;
+    // Solo damping relaxes after the main swing. Paired legs run at half their former frequency.
+    // Reproduce the calibrated peaks with scripts/calibrate-elastic.mjs.
+    const float ElasticSoloTail = 8;
+    const float ElasticPairDecay = 7.537490798899971f;
     const float ElasticSoloPeriod = 0.43031056027706766f;
-    const float ElasticPairPeriod = 0.33664927316001425f;
-    static readonly float[] ElasticSoloKick = [0, 0.6853132138892408f, 1.1091787748281363f, 1.4696240828544362f, 1.8012905799033314f];
-    static readonly float[] ElasticPairKick = [0, 0.8829462755133655f, 1.4362972653938577f, 1.9263692424370968f, 2.3898041023212153f];
+    const float ElasticPairPeriod = 0.6732985463200285f;
+    static readonly float[] ElasticSoloKick = [-0.2974298881021775f, 0.5992618094300022f, 1.036207742895828f, 1.3991518140146244f, 1.730459189003298f];
+    static readonly float[] ElasticPairKick = [0.054242444203084675f, 0.9078807808396336f, 1.4611442537053763f, 1.9533326533438204f, 2.419656309841953f];
     static readonly float[] BounceSoloRoot = [Mathf.Sqrt(0.1f), Mathf.Sqrt(0.2f), Mathf.Sqrt(0.3f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.5f)];
     static readonly float[] BouncePairRoot = [Mathf.Sqrt(0.2f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.6f), Mathf.Sqrt(0.8f), 1];
     static readonly float[] JumpSoloLaunch = [Mathf.Sqrt(1.1f), Mathf.Sqrt(1.2f), Mathf.Sqrt(1.3f), Mathf.Sqrt(1.4f), Mathf.Sqrt(1.5f)];
@@ -179,10 +182,10 @@ namespace tweens.gd {
       if (family is 9 or >= 17 and <= 20) {
         var u = 1 - t;
         var omega = Mathf.Tau / ElasticSoloPeriod;
-        var decay = ElasticSoloDecay * Mathf.Log(2);
+        var decay = (ElasticSoloDecay - 2 * ElasticSoloTail * u) * Mathf.Log(2);
         var kick = ElasticSoloKick[family == 9 ? 0 : family - 16];
-        return Mathf.Pow(2, -ElasticSoloDecay * u) * ((decay + kick * omega) * Mathf.Cos(omega * u)
-          + (omega - kick * decay) * Mathf.Sin(omega * u));
+        return ElasticScale(kick, false) * Mathf.Pow(2, -ElasticSoloDecay * u + ElasticSoloTail * u * u)
+          * ((decay + kick * omega) * Mathf.Cos(omega * u) + (omega - kick * decay) * Mathf.Sin(omega * u));
       }
       if (family is 10 or >= 21 and <= 29) {
         var jump = family >= 25;
@@ -470,13 +473,20 @@ namespace tweens.gd {
       return 3 * (s + 1) * t * t - 2 * s * t;
     }
 
-    // A damped oscillator with an adjustable sine term keeps both endpoints fixed.
-    // Frequency and decay add one cycle while preserving the damping ratio and calibrated peaks.
+    // Normalize the damped spring's residual so it reaches the endpoint continuously.
+    static float ElasticScale(float kick, bool paired) {
+      var omega = Mathf.Tau / (paired ? ElasticPairPeriod : ElasticSoloPeriod);
+      var residual = Mathf.Pow(2, -(paired ? ElasticPairDecay : ElasticSoloDecay - ElasticSoloTail))
+        * (Mathf.Cos(omega) - kick * Mathf.Sin(omega));
+      return 1 / (1 - residual);
+    }
+
     static float ElasticLegOut(float t, int level, bool paired = false) {
       if (t == 0 || t == 1) return t;
       var angle = Mathf.Tau * t / (paired ? ElasticPairPeriod : ElasticSoloPeriod);
       var kick = (paired ? ElasticPairKick : ElasticSoloKick)[level];
-      return 1 - Mathf.Pow(2, -(paired ? ElasticPairDecay : ElasticSoloDecay) * t) * (Mathf.Cos(angle) - kick * Mathf.Sin(angle));
+      var exponent = -(paired ? ElasticPairDecay : ElasticSoloDecay) * t + (paired ? 0 : ElasticSoloTail * t * t);
+      return ElasticScale(kick, paired) * (1 - Mathf.Pow(2, exponent) * (Mathf.Cos(angle) - kick * Mathf.Sin(angle)));
     }
 
     static float ElasticLegIn(float t, int level, bool paired = false) => 1 - ElasticLegOut(1 - t, level, paired);
@@ -487,7 +497,7 @@ namespace tweens.gd {
       var omega = Mathf.Tau / ElasticPairPeriod;
       var decay = ElasticPairDecay * Mathf.Log(2);
       var kick = ElasticPairKick[level];
-      return Mathf.Pow(2, -ElasticPairDecay * t) * ((decay + kick * omega) * Mathf.Cos(omega * t)
+      return ElasticScale(kick, true) * Mathf.Pow(2, -ElasticPairDecay * t) * ((decay + kick * omega) * Mathf.Cos(omega * t)
         + (omega - kick * decay) * Mathf.Sin(omega * t));
     }
 

@@ -15,7 +15,9 @@ the transition, with missing legs and with a linear In/Out split. The neutral sp
 select the method and centered window (defaults: Makima and 0.2). Non-polynomial
 samples also exercise the analytic derivatives used to construct the cubic join. C#, native GDScript, and the
 website's `npm run check:easing` consume the same samples. Each implementation
-also checks every family pairing. Bare calibrated names alias their 30% variants; Elastic adds one oscillation while preserving peak strengths. Back/Elastic fixtures cover aliases, 10%–50%
+also checks every family pairing. Bare calibrated names alias their 30% variants. Elastic uses
+broader paired swings and gentler damping in the solo tail, while preserving peak strengths.
+`node scripts/calibrate-elastic.mjs` reproduces its calibrated parameters. Back/Elastic fixtures cover aliases, 10%–50%
 variants, and mixed joins; independent peak tests verify the named overshoot
 against the full tween range for solo curves and matching pairs. Bounce fixtures
 cover the same 10%–50% variants; separate tests find the first rebound depth,

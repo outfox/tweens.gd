@@ -35,24 +35,33 @@ public class ComposedEasingTests
     }
 
     [Fact]
-    public void ElasticAddsOneCompleteOscillationToEveryStrength()
+    public void ElasticPairsUseBroaderSwingsAndSoloFollowThroughRemainsVisible()
     {
         foreach (var paired in new[] { false, true })
         foreach (var percent in new[] { 10, 20, 30, 40, 50 })
         {
             var ease = Flag(paired ? typeof(InOut) : typeof(Out), "Elastic" + percent);
-            var crossings = 0;
-            var peak = 1f;
-            var counted = false;
-            for (var i = 1; i < 10000; i++)
+            var peaks = new List<float>();
+            var values = Enumerable.Range(0, 10001).Select(i =>
+                Easing.Evaluate(ease, (paired ? .5f : 0) + (paired ? .5f : 1) * i / 10000f)).ToArray();
+            for (var i = 1; i < values.Length - 1; i++)
             {
-                var value = Easing.Evaluate(ease, (paired ? .5f : 0) + (paired ? .5f : 1) * i / 10000f);
-                peak = Math.Max(peak, value);
-                if (peak > 1.0000001f && value < peak - 0.0000001f && !counted) { crossings++; counted = true; }
-                if (value < 0.9999999f) { peak = 1; counted = false; }
+                // Quantized plateaus count once; ignore rounding near the endpoint.
+                if (values[i] > 1.0001f && values[i] > values[i - 1] && values[i] >= values[i + 1])
+                {
+                    var time = (paired ? .5f : 1) * i / 10000f;
+                    if (peaks.Count == 0 || time - peaks[^1] > .05f) peaks.Add(time);
+                }
             }
-            // The old solo 10% profile had one peak; stronger variants and paired profiles had two.
-            Assert.Equal(!paired && percent == 10 ? 2 : 3, crossings);
+            Assert.Equal(2, peaks.Count);
+            if (paired) Assert.InRange(peaks[1] - peaks[0], .33f, .34f);
+            else
+            {
+                Assert.InRange(peaks[1] - peaks[0], .44f, .46f);
+                Assert.True(values[(int)(peaks[1] * 10000)] > 1.003f);
+            }
+            // Normalization avoids snapping to the target on the last sample.
+            Assert.InRange(Math.Abs(values[^2] - 1), 0, .00002f);
         }
     }
 

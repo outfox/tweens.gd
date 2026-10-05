@@ -43,11 +43,14 @@ int64_t leg_bits(int64_t bits, bool out) {
 constexpr double BACK_SOLO[] = {1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737};
 constexpr double BACK_PAIRED[] = {2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325};
 constexpr double ELASTIC_SOLO_DECAY = 17.553423501870573;
-constexpr double ELASTIC_PAIR_DECAY = 15.074981597799942;
+// Solo damping relaxes after the main swing; paired legs use half their former frequency.
+// Reproduce the calibrated peaks with scripts/calibrate-elastic.mjs.
+constexpr double ELASTIC_SOLO_TAIL = 8.0;
+constexpr double ELASTIC_PAIR_DECAY = 7.537490798899971;
 constexpr double ELASTIC_SOLO_PERIOD = 0.43031056027706766;
-constexpr double ELASTIC_PAIR_PERIOD = 0.33664927316001425;
-constexpr double ELASTIC_SOLO_KICK[] = {0, 0.6853132138892408, 1.1091787748281363, 1.4696240828544362, 1.8012905799033314};
-constexpr double ELASTIC_PAIR_KICK[] = {0, 0.8829462755133655, 1.4362972653938577, 1.9263692424370968, 2.3898041023212153};
+constexpr double ELASTIC_PAIR_PERIOD = 0.6732985463200285;
+constexpr double ELASTIC_SOLO_KICK[] = {-0.2974298881021775, 0.5992618094300022, 1.036207742895828, 1.3991518140146244, 1.730459189003298};
+constexpr double ELASTIC_PAIR_KICK[] = {0.054242444203084675, 0.9078807808396336, 1.4611442537053763, 1.9533326533438204, 2.419656309841953};
 
 const double BOUNCE_SOLO_ROOT[] = {std::sqrt(0.1), std::sqrt(0.2), std::sqrt(0.3), std::sqrt(0.4), std::sqrt(0.5)};
 const double BOUNCE_PAIR_ROOT[] = {std::sqrt(0.2), std::sqrt(0.4), std::sqrt(0.6), std::sqrt(0.8), 1.0};
@@ -81,11 +84,18 @@ double back_in(double t, int level, bool paired) {
 	const double s = (paired ? BACK_PAIRED : BACK_SOLO)[level];
 	return (s + 1.0)*t*t*t - s*t*t;
 }
+double elastic_scale(double kick, bool paired) {
+	const double omega = Math::TAU/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
+	const double residual = std::pow(2.0, -(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY-ELASTIC_SOLO_TAIL))
+		*(std::cos(omega)-kick*std::sin(omega));
+	return 1.0/(1.0-residual);
+}
 double elastic_out(double t, int level, bool paired) {
 	if (t == 0.0 || t == 1.0) return t;
 	const double angle = Math::TAU*t/(paired ? ELASTIC_PAIR_PERIOD : ELASTIC_SOLO_PERIOD);
 	const double kick = (paired ? ELASTIC_PAIR_KICK : ELASTIC_SOLO_KICK)[level];
-	return 1.0 - std::pow(2.0, -(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY)*t)*(std::cos(angle)-kick*std::sin(angle));
+	const double exponent = -(paired ? ELASTIC_PAIR_DECAY : ELASTIC_SOLO_DECAY)*t+(paired ? 0.0 : ELASTIC_SOLO_TAIL*t*t);
+	return elastic_scale(kick, paired)*(1.0-std::pow(2.0,exponent)*(std::cos(angle)-kick*std::sin(angle)));
 }
 // Constant acceleration; three rebound depths h, h/4, h/16, with flight times
 // 2*sqrt(h), sqrt(h), sqrt(h)/2 after the unit-duration initial fall.
@@ -134,7 +144,7 @@ double pair_slope(int64_t family, double time) {
 	if (back >= 0) { const double s = BACK_PAIRED[back]; return 3.0*(s+1.0)*x*x - 2.0*s*x; }
 	if (elastic >= 0) {
 		const double u = 1.0-x, omega = Math::TAU/ELASTIC_PAIR_PERIOD, decay = ELASTIC_PAIR_DECAY*std::log(2.0), kick = ELASTIC_PAIR_KICK[elastic];
-		return std::pow(2.0, -ELASTIC_PAIR_DECAY*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
+		return elastic_scale(kick,true)*std::pow(2.0, -ELASTIC_PAIR_DECAY*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
 	}
 	if (bounce >= 0) {
 		const double r = BOUNCE_PAIR_ROOT[bounce], scale = 1.0+3.5*r;
@@ -189,8 +199,8 @@ double solo_slope(int family, double t, bool out) {
     const int back = back_level(family), elastic = elastic_level(family), bounce = bounce_level(family), jump = jump_level(family);
     if (back >= 0) { const double s = BACK_SOLO[back]; return 3.0*(s+1.0)*t*t-2.0*s*t; }
     if (elastic >= 0) {
-        const double u = 1.0-t, omega = Math::TAU/ELASTIC_SOLO_PERIOD, decay = ELASTIC_SOLO_DECAY*std::log(2.0), kick = ELASTIC_SOLO_KICK[elastic];
-        return std::pow(2.0,-ELASTIC_SOLO_DECAY*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
+        const double u = 1.0-t, omega = Math::TAU/ELASTIC_SOLO_PERIOD, decay = (ELASTIC_SOLO_DECAY-2.0*ELASTIC_SOLO_TAIL*u)*std::log(2.0), kick = ELASTIC_SOLO_KICK[elastic];
+        return elastic_scale(kick,false)*std::pow(2.0,-ELASTIC_SOLO_DECAY*u+ELASTIC_SOLO_TAIL*u*u)*((decay+kick*omega)*std::cos(omega*u)+(omega-kick*decay)*std::sin(omega*u));
     }
     if (bounce >= 0 || jump >= 0) {
         const int level = jump >= 0 ? jump : bounce;

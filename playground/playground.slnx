@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Editor" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="playground.2dog/playground.2dog.csproj" />
+  <Project Path="playground.csproj" />
+  <Project Path="playground.tests/playground.tests.csproj" />
+  <Project Path="playground.web/playground.web.csproj">
+    <BuildType Solution="Editor|*" Project="Debug" />
+    <Build Project="false" />
+  </Project>
+</Solution>

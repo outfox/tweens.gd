@@ -55,6 +55,10 @@ peaks at 130; its In counterpart dips to -30. `InOut.ELASTIC30` reaches both
 extremes. A mixed pair's join can reshape overshoot inside its blend window.
 Legacy `Tweens.Ease` curves keep their original shapes.
 
+Elastic uses broader oscillations in paired and mixed curves. Single In or Out
+curves relax their damping after the main swing so the follow-through stays
+visible. Both profiles preserve the named peak percentage and meet their endpoints continuously.
+
 Bounce offers `BOUNCE10` through `BOUNCE50`, with `BOUNCE` aliasing `BOUNCE30`.
 The percentage is the **first rebound's depth** within the full tween range.
 A tween from 0 to 100 with `Out.BOUNCE30` first reaches 100, rebounds to
