@@ -143,8 +143,8 @@
 	--tw-code-bg-gd: color-mix(in oklab, var(--tw-mint) var(--tw-code-tint), var(--tw-stage));
 	/* Code panels set into a demo widget, a step darker than the widget. */
 	--tw-code-inset: color-mix(in oklab, var(--tw-accent) var(--tw-code-tint), var(--tw-bg));
-	/* 15px at the default 16px root; rem follows the reader's font size setting and zoom. */
-	--sl-text-code: 0.9375rem;
+	/* ~12.5px at the default 16px root; rem follows the reader's font size setting and zoom. */
+	--sl-text-code: 0.78rem;
 }
 :root[data-theme='light'] {
 	--tw-accent-cs: #4a8fd0;
