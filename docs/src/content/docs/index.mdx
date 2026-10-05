@@ -1,5 +1,5 @@
 ---
-title: Hello, my name is Easy!
+title: Hey, I'm Easy!
 template: splash
 description: A tweening library for Godot that takes less code to write and read than, supporting C# and GDScript.
 heroDescription: ''
@@ -125,7 +125,8 @@ GD.Print("Arrived");
 
 ```gdscript title="Godot's Tween"
 var tween := sprite.create_tween()
-tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween.set_trans(Tween.TRANS_CUBIC)
+tween.set_ease(Tween.EASE_OUT)
 tween.tween_property(sprite, "position", Vector2(400, 180), 0.6)
 
 await tween.finished
@@ -145,15 +146,18 @@ print("Arrived")
 
 ```gdscript title="Godot's Tween"
 var tween1 := sprite1.create_tween()
-tween1.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween1.set_trans(Tween.TRANS_CUBIC)
+tween1.set_ease(Tween.EASE_OUT)
 tween1.tween_property(sprite1, "position", Vector2(400, 180), 0.6)
 
 var tween2 := sprite2.create_tween()
-tween2.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween2.set_trans(Tween.TRANS_CUBIC)
+tween2.set_ease(Tween.EASE_OUT)
 tween2.tween_property(sprite2, "position", Vector2(400, 180), 0.8)
 
 var tween3 := sprite3.create_tween()
-tween3.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+tween3.set_trans(Tween.TRANS_CUBIC)
+tween3.set_ease(Tween.EASE_OUT)
 tween3.tween_property(sprite3, "position", Vector2(400, 180), 1.0)
 
 await tween3.finished
