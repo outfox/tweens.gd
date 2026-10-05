@@ -1,13 +1,26 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
+using System.Linq;
 using Godot;
+using twodog;
 using twodog.Testing;
-using twodog.Testing.Xunit;
 
 namespace playground.Tests;
 
-[Collection<RenderingCollection>]
-public class RenderingTests(Fixture godot)
+/// <summary>Rendering fixture that accepts a software GL driver without V-Sync control, such as CI's Mesa llvmpipe.</summary>
+public sealed class CompatibilityFixture : Fixture
+{
+    public CompatibilityFixture()
+    {
+        var startup = Errors.Drain().Where(error => !error.Text.StartsWith("Could not set V-Sync mode")).ToArray();
+        if (startup.Length > 0) throw new GodotErrorException("Godot reported errors during startup.", startup);
+    }
+}
+
+public sealed class CompatibilityCollection : ICollectionFixture<CompatibilityFixture>;
+
+[Collection<CompatibilityCollection>]
+public class RenderingTests(CompatibilityFixture godot)
 {
     [Fact]
     public void DesktopAndNarrowLayoutsKeepControlsInsideViewport()
