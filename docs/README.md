@@ -26,6 +26,9 @@ The build emits `dist/`, including Pagefind search. The link check inspects
 generated HTML targets and anchors; it also rejects internal-document links and
 starter-template text. Preview the production build when checking search.
 
+`npm run render:compare` redraws `public/compare.svg`, the home page comparison as an animated image for the Godot
+Asset Store page. Rerun it after changing the comparison's code in `index.mdx`; it needs uv for font subsetting.
+
 ## Structure
 
 The site has two parallel learning paths with the same page slugs: `csharp/<slug>` and

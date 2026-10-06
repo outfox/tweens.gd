@@ -10,6 +10,7 @@
     "check:links": "node scripts/check-links.mjs",
     "check:easing": "node scripts/check-easing.mjs",
     "check:search": "node scripts/check-search-upstream.mjs",
+    "render:compare": "node scripts/render-compare-svg.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
