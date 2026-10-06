@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/public/ferret-tweens.svg" alt="tweens.gd" width="640"></p>
+<p align="center"><img src="docs/public/logo-ferret.svg" alt="tweens.gd" width="640"></p>
 
 # tweens.gd
 
