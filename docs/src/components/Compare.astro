@@ -1,6 +1,8 @@
 ---
 // Two code blocks side by side in a landscape window. In portrait, side by side only when both fit without scrolling.
 // Code keeps the site's one code size; a line too long for its half scrolls inside its block.
+// A `---` line splits the slot into two sides, each holding markdown above and below its one code block. Both sides'
+// code starts on one line, and on a narrow screen each side stacks as a unit.
 const html = await Astro.slots.render('default');
 
 // Longest lines, in characters, from each block's copy text (lines joined by U+007F). The first line is
@@ -13,10 +15,43 @@ const lines = [...html.matchAll(/data-code="([^"]*)"/g)].map((m) =>
 );
 const first = Math.max(0, ...lines.map((block) => block[0] ?? 0));
 const rest = Math.max(0, ...lines.flatMap((block) => block.slice(1)));
+
+// An Expressive Code block is one div wrapping one figure, so its end is the first figure close after its start.
+const CODE = '<div class="expressive-code';
+const CODE_END = '</figure></div>';
+const parts = html.split(/<hr\s*\/?>/);
+const sides =
+	parts.length > 1
+		? parts.map((part) => {
+				const start = part.indexOf(CODE);
+				if (start < 0) return { above: part, code: '', below: '' };
+				const end = part.indexOf(CODE_END, start) + CODE_END.length;
+				return { above: part.slice(0, start), code: part.slice(start, end), below: part.slice(end) };
+			})
+		: undefined;
+const blank = (text: string) => !text.trim();
 ---
 
 <div class="compare tw-wide" style={`--first: ${first}; --rest: ${rest}`}>
-	<div class="grid"><Fragment set:html={html} /></div>
+	{
+		sides ? (
+			<div class="grid sided">
+				{sides.map(({ above, code, below }) => (
+					<div class="side">
+						<div class:list={['text', 'above', { blank: blank(above) }]} set:html={above} />
+						<div class="body">
+							<div class="code" set:html={code} />
+							<div class:list={['text', 'below', { blank: blank(below) }]} set:html={below} />
+						</div>
+					</div>
+				))}
+			</div>
+		) : (
+			<div class="grid">
+				<Fragment set:html={html} />
+			</div>
+		)
+	}
 </div>
 
 <style>
@@ -40,5 +75,44 @@ const rest = Math.max(0, ...lines.flatMap((block) => block.slice(1)));
 		.grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
+	}
+	/* Each side spans two rows of the grid, so the text above both code blocks takes one height. */
+	.sided {
+		row-gap: 1.75rem;
+	}
+	.side {
+		display: grid;
+		grid-row: span 2;
+		grid-template-rows: subgrid;
+		row-gap: 0;
+	}
+	.side > * {
+		min-width: 0;
+		margin: 0;
+	}
+	.text > :global(*) {
+		margin: 0;
+	}
+	.text > :global(* + *) {
+		margin-top: 0.5rem;
+	}
+	.text {
+		text-wrap: pretty;
+	}
+	.above:not(.blank) {
+		margin-bottom: 0.75rem;
+	}
+	.below:not(.blank) {
+		margin-top: 0.75rem;
+	}
+	.body,
+	.code {
+		min-width: 0;
+	}
+	.code {
+		margin: 0;
+	}
+	.code > :global(*) {
+		margin: 0;
 	}
 </style>

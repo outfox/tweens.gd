@@ -3,17 +3,15 @@ title: "Syntax sugar"
 description: "Two API flavours and two ways to write endpoints: explicit types or sweet tuples and arrays."
 ---
 
-import { Aside } from '@astrojs/starlight/components';
 import Compare from '../../../components/Compare.astro';
-
 
 There's more than one way to tween a ferret!
 
-### Two API flavours
-
-**Structured** creates a strongly typed immutable record struct definition to reuse or vary (via the `with` keyword). **Convenience** defines and starts a local animation through extension methods for a wide variety of nodes and their descendants.
+## Two API flavours
 
 <Compare>
+
+**Structured** creates a strongly typed, immutable record struct definition to reuse, or to vary with the `with` keyword.
 
 ```csharp title="Structured"
 var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
@@ -21,7 +19,11 @@ var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
 sprite.Tween(arrive);
 ```
 
-```csharp title="Convenience"
+---
+
+**Convenient** defines and starts a local animation through an extension method, available on a wide variety of nodes and their descendants.
+
+```csharp title="Convenient"
 sprite.TweenPosition((400, 180), 0.6, Out.Cubic);
 ```
 
@@ -33,49 +35,28 @@ These are alternative ways to start the same motion. Both return a handle when p
 
 ## Safe and sweet endpoints
 
-Use a Godot value for an explicit type, a tuple for compiler-checked component counts, or an array expression if you want to be closer to the GDScript flavour:
-
 <Compare>
+
+A Godot value states the endpoint's type explicitly, and the compiler checks it.
 
 ```csharp title="Safe: explicit type"
 sprite.TweenPosition(new Vector2(400, 180), 0.6);
 ```
 
+---
+
+A tuple is checked by the compiler too. An array reads closer to GDScript.
+
 ```csharp title="Sweet: tuple or array"
 sprite.TweenPosition((400, 180), 0.6);
-sprite.TweenPosition([400, 180], 0.6); 
+sprite.TweenPosition([400, 180], 0.6);
 ```
+
+An array with the wrong number of components throws `ArgumentException` when the tween is created.
 
 </Compare>
 
-All three move to the same position. Structured constructors accept the same forms.
-
-<Compare>
-
-```csharp title="Clean: explicit & readable"
-var motion = new Tweens.Position2D
-{
-	To = new Vector2(400, 180),
-	Duration = 0.6,
-};
-
-sprite.Tween(motion);
-```
-
-```csharp title="Quick: convenient & concise"
-var motion1 = new Tweens.Position2D(new Vector2(400, 180), 0.6);
-var motion2 = new Tweens.Position2D((400, 180), 0.6);
-sprite1.Tween(motion1);
-sprite2.Tween(motion2);
-```
-
-</Compare>
-
-<Aside type="note" title="Choose your checks">
-
-Godot values and tuples are checked at compile time. Array expressions are checked when the tween is created; a wrong component count throws `ArgumentException`.
-
-</Aside>
+All three move to the same position, and structured constructors accept the same forms.
 
 | Animate | Sweet endpoint |
 | --- | --- |
@@ -89,15 +70,50 @@ Three color components imply alpha 1. Numeric endpoints need no `f` suffix.
 
 Arguments follow **endpoint, duration, ease, delay**. Times are seconds; C# also accepts `TimeSpan`.
 
-```csharp
-sprite.TweenPosition((400, 180), 0.6, Out.Cubic, 0.2);
+<Compare>
+
+An initializer names every setting.
+
+```csharp title="Clean: explicit & readable"
+var arrive = new Tweens.Position2D
+{
+    To = new Vector2(400, 180),
+    Duration = 0.6,
+    Ease = Out.Cubic,
+    Delay = 0.2,
+};
+```
+
+---
+
+Arguments take the same settings in order.
+
+```csharp title="Quick: convenient & concise"
 var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic, 0.2);
+sprite.TweenPosition((400, 180), 0.6, Out.Cubic, 0.2);
 ```
 
-Use an initializer on a definition, or a configure callback on a convenience call, for extra options:
+Constructors and convenient calls take the same arguments.
 
-```csharp
+</Compare>
+
+## More options
+
+<Compare>
+
+Set any other option in an initializer, and vary a copy with `with`.
+
+```csharp title="Structured"
 var pulse = new Tweens.Scale2D(1.2, 0.2) { PingPong = true };
-sprite.TweenScale(1.2, 0.2, options => options.PingPong = true);
-sprite.Tween(pulse with { PingPong = false });
+sprite.Tween(pulse with { Repeats = 2 });
 ```
+
+---
+
+Set any other option in a configure callback, which receives the definition before it starts.
+
+```csharp title="Convenient"
+sprite.TweenScale(1.2, 0.2, options => options.PingPong = true);
+```
+
+</Compare>

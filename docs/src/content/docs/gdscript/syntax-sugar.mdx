@@ -3,7 +3,6 @@ title: "Syntax sugar"
 description: "Two API flavours and two ways to write endpoints: explicit types or sweet arrays."
 ---
 
-import { Aside } from '@astrojs/starlight/components';
 import Compare from '../../../components/Compare.astro';
 
 There's more than one way to tween a ferret!
@@ -11,11 +10,11 @@ There's more than one way to tween a ferret!
 <span id="definitions" />
 <span id="two-flavours" />
 
-### Two API flavours
-
-**Structured** creates a definition object to reuse or vary (via `with_*()` copies). **Convenience** creates and starts a local animation in one `Tweens.play()` expression. GDScript uses helpers rather than node extensions.
+## Two API flavours
 
 <Compare>
+
+**Structured** creates a definition object to reuse, or to vary with `with_*()` copies.
 
 ```gdscript title="Structured"
 var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
@@ -23,9 +22,15 @@ var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
 Tweens.play(sprite, arrive)
 ```
 
-```gdscript title="Convenience"
+---
+
+**Convenient** creates and starts a local animation in one `Tweens.play()` expression.
+
+```gdscript title="Convenient"
 Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC))
 ```
+
+GDScript uses helpers rather than node extensions.
 
 </Compare>
 
@@ -35,46 +40,27 @@ These are alternative ways to start the same motion. Both return a handle when p
 
 ## Safe and sweet endpoints
 
-Use a Godot value for an explicit type, or an array of components for a sweeter expression:
-
 <Compare>
+
+A Godot value states the endpoint's type explicitly.
 
 ```gdscript title="Safe: explicit type"
 Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
 ```
 
+---
+
+An array of components is shorter, and the start converts it to the expected type.
+
 ```gdscript title="Sweet: array"
 Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 ```
 
-</Compare>
-
-Both move to the same position. Definition helpers accept the same forms.
-
-<Compare>
-
-```gdscript title="Clean: explicit & readable"
-var motion := Tweens.position_2d()
-motion.to_value = Vector2(400, 180)
-motion.duration = 0.6
-
-Tweens.play(sprite, motion)
-```
-
-```gdscript title="Quick: convenient & concise"
-var motion1 := Tweens.position_2d(Vector2(400, 180), 0.6)
-var motion2 := Tweens.position_2d([400, 180], 0.6)
-Tweens.play(sprite1, motion1)
-Tweens.play(sprite2, motion2)
-```
+An array with the wrong number of components rejects the start with `FAILED`.
 
 </Compare>
 
-<Aside type="note" title="Choose your checks">
-
-Godot values state their types explicitly. Named helpers check endpoints when playback starts and convert arrays to the expected type; a wrong component count rejects the start with `FAILED`. GDScript has no tuple syntax or C# compile-time endpoint checks.
-
-</Aside>
+Both move to the same position, and definition helpers accept the same forms. GDScript has no tuple syntax or C#'s compile-time endpoint checks.
 
 | Animate | Sweet endpoint |
 | --- | --- |
@@ -88,17 +74,49 @@ Three color components imply alpha 1. Arrays also work with `with_from()`, `with
 
 Arguments follow **endpoint, duration, ease, delay**. Times are seconds.
 
-```gdscript
-Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2))
-var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2)
+<Compare>
+
+Fields name every setting.
+
+```gdscript title="Clean: explicit & readable"
+var arrive := Tweens.position_2d()
+arrive.to_value = Vector2(400, 180)
+arrive.duration = 0.6
+arrive.ease = Out.CUBIC
+arrive.delay = 0.2
 ```
 
-Set fields on a definition, or chain `with_*()` helpers for extra options. Definitions are mutable; use `with_*()` to vary a copy without changing the original:
+---
 
-```gdscript
+Helper arguments take the same settings in order.
+
+```gdscript title="Quick: convenient & concise"
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2)
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2))
+```
+
+A helper takes the same arguments on its own or inside `Tweens.play()`.
+
+</Compare>
+
+## More options
+
+<Compare>
+
+Set any other field on the definition. Definitions are mutable, so vary a copy with `with_*()` to leave the original unchanged.
+
+```gdscript title="Structured"
 var pulse := Tweens.scale_2d([1.2, 1.2], 0.2)
 pulse.ping_pong = true
-Tweens.play(sprite, pulse)
-Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())
-Tweens.play(single, pulse.with_ping_pong(false))
+Tweens.play(sprite, pulse.with_repeats(2))
 ```
+
+---
+
+Chain `with_*()` copies on the helper inside the `Tweens.play()` call.
+
+```gdscript title="Convenient"
+Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())
+```
+
+</Compare>

@@ -21,7 +21,7 @@ const modeLabel = (m: string) => (gd ? constant(m) : m);
 		<svg class="lane" viewBox="0 0 260 120" aria-hidden="true">
 			<path class="orbit" d="M40 60a90 36 0 1 0 180 0a90 36 0 1 0 -180 0"></path>
 			<g data-sprite transform="translate(220 60)">
-				<rect class="sprite" x="-14" y="-14" width="28" height="28" rx="7"></rect>
+				<image class="sprite" href="/godot.svg" x="-14" y="-14" width="28" height="28"></image>
 			</g>
 		</svg>
 	</div>
@@ -115,7 +115,7 @@ const modeLabel = (m: string) => (gd ? constant(m) : m);
 			if (running()) angle += dt * 1.6;
 			const x = 130 + 90 * Math.cos(angle);
 			const y = 60 + 36 * Math.sin(angle);
-			sprite.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${((angle * 180) / Math.PI) % 360})`);
+			sprite.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)})`);
 		});
 		sync();
 	}
@@ -137,12 +137,15 @@ const modeLabel = (m: string) => (gd ? constant(m) : m);
 			grid-template-columns: 15rem 1fr;
 		}
 	}
+	/* Drawn like Godot's Scene dock: one panel, indented rows joined by tree lines, the owner row selected. */
 	.tree {
 		list-style: none;
 		margin: 0;
-		padding: 0;
+		padding: 0.4rem;
 		display: grid;
-		gap: 0.35rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 0.8rem;
+		background: var(--tw-surface);
 		font-family: var(--sl-font-mono);
 		font-size: 0.78rem;
 	}
@@ -151,9 +154,10 @@ const modeLabel = (m: string) => (gd ? constant(m) : m);
 		display: flex;
 		align-items: center;
 		gap: 0.4rem;
-		padding: 0.35rem 0.6rem;
-		border-radius: 0.5rem;
-		background: var(--tw-surface);
+		min-height: 1.9rem;
+		margin: 0;
+		padding: 0.2rem 0.5rem;
+		border-radius: 0.45rem;
 		color: var(--sl-color-white);
 		transition:
 			translate 0.7s var(--ease-back-in),
@@ -161,11 +165,28 @@ const modeLabel = (m: string) => (gd ? constant(m) : m);
 			rotate 0.7s var(--ease-back-in);
 	}
 	.node.level {
-		margin-left: 1rem;
+		padding-left: 1.7rem;
 	}
 	.node.owner {
-		margin-left: 2rem;
-		background: color-mix(in oklab, var(--tw-blue) 20%, var(--tw-surface));
+		padding-left: 2.9rem;
+		background: color-mix(in oklab, var(--tw-blue) 18%, transparent);
+	}
+	.node.level::before,
+	.node.owner::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		width: 0.6rem;
+		height: 50%;
+		border-left: 1px solid var(--tw-track);
+		border-bottom: 1px solid var(--tw-track);
+		border-bottom-left-radius: 4px;
+	}
+	.node.level::before {
+		left: 0.85rem;
+	}
+	.node.owner::before {
+		left: 2.05rem;
 	}
 	.node.owner.is-gone {
 		translate: 1.5rem 3rem;
@@ -209,14 +230,17 @@ const modeLabel = (m: string) => (gd ? constant(m) : m);
 		stroke-linecap: round;
 	}
 	.sprite {
-		fill: var(--tw-blue);
-		transition: fill 0.3s;
+		filter: drop-shadow(0 2px 4px rgb(3 8 14 / 0.35));
+		transition:
+			filter 0.3s,
+			opacity 0.3s;
 	}
 	.tree-paused .sprite {
-		fill: var(--tw-amber);
+		filter: drop-shadow(0 0 5px color-mix(in oklab, var(--tw-amber) 85%, transparent));
 	}
 	.is-exited .sprite {
-		fill: var(--tw-muted);
+		filter: grayscale(1);
+		opacity: 0.5;
 	}
 	.status {
 		display: flex;

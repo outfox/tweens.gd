@@ -787,6 +787,59 @@ header.header {
 	margin: 0;
 }
 
+/* Demo lanes keep pixel sizes at any width: a slim rail, and the Godot icon as the animated node. Scripts place the
+   sprite with --x from 0 (left end) to 1 (right end); .tw-lane-mark pins a tick at its own --x. */
+.tw-lane {
+	--sprite: 2.25rem;
+	--span: calc(100cqw - var(--sprite));
+	position: relative;
+	height: calc(var(--sprite) + 0.75rem);
+	container-type: inline-size;
+}
+.tw-lane::before,
+.tw-lane-fill {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: calc(var(--sprite) / 2);
+	height: 2px;
+	margin-top: -1px;
+	border-radius: 1px;
+}
+.tw-lane::before {
+	right: calc(var(--sprite) / 2);
+	background: var(--tw-outline);
+}
+.tw-lane.is-dotted::before {
+	height: 3px;
+	background: radial-gradient(circle, var(--tw-outline) 1.5px, transparent 2px) 0 50% / 10px 3px repeat-x;
+}
+.tw-lane-fill {
+	width: calc(var(--x, 0) * var(--span));
+	background: var(--tw-accent);
+}
+.tw-lane-mark {
+	position: absolute;
+	top: 50%;
+	left: calc(var(--sprite) / 2 + var(--x, 0) * var(--span));
+	width: 2px;
+	height: 0.9rem;
+	translate: -50% -50%;
+	border-radius: 1px;
+	background: var(--tw-muted);
+}
+.tw-sprite {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: var(--sprite);
+	height: var(--sprite);
+	translate: calc(var(--x, 0) * var(--span)) -50%;
+	background: url('/godot.svg') center / contain no-repeat;
+	filter: drop-shadow(0 3px 6px rgb(3 8 14 / 0.35));
+	transition: filter 0.3s, opacity 0.3s;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

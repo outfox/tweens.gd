@@ -11,13 +11,13 @@ const { lang = 'csharp' } = Astro.props;
 <div class="tw-widget pr not-content" data-playback-remote data-code-lang={lang}>
 	{
 		lang === 'gdscript' ? (
-			<pre class="code tw-code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement := Tweens.<span class="fn">play</span>(sprite, Tweens.<span class="fn">position_2d</span>(to, <span class="num">2.4</span>))</span>
+			<pre class="code tw-code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement := Tweens.<span class="fn">play</span>(sprite, Tweens.<span class="fn">position_2d</span>(to, <span class="num">2.4</span>, InOut.<span class="mb">SMOOTHER_STEP</span>))</span>
 <span data-line="pause">movement.<span class="fn">pause</span>()</span>
 <span data-line="resume">movement.<span class="fn">resume</span>()</span>
 <span data-line="cancel">movement.<span class="fn">cancel</span>()</span>
 <span data-line="await"><span class="kw">await</span> movement.end <span class="cm"># <span data-reason>pending…</span></span></span></pre>
 		) : (
-			<pre class="code tw-code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement = sprite.<span class="fn">TweenPosition</span>(to, <span class="num">2.4</span>);</span>
+			<pre class="code tw-code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement = sprite.<span class="fn">TweenPosition</span>(to, <span class="num">2.4</span>, InOut.<span class="mb">SmootherStep</span>);</span>
 <span data-line="pause">movement.<span class="fn">Pause</span>();</span>
 <span data-line="resume">movement.<span class="fn">Resume</span>();</span>
 <span data-line="cancel">movement.<span class="fn">Cancel</span>();</span>
@@ -25,29 +25,23 @@ const { lang = 'csharp' } = Astro.props;
 		)
 	}
 
-	<svg class="lane" viewBox="0 0 400 64" aria-hidden="true">
-		<line class="rail" x1="24" x2="376" y1="32" y2="32"></line>
-		<line class="progress" data-progress-line x1="24" x2="24" y1="32" y2="32"></line>
-		<circle class="end" cx="376" cy="32" r="5"></circle>
-		<g data-sprite transform="translate(24 32)">
-			<rect class="sprite" x="-14" y="-14" width="28" height="28" rx="7"></rect>
-			<g class="pause-badge" data-pause-badge>
-				<rect x="-5" y="-6" width="3.5" height="12" rx="1"></rect>
-				<rect x="1.5" y="-6" width="3.5" height="12" rx="1"></rect>
-			</g>
-		</g>
-	</svg>
-
-	<div class="status">
-		<span class="tw-chip state" data-state>Ready</span>
-		<span class="tw-chip">Progress <b data-progress>0.00</b></span>
+	<div class="tw-lane lane" data-lane aria-hidden="true">
+		<span class="tw-lane-fill"></span>
+		<span class="tw-lane-mark end" style="--x: 1"></span>
+		<span class="tw-sprite"><span class="pause-badge" data-pause-badge></span></span>
 	</div>
 
-	<div class="buttons">
-		<button type="button" class="tw-btn is-primary" data-act="start">Start</button>
-		<button type="button" class="tw-btn" data-act="pause" disabled>Pause</button>
-		<button type="button" class="tw-btn" data-act="resume" disabled>Resume</button>
-		<button type="button" class="tw-btn" data-act="cancel" disabled>Cancel</button>
+	<div class="footer">
+		<div class="buttons">
+			<button type="button" class="tw-btn is-primary" data-act="start">Start</button>
+			<button type="button" class="tw-btn" data-act="pause" disabled>Pause</button>
+			<button type="button" class="tw-btn" data-act="resume" disabled>Resume</button>
+			<button type="button" class="tw-btn" data-act="cancel" disabled>Cancel</button>
+		</div>
+		<div class="status">
+			<span class="tw-chip state" data-state>Ready</span>
+			<span class="tw-chip">Progress <b data-progress>0.00</b></span>
+		</div>
 	</div>
 	<p class="sr-only" aria-live="polite" data-announce></p>
 </div>
@@ -61,9 +55,8 @@ const { lang = 'csharp' } = Astro.props;
 
 	for (const root of document.querySelectorAll<HTMLElement>('[data-playback-remote]')) {
 		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
-		const sprite = $<SVGGElement>('[data-sprite]');
-		const line = $<SVGLineElement>('[data-progress-line]');
-		const badge = $<SVGGElement>('[data-pause-badge]');
+		const lane = $<HTMLElement>('[data-lane]');
+		const badge = $<HTMLElement>('[data-pause-badge]');
 		const stateOut = $<HTMLElement>('[data-state]');
 		const reasonOut = $<HTMLElement>('[data-reason]');
 		const announce = $<HTMLElement>('[data-announce]');
@@ -73,11 +66,9 @@ const { lang = 'csharp' } = Astro.props;
 		let state: State = 'Ready';
 		let elapsed = 0;
 
-		const x = () => 24 + 352 * EASES.SmootherStep(elapsed / DURATION);
+		// The code above names InOut.SmootherStep, so the sprite moves with that curve.
 		const render = () => {
-			const px = x();
-			sprite.setAttribute('transform', `translate(${px.toFixed(2)} 32)`);
-			line.setAttribute('x2', px.toFixed(2));
+			lane.style.setProperty('--x', EASES.SmootherStep(elapsed / DURATION).toFixed(4));
 			$('[data-progress]').textContent = (elapsed / DURATION).toFixed(2);
 		};
 
@@ -139,14 +130,14 @@ const { lang = 'csharp' } = Astro.props;
 	.pr {
 		padding: 1.25rem;
 		display: grid;
-		gap: 1rem;
+		gap: 1.1rem;
 	}
 	.code {
 		margin: 0;
-		padding: 0.9rem 1rem;
+		padding: 0.8rem 1rem;
 		border-radius: 0.8rem;
 		background: color-mix(in oklab, var(--tw-code-inset) 75%, transparent);
-		line-height: 1.9;
+		line-height: 1.8;
 		overflow-x: auto;
 	}
 	.code > span {
@@ -173,37 +164,34 @@ const { lang = 'csharp' } = Astro.props;
 		font-weight: 700;
 	}
 	.lane {
-		width: 100%;
-		overflow: visible;
-	}
-	.rail {
-		stroke: var(--tw-outline);
-		stroke-width: 4;
-		stroke-linecap: round;
-	}
-	.progress {
-		stroke: var(--tw-blue);
-		stroke-width: 4;
-		stroke-linecap: round;
+		margin-inline: 0.25rem;
 	}
 	.end {
-		fill: var(--tw-muted);
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
 	}
-	.sprite {
-		fill: var(--tw-blue);
-		transition: fill 0.3s;
+	[data-state='Completed'] .tw-sprite {
+		filter: drop-shadow(0 0 8px color-mix(in oklab, var(--tw-mint) 70%, transparent));
 	}
-	[data-state='Cancelled'] .sprite {
-		fill: var(--tw-muted);
+	[data-state='Cancelled'] .tw-sprite {
+		filter: grayscale(1);
+		opacity: 0.6;
 	}
-	[data-state='Completed'] .sprite {
-		fill: var(--tw-mint);
-	}
+	/* A pause glyph pinned to the sprite's corner while the handle is explicitly paused. */
 	.pause-badge {
-		fill: #0b1224;
+		position: absolute;
+		top: -0.35rem;
+		right: -0.35rem;
+		width: 1.1rem;
+		height: 1.1rem;
+		border-radius: 50%;
+		background:
+			linear-gradient(90deg, transparent 32%, #231705 32% 44%, transparent 44% 56%, #231705 56% 68%, transparent 68%)
+				center / 100% 45% no-repeat,
+			var(--tw-amber);
+		box-shadow: 0 0 0 2px var(--tw-stage);
 		opacity: 0;
-		transform-box: fill-box;
-		transform-origin: center;
 		scale: 0.3;
 		transition:
 			opacity 0.2s,
@@ -213,10 +201,18 @@ const { lang = 'csharp' } = Astro.props;
 		opacity: 1;
 		scale: 1;
 	}
+	.footer {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem 1rem;
+	}
+	.buttons,
 	.status {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 0.5rem;
-		justify-content: center;
 	}
 	.status b {
 		color: var(--tw-mint-ink);
@@ -241,11 +237,5 @@ const { lang = 'csharp' } = Astro.props;
 	.state[data-state='Cancelled'] {
 		background: var(--tw-rose);
 		color: #2a0710;
-	}
-	.buttons {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		justify-content: center;
 	}
 </style>

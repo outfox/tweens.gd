@@ -105,6 +105,8 @@ When this check fails after an upgrade:
 - Annotated examples use Expressive Code line-marker labels (`{"1":3-7}`) inside `<Moves>`,
   whose numbered notes match the labels.
 - Separate a definition from its start with a blank line, as in the define, start, await examples.
+- Two ways to write the same thing go in `<Compare>`. A `---` line splits it into two sides; markdown before or
+  after a side's one code block sits above or below it, lined up with the other side.
 - Comparisons with Godot's `Tween` go in `<Compare>`, Godot first. Where reuse is the point, start one
   definition on `sprite1` and `sprite2`. `<Variants>` switches between versions of one example.
 - Write each twin in its own language's idioms. Where the languages behave differently,

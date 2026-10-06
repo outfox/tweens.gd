@@ -13,12 +13,11 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 
 <div class="tw-widget tl not-content" data-timing-lab>
 	<div class="stage">
-		<svg class="lane" viewBox="0 0 400 60" aria-hidden="true">
-			<line class="rail" x1="20" x2="380" y1="30" y2="30"></line>
-			<circle class="end" cx="20" cy="30" r="4"></circle>
-			<circle class="end" cx="380" cy="30" r="4"></circle>
-			<g data-ball transform="translate(20 30)"><circle class="ball" r="13"></circle></g>
-		</svg>
+		<div class="tw-lane is-dotted lane" data-lane aria-hidden="true">
+			<span class="tw-lane-mark end" style="--x: 0"></span>
+			<span class="tw-lane-mark end" style="--x: 1"></span>
+			<span class="tw-sprite"></span>
+		</div>
 		<div class="chips">
 			<span class="tw-chip phase" data-phase>Delay</span>
 			<span class="tw-chip">Progress <b data-progress>0.00</b></span>
@@ -79,7 +78,7 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 		const segEls = [...root.querySelectorAll<HTMLElement>('.seg')];
 		const timeline = $<HTMLElement>('[data-timeline]');
 		const playhead = $<HTMLElement>('[data-playhead]');
-		const ball = $<SVGGElement>('[data-ball]');
+		const lane = $<HTMLElement>('[data-lane]');
 		const phase = $<HTMLElement>('[data-phase]');
 
 		let segs: Seg[] = [];
@@ -154,7 +153,7 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 			if (t >= total) progress = o.pingpong ? 0 : 1;
 
 			const w = EASES.SmootherStep(progress);
-			ball.setAttribute('transform', `translate(${(20 + w * 360).toFixed(2)} 30)`);
+			lane.style.setProperty('--x', w.toFixed(4));
 			playhead.style.left = `${total ? (clamped / total) * 100 : 0}%`;
 			const label = t >= total ? 'Completed' : LABEL[seg.kind];
 			if (phase.textContent !== label) {
@@ -218,20 +217,12 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 		gap: 1rem;
 	}
 	.lane {
-		width: 100%;
-		overflow: visible;
-	}
-	.rail {
-		stroke: var(--tw-outline);
-		stroke-width: 3;
-		stroke-dasharray: 1 8;
-		stroke-linecap: round;
+		margin: 0.25rem 0.25rem 0.75rem;
 	}
 	.end {
-		fill: var(--tw-muted);
-	}
-	.ball {
-		fill: var(--tw-mint);
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
 	}
 	.chips {
 		display: flex;
@@ -273,7 +264,7 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 	}
 	.segments {
 		display: flex;
-		height: 2.4rem;
+		height: 1.75rem;
 		gap: 3px;
 	}
 	.seg {
@@ -281,8 +272,8 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 		min-width: 0;
 		display: grid;
 		place-items: center;
-		border-radius: 0.45rem;
-		font: 700 0.7rem var(--sl-font-mono);
+		border-radius: 999px;
+		font: 700 0.68rem var(--sl-font-mono);
 		color: #0b1a17;
 		overflow: hidden;
 		transition:
