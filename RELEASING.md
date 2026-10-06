@@ -14,20 +14,20 @@ development version. Tags with a SemVer prerelease suffix produce GitHub prerele
    `.github/scripts/Test-ReleasePublishing.ps1`. Check the relevant library,
    GDScript, and documentation suites; `.github/workflows/ci.yml` defines the full checks.
 3. Commit the notes and release-related changes, and ensure CI passes for the
-   intended release commit. A GitHub draft release can use the same notes file.
+   intended release commit.
 
 ## Publish
 
 Create and push the release tag on the checked commit. The Release workflow runs
 the full CI pipeline, builds native libraries, versions and verifies both package
-formats, and smoke-tests fresh consumers before uploading the release assets.
+formats, and smoke-tests fresh consumers before publishing the release assets.
 Release publication requires nonempty hand-written notes for the tag; it does not
 fall back to GitHub-generated notes. Reruns upload assets to an existing release
 without replacing its edited notes.
 
-If a draft release already exists, the workflow uploads its assets and leaves it
-as a draft. Publish that draft after the Release workflow succeeds and its notes
-and downloads have been reviewed.
+The tag-driven workflow publishes directly once all checks succeed. Prepare the
+notes in the repository before tagging; GitHub's release-by-tag lookup does not
+find unpublished drafts, so a separate draft is not part of this workflow.
 
 ## Local package checks
 
