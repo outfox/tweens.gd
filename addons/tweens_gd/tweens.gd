@@ -51,14 +51,14 @@ const Ease = Types.Ease
 ## [param to] is the endpoint; [code]null[/code] captures the current value at activation, before any positive delay.
 ## Duration and delay are in seconds. Paths stay on the target; pass a Resource as its own target.
 ## Vector and Color endpoints also accept numeric component Arrays, resolved to the captured type at start.
-static func property(path: NodePath, to: Variant, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
+static func property(path: NodePath, to: Variant = null, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	return TweensGdDefinition.named(path, &"", TYPE_NIL, to, seconds, easing, delay)
 
 ## Creates a reusable callback-value definition without writing a property.
 ## [param from] supplies the initial value; [param to] supplies the endpoint. Set [code]on_update(handle, value)[/code]
 ## to consume samples. C# equivalent: a value definition such as [code]Tweens.Float[/code].
-static func value(from: Variant, to: Variant, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
+static func value(from: Variant, to: Variant = null, seconds: float = 0.0, easing: int = Types.Ease.LINEAR,
 		delay: float = 0.0) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.named(^"", &"", TYPE_NIL, to, seconds, easing, delay)
 	definition.initial_value = from
@@ -69,8 +69,9 @@ static func value(from: Variant, to: Variant, seconds: float = 0.0, easing: int 
 ## [param getter] receives the target; [param setter] receives the target and value.
 ## Optional [param interpolator] receives from, to, and eased weight; weight may overshoot [code][0, 1][/code].
 ## Optional [param validator] receives a value and returns an error string, empty on success.
-static func custom(getter: Callable, setter: Callable, to: Variant, seconds: float = 0.0,
-		interpolator: Callable = Callable(), validator: Callable = Callable()) -> TweensGdDefinition:
+## Set endpoints and timing on the returned definition.
+static func custom(getter: Callable, setter: Callable, interpolator: Callable = Callable(),
+		validator: Callable = Callable()) -> TweensGdDefinition:
 	var definition := TweensGdDefinition.new()
 	var adapter := CallableAdapter.new()
 	adapter.getter = getter
@@ -78,8 +79,6 @@ static func custom(getter: Callable, setter: Callable, to: Variant, seconds: flo
 	adapter.interpolator = interpolator
 	adapter.validator = validator
 	definition.adapter = adapter
-	definition.to_value = to
-	definition.duration = seconds
 	return definition
 
 ## Creates a reusable definition for a [ShaderMaterial] uniform named [param parameter].

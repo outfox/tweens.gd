@@ -70,29 +70,37 @@ func check(condition: bool, message: String) -> void:
 func _custom() -> void:
 	var scheduler := TweensGdScheduler.new()
 	var box := Box.new()
-	var definition := T.custom(func(t): return t.amount, func(t, v): t.amount = v, 10.0, 1.0)
+	var definition := T.custom(func(t): return t.amount, func(t, v): t.amount = v)
+	definition.to_value = 10.0
+	definition.duration = 1.0
 	definition.fill = T.Fill.NONE
 	var h := scheduler.add(box, definition)
 	scheduler.update(0.5)
 	host.near(box.amount, 6.0, "custom getter and setter interpolate")
 	scheduler.update(0.5)
 	check(h.is_settled and box.amount == 2.0, "custom adapter restores initial value")
-	var mixed := T.custom(func(t): return t.amount, func(t, v): t.amount = v, 1, 1.0)
+	var mixed := T.custom(func(t): return t.amount, func(t, v): t.amount = v)
 	mixed.from_value = 0
+	mixed.to_value = 1
+	mixed.duration = 1.0
 	var floating := scheduler.add(box, mixed)
 	scheduler.update(0.25)
 	check(typeof(floating.value) == TYPE_FLOAT and box.amount == 0.25, "custom float storage keeps fractional samples with integer endpoints")
 	floating.cancel()
 	box.amount = 2.0
-	var rounded := T.custom(func(t): return t.count, func(t, v): t.count = v, 3.5, 1.0)
+	var rounded := T.custom(func(t): return t.count, func(t, v): t.count = v)
 	rounded.from_value = 0.5
+	rounded.to_value = 3.5
+	rounded.duration = 1.0
 	var integer := scheduler.add(box, rounded)
 	scheduler.update(0.25)
 	check(typeof(integer.value) == TYPE_INT and box.count == 1, "custom integer storage rounds samples without truncating endpoints")
 	integer.cancel()
-	var custom := T.custom(func(t): return t.text, func(t, v): t.text = v, "b", 1.0,
+	var custom := T.custom(func(t): return t.text, func(t, v): t.text = v,
 		func(a, b, t): return a if t < 0.5 else b,
 		func(v): return "" if v is String else "expected String")
+	custom.to_value = "b"
+	custom.duration = 1.0
 	var text := scheduler.add(box, custom)
 	scheduler.update(0.75)
 	check(box.text == "b" and text.value == "b", "custom interpolation supports user-validated value types")
@@ -137,7 +145,8 @@ func _custom() -> void:
 	check(cancelled.is_settled and adapter.events.back() == "release", "reentrant setter cancellation cleans up")
 	box.on_write = Callable()
 	var stale := Node.new()
-	var stale_definition := T.custom(func(t): return t.amount, stale.set_meta.bind(&"sample").unbind(2), 1.0)
+	var stale_definition := T.custom(func(t): return t.amount, stale.set_meta.bind(&"sample").unbind(2))
+	stale_definition.to_value = 1.0
 	stale.free()
 	var stale_handle := scheduler.add(box, stale_definition)
 	scheduler.update(0.0)

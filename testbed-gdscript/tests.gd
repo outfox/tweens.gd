@@ -516,7 +516,7 @@ func _array_endpoints() -> bool:
 	scheduler.update(0.5)
 	check(node.scale == Vector2(1.25, 1.25), "arrays are from endpoints")
 	scheduler.update(0.5)
-	scheduler.add(node, T.scale_2d(null, 1.0).with_by([1, -0.5]))
+	scheduler.add(node, T.scale_2d().with_duration(1.0).with_by([1, -0.5]))
 	scheduler.update(1.0)
 	check(node.scale == Vector2(3, 1.5), "arrays are by offsets")
 	scheduler.add(node, T.property(^"modulate", [1, 0.5, 0], 1.0))
@@ -546,7 +546,7 @@ func _relative() -> bool:
 		var fixture := TweensGdScheduler.new()
 		var probe := Holder.new()
 		probe.amount = test.start
-		var definition := T.property(^"amount", null)
+		var definition := T.property(^"amount")
 		for key in ["from", "to", "by"]:
 			if test.has(key): definition.set(key + "_value", float(test[key]))
 		for key in test.options: definition.set(key, test.options[key])
@@ -562,15 +562,15 @@ func _relative() -> bool:
 	var scheduler := TweensGdScheduler.new()
 	var holder := Holder.new()
 	holder.amount = 1.0
-	scheduler.add(holder, T.property(^"amount", null, 1.0).with_by(10.0))
-	scheduler.add(holder, T.property(^"amount", null, 2.0).with_by(-4.0))
+	scheduler.add(holder, T.property(^"amount").with_duration(1.0).with_by(10.0))
+	scheduler.add(holder, T.property(^"amount").with_duration(2.0).with_by(-4.0))
 	scheduler.update(1.0)
 	near(holder.amount, 9.0, "relative tweens on one property add up")
 	scheduler.update(1.0)
 	near(holder.amount, 7.0, "relative tweens end at the sum of their offsets")
 
 	holder.count = 3
-	scheduler.add(holder, T.property(^"count", null, 1.0).with_by(5).with_repeats(1))
+	scheduler.add(holder, T.property(^"count").with_duration(1.0).with_by(5).with_repeats(1))
 	var counts: Array = []
 	for step in range(4):
 		scheduler.update(0.5)
@@ -580,20 +580,20 @@ func _relative() -> bool:
 	var start := Quaternion(Vector3.UP, PI / 2.0)
 	var turn := Quaternion(Vector3.RIGHT, PI / 2.0)
 	holder.turn = start
-	scheduler.add(holder, T.property(^"turn", null, 1.0).with_by(turn))
+	scheduler.add(holder, T.property(^"turn").with_duration(1.0).with_by(turn))
 	scheduler.update(0.5)
 	check(holder.turn.is_equal_approx(start * Quaternion(Vector3.RIGHT, PI / 4.0)), "quaternion offsets rotate about local axes")
 	scheduler.update(0.5)
 	check(holder.turn.is_equal_approx(start * turn) and not holder.turn.is_equal_approx(turn * start), "quaternion offsets end at start * by")
 
 	var samples: Array = []
-	scheduler.add(self, T.float_value(null, 1.0).with_initial_value(2.0).with_by(10.0).with_on_update(func(_h, v): samples.append(v)))
+	scheduler.add(self, T.float_value().with_duration(1.0).with_initial_value(2.0).with_by(10.0).with_on_update(func(_h, v): samples.append(v)))
 	scheduler.update(0.5)
 	scheduler.update(0.5)
 	check(samples == [2.0, 7.0, 12.0], "callback values add to the captured start: %s" % [samples])
 
 	holder.amount = 1.0
-	scheduler.add(holder, T.custom(func(t): return t.amount, func(t, v): t.amount = v, null, 1.0).with_by(2.0))
+	scheduler.add(holder, T.custom(func(t): return t.amount, func(t, v): t.amount = v).with_duration(1.0).with_by(2.0))
 	scheduler.update(0.5)
 	holder.amount += 10.0
 	scheduler.update(0.5)
@@ -602,15 +602,15 @@ func _relative() -> bool:
 	var node := Node2D.new()
 	add_child(node)
 	node.position = Vector2(1, 2)
-	scheduler.add(node, T.position_2d_x(null, 1.0).with_by(4.0))
-	scheduler.add(node, T.position_2d(null, 1.0).with_by(Vector2(1, 1)))
+	scheduler.add(node, T.position_2d_x().with_duration(1.0).with_by(4.0))
+	scheduler.add(node, T.position_2d().with_duration(1.0).with_by(Vector2(1, 1)))
 	scheduler.update(1.0)
 	check(node.position == Vector2(6, 3), "component and whole-vector offsets combine: %s" % [node.position])
 	node.free()
 
-	for rejected in [T.value(0.0, 1.0, 1.0).with_by(1.0), T.value(0.0, null, 1.0).with_by(Vector2.ONE),
-			T.value(0.0, null, 1.0).with_by(NAN), T.value(Quaternion.IDENTITY, null, 1.0).with_by(Quaternion(0, 0, 0, 0)),
-			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
+	for rejected in [T.value(0.0, 1.0, 1.0).with_by(1.0), T.value(0.0).with_duration(1.0).with_by(Vector2.ONE),
+			T.value(0.0).with_duration(1.0).with_by(NAN), T.value(Quaternion.IDENTITY).with_duration(1.0).with_by(Quaternion(0, 0, 0, 0)),
+			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, Callable(), func(_v): return "").with_duration(1.0)
 				.with_by(Transform2D.IDENTITY)]:
 		check(_activated_add(scheduler, holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid by_value")
 	scheduler.dispose()
@@ -621,13 +621,13 @@ func _adjustments() -> bool:
 	var holder := Holder.new()
 	var tilt := Quaternion(Vector3.RIGHT, PI / 2.0)
 	holder.turn = Quaternion(Vector3.UP, PI / 2.0)
-	scheduler.add(holder, T.property(^"turn", null, 1.0).with_factor_to(0.5).with_delta_to(tilt))
+	scheduler.add(holder, T.property(^"turn").with_duration(1.0).with_factor_to(0.5).with_delta_to(tilt))
 	scheduler.update(1.0)
 	check(holder.turn.is_equal_approx(Quaternion(Vector3.UP, PI / 4.0) * tilt),
 		"quaternion factors scale the angle and deltas rotate locally")
 
 	holder.count = 3
-	scheduler.add(holder, T.property(^"count", null, 1.0).with_factor_to(1.5))
+	scheduler.add(holder, T.property(^"count").with_duration(1.0).with_factor_to(1.5))
 	scheduler.update(1.0)
 	check(holder.count == 5, "integer factors round away from zero: %s" % holder.count)
 
@@ -640,13 +640,13 @@ func _adjustments() -> bool:
 	near(holder.amount, 5.0, "duration adjustments shape the timeline")
 
 	for rejected in [T.value(0.0, 1.0, 1.0).with_factor_by(2.0), T.value(0.0, 1.0, 1.0).with_delta_by(1.0),
-			T.value(0.0, null, 1.0).with_by(1.0).with_factor_to(2.0), T.value(0.0, null, 1.0).with_by(1.0).with_delta_to(1.0),
+			T.value(0.0).with_duration(1.0).with_by(1.0).with_factor_to(2.0), T.value(0.0).with_duration(1.0).with_by(1.0).with_delta_to(1.0),
 			T.value(0.0, 1.0, 1.0).with_factor_from(NAN), T.value(0.0, 1.0, 1.0).with_factor_to(INF),
 			T.value(0.0, 1.0, 1.0).with_factor_duration(NAN), T.value(0.0, 1.0, 1.0).with_delta_duration(-2.0),
 			T.value(0.0, 1.0, 1.0).with_factor_duration(0.5).with_offset(0.75),
 			T.value(0.0, 1.0, 1.0).with_factor_delay(NAN),
 			T.value(0.0, 1.0, 1.0).with_delta_to(Vector2.ONE), T.value(0.0, 1.0, 1.0).with_delta_from(NAN),
-			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, null, 1.0, Callable(), func(_v): return "")
+			T.custom(func(_t): return Transform2D.IDENTITY, func(_t, _v): pass, Callable(), func(_v): return "").with_duration(1.0)
 				.with_factor_to(2.0)]:
 		check(_activated_add(scheduler, holder, rejected).completion_reason == T.Reason.FAILED, "reject invalid factors and deltas")
 	scheduler.dispose()

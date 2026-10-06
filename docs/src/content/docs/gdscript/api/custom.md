@@ -31,9 +31,10 @@ Constructors must take no arguments. By default, `interpolate()` and
 
 | Factory | Purpose |
 | --- | --- |
-| `Tweens.custom(getter, setter, to, seconds = 0.0, interpolator = Callable(), validator = Callable())` | Read with `getter(target)`, write with `setter(target, value)`; the optional `interpolator(from, to, weight)` and `validator(value)` replace the defaults |
+| `Tweens.custom(getter, setter, interpolator = Callable(), validator = Callable())` | Read with `getter(target)`, write with `setter(target, value)`; the optional `interpolator(from, to, weight)` and `validator(value)` replace the defaults |
 
-The Callables and the objects they capture stay shared between starts.
+Set endpoints and timing on the returned definition. The Callables and the
+objects they capture stay shared between starts.
 
 ## Adapters with bindings
 

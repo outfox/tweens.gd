@@ -76,7 +76,7 @@ finish importing the addon before running it. For a fresh headless checkout,
 run `godot --headless --editor --import` once to populate the script-class cache.
 
 `property(path, to, seconds, easing, delay)` and `value(from, to, seconds, easing, delay)`
-create mutable `TweensGdDefinition` objects; everything after `to` is optional.
+create mutable `TweensGdDefinition` objects; everything after `path` or `from` is optional.
 `play(target, definition, owner = null, options = null)` snapshots the configuration and always
 returns a `TweensGdHandle`. Change a definition for future starts without changing
 existing playback; `definition.copy()` creates a separate configuration. Curves are
@@ -300,12 +300,13 @@ Use Callables for custom storage, with optional interpolation and value validati
 ```gdscript
 var intensity := Tweens.custom(
 	func(target): return target.get_meta(&"intensity", 0.0),
-	func(target, value): target.set_meta(&"intensity", value),
-	1.0, 0.5)
+	func(target, value): target.set_meta(&"intensity", value))
+intensity.to_value = 1.0
+intensity.duration = 0.5
 var handle := Tweens.play(self, intensity)
 ```
 
-The optional fifth argument is `interpolator(from, to, weight)`. The sixth is
+The optional third argument is `interpolator(from, to, weight)`. The fourth is
 `validator(value)`, returning an empty string on success or a diagnostic on failure.
 Override both to support additional Variant value types. A setter can return a
 diagnostic string to fail playback; a void return means success.

@@ -78,7 +78,7 @@ func run(host: Node) -> bool:
 func _runtime(host: Node) -> void:
 	var scheduler := TweensGdScheduler.new()
 	var target := Target.new()
-	scheduler.add(target, T.property(^"amount", null, 1).with_by(2.0).with_ease_function(T.FX.punch(2)))
+	scheduler.add(target, T.property(^"amount").with_duration(1).with_by(2.0).with_ease_function(T.FX.punch(2)))
 	var sample := T.FX.shake_2d(Vector2(8, 4))
 	var baseline := target.position
 	var clock := T.value(0.0, 1.0, 1)
@@ -86,7 +86,7 @@ func _runtime(host: Node) -> void:
 	scheduler.add(target, clock)
 	var turn := T.FX.punch_quaternion(Vector3(0, 0.3, 0))
 	scheduler.add(target, T.custom(func(obj): return obj.rotation, func(obj, value): obj.rotation = value,
-		null, 1, func(from, _to, t): return from * turn.call(t)))
+		func(from, _to, t): return from * turn.call(t)).with_duration(1))
 	scheduler.update(0.125)
 	host.near(target.amount, 11.53125, "FX scalar works as easing")
 	host.check(target.position == baseline + sample.call(0.125), "FX vector works through callback")

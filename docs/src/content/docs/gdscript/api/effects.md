@@ -84,8 +84,8 @@ var rotation := Tweens.FX.punch_quaternion(Vector3(0.1, 0.2, 0))
 var turn := Tweens.custom(
     func(target): return target.quaternion,
     func(target, value): target.quaternion = value,
-    null, 0.4,
     func(from, _to, t): return (from * rotation.call(t)).normalized())
+turn.duration = 0.4
 Tweens.play(node, turn)
 ```
 

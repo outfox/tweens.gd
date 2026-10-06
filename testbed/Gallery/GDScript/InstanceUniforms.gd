@@ -4,7 +4,7 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 # Scene objects are supplied by the matching C# scene setup file.
 
 func animate() -> void:
-	var amount = cycle(Tweens.instance_shader_parameter(&"amount", null, seconds))
+	var amount = cycle(Tweens.instance_shader_parameter(&"amount").with_duration(seconds))
 	var first = amount.copy()
 	first.to_value = 0.85
 	var second = amount.copy()

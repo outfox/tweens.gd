@@ -19,11 +19,11 @@ such as `In.SINE | Out.CUBIC`, or a matching pair such as
 | Factory | Purpose |
 | --- | --- |
 | `Tweens.position_2d(to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` and the other named helpers | Tween a known property, with target and value checks; see the [helper catalog](/gdscript/nodes/) |
-| `Tweens.property(path, to, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween any property, or a component path such as `^"position:x"` |
-| `Tweens.value(from, to, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Deliver values to `on_update` without writing a property |
+| `Tweens.property(path, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween any property, or a component path such as `^"position:x"` |
+| `Tweens.value(from, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Deliver values to `on_update` without writing a property |
 | `Tweens.shader_parameter(parameter, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween a `ShaderMaterial` uniform |
 | `Tweens.instance_shader_parameter(parameter, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween an `instance uniform` on a `CanvasItem` or `GeometryInstance3D` |
-| `Tweens.custom(getter, setter, to, seconds = 0.0, interpolator = Callable(), validator = Callable())` | Read and write your own storage through Callables |
+| `Tweens.custom(getter, setter, interpolator = Callable(), validator = Callable())` | Read and write your own storage through Callables |
 
 ## `with_*()` methods
 
