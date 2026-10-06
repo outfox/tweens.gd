@@ -127,7 +127,7 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
 				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
 				{ tag: 'meta', attrs: { property: 'og:image:alt', content: 'The tweens.gd logo: a happy ferret curled around the name' } },
-				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://tweens.gd/og-card.png' } },
+				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://tweens.gd/og-card-twitter.png' } },
 				{ tag: 'meta', attrs: { name: 'twitter:image:alt', content: 'The tweens.gd logo: a happy ferret curled around the name' } },
 				{ tag: 'meta', attrs: { name: 'theme-color', content: '#0e1620' } },
 			],
