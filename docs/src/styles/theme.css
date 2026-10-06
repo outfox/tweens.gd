@@ -305,6 +305,11 @@ h4,
 	border: 1px solid color-mix(in oklab, var(--tw-outline) 60%, transparent);
 }
 
+/* Struck-out text */
+:is(del, s) {
+	opacity: 0.7;
+}
+
 /* Tables read like dope sheets: tinted header, rows light up on hover. The frame belongs to the scroll
    container (astro.config.mjs wraps each table), so a wide table scrolls inside it at any width. */
 .sl-markdown-content .table-wrap {

@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "check": "astro check",
     "check:links": "node scripts/check-links.mjs",
     "check:easing": "node scripts/check-easing.mjs",
     "check:search": "node scripts/check-search-upstream.mjs",
@@ -19,7 +20,14 @@
     "astro": "^7.2.10",
     "sharp": "^0.35.3"
   },
+  "overrides": {
+    "postcss-nested": "^7.0.2"
+  },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }

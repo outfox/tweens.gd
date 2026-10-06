@@ -78,10 +78,9 @@ const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({
 </div>
 
 <script>
-	// The ferret rises in on load and lands with a squash. A click on the language switch is caught in the capture
-	// phase, before the switch acts on it (LangSwitch.astro): choosing the language that's already shown squashes the
-	// ferret and wiggles its nametag; choosing the other lets the new steps fade in behind the sliding ferret, whose
-	// nametag wiggles once it arrives.
+	// The ferret rises in on load and lands with a squash. Clicking it, or either language choice, squashes it and
+	// wiggles its nametag. A click on the language switch is caught in the capture phase, before the switch acts on it
+	// (LangSwitch.astro), so choosing the other language can fade the new steps in behind the sliding ferret.
 	const root = document.documentElement;
 	const path = document.querySelector<HTMLElement>('[data-path]');
 	const ferret = path?.querySelector<HTMLElement>('[data-ferret]');
@@ -105,6 +104,11 @@ const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({
 		play(tag, 'wiggle');
 	};
 	if (path && ferret && tag) {
+		/** Squashes the ferret, unless it's still rising in, and swings its nametag. */
+		const bounce = (dir = 1) => {
+			if (!ferret.classList.contains('enter')) play(ferret, 'squash');
+			swing(tag, dir);
+		};
 		ferret.addEventListener('animationend', (event) => {
 			if (event.target !== ferret) return;
 			if (!ferret.classList.contains('enter')) return ferret.classList.remove('squash');
@@ -112,12 +116,19 @@ const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({
 			play(ferret, 'squash');
 		});
 		tag.addEventListener('animationend', (event) => event.target === tag && tag.classList.remove('wiggle'));
-		// The tag swings as the slide brakes: 0.25 s into the 0.7 s back-out, just before it crosses its target.
+		ferret.addEventListener('click', () => bounce());
+		// A switch bounces the ferret as its slide brakes: 0.25 s into the 0.7 s back-out, just before it crosses its
+		// target. Where it doesn't slide, as on a phone, it bounces at once.
+		let lang = root.dataset.lang;
 		let braking: ReturnType<typeof setTimeout> | undefined;
-		ferret.addEventListener('transitionstart', (event) => {
-			if (event.target !== ferret || event.propertyName !== 'translate') return;
+		document.addEventListener('tweens:lang', () => {
+			if (root.dataset.lang === lang) return;
+			lang = root.dataset.lang;
+			const slides = ferret
+				.getAnimations()
+				.some((a) => a instanceof CSSTransition && a.transitionProperty === 'translate');
 			clearTimeout(braking);
-			braking = setTimeout(() => swing(tag, root.dataset.lang === 'gdscript' ? 1 : -1), 250);
+			braking = setTimeout(() => bounce(lang === 'gdscript' ? 1 : -1), slides ? 250 : 0);
 		});
 		document.addEventListener(
 			'click',
@@ -128,8 +139,7 @@ const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({
 					path.dataset.switched = '';
 					return;
 				}
-				if (!ferret.classList.contains('enter')) play(ferret, 'squash');
-				swing(tag);
+				bounce();
 			},
 			{ capture: true },
 		);
@@ -205,7 +215,7 @@ const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({
 		position: relative;
 		overflow: hidden;
 		aspect-ratio: 1332 / 3667;
-		pointer-events: none;
+		cursor: pointer;
 		transform-origin: 50% 100%;
 		--x: 0px;
 		translate: var(--x) 0;
