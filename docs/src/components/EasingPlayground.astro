@@ -72,11 +72,13 @@ const variants = sorted.filter(f => /\d$/.test(f));
 	<div class="recipe">
 		<div class="recipe-bar"><span class="hint">Source code recipe for this curve</span><button type="button" class="tw-btn" data-copy>Copy</button></div>
 		<pre class="tw-code">{gd ? (
-			<code data-code><span class="kw">var</span> move <span class="pn">:=</span> <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span><span class="pn">(</span><span class="num">300.0</span><span class="pn">,</span> <span class="num" data-code-duration>1.5</span><span class="pn">,</span> <span data-code-ease><span class="ty">Out</span><span class="pn">.</span><span class="mb">ELASTIC</span></span><span class="pn">)</span><span data-code-option="skew" hidden>
+			<code data-code><span class="kw">var</span> move <span class="pn">:=</span> <span class="ty">Tweens</span>.<span class="fn">position_2d_x</span><span class="pn">()</span>
+move<span class="pn">.</span><span class="mb">duration</span> <span class="pn">=</span> <span class="num" data-code-duration>1.5</span>
+move<span class="pn">.</span><span class="mb">ease</span> <span class="pn">=</span> <span data-code-ease><span class="ty">Out</span><span class="pn">.</span><span class="mb">ELASTIC</span></span><span data-code-option="skew" hidden>
 move<span class="pn">.</span><span class="mb">skew</span> <span class="pn">=</span> <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
 move<span class="pn">.</span><span class="mb">blend_type</span> <span class="pn">=</span> <span class="ty">BlendType</span><span class="pn">.</span><span class="mb" data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
 move<span class="pn">.</span><span class="mb">blend</span> <span class="pn">=</span> <span class="num" data-code-blend>0.10</span></span>
-<span class="ty">Tweens</span>.<span class="fn">play</span><span class="pn">(</span>sprite<span class="pn">,</span> move<span class="pn">)</span></code>
+<span class="ty">Tweens</span>.<span class="fn">play</span><span class="pn">(</span>sprite<span class="pn">,</span> move<span class="pn">.</span><span class="fn">with_to</span><span class="pn">(</span><span class="num">300.0</span><span class="pn">))</span></code>
 		) : (
 			<code data-code><span class="kw">var</span> move = <span class="kw">new</span> <span class="ty">Tweens</span>.<span class="ty">Position2DX</span>
 {'{'}

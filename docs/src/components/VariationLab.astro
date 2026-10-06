@@ -37,10 +37,11 @@ const gd = lang === 'gdscript';
 			<p class="pane-label">The shared definition</p>
 			{
 				gd ? (
-					<pre class="tw-code"><span class="kw">static var</span> recoil := Tweens.<span class="fn">position_2d_x</span>(<span class="kw">null</span>, <span class="num" data-base-duration>0.2</span>,
-    InOut.QUAD) <span class="cont">\</span>
-    .<span class="fn">with_by</span>(<span class="num" data-base-by>-12.0</span>) <span class="cont">\</span>
-    .<span class="fn">with_ping_pong</span>()</pre>
+					<pre class="tw-code"><span class="kw">var</span> recoil := Tweens.<span class="fn">position_2d_x</span>()
+recoil.by_value = <span class="num" data-base-by>-12.0</span>
+recoil.duration = <span class="num" data-base-duration>0.2</span>
+recoil.ease = InOut.QUAD
+recoil.ping_pong = <span class="kw">true</span></pre>
 				) : (
 					<pre class="tw-code"><span class="kw">static readonly</span> <span class="ty">Tweens.Position2DX</span> Recoil = <span class="kw">new</span>()
 {'{'}

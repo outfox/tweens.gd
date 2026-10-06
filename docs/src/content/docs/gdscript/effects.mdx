@@ -32,7 +32,9 @@ A smooth rise and fall for a gentle pulse. One whole cycle returns to rest.
 ## Add a punch
 
 ```gdscript
-var recoil := Tweens.position_2d_x(null, 0.4).with_by(12.0)
+var recoil := Tweens.position_2d_x()
+recoil.by_value = 12.0
+recoil.duration = 0.4
 recoil.ease_function = Tweens.FX.punch(6.0)
 
 Tweens.play(sprite, recoil)
