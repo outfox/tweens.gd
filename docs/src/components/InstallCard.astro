@@ -27,7 +27,13 @@ const art =
 <Card title={`<a class="install-logo install-logo--${logo}" href="${href}">${art}</a>`}><slot /></Card>
 
 <style is:global>
+	/* Columns follow the lane's width rather than the viewport's, and stay equal however wide their content is. */
+	.card-grid:has(.install-logo) {
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+		gap: 1.25rem;
+	}
 	.card:has(.install-logo) {
+		container-type: inline-size;
 		gap: 1rem;
 		padding: 1.25rem;
 		border: 1px solid var(--tw-outline);
@@ -37,6 +43,9 @@ const art =
 	.card .title:has(.install-logo) > span {
 		flex: 1;
 	}
+	.card:has(.install-logo) .body {
+		font-size: inherit;
+	}
 	.card:has(.install-logo) .body > :first-child {
 		margin-top: 0;
 	}
@@ -44,13 +53,15 @@ const art =
 		padding-inline-start: 1.25rem;
 	}
 
-	/* The logo sits on the accent tint asides use, and lifts on hover like the site's other links. */
+	/* The logo sits on the accent tint asides use, and lifts on hover like the site's other links.
+	   The banner grows with its card, and the logos with the banner. */
 	.card .install-logo {
+		--banner: clamp(6.5rem, 32cqi, 9.5rem);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.6rem;
-		height: 5.5rem;
+		gap: calc(var(--banner) * 0.1);
+		height: var(--banner);
 		border: 1px solid color-mix(in oklab, var(--sl-color-accent) 55%, transparent);
 		border-radius: 0.75rem;
 		background: color-mix(in oklab, var(--sl-color-accent) 22%, var(--tw-surface));
@@ -64,20 +75,25 @@ const art =
 		translate: 0 -3px;
 		background: color-mix(in oklab, var(--sl-color-accent) 32%, var(--tw-surface));
 	}
+	.install-logo :is(img, svg, span) {
+		margin: 0;
+	}
 	.install-logo img {
 		width: auto;
-		height: 3.2rem;
+		max-width: 85%;
+		height: calc(var(--banner) * 0.6);
+		object-fit: contain;
 	}
 	.install-logo--github img {
-		height: 2.4rem;
+		height: calc(var(--banner) * 0.44);
 	}
 	:root[data-theme='light'] .install-logo .on-dark,
 	:root:not([data-theme='light']) .install-logo .on-light {
 		display: none;
 	}
 	.install-logo svg {
-		width: 2.6rem;
-		height: 2.6rem;
+		width: calc(var(--banner) * 0.46);
+		height: calc(var(--banner) * 0.46);
 		color: #6cb0f0;
 	}
 	:root[data-theme='light'] .install-logo svg {
@@ -85,7 +101,7 @@ const art =
 	}
 	.install-logo span {
 		font-family: var(--tw-font-display);
-		font-size: 2rem;
+		font-size: calc(var(--banner) * 0.36);
 		font-weight: 700;
 	}
 </style>
