@@ -45,7 +45,7 @@ var shorter := Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2)
 
 Combine a start and a finish with `|`, as in `In.SINE | Out.CUBIC`; `InOut.SINE`
 is short for `In.SINE | Out.SINE`. `In`, `Out`, and `InOut` are global, like
-`Tweens`. The [easing guide](/gdscript/easing/) helps you pick a curve.
+`Tweens`. The [easing playground](/easings/) helps you pick a curve.
 
 ## Definitions
 

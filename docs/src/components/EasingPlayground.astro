@@ -48,9 +48,15 @@ const variants = sorted.filter(f => /\d$/.test(f));
 					{curves.map(f => <option value={f} selected={f === 'None'}>{f}</option>)}<hr />
 					{variants.map(f => <option value={f}>{f}</option>)}
 				</select></label>
-				<span class="join" aria-hidden="true">|</span>
+				<div class="join">
+					<button type="button" class="tw-btn link" aria-pressed="false" aria-label="Link In and Out curves" data-link>Link</button>
+					<span class="glyph" aria-hidden="true">
+						<span class="bar">|</span>
+						<svg class="chain" viewBox="0 0 12 24"><rect x="2" y="1.5" width="8" height="12" rx="4" /><rect x="2" y="10.5" width="8" height="12" rx="4" /></svg>
+					</span>
+				</div>
 				<label class="tw-field"><span class="out-key">Out curve</span><select data-out aria-label="Out curve">
-					<option value="None">None (In only)</option><hr />
+					<option value="None">None (In only)&lrm;</option><hr />
 					{curves.map(f => <option value={f} selected={f === 'Elastic'}>{f}</option>)}<hr />
 					{variants.map(f => <option value={f}>{f}</option>)}
 				</select></label>
@@ -105,6 +111,8 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 		const blend = $<HTMLSelectElement>('[data-blend]');
 		const width = $<HTMLInputElement>('[data-width]');
 		const playButton = $<HTMLButtonElement>('[data-play]');
+		const link = $<HTMLButtonElement>('[data-link]');
+		const linked = () => link.getAttribute('aria-pressed') === 'true';
 		const gd = langOf(root) === 'gdscript';
 		let playing: TweenHandle | undefined;
 		let graphScale = 170, laneScale = 1;
@@ -200,6 +208,17 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			setPlaying(handle);
 			handle.completion.then(() => { if (playing === handle) setPlaying(); });
 		});
+		// Linked, a choice on either side is copied to the other before the curve redraws.
+		entry.addEventListener('input', () => { if (linked()) exit.value = entry.value; });
+		exit.addEventListener('input', () => { if (linked()) entry.value = exit.value; });
+		// Linking matches the sides right away, keeping Out's curve unless Out is None.
+		link.addEventListener('click', () => {
+			link.setAttribute('aria-pressed', String(!linked()));
+			if (!linked()) return;
+			if (exit.value === 'None') exit.value = entry.value;
+			else entry.value = exit.value;
+			update();
+		});
 		for (const input of [entry, exit, duration, skew, blend, width]) input.addEventListener('input', update);
 		width.addEventListener('keydown', event => {
 			// Native range keys step in thumb positions; here they must step in percentages.
@@ -215,7 +234,7 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			update();
 		});
 		progress.addEventListener('input', () => { stop(); draw(+progress.value); });
-		$('[data-reset]').addEventListener('click', () => { entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(initialBlend); progress.value = '0'; update(); });
+		$('[data-reset]').addEventListener('click', () => { link.setAttribute('aria-pressed', 'false'); entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(initialBlend); progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($<HTMLElement>('[data-code]').innerText); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }
@@ -267,7 +286,23 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 	.controls { display: grid; align-content: start; gap: 1.25rem; }
 	.pacing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 	.selectors { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .5rem; align-items: end; }
-	.join { font: 1.25rem var(--sl-font-mono); color: var(--tw-muted); padding-bottom: .4rem; }
+	/* The Link toggle sits in the label row, above the bar; linked, the bar becomes a chain in the same spot. */
+	.join { display: grid; justify-items: center; gap: .3rem; }
+	.glyph { display: grid; place-items: center; padding-bottom: .4rem; color: var(--tw-muted); transition: color .2s; }
+	.glyph > * { grid-area: 1 / 1; transition: opacity .2s, scale .35s var(--ease-back-out); }
+	.bar { font: 1.25rem var(--sl-font-mono); }
+	.chain { width: .75rem; height: 1.5rem; fill: none; stroke: currentColor; stroke-width: 2; opacity: 0; scale: .4; }
+	.join:has([aria-pressed='true']) .bar { opacity: 0; scale: .4; }
+	.join:has([aria-pressed='true']) .chain { opacity: 1; scale: 1; }
+	.link { min-height: 1.5rem; padding: 0 .55rem; font-size: var(--sl-text-xs); }
+	.link[aria-pressed='true'] { background: var(--tw-accent); color: var(--tw-on-accent); }
+	:global(:root[data-theme='light']) .link[aria-pressed='true'] { background: var(--tw-accent-ink); }
+	.join:has([aria-pressed='true']) .glyph { color: var(--tw-accent-ink); }
+	/* The Out side mirrors the In side around the join. text-align-last aligns a select's shown value; the open list
+	   ignores text-align, so its options run right to left (the &lrm; keeps "None (In only)" closing its parenthesis). */
+	.tw-field:has([data-out]) { text-align: right; }
+	[data-out] { text-align-last: right; }
+	[data-out] option { direction: rtl; }
 	select { width: 100%; min-width: 0; color: var(--tw-text); background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .5rem; padding: .65rem .4rem; font: .85rem var(--sl-font-mono); }
 	/* Blend controls only apply when two different curves meet. */
 	.tw-field:has(:disabled) { opacity: .5; }

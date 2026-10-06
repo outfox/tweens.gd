@@ -1,22 +1,29 @@
 ---
 // Versions of one example, shown one at a time and picked with a switch. Each child of the slot is one version.
 // Variants with the same labels switch together, such as a shared page's C# and GDScript copies.
+// With `languages`, the language switch sits beside the versions' switch, for readers who haven't picked one yet.
+import LangSwitch from './LangSwitch.astro';
+
 interface Props {
 	labels: string[];
 	label?: string;
+	languages?: boolean;
 }
-const { labels, label = 'Example' } = Astro.props;
+const { labels, label = 'Example', languages = false } = Astro.props;
 ---
 
 <div class="variants tw-wide" data-variants={labels.join('|')} style={`--n: ${labels.length}; --i: 0`}>
-	<div class="switch" role="group" aria-label={label}>
-		{
-			labels.map((text, i) => (
-				<button type="button" data-variant={i} aria-pressed={String(i === 0)}>
-					{text}
-				</button>
-			))
-		}
+	<div class="bar not-content">
+		{languages && <LangSwitch />}
+		<div class="switch" role="group" aria-label={label}>
+			{
+				labels.map((text, i) => (
+					<button type="button" data-variant={i} aria-pressed={String(i === 0)}>
+						{text}
+					</button>
+				))
+			}
+		</div>
 	</div>
 	<div class="panels"><slot /></div>
 </div>
@@ -41,6 +48,11 @@ const { labels, label = 'Example' } = Astro.props;
 <style>
 	.variants {
 		margin-top: 1.5rem;
+	}
+	.bar {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
 	}
 	/* Equal cells with one indicator that slides to the chosen version, like the language switch. */
 	.switch {

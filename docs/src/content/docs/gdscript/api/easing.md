@@ -4,7 +4,7 @@ description: Curve families, composition, blend algorithms, and migration from l
 tableOfContents: true
 ---
 
-For choosing an ease and trying it visually, start with the [easing guide](/gdscript/easing/).
+For choosing an ease and trying it visually, start with the [easing guide](/easings/).
 
 ## Compose an ease
 

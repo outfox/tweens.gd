@@ -63,7 +63,7 @@ sprite.TweenPosition((400, 180), TimeSpan.FromMilliseconds(600), Out.Cubic, Time
 Combine a start and a finish with `|`, as in `In.Sine | Out.Cubic`; `InOut.Sine`
 is short for `In.Sine | Out.Sine`. For anything else, such as repeats or
 callbacks, pass the configure callback or a `TweenOptions` value. The
-[easing guide](/csharp/easing/) helps you pick a curve.
+[easing playground](/easings/) helps you pick a curve.
 
 ## Definitions
 

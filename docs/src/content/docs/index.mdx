@@ -11,13 +11,17 @@ hero:
   tagline: "... and what if tweening were fun?"
   actions:
     - text: Start the tutorial
-      link: '#learn-it-in-five-steps'
+      link: /tutorial/
       icon: right-arrow
+    - text: Ease into the Docs
+      link: /easings/
+      icon: right-arrow
+      variant: secondary
     - text: Godot Asset Store
       link: https://store.godotengine.org/asset/outfox/tweens/
       icon: external
       variant: secondary
-    - text: Join our Discord
+    - text: ⤜outfox⤏ Discord
       link: https://discord.gg/3UXVHnmEwd
       icon: discord
       variant: secondary
@@ -30,36 +34,25 @@ hero:
 ---
 
 import Compare from '../../components/Compare.astro';
-import Doors from '../../components/Doors.astro';
 import Lang from '../../components/Lang.astro';
-import Path from '../../components/Path.astro';
 import Variants from '../../components/Variants.astro';
 
-## Learn it in five steps
+## Add more juice to your games!
 
-<p id="language-hint">Choose your language, then start with installation or jump to the step you need.</p>
+tweens.gd is a fully free and libre open source tweening system for the [Godot game engine](https://godotengine.org/).
 
-<Doors />
 
-<Lang only="csharp">
+"Tweening" means: Using code to animate nodes and resources, changing their properties over time using ~~soft paws~~ smooth functions called "easings."
 
-<Path lang="csharp" />
+Whole game worlds can be animated this way, but your classic use cases are button clicks, squash and stretch effects, wiggles, hover, breathing, punches, fades, bounces, ... ["juice it or lose it".](https://www.youtube.com/watch?v=Fy0aCDmgnxg)
 
-</Lang>
+### tweens.gd respects your <u>time</u> and your <u>keycaps.</u>
 
-<Lang only="gdscript">
+<Variants labels={['One sprite', 'Three sprites']} languages>
 
-<Path lang="gdscript" />
-
-</Lang>
-
-## Compared with Godot's Tween
-
-I'mma just let the code speak for itself here. Dook, dook!
+<div>
 
 <Lang only="csharp">
-
-<Variants labels={['One sprite', 'Three sprites']}>
 
 <Compare>
 
@@ -79,6 +72,39 @@ GD.Print("Arrived");
 ```
 
 </Compare>
+
+</Lang>
+
+<Lang only="gdscript">
+
+<Compare>
+
+```gdscript title="Godot's Tween"
+var tween := sprite.create_tween()
+tween.set_trans(Tween.TRANS_CUBIC)
+tween.set_ease(Tween.EASE_OUT)
+tween.tween_property(sprite, "position", Vector2(400, 180), 0.6)
+
+await tween.finished
+print("Arrived")
+```
+
+```gdscript title="tweens.gd"
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
+
+await Tweens.play(sprite, arrive).end
+print("Arrived")
+```
+
+</Compare>
+
+</Lang>
+
+</div>
+
+<div>
+
+<Lang only="csharp">
 
 <Compare>
 
@@ -113,34 +139,9 @@ GD.Print("Arrived");
 
 </Compare>
 
-</Variants>
-
 </Lang>
 
 <Lang only="gdscript">
-
-<Variants labels={['One sprite', 'Three sprites']}>
-
-<Compare>
-
-```gdscript title="Godot's Tween"
-var tween := sprite.create_tween()
-tween.set_trans(Tween.TRANS_CUBIC)
-tween.set_ease(Tween.EASE_OUT)
-tween.tween_property(sprite, "position", Vector2(400, 180), 0.6)
-
-await tween.finished
-print("Arrived")
-```
-
-```gdscript title="tweens.gd"
-var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
-
-await Tweens.play(sprite, arrive).end
-print("Arrived")
-```
-
-</Compare>
 
 <Compare>
 
@@ -175,6 +176,10 @@ print("Arrived")
 
 </Compare>
 
+</Lang>
+
+</div>
+
 </Variants>
 
-</Lang>
+... may your ferrets be long, but your code always short!

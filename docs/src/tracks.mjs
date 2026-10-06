@@ -1,4 +1,4 @@
-// Two language tracks share page slugs. Only Learn is sequential; Guides and Reference are optional.
+// Two language tracks share page slugs. Only Learn is sequential; Easing, Guides and Reference are optional.
 // astro.config.mjs builds the sidebar from this list; the route middleware, the language switch, and the section art
 // read it too, so a page and its twin always sit at the same place in each path.
 
@@ -8,12 +8,13 @@ export const LANGS = {
 };
 
 /** Groups in path order. `art` picks the drawing beside each page title; `gdscript` overrides a label there.
- *  An entry with `pages` instead of a `slug` is a nested sidebar group. */
+ *  An entry with `pages` instead of a `slug` is a nested sidebar group; one with a `link` is a hub page (see HUBS). */
 export const PATH = [
 	{
 		label: 'Learn',
 		art: 'hop',
 		pages: [
+			{ link: '/tutorial/', label: 'Tutorial' },
 			{ slug: 'installation', label: 'Install' },
 			{ slug: 'quickstart', label: 'Your first tween' },
 			{ slug: 'definitions', label: 'Definitions' },
@@ -22,12 +23,19 @@ export const PATH = [
 		],
 	},
 	{
-		label: 'Guides',
+		label: 'Easing',
 		art: 'curve',
+		pages: [
+			{ link: '/easings/', label: 'Playground' },
+			{ slug: 'custom', label: 'Custom curves' },
+		],
+	},
+	{
+		label: 'Guides',
+		art: 'sketch',
 		collapsed: true,
 		pages: [
 			{ slug: 'syntax-sugar', label: 'Syntax sugar' },
-			{ slug: 'easing', label: 'Easing' },
 			{ slug: 'timing', label: 'Timing & loops' },
 			{ slug: 'variations', label: 'Variations' },
 			{ slug: 'lifetime', label: 'Lifetime & ownership' },
@@ -70,8 +78,8 @@ export const PATH = [
 	},
 ];
 
-/** Only these pages form the sequential tutorial, also shown on the homepage. */
-export const LEARN = PATH[0].pages;
+/** Only these pages form the sequential tutorial, also shown on the tutorial hub. */
+export const LEARN = PATH[0].pages.filter((page) => page.slug);
 
 /** Pages that belong to neither language, listed under Project. The overview is reached from the site title. */
 export const SHARED = [
@@ -94,13 +102,21 @@ export const slugOf = (idOrPath) => idOrPath.replace(/^\/+|\/+$/g, '').split('/'
 /** Every page entry of a group, including those in nested groups. */
 export const pagesOf = (group) => group.pages.flatMap((page) => (page.pages ? pagesOf(page) : [page]));
 
-export const firstSlug = PATH[0].pages[0].slug;
+export const firstSlug = LEARN[0].slug;
+
+/** Hub pages are shared pages that both tracks list, such as the tutorial overview and the easing playground. */
+export const HUBS = PATH.flatMap(pagesOf).filter((page) => page.link);
+
+/** The hub entry for a content id such as 'tutorial', if the page is one. */
+export const hubOf = (id) => HUBS.find((page) => page.link === `/${id}/`);
 
 const items = (pages, lang) =>
 	pages.map((page) =>
 		page.pages
 			? { label: page[lang] ?? page.label, collapsed: true, items: items(page.pages, lang) }
-			: { label: page[lang] ?? page.label, slug: `${lang}/${page.slug}` },
+			: page.link
+				? { label: page[lang] ?? page.label, link: page.link }
+				: { label: page[lang] ?? page.label, slug: `${lang}/${page.slug}` },
 	);
 
 /** Starlight sidebar config: one top-level group per language, then the shared pages. */
@@ -116,7 +132,7 @@ export const sidebar = () => [
 /** Old single-path URLs, kept working after the split. */
 export const redirects = {
 	'/concepts/definitions': '/csharp/definitions/',
-	'/concepts/easing': '/csharp/easing/',
+	'/concepts/easing': '/easings/',
 	'/concepts/timing': '/csharp/timing/',
 	'/concepts/lifetime': '/csharp/lifetime/',
 	'/csharp': `/csharp/${firstSlug}/`,

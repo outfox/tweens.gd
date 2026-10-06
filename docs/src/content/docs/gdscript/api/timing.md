@@ -22,7 +22,7 @@ See [timing and loops](/gdscript/timing/).
 
 ## Easing
 
-See [easing](/gdscript/easing/).
+See the [easing playground](/easings/).
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
