@@ -1,5 +1,6 @@
 import { defineRouteMiddleware, type StarlightRouteData } from '@astrojs/starlight/route-data';
 import { LANGS, LEARN, hubOf, slugOf, trackOf } from './tracks.mjs';
+import { catalogSection } from './scripts/gd-catalog';
 
 type Entry = StarlightRouteData['sidebar'][number];
 type Link = Extract<Entry, { type: 'link' }>;
@@ -39,5 +40,15 @@ export const onRequest = defineRouteMiddleware((context) => {
 	} else {
 		route.sidebar = [...tracks.map((g) => ({ ...g, collapsed: true })), ...shared];
 		route.pagination = { prev: undefined, next: undefined };
+	}
+
+	// A GDScript catalog page renders its class headings in GdCatalog.astro, out of the table of contents' sight; list
+	// them after Overview, where the component sits ahead of the page's own headings.
+	const section = route.entry.data.catalog;
+	if (section && route.toc) {
+		const { targets, single } = catalogSection(section);
+		const top = route.toc.items.findIndex((item) => item.slug === '_top') + 1;
+		if (!single)
+			route.toc.items.splice(top, 0, ...targets.map((t) => ({ depth: 2, slug: t.anchor, text: t.heading, children: [] })));
 	}
 });

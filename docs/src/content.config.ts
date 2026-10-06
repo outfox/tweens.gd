@@ -17,6 +17,8 @@ export const collections = {
 				facts: z.array(z.object({ text: z.string(), link: z.string().optional() })).optional(),
 				// Keeps the title for screen readers and search only, for a tool page that starts with its widget.
 				hideTitle: z.boolean().optional(),
+				// The section of the GDScript helper catalog a page shows (src/scripts/gd-catalog.ts), such as "2D".
+				catalog: z.string().optional(),
 			}),
 		}),
 	}),

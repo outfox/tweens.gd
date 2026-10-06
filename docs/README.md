@@ -113,7 +113,9 @@ When this check fails after an upgrade:
   say so on that page rather than sharing prose that fits neither.
 - C# snippets state their prerequisites; GDScript pages state the `preload` they assume.
 - GDScript API facts come from `addons/tweens_gd/README.md` and the addon source. The
-  helper catalog is generated at build time from `addons/tweens_gd/CATALOG.md`.
+  helper catalog is generated at build time from `addons/tweens_gd/CATALOG.md`: a page names its
+  section in the `catalog` frontmatter field, `<GdCatalog />` renders it, and `src/routeData.ts` adds its
+  class headings to the table of contents.
 - Keep release procedures, coverage reports, and implementation notes private.
 - Keep library versions, adapter names, and examples aligned with the source.
 - Check C# code fences with `pwsh ./scripts/Check-Examples.ps1` from this directory.

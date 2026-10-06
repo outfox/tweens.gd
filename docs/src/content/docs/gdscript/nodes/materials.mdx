@@ -2,6 +2,7 @@
 title: Material properties
 tableOfContents: true
 description: Named helpers for BaseMaterial3D properties, for StandardMaterial3D and ORMMaterial3D.
+catalog: Materials
 ---
 
 import GdCatalog from '../../../../components/GdCatalog.astro';
@@ -15,15 +16,12 @@ enabled.
 Each row pairs a helper with the property path it tweens. Names ending in `_x`,
 `_y`, `_z`, or `_alpha` write one component.
 
-<GdCatalog section="Materials" />
+<GdCatalog />
+
+Each UV helper also has `_x`, `_y`, and `_z` variants. A component write reads the other components at each
+write, including concurrent edits to them.
 
 ## Units and constraints
-
-- Each UV helper also has `_x`, `_y`, and `_z` variants. A component write reads
-  the other components at each write, including concurrent edits to them.
-- Tweens don't change rendering modes or flags; enable transparency, emission,
-  and normal maps yourself.
-
 
 - Alpha fading requires a suitable transparency mode.
 - Emission and normal mapping need their feature flags enabled; normal mapping also needs a normal map.
