@@ -1,4 +1,4 @@
-![tweens.gd](https://raw.githubusercontent.com/outfox/tweens.gd/main/docs/public/ferret-tweens.svg)
+![tweens.gd](https://raw.githubusercontent.com/outfox/tweens.gd/main/docs/public/logo-ferret-static.svg)
 
 # tweens.gd for C#
 
