@@ -1,0 +1,107 @@
+---
+title: Custom definitions
+description: Tweens.Property delegates, the TweenDefinition members to override, the binding lifecycle, Interpolators, and the mutable builder classes.
+tableOfContents: true
+---
+
+import Variants from '../../../../components/Variants.astro';
+import { Steps } from '@astrojs/starlight/components';
+
+A custom definition animates storage the catalog doesn't cover. Pass delegates to `Tweens.Property`, or derive from `TweenDefinition<TTarget, TValue>` for setup and cleanup around each playback; both start like any built-in definition. [Custom properties](/csharp/custom-properties/) walks through both.
+
+<Variants labels={['Delegates', 'Subclass']} label="Definition">
+
+```csharp
+// Tweens a camera's zoom as one number, keeping X and Y equal.
+var zoom = new Tweens.Property<Camera2D, float>(
+    target => target.Zoom.X,
+    (target, value) => target.Zoom = new Vector2(value, value),
+    Interpolators.Float,
+    to: 2, duration: 0.5, ease: InOut.SmootherStep);
+
+camera.Tween(zoom);
+```
+
+<div>
+
+```csharp title="UniformZoomTween.cs"
+// Tweens a camera's zoom as one number, keeping X and Y equal.
+public sealed class UniformZoomTween : TweenDefinition<Camera2D, float>
+{
+    protected override float Read(Camera2D target) => target.Zoom.X;
+    protected override void Write(Camera2D target, float value) => target.Zoom = new Vector2(value, value);
+    protected override float Interpolate(float from, float to, float weight) => Interpolators.Float(from, to, weight);
+}
+```
+
+```csharp
+camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = InOut.SmootherStep });
+```
+
+</div>
+
+</Variants>
+
+## Delegates
+
+| Constructor | Arguments |
+| --- | --- |
+| `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations, then the optional endpoint and timing |
+| `new PropertyTween<TTarget, TValue>(getter, setter, interpolate)` | The same operations, as a mutable class definition |
+
+`interpolate` takes `(from, to, weight)`; pass one of the [`Interpolators`](#interpolators). Captured objects stay shared between playbacks.
+
+## Members to override
+
+`TweenDefinition<TTarget, TValue>` is abstract; `TTarget` is a class and `TValue` a struct. Its public members, from `From` to `OnFinally`, match the [built-in definitions](/csharp/api/definitions/#members). These are all `protected`:
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `Read(target)` | `TValue` | Read the current value. Required |
+| `Write(target, value)` | `void` | Write a value. Required |
+| `Interpolate(from, to, weight)` | `TValue` | Blend two values; `weight` leaves 0 to 1 when an ease overshoots. Required |
+| `Prepare(target)` | `void` | Set up this playback's bindings |
+| `Restore(target, initial)` | `void` | Undo the tween at a non-retaining end; writes `initial` unless overridden |
+| `Release()` | `void` | Free this playback's resources |
+| `ReadsWrittenValue` | `bool` | Whether `Read` returns what `Write` stored; `true` unless overridden |
+
+## Binding lifecycle
+
+<Steps>
+
+1. **Copy.** Each start works on a private, shallow copy of the definition, so per-playback state belongs in its fields. Reference-valued fields stay shared.
+2. **`Prepare`** runs on that copy at activation, before the first read.
+3. **`Read`** captures the start value.
+4. **`Interpolate` and `Write`** run on every update.
+5. **`Restore`** runs at a natural end whose fill doesn't keep the final value. It can write `initial` back, or remove an override instead.
+6. **`Release`** runs after the ending callbacks, and also after a failed `Prepare`. Release only what this copy owns.
+
+</Steps>
+
+## Interpolators
+
+`Interpolators` has one static method per built-in value type, each taking `(from, to, weight)`. Pass one as the `interpolate` argument, or call it from your own `Interpolate`.
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `Float`, `Double` | `float`, `double` | Linear blend; overshoot passes through |
+| `Int` | `int` | Rounds half away from zero; overshoot saturates at the `int` limits |
+| `Vector2`, `Vector3`, `Vector4`, `Color`, `Rect2` | the same type | Component-wise linear blend |
+| `Quaternion` | `Quaternion` | Shortest-path spherical blend; endpoints must be nonzero |
+
+## Builders
+
+The class-based definitions, such as `Position2DTween`, and your own subclasses of `TweenDefinition<TTarget, TValue>` are mutable. They inherit `TweenOptionsBuilder`, the mutable form of [`TweenOptions`](/csharp/api/definitions/#shared-options), and each start snapshots them. IntelliSense hides the built-in classes and offers the `Tweens.*` structs instead.
+
+A shorthand method's configure callback receives one of these builders: `TweenPosition` on a `Node2D` passes a `Position2DTween`. Write reusable configure methods against `TweenOptionsBuilder`.
+
+## Rules
+
+- `By`, factors, and deltas work with `int`, `float`, `double`, vector, `Color`, `Quaternion`, and `Rect2` values.
+- `By` reads the property back on every update. If `Read` doesn't return what `Write` stored, override `ReadsWrittenValue` to return `false`, and `By` is added to the start value instead.
+- Don't change reference-valued configuration while playbacks share it.
+
+{/* Keep links to earlier sections working. */}
+<span id="delegates-instead-of-a-subclass" />
+<span id="class-based-definitions" />
+<span id="custom-definitions-and-bindings" />

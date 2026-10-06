@@ -1,0 +1,102 @@
+---
+title: Adapters
+description: The Tweens.custom() Callables, the TweensGdAdapter methods to override, and the binding lifecycle for custom GDScript storage.
+tableOfContents: true
+---
+
+import Variants from '../../../../components/Variants.astro';
+import { Steps } from '@astrojs/starlight/components';
+
+An adapter animates storage that a property path can't reach. Pass Callables to `Tweens.custom()`, or extend `TweensGdAdapter` for setup and cleanup around each playback and assign an instance to a definition's `adapter`. [Custom properties](/gdscript/custom-properties/) walks through both.
+
+<Variants labels={['Callables', 'Adapter']} label="Definition">
+
+```gdscript
+# Tweens a camera's zoom as one number, keeping X and Y equal.
+var zoom := Tweens.custom(
+	func(target): return target.zoom.x,
+	func(target, value): target.zoom = Vector2(value, value))
+zoom.to_value = 2.0
+zoom.duration = 0.5
+
+Tweens.play(camera, zoom)
+```
+
+<div>
+
+```gdscript title="uniform_zoom_adapter.gd"
+# Tweens a camera's zoom as one number, keeping X and Y equal.
+class_name UniformZoomAdapter
+extends "res://addons/tweens_gd/adapter.gd"
+
+func read(target: Object) -> Variant:
+	return target.zoom.x
+
+func write(target: Object, value: Variant) -> String:
+	target.zoom = Vector2(value, value)
+	return ""
+```
+
+```gdscript
+var zoom := TweensGdDefinition.new()
+zoom.adapter = UniformZoomAdapter.new()
+zoom.to_value = 2.0
+zoom.duration = 0.5
+
+Tweens.play(camera, zoom)
+```
+
+</div>
+
+</Variants>
+
+## Callables
+
+| Factory | Purpose |
+| --- | --- |
+| `Tweens.custom(getter, setter, interpolator, validator)` | Read with `getter(target)` and write with `setter(target, value)`; the optional `interpolator(from, to, weight)` and `validator(value)` replace the defaults |
+
+Set endpoints and timing on the returned definition. The Callables and the objects they capture stay shared between starts.
+
+## Methods to override
+
+Override `read` and `write`; the rest are optional. Hooks that return a `String` return an empty one on success, and an error message to fail playback with `FAILED`.
+
+| Method | Returns | Purpose |
+| --- | --- | --- |
+| `read(target)` | `Variant` | Read the current value |
+| `write(target, value)` | `String` | Write a value |
+| `interpolate(from, to, weight)` | `Variant` | Blend two values; `weight` leaves 0 to 1 when an ease overshoots. Handles every built-in value type unless overridden |
+| `validate_value(value)` | `String` | Reject unsupported or non-finite values. Handles every built-in value type unless overridden |
+| `prepare(target)` | `String` | Set up this playback's state |
+| `restore(target, initial)` | `String` | Undo the tween at a non-retaining end; calls `write()` unless overridden |
+| `release()` | `String` | Free this playback's state |
+| `copy()` | `TweensGdAdapter` | Create the per-playback copy; copies script variables shallowly unless overridden |
+
+## Binding lifecycle
+
+<Steps>
+
+1. **`copy()`.** Each start works on its own copy of the adapter. The default copies script variables shallowly, so Arrays, resources, and captured objects stay shared; override `copy()` when configuration needs another policy.
+2. **`prepare()`** runs on that copy before the first read. Initialize private playback state here.
+3. **`read()`** captures the start value.
+4. **`interpolate()` and `write()`** run on every update.
+5. **`restore()`** runs at a natural end whose fill doesn't keep the final value. It can write `initial` back, or remove an override instead.
+6. **`release()`** runs after the ending callbacks and before waiters resume, and also after a failed `prepare()`. Release only what this copy owns.
+
+</Steps>
+
+## Rules
+
+- Adapter constructors must take no arguments.
+- An adapter script's `extends` line needs a path or a global class: the base script's path, or `TweensGdAdapter` once the editor has built its class cache.
+- If a setter or interpolator cancels its own tween, `release()` waits until that call returns.
+- Several detected failures are kept together in the handle's `error`.
+
+:::caution[Script errors aren't failures]
+The addon reports only problems it detects: error strings from hooks, invalid Callables, and non-finite values. A GDScript runtime error inside a hook or Callable remains an ordinary Godot script error, with no conversion to `FAILED`. Return an error string for recoverable problems.
+:::
+
+{/* Keep links to earlier sections working. */}
+<span id="callables-instead-of-a-subclass" />
+<span id="adapters-with-bindings" />

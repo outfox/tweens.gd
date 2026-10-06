@@ -90,6 +90,13 @@ When this check fails after an upgrade:
 - Keep language twins in the same section order. Give demos one concrete experiment
   instead of repeating an explanation of every control.
 - Enable `tableOfContents: true` on reference pages with several sections.
+- Core API pages follow a tween's life: describe, shape, start, control, extend. Each opens with a lede that links
+  the guide teaching it, then at most one short snippet, member tables, and a closing list of rules. A fact lives on
+  one page, and each enum on the page it belongs to (`FillMode` on Timing, `Reason` on Handles). Tables whose first
+  column is one of `MEMBER_COLUMNS` (`astro.config.mjs`) render as member lists with a link per row, so keep member
+  names unique on a page.
+- `<Timeline>` draws Chain entries or a tween's cycles on one time axis; `<EaseFamilies>` draws every easing family
+  from `src/scripts/motion.ts`.
 - Each page opens with a one-paragraph lede stating its key idea; the theme sets it apart.
   Lead pages and paragraphs with the reader's goal or the visible result. Introduce
   technical details after their purpose, and place prerequisites beside the step

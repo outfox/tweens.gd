@@ -15,7 +15,7 @@ const anchor = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
 
 // API reference tables list one member per row, named in their first column. They render as a member list (theme.css),
 // and each row gets an id from its first code name, so a member can be linked directly.
-const MEMBER_COLUMNS = new Set(['Member', 'Field', 'Method', 'Entry point', 'Constructor', 'Factory', 'Enum', 'Constant']);
+const MEMBER_COLUMNS = new Set(['Member', 'Field', 'Method', 'Entry point', 'Constructor', 'Factory', 'Enum', 'Constant', 'Parameter']);
 
 // Wraps Markdown tables in a scroll container, so a wide table scrolls inside the content lane instead of spilling past it.
 // Each body cell also gets its column header as data-label, which narrow screens show when they stack rows.

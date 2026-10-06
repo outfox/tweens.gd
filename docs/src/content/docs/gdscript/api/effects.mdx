@@ -1,0 +1,99 @@
+---
+title: Effects
+description: The GDScript Tweens.FX factories for punch, shake, and breathing, their parameters, and how to sample per-axis and rotation effects.
+tableOfContents: true
+---
+
+import Variants from '../../../../components/Variants.astro';
+
+`Tweens.FX` builds deterministic Callables of progress for impacts, jitter, and pulses. A scalar Callable goes straight into `ease_function`, and the tween supplies duration and playback. [Effects](/gdscript/effects/) introduces them.
+
+```gdscript
+var recoil := Tweens.position_2d()
+recoil.by_value = [9, 5]
+recoil.duration = 0.4
+recoil.ease_function = Tweens.FX.punch(6.0)
+```
+
+The sprite moves along `by_value` and returns to its start. `by_value` sets the strength, so the factory's amplitude stays at 1.
+
+## Scalar factories
+
+Each returns a Callable of progress.
+
+| Factory | Shape |
+| --- | --- |
+| `punch(frequency = 6, amplitude = 1, decay = 2, phase = 0, attack = 0)` | Damped sine; starts and ends at zero |
+| `shake(frequency = 12, amplitude = 1, seed = 0, offset = 0, decay = 2, attack = 0.1)` | Smooth seeded noise under an envelope; ends at zero |
+| `breathe(frequency = 1, amplitude = 1, phase = 0)` | Raised cosine from zero to the amplitude and back |
+| `decay(power = 2)` | Envelope `(1 − t)^power` |
+| `attack_release(attack = 0.1, decay = 2)` | Envelope that rises over `attack`, then releases |
+
+## Per-axis factories
+
+Each family has a `_2d`, a `_3d`, and a `_quaternion` version, returning a `Vector2`, `Vector3`, or `Quaternion` offset. `amplitude` comes first and is required; the rest default as in the scalar version.
+
+| Factory | Parameters after `amplitude` |
+| --- | --- |
+| `punch_2d`, `punch_3d`, `punch_quaternion` | `frequency`, `decay`, `phase`, `attack` |
+| `shake_2d`, `shake_3d`, `shake_quaternion` | `frequency`, `seed`, `offset`, `decay`, `attack` |
+| `breathe_2d`, `breathe_3d`, `breathe_quaternion` | `frequency`, `phase` |
+
+- `amplitude`, `frequency`, `phase`, and `offset` are per axis: `Vector2` for 2D, `Vector3` for 3D and quaternions.
+- Each axis computes amplitude × envelope × signal with its own frequency and phase or offset.
+- Shake's default offsets, `(0, 101.37)` and `(0, 101.37, 203.71)`, give each axis its own noise. Equal frequencies and offsets give the same path.
+- A quaternion amplitude holds rotation-vector components in radians. Each sample converts to a unit quaternion; identity is the neutral offset.
+
+## Parameters
+
+| Parameter | Meaning |
+| --- | --- |
+| `frequency` | Cycles per tween duration, not per second; for shake, noise lattice intervals. Multiply a rate per second by the duration. Must not be negative |
+| `amplitude` | Scales the output. Signed; zero locks that axis |
+| `phase` | Where the cycle starts, in cycles; not a time delay |
+| `offset` | Shake's starting noise coordinate |
+| `seed` | Shake's noise pattern, a signed 32-bit integer; reuse it to reproduce a shape |
+| `decay` | Release exponent; higher fades faster. Must be positive |
+| `attack` | Fraction of the duration spent rising to full amplitude, in `[0, 1)`. Positive attack ramps up quintically; zero starts at full amplitude |
+
+Frequency, amplitude, and phase or offset must fit finite 32-bit floats, to match C# and Godot vector storage.
+
+## Sampling offsets
+
+Per-axis Callables return offsets, so they can't go in `ease_function`. Sample them in a callback value tween, or apply a rotation as `baseline * sample.call(t)` in a custom interpolator:
+
+<Variants labels={['Offset', 'Rotation']} label="Effect">
+
+```gdscript
+# A dedicated visual child keeps gameplay movement on its own transform.
+var rest := sprite.position
+var sample := Tweens.FX.shake_2d(
+	Vector2(12, 6), Vector2(10, 14), 123, Vector2(0.3, 100.7))
+var driver := Tweens.value(0.0, 1.0, 0.4)
+driver.on_update = func(_handle, t): sprite.position = rest + sample.call(t)
+driver.on_finally = func(_handle):
+	if is_instance_valid(sprite): sprite.position = rest
+Tweens.play(sprite, driver)
+```
+
+```gdscript
+var rotation := Tweens.FX.punch_quaternion(Vector3(0.1, 0.2, 0))
+var turn := Tweens.custom(
+	func(target): return target.quaternion,
+	func(target, value): target.quaternion = value,
+	func(from, _to, t): return (from * rotation.call(t)).normalized())
+turn.duration = 0.4
+Tweens.play(node, turn)
+```
+
+</Variants>
+
+## Rules
+
+- Factories capture their settings and use no mutable random generator or native noise, so a sample is the same regardless of call order or frame rate. Reuse a Callable between starts; create another with a different seed for another pattern.
+- Sampling clamps finite progress to `[0, 1]`. Non-finite progress gives non-finite output, which the tween detects as a failure.
+- Invalid parameters report an error and return an empty Callable. When the parameters come from untrusted configuration, check `is_valid()`: an empty `ease_function` means built-in easing.
+- Punch and shake end exactly at zero. Punch starts at zero when its phase is zero; shake with zero attack can start displaced. Breathe with a whole-number frequency and zero phase returns to zero.
+- An effect is a function, not a controller: cancelling keeps its last sample. Restore the baseline in `on_finally`, and cancel a running effect on that node before starting another.
+- `by_value` still accumulates across repeats. For a repeated return-to-rest effect, use a callback value or custom property tween.
+- Effects keep their own pacing; `skew` and `weks` don't apply.

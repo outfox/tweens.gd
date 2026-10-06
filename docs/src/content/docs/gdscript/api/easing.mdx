@@ -1,0 +1,138 @@
+---
+title: Easing
+description: GDScript easing fields, every curve family and numbered variant, mixed In/Out pairs, pacing with skew and weks, and custom functions or curves.
+tableOfContents: true
+---
+
+import EaseFamilies from '../../../../components/EaseFamilies.astro';
+
+Easing maps each leg's progress to a weight between its endpoints. Pick one `In` and one `Out` curve and join them with `|`. The [easing playground](/easings/) draws every combination.
+
+```gdscript
+Tweens.play(sprite, Tweens.position_2d_x(300.0, 1.2, In.SINE | Out.CUBIC))
+```
+
+## Members
+
+| Field | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `ease` | `int` | `LINEAR` | An `In` curve, an `Out` curve, both joined with `\|`, an `InOut` pair, or a legacy ease |
+| `blend_type` | `int` | `BlendType.MAKIMA` | How [mixed pairs](#mixed-pairs) join |
+| `blend` | `float` | `0.2` | Width of the centered join window, in `[0, 1]` |
+| `skew` | `float` | `0.5` | Where the outward leg splits between In and Out; see [pacing](#pacing) |
+| `weks` | `float` | `0.5` | Where the ping-pong return splits |
+| `ease_function` | `Callable` | `Callable()` | Custom function of progress; overrides `ease` |
+| `curve` | `Curve` | `null` | Godot curve sampled over progress; overrides `ease` |
+
+Each has a `with_*()` copy method, such as `with_ease()` or `with_blend_type()`.
+
+## Families
+
+<EaseFamilies lang="gdscript" />
+
+- Every family is available as `In.X`, `Out.X`, and `InOut.X`; `InOut.SINE` is exactly `In.SINE | Out.SINE`.
+- `SMOOTH_STEP` and `SMOOTHER_STEP` are symmetric, so their In and Out legs match.
+- Weights aren't clamped: Back, Elastic, and Jump overshoot. Native property setters still apply their own limits.
+
+## Composing
+
+- A single leg, such as `Out.CUBIC`, runs over the whole duration.
+- `In.SINE | Out.CUBIC` eases in with one family and out with another. Choose at most one of each side; two different In or two different Out flags are rejected.
+- `In.NONE` and `Out.NONE` omit a leg. `In.LINEAR` and `Out.LINEAR` select a straight line for that side of a mixed pair; no selection at all is linear.
+- `In`, `Out`, and `InOut` are global classes of integer constants, so flags from either side compose. Pass them as a helper's third argument, assign them to `ease`, or sample them with [`Tweens.Easing.evaluate()`](#sampling).
+
+## Numbered variants
+
+Back, Elastic, Bounce, and Jump come in five strengths, `10` to `50`, such as `Out.ELASTIC40` or `InOut.BACK20`. The plain name is the `30` variant. The number is a percentage of the full tween range:
+
+| Family | The number sets | `Out.X30` from 0 to 100 |
+| --- | --- | --- |
+| `BACK` | Peak overshoot | Peaks at 130, then settles at 100 |
+| `ELASTIC` | Peak overshoot | Swings to 130, then oscillates into 100 |
+| `BOUNCE` | Depth of the first rebound | Reaches 100, falls back to 70, then rebounds a quarter and a sixteenth as deep |
+| `JUMP` | Height of the first hop above the target | Rises to 130, lands, then hops to 107.5 and 101.875 |
+
+- An `In` leg mirrors its motion: `In.ELASTIC30` dips to −30 before leaving.
+- A matching `InOut` pair keeps the percentage in each half: `InOut.ELASTIC30` reaches both extremes, and `InOut.BOUNCE30` rebounds 30 units in each half.
+- Single Elastic legs relax their damping after the main swing, so the follow-through stays visible; paired Elastic curves oscillate more broadly. Both keep the named peak.
+- Jump stays above the target once it first reaches it.
+- In a mixed pair, the join can reshape overshoot or rebounds inside its window.
+
+## Mixed pairs
+
+At the neutral split, the In leg covers the first half of progress and of the value range, and the Out leg the second; every pair passes through (0.5, 0.5). Where two different families meet, a centered window of width `blend` joins them:
+
+| `BlendType` | Join |
+| --- | --- |
+| `MAKIMA` | The default. Two cubics with matched velocity at the window's edges, sharing a midpoint velocity from modified Akima weights |
+| `HERMITE` | Two cubics with matched velocity at the edges and equal acceleration at the midpoint |
+| `SMOOTH_STEP` | Crossfades the two families' InOut profiles with `u²(3 − 2u)` |
+| `LINEAR` | Crossfades the profiles with `u`; velocity may jump at the window's edges |
+
+- With the default width 0.2, progress up to 0.4 follows the In half exactly, and from 0.6 the Out half. A wider window reshapes more of each leg; zero splices the halves directly and may jump in velocity.
+- `blend` must be finite and within `[0, 1]`.
+- All methods preserve the midpoint. For monotone families, Makima and Hermite add no reversals or overshoot; the crossfades can inherit steep midpoint slopes from a family such as Circ.
+- Matching families skip the join and use their paired profile.
+- Join settings don't affect a single leg, a matching pair, a legacy ease, `ease_function`, or `curve`.
+
+<details id="how-the-join-works">
+<summary>The join, in detail</summary>
+
+Each half is the family's InOut half profile: for Sine, `0.5 * SineIn(2 * t)` and `0.5 + 0.5 * SineOut(2 * t - 1)`. Back, Elastic, and Jump are calibrated to their named overshoot, and Bounce to its first rebound depth.
+
+Makima sets the midpoint velocity with the modified Akima weights of MATLAB's [`makima`](https://www.mathworks.com/help/matlab/ref/makima.html): a weighted mean of the slopes on either side, favoring the half whose slope is steadier and closer to zero, so the result stays between them. Hermite solves the midpoint velocity from equal acceleration between the cubics, then limits it to prevent new reversals in monotone families. For a window half-width `h`, edge values `y0, y1`, and edge velocities `v0, v1`:
+
+```text
+d0 = (0.5 - y0) / h
+d1 = (y1 - 0.5) / h
+Makima:  w0 = |v1 - d1| + |v1 + d1| / 2
+         w1 = |d0 - v0| + |d0 + v0| / 2
+         midVelocity = (w0 * d0 + w1 * d1) / (w0 + w1)
+Hermite: midVelocity = clamp((3 * (d0 + d1) - v0 - v1) / 4,
+                             0, 3 * max(0, min(d0, d1)))
+left cubic:  (0.5 - h, y0, v0) -> (0.5, 0.5, midVelocity)
+right cubic: (0.5, 0.5, midVelocity) -> (0.5 + h, y1, v1)
+```
+
+The edge velocities stand in for the outer slopes that `makima` takes from neighboring samples. Both methods give a continuous velocity across the join at regular points of the source curves; acceleration can change at the window's edges, and with Makima also at the midpoint.
+
+</details>
+
+## Pacing
+
+`skew` moves the outward leg's In/Out split; `weks` moves the ping-pong return's.
+
+- At 0.5, the default, the pair stays balanced. At 0 the Out curve fills the whole leg; at 1 the In curve does. Values between move the split in both time and value, and the join window follows it, shrinking near either end.
+- `weks = 1 - skew` makes the return retrace the outward curve.
+- Duration, intervals, and the handle's raw `progress` stay unchanged.
+- Both apply to In/Out pairs. A single leg, a legacy ease, `ease_function`, and `curve` keep their shape.
+- Moving the split redistributes the legs' value ranges, so the numbered percentages describe the balanced pair.
+- Both must be finite and within `[0, 1]`, even without ping-pong.
+
+## Custom functions and curves
+
+- `ease_function` maps normalized progress, from 0 to 1, to a weight. Return 0 at the start and 1 at the end for an ordinary arrival.
+- A Godot `Curve` is sampled over the same 0 to 1 domain. Each start samples its own duplicate, so later edits reach only later starts.
+- Either one overrides `ease`; setting both is rejected.
+- The Callable runs synchronously on every update. If it becomes invalid or returns anything but a finite number, the tween ends with `FAILED`. A script error inside it stays an ordinary Godot script error.
+- [Effects](/gdscript/api/effects/) builds functions for punch, shake, and breathing; [custom easing](/gdscript/custom/) shows both in use.
+
+## Sampling
+
+| Method | Returns | Meaning |
+| --- | --- | --- |
+| `Tweens.Easing.evaluate(ease, progress, blend_type, blend, skew)` | `float` | The weight at `progress`, without starting playback; the last three default to `MAKIMA`, `0.2`, and `0.5` |
+
+## Legacy eases
+
+`Tweens.Ease` keeps Godot-style names, such as `Tweens.Ease.SINE_IN`, with their original numeric values and shapes. Write `In.SINE`, `Out.SINE`, and `InOut.SINE` for `SINE_IN`, `SINE_OUT`, and `SINE_IN_OUT`, and likewise for the other families.
+
+- Back, Elastic, and Bounce flags use the percentage calibration; their legacy names keep the old shapes, such as `Tweens.Ease.BOUNCE_OUT`'s 25% first rebound.
+- Don't combine legacy names with flags.
+- `Tweens.Ease.LINEAR`, zero, is the default.
+
+{/* Keep links to earlier sections working. */}
+<span id="compose-an-ease" />
+<span id="choose-a-family" />
+<span id="choose-the-method-and-width" />
+<span id="migrate-existing-eases" />

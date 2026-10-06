@@ -1,0 +1,281 @@
+---
+// Labelled tracks on one time axis, such as a Chain's entries or one tween's cycles. A playhead sweeps it in real time
+// when it scrolls into view; one already on screen at load stays still until Replay is pressed.
+type Kind = 'play' | 'back' | 'wait';
+interface Segment {
+	from: number;
+	to: number;
+	kind?: Kind;
+	text?: string;
+}
+interface Row {
+	label: string;
+	segments: Segment[];
+}
+interface Props {
+	rows: Row[];
+	/** What the timeline shows, for its caption and accessible name. */
+	label: string;
+	/** Axis labels; defaults to every segment boundary. */
+	ticks?: number[];
+}
+const { rows, label, ticks: given } = Astro.props;
+
+const bounds = rows.flatMap((row) => row.segments.flatMap((s) => [s.from, s.to]));
+const end = Math.max(...bounds);
+const ticks = given ?? [...new Set([0, ...bounds])].sort((a, b) => a - b);
+const pct = (t: number) => `${((t / end) * 100).toFixed(3)}%`;
+const fmt = (t: number) => String(+t.toFixed(3));
+// The sweep runs in real time, but never faster than 1.5 seconds overall.
+const pace = Math.max(1, 1.5 / end);
+const names: Record<Kind, string> = { play: 'Moving', back: 'Returning', wait: 'Waiting' };
+const kinds = [...new Set(rows.flatMap((row) => row.segments.map((s) => s.kind ?? 'play')))];
+const summary = rows
+	.map((row) => `${row.label}: ${row.segments.map((s) => `${names[s.kind ?? 'play'].toLowerCase()} ${fmt(s.from)} to ${fmt(s.to)} s`).join(', ')}`)
+	.join('; ');
+const nameWidth = Math.max(...rows.map((row) => row.label.length));
+---
+
+<figure class="timeline not-content" data-timeline style={`--rows: ${rows.length}; --name: ${nameWidth}ch; --sweep: ${(end * pace).toFixed(3)}s`}>
+	<div class="chart" role="img" aria-label={`${label}. ${summary}.`}>
+		{
+			rows.map((row, r) => (
+				<>
+					<span class="name" style={`grid-row: ${r + 1}`}>{row.label}</span>
+					<span class="track" style={`grid-row: ${r + 1}`}>
+						{row.segments.map((s) => (
+							<span
+								class={`bar ${s.kind ?? 'play'}`}
+								style={`--a: ${pct(s.from)}; --w: ${pct(s.to - s.from)}; --at: ${(s.from * pace).toFixed(3)}s; --for: ${((s.to - s.from) * pace).toFixed(3)}s`}
+							>
+								{s.text && <span class="text">{s.text}</span>}
+							</span>
+						))}
+					</span>
+				</>
+			))
+		}
+		<span class="lines" aria-hidden="true">
+			{ticks.map((t) => <span class="line" style={`--a: ${pct(t)}`} />)}
+			<span class="playhead" />
+		</span>
+		<span class="axis" aria-hidden="true">
+			{ticks.map((t, i) => <span class="tick" style={`--a: ${pct(t)}`}>{fmt(t)}{i === ticks.length - 1 && ' s'}</span>)}
+		</span>
+	</div>
+	<figcaption>
+		<span class="caption">{label}</span>
+		{
+			kinds.length > 1 && (
+				<span class="legend" aria-hidden="true">
+					{kinds.map((k) => (
+						<span class="key">
+							<span class={`swatch ${k}`} />
+							{names[k]}
+						</span>
+					))}
+				</span>
+			)
+		}
+		<button type="button" class="tw-btn replay" data-replay>
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" /></svg>
+			Replay
+		</button>
+	</figcaption>
+</figure>
+
+<script>
+	import { onceVisible, reducedMotion } from '../scripts/motion';
+
+	const play = (figure: HTMLElement) => {
+		if (reducedMotion()) return;
+		figure.classList.remove('is-playing');
+		void figure.offsetWidth;
+		figure.classList.add('is-playing');
+	};
+	for (const figure of document.querySelectorAll<HTMLElement>('[data-timeline]')) {
+		figure.querySelector('[data-replay]')!.addEventListener('click', () => play(figure));
+		figure.addEventListener('animationend', (event) => {
+			if ((event.target as Element).classList.contains('playhead')) figure.classList.remove('is-playing');
+		});
+		if (figure.getBoundingClientRect().top >= innerHeight && !reducedMotion()) {
+			// Waits empty below the fold, then fills as the playhead passes.
+			figure.classList.add('is-armed');
+			onceVisible(figure, () => {
+				figure.classList.remove('is-armed');
+				play(figure);
+			}, 0.6);
+		}
+	}
+</script>
+
+<style>
+	.timeline {
+		margin-block: 1.75rem;
+		max-width: var(--tw-measure);
+		padding: 1.1rem 1.25rem 0.9rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 1rem;
+		background: var(--tw-stage);
+	}
+	.chart {
+		display: grid;
+		grid-template-columns: var(--name) minmax(0, 1fr);
+		grid-template-rows: repeat(var(--rows), 1.9rem) auto;
+		column-gap: 1rem;
+		align-items: center;
+	}
+	.name {
+		grid-column: 1;
+		font: 600 var(--sl-text-xs) var(--sl-font-mono);
+		color: var(--sl-color-white);
+		white-space: nowrap;
+	}
+	.track {
+		position: relative;
+		z-index: 1;
+		grid-column: 2;
+		height: 100%;
+	}
+	.lines,
+	.axis {
+		position: relative;
+		grid-column: 2;
+	}
+	.lines {
+		grid-row: 1 / span var(--rows);
+		align-self: stretch;
+	}
+	.line {
+		position: absolute;
+		inset-block: 0;
+		left: var(--a);
+		width: 1px;
+		background: var(--tw-grid);
+	}
+	.axis {
+		grid-row: calc(var(--rows) + 1);
+		height: 1.4rem;
+	}
+	.tick {
+		position: absolute;
+		top: 0.35rem;
+		left: var(--a);
+		translate: -50% 0;
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+		white-space: nowrap;
+	}
+	.bar {
+		position: absolute;
+		inset-block: 0.35rem;
+		left: var(--a);
+		width: var(--w);
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		border-radius: 999px;
+		background: var(--tw-accent);
+	}
+	:global(:root[data-theme='light']) .bar.play {
+		background: var(--tw-accent-ink);
+	}
+	/* A return leg runs the same span backwards: the accent, striped against the direction of travel. */
+	.bar.back {
+		background: repeating-linear-gradient(-45deg, var(--tw-accent) 0 5px, color-mix(in oklab, var(--tw-accent) 55%, var(--tw-stage)) 5px 10px);
+	}
+	.bar.wait {
+		background: none;
+		border: 1.5px dashed var(--tw-muted);
+	}
+	.text {
+		padding-inline: 0.4rem;
+		font: 600 var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+		white-space: nowrap;
+	}
+	.playhead {
+		position: absolute;
+		inset-block: -0.2rem;
+		left: 0;
+		width: 2px;
+		border-radius: 1px;
+		background: var(--sl-color-white);
+		opacity: 0;
+	}
+	/* Armed bars wait clipped to nothing; playing bars reveal left to right as the playhead crosses them. */
+	.is-armed .bar {
+		clip-path: inset(0 100% 0 0);
+	}
+	.is-playing .bar {
+		animation: reveal var(--for) linear var(--at) both;
+	}
+	.is-playing .playhead {
+		animation: sweep var(--sweep) linear both;
+	}
+	@keyframes reveal {
+		from {
+			clip-path: inset(0 100% 0 0);
+		}
+		to {
+			clip-path: inset(0 0 0 0);
+		}
+	}
+	@keyframes sweep {
+		0% {
+			left: 0;
+			opacity: 1;
+		}
+		96% {
+			opacity: 1;
+		}
+		100% {
+			left: 100%;
+			opacity: 0;
+		}
+	}
+	figcaption {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem 1rem;
+		margin-top: 0.6rem;
+		color: var(--tw-muted);
+		font-size: var(--sl-text-xs);
+	}
+	.caption {
+		flex: 1 1 auto;
+	}
+	.legend {
+		display: flex;
+		gap: 0.9rem;
+	}
+	.key {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+	}
+	.swatch {
+		width: 1.1rem;
+		height: 0.6rem;
+		border-radius: 999px;
+		background: var(--tw-accent);
+	}
+	.swatch.back {
+		background: repeating-linear-gradient(-45deg, var(--tw-accent) 0 3px, color-mix(in oklab, var(--tw-accent) 55%, var(--tw-stage)) 3px 6px);
+	}
+	.swatch.wait {
+		background: none;
+		border: 1.5px dashed var(--tw-muted);
+	}
+	.replay {
+		min-height: 1.9rem;
+		padding: 0.2rem 0.75rem;
+		font-size: var(--sl-text-xs);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.replay {
+			display: none;
+		}
+	}
+</style>

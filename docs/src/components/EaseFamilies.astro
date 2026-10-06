@@ -1,0 +1,158 @@
+---
+// Every easing family as a tile of three small plots: its In leg, its Out leg, and the matching InOut pair.
+// Curves come from scripts/motion.ts, the docs' port of the library's easing math, sampled at build time.
+import { constant, type Lang } from '../scripts/lang';
+import { legEase, pairedLegEase, type EaseLeg } from '../scripts/motion';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+
+// The In leg's formula for the classic families; the calibrated ones are described by what they do.
+const families: { name: EaseLeg; note: string }[] = [
+	{ name: 'Linear', note: 't' },
+	{ name: 'Sine', note: '1 − cos(πt/2)' },
+	{ name: 'Quad', note: 't²' },
+	{ name: 'Cubic', note: 't³' },
+	{ name: 'Quart', note: 't⁴' },
+	{ name: 'Quint', note: 't⁵' },
+	{ name: 'Expo', note: '2^(10t − 10)' },
+	{ name: 'Circ', note: '1 − √(1 − t²)' },
+	{ name: 'SmoothStep', note: '3t² − 2t³' },
+	{ name: 'SmootherStep', note: 'so soft' },
+	{ name: 'Back', note: 'overshoots' },
+	{ name: 'Elastic', note: 'springs' },
+	{ name: 'Bounce', note: 'rebounds' },
+	{ name: 'Jump', note: 'hops' },
+];
+
+// Room for the 30% default overshoot above 1 and below 0, with guides at both endpoints.
+const SIZE = 48;
+const LO = -0.38;
+const HI = 1.38;
+const y = (v: number) => SIZE - ((v - LO) / (HI - LO)) * SIZE;
+const path = (f: (t: number) => number) => {
+	const samples = 120;
+	let d = '';
+	for (let i = 0; i <= samples; i++) {
+		const t = i / samples;
+		d += `${i ? 'L' : 'M'}${(t * SIZE).toFixed(2)} ${y(f(t)).toFixed(2)}`;
+	}
+	return d;
+};
+const tiles = families.map(({ name, note }) => ({
+	name: lang === 'gdscript' ? constant(name) : name,
+	note,
+	plots: [
+		{ leg: 'In', d: path((t) => legEase(name, 'In', t)) },
+		{ leg: 'Out', d: path((t) => legEase(name, 'Out', t)) },
+		{ leg: 'InOut', d: path((t) => pairedLegEase(name, t)) },
+	],
+}));
+---
+
+<ul class="families not-content tw-wide" aria-label="Easing families">
+	{
+		tiles.map((tile) => (
+			<li class="tile">
+				<p class="head">
+					<code class="name">{tile.name}</code>
+					<span class="note">{tile.note}</span>
+				</p>
+				<div class="plots" aria-hidden="true">
+					{tile.plots.map((plot) => (
+						<figure class="plot">
+							<svg viewBox={`0 0 ${SIZE} ${SIZE}`} preserveAspectRatio="none">
+								<path class="guide" d={`M0 ${y(0)}H${SIZE}M0 ${y(1)}H${SIZE}`} />
+								<path class="curve" d={plot.d} />
+							</svg>
+							<figcaption>{plot.leg}</figcaption>
+						</figure>
+					))}
+				</div>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.families {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+		gap: 0.75rem;
+		margin: 1.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.tile {
+		margin: 0;
+		padding: 0.75rem 0.85rem 0.6rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 0.9rem;
+		background: var(--tw-stage);
+		transition:
+			border-color 0.2s,
+			translate 0.4s var(--ease-back-out);
+	}
+	.tile:hover {
+		border-color: var(--tw-accent);
+		translate: 0 -2px;
+	}
+	.head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem;
+		margin: 0 0 0.5rem;
+	}
+	.name {
+		font: 650 var(--sl-text-sm) var(--sl-font-mono);
+		color: var(--sl-color-white);
+	}
+	.note {
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+		white-space: nowrap;
+	}
+	.plots {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.5rem;
+	}
+	.plot {
+		margin: 0;
+	}
+	svg {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1;
+		overflow: visible;
+		border-radius: 0.4rem;
+		background: var(--tw-surface);
+	}
+	.guide {
+		fill: none;
+		stroke: var(--tw-outline);
+		stroke-width: 1;
+		stroke-dasharray: 2 2;
+		vector-effect: non-scaling-stroke;
+	}
+	.curve {
+		fill: none;
+		stroke: var(--tw-accent);
+		stroke-width: 2;
+		stroke-linejoin: round;
+		vector-effect: non-scaling-stroke;
+	}
+	:global(:root[data-theme='light']) .curve {
+		stroke: var(--tw-accent-ink);
+	}
+	figcaption {
+		margin-top: 0.25rem;
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+		text-align: center;
+	}
+</style>

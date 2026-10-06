@@ -1,0 +1,120 @@
+---
+title: Core API
+description: A map of the C# core API, from the definition you describe to the handle you control, with its Godot Tween equivalents.
+---
+
+import Compare from '../../../components/Compare.astro';
+import Moves from '../../../components/Moves.astro';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+A definition describes a motion, starting it returns a handle, and the handle controls that one playback. These pages list every member of each, with the exact rules the guides leave out.
+
+Examples use `using Godot;` and `using tweens.gd;`. Definitions such as `Tweens.Position2D` live in the global `Tweens` namespace and need no `using`.
+
+## Anatomy of a tween
+
+<Moves>
+
+```csharp {"1":1} {"2":3} {"3":6} {"4":7}
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic)
+{
+    OnEnd = _ => GD.Print("Arrived"),
+};
+
+var movement = sprite.Tween(arrive);
+await movement.End;
+```
+
+1. **Define.** A [definition](/csharp/api/definitions/) holds the [endpoint](/csharp/api/endpoints/), [timing](/csharp/api/timing/), and [easing](/csharp/api/easing/).
+2. **React.** [Callbacks](/csharp/api/callbacks/) run at fixed points of each playback.
+3. **Start.** [Starting playback](/csharp/api/start/) snapshots the definition and returns a [handle](/csharp/api/handles/).
+4. **Await.** `End` completes with the [reason](/csharp/api/handles/#reason) playback ended.
+
+</Moves>
+
+## Find a page
+
+<CardGrid>
+<Card title="Describe" icon="pencil">
+
+- [Definitions](/csharp/api/definitions/): `Tweens.*` and `TweenOptions`
+- [Endpoints & variations](/csharp/api/endpoints/): `From`, `To`, `By`, factors
+- [Timing](/csharp/api/timing/): `Duration`, `Repeats`, `FillMode`
+- [Callbacks](/csharp/api/callbacks/): `OnAdd` through `OnFinally`
+
+</Card>
+<Card title="Shape" icon="analytics">
+
+- [Easing](/csharp/api/easing/): `EaseType`, `BlendType`, curves
+- [Effects](/csharp/api/effects/): punch, shake, and breathe
+
+</Card>
+<Card title="Play" icon="rocket">
+
+- [Starting playback](/csharp/api/start/): `Tween()`, `PlaybackOptions`
+- [Handles](/csharp/api/handles/): `TweenInstance`, `Reason`
+- [Groups](/csharp/api/groups/): parallel steps
+- [Chains](/csharp/api/chains/): linked timelines
+
+</Card>
+<Card title="Extend" icon="puzzle">
+
+- [Custom definitions](/csharp/api/custom/): `TweenDefinition`
+- [Scheduler](/csharp/api/scheduler/): `TweenScheduler`
+- [Property catalog](/csharp/nodes/): every built-in definition
+
+</Card>
+</CardGrid>
+
+## Coming from Godot's Tween
+
+Both blink a sprite out three times:
+
+<Compare>
+
+```csharp title="Godot's Tween"
+var tween = sprite.CreateTween().SetLoops(3);
+tween.TweenProperty(sprite, "modulate:a", 0f, 0.2).From(1f);
+```
+
+```csharp title="tweens.gd"
+var blink = new Tweens.ModulateAlpha(0, 0.2) { From = 1, Repeats = 2 };
+
+sprite.Tween(blink);
+```
+
+</Compare>
+
+| Godot's `Tween` | tweens.gd |
+| --- | --- |
+| `TweenProperty(...)` | A [definition](/csharp/api/definitions/), started with `node.Tween(definition)` |
+| `From(value)`, `AsRelative()` | [`From`](/csharp/api/endpoints/#from), [`By`](/csharp/api/endpoints/#by) |
+| `SetTrans(...)`, `SetEase(...)` | One [`Ease`](/csharp/api/easing/#ease), such as `Out.Cubic` |
+| `SetDelay(seconds)` | [`Delay`](/csharp/api/timing/#delay) |
+| `SetLoops(count)` | [`Repeats`](/csharp/api/timing/#repeats), which counts cycles after the first: `SetLoops(3)` is `Repeats = 2`, and `SetLoops()` is `TweenOptions.Infinite` |
+| A second tween back to the start | [`PingPong`](/csharp/api/timing/#pingpong) |
+| `SetParallel()`, `Parallel()` | `node.Tween(first, second)`, or [`Group.Of`](/csharp/api/groups/) |
+| Tweeners in sequence, `TweenInterval(seconds)` | [`node.Chain([...])`](/csharp/api/chains/), with a `Delay` on the next entry |
+| `TweenCallback(...)` | A [callback](/csharp/api/callbacks/), such as `OnEnd` |
+| `TweenMethod(...)` | `Tweens.Float` and the other [callback values](/csharp/nodes/values/) |
+| `Finished` signal | `await handle.End`, which also resumes when playback stops early |
+| `Pause()`, `Play()`, `Kill()` | `Pause()`, `Resume()`, `Cancel()` |
+| `SetProcessMode`, `SetPauseMode`, `SetIgnoreTimeScale` | [`PlaybackOptions`](/csharp/api/start/#playback-options) |
+| `BindNode(node)` | The node you start on, or a resource tween's [owner](/csharp/api/start/#on-a-resource) |
+
+## Differences from GDScript
+
+Both implementations share their timing, easing, grouping, and lifetime rules, and shared fixtures test both. The differences come from the languages:
+
+| Area | C# | GDScript |
+| --- | --- | --- |
+| Names | PascalCase: `From`, `To`, `By` | snake_case: `from_value`, `to_value`, `by_value` |
+| Starts | `node.Tween(definition)`, `node.Tween(a, b)` | `Tweens.play(node, definition)`, `Tweens.play_all(node, [a, b])` |
+| Definitions | Immutable values, varied with `with` | Mutable objects, varied with `with_*()` copies |
+| Type checks | Generic `TweenInstance<TTarget, TValue>`, checked by the compiler | Target class and value type checked when playback starts |
+| Failures | Awaiting faults with an exception; `Error` holds it | Awaiting `end` returns `FAILED`; `error` holds a message |
+| Script errors | Exceptions from callbacks and setters fault the tween | Detected problems become `FAILED`; other errors stay Godot script errors |
+| Integer values | Saturate at 32-bit limits | Saturate at signed 64-bit limits; shader integers stay 32-bit |
+| Callbacks | Synchronous | Synchronous; await `end` from a separate coroutine instead of inside one |
+
+See the [GDScript core API](/gdscript/api/) for its entry points.

@@ -6,6 +6,7 @@ description: Compare easing curves, blend an In with a different Out, and copy t
 import EasingPlayground from '../../components/EasingPlayground.astro';
 import Lang from '../../components/Lang.astro';
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import EaseFamilies from '../../components/EaseFamilies.astro';
 
 <Lang only="csharp">
 
@@ -19,7 +20,7 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 </Lang>
 
-Combine different In and Out families with `|`, or choose matching legs with `InOut`. Try changing just the Out family and watch how the arrival changes.
+<EaseFamilies />
 
 <Lang only="gdscript">
 

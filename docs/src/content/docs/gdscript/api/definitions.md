@@ -1,44 +1,54 @@
 ---
-title: Creating definitions
-description: The GDScript factories and named helpers, the with_ methods that vary a copy, and the fields that choose what a definition animates.
+title: Definitions
+description: The GDScript factories and named helpers, the with_ methods that vary a copy, the binding fields, and what each start copies.
 tableOfContents: true
 ---
 
-A `TweensGdDefinition` describes one motion. It's a mutable object: each start
-snapshots it, so changing a definition affects only later starts. To vary one
-start, start a copy: `copy()` returns an unchanged one, and the
-[`with_*()` methods](#with_-methods) return one with a field changed. See
-[reusable definitions](/gdscript/definitions/).
+A `TweensGdDefinition` is a mutable description of one motion. Each start snapshots it, so a change reaches only later starts; `with_*()` methods return a changed copy instead. [Reusable definitions](/gdscript/definitions/) shows the pattern.
+
+```gdscript
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) # Factory
+var slow := arrive.with_duration(1.2)                         # Copy
+arrive.delay = 0.1                                            # Change
+```
 
 ## Factories
 
-Each factory returns a new `TweensGdDefinition`. `easing` accepts integer flags,
-such as `In.SINE | Out.CUBIC`, or a matching pair such as
-`InOut.SINE`. Legacy `Tweens.Ease` constants also work.
+Each factory returns a new `TweensGdDefinition`.
 
 | Factory | Purpose |
 | --- | --- |
-| `Tweens.position_2d(to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` and the other named helpers | Tween a known property, with target and value checks; see the [helper catalog](/gdscript/nodes/) |
-| `Tweens.property(path, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween any property, or a component path such as `^"position:x"` |
-| `Tweens.value(from, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Deliver values to `on_update` without writing a property |
-| `Tweens.shader_parameter(parameter, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween a `ShaderMaterial` uniform |
-| `Tweens.instance_shader_parameter(parameter, to = null, seconds = 0.0, easing = LINEAR, delay = 0.0)` | Tween an `instance uniform` on a `CanvasItem` or `GeometryInstance3D` |
-| `Tweens.custom(getter, setter, interpolator = Callable(), validator = Callable())` | Read and write your own storage through Callables |
+| `Tweens.position_2d(to, seconds, easing, delay)` | Tween a known property, checking the target's class and the value's type; every [named helper](/gdscript/nodes/) takes these |
+| `Tweens.property(path, to, seconds, easing, delay)` | Tween any property, or a component path such as `^"position:x"` |
+| `Tweens.value(from, to, seconds, easing, delay)` | Deliver values to `on_update` without writing a property |
+| `Tweens.shader_parameter(parameter, to, seconds, easing, delay)` | Tween a `ShaderMaterial` uniform |
+| `Tweens.instance_shader_parameter(parameter, to, seconds, easing, delay)` | Tween an `instance uniform` on a `CanvasItem` or `GeometryInstance3D` |
+| `Tweens.custom(getter, setter, interpolator, validator)` | Read and write your own storage through Callables; see [adapters](/gdscript/api/custom/) |
 
-## `with_*()` methods
+`to` defaults to `null`, which uses the property's value at start. `seconds` and `delay` default to `0.0`, and `easing` to linear; it takes [`In` and `Out` flags](/gdscript/api/easing/) or a legacy `Tweens.Ease` constant. `Tweens.custom()` needs only its getter and setter.
 
-Playback settings and callbacks have `with_*()` methods that return a copy with
-one field changed. Binding fields (`property`, `adapter`, `target_class`, and
-`value_type`) are assigned directly. The copy methods use two shortenings:
+### Helper or property path?
 
-- Endpoint fields drop `_value`: `with_from()`, `with_to()`, and `with_by()`.
-  `with_initial_value()` keeps its name.
-- `with_ping_pong()` drops `use_`. It and
-  `with_suppress_callbacks_when_target_invalid()` default to `true`.
+Both create the same type of definition.
 
-They chain, as in `pop.with_delay(0.1).with_duration(0.4)`.
+| | Named helper | Property path |
+| --- | --- | --- |
+| Call | `Tweens.position_2d(to, 0.5)` | `Tweens.property(^"position", to, 0.5)` |
+| Checked at start | The target's class and the value's type | That the target has the property |
+| Reaches | The properties in the [helper catalog](/gdscript/nodes/) | Any property on the target, and components such as `position:x` or `region_rect:size:x` |
 
-## Target fields
+Paths select a property and its value components on the target itself. They can't traverse nodes or cross into another object; pass that object as the target instead.
+
+## Fields
+
+Every definition has the same fields, listed by role:
+
+- [Endpoints & variations](/gdscript/api/endpoints/): `from_value`, `to_value`, `by_value`, and their factors and deltas.
+- [Timing](/gdscript/api/timing/): `duration`, `delay`, `offset`, `repeats`, `ping_pong`, intervals, and `fill`.
+- [Easing](/gdscript/api/easing/): `ease`, `blend_type`, `blend`, `skew`, `weks`, `ease_function`, and `curve`.
+- [Callbacks](/gdscript/api/callbacks/): `on_add` through `on_finally`, and `suppress_callbacks_when_target_invalid`.
+
+The binding fields choose what a definition animates. Factories set them, and they have no `with_*()` methods:
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
@@ -47,25 +57,9 @@ They chain, as in `pop.with_delay(0.1).with_duration(0.4)`.
 | `target_class` | `StringName` | `&""` | Target class that a named helper checks at start |
 | `value_type` | `int` | `TYPE_NIL` | Value type that a named helper checks at start |
 
-`definition.validate()` returns an empty string when the configuration is valid,
-or a message describing the first problem.
-
-## Fields
-
-Every definition has the same fields, listed by role:
-
-- [Endpoints and variations](/gdscript/api/endpoints/): `from_value`, `to_value`,
-  `by_value`, and the factors, deltas, and skew/weks that derive variants.
-- [Timing and easing](/gdscript/api/timing/): `duration`, `delay`, `repeats`,
-  `fill`, `ease`, and the rest of the timeline.
-- [Modes and callbacks](/gdscript/api/modes/): process, time scale, and pause
-  modes, and `on_add` through `on_finally`.
-
 ## Share timing and easing
 
-GDScript definitions have no separate options object. To give several
-definitions the same timing and easing, write a function that sets those fields
-and returns the definition:
+GDScript definitions have no separate options object. To give several definitions the same timing and easing, write a function that sets those fields and returns the definition:
 
 ```gdscript
 static func snappy(definition: TweensGdDefinition) -> TweensGdDefinition:
@@ -74,42 +68,32 @@ static func snappy(definition: TweensGdDefinition) -> TweensGdDefinition:
 	return definition
 ```
 
-To override one setting, change it after the shared function has run:
-
-```gdscript
-var slow_pop := snappy(Tweens.scale_2d()).with_duration(0.6)
-```
-
-A definition that shares its timing with nothing else can take it from the
-helper instead: `Tweens.modulate_alpha(0.0, 0.25, Out.BACK)`.
+Change a setting after the shared function has run, as in `snappy(Tweens.scale_2d()).with_duration(0.6)`.
 
 :::caution[Order matters]
-- Call the shared function first. It assigns every field it sets, so a value
-  you set before calling it is replaced, including a duration or easing passed
-  to the helper.
-- Static variables initialize top to bottom. A static variable that reads
-  another one must be declared after it.
+- Call the shared function first. It assigns every field it sets, so a value you set before calling it is replaced, including a duration or easing passed to the helper.
+- Static variables initialize top to bottom. A static variable that reads another one must be declared after it.
 :::
 
-## Helper or property path?
+## Methods
 
-Every definition is the same type, whether a named helper or `Tweens.property()`
-created it.
-
-| | Named helper | Property path |
+| Method | Returns | Meaning |
 | --- | --- | --- |
-| Call | `Tweens.position_2d(to, 0.5)` | `Tweens.property(^"position", to, 0.5)` |
-| Checked at start | The target's class and the value's type | That the target has the property |
-| Reaches | The properties in the [helper catalog](/gdscript/nodes/) | Any property on the target, and components such as `position:x` or `region_rect:size:x` |
+| `with_duration(seconds)` and the other `with_*()` methods | `TweensGdDefinition` | A copy with one field changed |
+| `copy()` | `TweensGdDefinition` | An unchanged copy |
+| `validate()` | `String` | Empty when the configuration is valid, or a description of the first problem |
 
-Paths select a property and its value components on the target itself. They
-can't traverse nodes or cross into another object; pass that object as the
-target instead.
+- There's one `with_*()` method for every endpoint, variation, timing, easing, and callback field. They chain, as in `pop.with_delay(0.1).with_duration(0.4)`.
+- Endpoint methods drop `_value`: `with_from()`, `with_to()`, and `with_by()`. `with_initial_value()` keeps its name.
+- `with_ping_pong()` and `with_suppress_callbacks_when_target_invalid()` default to `true`.
 
 ## What each start copies
 
-Starting a definition snapshots its configuration. Preparation and property capture
-happen on the first eligible update, before any positive delay. Later changes to the definition never reach running playback.
-Callables and the objects they capture stay shared, but `curve` resources are
-duplicated for each start. Each `copy()` and `with_*()` call creates a new
-definition object.
+- Starting snapshots the configuration. Later changes to the definition never reach running playback.
+- Preparation and property capture happen on the first eligible update, before any positive delay.
+- Callables and the objects they capture stay shared; `curve` resources are duplicated for each start.
+- Each `copy()` and `with_*()` call creates a new definition object.
+
+<!-- Keep links to earlier sections working. -->
+<span id="with_-methods"></span>
+<span id="target-fields"></span>

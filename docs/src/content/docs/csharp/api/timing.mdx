@@ -1,0 +1,74 @@
+---
+title: Timing
+description: Duration, delay, offset, repeats, ping-pong, intervals, and fill, which place a C# tween in time.
+tableOfContents: true
+---
+
+import Timeline from '../../../../components/Timeline.astro';
+
+Timing places a tween in time: how long each leg takes, when the first one starts, how often it repeats, and what the property shows before and after. [Loops & delays](/csharp/loops/) introduces it.
+
+## Members
+
+| Member | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `Duration` | `Duration` | `0` | Seconds per leg; zero completes on the first eligible update |
+| `Delay` | `Duration` | `0` | Signed wait before the first leg; a negative delay pre-rolls |
+| `Offset` | `Duration` | `0` | Start this far into the first forward leg, within `[0, Duration]`; the delay still comes first |
+| `Repeats` | `int` | `0` | Cycles after the first; `TweenOptions.Infinite` (-1) repeats until cancelled |
+| `PingPong` | `bool` | `false` | Each cycle runs forward, then back |
+| `PingPongInterval` | `Duration` | `0` | Wait at the far endpoint before returning |
+| `RepeatInterval` | `Duration` | `0` | Wait between cycles, never after the last |
+| `Fill` | `FillMode` | `RetainFinalValue` | What the property shows during the delay and after [natural completion](#fill-and-restoration) |
+
+`FactorDuration`, `DeltaDuration`, `FactorDelay`, and `DeltaDelay` adjust `Duration` and `Delay` for each start; see [variations](/csharp/api/endpoints/#variations).
+
+`Duration` is also a readonly record struct of `double` seconds. It converts implicitly from `float`, `double`, and `TimeSpan`, and back to `double`; `Seconds` reads the value. Its default is zero.
+
+## Cycles
+
+A cycle is one leg, or a forward leg, the ping-pong interval, and a return leg. Repeat intervals separate cycles:
+
+```csharp
+var bob = new Tweens.Position2DY
+{
+    By = -20,
+    Duration = 0.5,
+    PingPong = true,
+    PingPongInterval = 0.2,
+    RepeatInterval = 0.3,
+    Repeats = 1,
+};
+```
+
+<Timeline
+	label="Two 1.2-second cycles and one 0.3-second repeat interval: 2.7 seconds in all"
+	rows={[
+		{ label: 'Cycle 1', segments: [{ from: 0, to: 0.5 }, { from: 0.5, to: 0.7, kind: 'wait' }, { from: 0.7, to: 1.2, kind: 'back' }] },
+		{ label: 'Interval', segments: [{ from: 1.2, to: 1.5, kind: 'wait' }] },
+		{ label: 'Cycle 2', segments: [{ from: 1.5, to: 2.0 }, { from: 2.0, to: 2.2, kind: 'wait' }, { from: 2.2, to: 2.7, kind: 'back' }] },
+	]}
+/>
+
+A ping-pong tween ends at its starting endpoint, so that endpoint is its final value.
+
+## Fill and restoration
+
+| `FillMode` | During the initial delay | On natural completion |
+| --- | --- | --- |
+| `RetainFinalValue` | Leave the property alone | Keep the final value |
+| `ApplyFromDuringDelay` | Apply `From` | Restore the captured initial value |
+| `Both` | Apply `From` | Keep the final value |
+| `None` | Leave the property alone | Restore the captured initial value |
+
+- `RetainFinalValue` is the default. `Both` suits staggered entrances: items still waiting show their `From` value.
+- Cancelling always keeps the latest value, whatever the fill mode.
+- Restoring a shader uniform also restores whether the material had an explicit override; see the [material reference](/csharp/nodes/materials/).
+
+## Rules
+
+- Non-finite times, and negative durations, intervals, or offsets, throw when the tween starts.
+- An infinitely repeating cycle that takes zero time is rejected.
+- A long frame advances to the correct phase, even across several cycles, without losing time at boundaries. It doesn't replay the callbacks of the cycles it skipped.
+- In a [Chain](/csharp/api/chains/#timeline), each entry's delay counts from the end of the entry before it.
+- The clock that advances a tween, and whether time scale applies, is chosen when it starts; see [playback options](/csharp/api/start/#playback-options).

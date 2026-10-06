@@ -1,0 +1,118 @@
+---
+title: Core API
+description: A map of the GDScript core API, from the definition you describe to the handle you control, with its Godot Tween equivalents.
+---
+
+import Compare from '../../../components/Compare.astro';
+import Moves from '../../../components/Moves.astro';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+A definition describes a motion, starting it returns a handle, and the handle controls that one playback. These pages list every field and member of each, with the exact rules the guides leave out.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree. The native types are global too: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`, `TweensGdChain`, `TweensGdPlaybackOptions`, `TweensGdScheduler`, and `TweensGdCancellation`. Use these names in type annotations.
+
+## Anatomy of a tween
+
+<Moves>
+
+```gdscript {"1":1} {"2":2} {"3":4} {"4":5}
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) \
+	.with_on_end(func(_handle): print("Arrived"))
+
+var movement := Tweens.play(sprite, arrive)
+await movement.end
+```
+
+1. **Define.** A [definition](/gdscript/api/definitions/) holds the [endpoint](/gdscript/api/endpoints/), [timing](/gdscript/api/timing/), and [easing](/gdscript/api/easing/).
+2. **React.** [Callbacks](/gdscript/api/callbacks/) run at fixed points of each playback.
+3. **Start.** [Starting playback](/gdscript/api/start/) snapshots the definition and returns a [handle](/gdscript/api/handles/).
+4. **Await.** `end` resumes with the [reason](/gdscript/api/handles/#tweensreason) playback ended.
+
+</Moves>
+
+## Find a page
+
+<CardGrid>
+<Card title="Describe" icon="pencil">
+
+- [Definitions](/gdscript/api/definitions/): factories and `with_*()`
+- [Endpoints & variations](/gdscript/api/endpoints/): `from_value`, `to_value`, `by_value`
+- [Timing](/gdscript/api/timing/): `duration`, `repeats`, `Tweens.Fill`
+- [Callbacks](/gdscript/api/callbacks/): `on_add` through `on_finally`
+
+</Card>
+<Card title="Shape" icon="analytics">
+
+- [Easing](/gdscript/api/easing/): `In`, `Out`, `BlendType`, curves
+- [Effects](/gdscript/api/effects/): punch, shake, and breathe
+
+</Card>
+<Card title="Play" icon="rocket">
+
+- [Starting playback](/gdscript/api/start/): `Tweens.play()`, options
+- [Handles](/gdscript/api/handles/): `TweensGdHandle`, `Tweens.Reason`
+- [Groups](/gdscript/api/groups/): parallel steps
+- [Chains](/gdscript/api/chains/): linked timelines
+
+</Card>
+<Card title="Extend" icon="puzzle">
+
+- [Adapters](/gdscript/api/custom/): `TweensGdAdapter`
+- [Scheduler](/gdscript/api/scheduler/): `TweensGdScheduler`
+- [Helper catalog](/gdscript/nodes/): every named helper
+
+</Card>
+</CardGrid>
+
+## Coming from Godot's Tween
+
+Both blink a sprite out three times:
+
+<Compare>
+
+```gdscript title="Godot's Tween"
+var tween := sprite.create_tween().set_loops(3)
+tween.tween_property(sprite, "modulate:a", 0.0, 0.2).from(1.0)
+```
+
+```gdscript title="tweens.gd"
+var blink := Tweens.modulate_alpha(0.0, 0.2).with_from(1.0).with_repeats(2)
+
+Tweens.play(sprite, blink)
+```
+
+</Compare>
+
+| Godot's `Tween` | tweens.gd |
+| --- | --- |
+| `tween_property(...)` | A [definition](/gdscript/api/definitions/), started with `Tweens.play(node, definition)` |
+| `from(value)`, `as_relative()` | [`from_value`](/gdscript/api/endpoints/#from-value), [`by_value`](/gdscript/api/endpoints/#by-value) |
+| `set_trans(...)`, `set_ease(...)` | One [`ease`](/gdscript/api/easing/#ease), such as `Out.CUBIC` |
+| `set_delay(seconds)` | [`delay`](/gdscript/api/timing/#delay) |
+| `set_loops(count)` | [`repeats`](/gdscript/api/timing/#repeats), which counts cycles after the first: `set_loops(3)` is `repeats = 2`, and `set_loops()` is `Tweens.INFINITE` |
+| A second tween back to the start | [`ping_pong`](/gdscript/api/timing/#ping-pong) |
+| `set_parallel()`, `parallel()` | `Tweens.play_all(node, [...])`, or [`Tweens.group()`](/gdscript/api/groups/) |
+| Tweeners in sequence, `tween_interval(seconds)` | [`Tweens.chain(node, [...])`](/gdscript/api/chains/), with a `delay` on the next entry |
+| `tween_callback(...)` | A [callback](/gdscript/api/callbacks/), such as `on_end` |
+| `tween_method(...)` | `Tweens.value()` and the other [callback values](/gdscript/nodes/values/) |
+| `finished` signal | `await handle.end`, which also resumes when playback stops early |
+| `pause()`, `play()`, `kill()` | `pause()`, `resume()`, `cancel()` |
+| `set_process_mode`, `set_pause_mode`, `set_ignore_time_scale` | [`Tweens.playback_options()`](/gdscript/api/start/#playback-options) |
+| `bind_node(node)` | The node you start on, or a resource tween's [owner](/gdscript/api/start/#owners) |
+
+## Differences from C#
+
+Both implementations share their timing, easing, grouping, and lifetime rules, and shared fixtures test both. The differences come from the languages:
+
+| Area | C# | GDScript |
+| --- | --- | --- |
+| Names | PascalCase: `From`, `To`, `By` | snake_case: `from_value`, `to_value`, `by_value` |
+| Starts | `node.Tween(definition)`, `node.Tween(a, b)` | `Tweens.play(node, definition)`, `Tweens.play_all(node, [a, b])` |
+| Definitions | Immutable values, varied with `with` | Mutable objects, varied with `with_*()` copies |
+| Type checks | Generic `TweenInstance<TTarget, TValue>`, checked by the compiler | Target class and value type checked when playback starts |
+| Failures | Awaiting faults with an exception; `Error` holds it | Awaiting `end` returns `FAILED`; `error` holds a message |
+| Script errors | Exceptions from callbacks and setters fault the tween | Detected problems become `FAILED`; other errors stay Godot script errors |
+| Integer values | Saturate at 32-bit limits | Saturate at signed 64-bit limits; shader integers stay 32-bit |
+| Callbacks | Synchronous | Synchronous; await `end` from a separate coroutine instead of inside one |
+
+See the [C# core API](/csharp/api/) for its entry points, and [compatibility](/compatibility/) for validated platforms.

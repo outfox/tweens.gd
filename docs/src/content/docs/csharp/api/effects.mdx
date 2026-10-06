@@ -1,0 +1,105 @@
+---
+title: Effects
+description: The C# Tweens.FX factories for punch, shake, and breathing, their parameters, and how to sample per-axis and rotation effects.
+tableOfContents: true
+---
+
+import Variants from '../../../../components/Variants.astro';
+
+`Tweens.FX` builds deterministic functions of progress for impacts, jitter, and pulses. A scalar function goes straight into `EaseFunction`, and the tween supplies duration and playback. [Effects](/csharp/effects/) introduces them.
+
+```csharp
+var recoil = new Tweens.Position2D
+{
+    By = new Vector2(9, 5),
+    Duration = 0.4,
+    EaseFunction = Tweens.FX.Punch(frequency: 6, decay: 2),
+};
+```
+
+The sprite moves along `By` and returns to its start. `By` sets the strength, so the factory's amplitude stays at 1.
+
+## Scalar factories
+
+Each returns a `Func<float, float>`.
+
+| Factory | Shape |
+| --- | --- |
+| `Punch(frequency = 6, amplitude = 1, decay = 2, phase = 0, attack = 0)` | Damped sine; starts and ends at zero |
+| `Shake(frequency = 12, amplitude = 1, seed = 0, offset = 0, decay = 2, attack = 0.1)` | Smooth seeded noise under an envelope; ends at zero |
+| `Breathe(frequency = 1, amplitude = 1, phase = 0)` | Raised cosine from zero to the amplitude and back |
+| `Decay(power = 2)` | Envelope `(1 − t)^power` |
+| `AttackRelease(attack = 0.1, decay = 2)` | Envelope that rises over `attack`, then releases |
+
+## Per-axis factories
+
+Each family has a `2D`, a `3D`, and a `Quaternion` version, returning a `Vector2`, `Vector3`, or `Quaternion` offset. `amplitude` comes first and is required; the rest default as in the scalar version.
+
+| Factory | Parameters after `amplitude` |
+| --- | --- |
+| `Punch2D`, `Punch3D`, `PunchQuaternion` | `frequency`, `decay`, `phase`, `attack` |
+| `Shake2D`, `Shake3D`, `ShakeQuaternion` | `frequency`, `seed`, `offset`, `decay`, `attack` |
+| `Breathe2D`, `Breathe3D`, `BreatheQuaternion` | `frequency`, `phase` |
+
+- `amplitude`, `frequency`, `phase`, and `offset` are per axis: `Vector2` for 2D, `Vector3` for 3D and quaternions.
+- Each axis computes amplitude × envelope × signal with its own frequency and phase or offset.
+- Shake's default offsets, `(0, 101.37)` and `(0, 101.37, 203.71)`, give each axis its own noise. Equal frequencies and offsets give the same path.
+- A quaternion amplitude holds rotation-vector components in radians. Each sample converts to a unit quaternion; identity is the neutral offset.
+
+## Parameters
+
+| Parameter | Meaning |
+| --- | --- |
+| `frequency` | Cycles per tween duration, not per second; for Shake, noise lattice intervals. Multiply a rate per second by the duration. Must not be negative |
+| `amplitude` | Scales the output. Signed; zero locks that axis |
+| `phase` | Where the cycle starts, in cycles; not a time delay |
+| `offset` | Shake's starting noise coordinate |
+| `seed` | Shake's noise pattern; reuse it to reproduce a shape |
+| `decay` | Release exponent; higher fades faster. Must be positive |
+| `attack` | Fraction of the duration spent rising to full amplitude, in `[0, 1)`. Positive attack ramps up quintically; zero starts at full amplitude |
+
+## Sampling offsets
+
+Per-axis functions return offsets, so they can't go in `EaseFunction`. Sample them in a callback value tween, or apply a rotation as `baseline * sample(t)` in a custom interpolator:
+
+<Variants labels={['Offset', 'Rotation']} label="Effect">
+
+```csharp
+// A dedicated visual child keeps gameplay movement on its own transform.
+var rest = sprite.Position;
+var sample = Tweens.FX.Shake2D(
+    amplitude: new Vector2(12, 6),
+    frequency: new Vector2(10, 14),
+    seed: 123, offset: new Vector2(0.3f, 100.7f));
+sprite.Tween(new Tweens.Float
+{
+    From = 0, To = 1, Duration = 0.4,
+    OnUpdate = (_, t) => sprite.Position = rest + sample(t),
+    OnFinally = _ =>
+    {
+        if (GodotObject.IsInstanceValid(sprite)) sprite.Position = rest;
+    },
+});
+```
+
+```csharp
+var rotation = Tweens.FX.PunchQuaternion(new Vector3(0.1f, 0.2f, 0));
+mesh.Tween(new Tweens.Property<Node3D, Quaternion>(
+    target => target.Quaternion,
+    (target, value) => target.Quaternion = value,
+    (from, _, t) => (from * rotation(t)).Normalized())
+{
+    Duration = 0.4,
+});
+```
+
+</Variants>
+
+## Rules
+
+- Factories capture their settings and use no mutable random generator or native noise, so a sample is the same regardless of call order or frame rate. Reuse a function between starts; create another with a different seed for another pattern.
+- Sampling clamps progress to `[0, 1]`. Invalid parameters or non-finite progress throw `ArgumentOutOfRangeException`.
+- Punch and Shake end exactly at zero. Punch starts at zero when its phase is zero; Shake with zero attack can start displaced. Breathe with a whole-number frequency and zero phase returns to zero.
+- An effect is a function, not a controller: cancelling keeps its last sample. Restore the baseline in `OnFinally`, and cancel a running effect on that node before starting another.
+- `By` still accumulates across repeats. For a repeated return-to-rest effect, use a callback value or custom property tween.
+- Effects keep their own pacing; `Skew` and `Weks` don't apply.

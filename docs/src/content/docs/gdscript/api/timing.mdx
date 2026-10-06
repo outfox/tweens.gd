@@ -1,0 +1,72 @@
+---
+title: Timing
+description: Duration, delay, offset, repeats, ping-pong, intervals, and fill, which place a GDScript tween in time.
+tableOfContents: true
+---
+
+import Timeline from '../../../../components/Timeline.astro';
+
+Timing places a tween in time: how long each leg takes, when the first one starts, how often it repeats, and what the property shows before and after. [Loops & delays](/gdscript/loops/) introduces it.
+
+## Members
+
+| Field | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `duration` | `float` | `0.0` | Seconds per leg; zero completes on the first eligible update |
+| `delay` | `float` | `0.0` | Signed wait before the first leg; a negative delay pre-rolls |
+| `offset` | `float` | `0.0` | Start this far into the first forward leg, between zero and `duration`; the delay still comes first |
+| `repeats` | `int` | `0` | Cycles after the first; `Tweens.INFINITE` (-1) repeats until cancelled |
+| `ping_pong` | `bool` | `false` | Each cycle runs forward, then back |
+| `ping_pong_interval` | `float` | `0.0` | Wait at the far endpoint before returning |
+| `repeat_interval` | `float` | `0.0` | Wait between cycles, never after the last |
+| `fill` | `Tweens.Fill` | `RETAIN_FINAL_VALUE` | What the property shows during the delay and after [natural completion](#fill-and-restoration) |
+
+`factor_duration`, `delta_duration`, `factor_delay`, and `delta_delay` adjust `duration` and `delay` for each start; see [variations](/gdscript/api/endpoints/#variations).
+
+Times are in seconds, as GDScript `float` values. The helper factories set `duration` and `delay` from their second and fourth arguments, as in `Tweens.position_2d_y(to, 0.8, InOut.SINE, 0.2)`.
+
+## Cycles
+
+A cycle is one leg, or a forward leg, the ping-pong interval, and a return leg. Repeat intervals separate cycles:
+
+```gdscript
+var bob := Tweens.position_2d_y()
+bob.by_value = -20.0
+bob.duration = 0.5
+bob.ping_pong = true
+bob.ping_pong_interval = 0.2
+bob.repeat_interval = 0.3
+bob.repeats = 1
+```
+
+<Timeline
+	label="Two 1.2-second cycles and one 0.3-second repeat interval: 2.7 seconds in all"
+	rows={[
+		{ label: 'Cycle 1', segments: [{ from: 0, to: 0.5 }, { from: 0.5, to: 0.7, kind: 'wait' }, { from: 0.7, to: 1.2, kind: 'back' }] },
+		{ label: 'Interval', segments: [{ from: 1.2, to: 1.5, kind: 'wait' }] },
+		{ label: 'Cycle 2', segments: [{ from: 1.5, to: 2.0 }, { from: 2.0, to: 2.2, kind: 'wait' }, { from: 2.2, to: 2.7, kind: 'back' }] },
+	]}
+/>
+
+A ping-pong tween ends at its starting endpoint, so that endpoint is its final value.
+
+## Fill and restoration
+
+| `Tweens.Fill` | During the initial delay | On natural completion |
+| --- | --- | --- |
+| `RETAIN_FINAL_VALUE` | Leave the property alone | Keep the final value |
+| `APPLY_FROM_DURING_DELAY` | Apply `from_value` | Restore the captured initial value |
+| `BOTH` | Apply `from_value` | Keep the final value |
+| `NONE` | Leave the property alone | Restore the captured initial value |
+
+- `RETAIN_FINAL_VALUE` is the default. `BOTH` suits staggered entrances: items still waiting show their `from_value`.
+- Cancelling always keeps the latest value, whatever the fill mode.
+- Restoring a shader uniform also restores whether the material had an explicit override; see the [material reference](/gdscript/nodes/materials/).
+
+## Rules
+
+- Non-finite times, and negative durations, intervals, or offsets, reject the start: `Tweens.play()` returns a handle whose `end` reports `FAILED`.
+- An infinitely repeating cycle that takes zero time is rejected.
+- A long frame advances to the correct phase, even across several cycles, without losing time at boundaries. It doesn't replay the callbacks of the cycles it skipped.
+- In a [Chain](/gdscript/api/chains/#timeline), each entry's delay counts from the end of the entry before it.
+- The clock that advances a tween, and whether time scale applies, is chosen when it starts; see [playback options](/gdscript/api/start/#playback-options).

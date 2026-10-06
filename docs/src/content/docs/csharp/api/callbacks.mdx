@@ -1,0 +1,51 @@
+---
+title: Callbacks
+description: The callbacks a C# definition runs during playback, the order they run in, and when they are skipped.
+tableOfContents: true
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Callbacks are definition members that run synchronously at fixed points of each playback. [Control & completion](/csharp/playback/#callbacks) shows one in use.
+
+## Members
+
+Each callback receives the playback's `TweenInstance<TTarget, TValue>` handle; `OnUpdate` also receives the value it wrote. All default to `null`.
+
+| Member | Runs |
+| --- | --- |
+| `OnAdd` | At activation, after the start value is captured |
+| `OnStart` | Once, when the delay ends and playback begins |
+| `OnUpdate` | After each write |
+| `OnEnd` | On natural completion |
+| `OnCancel` | When playback stops early: cancelled, target freed, owner exited, or runner disposed |
+| `OnFinally` | Last, in every case, including faults |
+
+## Suppressing callbacks
+
+When ending callbacks touch the target, skip them once it's gone:
+
+| Member | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `SuppressCallbacksWhenTargetInvalid` | `bool` | `false` | Skip `OnEnd`, `OnCancel`, and `OnFinally` when the target or owner is gone, or playback ended with `TargetFreed` or `OwnerExited` |
+
+## Callback order
+
+<Steps>
+
+1. `OnAdd`, at activation after capture.
+2. `OnUpdate` with `From`, only when the [fill mode](/csharp/api/timing/#fill-and-restoration) applies it during the delay.
+3. `OnStart`, once, when the delay ends and playback begins.
+4. `OnUpdate` at each sampled timeline boundary and eligible update, plus once more when completion restores the initial value.
+5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.
+6. `OnFinally`, in every case.
+
+</Steps>
+
+## Rules
+
+- The handle's terminal state is visible before the terminal callbacks run, and each runs at most once.
+- A tween cancelled before activation, or whose preparation failed, runs no callbacks.
+- A long frame doesn't replay the callbacks of the cycles it skipped.
+- An exception in a callback [faults](/csharp/api/handles/#errors) the tween; `OnFinally` still runs.
+- Tweens started in a callback or after an await are independent: they begin on the next eligible update, with no inherited frame time. A [Chain](/csharp/api/chains/) links timing instead.

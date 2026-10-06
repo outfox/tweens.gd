@@ -1,33 +1,44 @@
 ---
-title: Endpoints and variations
-description: Where a tween starts and ends, the relative By offset, and the factors, deltas, and skew/weks that derive variants.
+title: Endpoints & variations
+description: Where a GDScript tween starts and ends, the forms an endpoint accepts, relative by_value offsets, and the factors and deltas that derive variants.
 tableOfContents: true
 ---
 
-Where a tween starts and ends, and how a variant derives from those values.
+Endpoints say where a tween goes. Variations derive a stronger, slower, or later version from a definition's own values each time it starts. [Reusable definitions](/gdscript/definitions/#choose-the-endpoints) and [variations](/gdscript/variations/) introduce both.
 
 ## Endpoints
 
-If a definition has no `from_value` or `to_value`, it uses the property's value
-when the tween starts for that endpoint. See
-[reusable definitions](/gdscript/definitions/#leave-out-from_value-or-to_value).
-An array of numbers can stand in for a vector or color endpoint, delta, or offset:
-`[400, 180]` for a `Vector2`, and `[1, 0.5, 0]` or `[1, 0.5, 0, 0.8]` for a
-`Color`. The start converts it to the captured value's type; an array that
-doesn't match rejects the start.
-
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `from_value` | `Variant` | `null` | Start value |
-| `to_value` | `Variant` | `null` | End value |
-| `by_value` | `Variant` | `null` | [Offset](/gdscript/definitions/#move-by-an-offset-with-by_value) instead of `to_value`, added on top of other changes to the property while it plays |
-| `initial_value` | `Variant` | `0.0` | Start value of a callback-only tween, which has no property to read |
+| `from_value` | `Variant` | `null` | Start value; `null` uses the property's value at start |
+| `to_value` | `Variant` | `null` | End value; `null` uses the property's value at start |
+| `by_value` | `Variant` | `null` | Offset to add instead of a `to_value`, on top of other changes to the property while it plays |
+| `initial_value` | `Variant` | `0.0` | Start value of a callback-only definition, which has no property to read |
+
+## Endpoint forms
+
+An array of numbers can stand in for a vector or color endpoint, delta, or offset. The start converts it to the captured value's type:
+
+| Endpoint | Array | Example |
+| --- | --- | --- |
+| `Vector2`, `Vector3`, `Vector4` | One number per component | `[400, 180]` |
+| `Color` | Three or four components | `[1, 0.5, 0]`, `[1, 0.5, 0, 0.8]` |
+
+- Three color components leave the alpha at 1.
+- An array that doesn't match the captured type rejects the start.
+- Uniform scales and named colors take explicit values, such as `Vector2.ONE * 1.2` and `Color("tomato")`.
+
+## Relative offsets
+
+- Set `to_value` or `by_value`, not both. A `to_value` tween on the same property still sets it outright.
+- With `from_value`, the tween runs from `from_value` to `from_value` plus `by_value`, like a `to_value` tween.
+- Each repeat adds `by_value` again, so `repeats = 2` moves three times as far. A ping-pong cycle comes back to where it started.
+- A `fill` that doesn't retain the final value takes the offset back out at the end, and keeps other changes.
+- A quaternion offset rotates about the node's own axes, so the tween ends at `start * by_value`.
 
 ## Variations
 
-These derive a variant from a definition's values instead of replacing them:
-when the tween starts, each value becomes factor × value + delta. See
-[variations](/gdscript/variations/).
+When a tween starts, each of these values becomes factor × value + delta:
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
@@ -37,65 +48,22 @@ when the tween starts, each value becomes factor × value + delta. See
 | `delta_duration` | `float` | `0.0` | Then add these seconds |
 | `factor_delay` | `float` | `1.0` | Multiply `delay` |
 | `delta_delay` | `float` | `0.0` | Then add these seconds, as in a per-start stagger |
-| `skew` | `float` | `0.5` | In/Out split in `[0, 1]`: 0 front-loads, 0.5 balances, 1 rear-loads |
-| `weks` | `float` | `0.5` | Independent return split in `[0, 1]`; set to `1 - skew` to retrace |
 
-## Relative offsets
+With `to_value` left out, `factor_to` scales the value captured at the start.
 
-- Set `to_value` or `by_value`, not both. A `to_value` tween on the same
-  property still sets it outright.
-- With `from_value`, the tween runs from `from_value` to `from_value` plus
-  `by_value`, like a `to_value` tween.
-- Each repeat adds `by_value` again, so `repeats = 2` moves three times as far.
-  A ping-pong cycle comes back to where it started.
-- A `fill` that doesn't retain the final value takes the offset back out at the
-  end, and keeps other changes.
-- A quaternion offset rotates about the node's own axes, so the tween ends at
-  `start * by_value`.
-- Callback-only definitions add `by_value` to `initial_value`.
+### Rules
+
+- Factors and deltas apply once, when the tween starts. A non-retaining `fill` restores the captured value, not an adjusted one.
+- For a quaternion, the factor scales the rotation angle and the delta rotates about the node's own axes.
+- `factor_by` and `delta_by` need a `by_value`. `factor_to` and `delta_to` don't apply to a `by_value` tween. Both combinations are rejected.
+- Adjusting `from_value` fixes the start of a `by_value` tween, as an explicit `from_value` does.
+- The adjusted duration and delay must not be negative, and `offset` must fit within the adjusted duration.
+- Factors and deltas must be finite. Invalid values reject the start.
 
 ## Callback endpoints
 
-Callback-only definitions, such as `Tweens.value()` and `Tweens.float_value()`,
-animate no property.
-With no `from_value` or `to_value`, they use `initial_value` for that endpoint:
-the `from` you pass to `Tweens.value()`, or zero, transparent black, or identity
-for the named value helpers.
+Callback-only definitions, such as `Tweens.value()` and `Tweens.float_value()`, animate no property; `on_update` receives each value. With no `from_value` or `to_value`, they use `initial_value` for that endpoint: the `from` passed to `Tweens.value()`, or zero, transparent black, or identity for the named value helpers. They add `by_value` to `initial_value`. The [catalog](/gdscript/nodes/values/) lists them.
 
 ## When tweens compete
 
-Two tweens may animate the same property. Tweens write in the order they were
-started, so each update the one started last wins. Component paths, such as
-`position:x` or `modulate:a`, read the other components on every write, so an x
-tween and a y tween combine.
-
-## Change the pacing with `skew`
-
-`skew` moves the In/Out split linearly from 0 to 1. The default, 0.5,
-preserves the balanced pair. At 0, the Out profile fills the duration; at 1,
-the In profile does. Intermediate values move the split in both time and value.
-The blend window follows it and shrinks near either endpoint.
-
-`weks` independently controls the ping-pong return: 0 front-loads the return,
-0.5 preserves it, and 1 rear-loads it. To retrace the outward curve, set
-`weks = 1 - skew`. Duration, intervals, and raw progress stay unchanged.
-
-These settings apply to paired In/Out flags. A single leg, legacy ease,
-custom function, or Godot Curve retains its authored profile. The numbered
-overshoot and rebound percentages describe the balanced pair and solo legs;
-moving the split also redistributes the paired legs' value ranges.
-
-## Rules
-
-- Factors and deltas apply once, when the tween starts. A non-retaining `fill`
-  restores the captured value, not an adjusted one.
-- For a quaternion, the factor scales the rotation angle and the delta rotates
-  about the node's own axes.
-- `factor_by` and `delta_by` need a `by_value`. `factor_to` and `delta_to` don't
-  apply with `by_value`. Both combinations are rejected.
-- Adjusting `from_value` fixes the start of a `by_value` tween, as an explicit
-  `from_value` does.
-- The adjusted duration and delay must not be negative, and `offset` must fit
-  within the adjusted duration.
-- Factors, deltas, `skew`, and `weks` must be finite. Both splits must be
-  in `[0, 1]`, even without ping-pong. Invalid values reject the start.
+Two tweens may animate the same property. Tweens write in the order they started, so each update the one started last wins. Component paths, such as `position:x` or `modulate:a`, read the other components on every write, so an x tween and a y tween combine.

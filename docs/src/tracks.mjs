@@ -50,20 +50,21 @@ export const PATH = [
 		art: 'catalog',
 		collapsed: true,
 		pages: [
+			// Core API pages follow a tween's life: describe it, shape it, start it, control it, then extend the library.
 			{ label: 'Core API', pages: [
 				{ slug: 'api', label: 'Overview' },
-				{ slug: 'api/definitions', label: 'Creating definitions' },
+				{ slug: 'api/definitions', label: 'Definitions' },
 				{ slug: 'api/endpoints', label: 'Endpoints & variations' },
-				{ slug: 'api/timing', label: 'Timing & easing' },
-				{ slug: 'api/easing', label: 'Easing reference' },
-				{ slug: 'api/effects', label: 'Effect factories' },
-				{ slug: 'api/modes', label: 'Modes & callbacks' },
-				{ slug: 'api/enums', label: 'Enums', gdscript: 'Constants' },
+				{ slug: 'api/timing', label: 'Timing' },
+				{ slug: 'api/callbacks', label: 'Callbacks' },
+				{ slug: 'api/easing', label: 'Easing' },
+				{ slug: 'api/effects', label: 'Effects' },
+				{ slug: 'api/start', label: 'Starting playback' },
 				{ slug: 'api/handles', label: 'Handles' },
 				{ slug: 'api/groups', label: 'Groups' },
 				{ slug: 'api/chains', label: 'Chains' },
-				{ slug: 'api/scheduler', label: 'Scheduler' },
 				{ slug: 'api/custom', label: 'Custom definitions', gdscript: 'Adapters' },
+				{ slug: 'api/scheduler', label: 'Scheduler' },
 			] },
 			{ label: 'Property catalog', pages: [
 				{ slug: 'nodes', label: 'Overview' },
@@ -141,6 +142,11 @@ export const redirects = {
 	'/concepts/easing': '/easings/',
 	'/concepts/timing': '/csharp/loops/',
 	'/concepts/lifetime': '/csharp/lifetime/',
+	// Playback options moved to Starting playback, callbacks to their own page, and each enum to the page it belongs to.
+	'/csharp/api/modes': '/csharp/api/start/',
+	'/gdscript/api/modes': '/gdscript/api/start/',
+	'/csharp/api/enums': '/csharp/api/',
+	'/gdscript/api/enums': '/gdscript/api/',
 	'/csharp': `/csharp/${firstSlug}/`,
 	'/gdscript': `/gdscript/${firstSlug}/`,
 };

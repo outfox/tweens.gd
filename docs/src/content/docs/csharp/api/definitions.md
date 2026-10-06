@@ -1,67 +1,43 @@
 ---
-title: Creating definitions
-description: The built-in C# definition structs, their constructors, shared TweenOptions, and the interfaces that start them.
+title: Definitions
+description: The built-in C# definition structs, their constructors, shared TweenOptions, and what each start copies.
 tableOfContents: true
 ---
 
-A definition describes one motion. The built-in ones are `readonly record struct`
-values in the root `Tweens` namespace, one per property; the
-[node and value catalog](/csharp/nodes/) lists them. Store them in readonly fields
-and vary a copy with `with` when you start one (see
-[reusable definitions](/csharp/definitions/)):
+A definition is an immutable description of one motion: a `readonly record struct` in the global `Tweens` namespace, one per property. Vary a copy with `with`; [reusable definitions](/csharp/definitions/) shows the pattern.
 
-```csharp title="Trail.cs"
-public partial class Trail : PathFollow2D
-{
-    static readonly Tweens.PathFollow2DVOffset Offset = new() { To = 20 };
-
-    public void Drift(double seconds, double delay) =>
-        this.Tween(Offset with { Duration = seconds, Delay = delay });
-}
+```csharp
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic); // Constructor
+var pulse = new Tweens.Scale2D(1.2, 0.2) { PingPong = true };   // Initializer
+var slow = arrive with { Duration = 1.2 };                       // Copy
 ```
 
 ## Constructors
 
-Each definition's constructor takes the endpoint and common timing. The endpoint
-is required and never `null`; the timing after it is optional:
-
 | Constructor | Arguments |
 | --- | --- |
-| `new Tweens.Position2D(to, duration, ease, delay)` and the other catalog definitions | `To`, `Duration`, `Ease`, `Delay` |
-| `new Tweens.ShaderParameter<TValue>(parameter, to, duration, ease, delay)` and the instance uniform definitions | The uniform name, then the same four |
-| `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations, then the same four |
+| `new Tweens.Position2D(to, duration, ease, delay)` | The endpoint, then optional timing; every [catalog](/csharp/nodes/) definition takes these |
+| `new Tweens.ShaderParameter<TValue>(parameter, to, duration, ease, delay)` | The uniform name first; the instance uniform definitions take the same |
+| `new Tweens.Property<TTarget, TValue>(getter, setter, interpolate, to, duration, ease, delay)` | The property operations first; see [custom definitions](/csharp/api/custom/) |
 
-Set anything else in an initializer after the arguments:
-`new Tweens.Scale2D(Vector2.One, 0.2) { Fill = FillMode.Both }`. To use the
-property's value at start instead, leave `To` out:
-`new Tweens.Position2D { Duration = 0.4 }`,
-or `new Tweens.ShaderParameter<float>("dissolve") { By = 0.5f }`.
+The endpoint argument is never `null`. To use the property's value at start instead, leave the arguments out and set members in an initializer: `new Tweens.Position2D { Duration = 0.4 }`. The [endpoint page](/csharp/api/endpoints/#endpoint-forms) lists the tuple, array, and color forms an endpoint also accepts.
 
-### Shorter endpoints
+## Members
 
-Built-in definitions and shorthand methods also take these forms. Components are
-`double`, so they need no `f` suffix:
+Every definition has the same members, listed by role:
 
-| Endpoint | Also takes | Example |
+- [Endpoints & variations](/csharp/api/endpoints/): `From`, `To`, `By`, and their factors and deltas.
+- [Timing](/csharp/api/timing/): `Duration`, `Delay`, `Offset`, `Repeats`, `PingPong`, intervals, and `Fill`.
+- [Easing](/csharp/api/easing/): `Ease`, `BlendType`, `Blend`, `Skew`, `Weks`, `EaseFunction`, and `Curve`.
+- [Callbacks](/csharp/api/callbacks/): `OnAdd` through `OnFinally`, and `SuppressCallbacksWhenTargetInvalid`.
+
+| Member | Type | Meaning |
 | --- | --- | --- |
-| `float` | Any number | `new Tweens.ModulateAlpha(0.5, 0.2)` |
-| `Vector2`, `Vector3`, `Vector4` | A tuple or collection of components | `(400, 180)`, `[400, 180]` |
-| `Vector2`, `Vector3` scales | One number for every axis | `new Tweens.Scale2D(1.2, 0.2)` |
-| `Color` | Three or four components, an HTML code, or a color name | `(1, 0.5, 0)`, `[1, 0.5, 0, 0.8]`, `"#ff8800"`, `"tomato"` |
-
-Three color components leave the alpha at 1. A collection with the wrong number
-of components throws an `ArgumentException`.
+| `Options` | `TweenOptions` | Every timing and easing member, `SuppressCallbacksWhenTargetInvalid`, and the duration and delay factors, as one value |
 
 ## Shared options
 
-`TweenOptions` is a readonly record struct that holds the
-[timing, easing](/csharp/api/timing/), and [mode](/csharp/api/modes/) members,
-plus `Skew`, `Weks`, `FactorDuration`, and `DeltaDuration`. Assign it to a
-definition's `Options`, or pass it to a shorthand method. A definition's flat
-members, such as `Duration`, read and write that same value.
-
-To override one setting, list it after `Options`. Shorthand methods accept
-options too:
+`TweenOptions` is a readonly record struct holding the members of `Options`. A definition's flat members, such as `Duration`, read and write that same value. Assign one to several definitions, list overrides after it, or pass it to a [shorthand method](/csharp/api/start/#shorthand-methods):
 
 ```csharp
 var snappy = new TweenOptions { Duration = 0.25, Ease = Out.Back };
@@ -70,51 +46,20 @@ sprite.TweenPosition((400, 180), 0.5, snappy);
 ```
 
 :::caution[Order matters]
-- Put `Options` first in an initializer. Assigning it replaces every timing
-  setting listed before it, including a duration or ease passed to the
-  constructor.
-- Declare shared options above the static definitions that use them. Static
-  fields initialize top to bottom, so a definition declared first copies empty
-  options.
+- Put `Options` first in an initializer. Assigning it replaces every timing setting listed before it, including a duration or ease passed to the constructor.
+- Declare shared options above the static definitions that use them. Static fields initialize top to bottom, so a definition declared first copies empty options.
 :::
 
 ## Interfaces
 
-`ITweenDefinition<TTarget, TValue>` connects definitions to typed playback;
-`ITweenDefinition<TTarget>` lets groups mix value types. `TTarget` is a class and
-`TValue` is a struct. See [custom properties](/csharp/custom-properties/) to implement
-property operations or per-playback bindings.
-
-## Members
-
-Every definition has the same members, listed by role:
-
-- [Endpoints and variations](/csharp/api/endpoints/): `From`, `To`, `By`, and the
-  factors, deltas, and Skew/Weks that derive variants.
-- [Timing and easing](/csharp/api/timing/): `Duration`, `Delay`, `Repeats`, `Fill`,
-  `Ease`, and the rest of the timeline.
-- [Modes and callbacks](/csharp/api/modes/): process, time scale, and pause modes,
-  and `OnAdd` through `OnFinally`.
-
-## Definition or shorthand?
-
-Every built-in definition also has a typed shorthand method. Both return the same
-kind of handle.
-
-| | Definition | Shorthand |
-| --- | --- | --- |
-| Call | `sprite.Tween(new Tweens.Position2D { ... })` | `sprite.TweenPosition((400, 180), 0.5, Out.Cubic)` |
-| Best for | Motion you name, reuse, or tune | One-off motion next to game logic |
-| Configure with | Constructor arguments, an initializer, and `with` | An ease and delay, a callback such as `o => o.Ease = ...`, or a `TweenOptions` value |
-
-A shorthand call's duration argument wins over the duration in a `TweenOptions`
-value. Reusable configure callbacks take a `TweenOptionsBuilder`.
+| Member | Meaning |
+| --- | --- |
+| `ITweenDefinition<TTarget, TValue>` | Connects a definition to typed playback; `TTarget` is a class and `TValue` a struct |
+| `ITweenDefinition<TTarget>` | Lets [groups](/csharp/api/groups/) and [Chains](/csharp/api/chains/) mix value types; contravariant in `TTarget` |
 
 ## What each start copies
 
-Starting a definition snapshots its configuration. Preparation and property capture happen on the first eligible update, before any positive delay.
-Later `with` copies never reach running playback. Delegates and the objects they
-capture stay shared, but Godot `Curve` resources are duplicated for each playback.
-
-A `with` copy allocates nothing. Starting boxes the definition once and allocates
-its playback state. After that, nothing is copied per frame.
+- Starting snapshots the configuration. Later `with` copies never reach running playback.
+- Preparation and property capture happen on the first eligible update, before any positive delay.
+- Delegates and the objects they capture stay shared; Godot `Curve` resources are duplicated for each playback.
+- A `with` copy allocates nothing. Starting boxes the definition once and allocates its playback state; nothing is copied per frame.

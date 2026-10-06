@@ -1,0 +1,55 @@
+---
+title: Callbacks
+description: The callbacks a GDScript definition runs during playback, the order they run in, and when they are skipped.
+tableOfContents: true
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Callbacks are definition fields holding Callables that run synchronously at fixed points of each playback. [Control & completion](/gdscript/playback/#callbacks) shows one in use.
+
+## Members
+
+Each callback receives the playback's `TweensGdHandle`; `on_update` receives `(handle, value)`. All default to an empty `Callable()`, and each has a `with_*()` copy method, such as `with_on_end()`.
+
+| Field | Runs |
+| --- | --- |
+| `on_add` | At activation, after the start value is captured |
+| `on_start` | Once, when the delay ends and playback begins |
+| `on_update` | After each write |
+| `on_end` | On natural completion |
+| `on_cancel` | When playback stops early: cancelled, target freed, owner exited, or runner disposed |
+| `on_finally` | Last, in every case, including failures |
+
+## Suppressing callbacks
+
+When ending callbacks touch the target, skip them once it's gone:
+
+| Field | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `suppress_callbacks_when_target_invalid` | `bool` | `false` | Skip `on_end`, `on_cancel`, and `on_finally` when the target or owner is gone, or playback ended with `TARGET_FREED` or `OWNER_EXITED` |
+
+## Callback order
+
+<Steps>
+
+1. `on_add(handle)`, at activation after capture.
+2. `on_update(handle, value)` with `from_value`, only when the [fill mode](/gdscript/api/timing/#fill-and-restoration) applies it during the delay.
+3. `on_start(handle)`, once, when the delay ends and playback begins.
+4. `on_update(handle, value)` at each sampled timeline boundary and eligible update, plus once more when completion restores the initial value.
+5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback stops early.
+6. `on_finally(handle)`, in every case.
+
+</Steps>
+
+## Rules
+
+- The handle's terminal state is visible inside the terminal callbacks, each runs at most once, and awaiting `end` resumes after them.
+- A tween cancelled before activation, or whose preparation failed, runs no callbacks.
+- A long frame doesn't replay the callbacks of the cycles it skipped.
+- Stale Callables [fail](/gdscript/api/handles/#errors) the tween; `on_finally` still runs. Other errors inside a callback stay Godot script errors.
+- Tweens started in a callback or after an await are independent: they begin on the next eligible update, with no inherited frame time. A [Chain](/gdscript/api/chains/) links timing instead.
+
+:::caution[Don't `await` inside callbacks]
+Callbacks must return before playback continues. Put anything that awaits in a separate coroutine that awaits `end`.
+:::

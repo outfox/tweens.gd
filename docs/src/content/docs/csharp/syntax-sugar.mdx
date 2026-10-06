@@ -53,18 +53,18 @@ All three move to the same position. Structured constructors accept the same for
 <Compare>
 
 ```csharp title="Clean: explicit & readable"
-var motion = new TweenPosition2D
+var motion = new Tweens.Position2D
 {
 	To = new Vector2(400, 180),
-	Duration = 0.6
-}
+	Duration = 0.6,
+};
 
 sprite.Tween(motion);
 ```
 
 ```csharp title="Quick: convenient & concise"
-var motion1 = new TweenPosition2D(new Vector2(400, 180), 0.6);
-var motion2 = new TweenPosition2D((400, 180), 0.6);
+var motion1 = new Tweens.Position2D(new Vector2(400, 180), 0.6);
+var motion2 = new Tweens.Position2D((400, 180), 0.6);
 sprite1.Tween(motion1);
 sprite2.Tween(motion2);
 ```
@@ -99,5 +99,5 @@ Use an initializer on a definition, or a configure callback on a convenience cal
 ```csharp
 var pulse = new Tweens.Scale2D(1.2, 0.2) { PingPong = true };
 sprite.TweenScale(1.2, 0.2, options => options.PingPong = true);
-single.Tween(pulse with { PingPong = false });
+sprite.Tween(pulse with { PingPong = false });
 ```

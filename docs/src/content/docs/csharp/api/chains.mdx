@@ -1,0 +1,106 @@
+---
+title: Chains
+description: Chain, which plays C# definitions in order on one target's timeline, with signed delays, pre-roll, and one controller.
+tableOfContents: true
+---
+
+import Timeline from '../../../../components/Timeline.astro';
+
+A `Chain` plays a flat list of definitions on one target's timeline: each entry starts where the one before it ends, shifted by its own `Delay`. One controller pauses, cancels, and awaits the whole list. [Sequences](/csharp/sequences/) introduces chains.
+
+## Create
+
+| Entry point | Returns | Purpose |
+| --- | --- | --- |
+| `node.Chain(definitions, options)` | `Chain` | Link definitions on a node |
+| `resource.Chain(definitions, owner, options)` | `Chain` | Link definitions on a resource, owned by a node |
+| `scheduler.AddChain(target, definitions, owner, options)` | `Chain` | Link definitions on a [manual scheduler](/csharp/api/scheduler/) |
+
+`definitions` is an `IReadOnlyList<ITweenDefinition<TTarget>>`, so entries can animate different value types, and definitions for a base class of the target are accepted. Callbacks still receive each entry's typed handle. `options` is an optional [`PlaybackOptions`](/csharp/api/start/#playback-options) for the whole chain.
+
+## Control
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `Pause()` | `void` | Pause the whole chain |
+| `Resume()` | `void` | Resume it |
+| `IsPaused` | `bool` | True while paused by `Pause()` |
+| `Cancel()` | `void` | Stop the active entries and discard the pending ones |
+
+## Status
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `IsTerminal` | `bool` | True once the chain has stopped |
+| `IsSettled` | `bool` | True once every callback and release hook has run as well |
+| `CompletionReason` | `Reason?` | The first terminal reason; `null` while running |
+| `Error` | `Exception?` | The detected failure, including aggregated cleanup errors |
+| `Elapsed` | `double` | Visible time consumed so far |
+| `Duration` | `double` | The last scheduled end, clamped at zero |
+| `EntryCount` | `int` | Declared entries |
+| `ActiveCount` | `int` | Entries playing now |
+| `PendingCount` | `int` | Entries not yet activated |
+
+## Awaiting
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `End` | `Task<Reason>` | Completes after every entry, callback, and release hook; faults on a detected exception |
+| `AwaitDecommissionAsync(token)` | `Task<Reason>` | The same wait, but `token` cancels only this wait; playback continues |
+
+## Timeline
+
+A positive delay waits after the preceding entry's end; a negative one starts before it. The next entry follows the overlapped entry's own end, even while an earlier entry is still playing:
+
+```csharp
+var animation = sprite.Chain([
+    new Tweens.Position2DX(100, 1.0),
+    new Tweens.ModulateAlpha(0, 0.2) { Delay = -0.6 },
+    new Tweens.Scale2D(1.2, 0.1),
+]);
+```
+
+<Timeline
+	label="The fade overlaps the move; the scale follows the fade; the chain ends with the move"
+	rows={[
+		{ label: 'Position', segments: [{ from: 0, to: 1 }] },
+		{ label: 'Fade', segments: [{ from: 0.4, to: 0.6 }] },
+		{ label: 'Scale', segments: [{ from: 0.6, to: 0.7 }] },
+	]}
+/>
+
+- An entry captures its start value when it activates, so with a positive delay it captures at the preceding end, then waits.
+- The chain ends when every entry has.
+- Where entries write the same property, the later definition writes last while both are active, and an earlier entry still playing can show again once a later one completes.
+- Each entry keeps its own fill and relative-value behavior.
+- When signed delays reorder starts, an older entry can activate after a later one. Active entries with higher write priority are then sampled again at that time, so their setters and update callbacks can run twice.
+
+## Pre-roll
+
+- A delay that places work before time zero is simulated on the first eligible update: a one-second first entry with `Delay = -0.25` is already a quarter through at time zero.
+- Crossed callbacks run in time order; declaration order breaks ties.
+- The target's value at the earliest activation is the start state. Nothing else is rewound, and callbacks have real side effects.
+- A chain entirely in the past completes on its first eligible update, after its callbacks and cleanup, with a visible duration of zero.
+- Pausing before that update defers all preparation, capture, and replay.
+- A standalone tween takes signed delays too. `Offset` picks progress inside one leg; pre-roll replays crossed history.
+
+## Control and completion
+
+- An active entry's handle, as passed to its callbacks, forwards `Pause()`, `Resume()`, and `Cancel()` to the chain. On an entry that has ended, they do nothing.
+- Pausing inside a callback stops at the current timestamp. `Resume()` finishes that boundary without replaying completed callbacks, and discards the rest of the interrupted frame.
+- A long update can cross several boundaries, calling setters and update callbacks several times.
+- Cancellation, owner exit, or failure stops the active entries and discards the pending ones without preparing them or running their callbacks or release hooks.
+- Check the reason `End` returns when later logic depends on success.
+- One playback policy and one lifetime subscription cover the chain, and its scheduler counts it once in `ActiveCount`.
+- Dropping the reference doesn't stop playback. Settling releases the copied definitions, adapters, and callbacks.
+
+## Limits
+
+- One target and a flat list, though entries may animate different properties and value types on it.
+- Multiple targets, nested chains, explicit parallel steps, and repeating a whole chain aren't supported yet.
+- Only the last entry may repeat infinitely; an entry after an infinite one is rejected.
+- Empty lists, invalid definitions, and schedules that overflow are rejected before playback starts.
+
+{/* Keep links to earlier sections working. */}
+<span id="overlap-and-gaps" />
+<span id="completion-driven-logic" />

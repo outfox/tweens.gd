@@ -1,0 +1,107 @@
+---
+title: Chains
+description: TweensGdChain, which plays GDScript definitions in order on one target's timeline, with signed delays, pre-roll, and one controller.
+tableOfContents: true
+---
+
+import Timeline from '../../../../components/Timeline.astro';
+
+A `TweensGdChain` plays a flat list of definitions on one target's timeline: each entry starts where the one before it ends, shifted by its own `delay`. One controller pauses, cancels, and awaits the whole list. [Sequences](/gdscript/sequences/) introduces chains.
+
+## Create
+
+| Entry point | Returns | Purpose |
+| --- | --- | --- |
+| `Tweens.chain(target, definitions, owner, options)` | `TweensGdChain` | Link definitions on a target |
+| `scheduler.add_chain(target, definitions, owner, options)` | `TweensGdChain` | Link definitions on a [manual scheduler](/gdscript/api/scheduler/) |
+
+`definitions` is a nonempty Array of `TweensGdDefinition` objects, which can animate different value types. Their configuration, adapters, and curves are copied when the chain is created; values are captured as each entry activates. `owner` and `options` follow [`Tweens.play()`](/gdscript/api/start/#start). A rejected chain returns a controller that has already failed.
+
+## Control
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `pause()` | `void` | Pause the whole chain |
+| `resume()` | `void` | Resume it |
+| `is_paused` | `bool` | True while paused by `pause()` |
+| `cancel()` | `void` | Stop the active entries and discard the pending ones |
+
+## Status
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `is_terminal` | `bool` | True once the chain has stopped |
+| `is_settled` | `bool` | True once every callback and release hook has run as well |
+| `completion_reason` | `Tweens.Reason` | The first terminal reason; `-1` while running |
+| `error` | `String` | The detected failures, joined with newlines |
+| `errors` | `Array[String]` | A copy of each entry's errors |
+| `elapsed` | `float` | Visible time consumed so far |
+| `duration` | `float` | The last scheduled end, clamped at zero |
+| `entry_count` | `int` | Declared entries |
+| `active_count` | `int` | Entries playing now |
+| `pending_count` | `int` | Entries not yet activated |
+
+## Awaiting
+
+| Member | Type | Meaning |
+| --- | --- | --- |
+| `end` | `Variant` | Await it directly: the `ended` signal while running, the reason once settled |
+| `wait(cancellation)` | `Tweens.Reason` | Await the reason; the optional [token](/gdscript/api/handles/#tweensgdcancellation) cancels only this wait |
+| `ended(reason)` | signal | Emitted once when the chain ends |
+
+## Timeline
+
+A positive delay waits after the preceding entry's end; a negative one starts before it. The next entry follows the overlapped entry's own end, even while an earlier entry is still playing:
+
+```gdscript
+var animation := Tweens.chain(sprite, [
+	Tweens.position_2d_x(100.0, 1.0),
+	Tweens.modulate_alpha(0.0, 0.2).with_delay(-0.6),
+	Tweens.scale_2d([1.2, 1.2], 0.1),
+])
+```
+
+<Timeline
+	label="The fade overlaps the move; the scale follows the fade; the chain ends with the move"
+	rows={[
+		{ label: 'Position', segments: [{ from: 0, to: 1 }] },
+		{ label: 'Fade', segments: [{ from: 0.4, to: 0.6 }] },
+		{ label: 'Scale', segments: [{ from: 0.6, to: 0.7 }] },
+	]}
+/>
+
+- An entry captures its start value when it activates, so with a positive delay it captures at the preceding end, then waits.
+- The chain ends when every entry has.
+- Where entries write the same property, the later definition writes last while both are active, and an earlier entry still playing can show again once a later one completes.
+- Each entry keeps its own fill and relative-value behavior.
+- When signed delays reorder starts, an older entry can activate after a later one. Active entries with higher write priority are then sampled again at that time, so their setters and update callbacks can run twice.
+
+## Pre-roll
+
+- A delay that places work before time zero is simulated on the first eligible update: a one-second first entry with `delay = -0.25` is already a quarter through at time zero.
+- Crossed callbacks run in time order; declaration order breaks ties.
+- The target's value at the earliest activation is the start state. Nothing else is rewound, and callbacks have real side effects.
+- A chain entirely in the past completes on its first eligible update, after its callbacks and cleanup, with a visible duration of zero.
+- Pausing before that update defers all preparation, capture, and replay.
+- A standalone tween takes signed delays too. `offset` picks progress inside one leg; pre-roll replays crossed history.
+
+## Control and completion
+
+- An active entry's handle, as passed to its callbacks, forwards `pause()`, `resume()`, and `cancel()` to the chain. On an entry that has ended, they do nothing.
+- Pausing inside a callback stops at the current timestamp. `resume()` finishes that boundary without replaying completed callbacks, and discards the rest of the interrupted frame.
+- A long update can cross several boundaries, calling setters and update callbacks several times.
+- Cancellation, owner exit, or failure stops the active entries and discards the pending ones without preparing them or running their callbacks or release hooks.
+- Check `completion_reason` when later logic depends on success; failures are kept in `error` and `errors`.
+- One playback policy and one lifetime subscription cover the chain, and its scheduler counts it once in `active_count`.
+- Dropping the reference doesn't stop playback. Settling releases the copied definitions, adapters, and callbacks.
+
+## Limits
+
+- One target and a flat list, though entries may animate different properties and value types on it.
+- Multiple targets, nested chains, explicit parallel steps, and repeating a whole chain aren't supported yet.
+- Only the last entry may repeat infinitely; an entry after an infinite one is rejected.
+- Empty arrays, invalid definitions, and schedules that overflow are rejected before playback starts.
+
+{/* Keep links to earlier sections working. */}
+<span id="overlap-and-gaps" />
+<span id="completion-driven-logic" />

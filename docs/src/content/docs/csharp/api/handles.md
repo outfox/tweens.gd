@@ -1,75 +1,82 @@
 ---
-title: Handles and groups
-description: The members of TweenInstance and Group, the handles that starting playback returns.
+title: Handles
+description: TweenInstance, what starting one C# definition returns, with its states, completion reasons, errors, and threading rules.
 tableOfContents: true
 ---
 
-Starting one definition returns a `TweenInstance<TTarget, TValue>` handle.
-Starting several, or grouping running tweens with `Group.Of`, returns a
-[`Group`](/csharp/api/groups/). Await either handle's `End` task to wait for playback.
+Starting one definition returns a `TweenInstance<TTarget, TValue>` that controls that playback alone. The non-generic base class `TweenInstance` has every member but `Target` and `Value`, so handles of different types fit in one collection. [Control & completion](/csharp/playback/) introduces handles.
 
-The non-generic base class `TweenInstance` has every handle member below except
-`Target` and `Value`, so handles with different type arguments fit in one
-collection.
-
-## Control playback
+## Control
 
 | Member | Type | Meaning |
 | --- | --- | --- |
-| `Pause()`, `Resume()` | `void` | Set or clear the explicit pause |
-| `IsPaused` | `bool` | True while explicitly paused; settable |
-| `Cancel()` | `void` | End playback now and keep the latest value |
+| `Pause()` | `void` | Hold playback, in addition to any [pause mode](/csharp/api/start/#tweenpausemode) |
+| `Resume()` | `void` | Release that hold |
+| `IsPaused` | `bool` | True while held by `Pause()`; settable |
+| `Cancel()` | `void` | Stop now and keep the latest value; does nothing once playback has ended |
 
-Pause is separate from `State`: there's no `Paused` state. See
-[control and completion](/csharp/playback/).
-
-## Read the state
+## Status
 
 | Member | Type | Meaning |
 | --- | --- | --- |
-| `State` | `TweenState` | `Delayed`, `Playing`, `Interval`, `Completed`, `Cancelled`, or `Faulted` |
+| `State` | `TweenState` | Where the timeline is; a paused handle keeps its state |
+| `Progress` | `float` | Position in the current leg, from 0 to 1, before easing. It runs backward during a ping-pong return, and isn't the share of all cycles completed |
 | `IsTerminal` | `bool` | True once completed, cancelled, or faulted |
-| `Progress` | `float` | Position in the current leg, from 0 to 1, before easing |
+| `IsSettled` | `bool` | True once the ending callbacks and cleanup have run |
 | `CompletionReason` | `Reason?` | Why playback ended; `null` until it has |
-| `Error` | `Exception?` | The exception that faulted the tween, if one did |
+| `Error` | `Exception?` | The exception that faulted playback, if one did |
+| `Target` | `TTarget` | The animated object |
+| `Value` | `TValue` | The value captured at start, then the latest value written |
 
-## Await the end
-
-| Member | Type | Meaning |
-| --- | --- | --- |
-| `End` | `Task<Reason>` | Shared completion that any number of callers can await, even after it ended |
-| `AwaitDecommissionAsync(token)` | `Task<Reason>` | Wait with a token that cancels only the wait, not playback |
-
-To coordinate async work, `await movement.End` instead of polling `State`. You can
-also pass `End` to APIs that need a `Task<Reason>`. [Why it ended](/csharp/cancellation/#why-it-ended)
-describes each `Reason`.
-
-## Target and value
+## Awaiting
 
 | Member | Type | Meaning |
 | --- | --- | --- |
-| `Target` | `TTarget` | The object the tween animates |
-| `Value` | `TValue` | The value read at start, then the latest value written |
+| `End` | `Task<Reason>` | Completes after the ending callbacks and cleanup. Any number of callers can await it, even after the end |
+| `AwaitDecommissionAsync(token)` | `Task<Reason>` | The same wait, but `token` cancels only this wait and throws `OperationCanceledException`; playback continues |
+
+## TweenState
+
+| Member | Meaning |
+| --- | --- |
+| `TweenState.Delayed` | Waiting out the delay |
+| `TweenState.Playing` | Moving through a leg |
+| `TweenState.Interval` | Holding at an endpoint, between legs or cycles |
+| `TweenState.Completed` | Reached its natural end |
+| `TweenState.Cancelled` | Stopped early |
+| `TweenState.Faulted` | Stopped by an exception; see `Error` |
+
+## Reason
+
+| Member | Meaning |
+| --- | --- |
+| `Reason.Completed` | Reached its natural end |
+| `Reason.Cancelled` | `Cancel()` or `CancelTweens()` stopped it |
+| `Reason.TargetFreed` | The target was disposed, freed, or queued for deletion |
+| `Reason.OwnerExited` | The owner left the scene tree |
+| `Reason.RunnerDisposed` | The runner, its tree, or a manual scheduler shut down |
+
+Compare against `Completed` rather than a particular early reason: freeing a node reports `TargetFreed` after `QueueFree()`, but `OwnerExited` after `Free()`, because Godot exits the tree first.
 
 ## Errors
 
-An exception in interpolation, easing, a setter, or a callback faults the tween.
-`End` throws when awaited, `Error` holds the exception, and several failures are
-kept in an `AggregateException`. Cleanup and `OnFinally` still run, and other
-tweens keep playing. Schedulers also report the error through
-`UnhandledException`, and the automatic runner forwards it to `GD.PushError`.
+- An exception in interpolation, easing, a setter, or a callback faults the tween. `State` becomes `Faulted`, `Error` holds the exception, and awaiting `End` throws it; several failures are kept in an `AggregateException`.
+- Cleanup and `OnFinally` still run, and other tweens keep playing.
+- The scheduler reports the exception through `UnhandledException`, and the automatic runner forwards it to `GD.PushError`.
+- Invalid start arguments throw at the start call instead.
 
 :::caution[Catch errors in `async void` callbacks]
-`_Ready` and other Godot callbacks are often `async void`. Wrap their sequences in
-`try`/`catch`, or a faulted tween's exception is lost.
+`_Ready` and other Godot callbacks are often `async void`. Wrap awaited sequences in `try`/`catch`, or a faulted tween's exception is lost.
 :::
 
-## Stay on the main thread
+## Threading
 
-Create and control tweens, and await `End`, on Godot's main thread. `End` finishes
-there, and ordinary Godot async code keeps its synchronization context.
+- Create and control tweens, and await `End`, on Godot's main thread. `End` completes there, so ordinary Godot async code keeps its synchronization context.
+- Don't block with `.Wait()` or `.Result`, and keep engine access out of `Task.Run` and `ConfigureAwait(false)`.
+- tweens.gd has no coroutine API; use Godot's `ToSignal` for unrelated engine signals.
 
-- Don't block with `.Wait()` or `.Result`.
-- Don't use `Task.Run` or `ConfigureAwait(false)` around engine access.
-- Use Godot's `ToSignal` to wait for unrelated engine signals; tweens.gd has no
-  coroutine API.
+<!-- Keep links to earlier sections working. -->
+<span id="control-playback"></span>
+<span id="read-the-state"></span>
+<span id="await-the-end"></span>
+<span id="stay-on-the-main-thread"></span>
