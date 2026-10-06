@@ -2,14 +2,9 @@
 import { Icon } from '@astrojs/starlight/components';
 import { LANGS, LEARN } from '../tracks.mjs';
 
-interface Props {
-	lang: 'csharp' | 'gdscript';
-}
-const { lang } = Astro.props;
-const label = LANGS[lang].label;
-const cs = lang === 'csharp';
+type Lang = keyof typeof LANGS;
 // What a reader can do after each step, and the API it introduces.
-const content: Record<string, { text: string; api?: string[] }> = {
+const content = (cs: boolean): Record<string, { text: string; api?: string[] }> => ({
 	installation: {
 		text: cs ? 'Add tweens.gd from the Godot Store or NuGet.' : 'Add tweens.gd from the Godot Store or GitHub Releases.',
 	},
@@ -29,72 +24,233 @@ const content: Record<string, { text: string; api?: string[] }> = {
 		text: 'Pause or cancel a tween, and react to how it ended.',
 		api: cs ? ['OnEnd', 'CancelTweens()'] : ['with_on_end()', 'Tweens.cancel_tweens()'],
 	},
-};
-const steps = LEARN.map((page) => ({
-	slug: page.slug,
-	title: page[lang] ?? page.label,
-	...content[page.slug],
+});
+const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({
+	lang,
+	label: LANGS[lang].label,
+	steps: LEARN.map((page) => ({
+		slug: page.slug,
+		title: page[lang] ?? page.label,
+		...content(lang === 'csharp')[page.slug],
+	})),
 }));
 ---
 
-<div class="path not-content tw-wide">
-	<nav aria-label={`${label} tutorial`}>
-		<ol>
-			{steps.map((step, i) => (
-				<li>
-					<a href={`/${lang}/${step.slug}/`}>
-						<span class="number" aria-hidden="true">{i + 1}</span>
-						<span class="step-copy">
-							<span class="title">{step.title}</span>
-							<span class="description">{step.text}</span>
-							{step.api && (
-								<span class="api">
-									{step.api.map((name) => <code class="tw-code">{name}</code>)}
-								</span>
-							)}
-							{i === 0 && <span class="begin">Start tutorial <Icon name="right-arrow" /></span>}
-						</span>
-						{i > 0 && <Icon name="right-arrow" class="arrow" />}
-					</a>
-				</li>
-			))}
-		</ol>
-	</nav>
-	<div class="ferret" aria-hidden="true">
+<!-- Each language's steps sit under its card in Doors.astro; the ferret takes the other column. -->
+<div class="path not-content tw-wide" data-path>
+	{tracks.map(({ lang, label, steps }) => (
+		<div data-lang-only={lang}>
+			<div class={`track ${lang}`}>
+				<nav class="steps" aria-label={`${label} tutorial`}>
+					<ol>
+						{steps.map((step, i) => (
+							<li>
+								<a href={`/${lang}/${step.slug}/`}>
+									<span class="number" aria-hidden="true">{i + 1}</span>
+									<span class="step-copy">
+										<span class="title">{step.title}</span>
+										<span class="description">{step.text}</span>
+										{step.api && (
+											<span class="api">
+												{step.api.map((name) => <code class="tw-code">{name}</code>)}
+											</span>
+										)}
+										{i === 0 && <span class="begin">Start tutorial <Icon name="right-arrow" /></span>}
+									</span>
+									{i > 0 && <Icon name="right-arrow" class="arrow" />}
+								</a>
+							</li>
+						))}
+					</ol>
+				</nav>
+				<div class="leftover" aria-hidden="true">
+					<p class="bubble">Oh my, so much ferret left, yet we're finished already?</p>
+				</div>
+			</div>
+		</div>
+	))}
+	<div class="ferret" aria-hidden="true" data-ferret>
 		<img src="/ferret-vertical.svg" alt="" width="2247" height="4101" />
 		<img class="nametag" src="/nametag-easy.svg" alt="" width="400" height="280" />
 	</div>
+	<!-- Starts the entrance before first paint, so the ferret never shows in place first. -->
+	<script is:inline>document.currentScript.previousElementSibling.classList.add('enter');</script>
 </div>
 
+<script>
+	// The ferret rises in on load and lands with a squash. A click on the language switch is caught in the capture
+	// phase, before the switch acts on it (LangSwitch.astro): choosing the language that's already shown squashes the
+	// ferret and wiggles its nametag; choosing the other lets the new steps fade in behind the sliding ferret, whose
+	// nametag wiggles once it arrives.
+	const root = document.documentElement;
+	const path = document.querySelector<HTMLElement>('[data-path]');
+	const ferret = path?.querySelector<HTMLElement>('[data-ferret]');
+	const tag = ferret?.querySelector<HTMLElement>('.nametag');
+	/** Restarts a one-shot animation class, even while it's still running. */
+	const play = (el: HTMLElement, name: string) => {
+		el.classList.remove(name);
+		void el.offsetWidth;
+		el.classList.add(name);
+	};
+	/** Swings the nametag from its current angle to a new resting tilt, at least 2.5° from the last one.
+	 *  A dir of 1 swings its bottom left first, as when the ferret brakes while moving left; -1 mirrors that. */
+	const swing = (tag: HTMLElement, dir = 1) => {
+		tag.style.setProperty('--dir', String(dir));
+		const from = parseFloat(getComputedStyle(tag).rotate) || -6;
+		const last = parseFloat(tag.style.getPropertyValue('--tilt')) || -6;
+		let to = last;
+		while (Math.abs(to - last) < 2.5) to = -10 + Math.random() * 8;
+		tag.style.setProperty('--from', `${from}deg`);
+		tag.style.setProperty('--tilt', `${to.toFixed(1)}deg`);
+		play(tag, 'wiggle');
+	};
+	if (path && ferret && tag) {
+		ferret.addEventListener('animationend', (event) => {
+			if (event.target !== ferret) return;
+			if (!ferret.classList.contains('enter')) return ferret.classList.remove('squash');
+			ferret.classList.remove('enter');
+			play(ferret, 'squash');
+		});
+		tag.addEventListener('animationend', (event) => event.target === tag && tag.classList.remove('wiggle'));
+		// The tag swings as the slide brakes: 0.25 s into the 0.7 s back-out, just before it crosses its target.
+		let braking: ReturnType<typeof setTimeout> | undefined;
+		ferret.addEventListener('transitionstart', (event) => {
+			if (event.target !== ferret || event.propertyName !== 'translate') return;
+			clearTimeout(braking);
+			braking = setTimeout(() => swing(tag, root.dataset.lang === 'gdscript' ? 1 : -1), 250);
+		});
+		document.addEventListener(
+			'click',
+			(event) => {
+				const choice = (event.target as Element).closest<HTMLElement>('[data-lang-switch][data-shared] [data-lang-choice]');
+				if (!choice) return;
+				if (choice.dataset.langChoice !== root.dataset.lang) {
+					path.dataset.switched = '';
+					return;
+				}
+				if (!ferret.classList.contains('enter')) play(ferret, 'squash');
+				swing(tag);
+			},
+			{ capture: true },
+		);
+	}
+</script>
+
 <style>
+	/* The column gap matches the language cards', so each column lines up under its card. */
 	.path {
+		--gap: 1rem;
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		align-items: start;
-		gap: 2rem;
+		gap: 2rem var(--gap);
 		margin-block: 1.5rem 3rem;
 	}
-	/* The ferret is as wide as the steps and as tall as that makes it. Its SVG has wide empty margins, so the box
-	   crops to the drawing: 970 × 3667 at (741, 289) of the 2247 × 4101 viewBox. */
+	/* A track spans the row, so below its steps it holds whatever length of ferret is left over. */
+	.track {
+		grid-row: 1;
+		align-self: stretch;
+		display: grid;
+		grid-template-rows: auto 1fr;
+	}
+	.track.csharp { grid-column: 1; }
+	.track.gdscript { grid-column: 2; }
+	.path[data-switched] .track { animation: steps-in 0.45s 0.25s ease-out both; }
+	@keyframes steps-in {
+		from { opacity: 0; translate: 0 0.75rem; }
+	}
+	/* The leftover space is a size container, so it never makes the row taller. The bubble shows only when the
+	   ferret runs well past the steps, and points its tail at the ferret in the other column. */
+	.leftover {
+		container-type: size;
+		display: grid;
+		place-items: center;
+	}
+	.csharp .leftover { justify-items: end; }
+	.gdscript .leftover { justify-items: start; }
+	.bubble { display: none; }
+	@container (min-height: 16rem) {
+		.bubble {
+			display: block;
+			position: relative;
+			max-width: 17rem;
+			margin: 0;
+			padding: 1rem 1.25rem;
+			border: 1px solid var(--tw-outline);
+			border-radius: 1rem;
+			background: var(--tw-surface);
+			color: var(--tw-soft);
+			font: 700 1.05rem / 1.4 var(--tw-font-display);
+			text-wrap: balance;
+			rotate: -2deg;
+		}
+		.bubble::after {
+			content: '';
+			position: absolute;
+			top: calc(50% - 0.45rem);
+			width: 0.9rem;
+			height: 0.9rem;
+			background: inherit;
+			border: 1px solid var(--tw-outline);
+			rotate: 45deg;
+		}
+		.csharp .bubble::after { right: -0.5rem; border-bottom: 0; border-left: 0; }
+		.gdscript .bubble::after { left: -0.5rem; border-top: 0; border-right: 0; }
+	}
+	/* The ferret fills its column, with its body centered: the box crops the 2247 × 4101 viewBox to 1332 × 3667 at
+	   (379, 289), symmetric about the body at x = 1045, so the tail curling right still fits. */
 	.ferret {
+		grid-row: 1;
+		grid-column: 2;
 		position: relative;
 		overflow: hidden;
-		aspect-ratio: 970 / 3667;
+		aspect-ratio: 1332 / 3667;
+		pointer-events: none;
+		transform-origin: 50% 100%;
+		--x: 0px;
+		translate: var(--x) 0;
+		transition: translate 0.7s var(--ease-back-out);
+	}
+	:global(:root[data-lang='gdscript']) .ferret { --x: calc(-100% - var(--gap)); }
+	/* On load it rises a short way into place, as if it had been on its way already. */
+	.ferret.enter { animation: ferret-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+	@keyframes ferret-in {
+		from { translate: var(--x) 2.5rem; opacity: 0; }
+		40% { opacity: 1; }
+	}
+	/* A faint squash and stretch from the feet. */
+	.ferret.squash { animation: squash 0.5s ease-in-out; }
+	@keyframes squash {
+		30% { scale: 1.009 0.982; }
+		60% { scale: 0.997 1.009; }
+		80% { scale: 1.0018 0.9982; }
+	}
+	/* The nametag swings about its top edge from --from and settles at a new --tilt, picked by the script. */
+	.ferret .nametag.wiggle { animation: tag-wiggle 0.7s ease-in-out; }
+	@keyframes tag-wiggle {
+		from { rotate: var(--from); }
+		20% { rotate: calc(var(--tilt) + 8deg * var(--dir, 1)); }
+		45% { rotate: calc(var(--tilt) - 5deg * var(--dir, 1)); }
+		70% { rotate: calc(var(--tilt) + 3deg * var(--dir, 1)); }
+		88% { rotate: calc(var(--tilt) - 1deg * var(--dir, 1)); }
+		to { rotate: var(--tilt); }
 	}
 	.ferret img {
 		position: absolute;
 		top: -7.87%;
-		left: -76.44%;
-		width: 231.6%;
+		left: -28.45%;
+		width: 168.67%;
 		max-width: none;
 		height: auto;
 	}
 	/* Stuck to the chest, 520 units wide and centered near (1060, 1480) in the ferret's viewBox. */
 	.ferret .nametag {
 		top: 27.5%;
-		left: 6.1%;
-		width: 53.6%;
-		rotate: -6deg;
+		left: 31.6%;
+		width: 39.04%;
+		/* Always pinned at the top, so the tilt at rest and the wiggle share one pivot. */
+		transform-origin: 50% 0;
+		rotate: var(--tilt, -6deg);
 		filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.3));
 	}
 	ol {
@@ -174,8 +330,19 @@ const steps = LEARN.map((page) => ({
 	.begin :global(svg) { flex-shrink: 0; font-size: 1.25rem; }
 	/* On a phone the steps take the full width, and the ferret waits below them. */
 	@media (max-width: 36rem) {
-		.path { grid-template-columns: minmax(0, 1fr); }
-		.ferret { justify-self: center; width: min(100%, 12rem); }
+		.path { --gap: 0.75rem; grid-template-columns: minmax(0, 1fr); }
+		.track.gdscript { grid-column: 1; }
+		.ferret, :global(:root[data-lang='gdscript']) .ferret {
+			grid-row: 2;
+			grid-column: 1;
+			justify-self: center;
+			width: min(100%, 12rem);
+			--x: 0px;
+		}
 	}
-	@media (prefers-reduced-motion: reduce) { a { transition: none; } }
+	/* Reduced motion: everything lands in place at once. The site's 1 ms rule in theme.css would keep delays. */
+	@media (prefers-reduced-motion: reduce) {
+		a, .ferret { transition: none; }
+		.path[data-switched] .track, .ferret.enter, .ferret.squash, .ferret .nametag.wiggle { animation: none; }
+	}
 </style>
