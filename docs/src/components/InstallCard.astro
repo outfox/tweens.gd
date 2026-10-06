@@ -1,0 +1,91 @@
+---
+import { Card } from '@astrojs/starlight/components';
+
+interface Props {
+	/** Names the channel: the logo's alt text, or the wordmark next to NuGet's mark. */
+	title: string;
+	href: string;
+	logo: 'godot-asset-store' | 'github' | 'nuget';
+}
+
+const { title, href, logo } = Astro.props;
+
+// Wordmarks come in a white and a black file; the page shows the one for its theme.
+const wordmarks = {
+	'godot-asset-store': { dark: '/godot-asset-store.svg', light: '/godot-asset-store-black.svg' },
+	github: { dark: '/github-logo-white.svg', light: '/github-logo-black.svg' },
+};
+// Starlight's icon set has no NuGet mark, so it's drawn here and pairs with the name as its wordmark.
+const nuget =
+	'<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" fill-rule="evenodd"><path d="M0 2.2a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0zM11.4 5.4h6.6a6 6 0 0 1 6 6v6.6a6 6 0 0 1-6 6h-6.6a6 6 0 0 1-6-6v-6.6a6 6 0 0 1 6-6zM8 10.4a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0zM13.6 17.6a4 4 0 1 0 8 0a4 4 0 1 0-8 0z"/></svg>';
+const art =
+	logo === 'nuget'
+		? `${nuget}<span>${title}</span>`
+		: `<img class="on-dark" src="${wordmarks[logo].dark}" alt="${title}"><img class="on-light" src="${wordmarks[logo].light}" alt="${title}">`;
+---
+
+<Card title={`<a class="install-logo install-logo--${logo}" href="${href}">${art}</a>`}><slot /></Card>
+
+<style is:global>
+	.card:has(.install-logo) {
+		gap: 1rem;
+		padding: 1.25rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 1rem;
+		background: var(--tw-stage);
+	}
+	.card .title:has(.install-logo) > span {
+		flex: 1;
+	}
+	.card:has(.install-logo) .body > :first-child {
+		margin-top: 0;
+	}
+	.card:has(.install-logo) .body ol {
+		padding-inline-start: 1.25rem;
+	}
+
+	/* The logo sits on the accent tint asides use, and lifts on hover like the site's other links. */
+	.card .install-logo {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		height: 5.5rem;
+		border: 1px solid color-mix(in oklab, var(--sl-color-accent) 55%, transparent);
+		border-radius: 0.75rem;
+		background: color-mix(in oklab, var(--sl-color-accent) 22%, var(--tw-surface));
+		color: var(--sl-color-white);
+		text-decoration: none;
+		transition:
+			translate 0.35s var(--ease-back-out),
+			background-color 0.2s;
+	}
+	.card .install-logo:hover {
+		translate: 0 -3px;
+		background: color-mix(in oklab, var(--sl-color-accent) 32%, var(--tw-surface));
+	}
+	.install-logo img {
+		width: auto;
+		height: 3.2rem;
+	}
+	.install-logo--github img {
+		height: 2.4rem;
+	}
+	:root[data-theme='light'] .install-logo .on-dark,
+	:root:not([data-theme='light']) .install-logo .on-light {
+		display: none;
+	}
+	.install-logo svg {
+		width: 2.6rem;
+		height: 2.6rem;
+		color: #6cb0f0;
+	}
+	:root[data-theme='light'] .install-logo svg {
+		color: #004880;
+	}
+	.install-logo span {
+		font-family: var(--tw-font-display);
+		font-size: 2rem;
+		font-weight: 700;
+	}
+</style>

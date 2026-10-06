@@ -36,17 +36,16 @@ hero:
 import Compare from '../../components/Compare.astro';
 import Lang from '../../components/Lang.astro';
 import Variants from '../../components/Variants.astro';
+import { Aside } from '@astrojs/starlight/components';
 
 ## Juice your games!
 
-tweens.gd is a fully free and libre open source tweening system for the [Godot game engine](https://godotengine.org/).
+tweens.gd is a fully free and libre open source tweening system for the [Godot game engine](https://godotengine.org/).  
+This addon aims for concise and consistent syntax, and more flexible easing options than most.
 
 
-"Tweening" means: Using code to animate nodes and resources, changing their properties over time using ~~soft paws~~ smooth functions called "easings."
 
-Whole game worlds can be animated this way, but your classic use cases are button clicks, squash and stretch effects, wiggles, hover, breathing, punches, fades, bounces, ... ["juice it or lose it".](https://www.youtube.com/watch?v=Fy0aCDmgnxg)
-
-### tweens.gd respects your <u>time</u> and your <u>keycaps.</u>
+#### tweens.gd respects your <u>time</u> and your <u>keycaps.</u>
 
 <Variants labels={['One sprite', 'Three sprites']} languages>
 
@@ -139,6 +138,7 @@ GD.Print("Arrived");
 
 </Compare>
 
+
 </Lang>
 
 <Lang only="gdscript">
@@ -182,4 +182,9 @@ print("Arrived")
 
 </Variants>
 
-... may your ferrets be long, but your code always short!
+#### ... may your ferrets be long, and your code always short!
+
+<Aside type="tip" title="'Tweening' means..."><p>...using code to animate nodes and resources, changing their properties like position or color over time by ~~soft paws~~ smooth functions called "easings."</p>
+<p>Whole game worlds can be animated this way, but your classic use cases are button clicks, squash and stretch effects, wiggles, hover, punches, fades, bounces, ... ["juice it or lose it".](https://www.youtube.com/watch?v=Fy0aCDmgnxg)</p></Aside>
+
+

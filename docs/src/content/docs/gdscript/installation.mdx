@@ -1,9 +1,10 @@
 ---
 title: Install
-description: Add tweens.gd to your Godot project from Godot Store or GitHub Releases.
+description: Add tweens.gd to your Godot project from the Godot Asset Store or GitHub.
 ---
 
-import InstallOptions from '../../../components/InstallOptions.astro';
+import { CardGrid } from '@astrojs/starlight/components';
+import InstallCard from '../../../components/InstallCard.astro';
 
 tweens.gd is free and libre open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE).
 You can build it from source or get prebuilt versions through these official channels.
@@ -12,28 +13,24 @@ You can build it from source or get prebuilt versions through these official cha
 
 Choose where to download the addon:
 
-<InstallOptions>
-<div slot="store">
-
-### Godot Store
+<CardGrid>
+<InstallCard title="Godot Asset Store" logo="godot-asset-store" href="https://store.godotengine.org/asset/outfox/tweens/">
 
 Get the shared addon with support for both C# and GDScript.
 
-1. Download it from the [Godot Store](https://store.godotengine.org/asset/outfox/tweens/).
+1. Download it from the [Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/).
 2. Unpack it into your project root, keeping the entire `addons/tweens_gd/` directory.
 
-</div>
-<div slot="alternative">
+</InstallCard>
+<InstallCard title="GitHub" logo="github" href="https://github.com/outfox/tweens.gd/releases/latest">
 
-### GitHub Releases
-
-Get the addon ZIP from [GitHub Releases](https://github.com/outfox/tweens.gd/releases).
+Get the addon ZIP from the [latest release](https://github.com/outfox/tweens.gd/releases/latest).
 Alongside the combined addon, releases will also offer lightweight GDScript-only builds.
 
 Choose the packaged addon from the release assets, then unpack it into your project root.
 
-</div>
-</InstallOptions>
+</InstallCard>
+</CardGrid>
 
 ## Build your project
 

@@ -630,6 +630,21 @@ header.header {
 	border-radius: 0.9rem;
 	background: color-mix(in oklab, var(--sl-color-asides-border) 10%, var(--tw-bg));
 }
+/* Tips take a light tint of the language accent and swap Starlight's rocket for a paw print. */
+.starlight-aside--tip {
+	--sl-color-asides-text-accent: var(--sl-color-accent-high);
+	--sl-color-asides-border: var(--sl-color-accent);
+	background-color: color-mix(in oklab, var(--sl-color-accent) 22%, var(--tw-surface));
+}
+.starlight-aside--tip .starlight-aside__icon {
+	rotate: -14deg;
+	background: currentColor;
+	mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 11.2c-2.8 0-6.2 3.7-6.2 6.6 0 1.8 1.3 2.8 3 2.8 1.3 0 2.2-.7 3.2-.7s1.9.7 3.2.7c1.7 0 3-1 3-2.8 0-2.9-3.4-6.6-6.2-6.6z'/><ellipse cx='4.6' cy='10.6' rx='2' ry='2.5' transform='rotate(-22 4.6 10.6)'/><ellipse cx='9' cy='5.6' rx='2.1' ry='2.7' transform='rotate(-8 9 5.6)'/><ellipse cx='15' cy='5.6' rx='2.1' ry='2.7' transform='rotate(8 15 5.6)'/><ellipse cx='19.4' cy='10.6' rx='2' ry='2.5' transform='rotate(22 19.4 10.6)'/></svg>")
+		center / contain no-repeat;
+}
+.starlight-aside--tip .starlight-aside__icon > * {
+	display: none;
+}
 
 /* Buttons from Starlight (hero actions, link buttons) */
 .sl-link-button {
@@ -783,7 +798,7 @@ header.header {
 }
 
 /* Prose keeps its measure; code, tables, and demos take the whole lane. The landing page runs wider still. */
-.sl-markdown-content > :not(.expressive-code, .table-wrap, .tw-widget, .tw-wide, starlight-tabs),
+.sl-markdown-content > :not(.expressive-code, .table-wrap, .tw-widget, .tw-wide, .card-grid, starlight-tabs),
 .sl-markdown-content [role='tabpanel'] > :not(.expressive-code, .table-wrap) {
 	max-width: var(--tw-measure);
 }
@@ -883,7 +898,7 @@ pre[data-language='gdscript'] code,
 :root[data-lang='gdscript'] [data-lang-only='csharp'] {
 	display: none;
 }
-.sl-markdown-content > [data-lang-only] > :not(.expressive-code, .table-wrap, .tw-widget, .tw-wide, starlight-tabs) {
+.sl-markdown-content > [data-lang-only] > :not(.expressive-code, .table-wrap, .tw-widget, .tw-wide, .card-grid, starlight-tabs) {
 	max-width: var(--tw-measure);
 }
 .sl-markdown-content > [data-lang-only] > :first-child {

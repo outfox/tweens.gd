@@ -1,9 +1,10 @@
 ---
 title: Install
-description: Add tweens.gd to your Godot C# project from Godot Store or NuGet.
+description: Add tweens.gd to your Godot C# project from the Godot Asset Store or NuGet.
 ---
 
-import InstallOptions from '../../../components/InstallOptions.astro';
+import { CardGrid } from '@astrojs/starlight/components';
+import InstallCard from '../../../components/InstallCard.astro';
 
 tweens.gd is free and libre open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE).
 You can build it from source or get prebuilt versions through these official channels.
@@ -12,20 +13,16 @@ You can build it from source or get prebuilt versions through these official cha
 
 Choose one of these two methods:
 
-<InstallOptions>
-<div slot="store">
-
-### Godot Store
+<CardGrid>
+<InstallCard title="Godot Asset Store" logo="godot-asset-store" href="https://store.godotengine.org/asset/outfox/tweens/">
 
 Get the shared addon with support for both C# and GDScript.
 
-1. Download it from the [Godot Store](https://store.godotengine.org/asset/outfox/tweens/).
+1. Download it from the [Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/).
 2. Unpack it into your project root, keeping the entire `addons/tweens_gd/` directory.
 
-</div>
-<div slot="alternative">
-
-### NuGet
+</InstallCard>
+<InstallCard title="NuGet" logo="nuget" href="https://www.nuget.org/packages/tweens.gd">
 
 Add the pure C# library through your package manager.
 
@@ -33,8 +30,8 @@ Add the pure C# library through your package manager.
 dotnet add package tweens.gd
 ```
 
-</div>
-</InstallOptions>
+</InstallCard>
+</CardGrid>
 
 ## Build your project
 
