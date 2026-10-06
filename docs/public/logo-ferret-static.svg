@@ -62,7 +62,7 @@
     </linearGradient>
     <ellipse id="glyph-dot" cx="1365.19" cy="526.93" rx="44.01" ry="44.8"/>
     <style id="letters">
-      @keyframes tail-flick{0%,38%,to{transform:rotate(0deg)}8%{transform:rotate(2.4deg)}18%{transform:rotate(-1.4deg)}28%{transform:rotate(.5deg)}}@keyframes hop{0%,17%,to{translate:0 0;scale:1}3%{translate:0 0;scale:1.05 .93;animation-timing-function:cubic-bezier(.33,.67,.67,1)}4.5%{scale:.96 1.06}7.5%{translate:0-16px;scale:1;animation-timing-function:cubic-bezier(.33,0,.67,.33)}10%{scale:.97 1.04}10.5%{translate:0 0;scale:1.05 .94}13.5%{scale:.98 1.02}}@keyframes squish{0%,13%,to{scale:1}2.5%{scale:1.06 .9}5%{scale:.97 1.05}7.5%{scale:1.015 .98}10%{scale:.995 1.01}}@keyframes stretch{0%,20%,to{scale:1}4%{scale:1.03 .95}9%{scale:.96 1.07}13%{scale:1.015 .98}17%{scale:.995 1.01}}@keyframes bounce{0%,18%,to{translate:0 0;scale:1}2.5%{translate:0 0;scale:1.14 .84;animation-timing-function:cubic-bezier(.33,.67,.67,1)}4%{scale:.92 1.1}7%{translate:0-36px;scale:1;animation-timing-function:cubic-bezier(.33,0,.67,.33)}9.5%{scale:.94 1.08}10%{translate:0 0;scale:1.16 .82;animation-timing-function:cubic-bezier(.33,.67,.67,1)}12.5%{translate:0-11px;scale:1;animation-timing-function:cubic-bezier(.33,0,.67,.33)}14.5%{translate:0 0;scale:1.07 .93}}@keyframes dangle{0%,17%,to{translate:0 0;scale:1}3%{translate:0-6px;scale:1.02 .97}6.5%{translate:0 6px;scale:.97 1.05}10%{translate:0-2px;scale:1.01 .985}13%{translate:0 1px;scale:1}}@keyframes jelly{0%,18%,to{transform:skewX(0deg) scale(1,1)}1.5%{transform:skewX(0deg) scale(1.12,.84)}3.5%{transform:skewX(-13deg) scale(.93,1.12)}5.5%{transform:skewX(10deg) scale(1.06,.94)}7.5%{transform:skewX(-7deg) scale(.97,1.05)}9.5%{transform:skewX(4.5deg) scale(1.02,.98)}11.5%{transform:skewX(-2.5deg) scale(1,1)}13.5%{transform:skewX(1.2deg) scale(1,1)}15.5%{transform:skewX(-.5deg) scale(1,1)}}@keyframes pendulum{0%,22%,to{transform:rotate(0deg)}1.5%{transform:rotate(-4deg)}4%{transform:rotate(17deg)}7%{transform:rotate(-13deg)}10%{transform:rotate(9deg)}13%{transform:rotate(-5.5deg)}16%{transform:rotate(3deg)}19%{transform:rotate(-1deg)}}@keyframes arc{0%,10.5%,to{translate:0 0}1.5%{translate:0 0;animation-timing-function:cubic-bezier(.33,.67,.67,1)}6%{translate:0 var(--jump);animation-timing-function:cubic-bezier(.33,0,.67,.33)}}@keyframes spin{0%{rotate:0deg}1.5%{rotate:0deg;animation-timing-function:cubic-bezier(.3,.15,.6,1)}10.5%,to{rotate:var(--turn)}}@keyframes flip-squash{0%,16%,4.5%,9.5%,to{transform:scale(1,1)}1.5%{transform:scale(1.12,.84)}2.75%{transform:scale(.94,1.08)}10.5%{transform:scale(.97,1.04)}11.5%{transform:scale(1.14,.84)}13%{transform:scale(.96,1.05)}14.5%{transform:scale(1.01,.99)}}@keyframes card-flip{0%,1.5%,10.5%,6%,to{scale:1 1}3.75%,8.25%{scale:-1 1}}@keyframes flip-m{0%,1.5%,10.5%,to{scale:1 1}4%,7.5%{scale:1-1}}@keyframes m-wobble{0%,4%,9%,to{rotate:0deg}5.5%{rotate:5deg}7%{rotate:-3deg}}@keyframes e2-arc{0%,10%,14.4%,to{translate:0 0}11%,2.5%{translate:0 0;animation-timing-function:cubic-bezier(.33,.67,.67,1)}6.25%{translate:0-215px;animation-timing-function:cubic-bezier(.33,0,.67,.33)}12.7%{translate:0-45px;animation-timing-function:cubic-bezier(.33,0,.67,.33)}}@keyframes e2-wobble{0%,10%,2.5%,to{rotate:0deg}4%{rotate:-6deg}6.25%{rotate:10deg}8.5%{rotate:-4deg}}@keyframes e2-squash{0%,12%,14%,16.3%,5%,to{transform:scale(1,1)}2.5%{transform:scale(1.28,.72)}3.5%{transform:scale(.76,1.36)}9%{transform:scale(.92,1.1)}10%{transform:scale(.96,1.04)}10.5%{transform:scale(1.3,.74)}11%{transform:scale(.9,1.12)}14.9%{transform:scale(1.1,.9)}15.6%{transform:scale(.98,1.03)}}@keyframes t-arc{0%,18.5%,to{translate:0 0}3%{translate:0 0;animation-timing-function:cubic-bezier(.33,.67,.67,1)}6.75%{translate:0-290px;animation-timing-function:cubic-bezier(.33,0,.67,.33)}10.5%{translate:0 0;animation-timing-function:cubic-bezier(.2,.7,.4,1)}12.5%,15.5%{translate:16px -14px}17%{translate:-4px 0}}@keyframes t-spin{0%{rotate:0deg}3%{rotate:0deg;animation-timing-function:cubic-bezier(.3,.15,.6,1)}10.5%{rotate:-360deg;animation-timing-function:cubic-bezier(.2,.7,.4,1)}12.5%,15.5%{rotate:-348deg}17%{rotate:-362.5deg}18.5%{rotate:-359.5deg}20%,to{rotate:-360deg}}@keyframes t-squash{0%,18.5%,5.5%,9.5%,to{transform:scale(1,1)}3%{transform:scale(1.2,.74)}4%{transform:scale(.85,1.22)}10.5%{transform:scale(.94,1.08)}11.25%{transform:scale(1.25,.76)}12.5%,15.5%{transform:scale(.96,1.06)}14%{transform:scale(.98,1.03)}17%{transform:scale(1.02,.98)}}@keyframes dot-arc{0%,23%,30.2%,34.1%,to{translate:0 0}2%,23.6%,30.5%{translate:0 0;animation-timing-function:cubic-bezier(.33,.67,.67,1)}12.5%{translate:0-400px;animation-timing-function:cubic-bezier(.33,0,.67,.33)}26.9%{translate:0-40px;animation-timing-function:cubic-bezier(.33,0,.67,.33)}32.3%{translate:0-12px;animation-timing-function:cubic-bezier(.33,0,.67,.33)}}@keyframes dot-pop{0%,11%,14.5%,to{scale:1}12.75%{scale:1.3}}@keyframes dot-squash{0%,21%,25.5%,29.9%,31.6%,33.9%,35%,5%,to{transform:scale(1,1)}2%{transform:scale(1.4,.6)}3%{transform:scale(.72,1.4)}22.8%{transform:scale(.84,1.2)}23.3%{transform:scale(1.45,.6)}23.9%{transform:scale(.88,1.15)}30.35%{transform:scale(1.2,.8)}30.8%{transform:scale(.95,1.06)}34.3%{transform:scale(1.07,.93)}}@keyframes sheen-t{0%,14%,63.75%,80.75%,to{fill:#67a2dd}5%,67.75%,76.25%{fill:#8db9e6}}@keyframes sheen-w{0%,14%,58%,71.5%,to{fill:#67a2dd}5%,63.25%{fill:#8db9e6}}@keyframes sheen-e1{0%,14%,55.25%,69.25%,to{fill:#67a2dd}5%,60.75%{fill:#8db9e6}}@keyframes sheen-e2{0%,14%,52.5%,67.5%,to{fill:#67a2dd}5%,58.5%{fill:#8db9e6}}@keyframes sheen-n{0%,14%,49.75%,63.75%,to{fill:#67a2dd}5%,55.25%{fill:#8db9e6}}@keyframes sheen-s{0%,14%,47%,61%,to{fill:#67a2dd}5%,52.5%{fill:#8db9e6}}@keyframes sheen-dot{0%,14%,47.25%,69.25%,to{fill:#9bd69c}5%,56.75%,59.25%{fill:#b4e0b5}}@keyframes sheen-g{0%,14%,41.5%,59.5%,to{fill:#9bd69c}45.5%,5%{fill:#b4e0b5}}@keyframes sheen-d{0%,14%,38.75%,53.75%,to{fill:#9bd69c}42.25%,5%{fill:#b4e0b5}}.face,.letter,.trick{transform-box:view-box;animation-duration:8s;animation-iteration-count:infinite;animation-timing-function:ease-in-out}.letter-shadow{fill:none;stroke:#49201c;stroke-opacity:.45;stroke-width:18px;stroke-linejoin:round}.blue{fill:#67a2dd}.green{fill:#9bd69c}.blue,.green{stroke:#fff;stroke-width:14px;stroke-linejoin:round;paint-order:stroke}.tail-copy{transform-box:fill-box;transform-origin:1078.14px 247.8px;animation:tail-flick 8s ease-in-out 5.92s infinite}@media (prefers-reduced-motion:reduce){.face,.letter,.tail-copy,.trick{animation:none!important}}#still:target :is(.letter,.trick,.face,.tail-copy){animation:none!important}
+      .letter-shadow{fill:none;stroke:#49201c;stroke-opacity:.45;stroke-width:18px;stroke-linejoin:round}.blue{fill:#67a2dd}.green{fill:#9bd69c}.blue,.green{stroke:#fff;stroke-width:14px;stroke-linejoin:round;paint-order:stroke}
     </style>
     <mask id="right-hind-leg" width="612" height="576" x="1061" y="936" maskUnits="userSpaceOnUse" style="mask-type:alpha">
       <path d="m1542.3 938.5 14.4.6 12.4 1.4 12.2 2.1 11.9 3 11.5 3.9 9.7 4.1 10.8 5.7 9 5.7 9.9 7.6 8.1 7.4 4.6 5.2 4.5 6.5 3.5 7.1 2.9 8.6 1.8 9.2.8 9.7-.1 10.2-1.2 11.9-1.9 11.2-3.1 13-4 13.6-4.9 14.1-5.8 14.6-7.2 16.6-7.4 15.6-8.9 17.6-9.8 18.1-10.5 18.5-11.3 18.9-13 21-13.8 21.3-15.4 23.1-14.6 7.4-13.4 6.2-12.9 5.3-13.6 4.8-12.5 3.8-11 2.6-11.1 2-12.2 1.3-2.3-7.9-17 1.5-15.1.6-16-.2-14.3-.9-14.4-1.9-12.2-2.5-8-2.2-11.3-3.7.1-.9-9.7 1.3-9.9.9-10.4.4-9.9-.1-58.3 141-4.6 8.5-5.2 7.7-5.7 6.8-7 6.9-4.9 3.9-5.4 3.7-10.3 5.5-6.9 2.8-7.5 2.2-10.6 2.2-.3-.8-8.7 6.4-7.1 4.1-7.8 3-4.9 1.3-4.9.8-4.6.3-6.5-.4-5.9-1.2-6.9-2.3-7.9-4.2-4.8-3.5-4.6-4.4-5.5-2.6-4-2.9-4.2-4.3-3.8-5.9-2.2-4.8-2.1-7.5-2.9 1.5v-8.6l-2.7-3.7-1.9-3.3-2.9-7.1-1.8-7.2-1-8.6.1-7.3.8-8.1 1.7-8.9 2.2-8.1 12.5-39.9 24.3-73.2 33-97.4-12.7 2.6 8.3-15.3 3.4-5.1 4-5.3 6.4-7 6.8-6.2 6.8-5.1 7.7-4.6 6.8-3.2 7.5-2.6 8.1-1.9 8.2-.9 12.4-3.8 3.6-1.6 4-2.4 6.8-5.4 4.3-4.5 1.9-55.4 14.8-9.9 15.9-10 16.6-10.1 18.5-10.6 16.5-9 17.8-9.3 17.4-8.5 16.6-7.7 17.2-7.4 15.8-6.4 16.3-6.1 14.6-4.9 14.8-4.6 14.9-4.1 15-3.5 14.9-3 13.1-2 13-1.4 12.9-.9z"/>
@@ -72,16 +72,16 @@
     <g id="easy-shadow" fill="#49201c">
       <g fill-opacity=".32">
         <use x="9.54" y="26.72" href="#easy-shadow-far"/>
-        <use class="tail-copy" href="#tail-shadow-far" transform="translate(9.54 26.72)"/>
+        <use href="#tail-shadow-far" transform="translate(9.54 26.72)"/>
       </g>
       <g fill-opacity=".38">
         <use x="2.86" y="9.54" href="#easy-shadow-near"/>
-        <use class="tail-copy" href="#tail-shadow-near" transform="translate(2.86 9.54)"/>
+        <use href="#tail-shadow-near" transform="translate(2.86 9.54)"/>
       </g>
     </g>
     <g id="easy-art">
       <g id="g82">
-        <g class="tail-copy">
+        <g>
           <path id="path16" d="M662.66 1909.15c48.33 0 98.14-8.26 148.05-24.55 39.89-13.02 79.92-31.17 119-53.95 47.5-27.68 82.14-55.66 98.23-69.54l-17.31 48.08 8.66-6c24.46-16.94 45.95-40.77 63.87-70.85 14.27-23.96 26.33-51.92 35.83-83.1 8.97-29.43 13.95-56.28 16.62-74.44l10 56.94 2.95-19.97c1.04-90.77 36.76-222.37 66.54-316.79 32.3-102.42 64.77-184.34 65.09-185.15l.37-.92-36.28-183.54-4.53 6.88c-.79 1.2-80.18 121.57-175.63 245.57-56.02 72.78-106.52 132.54-150.1 177.63-54.18 56.05-97.56 89.32-128.93 98.87-12.61 3.84-24.69 5.79-35.9 5.79h-.02c-42.3-.01-74.3-26.91-95.13-79.96-15.74-40.1-18.77-80.68-18.8-81.09l-.6-8.47-17.05 20.84c5.56-71.81 37.86-119.92 64.66-148.02 30.39-31.87 60.27-45.53 60.57-45.66l14.62-5.73-52.74-2.25c36.6-21.13 70.93-46.01 102.17-74.05 27.33-24.54 52.38-51.55 74.44-80.28 37.61-48.97 53.78-86.59 53.94-86.96l.92-2.17-1.72-1.61c-35.77-33.42-78.34-58.06-126.53-73.23-38.41-12.09-80.43-18.22-124.9-18.22-38.31 0-71.82 4.63-95.4 9.15l71.13-30.2h-18.94c-90.52 4.67-171.38 36.29-240.32 93.98-55.05 46.07-102.63 108.76-141.41 186.34-34.46 68.91-55.46 137.08-67.01 182.13-8.25 32.15-12.99 57.45-15.28 71.08l-13.93-32.92v18.12c.93 120.32 21.33 226.18 60.65 314.64 31.5 70.88 75.14 130.8 129.7 178.1 48.57 42.1 96.97 66.19 129.03 78.98 21.18 8.45 37.99 13.19 48.12 15.65l-36.07 15.19 7.43 3.1c51.85 21.6 106.33 32.56 161.94 32.56"/>
           <path id="path17" fill="url(#easy-b)" d="M165.26 1270.88c1.26 163.03 37.87 281.34 87.77 366.99 110.94 190.4 287.57 219.35 287.57 219.35l-38.55 16.23c281.13 117.3 532.01-122.25 533.59-123.75l-18.25 50.71c105.49-73.04 117.67-249.55 117.67-249.55l10.14 60.87c.62-53.59 13.01-121.02 29.99-188.94.38-1.53.76-3.06 1.15-4.59 39-154.31 100.73-309.63 100.73-309.63l-34.49-174.48s-5.64 8.56-15.73 23.51c-65.59 97.02-319.44 463.01-440.76 499.94-139.99 42.6-154.19-158.25-154.19-158.25l-18.26 22.31c6.08-152.16 127.82-206.94 127.82-206.94l-48.69-2.04c176.51-97.38 239.4-245.49 239.4-245.49-153.6-143.49-377.64-73.59-379.38-73.05l87.22-38.54c-393.59 20.29-462.58 541.71-462.58 541.71z" style="fill:url(#easy-b)"/>
           <path id="path18" fill="url(#easy-d)" d="m540.6 1857.22-38.56 16.23c282.01 117.68 533.59-123.75 533.59-123.75l-18.26 50.72c105.49-73.04 117.67-249.55 117.67-249.55l10.14 60.87c.62-53.59 13.02-121.02 29.99-188.95l-42.5-19.69-81.09 138.97 19.39-10.39c-.62.96-40.54 62.62-84.75 92.1h22.28s-54.96 74.28-132.21 102.5h34.17s-108.44 74.27-231.74 78.73l50.5 10.4s-80.22 20.8-163.41 13.37l35.65 20.81s-246.75-57.98-348.44-211.71c110.95 190.39 287.58 219.34 287.58 219.34" style="fill:url(#easy-d)"/>
@@ -168,46 +168,46 @@
       </g>
     </g>
   </g>
-  <g class="trick" style="transform-origin:75px 425px;animation-name:t-arc,t-spin;animation-delay:5.16s">
-    <g class="letter" style="transform-origin:0 574.6px;animation-name:hop,t-squash;animation-delay:.3s,5.16s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-t"/>
-      <use class="blue face" href="#glyph-t" style="animation-name:sheen-t;animation-delay:.3s"/>
+      <use class="blue" href="#glyph-t"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:310.1px 450px;--jump:-158px;animation-name:arc,flip-m,m-wobble;animation-delay:5.04s">
-    <g class="letter" style="transform-origin:310.1px 568.8px;animation-name:squish,flip-squash;animation-delay:.4s,5.04s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-w"/>
-      <use class="blue face" href="#glyph-w" style="animation-name:sheen-w;animation-delay:.4s"/>
+      <use class="blue" href="#glyph-w"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:786.7px 450px;animation-name:e2-arc,e2-wobble;animation-delay:4.8s">
-    <g class="letter" style="transform-origin:786.7px 575px;animation-name:squish,e2-squash;animation-delay:.6s,4.8s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-e2"/>
-      <use class="blue face" href="#glyph-e2" style="animation-name:sheen-e2;animation-delay:.6s"/>
+      <use class="blue" href="#glyph-e2"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:1001.3px 450px;--jump:-170px;--turn:-360deg;animation-name:arc,spin;animation-delay:4.68s">
-    <g class="letter" style="transform-origin:1001.3px 568.8px;animation-name:stretch,flip-squash;animation-delay:.7s,4.68s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-n"/>
-      <use class="blue face" href="#glyph-n" style="animation-name:sheen-n;animation-delay:.7s"/>
+      <use class="blue" href="#glyph-n"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:1209.2px 450px;--jump:-155px;animation-name:arc,card-flip;animation-delay:4.56s">
-    <g class="letter" style="transform-origin:1209.2px 575px;animation-name:hop,flip-squash;animation-delay:.8s,4.56s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-s"/>
-      <use class="blue face" href="#glyph-s" style="animation-name:sheen-s;animation-delay:.8s"/>
+      <use class="blue" href="#glyph-s"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:1532.8px 331.8px;animation-name:pendulum;animation-delay:4.32s">
-    <g class="letter" style="transform-origin:1532.8px 331.8px;animation-name:dangle;animation-delay:1s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-g"/>
-      <use class="green face" href="#glyph-g" style="animation-name:sheen-g;animation-delay:1s"/>
+      <use class="green" href="#glyph-g"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:1745px 575px;animation-name:jelly;animation-delay:4.2s">
-    <g class="letter" style="transform-origin:1847.3px 575px;animation-name:stretch;animation-delay:1.1s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-d"/>
-      <use class="green face" href="#glyph-d" style="animation-name:sheen-d;animation-delay:1.1s"/>
+      <use class="green" href="#glyph-d"/>
     </g>
   </g>
   <g id="easy-paws">
@@ -215,7 +215,7 @@
     <g transform="translate(-219 -397)scale(.524)">
       <use href="#g75"/>
       <g id="easy-right-hind-leg" mask="url(#right-hind-leg)">
-        <g class="tail-copy">
+        <g>
           <use href="#path16"/>
           <use href="#path17"/>
           <use href="#path18"/>
@@ -235,16 +235,16 @@
       </g>
     </g>
   </g>
-  <g class="trick" style="transform-origin:576.8px 450px;--jump:-190px;--turn:360deg;animation-name:arc,spin;animation-delay:4.92s">
-    <g class="letter" style="transform-origin:576.8px 575px;animation-name:hop,flip-squash;animation-delay:.5s,4.92s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-e1"/>
-      <use class="blue face" href="#glyph-e1" style="animation-name:sheen-e1;animation-delay:.5s"/>
+      <use class="blue" href="#glyph-e1"/>
     </g>
   </g>
-  <g class="trick" style="transform-origin:1365.2px 527px;animation-name:dot-arc,dot-pop;animation-delay:4.44s">
-    <g class="letter" style="transform-origin:1365.2px 571.7px;animation-name:bounce,dot-squash;animation-delay:.9s,4.44s">
+  <g>
+    <g>
       <use x="2.5" y="6.5" class="letter-shadow" href="#glyph-dot"/>
-      <use class="green face" href="#glyph-dot" style="animation-name:sheen-dot;animation-delay:.9s"/>
+      <use class="green" href="#glyph-dot"/>
     </g>
   </g>
 </svg>
