@@ -4,10 +4,17 @@
 param(
     [Parameter(Mandatory)][string] $Tag,
     [switch] $Prerelease,
-    [string] $PackageDirectory = 'packages'
+    [string] $PackageDirectory = 'packages',
+    [string] $NotesFile = (Join-Path $PSScriptRoot "../releases/$Tag.md")
 )
 
 $ErrorActionPreference = 'Stop'
+if (!(Test-Path -LiteralPath $NotesFile -PathType Leaf)) {
+    throw "Release notes are missing: $NotesFile. Write the changelog before publishing."
+}
+if ([string]::IsNullOrWhiteSpace((Get-Content -LiteralPath $NotesFile -Raw))) {
+    throw "Release notes are empty: $NotesFile. Write the changelog before publishing."
+}
 $packages = @(Get-ChildItem $PackageDirectory -File | ForEach-Object FullName)
 $apiUrl = if ($env:GITHUB_API_URL) { $env:GITHUB_API_URL } else { 'https://api.github.com' }
 $headers = @{
@@ -23,7 +30,7 @@ switch ([int]$response.StatusCode) {
         gh release upload $Tag @packages --clobber
     }
     404 {
-        $options = @('--verify-tag', '--generate-notes', '--title', "tweens.gd $Tag")
+        $options = @('--verify-tag', '--notes-file', $NotesFile, '--title', "tweens.gd $Tag")
         if ($Prerelease) { $options += '--prerelease' }
         gh release create $Tag @packages @options
     }

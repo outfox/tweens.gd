@@ -6,6 +6,7 @@ $ErrorActionPreference = 'Stop'
 # Exercise the production script without network access or release mutations.
 function Invoke-WebRequest {
     param($Uri, $Headers, [switch] $SkipHttpErrorCheck)
+    $releaseTestState.Lookups++
     if (!$SkipHttpErrorCheck) { throw 'Lookup must inspect HTTP error statuses.' }
     if ($releaseTestState.NetworkFailure) { throw 'Simulated network failure' }
     [pscustomobject]@{ StatusCode = $releaseTestState.StatusCode }
@@ -31,20 +32,32 @@ $cases = @(
     @{ Status = 503; Error = 'HTTP 503' },
     @{ NetworkFailure = $true; Error = 'Simulated network failure' },
     @{ Status = 200; Command = 'upload'; ExitCode = 1; Error = 'gh exit code 1' },
-    @{ Status = 404; Command = 'create'; ExitCode = 1; Error = 'gh exit code 1' }
+    @{ Status = 404; Command = 'create'; ExitCode = 1; Error = 'gh exit code 1' },
+    @{ Notes = 'Missing'; Error = 'Release notes are missing' },
+    @{ Notes = 'Empty'; Error = 'Release notes are empty' }
 )
 $savedExitCode = $global:LASTEXITCODE
+$notesFile = [IO.Path]::GetTempFileName()
+$emptyNotesFile = [IO.Path]::GetTempFileName()
 try {
+    Set-Content -LiteralPath $notesFile -Value 'Hand-written release notes.'
+    Set-Content -LiteralPath $emptyNotesFile -Value '   '
     foreach ($case in $cases) {
         $releaseTestState = @{
             StatusCode = $case.Status
             NetworkFailure = $case.NetworkFailure
             ExitCode = [int]$case.ExitCode
             Commands = [System.Collections.Generic.List[object]]::new()
+            Lookups = 0
+        }
+        $caseNotesFile = switch ($case.Notes) {
+            'Missing' { "$notesFile.missing" }
+            'Empty' { $emptyNotesFile }
+            default { $notesFile }
         }
         $failure = $null
         try {
-            & "$PSScriptRoot/Publish-GitHubRelease.ps1" -Tag 'v0.1.0' -Prerelease:([bool]$case.Prerelease)
+            & "$PSScriptRoot/Publish-GitHubRelease.ps1" -Tag 'v0.1.0' -Prerelease:([bool]$case.Prerelease) -NotesFile $caseNotesFile
         } catch { $failure = $_.Exception.Message }
         if ($case.Error) {
             if (!$failure -or !$failure.Contains($case.Error)) { throw "Expected '$($case.Error)', got '$failure'." }
@@ -56,9 +69,18 @@ try {
             if (($releaseTestState.Commands[0] -contains '--prerelease') -ne [bool]$case.Prerelease) {
                 throw 'Incorrect prerelease option.'
             }
+            if ($case.Command -eq 'create') {
+                $command = $releaseTestState.Commands[0]
+                $notesIndex = [array]::IndexOf($command, '--notes-file')
+                if ($notesIndex -lt 0 -or $command[$notesIndex + 1] -ne $notesFile -or $command -contains '--generate-notes') {
+                    throw 'Release creation must use the hand-written notes file.'
+                }
+            }
         } elseif ($releaseTestState.Commands.Count -ne 0) { throw 'Lookup failure must not publish anything.' }
+        if ($case.Notes -and $releaseTestState.Lookups -ne 0) { throw 'Invalid notes must fail before contacting GitHub.' }
     }
 } finally {
+    Remove-Item -LiteralPath $notesFile, $emptyNotesFile
     $global:LASTEXITCODE = $savedExitCode
 }
 Write-Output "Passed $($cases.Count) release publishing checks."
