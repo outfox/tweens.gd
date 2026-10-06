@@ -5,7 +5,7 @@ using System.Linq;
 using Godot;
 namespace testbed;
 
-public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.2)
+public readonly record struct EasingSelection(int InIndex, int OutIndex, double Skew, int BlendType = 0, double Blend = 0.1)
 {
     public static EasingSelection Default => new(0, 10, 0.5);
 }

@@ -14,6 +14,9 @@ namespace tweens {
 
 inline constexpr int64_t INFINITE_REPEATS = -1;
 
+// Centered join width for mixed In/Out eases; matches Easing.DefaultBlend in C#.
+inline constexpr double DEFAULT_BLEND = 0.1;
+
 enum Fill : int64_t {
 	FILL_NONE = 0,
 	FILL_APPLY_FROM_DURING_DELAY = 1,

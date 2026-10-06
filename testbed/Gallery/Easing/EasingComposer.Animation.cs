@@ -91,7 +91,7 @@ public sealed partial class EasingComposer
         });
     }
 
-    private static Vector2[] Sample(EaseType ease, double skew, BlendType blendType = BlendType.Makima, double blend = 0.2, double start = 0, double end = 1)
+    private static Vector2[] Sample(EaseType ease, double skew, BlendType blendType = BlendType.Makima, double blend = 0.1, double start = 0, double end = 1)
     {
         var points = new Vector2[241];
         for (var i = 0; i < points.Length; i++)

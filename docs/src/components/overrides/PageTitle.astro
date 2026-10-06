@@ -18,6 +18,10 @@ let i = 0;
 const words = title.split(' ').map((word) => [...word].map((ch) => ({ ch, i: i++ })));
 ---
 
+{/* A tool page can hide its title; the heading stays for screen readers, search, and the skip link (theme.css). */}
+{entry.data.hideTitle ? (
+<h1 id={PAGE_TITLE_ID} class="sr-only tw-hidden-title" data-pagefind-meta={searchTitle}>{title}</h1>
+) : (
 <div class="title-row">
 	<div class="heading">
 		{
@@ -56,6 +60,7 @@ const words = title.split(' ').map((word) => [...word].map((ch) => ({ ch, i: i++
 		)
 	}
 </div>
+)}
 
 <style>
 	.title-row {

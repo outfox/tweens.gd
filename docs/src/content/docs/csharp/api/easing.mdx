@@ -18,7 +18,7 @@ sprite.TweenPositionX(300, 1.2, In.Sine | Out.Cubic);
 | --- | --- | --- | --- |
 | `Ease` | `EaseType` | `Linear` | An `In` curve, an `Out` curve, both joined with `\|`, an `InOut` pair, or a legacy ease |
 | `BlendType` | `BlendType` | `Makima` | How [mixed pairs](#mixed-pairs) join |
-| `Blend` | `double` | `0.2` | Width of the centered join window, in `[0, 1]` |
+| `Blend` | `double` | `0.1` | Width of the centered join window, in `[0, 1]` |
 | `Skew` | `double` | `0.5` | Where the outward leg splits between In and Out; see [pacing](#pacing) |
 | `Weks` | `double` | `0.5` | Where the ping-pong return splits |
 | `EaseFunction` | `Func<float, float>?` | `null` | Custom function of progress; overrides `Ease` |
@@ -67,7 +67,7 @@ At the neutral split, the In leg covers the first half of progress and of the va
 | `SmoothStep` | Crossfades the two families' InOut profiles with `u²(3 − 2u)` |
 | `Linear` | Crossfades the profiles with `u`; velocity may jump at the window's edges |
 
-- With the default width 0.2, progress up to 0.4 follows the In half exactly, and from 0.6 the Out half. A wider window reshapes more of each leg; zero splices the halves directly and may jump in velocity.
+- With the default width 0.1, progress up to 0.45 follows the In half exactly, and from 0.55 the Out half. A wider window reshapes more of each leg; zero splices the halves directly and may jump in velocity.
 - `Blend` must be finite and within `[0, 1]`.
 - All methods preserve the midpoint. For monotone families, Makima and Hermite add no reversals or overshoot; the crossfades can inherit steep midpoint slopes from a family such as Circ.
 - Matching families skip the join and use their paired profile.
@@ -118,7 +118,7 @@ The edge velocities stand in for the outer slopes that `makima` takes from neigh
 
 | Method | Returns | Meaning |
 | --- | --- | --- |
-| `Easing.Evaluate(ease, progress, blendType, blend, skew)` | `float` | The weight at `progress`, without starting playback; the last three default to `Makima`, `0.2`, and `0.5` |
+| `Easing.Evaluate(ease, progress, blendType, blend, skew)` | `float` | The weight at `progress`, without starting playback; the last three default to `Makima`, `0.1`, and `0.5` |
 
 ## Legacy eases
 

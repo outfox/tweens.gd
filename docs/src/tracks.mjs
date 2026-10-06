@@ -24,7 +24,7 @@ export const PATH = [
 	},
 	{
 		label: 'Easing',
-		art: 'curve',
+		art: 'spacing',
 		pages: [
 			{ link: '/easings/', label: 'Playground' },
 			{ slug: 'effects', label: 'Effects' },
@@ -50,6 +50,15 @@ export const PATH = [
 		art: 'catalog',
 		collapsed: true,
 		pages: [
+			{ label: 'Catalog', pages: [
+				{ slug: 'nodes', label: 'Overview' },
+				{ slug: 'nodes/2d', label: '2D nodes' },
+				{ slug: 'nodes/3d', label: '3D nodes' },
+				{ slug: 'nodes/ui', label: 'UI controls' },
+				{ slug: 'nodes/materials', label: 'Material properties' },
+				{ slug: 'nodes/audio', label: 'Animation & audio' },
+				{ slug: 'nodes/values', label: 'Callback values' },
+			] },
 			// Core API pages follow a tween's life: describe it, shape it, start it, control it, then extend the library.
 			{ label: 'Core API', pages: [
 				{ slug: 'api', label: 'Overview' },
@@ -65,15 +74,6 @@ export const PATH = [
 				{ slug: 'api/chains', label: 'Chains' },
 				{ slug: 'api/custom', label: 'Custom definitions', gdscript: 'Adapters' },
 				{ slug: 'api/scheduler', label: 'Scheduler' },
-			] },
-			{ label: 'Property catalog', pages: [
-				{ slug: 'nodes', label: 'Overview' },
-				{ slug: 'nodes/2d', label: '2D nodes' },
-				{ slug: 'nodes/3d', label: '3D nodes' },
-				{ slug: 'nodes/ui', label: 'UI controls' },
-				{ slug: 'nodes/materials', label: 'Material properties' },
-				{ slug: 'nodes/audio', label: 'Animation & audio' },
-				{ slug: 'nodes/values', label: 'Callback values' },
 			] },
 		],
 	},

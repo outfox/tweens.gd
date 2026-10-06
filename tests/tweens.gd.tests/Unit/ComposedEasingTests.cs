@@ -73,7 +73,7 @@ public class ComposedEasingTests
         {
             var ease = Flag(typeof(In), sample.GetProperty("in").GetString()!) | Flag(typeof(Out), sample.GetProperty("out").GetString()!);
             var t = sample.GetProperty("progress").GetDouble();
-            Assert.InRange(Math.Abs(Easing.Evaluate(ease, (float)t, sample.TryGetProperty("blendType", out var blendType) ? Enum.Parse<BlendType>(blendType.GetString()!) : BlendType.Makima, sample.TryGetProperty("blend", out var blend) ? blend.GetDouble() : 0.2, sample.GetProperty("skew").GetDouble()) - sample.GetProperty("expected").GetDouble()),
+            Assert.InRange(Math.Abs(Easing.Evaluate(ease, (float)t, sample.TryGetProperty("blendType", out var blendType) ? Enum.Parse<BlendType>(blendType.GetString()!) : BlendType.Makima, sample.GetProperty("blend").GetDouble(), sample.GetProperty("skew").GetDouble()) - sample.GetProperty("expected").GetDouble()),
                 0, data.RootElement.GetProperty("tolerance").GetDouble());
         }
     }
@@ -102,8 +102,8 @@ public class ComposedEasingTests
                 var t = i / 100f;
                 var actual = Easing.Evaluate(combined, t);
                 Assert.True(float.IsFinite(actual));
-                if (t <= 0.4f) Assert.Equal(Easing.Evaluate(Flag(typeof(InOut), entry), t), actual);
-                if (t >= 0.6f) Assert.Equal(Easing.Evaluate(Flag(typeof(InOut), exit), t), actual);
+                if (t < 0.45f) Assert.Equal(Easing.Evaluate(Flag(typeof(InOut), entry), t), actual);
+                if (t > 0.55f) Assert.Equal(Easing.Evaluate(Flag(typeof(InOut), exit), t), actual);
             }
         }
     }
@@ -351,11 +351,11 @@ public class ComposedEasingTests
         Assert.Throws<NotImplementedException>(() => Easing.Evaluate(ease, 0.5f));
 
     [Theory]
-    [InlineData(0.4f, BlendType.Makima)]
-    [InlineData(0.6f, BlendType.Makima)]
+    [InlineData(0.45f, BlendType.Makima)]
+    [InlineData(0.55f, BlendType.Makima)]
     [InlineData(0.5f, BlendType.Makima)]
-    [InlineData(0.4f, BlendType.Hermite)]
-    [InlineData(0.6f, BlendType.Hermite)]
+    [InlineData(0.45f, BlendType.Hermite)]
+    [InlineData(0.55f, BlendType.Hermite)]
     [InlineData(0.5f, BlendType.Hermite)]
     public void BlendBoundariesHaveContinuousValueAndSlope(float t, BlendType method)
     {
@@ -422,13 +422,14 @@ public class ComposedEasingTests
     {
         var options = new TweenOptions { Duration = 1, Ease = In.Quad | Out.Cubic, BlendType = BlendType.Linear, Blend = 0.4 };
         var builder = new TweenOptionsBuilder();
-        Assert.Equal(0.2, builder.Blend);
-        Assert.Equal(default(TweenOptions), new TweenOptions { Blend = 0.2 });
-        Assert.Equal(0.4041957f, Easing.Evaluate(options.Ease, 0.45f), 5);
-        Assert.Equal(0.40125f, Easing.Evaluate(options.Ease, 0.45f, BlendType.Hermite), 5);
+        Assert.Equal(0.1, builder.Blend);
+        Assert.Equal(default(TweenOptions), new TweenOptions { Blend = 0.1 });
+        Assert.Equal(Easing.Evaluate(options.Ease, 0.47f, BlendType.Makima, 0.1), Easing.Evaluate(options.Ease, 0.47f));
+        Assert.Equal(0.4041957f, Easing.Evaluate(options.Ease, 0.45f, BlendType.Makima, 0.2), 5);
+        Assert.Equal(0.40125f, Easing.Evaluate(options.Ease, 0.45f, BlendType.Hermite, 0.2), 5);
         options.CopyTo(builder);
         Assert.Equal(options, builder.ToOptions());
-        Assert.Equal(0.2, default(TweenOptions).Blend);
+        Assert.Equal(0.1, default(TweenOptions).Blend);
         Assert.Equal(BlendType.Makima, default(TweenOptions).BlendType);
         using var scheduler = new TweenScheduler();
         var box = new Box();

@@ -13,8 +13,8 @@ public readonly record struct EaseFamily(string Name, EaseType In, EaseType Out)
 /// <summary>The website composer's settings, evaluated by tweens.gd itself.</summary>
 public sealed record EasingSettings
 {
-    // Recipes omit the library's defaults; the playground starts with a narrower blend.
-    private const double LibraryDefaultBlend = 0.2;
+    // Recipes omit the library's defaults, read from the library itself.
+    private static readonly double LibraryDefaultBlend = default(TweenOptions).Blend;
 
     // Catalog positions are the stable IDs used by the curve pickers.
     public static IReadOnlyList<EaseFamily> Families { get; } = Array.AsReadOnly(new EaseFamily[]
@@ -64,7 +64,7 @@ public sealed record EasingSettings
     public EaseFamily Exit { get; init; } = Families.Single(family => family.Name == "Elastic");
     public double Duration { get; init; } = 1.5;
     public double Skew { get; init; } = 0.5;
-    public double Blend { get; init; } = 0.1;
+    public double Blend { get; init; } = LibraryDefaultBlend;
     public BlendType BlendType { get; init; } = BlendType.Makima;
 
     public EaseType Ease => Entry.In | Exit.Out;

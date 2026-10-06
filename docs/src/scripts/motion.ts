@@ -136,7 +136,7 @@ function jumpLegOut(t: number, level: number, paired: boolean): number {
 
 /** Join half-duration profiles locally; crossfade modes are available for comparison. */
 export type BlendType = 'Makima' | 'Hermite' | 'SmoothStep' | 'Linear';
-export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 0.5, method: BlendType = 'Makima', width = 0.2): number {
+export function composeEase(entry: EaseLeg, exit: EaseLeg, progress: number, skew = 0.5, method: BlendType = 'Makima', width = 0.1): number {
 	if (!['Makima', 'Hermite', 'SmoothStep', 'Linear'].includes(method) || !Number.isFinite(width) || width < 0 || width > 1) throw new RangeError('Invalid easing blend');
 	if (!Number.isFinite(skew) || skew < 0 || skew > 1) throw new RangeError('Invalid easing split');
 	entry = canonicalFamily(entry); exit = canonicalFamily(exit);

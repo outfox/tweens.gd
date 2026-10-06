@@ -11,11 +11,14 @@ using Godot;
 namespace tweens.gd {
   /// <summary>Samples easing curves without starting playback.</summary>
   public static class Easing {
+    /// <summary>Default centered join width, shared by TweenOptions, TweenOptionsBuilder, and Evaluate.</summary>
+    internal const double DefaultBlend = 0.1;
+
     /// <summary>Samples a curve at progress clamped to [0, 1]. Eased weight may overshoot.</summary>
     /// <remarks>Skew moves the paired In/Out split in [0, 1]; 0.5 preserves the authored pair.
     /// Blend is the transition width around that split; zero directly splices the legs.
     /// In GDScript, use Tweens.Easing.evaluate(ease, progress, blend_type, blend, skew).</remarks>
-    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Makima, double blend = 0.2, double skew = 0.5)
+    public static float Evaluate(EaseType ease, float progress, BlendType blendType = BlendType.Makima, double blend = DefaultBlend, double skew = 0.5)
       => GetFunction(ease, blendType, blend, skew)(Math.Clamp(progress, 0, 1));
 
     const float ConstantA = 1.70158f;
@@ -95,7 +98,7 @@ namespace tweens.gd {
       var functions = new Func<float, float>[CurveCount, CurveCount];
       for (var i = 0; i < CurveCount; i++)
         for (var o = 0; o < CurveCount; o++) {
-          functions[i, o] = Compose(i, o, BlendType.Makima, 0.2f);
+          functions[i, o] = Compose(i, o, BlendType.Makima, (float)DefaultBlend);
         }
       return functions;
     }
@@ -250,7 +253,7 @@ namespace tweens.gd {
       if (!double.IsFinite(blend) || blend < 0 || blend > 1) throw new ArgumentOutOfRangeException(nameof(blend));
     }
 
-    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Makima, double blend = 0.2, double skew = 0.5) {
+    internal static Func<float, float> GetFunction(EaseType easeType, BlendType blendType = BlendType.Makima, double blend = DefaultBlend, double skew = 0.5) {
       ValidateBlend(blendType, blend);
       if (!double.IsFinite(skew) || skew < 0 || skew > 1) throw new ArgumentOutOfRangeException(nameof(skew));
       var bits = (long)easeType;
@@ -262,7 +265,7 @@ namespace tweens.gd {
           if (exit == 0) return InCurves[BitOperations.TrailingZeroCount(entry)];
           var i = BitOperations.TrailingZeroCount(entry);
           var o = BitOperations.TrailingZeroCount(exit);
-          return blendType == BlendType.Makima && blend == 0.2 && skew == 0.5 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend, (float)skew);
+          return blendType == BlendType.Makima && blend == DefaultBlend && skew == 0.5 ? Compositions[i, o] : Compose(i, o, blendType, (float)blend, (float)skew);
         }
       }
       return easeType switch {

@@ -123,7 +123,7 @@ public class EasingPlaygroundTests(HeadlessFixture godot)
             Assert.True(slider.ExpEdit);
             Assert.Equal(0.1, page.Settings.Blend);
             Assert.InRange(slider.Ratio, 0.51, 0.53);
-            Assert.Contains("Blend = 0.10", page.Recipe);
+            Assert.DoesNotContain("Blend =", page.Recipe);
             slider.Ratio = 0;
             Assert.Equal(0, page.Settings.Blend);
             slider.Ratio = 1;
@@ -142,7 +142,7 @@ public class EasingPlaygroundTests(HeadlessFixture godot)
             Assert.Equal(0.1, page.Settings.Blend);
             Assert.Equal(11, slider.Value);
             page.SetLanguage(gdscript: true);
-            Assert.Contains("move.blend = 0.10", page.Recipe);
+            Assert.DoesNotContain("move.blend", page.Recipe);
             page.Reset();
             Assert.Equal(0.1, page.Settings.Blend);
             Assert.Equal("10%", page.GetNode<Label>("%BlendValue").Text);

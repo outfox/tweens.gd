@@ -255,7 +255,7 @@ double bounce_out(double t) {
 } // namespace
 
 void TweensGdEasing::_bind_methods() {
-	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress", "blend_type", "blend", "skew"), &TweensGdEasing::evaluate, DEFVAL(0), DEFVAL(0.2), DEFVAL(0.5));
+	ClassDB::bind_static_method("TweensGdEasing", D_METHOD("evaluate", "ease", "progress", "blend_type", "blend", "skew"), &TweensGdEasing::evaluate, DEFVAL(0), DEFVAL(tweens::DEFAULT_BLEND), DEFVAL(0.5));
 }
 
 bool tweens::is_known_ease(int64_t p_ease) {

@@ -344,9 +344,9 @@
 		<member name="adapter" type="RefCounted" setter="set_adapter" getter="get_adapter">
 			Custom storage operations, copied for each playback. Use a [TweensGdAdapter] or [member property], not both.
 		</member>
-		<member name="blend" type="float" setter="set_blend" getter="get_blend" default="0.2">
-			Centered transition width in [code][0, 1][/code]. Defaults to 0.2 (40%–60%); zero directly splices the
-			halves.
+		<member name="blend" type="float" setter="set_blend" getter="get_blend" default="0.1">
+			Centered transition width in [code][0, 1][/code]. Defaults to 0.1 (45%–55% at the neutral split); zero
+			directly splices the halves.
 		</member>
 		<member name="blend_type" type="int" setter="set_blend_type" getter="get_blend_type" default="0">
 			How mixed In/Out legs join. Defaults to [code]BlendType.MAKIMA[/code]; matching families keep their

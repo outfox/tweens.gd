@@ -80,14 +80,16 @@
       "out": "Cubic",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": 0.578125
+      "expected": 0.578125,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "None",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.36
+      "expected": 0.36,
+      "blend": 0.2
     },
     {
       "in": "Linear",
@@ -158,42 +160,48 @@
       "out": "None",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": 0.5
+      "expected": 0.5,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Sine",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": 0.1464466094067262
+      "expected": 0.1464466094067262,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Sine",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.3454915028125263
+      "expected": 0.3454915028125263,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Sine",
       "progress": 0.5,
       "skew": 0.5,
-      "expected": 0.49999999999999994
+      "expected": 0.49999999999999994,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Sine",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.6545084971874737
+      "expected": 0.6545084971874737,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Sine",
       "progress": 0.75,
       "skew": 0.5,
-      "expected": 0.8535533905932737
+      "expected": 0.8535533905932737,
+      "blend": 0.2
     },
     {
       "in": "Quad",
@@ -434,364 +442,416 @@
       "out": "Elastic",
       "progress": 0,
       "skew": 0.5,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 1.2855216252933235
+      "expected": 1.2855216252933235,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic",
       "progress": 0.27674,
       "skew": 0.5,
-      "expected": 0.9882263299486703
+      "expected": 0.9882263299486703,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.5,
-      "expected": 1.0014170663600452
+      "expected": 1.0014170663600452,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic",
       "progress": 0.7,
       "skew": 0.5,
-      "expected": 0.9980495592207533
+      "expected": 0.9980495592207533,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic",
       "progress": 1,
       "skew": 0.5,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Elastic",
       "out": "None",
       "progress": 0,
       "skew": 0.5,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Elastic",
       "out": "None",
       "progress": 0.3,
       "skew": 0.5,
-      "expected": 0.001950440779246665
+      "expected": 0.001950440779246665,
+      "blend": 0.2
     },
     {
       "in": "Elastic",
       "out": "None",
       "progress": 0.72326,
       "skew": 0.5,
-      "expected": 0.011773670051329677
+      "expected": 0.011773670051329677,
+      "blend": 0.2
     },
     {
       "in": "Elastic",
       "out": "None",
       "progress": 0.9,
       "skew": 0.5,
-      "expected": -0.2855216252933235
+      "expected": -0.2855216252933235,
+      "blend": 0.2
     },
     {
       "in": "Elastic",
       "out": "None",
       "progress": 1,
       "skew": 0.5,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": 1.0014170663600452
+      "expected": 1.0014170663600452,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Back10",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 0.7057971454549532
+      "expected": 0.7057971454549532,
+      "blend": 0.2
     },
     {
       "in": "Back10",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": 0.2942028545450468
-    },
-    {
-      "in": "Back10",
-      "out": "Back10",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": -0.06816025039776342
+      "expected": 0.2942028545450468,
+      "blend": 0.2
     },
     {
       "in": "Back10",
       "out": "Back10",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": -0.06816025039776342,
+      "blend": 0.2
+    },
+    {
+      "in": "Back10",
+      "out": "Back10",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.0681602503977634
+      "expected": 1.0681602503977634,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Back20",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 0.8198257793940866
+      "expected": 0.8198257793940866,
+      "blend": 0.2
     },
     {
       "in": "Back20",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": 0.18017422060591337
-    },
-    {
-      "in": "Back20",
-      "out": "Back20",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": -0.11740595655813461
+      "expected": 0.18017422060591337,
+      "blend": 0.2
     },
     {
       "in": "Back20",
       "out": "Back20",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": -0.11740595655813461,
+      "blend": 0.2
+    },
+    {
+      "in": "Back20",
+      "out": "Back20",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.1174059565581347
+      "expected": 1.1174059565581347,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Back30",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 0.9224386122425039
+      "expected": 0.9224386122425039,
+      "blend": 0.2
     },
     {
       "in": "Back30",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": 0.0775613877574961
-    },
-    {
-      "in": "Back30",
-      "out": "Back30",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": -0.1635181219275308
+      "expected": 0.0775613877574961,
+      "blend": 0.2
     },
     {
       "in": "Back30",
       "out": "Back30",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": -0.1635181219275308,
+      "blend": 0.2
+    },
+    {
+      "in": "Back30",
+      "out": "Back30",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.1635181219275308
+      "expected": 1.1635181219275308,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Back40",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.019935315537817
+      "expected": 1.019935315537817,
+      "blend": 0.2
     },
     {
       "in": "Back40",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.019935315537817022
-    },
-    {
-      "in": "Back40",
-      "out": "Back40",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": -0.2083368404492395
+      "expected": -0.019935315537817022,
+      "blend": 0.2
     },
     {
       "in": "Back40",
       "out": "Back40",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": -0.2083368404492395,
+      "blend": 0.2
+    },
+    {
+      "in": "Back40",
+      "out": "Back40",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.2083368404492396
+      "expected": 1.2083368404492396,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Back50",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.114542018705118
+      "expected": 1.114542018705118,
+      "blend": 0.2
     },
     {
       "in": "Back50",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.11454201870511804
-    },
-    {
-      "in": "Back50",
-      "out": "Back50",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": -0.2524713714501874
+      "expected": -0.11454201870511804,
+      "blend": 0.2
     },
     {
       "in": "Back50",
       "out": "Back50",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": -0.2524713714501874,
+      "blend": 0.2
+    },
+    {
+      "in": "Back50",
+      "out": "Back50",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.2524713714501874
+      "expected": 1.2524713714501874,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic10",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.0994368694898362
+      "expected": 1.0994368694898362,
+      "blend": 0.2
     },
     {
       "in": "Elastic10",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.09943686948983621
-    },
-    {
-      "in": "Elastic10",
-      "out": "Elastic10",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": 0.014943833488485658
+      "expected": -0.09943686948983621,
+      "blend": 0.2
     },
     {
       "in": "Elastic10",
       "out": "Elastic10",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": 0.014943833488485658,
+      "blend": 0.2
+    },
+    {
+      "in": "Elastic10",
+      "out": "Elastic10",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9850561665115143
+      "expected": 0.9850561665115143,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic20",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.1197928455460717
+      "expected": 1.1197928455460717,
+      "blend": 0.2
     },
     {
       "in": "Elastic20",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.11979284554607172
-    },
-    {
-      "in": "Elastic20",
-      "out": "Elastic20",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": 0.012448871896973468
+      "expected": -0.11979284554607172,
+      "blend": 0.2
     },
     {
       "in": "Elastic20",
       "out": "Elastic20",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": 0.012448871896973468,
+      "blend": 0.2
+    },
+    {
+      "in": "Elastic20",
+      "out": "Elastic20",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9875511281030265
+      "expected": 0.9875511281030265,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic30",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.1296963292802638
+      "expected": 1.1296963292802638,
+      "blend": 0.2
     },
     {
       "in": "Elastic30",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.12969632928026398
+      "expected": -0.12969632928026398,
+      "blend": 0.2
     },
     {
       "in": "Elastic30",
       "out": "Elastic30",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.010832955744933315
+      "expected": 0.010832955744933315,
+      "blend": 0.2
     },
     {
       "in": "Elastic30",
       "out": "Elastic30",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9891670442550666
+      "expected": 0.9891670442550666,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic40",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.1379147309246556
+      "expected": 1.1379147309246556,
+      "blend": 0.2
     },
     {
       "in": "Elastic40",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.13791473092465556
+      "expected": -0.13791473092465556,
+      "blend": 0.2
     },
     {
       "in": "Elastic40",
       "out": "Elastic40",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.00939616665992482
+      "expected": 0.00939616665992482,
+      "blend": 0.2
     },
     {
       "in": "Elastic40",
       "out": "Elastic40",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9906038333400752
+      "expected": 0.9906038333400752,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Elastic50",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.145410579117276
+      "expected": 1.145410579117276,
+      "blend": 0.2
     },
     {
       "in": "Elastic50",
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.14541057911727595
+      "expected": -0.14541057911727595,
+      "blend": 0.2
     },
     {
       "in": "Elastic50",
       "out": "Elastic50",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.008035528349052856
+      "expected": 0.008035528349052856,
+      "blend": 0.2
     },
     {
       "in": "Elastic50",
       "out": "Elastic50",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9919644716509471
+      "expected": 0.9919644716509471,
+      "blend": 0.2
     },
     {
       "in": "Back50",
@@ -1662,175 +1722,200 @@
       "out": "Bounce10",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.9027195659051827
+      "expected": 0.9027195659051827,
+      "blend": 0.2
     },
     {
       "in": "Bounce10",
       "out": "None",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.09728043409481735
-    },
-    {
-      "in": "Bounce10",
-      "out": "Bounce10",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": 0.039287914042481664
+      "expected": 0.09728043409481735,
+      "blend": 0.2
     },
     {
       "in": "Bounce10",
       "out": "Bounce10",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": 0.039287914042481664,
+      "blend": 0.2
+    },
+    {
+      "in": "Bounce10",
+      "out": "Bounce10",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 0.4670975241575015
+      "expected": 0.4670975241575015,
+      "blend": 0.2
     },
     {
       "in": "Bounce10",
       "out": "Bounce10",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9607120859575183
+      "expected": 0.9607120859575183,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Bounce20",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.808452035960037
+      "expected": 0.808452035960037,
+      "blend": 0.2
     },
     {
       "in": "Bounce20",
       "out": "None",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.191547964039963
+      "expected": 0.191547964039963,
+      "blend": 0.2
     },
     {
       "in": "Bounce20",
       "out": "Bounce20",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.009618156434649139
+      "expected": 0.009618156434649139,
+      "blend": 0.2
     },
     {
       "in": "Bounce20",
       "out": "Bounce20",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 0.4483640563788214
+      "expected": 0.4483640563788214,
+      "blend": 0.2
     },
     {
       "in": "Bounce20",
       "out": "Bounce20",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9903818435653509
+      "expected": 0.9903818435653509,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Bounce30",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.7410041493954538
+      "expected": 0.7410041493954538,
+      "blend": 0.2
     },
     {
       "in": "Bounce30",
       "out": "None",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.2589958506045462
+      "expected": 0.2589958506045462,
+      "blend": 0.2
     },
     {
       "in": "Bounce30",
       "out": "Bounce30",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.01763104996137771
+      "expected": 0.01763104996137771,
+      "blend": 0.2
     },
     {
       "in": "Bounce30",
       "out": "Bounce30",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 0.43113911657654813
+      "expected": 0.43113911657654813,
+      "blend": 0.2
     },
     {
       "in": "Bounce30",
       "out": "Bounce30",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9823689500386223
+      "expected": 0.9823689500386223,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Bounce40",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.6874391318103651
+      "expected": 0.6874391318103651,
+      "blend": 0.2
     },
     {
       "in": "Bounce40",
       "out": "None",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.3125608681896349
+      "expected": 0.3125608681896349,
+      "blend": 0.2
     },
     {
       "in": "Bounce40",
       "out": "Bounce40",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.04058359213500107
+      "expected": 0.04058359213500107,
+      "blend": 0.2
     },
     {
       "in": "Bounce40",
       "out": "Bounce40",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 0.414695048315003
+      "expected": 0.414695048315003,
+      "blend": 0.2
     },
     {
       "in": "Bounce40",
       "out": "Bounce40",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.9594164078649989
+      "expected": 0.9594164078649989,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Bounce50",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.6427460325558381
+      "expected": 0.6427460325558381,
+      "blend": 0.2
     },
     {
       "in": "Bounce50",
       "out": "None",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.35725396744416194
+      "expected": 0.35725396744416194,
+      "blend": 0.2
     },
     {
       "in": "Bounce50",
       "out": "Bounce50",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": 0.06374999999999997
+      "expected": 0.06374999999999997,
+      "blend": 0.2
     },
     {
       "in": "Bounce50",
       "out": "Bounce50",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 0.39875000000000005
+      "expected": 0.39875000000000005,
+      "blend": 0.2
     },
     {
       "in": "Bounce50",
       "out": "Bounce50",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.93625
+      "expected": 0.93625,
+      "blend": 0.2
     },
     {
       "in": "Bounce20",
@@ -2269,245 +2354,280 @@
       "out": "Jump10",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 0.35199811556599303
+      "expected": 0.35199811556599303,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump10",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 1.051119817806481
+      "expected": 1.051119817806481,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump10",
       "progress": 0.75,
       "skew": 0.5,
-      "expected": 1.0043742148191637
+      "expected": 1.0043742148191637,
+      "blend": 0.2
     },
     {
       "in": "Jump10",
       "out": "None",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": -0.004374214819163669
+      "expected": -0.004374214819163669,
+      "blend": 0.2
     },
     {
       "in": "Jump10",
       "out": "None",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.4973776696148431
-    },
-    {
-      "in": "Jump10",
-      "out": "Jump10",
-      "progress": 0.15,
-      "skew": 0.5,
-      "expected": -0.001492346141747647
+      "expected": 0.4973776696148431,
+      "blend": 0.2
     },
     {
       "in": "Jump10",
       "out": "Jump10",
+      "progress": 0.15,
+      "skew": 0.5,
+      "expected": -0.001492346141747647,
+      "blend": 0.2
+    },
+    {
+      "in": "Jump10",
+      "out": "Jump10",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.0014923461417475
+      "expected": 1.0014923461417475,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump20",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 0.43595407685048615
+      "expected": 0.43595407685048615,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump20",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 1.1901237113388365
+      "expected": 1.1901237113388365,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump20",
       "progress": 0.75,
       "skew": 0.5,
-      "expected": 1.0387308653543692
+      "expected": 1.0387308653543692,
+      "blend": 0.2
     },
     {
       "in": "Jump20",
       "out": "None",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": -0.038730865354369204
+      "expected": -0.038730865354369204,
+      "blend": 0.2
     },
     {
       "in": "Jump20",
       "out": "None",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.3828150577951446
+      "expected": 0.3828150577951446,
+      "blend": 0.2
     },
     {
       "in": "Jump20",
       "out": "Jump20",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": -0.03062486080160909
+      "expected": -0.03062486080160909,
+      "blend": 0.2
     },
     {
       "in": "Jump20",
       "out": "Jump20",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.030624860801609
+      "expected": 1.030624860801609,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump30",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 0.5092749099279279
+      "expected": 0.5092749099279279,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump30",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 1.299881002301802
+      "expected": 1.299881002301802,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump30",
       "progress": 0.75,
       "skew": 0.5,
-      "expected": 1.06865621246997
+      "expected": 1.06865621246997,
+      "blend": 0.2
     },
     {
       "in": "Jump30",
       "out": "None",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": -0.06865621246996989
+      "expected": -0.06865621246996989,
+      "blend": 0.2
     },
     {
       "in": "Jump30",
       "out": "None",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.28331887760210206
+      "expected": 0.28331887760210206,
+      "blend": 0.2
     },
     {
       "in": "Jump30",
       "out": "Jump30",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": -0.05773469228349526
+      "expected": -0.05773469228349526,
+      "blend": 0.2
     },
     {
       "in": "Jump30",
       "out": "Jump30",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.0577346922834954
+      "expected": 1.0577346922834954,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump40",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 0.5777491648096547
+      "expected": 0.5777491648096547,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump40",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 1.3963102032265504
+      "expected": 1.3963102032265504,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump40",
       "progress": 0.75,
       "skew": 0.5,
-      "expected": 1.096562152004023
+      "expected": 1.096562152004023,
+      "blend": 0.2
     },
     {
       "in": "Jump40",
       "out": "None",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": -0.09656215200402296
+      "expected": -0.09656215200402296,
+      "blend": 0.2
     },
     {
       "in": "Jump40",
       "out": "None",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.19068868318632237
+      "expected": 0.19068868318632237,
+      "blend": 0.2
     },
     {
       "in": "Jump40",
       "out": "Jump40",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": -0.08399999999999996
+      "expected": -0.08399999999999996,
+      "blend": 0.2
     },
     {
       "in": "Jump40",
       "out": "Jump40",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.084
+      "expected": 1.084,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump50",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 0.6434614317029975
+      "expected": 0.6434614317029975,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump50",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 1.485143937183243
+      "expected": 1.485143937183243,
+      "blend": 0.2
     },
     {
       "in": "None",
       "out": "Jump50",
       "progress": 0.75,
       "skew": 0.5,
-      "expected": 1.1233172632095823
+      "expected": 1.1233172632095823,
+      "blend": 0.2
     },
     {
       "in": "Jump50",
       "out": "None",
       "progress": 0.25,
       "skew": 0.5,
-      "expected": -0.12331726320958225
+      "expected": -0.12331726320958225,
+      "blend": 0.2
     },
     {
       "in": "Jump50",
       "out": "None",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 0.10197130508742014
+      "expected": 0.10197130508742014,
+      "blend": 0.2
     },
     {
       "in": "Jump50",
       "out": "Jump50",
       "progress": 0.15,
       "skew": 0.5,
-      "expected": -0.10981601717798217
+      "expected": -0.10981601717798217,
+      "blend": 0.2
     },
     {
       "in": "Jump50",
       "out": "Jump50",
       "progress": 0.85,
       "skew": 0.5,
-      "expected": 1.109816017177982
+      "expected": 1.109816017177982,
+      "blend": 0.2
     },
     {
       "in": "Jump20",
@@ -2946,21 +3066,24 @@
       "out": "Cubic",
       "progress": 0.35,
       "skew": 0.5,
-      "expected": 0.24499999999999997
+      "expected": 0.24499999999999997,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.4,
       "skew": 0.5,
-      "expected": 0.32000000000000006
+      "expected": 0.32000000000000006,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.45,
       "skew": 0.5,
-      "expected": 0.4041956521739131
+      "expected": 0.4041956521739131,
+      "blend": 0.2
     },
     {
       "in": "Quad",
@@ -2976,14 +3099,16 @@
       "out": "Cubic",
       "progress": 0.5,
       "skew": 0.5,
-      "expected": 0.49999999999999994
+      "expected": 0.49999999999999994,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.55,
       "skew": 0.5,
-      "expected": 0.6238043478260871
+      "expected": 0.6238043478260871,
+      "blend": 0.2
     },
     {
       "in": "Quad",
@@ -2999,1022 +3124,1168 @@
       "out": "Cubic",
       "progress": 0.6,
       "skew": 0.5,
-      "expected": 0.744
+      "expected": 0.744,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Cubic",
       "progress": 0.65,
       "skew": 0.5,
-      "expected": 0.8285
+      "expected": 0.8285,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.125,
       "skew": 0,
-      "expected": 0.234375
+      "expected": 0.234375,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.5,
       "skew": 0,
-      "expected": 0.75
+      "expected": 0.75,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.875,
       "skew": 0,
-      "expected": 0.984375
+      "expected": 0.984375,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 0,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.125,
       "skew": 0,
-      "expected": 0.330078125
+      "expected": 0.330078125,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 0,
-      "expected": 0.875
+      "expected": 0.875,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.875,
       "skew": 0,
-      "expected": 0.998046875
+      "expected": 0.998046875,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 0,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0,
-      "expected": 1.2965738391429407
+      "expected": 1.2965738391429407,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0,
-      "expected": 1.0014170663600452
+      "expected": 1.0014170663600452,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0,
-      "expected": 0.9969112457469758
+      "expected": 0.9969112457469758,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 0,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.125,
       "skew": 0,
-      "expected": 0.6169139530374123
+      "expected": 0.6169139530374123,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 0,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.5,
       "skew": 0,
-      "expected": 1.2868747497997999
+      "expected": 1.2868747497997999,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.875,
       "skew": 0,
-      "expected": 1.0202265280974725
+      "expected": 1.0202265280974725,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 0,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 0.01,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.125,
       "skew": 0.01,
-      "expected": 0.22664141414141414
+      "expected": 0.22664141414141414,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.01,
       "skew": 0.01,
-      "expected": 0.01
+      "expected": 0.01,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.5,
       "skew": 0.01,
-      "expected": 0.7474747474747475
+      "expected": 0.7474747474747475,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.875,
       "skew": 0.01,
-      "expected": 0.9842171717171717
+      "expected": 0.9842171717171717,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 0.01,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 0.01,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.125,
       "skew": 0.01,
-      "expected": 0.31647599734720944
+      "expected": 0.31647599734720944,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.01,
       "skew": 0.01,
-      "expected": 0.01
+      "expected": 0.01,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 0.01,
-      "expected": 0.8724619936741149
+      "expected": 0.8724619936741149,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.875,
       "skew": 0.01,
-      "expected": 0.998007218651158
+      "expected": 0.998007218651158,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 0.01,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 0.01,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0.01,
-      "expected": 1.2997739995445927
+      "expected": 1.2997739995445927,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.01,
       "skew": 0.01,
-      "expected": 0.01
+      "expected": 0.01,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.01,
-      "expected": 0.998396493920129
+      "expected": 0.998396493920129,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0.01,
-      "expected": 0.9971900259392533
+      "expected": 0.9971900259392533,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 0.01,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 0.01,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.125,
       "skew": 0.01,
-      "expected": 0.588371885124478
+      "expected": 0.588371885124478,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.01,
       "skew": 0.01,
-      "expected": 0.01
+      "expected": 0.01,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.5,
       "skew": 0.01,
-      "expected": 1.2908448072595986
+      "expected": 1.2908448072595986,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.875,
       "skew": 0.01,
-      "expected": 1.0213067743710975
+      "expected": 1.0213067743710975,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 0.01,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 0.25,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.125,
       "skew": 0.25,
-      "expected": 0.0625
+      "expected": 0.0625,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.25,
       "skew": 0.25,
-      "expected": 0.25
+      "expected": 0.25,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.5,
       "skew": 0.25,
-      "expected": 0.6666666666666665
+      "expected": 0.6666666666666665,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.875,
       "skew": 0.25,
-      "expected": 0.9791666666666667
+      "expected": 0.9791666666666667,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 0.25,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 0.25,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.125,
       "skew": 0.25,
-      "expected": 0.0732233047033631
+      "expected": 0.0732233047033631,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.25,
       "skew": 0.25,
-      "expected": 0.24999999999999997
+      "expected": 0.24999999999999997,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 0.25,
-      "expected": 0.7777777777777778
+      "expected": 0.7777777777777778,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.875,
       "skew": 0.25,
-      "expected": 0.9965277777777779
+      "expected": 0.9965277777777779,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 0.25,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 0.25,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0.25,
-      "expected": -0.14436321619794723
+      "expected": -0.14436321619794723,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.25,
       "skew": 0.25,
-      "expected": 0.2499999999999999
+      "expected": 0.2499999999999999,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.25,
-      "expected": 1.0511449322082806
+      "expected": 1.0511449322082806,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0.25,
-      "expected": 1.0027366479601063
+      "expected": 1.0027366479601063,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 0.25,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 0.25,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.125,
       "skew": 0.25,
-      "expected": 0.14836187548277815
+      "expected": 0.14836187548277815,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.25,
       "skew": 0.25,
-      "expected": 0.24999999999999994
+      "expected": 0.24999999999999994,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.5,
       "skew": 0.25,
-      "expected": 1.2882482070637964
+      "expected": 1.2882482070637964,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.875,
       "skew": 0.25,
-      "expected": 1.0563028112361643
+      "expected": 1.0563028112361643,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 0.25,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 0.75,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.125,
       "skew": 0.75,
-      "expected": 0.020833333333333332
+      "expected": 0.020833333333333332,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.75,
       "skew": 0.75,
-      "expected": 0.75
+      "expected": 0.75,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": 0.3333333333333333
+      "expected": 0.3333333333333333,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.875,
       "skew": 0.75,
-      "expected": 0.9375
+      "expected": 0.9375,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 0.75,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 0.75,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.125,
       "skew": 0.75,
-      "expected": 0.025555630283198766
+      "expected": 0.025555630283198766,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.75,
       "skew": 0.75,
-      "expected": 0.7500000000000001
+      "expected": 0.7500000000000001,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": 0.3749999999999999
+      "expected": 0.3749999999999999,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.875,
       "skew": 0.75,
-      "expected": 0.96875
+      "expected": 0.96875,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 0.75,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 0.75,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0.75,
-      "expected": -0.07477148069860132
+      "expected": -0.07477148069860132,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.75,
       "skew": 0.75,
-      "expected": 0.7500000000000003
+      "expected": 0.7500000000000003,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": -0.2785374764710483
+      "expected": -0.2785374764710483,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0.75,
-      "expected": 0.9727242967584941
+      "expected": 0.9727242967584941,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 0.75,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 0.75,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.125,
       "skew": 0.75,
-      "expected": 0.07381870972638796
+      "expected": 0.07381870972638796,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.75,
       "skew": 0.75,
-      "expected": 0.7500000000000001
+      "expected": 0.7500000000000001,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": 0.1370889764977835
+      "expected": 0.1370889764977835,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.875,
       "skew": 0.75,
-      "expected": 1.1218112178478972
+      "expected": 1.1218112178478972,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 0.75,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 0.99,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.125,
       "skew": 0.99,
-      "expected": 0.015782828282828284
+      "expected": 0.015782828282828284,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.99,
       "skew": 0.99,
-      "expected": 0.99
+      "expected": 0.99,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.5,
       "skew": 0.99,
-      "expected": 0.25252525252525254
+      "expected": 0.25252525252525254,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.875,
       "skew": 0.99,
-      "expected": 0.7733585858585859
+      "expected": 0.7733585858585859,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 0.99,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 0.99,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.125,
       "skew": 0.99,
-      "expected": 0.019407540815430578
+      "expected": 0.019407540815430578,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.99,
       "skew": 0.99,
-      "expected": 0.99
+      "expected": 0.99,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 0.99,
-      "expected": 0.29553986117074194
+      "expected": 0.29553986117074194,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.875,
       "skew": 0.99,
-      "expected": 0.8103591330540724
+      "expected": 0.8103591330540724,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 0.99,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 0.99,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0.99,
-      "expected": -0.045425164956004606
+      "expected": -0.045425164956004606,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.99,
       "skew": 0.99,
-      "expected": 0.99
+      "expected": 0.99,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.99,
-      "expected": -0.30223852434463155
+      "expected": -0.30223852434463155,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0.99,
-      "expected": 0.3746221212333564
+      "expected": 0.3746221212333564,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 0.99,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 0.99,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.125,
       "skew": 0.99,
-      "expected": 0.04265167221118447
+      "expected": 0.04265167221118447,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.99,
       "skew": 0.99,
-      "expected": 0.99
+      "expected": 0.99,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.5,
       "skew": 0.99,
-      "expected": 0.2923816957691132
+      "expected": 0.2923816957691132,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.875,
       "skew": 0.99,
-      "expected": 0.8749248629505854
+      "expected": 0.8749248629505854,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 0.99,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0,
       "skew": 1,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.125,
       "skew": 1,
-      "expected": 0.015625
+      "expected": 0.015625,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 1,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.5,
       "skew": 1,
-      "expected": 0.25
+      "expected": 0.25,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 0.875,
       "skew": 1,
-      "expected": 0.765625
+      "expected": 0.765625,
+      "blend": 0.2
     },
     {
       "in": "Quad",
       "out": "Quad",
       "progress": 1,
       "skew": 1,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0,
       "skew": 1,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.125,
       "skew": 1,
-      "expected": 0.01921471959676957
+      "expected": 0.01921471959676957,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 1,
-      "expected": 0.9999999999999999
+      "expected": 0.9999999999999999,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.5,
       "skew": 1,
-      "expected": 0.2928932188134524
+      "expected": 0.2928932188134524,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 0.875,
       "skew": 1,
-      "expected": 0.8049096779838717
+      "expected": 0.8049096779838717,
+      "blend": 0.2
     },
     {
       "in": "Sine",
       "out": "Cubic",
       "progress": 1,
       "skew": 1,
-      "expected": 0.9999999999999999
+      "expected": 0.9999999999999999,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0,
       "skew": 1,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.125,
       "skew": 1,
-      "expected": -0.04444992501369516
+      "expected": -0.04444992501369516,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 1,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.5,
       "skew": 1,
-      "expected": -0.29925645726807004
+      "expected": -0.29925645726807004,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 0.875,
       "skew": 1,
-      "expected": 0.3451005249041339
+      "expected": 0.3451005249041339,
+      "blend": 0.2
     },
     {
       "in": "Back",
       "out": "Elastic",
       "progress": 1,
       "skew": 1,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0,
       "skew": 1,
-      "expected": 0
+      "expected": 0,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.125,
       "skew": 1,
-      "expected": 0.041476609649163776
+      "expected": 0.041476609649163776,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 1,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.5,
       "skew": 1,
-      "expected": 0.2920419181288746
+      "expected": 0.2920419181288746,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 0.875,
       "skew": 1,
-      "expected": 0.8670459702728724
+      "expected": 0.8670459702728724,
+      "blend": 0.2
     },
     {
       "in": "Bounce",
       "out": "Jump",
       "progress": 1,
       "skew": 1,
-      "expected": 1
+      "expected": 1,
+      "blend": 0.2
     }
   ]
 }

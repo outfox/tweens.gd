@@ -148,7 +148,7 @@ func _composed_easing() -> void:
 	for sample in data.cases:
 		var a: int = entries[String(sample["in"]).replace("Step", "_Step").to_upper()]
 		var b: int = exits[String(sample["out"]).replace("Step", "_Step").to_upper()]
-		near(T.Easing.evaluate(a | b, sample.progress, _constants(BlendType)[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.get("blend", 0.2), sample.skew), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
+		near(T.Easing.evaluate(a | b, sample.progress, _constants(BlendType)[String(sample.get("blendType", "Makima")).to_snake_case().to_upper()], sample.blend, sample.skew), sample.expected, "shared composed sample %s | %s" % [sample["in"], sample["out"]])
 	for family in pairs:
 		check(pairs[family] == (entries[family] | exits[family]), "matching ease alias")
 		if family.begins_with("BACK") or family.begins_with("ELASTIC") or family.begins_with("BOUNCE") or family.begins_with("JUMP"): continue
@@ -168,14 +168,14 @@ func _composed_easing() -> void:
 				var t := i / 100.0
 				var a := T.Easing.evaluate(entry | exits[entry_name], t) if exit else T.Easing.evaluate(entry, t)
 				var b := T.Easing.evaluate(entries[exit_name] | exit, t) if entry else T.Easing.evaluate(exit, t)
-				var expected := lerpf(a, b, smoothstep(0.4, 0.6, t))
+				var expected := lerpf(a, b, smoothstep(0.45, 0.55, t))
 				if entry == 0: expected = b
 				if exit == 0: expected = a
 				near(T.Easing.evaluate(combined, t, BlendType.SMOOTH_STEP), expected, "smoothstep comparison")
 				var actual := T.Easing.evaluate(combined, t)
 				check(is_finite(actual), "finite default composition")
-				if exit == 0 or (entry and t <= 0.4): near(actual, a, "original In half")
-				if entry == 0 or (exit and t >= 0.6): near(actual, b, "original Out half")
+				if exit == 0 or (entry and t <= 0.45): near(actual, a, "original In half")
+				if entry == 0 or (exit and t >= 0.55): near(actual, b, "original Out half")
 	for base in ["BACK", "ELASTIC", "JUMP"]:
 		check(entries[base] == entries[base + "30"] and exits[base] == exits[base + "30"] and pairs[base] == pairs[base + "30"], "30 percent aliases")
 		for percent in [10, 20, 30, 40, 50]:
@@ -267,10 +267,11 @@ func _composed_easing() -> void:
 	for method in [-1, BlendType.LINEAR + 1, 99]:
 		check(is_nan(T.Easing.evaluate(InOut.SINE, 0.5, method)), "invalid blend method")
 		check(not T.value(0.0, 1.0, 1.0).with_blend_type(method).validate().is_empty(), "validate blend")
-	near(T.value(0.0, 1.0, 1.0).blend, 0.2, "default blend width")
+	near(T.value(0.0, 1.0, 1.0).blend, 0.1, "default blend width")
 	check(T.value(0.0, 1.0, 1.0).blend_type == BlendType.MAKIMA, "default blend method")
-	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45), 0.4041956521739131, "default evaluator blend")
-	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45, BlendType.HERMITE), 0.40125, "hermite evaluator blend")
+	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.47), T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.47, BlendType.MAKIMA, 0.1), "default evaluator blend")
+	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45, BlendType.MAKIMA, 0.2), 0.4041956521739131, "explicit evaluator blend")
+	near(T.Easing.evaluate(In.QUAD | Out.CUBIC, 0.45, BlendType.HERMITE, 0.2), 0.40125, "hermite evaluator blend")
 	var custom := T.value(0.0, 1.0, 1.0, In.QUAD | Out.CUBIC).with_blend_type(BlendType.LINEAR).with_blend(0.4)
 	var custom_scheduler := TweensGdScheduler.new()
 	var custom_handle := custom_scheduler.add(self, custom)
@@ -298,9 +299,9 @@ func _composed_easing() -> void:
 	definition.ping_pong = true
 	var handle := scheduler.add(target, definition)
 	scheduler.update(1.0)
-	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.2, 0.75), "split before blended easing")
+	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.1, 0.75), "split before blended easing")
 	scheduler.update(2.0)
-	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.2, 0.75), "independent return skew")
+	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.1, 0.75), "independent return skew")
 	scheduler.update(1.0)
 	near(target.amount, 0.0, "composed return endpoint")
 	check(handle.completion_reason == T.Reason.COMPLETED, "composed playback completes")

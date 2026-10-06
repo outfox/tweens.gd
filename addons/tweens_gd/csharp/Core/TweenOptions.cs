@@ -116,8 +116,8 @@ public readonly record struct TweenOptions
     /// <summary>How mixed In/Out legs join. Defaults to Makima; matching families keep their conventional shape.</summary>
     public BlendType BlendType { get; init; }
     private readonly double? blend;
-    /// <summary>Centered transition width in [0, 1]. Defaults to 0.2 (40%–60%); zero directly splices the halves.</summary>
-    public double Blend { get => blend ?? 0.2; init => blend = value == 0.2 ? null : value; }
+    /// <summary>Centered transition width in [0, 1]. Defaults to 0.1 (45%–55% at the neutral split); zero directly splices the halves.</summary>
+    public double Blend { get => blend ?? Easing.DefaultBlend; init => blend = value == Easing.DefaultBlend ? null : value; }
     private readonly double? skew;
     /// <summary>In/Out split in [0, 1]: 0 selects Out, 0.5 is balanced, 1 selects In. Applies to paired easing flags.</summary>
     public double Skew { get => skew ?? 0.5; init => skew = value == 0.5 ? null : value; }
@@ -191,7 +191,7 @@ public class TweenOptionsBuilder
     /// <inheritdoc cref="TweenOptions.BlendType"/>
     public BlendType BlendType { get; set; }
     /// <inheritdoc cref="TweenOptions.Blend"/>
-    public double Blend { get; set; } = 0.2;
+    public double Blend { get; set; } = Easing.DefaultBlend;
     /// <inheritdoc cref="TweenOptions.Skew"/>
     public double Skew { get; set; } = 0.5;
     /// <inheritdoc cref="TweenOptions.Weks"/>

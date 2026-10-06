@@ -15,6 +15,8 @@ export const collections = {
 				heroDescription: z.string().optional(),
 				// Short facts under the landing hero, such as supported languages and engine versions.
 				facts: z.array(z.object({ text: z.string(), link: z.string().optional() })).optional(),
+				// Keeps the title for screen readers and search only, for a tool page that starts with its widget.
+				hideTitle: z.boolean().optional(),
 			}),
 		}),
 	}),

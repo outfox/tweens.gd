@@ -859,6 +859,21 @@ header.header {
 	--sl-content-width: 72rem;
 }
 
+/* A page with hideTitle (PageTitle.astro) keeps its heading for assistive tech only: the title's panel leaves the layout,
+   and the content panel after it drops the divider it would draw under the title. */
+.content-panel:has(.tw-hidden-title) {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	border: 0;
+}
+.content-panel:has(.tw-hidden-title) + .content-panel {
+	border-top: 0;
+}
+
 /* Each page opens with its one key idea; the lede sets it apart from the detail that follows. */
 .sl-markdown-content > p:first-child {
 	font-size: var(--sl-text-lg);

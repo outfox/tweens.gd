@@ -43,7 +43,7 @@ struct TweenSettings {
 	int64_t fill = tweens::FILL_RETAIN_FINAL_VALUE;
 	int64_t ease = 0;
 	int64_t blend_type = 0;
-	double blend = 0.2;
+	double blend = tweens::DEFAULT_BLEND;
 	double skew = 0.5;
 	double weks = 0.5;
 	Callable ease_function;

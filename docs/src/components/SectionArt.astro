@@ -1,29 +1,46 @@
 ---
 // Small illustration that marks which part of the docs a page belongs to. It plays once, then rests.
-export type Section = 'curve' | 'hop' | 'catalog' | 'sketch' | 'dock';
+export type Section = 'spacing' | 'hop' | 'catalog' | 'sketch' | 'dock';
 interface Props {
 	kind: Section;
 }
 const { kind } = Astro.props;
 // Time (s) of each drawing's resting frame: the first moment its motion has settled.
-const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketch: 2.4, dock: 1.6 };
+const still: Record<Section, number> = { spacing: 2.1, hop: 1.2, catalog: 1.6, sketch: 2.4, dock: 1.6 };
+
+// spacing: an animator's spacing chart. A ball eases along a rail on the library's SmootherStep, leaving an onion-skin
+// ghost and a chart tick at each of ten equal time steps, so the ghosts bunch where the motion is slow.
+const smootherStep = (t: number) => t * t * t * (t * (6 * t - 15) + 10);
+const SPACING = { frames: 10, move: 1.8, cycle: 3.2, from: 22, to: 138, fade: 0.9 };
+const spaceX = (t: number) => SPACING.from + (SPACING.to - SPACING.from) * smootherStep(t);
+const moveEnd = SPACING.move / SPACING.cycle;
+const steps = Array.from({ length: 41 }, (_, i) => i / 40);
+const ballX = [...steps.map((s) => spaceX(s).toFixed(2)), spaceX(1).toFixed(2)].join(';');
+const ballTimes = [...steps.map((s) => (s * moveEnd).toFixed(4)), '1'].join(';');
+const ghosts = Array.from({ length: SPACING.frames + 1 }, (_, i) => {
+	const at = (i / SPACING.frames) * moveEnd;
+	return { x: spaceX(i / SPACING.frames).toFixed(2), times: `0;${at.toFixed(4)};${(at + 0.015).toFixed(4)};${SPACING.fade};1` };
+});
 ---
 
 <svg class:list={['art', `art-${kind}`]} data-still={still[kind]} viewBox="0 0 160 100" aria-hidden="true" focusable="false">
 	{
-		kind === 'curve' && (
+		kind === 'spacing' && (
 			<>
-				<path class="grid" d="M10 90H130M10 10H130M10 50H130M130 10V90M10 10V90" />
-				<path class="track" d="M10 90C40 90 44 -6 76 8S112 10 130 10" />
-				<g class="curve-x">
-					<g class="curve-y">
-						<circle class="dot mint" r="6" />
+				<line class="rail" x1={SPACING.from} y1="60" x2={SPACING.to} y2="60" />
+				{ghosts.map((g) => (
+					<g opacity="0">
+						<animate attributeName="opacity" dur={`${SPACING.cycle}s`} repeatCount="indefinite" values="0;0;1;1;0" keyTimes={g.times} />
+						<line class="tick" x1={g.x} y1="60" x2={g.x} y2="70" />
+						<circle class="ghost" cx={g.x} cy="40" r="7" />
 					</g>
-				</g>
-				<line class="axis" x1="146" y1="10" x2="146" y2="90" />
-				<g class="curve-y value">
-					<circle class="dot blue" cx="146" r="5" />
-				</g>
+				))}
+				<rect class="key" x={SPACING.from - 4} y="56" width="8" height="8" rx="1.5" transform={`rotate(45 ${SPACING.from} 60)`} />
+				<rect class="key" x={SPACING.to - 4} y="56" width="8" height="8" rx="1.5" transform={`rotate(45 ${SPACING.to} 60)`} />
+				<circle class="ball" cx={SPACING.from} cy="40" r="7">
+					<animate attributeName="cx" dur={`${SPACING.cycle}s`} repeatCount="indefinite" values={ballX} keyTimes={ballTimes} />
+					<animate attributeName="opacity" dur={`${SPACING.cycle}s`} repeatCount="indefinite" values="0;1;1;0" keyTimes={`0;0.04;${SPACING.fade};1`} />
+				</circle>
 			</>
 		)
 	}
@@ -42,12 +59,15 @@ const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketc
 				<path class="trail" d="M28 69Q80 -11 132 69" />
 				<g>
 					<path class="trail lit" d="M28 69Q80 -11 132 69" mask="url(#hop-lit)" />
-					{/* One SMIL clock drives position, trail and squash; the box's bottom rides 11 units under the arc. */}
-					<g>
-						<animateMotion dur="2.4s" repeatCount="indefinite" path="M28 80Q80 0 132 80" keyPoints="0;0;1;1;0;0" keyTimes="0;0.12;0.45;0.62;0.95;1" calcMode="spline" keySplines="0 0 1 1;0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1" />
+					{/* One SMIL clock drives position, trail and squash; the box's bottom rides 11 units under the arc.
+					    The box rests on the first pad until that clock starts; its path is relative to the pad. */}
+					<g transform="translate(28 80)">
 						<g>
-							<animateTransform attributeName="transform" type="scale" dur="2.4s" repeatCount="indefinite" values="1 1;1 1;1.25 0.75;0.85 1.2;1 1;1 1;1.3 0.7;1 1;1 1;1.25 0.75;0.85 1.2;1 1;1 1;1.3 0.7;1 1" keyTimes="0;0.04;0.1;0.15;0.25;0.43;0.47;0.54;0.56;0.6;0.65;0.75;0.93;0.97;1" />
-							<rect class="hopper" x="-11" y="-22" width="22" height="22" rx="6" />
+							<animateMotion dur="2.4s" repeatCount="indefinite" path="M0 0Q52 -80 104 0" keyPoints="0;0;1;1;0;0" keyTimes="0;0.12;0.45;0.62;0.95;1" calcMode="spline" keySplines="0 0 1 1;0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1" />
+							<g>
+								<animateTransform attributeName="transform" type="scale" dur="2.4s" repeatCount="indefinite" values="1 1;1 1;1.25 0.75;0.85 1.2;1 1;1 1;1.3 0.7;1 1;1 1;1.25 0.75;0.85 1.2;1 1;1 1;1.3 0.7;1 1" keyTimes="0;0.04;0.1;0.15;0.25;0.43;0.47;0.54;0.56;0.6;0.65;0.75;0.93;0.97;1" />
+								<rect class="hopper" x="-11" y="-22" width="22" height="22" rx="6" />
+							</g>
 						</g>
 					</g>
 				</g>
@@ -93,9 +113,12 @@ const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketc
 				</defs>
 				<path class="sketch-ghost" d="M14 82C50 82 48 18 84 18S120 50 146 26" />
 				<path class="sketch-line" d="M14 82C50 82 48 18 84 18S120 50 146 26" mask="url(#sketch-reveal)" />
-				<circle class="sketch-tip" r="5">
-					<animateMotion dur="3.2s" repeatCount="indefinite" path="M14 82C50 82 48 18 84 18S120 50 146 26" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="spline" keySplines="0.16 1 0.3 1;0 0 1 1" />
-				</circle>
+				{/* The tip waits at the line's start until the clock runs; its path is relative to that start. */}
+				<g transform="translate(14 82)">
+					<circle class="sketch-tip" r="5">
+						<animateMotion dur="3.2s" repeatCount="indefinite" path="M0 0C36 0 34 -64 70 -64S106 -32 132 -56" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="spline" keySplines="0.16 1 0.3 1;0 0 1 1" />
+					</circle>
+				</g>
 			</>
 		)
 	}
@@ -107,8 +130,9 @@ const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketc
 				<rect class="socket-glow" x="96" y="26" width="52" height="48" rx="10" opacity="0">
 					<animate attributeName="opacity" dur="2.8s" repeatCount="indefinite" values="0;0;0.35;0.35;0;0" keyTimes="0;0.33;0.36;0.78;0.84;1" />
 				</rect>
-				{/* Docked, the pin fills the hole and the body sits flush against the socket (x 96). */}
-				<g>
+				{/* Docked, the pin fills the hole and the body sits flush against the socket (x 96). The static transform is
+				    the first keyframe, so the plug starts in place before the clock replaces it. */}
+				<g transform="translate(-20 0)">
 					<animateTransform attributeName="transform" type="translate" dur="2.8s" repeatCount="indefinite" values="-20 0;-20 0;18 0;15 0;18 0;18 0;-20 0" keyTimes="0;0.1;0.34;0.38;0.42;0.8;1" calcMode="spline" keySplines="0 0 1 1;0.7 0 0.9 0.5;0.2 0.6 0.4 1;0.4 0 0.6 1;0 0 1 1;0.45 0 0.55 1" />
 					<rect class="plug-body" x="30" y="30" width="48" height="40" rx="10" />
 					<rect class="plug-pin" x="78" y="42" width="20" height="16" rx="3" />
@@ -162,27 +186,14 @@ const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketc
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
-	.grid {
-		stroke: var(--tw-grid);
-		stroke-width: 1;
-	}
-	.track,
 	.trail {
 		stroke: var(--tw-track);
 		stroke-width: 2.5;
-	}
-	.trail {
 		stroke-dasharray: 2 7;
 	}
-	.axis {
-		stroke: var(--tw-outline);
-		stroke-width: 2;
-	}
-	.dot.mint,
 	.mint-fill {
 		fill: var(--tw-mint);
 	}
-	.dot.blue,
 	.blue-fill {
 		fill: var(--tw-blue);
 	}
@@ -190,30 +201,25 @@ const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketc
 		fill: var(--tw-amber);
 	}
 
-	/* curve: x runs linearly in time, y follows BackOut-ish value, a value dot rides the axis */
-	.curve-x {
-		animation: curve-x 2.6s linear infinite;
+	/* spacing: ghosts and ticks mark where the ball was at each equal time step */
+	.rail {
+		stroke: var(--tw-outline);
+		stroke-width: 2;
 	}
-	.curve-y {
-		animation: curve-y 2.6s var(--ease-back-out) infinite;
+	.tick {
+		stroke: var(--tw-track);
+		stroke-width: 2;
 	}
-	@keyframes curve-x {
-		0% {
-			transform: translateX(10px);
-		}
-		70%,
-		100% {
-			transform: translateX(130px);
-		}
+	.ghost {
+		fill: color-mix(in oklab, var(--tw-mint) 14%, transparent);
+		stroke: color-mix(in oklab, var(--tw-mint) 70%, transparent);
+		stroke-width: 1.5;
 	}
-	@keyframes curve-y {
-		0% {
-			transform: translateY(90px);
-		}
-		70%,
-		100% {
-			transform: translateY(10px);
-		}
+	.key {
+		fill: var(--tw-blue);
+	}
+	.ball {
+		fill: var(--tw-mint);
 	}
 
 	/* hop: a sprite jumps pad to pad, squashing on each landing */
@@ -350,12 +356,4 @@ const still: Record<Section, number> = { curve: 2, hop: 1.2, catalog: 1.6, sketc
 		stroke-width: 3;
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.curve-x {
-			transform: translateX(130px);
-		}
-		.curve-y {
-			transform: translateY(10px);
-		}
-	}
 </style>

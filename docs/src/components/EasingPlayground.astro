@@ -78,6 +78,7 @@ move<span class="pn">.</span><span class="mb">ease</span> <span class="pn">=</sp
 move<span class="pn">.</span><span class="mb">skew</span> <span class="pn">=</span> <span class="num" data-code-skew>0.50</span></span><span data-code-option="blend-type" hidden>
 move<span class="pn">.</span><span class="mb">blend_type</span> <span class="pn">=</span> <span class="ty">BlendType</span><span class="pn">.</span><span class="mb" data-code-blend-type>MAKIMA</span></span><span data-code-option="blend" hidden>
 move<span class="pn">.</span><span class="mb">blend</span> <span class="pn">=</span> <span class="num" data-code-blend>0.10</span></span>
+
 <span class="ty">Tweens</span>.<span class="fn">play</span><span class="pn">(</span>sprite<span class="pn">,</span> move<span class="pn">.</span><span class="fn">with_to</span><span class="pn">(</span><span class="num">300.0</span><span class="pn">))</span></code>
 		) : (
 			<code data-code><span class="kw">var</span> move = <span class="kw">new</span> <span class="ty">Tweens</span>.<span class="ty">Position2DX</span>
@@ -101,8 +102,14 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 	const blendFromSlider = (position: number) => Math.round(Math.pow(101, position) - 1) / 100;
 	const blendToSlider = (blend: number) => String(Math.log(1 + 100 * blend) / Math.log(101));
 	const gridIntervalSeconds = 0.25;
-	const initialBlend = 0.1;
-	const libraryDefaultBlend = 0.2;
+	const defaultBlend = 0.1;
+	// The controls every instance mirrors, such as the C# and GDScript copies on a shared page.
+	interface State { entry: string; exit: string; duration: string; skew: string; blend: string; width: string; linked: string; progress: string }
+	const instances: { read: () => State; apply: (state: State) => void }[] = [];
+	const share = (from: (typeof instances)[number]) => {
+		const state = from.read();
+		for (const other of instances) if (other !== from) other.apply(state);
+	};
 	for (const root of document.querySelectorAll<HTMLElement>('[data-easing-playground]')) {
 		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
 		const entry = $<HTMLSelectElement>('[data-in]');
@@ -145,7 +152,7 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			$('[data-play-label]').textContent = handle ? 'Stop' : 'Play';
 		};
 		const stop = () => { playing?.cancel(); setPlaying(); };
-		const update = () => {
+		const update = (sync: unknown = true) => {
 			stop();
 			// Snap the thumb as well as the value to a whole percentage on the logarithmic scale.
 			width.value = blendToSlider(blendWidth());
@@ -200,10 +207,20 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 				// Options at the library's defaults are left out.
 				const option = line.dataset.codeOption;
 				line.hidden = option === 'skew' ? skew.disabled || k === 0.5
-					: blend.disabled || (option === 'blend-type' && blend.value === 'Makima') || (option === 'blend' && blendWidth() === libraryDefaultBlend);
+					: blend.disabled || (option === 'blend-type' && blend.value === 'Makima') || (option === 'blend' && blendWidth() === defaultBlend);
 			});
 			draw(+progress.value);
+			if (sync) share(self);
 		};
+		const self = {
+			read: (): State => ({ entry: entry.value, exit: exit.value, duration: duration.value, skew: skew.value, blend: blend.value, width: width.value, linked: String(linked()), progress: progress.value }),
+			apply: (state: State) => {
+				entry.value = state.entry; exit.value = state.exit; duration.value = state.duration; skew.value = state.skew;
+				blend.value = state.blend; width.value = state.width; link.setAttribute('aria-pressed', state.linked); progress.value = state.progress;
+				update(false);
+			},
+		};
+		instances.push(self);
 		playButton.addEventListener('click', () => {
 			if (playing) { stop(); return; }
 			const handle = tween(+duration.value, (_, p) => draw(p), 'Linear');
@@ -216,7 +233,7 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 		// Linking matches the sides right away, keeping Out's curve unless Out is None.
 		link.addEventListener('click', () => {
 			link.setAttribute('aria-pressed', String(!linked()));
-			if (!linked()) return;
+			if (!linked()) return share(self);
 			if (exit.value === 'None') exit.value = entry.value;
 			else entry.value = exit.value;
 			update();
@@ -235,13 +252,13 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 			width.value = blendToSlider(Math.max(0, Math.min(100, targets[event.key])) / 100);
 			update();
 		});
-		progress.addEventListener('input', () => { stop(); draw(+progress.value); });
-		$('[data-reset]').addEventListener('click', () => { link.setAttribute('aria-pressed', 'false'); entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(initialBlend); progress.value = '0'; update(); });
+		progress.addEventListener('input', () => { stop(); draw(+progress.value); share(self); });
+		$('[data-reset]').addEventListener('click', () => { link.setAttribute('aria-pressed', 'false'); entry.value = 'None'; exit.value = 'Elastic'; duration.value = '1.5'; skew.value = '0.5'; blend.value = 'Makima'; width.value = blendToSlider(defaultBlend); progress.value = '0'; update(); });
 		$('[data-copy]').addEventListener('click', async () => {
 			try { await navigator.clipboard.writeText($<HTMLElement>('[data-code]').innerText); $<Element>('[data-announce]').textContent = 'Tween code copied.'; }
 			catch { $<Element>('[data-announce]').textContent = 'Select the code to copy it.'; }
 		});
-		update();
+		update(false);
 	}
 </script>
 
