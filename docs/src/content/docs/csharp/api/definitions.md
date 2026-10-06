@@ -82,7 +82,7 @@ sprite.TweenPosition((400, 180), 0.5, snappy);
 
 `ITweenDefinition<TTarget, TValue>` connects definitions to typed playback;
 `ITweenDefinition<TTarget>` lets groups mix value types. `TTarget` is a class and
-`TValue` is a struct. See [custom tweens](/csharp/custom-tweens/) to implement
+`TValue` is a struct. See [custom properties](/csharp/custom-properties/) to implement
 property operations or per-playback bindings.
 
 ## Members

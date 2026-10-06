@@ -39,7 +39,7 @@ Pause is separate from `state`: there's no paused state. See
 | `ended(reason)` | signal | Emitted once when playback ends |
 
 Prefer `await handle.end` to awaiting `ended`: awaiting the signal after it has
-fired waits forever. [Cancellation and completion reasons](/gdscript/cancellation/)
+fired waits forever. [Cancellation](/gdscript/cancellation/)
 describes each `Tweens.Reason`.
 
 ## Target and value

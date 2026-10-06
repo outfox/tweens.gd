@@ -1,12 +1,12 @@
 ---
 title: "Variations"
-description: "Scale a shared motion, add a stagger, or adjust its outward and return pacing."
+description: "Derive stronger, slower, or later versions of one definition, and adjust their pacing."
 ---
 
 import VariationLab from '../../../components/VariationLab.astro';
-import { Aside } from '@astrojs/starlight/components';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
 
-Derive a stronger, slower, or later version of one definition. Factors multiply its values; deltas add to them when playback starts.
+Derive a stronger, slower, or later version of one definition. Factors multiply its values and deltas add to them, when playback starts.
 
 Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
@@ -24,20 +24,16 @@ var recoil = new Tweens.Position2DX
     PingPong = true,
 };
 
-sprite.Tween(recoil with { FactorBy = 2, FactorDuration = 1.2 });
+sprite1.Tween(recoil with { FactorBy = 2 });         // 24 pixels back
+sprite2.Tween(recoil with { FactorDuration = 1.5 }); // 0.3 seconds each way
+sprite3.Tween(recoil with { DeltaDelay = 0.1 });     // 0.1 seconds later
 ```
 
-This hit moves 24 pixels and takes 0.24 seconds each way. Tune the original distance or duration, and the factored version follows.
-
-<Aside type="tip" title="Multiply, then add">
-
-`FactorDuration = 2` doubles the original duration. `DeltaDelay = 0.1` adds a tenth of a second to its delay. Replacing `Duration` instead gives the copy a fixed duration.
-
-</Aside>
+Each copy follows the original: tune `recoil`, and every variation changes with it. Setting `Duration` on a copy instead replaces the duration outright.
 
 ## Vary the current value
 
-Leave the destination unset and scale the captured value:
+Leave the destination out, and `FactorTo` scales the value captured at the start:
 
 ```csharp
 var beat = new Tweens.Scale2D
@@ -47,28 +43,29 @@ var beat = new Tweens.Scale2D
     Ease = InOut.SmootherStep,
     PingPong = true,
 };
+
 sprite.Tween(beat);
 ```
 
-The sprite grows to 120% of its current scale and returns. Use `DeltaDelay` for a stagger that preserves the definition's own delay.
+The sprite grows to 120% of its current scale and back.
 
 <span id="change-the-pacing-with-skew" />
 
 ## Change the pacing
 
-`Skew` controls the outward In/Out split; `Weks` controls the return. Each ranges from 0 (front-loaded) to 1 (rear-loaded), with 0.5 balanced. Set the return split to one minus the outward split to retrace the curve.
+`Skew` shifts the outward leg's balance between its In and Out halves; `Weks` does the same for the return. Both run from 0 (fast start) to 1 (fast finish), and 0.5 keeps the ease as written. Set `Weks = 1 - Skew` to retrace the outward curve.
 
-**Try it:** increase hit strength, then adjust the outward split. The distance changes with the factor; pacing changes with the split.
+**Try it:** change the shared recoil kick, and Hit and Crit follow it. Then move `Skew`: the pacing changes, the distance doesn't.
 
 <VariationLab />
 
-<Aside type="note" title="Paired easing only">
+<Aside type="note" title="Paired eases only">
 
-The split controls apply to paired In/Out flags. Custom functions, Godot Curves, and single easing legs keep their authored shape.
+`Skew` and `Weks` apply to paired In/Out eases. Single legs, custom functions, and Godot Curves keep their shape.
 
 </Aside>
 
-The [endpoint reference](/csharp/api/endpoints/) covers every factor, delta, and combination rule.
+<LinkCard title="Endpoint reference" description="Every factor and delta, and how they combine." href="/csharp/api/endpoints/" />
 
 {/* Keep links to earlier guide sections working. */}
 <span id="rules" />

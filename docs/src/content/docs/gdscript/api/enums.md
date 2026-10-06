@@ -9,7 +9,7 @@ The constants that definitions and handles use, one value per entry.
 ## Tweens.Fill
 
 What the property shows during the delay and after natural completion. See
-[fill and restoration](/gdscript/timing/#fill-and-restoration).
+[fill and restoration](/gdscript/loops/#hold-during-a-delay).
 
 | Member | Meaning |
 | --- | --- |
@@ -60,7 +60,7 @@ Which pause the tween follows. Pausing the handle always stops it. See
 ## Tweens.Process
 
 Which frames advance the tween. See
-[process and physics](/gdscript/timing/#process-and-physics).
+[process and physics](/gdscript/lifetime/#process-and-physics).
 
 | Member | Meaning |
 | --- | --- |

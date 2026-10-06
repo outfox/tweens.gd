@@ -34,7 +34,7 @@ Each row pairs a helper with the property path it tweens. Names ending in `_x`,
 
 Automatic material playback requires a scene tree or an in-tree owner node. Owner-bound playback stops when the owner leaves; tree-bound playback stops with the tree. Playback keeps the original resource even when a mesh changes materials, and never duplicates or disposes it. A SceneTree owner binds to its root node, so `Tweens.cancel_tweens(get_tree().root)` also cancels that playback.
 
-A manual scheduler can play resources without an owner. Dispose it when finished. See [resource lifetimes](/gdscript/materials/#choose-the-playback-lifetime).
+A manual scheduler can play resources without an owner. Dispose it when finished. See [resource lifetimes](/gdscript/materials/#choose-an-owner).
 
 ## Ordinary shader uniforms
 

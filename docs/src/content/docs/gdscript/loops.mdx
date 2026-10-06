@@ -1,0 +1,82 @@
+---
+title: "Loops and delays"
+description: "Repeat a motion, send it back and forth, and choose what shows during a delay."
+---
+
+import Compare from '../../../components/Compare.astro';
+import FillModes from '../../../components/FillModes.astro';
+import TimingLab from '../../../components/TimingLab.astro';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
+
+Ping-pong sends a motion back to where it started; repeats play it again. Together they make idle motion that runs on its own.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+
+## Loop forever
+
+<Compare>
+
+```gdscript title="Godot's Tween"
+var tween := sprite.create_tween().set_loops()
+tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+tween.tween_property(sprite, "scale", Vector2(1.1, 1.1), 0.8)
+tween.tween_property(sprite, "scale", Vector2.ONE, 0.8)
+```
+
+```gdscript title="tweens.gd"
+var pulse := Tweens.scale_2d([1.1, 1.1], 0.8, InOut.SINE) \
+    .with_ping_pong().with_repeats(Tweens.INFINITE)
+
+Tweens.play(sprite, pulse)
+```
+
+</Compare>
+
+The sprite grows for 0.8 seconds, shrinks for 0.8 seconds, and repeats until cancelled or removed from the tree. Ping-pong returns to the scale the sprite had at the start, so the return leg needs no value of its own.
+
+## Count cycles
+
+| Set | Effect |
+| --- | --- |
+| `with_repeats(2)` | Three cycles: the first plus two repeats |
+| `with_ping_pong()` | Each cycle goes there and back; `duration` applies to each leg |
+| `with_ping_pong_interval()` | Pause at the far end before the return leg |
+| `with_repeat_interval()` | Pause between cycles |
+
+**Try it:** raise `repeats`, then drag the timeline to see where each interval falls.
+
+<TimingLab lang="gdscript" />
+
+<span id="fill-and-restoration" />
+
+## Hold during a delay
+
+`fill` chooses what a delayed tween shows before it starts and after it ends. For an entrance, `Tweens.Fill.BOTH` applies the `from` value during the delay and keeps the final value:
+
+```gdscript
+var fade_in := Tweens.modulate_alpha()
+fade_in.from_value = 0.0
+fade_in.duration = 0.3
+fade_in.delay = 0.5
+fade_in.fill = Tweens.Fill.BOTH
+
+Tweens.play(label, fade_in)
+```
+
+The label stays hidden for half a second, then fades in to its own alpha. The default fill, `RETAIN_FINAL_VALUE`, would leave it visible during the delay, so it would blink out before fading in.
+
+Each row below plays one delayed tween with a different fill mode:
+
+<FillModes lang="gdscript" />
+
+<Aside type="note" title="Cancelling keeps the current value">
+
+Fill modes restore the initial value only on natural completion. A cancelled tween keeps its latest value.
+
+</Aside>
+
+<LinkCard title="Timing reference" description="Every timing option, fill mode, and validation rule." href="/gdscript/api/timing/" />
+
+{/* Keep links to earlier guide sections working. */}
+<span id="timing-fields" />
+<span id="progress" />

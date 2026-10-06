@@ -3,7 +3,7 @@ title: Callback values
 description: The eight callback value definitions, which write no property and deliver each sample to OnUpdate.
 ---
 
-These target any `Node`, write no property, and deliver each sample to `OnUpdate`. See [custom tweens](/csharp/custom-tweens/#callback-values).
+These target any `Node`, write no property, and deliver each sample to `OnUpdate`. See [callback values](/csharp/custom-properties/#callback-values).
 
 | Definition | Shorthand | Value |
 | --- | --- | --- |

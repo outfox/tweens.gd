@@ -1,35 +1,34 @@
 ---
 title: "Materials and shaders"
-description: "Animate material properties or shader uniforms and choose their owner."
+description: "Animate material properties and shader uniforms, shared or per node."
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import Compare from '../../../components/Compare.astro';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
 
-Animate a material to change every node using it. Use an instance uniform when each node needs its own shader value.
+Animate a material to change every node that uses it. Use an instance uniform when each node needs its own shader value.
 
-Examples use the global `Tweens` class in a node script, with targets inside the scene tree. Materials below are configured resources; `mesh` is a `MeshInstance3D` using them.
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree. `mesh` is a `MeshInstance3D` using the materials shown.
 
-## Choose the playback lifetime
+<span id="choose-the-playback-lifetime" />
 
-Resources need an explicit lifetime. Use a node owner for an effect attached to that node, or the tree for an effect that should outlive it:
+## Choose an owner
+
+A material isn't in the scene tree, so its tweens take an owner as the third argument. A node ends playback when it leaves the tree; the tree keeps it running until shutdown:
 
 ```gdscript
 var smooth := Tweens.material_roughness(0.2, 1.0)
-Tweens.play(material, smooth, mesh)       # Stop when mesh leaves the tree.
-Tweens.play(material, smooth, get_tree()) # Stop when the tree shuts down.
+Tweens.play(material, smooth, mesh)       # Ends when mesh leaves the tree.
+Tweens.play(material, smooth, get_tree()) # Ends when the tree shuts down.
 ```
 
-These are alternative lifetime choices. Changing a mesh's material does not retarget a running tween.
+The tween keeps animating this material, even if the mesh switches to another one.
 
-## Built-in material properties
+<span id="built-in-material-properties" />
 
-Use the [material catalog](/gdscript/nodes/materials/) for albedo, roughness, emission, and UV helpers. They target `BaseMaterial3D`.
+## Material properties
 
-<Aside type="caution" title="Sharing is visible">
-
-Tweening a shared resource changes all its users. For independent values, duplicate and assign the material once during scene setup.
-
-</Aside>
+The [material catalog](/gdscript/nodes/materials/) covers albedo, roughness, emission, UVs, and more on `BaseMaterial3D`. Every node using a material shows its tweens, so to animate one node alone, duplicate the material once during setup:
 
 ```gdscript
 var unique: StandardMaterial3D = shared.duplicate()
@@ -37,13 +36,15 @@ mesh.material_override = unique
 Tweens.play(unique, Tweens.material_albedo_color(Color.RED, 1.0), mesh)
 ```
 
-<Aside type="tip" title="Enable the feature first">
+<Aside type="caution" title="Enable the feature first">
 
-Alpha fading needs transparency; emission and normal mapping need their flags enabled. Tweens change values, so configure the material for the visible effect before starting playback.
+Tweens change values, not material flags. Fading alpha needs transparency enabled; emission and normal maps need their own flags.
 
 </Aside>
 
-## Ordinary shader uniforms
+<span id="ordinary-shader-uniforms" />
+
+## Shader uniforms
 
 For a shader declaring `uniform float dissolve = 0.25;`:
 
@@ -51,25 +52,37 @@ For a shader declaring `uniform float dissolve = 0.25;`:
 Tweens.play(shader_material, Tweens.shader_parameter(&"dissolve", 1.0, 0.5), mesh)
 ```
 
-This changes the shared material's uniform. Names are case-sensitive and endpoints must match the declared type. Use `1.0` for a float uniform; `1` is an integer. Use `Color` for color uniforms.
+This changes the uniform for every node using the material. Names are case-sensitive, and the endpoint's type must match the uniform: `1.0` for a float, `1` for an int, `Color` for a color, and the matching vector type for a vector.
 
-## Per-instance shader uniforms
+<span id="per-instance-shader-uniforms" />
+
+## Instance uniforms
 
 For a shader declaring `instance uniform float pulse = 0.25;`:
 
-```gdscript
+<Compare>
+
+```gdscript title="Godot's Tween"
+mesh.create_tween().tween_method(
+    func(value: float) -> void: mesh.set_instance_shader_parameter(&"pulse", value),
+    0.25, 1.0, 0.5)
+```
+
+```gdscript title="tweens.gd"
 Tweens.play(mesh, Tweens.instance_shader_parameter(&"pulse", 1.0, 0.5))
 ```
 
-Only this node's instance value changes, even when it shares the material. Playback follows the node's normal lifetime.
+</Compare>
+
+Only this node's value changes, even when it shares the material. tweens.gd starts from the current value or the shader's default; Godot's version needs it written out.
 
 <Aside type="caution" title="Keep bindings stable">
 
-Replacing a bound shader or material can fail playback. Start a new tween after changing the binding. Shader default lookup also needs a working renderer.
+Editing or replacing a bound shader ends playback with `FAILED`, and so does swapping the material under an instance uniform. Start a new tween after the change. Reading a shader's default value needs a working renderer.
 
 </Aside>
 
-The [material and uniform reference](/gdscript/nodes/materials/#ordinary-shader-uniforms) covers supported types, validation, defaults, and restoring overrides.
+<LinkCard title="Material and uniform reference" description="Supported types, validation, defaults, and restoring overrides." href="/gdscript/nodes/materials/" />
 
 {/* Keep links to earlier guide sections working. */}
 <span id="manual-scheduling" />

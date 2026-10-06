@@ -43,7 +43,7 @@ SceneTree or an owner Node, plus an optional configuration callback.
 
 Automatic material playback requires a scene tree or an in-tree owner node. Owner-bound playback stops when the owner leaves; tree-bound playback stops with the tree. Playback keeps the original resource even when a mesh changes materials, and never duplicates or disposes it. Call `owner.CancelTweens()` to include that owner’s material playback.
 
-A manual scheduler can play resources without an owner. Dispose it when finished. See [resource lifetimes](/csharp/materials/#choose-the-playback-lifetime).
+A manual scheduler can play resources without an owner. Dispose it when finished. See [resource lifetimes](/csharp/materials/#choose-an-owner).
 
 ## Ordinary shader uniforms
 

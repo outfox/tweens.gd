@@ -17,7 +17,7 @@ var handle = sprite.Tween(new Tweens.Position2D((100, 0), 1), clock);
 
 | Member | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `ProcessMode` | `TweenProcessMode` | `Process` | Update on [process or physics](/csharp/timing/#process-and-physics) frames |
+| `ProcessMode` | `TweenProcessMode` | `Process` | Update on [process or physics](/csharp/lifetime/#process-and-physics) frames |
 | `UseUnscaledTime` | `bool` | `false` | Ignore `Engine.TimeScale` |
 | `PauseMode` | `TweenPauseMode` | `Bound` | Which [pause](/csharp/lifetime/#pausing) the tween follows |
 | `SuppressCallbacksWhenTargetInvalid` | `bool` | `false` | Skip the ending callbacks when the target or owner is gone |
@@ -52,7 +52,7 @@ Callbacks run in this order:
 2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
 3. `OnStart` once, when the delay ends and playback begins.
 4. `OnUpdate` at each sampled timeline boundary and eligible update, plus once more when
-   completion [restores the initial value](/csharp/timing/#fill-and-restoration).
+   completion [restores the initial value](/csharp/loops/#hold-during-a-delay).
 5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.
 6. `OnFinally` in every case, including faults.
 

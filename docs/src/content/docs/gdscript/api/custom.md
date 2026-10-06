@@ -5,7 +5,7 @@ description: The adapter base class for custom storage and per-playback bindings
 
 To animate storage that a property path can't reach, extend `Tweens.Adapter`
 (`TweensGdAdapter`) and assign an instance to `definition.adapter`, or pass
-Callables to `Tweens.custom()`. [Custom adapters](/gdscript/custom-tweens/) walks
+Callables to `Tweens.custom()`. [Custom properties](/gdscript/custom-properties/) walks
 through examples.
 
 ## Methods to override

@@ -112,5 +112,5 @@ A final infinitely repeating entry is allowed; a successor after an infinite
 entry is rejected. Empty lists, invalid definitions, and overflowed schedules
 reject before playback.
 
-See [Chain members](/gdscript/api/chains/), [timing](/gdscript/timing/),
+See [Chain members](/gdscript/api/chains/), [timing](/gdscript/api/timing/),
 and [cancellation](/gdscript/cancellation/) for the detailed contract.

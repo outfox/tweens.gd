@@ -1,61 +1,66 @@
 ---
-title: "Cancellation and reasons"
-description: "Stop playback or continue only after a successful arrival."
+title: "Cancellation"
+description: "Stop playback, and continue only after a motion arrives."
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import Compare from '../../../components/Compare.astro';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
 
-Awaiting a tween resumes when it ends, including cancellation. Check the reason when the next action requires a successful arrival.
+Awaiting a tween resumes however it ends, cancelled or not. Check the reason when the next step needs the motion to have arrived.
 
 Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
 ## Cancel playback
 
-Call `movement.cancel()` to stop a tween. Its latest value stays visible and its waiters resume. Cancellation does not stop the surrounding coroutine.
-
-<Aside type="tip" title="Cancel a whole animation">
-
-Groups and Chains expose the same controls. To cancel everything owned by a node and its descendants, use `Tweens.cancel_tweens(sprite, true)`.
-
-</Aside>
+`movement.cancel()` stops a tween where it is and resumes everything awaiting it. Groups and Chains cancel the same way, and `Tweens.cancel_tweens(sprite, true)` cancels everything a node and its descendants own.
 
 ## Continue only on success
 
-```gdscript
+<Compare>
+
+```gdscript title="Godot's Tween"
+var tween := sprite.create_tween()
+tween.tween_property(sprite, "position", Vector2(400, 180), 0.6)
+await tween.finished # Not emitted if killed.
+
+sprite.create_tween().tween_property(sprite, "modulate:a", 0.0, 0.3)
+```
+
+```gdscript title="tweens.gd"
 var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 if await movement.end != Tweens.Reason.COMPLETED:
     return
 
-await Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3)).end
+Tweens.play(sprite, Tweens.modulate_alpha(0.0, 0.3))
 ```
 
-The fade runs only after arrival. The early return also avoids starting it on a target that was freed during movement.
+</Compare>
+
+Godot doesn't emit `finished` for a killed tween, so code awaiting it never continues. `end` always resumes with a reason: here, the fade runs only after the sprite arrives, and never on a sprite freed along the way.
 
 ## Why it ended
 
 | Reason | Meaning |
 | --- | --- |
 | `COMPLETED` | Reached the natural end |
-| `CANCELLED` | Cancel was called |
+| `CANCELLED` | Cancelled through a handle or `cancel_tweens()` |
 | `TARGET_FREED` | Target was freed or queued for deletion |
 | `OWNER_EXITED` | Owner left the tree |
 | `RUNNER_DISPOSED` | Tree or scheduler shut down |
-| `FAILED` | Start or playback detected a problem; read `error` |
+| `FAILED` | Start or playback hit a problem; read `error` |
 | `WAIT_CANCELLED` | Only the wait was cancelled |
 
-<Aside type="note" title="Tree exit can happen first">
+<Aside type="caution" title="Compare against COMPLETED">
 
-Freeing a node can report `OWNER_EXITED` because Godot emits tree exit before invalidating it. Both mean playback stopped early.
+Freeing a node reports `TARGET_FREED` after `queue_free()`, but `OWNER_EXITED` after `free()`, because Godot exits the tree first. Test for `COMPLETED` rather than a particular early reason.
 
 </Aside>
 
 ## Cancel a wait, not the tween
 
-`wait(cancellation)` with a `TweensGdCancellation` lets one caller stop waiting while playback and other waiters continue.
+`await movement.wait(cancellation)` returns `WAIT_CANCELLED` once the `TweensGdCancellation` is cancelled. Playback, other waiters, and the handle's own reason are unaffected. Groups and Chains have the same method.
 
-A cancelled wait returns `WAIT_CANCELLED`; it does not change the handle’s completion reason.
-
-See [handle wait helpers](/gdscript/api/handles/) for the API and [errors](/gdscript/api/handles/#errors) for failure handling.
+<LinkCard title="Handles" description="Controls, states, wait helpers, and errors." href="/gdscript/api/handles/" />
 
 {/* Keep links to earlier guide sections working. */}
 <span id="loops" />

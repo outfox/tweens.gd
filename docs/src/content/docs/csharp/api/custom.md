@@ -6,7 +6,7 @@ tableOfContents: true
 
 To animate a value the catalog doesn't cover, derive from
 `TweenDefinition<TTarget, TValue>` or pass delegates to `Tweens.Property`. Both
-start like any other definition. [Custom tweens](/csharp/custom-tweens/) walks
+start like any other definition. [Custom properties](/csharp/custom-properties/) walks
 through examples.
 
 ## Members to override

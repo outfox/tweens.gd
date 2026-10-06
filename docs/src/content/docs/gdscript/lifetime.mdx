@@ -1,62 +1,72 @@
 ---
-title: "Lifetime and ownership"
-description: "Let nodes stop their own tweens and choose how playback follows pause."
+title: "Lifetime and pausing"
+description: "Nodes end their own tweens; choose how playback follows pause and time scale."
 ---
 
 import OwnershipDemo from '../../../components/OwnershipDemo.astro';
-import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-A node owns the tweens started on it. Leaving the scene tree stops them automatically, including paused tweens.
+A node owns the tweens started on it. When it leaves the scene tree, they end, even while paused.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
 ## Target and owner
 
 <CardGrid>
 <Card title="Target">
 
-The object receiving animated values: a node, material, or other supported object.
+The object that receives values: a node, material, or other supported object.
 
 </Card>
 <Card title="Owner">
 
-The node whose lifetime controls playback. For node tweens, target and owner are the same.
+The node whose lifetime ends playback. A node tween's owner is its target.
 
 </Card>
 </CardGrid>
 
 ## Nodes
 
-Start from `_ready()` or later, while the node is in the tree. Removal or reparenting that exits the tree ends its tweens.
+Start a tween once its node is in the tree, in `_ready()` or later; starting outside the tree logs an error and returns a `FAILED` handle. Removing or reparenting the node ends its tweens.
 
-To stop an entire branch, call `Tweens.cancel_tweens(node, true)`. This controls automatically scheduled playback.
+`Tweens.cancel_tweens(node, true)` cancels a whole branch. It reaches automatic playback, not [manual schedulers](/gdscript/api/scheduler/).
 
 ## Pausing
 
-| Mode | Playback follows |
+| `pause_mode` | Playback follows |
 | --- | --- |
-| `BOUND` (default) | The owner's ability to process |
-| `SCENE_TREE` | Tree pause |
-| `ALWAYS` | Neither owner nor tree pause |
+| `BOUND` (default) | The owner's `can_process()`: its process mode and tree pause |
+| `SCENE_TREE` | Tree pause only |
+| `ALWAYS` | Neither; plays through pause |
 
-Set this policy in `Tweens.playback_options()` when starting playback. Pausing the handle always stops it.
+A pause menu with `process_mode = PROCESS_MODE_ALWAYS` keeps animating under `BOUND`. Pausing a handle holds it in every mode.
 
-**Try it:** pause the tree, then change the playback's pause mode.
+**Try it:** pause the tree, then change the pause mode.
 
 <OwnershipDemo lang="gdscript" />
 
-<Aside type="note" title="Disabling process is different">
+<Aside type="caution" title="set_process(false) is not a pause">
 
-`set_process(false)` does not pause owned tweens. Bound playback follows `can_process()`, which depends on node process mode and tree pause.
+`BOUND` follows `can_process()`, which `set_process(false)` doesn't change. Pause the handle to hold a tween.
 
 </Aside>
 
+## Process and physics
+
+`Tweens.playback_options()` sets the process mode, pause mode, and unscaled time, in that order. Pass the result after the owner; `null` makes the target its own owner:
+
+```gdscript
+var ui := Tweens.playback_options(Tweens.Process.PROCESS, Tweens.Pause.ALWAYS, true)
+Tweens.play(label, Tweens.modulate_alpha(1.0, 0.3), null, ui)
+```
+
+This fade keeps its pace through pause and slow motion. `Tweens.Process.PHYSICS` would update it on physics frames instead.
+
 ## Resources
 
-Give a material tween an owner node to stop it when that node leaves the tree, or a scene tree to keep it running for the tree's lifetime. Playback always targets the original resource, even if a mesh changes materials.
+A material isn't in the tree, so its tweens take an owner: a node, or the scene tree. See [materials and shaders](/gdscript/materials/). Tweens never duplicate or dispose the resources they animate.
 
-See [materials and shaders](/gdscript/materials/) for examples. Tweens never duplicate or dispose the resources you supply.
+<LinkCard title="Modes reference" description="Pause, process, and time-scale options." href="/gdscript/api/modes/" />
 
-## How playback ends
-
-Every end settles the handle with a [completion reason](/gdscript/cancellation/#why-it-ended). Keep handles only as long as you need them: a finished handle still references its target.
-
-See [playback modes](/gdscript/api/modes/) for callback suppression and [schedulers](/gdscript/api/scheduler/) for manual playback.
+{/* Keep links to earlier guide sections working. */}
+<span id="how-playback-ends" />

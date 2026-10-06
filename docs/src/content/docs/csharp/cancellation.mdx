@@ -1,60 +1,66 @@
 ---
-title: "Cancellation and reasons"
-description: "Stop playback or continue only after a successful arrival."
+title: "Cancellation"
+description: "Stop playback, and continue only after a motion arrives."
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import Compare from '../../../components/Compare.astro';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
 
-Awaiting a tween resumes when it ends, including cancellation. Check the reason when the next action requires a successful arrival.
+Awaiting a tween resumes however it ends, cancelled or not. Check the reason when the next step needs the motion to have arrived.
 
 Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
 ## Cancel playback
 
-Call `movement.Cancel()` to stop a tween. Its latest value stays visible and its waiters resume. Cancellation does not stop the surrounding async method.
-
-<Aside type="tip" title="Cancel a whole animation">
-
-Groups and Chains expose the same controls. To cancel everything owned by a node and its descendants, use `sprite.CancelTweens(includeChildren: true)`.
-
-</Aside>
+`movement.Cancel()` stops a tween where it is and resumes everything awaiting it. Groups and Chains cancel the same way, and `sprite.CancelTweens(includeChildren: true)` cancels everything a node and its descendants own.
 
 ## Continue only on success
 
-```csharp
+<Compare>
+
+```csharp title="Godot's Tween"
+var tween = sprite.CreateTween();
+tween.TweenProperty(sprite, "position", new Vector2(400, 180), 0.6);
+await ToSignal(tween, Tween.SignalName.Finished); // Not emitted if killed.
+
+sprite.CreateTween().TweenProperty(sprite, "modulate:a", 0f, 0.3);
+```
+
+```csharp title="tweens.gd"
 var movement = sprite.TweenPosition((400, 180), 0.6);
 if (await movement.End != Reason.Completed)
     return;
 
-await sprite.TweenModulateAlpha(0, 0.3).End;
+sprite.TweenModulateAlpha(0, 0.3);
 ```
 
-The fade runs only after arrival. The early return also avoids starting it on a target that was freed during movement.
+</Compare>
+
+Godot doesn't emit `finished` for a killed tween, so code awaiting it never continues. `End` always resumes with a reason: here, the fade runs only after the sprite arrives, and never on a sprite freed along the way.
 
 ## Why it ended
 
 | Reason | Meaning |
 | --- | --- |
 | `Completed` | Reached the natural end |
-| `Cancelled` | Cancel was called |
+| `Cancelled` | Cancelled through a handle or `CancelTweens` |
 | `TargetFreed` | Target was freed or queued for deletion |
 | `OwnerExited` | Owner left the tree |
 | `RunnerDisposed` | Tree or scheduler shut down |
 
+Errors throw instead: a start with invalid arguments throws at the call, and awaiting `End` rethrows a fault from an easing, setter, or callback.
 
-<Aside type="note" title="Tree exit can happen first">
+<Aside type="caution" title="Compare against Completed">
 
-Freeing a node can report `OwnerExited` because Godot emits tree exit before invalidating it. Both mean playback stopped early.
+Freeing a node reports `TargetFreed` after `QueueFree()`, but `OwnerExited` after `Free()`, because Godot exits the tree first. Test for `Completed` rather than a particular early reason.
 
 </Aside>
 
 ## Cancel a wait, not the tween
 
-`AwaitDecommissionAsync(cancellationToken)` lets one caller stop waiting while playback and other waiters continue.
+`await movement.AwaitDecommissionAsync(token)` stops waiting when `token` is cancelled, and throws `OperationCanceledException`. Playback and other waiters continue. Chains have the same method.
 
-A cancelled wait throws `OperationCanceledException`; cancelled playback returns `Reason.Cancelled`.
-
-See [handle wait helpers](/csharp/api/handles/) for the API and [errors](/csharp/api/handles/#errors) for failure handling.
+<LinkCard title="Handles" description="Controls, states, wait helpers, and errors." href="/csharp/api/handles/" />
 
 {/* Keep links to earlier guide sections working. */}
 <span id="loops" />

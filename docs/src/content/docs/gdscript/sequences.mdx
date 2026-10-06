@@ -1,11 +1,12 @@
 ---
 title: "Sequences"
-description: "Play definitions in order, overlap them, or run independent tweens together."
+description: "Play motions in order, overlap them, or run them together."
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import Moves from '../../../components/Moves.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Use a **Chain** to put several motions on one target's timeline. Use a **Group** when independent tweens should play together.
+A Chain plays motions one after another on one target's timeline. A Group plays them at the same time.
 
 Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
@@ -20,20 +21,25 @@ var animation := Tweens.chain(sprite, [
 await animation.end
 ```
 
-The sprite moves, grows, then fades. Each step captures its starting value when it activates, so it sees the preceding step's result.
+The sprite moves, grows, then fades. Each step reads its starting value when it begins, so it continues from where the previous step ended.
 
 ## Overlap and gaps
 
-Each entry's delay is relative to the previous entry's end. A positive delay adds a gap; a negative delay overlaps:
+An entry's `delay` counts from the end of the entry before it. A positive delay leaves a gap; a negative one overlaps.
 
-```gdscript
+<Moves>
+
+```gdscript {"1":2} {"2":3}
 var animation := Tweens.chain(sprite, [
     Tweens.position_2d([400, 180], 0.6),
     Tweens.modulate_alpha(0.0, 0.3).with_delay(-0.2),
 ])
 ```
 
-The fade starts at 0.4 seconds, while movement continues to 0.6. The Chain ends at 0.7 seconds.
+1. **Move** from 0 to 0.6 seconds.
+2. **Fade** from 0.4 to 0.7 seconds, overlapping the move's last 0.2 seconds.
+
+</Moves>
 
 ## Play together
 
@@ -45,15 +51,18 @@ var together := Tweens.play_all(sprite, [
 await together.end
 ```
 
-Group handles from different targets with `Tweens.group([first, second])`. Pause, resume, or cancel through the returned controller.
+`Tweens.play_all()` returns a Group. To group tween handles from different targets, use `Tweens.group([first, second])`. A Group ends when all its members have ended; if one stops early, the Group cancels the rest.
 
-<Aside type="tip" title="When to use await">
+<Aside type="tip" title="Chain or await?">
 
-Use ordinary awaits for decisions, user input, and transitions between targets. Use a Chain when motions need a shared timeline: separate starts after an await begin on the next eligible update.
+Await between steps that wait on a decision, input, or another target. Use a Chain when steps share one timeline: a tween started after an await begins on the next update.
 
 </Aside>
 
-See the [Chain reference](/gdscript/api/chains/) for pre-roll, capture order, and limits, or [Groups](/gdscript/api/groups/) for parallel completion rules.
+<CardGrid>
+<LinkCard title="Chains" description="Pre-roll, capture order, controls, and limits." href="/gdscript/api/chains/" />
+<LinkCard title="Groups" description="Membership, controls, and completion rules." href="/gdscript/api/groups/" />
+</CardGrid>
 
 {/* Keep links to earlier guide sections working. */}
 <span id="link-definitions" />

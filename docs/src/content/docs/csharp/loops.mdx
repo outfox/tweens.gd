@@ -1,0 +1,87 @@
+---
+title: "Loops and delays"
+description: "Repeat a motion, send it back and forth, and choose what shows during a delay."
+---
+
+import Compare from '../../../components/Compare.astro';
+import FillModes from '../../../components/FillModes.astro';
+import TimingLab from '../../../components/TimingLab.astro';
+import { Aside, LinkCard } from '@astrojs/starlight/components';
+
+Ping-pong sends a motion back to where it started; repeats play it again. Together they make idle motion that runs on its own.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+## Loop forever
+
+<Compare>
+
+```csharp title="Godot's Tween"
+var tween = sprite.CreateTween().SetLoops()
+    .SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+tween.TweenProperty(sprite, "scale", new Vector2(1.1f, 1.1f), 0.8);
+tween.TweenProperty(sprite, "scale", Vector2.One, 0.8);
+```
+
+```csharp title="tweens.gd"
+var pulse = new Tweens.Scale2D(1.1, 0.8, InOut.Sine)
+{
+    PingPong = true,
+    Repeats = TweenOptions.Infinite,
+};
+
+sprite.Tween(pulse);
+```
+
+</Compare>
+
+The sprite grows for 0.8 seconds, shrinks for 0.8 seconds, and repeats until cancelled or removed from the tree. Ping-pong returns to the scale the sprite had at the start, so the return leg needs no value of its own.
+
+## Count cycles
+
+| Set | Effect |
+| --- | --- |
+| `Repeats = 2` | Three cycles: the first plus two repeats |
+| `PingPong = true` | Each cycle goes there and back; `Duration` applies to each leg |
+| `PingPongInterval` | Pause at the far end before the return leg |
+| `RepeatInterval` | Pause between cycles |
+
+**Try it:** raise `Repeats`, then drag the timeline to see where each interval falls.
+
+<TimingLab />
+
+<span id="fill-and-restoration" />
+
+## Hold during a delay
+
+`Fill` chooses what a delayed tween shows before it starts and after it ends. For an entrance, `FillMode.Both` applies `From` during the delay and keeps the final value:
+
+```csharp
+var fadeIn = new Tweens.ModulateAlpha
+{
+    From = 0,
+    Duration = 0.3,
+    Delay = 0.5,
+    Fill = FillMode.Both,
+};
+
+label.Tween(fadeIn);
+```
+
+The label stays hidden for half a second, then fades in to its own alpha. The default fill, `RetainFinalValue`, would leave it visible during the delay, so it would blink out before fading in.
+
+Each row below plays one delayed tween with a different fill mode:
+
+<FillModes />
+
+<Aside type="note" title="Cancelling keeps the current value">
+
+Fill modes restore the initial value only on natural completion. A cancelled tween keeps its latest value.
+
+</Aside>
+
+<LinkCard title="Timing reference" description="Every timing option, fill mode, and validation rule." href="/csharp/api/timing/" />
+
+{/* Keep links to earlier guide sections working. */}
+<span id="timing-options" />
+<span id="progress" />

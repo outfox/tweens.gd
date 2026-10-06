@@ -17,7 +17,7 @@ var handle := Tweens.play(sprite, Tweens.position_2d([100, 0], 1.0), null, clock
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `process_mode` | `Tweens.Process` | `PROCESS` | Update on [process or physics](/gdscript/timing/#process-and-physics) frames |
+| `process_mode` | `Tweens.Process` | `PROCESS` | Update on [process or physics](/gdscript/lifetime/#process-and-physics) frames |
 | `use_unscaled_time` | `bool` | `false` | Ignore `Engine.time_scale` |
 | `pause_mode` | `Tweens.Pause` | `BOUND` | Which [pause](/gdscript/lifetime/#pausing) the tween follows |
 | `suppress_callbacks_when_target_invalid` | `bool` | `false` | Skip the ending callbacks when the target or owner is gone |
@@ -53,7 +53,7 @@ Callbacks run synchronously, in this order:
    it during the delay.
 3. `on_start(handle)` once, when the delay ends and playback begins.
 4. `on_update(handle, value)` at each sampled timeline boundary and eligible update,
-   plus once more when completion [restores the initial value](/gdscript/timing/#fill-and-restoration).
+   plus once more when completion [restores the initial value](/gdscript/loops/#hold-during-a-delay).
 5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
    stops early.
 6. `on_finally(handle)` in every case, including failures.

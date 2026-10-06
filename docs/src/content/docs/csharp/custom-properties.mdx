@@ -1,0 +1,71 @@
+---
+title: "Custom properties"
+description: "Animate values the catalog doesn't cover: callbacks, your own properties, and custom bindings."
+---
+
+import Moves from '../../../components/Moves.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+When the catalog has no matching property, animate a callback value or supply your own getter and setter.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+## Callback values
+
+```csharp
+label.Tween(new Tweens.Float
+{
+    From = 10,
+    To = 100,
+    Duration = 1,
+    OnUpdate = (_, sample) => label.Text = Mathf.RoundToInt(sample).ToString(),
+});
+```
+
+The label counts from 10 to 100. `OnUpdate` receives each value; the node you start on owns playback. [Callback values](/csharp/nodes/values/) lists the other value types.
+
+<span id="custom-properties" />
+
+## Getter and setter
+
+<Moves>
+
+```csharp title="HealthBar.cs" {"1":3} {"2":5-7} {"3":9}
+public partial class HealthBar : Node2D
+{
+    public float Fill { get; set; } = 1;
+
+    static readonly Tweens.Property<HealthBar, float> Drain = new(
+        bar => bar.Fill, (bar, value) => bar.Fill = value, Interpolators.Float)
+        { Duration = 0.4, Ease = InOut.SmootherStep };
+
+    public void SetHealth(float fraction) => this.Tween(Drain with { To = fraction });
+}
+```
+
+1. **Store.** Any property or field works.
+2. **Define.** A getter, a setter, and an interpolator, with the usual timing and easing.
+3. **Play.** Each call sets a new destination with `with`.
+
+</Moves>
+
+<span id="extend-a-binding" />
+
+## Custom bindings
+
+For setup or cleanup around each playback, derive from `TweenDefinition<TTarget, TValue>`. Override `Read`, `Write`, and `Interpolate`, and optionally `Prepare`, `Restore`, and `Release`. Each start works on a shallow copy, so referenced objects stay shared unless you copy them.
+
+<Aside type="caution" title="Release only what your copy owns">
+
+Keep per-playback state on the playback copy, and release only resources that copy created.
+
+</Aside>
+
+<CardGrid>
+<LinkCard title="Custom definitions" description="Every hook, its order, and failed preparation." href="/csharp/api/custom/" />
+<LinkCard title="Manual scheduling" description="Advance tweens yourself, for plain objects and tests." href="/csharp/api/scheduler/" />
+</CardGrid>
+
+{/* Keep links to earlier guide sections working. */}
+<span id="drive-a-scheduler-yourself" />
+<span id="custom-definitions-and-bindings" />

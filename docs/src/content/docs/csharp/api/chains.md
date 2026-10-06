@@ -112,5 +112,5 @@ A final infinitely repeating entry is allowed; a successor after an infinite
 entry is rejected. Empty lists, invalid definitions, and overflowed schedules
 reject before playback.
 
-See [Chain members](/csharp/api/chains/), [timing](/csharp/timing/),
+See [Chain members](/csharp/api/chains/), [timing](/csharp/api/timing/),
 and [cancellation](/csharp/cancellation/) for the detailed contract.

@@ -9,7 +9,7 @@ The enums that definitions and handles use, one value per entry.
 ## FillMode
 
 What the property shows during the delay and after natural completion. See
-[fill and restoration](/csharp/timing/#fill-and-restoration).
+[fill and restoration](/csharp/loops/#hold-during-a-delay).
 
 | Member | Meaning |
 | --- | --- |
@@ -58,7 +58,7 @@ Which pause the tween follows. Pausing the handle always stops it. See
 ## TweenProcessMode
 
 Which frames advance the tween. See
-[process and physics](/csharp/timing/#process-and-physics).
+[process and physics](/csharp/lifetime/#process-and-physics).
 
 | Member | Meaning |
 | --- | --- |
