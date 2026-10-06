@@ -92,7 +92,7 @@ Use `In`, `Out`, or `InOut` for mirrored, outgoing, or paired motion.
 
 `EaseType.Linear` (zero) remains the default. Legacy `EaseType` constants keep
 their numeric values and original shapes. Do not OR legacy names with the new
-flags. [Easing](/csharp/easing/) includes the composer and migration details.
+flags. Try the composer in the [easing playground](/easings/).
 
 ## Constants
 

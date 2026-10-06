@@ -11,7 +11,10 @@ import Default from '@astrojs/starlight/components/Sidebar.astro';
 		const pane = document.getElementById('starlight__sidebar');
 		if (!pane || !matchMedia('(min-width: 50em)').matches) return;
 		if (window.__twCarry) pane.scrollTop = window.__twCarry.sidebar;
-		const link = pane.querySelector('a[aria-current="page"]:not([data-lang-choice])');
+		// A hub page lists its link in both tracks; the hidden one has no box.
+		const link = [...pane.querySelectorAll('a[aria-current="page"]:not([data-lang-choice])')].find(
+			(a) => a.getClientRects().length,
+		);
 		if (!link) return;
 		const p = pane.getBoundingClientRect();
 		const l = link.getBoundingClientRect();

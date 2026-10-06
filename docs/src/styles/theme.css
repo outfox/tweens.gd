@@ -606,6 +606,11 @@ header.header {
 	border-radius: 50%;
 	background: var(--tw-accent);
 }
+/* Hub pages list both tracks' groups (src/routeData.ts); only the reader's language shows. */
+:root:not([data-lang='gdscript']) .sidebar-content .top-level > li:has([data-track='gdscript']),
+:root[data-lang='gdscript'] .sidebar-content .top-level > li:has([data-track='csharp']) {
+	display: none;
+}
 .sidebar-content summary .group-label {
 	font-family: var(--tw-font-display);
 	letter-spacing: 0.01em;

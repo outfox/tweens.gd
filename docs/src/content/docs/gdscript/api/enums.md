@@ -95,7 +95,7 @@ Use `In`, `Out`, or `InOut` for mirrored, outgoing, or paired motion.
 
 `Tweens.Ease.LINEAR` (zero) remains the default. Legacy `Tweens.Ease` constants
 keep their numeric values and original shapes. Do not OR legacy names with new
-flags. [Easing](/gdscript/easing/) includes the composer and migration details.
+flags. Try the composer in the [easing playground](/easings/).
 
 ## Tweens.INFINITE
 

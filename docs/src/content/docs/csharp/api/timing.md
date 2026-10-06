@@ -28,7 +28,7 @@ See [syntax sugar](/csharp/syntax-sugar/#easing-and-delay) for examples.
 
 ## Easing
 
-See [easing](/csharp/easing/).
+See the [easing playground](/easings/).
 
 | Member | Type | Default | Meaning |
 | --- | --- | --- | --- |

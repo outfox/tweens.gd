@@ -2,8 +2,8 @@
 import { Icon } from '@astrojs/starlight/components';
 
 const doors = [
-	{ lang: 'csharp', name: 'C#', requirements: 'Godot 4.7.2 .NET', api: '/csharp/api/' },
-	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2', api: '/gdscript/api/' },
+	{ lang: 'csharp', name: 'C#', requirements: 'Godot 4.7.2 .NET' },
+	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2' },
 ];
 ---
 
@@ -17,10 +17,6 @@ const doors = [
 				</span>
 				<span class="indicator" aria-hidden="true"><Icon name="check" /></span>
 			</button>
-			<div class="reference">
-				<span class="selection"><span class="selected">Selected</span><span class="unselected">Available</span></span>
-				<a href={d.api} aria-label={`${d.name} Core API`}>Core API <Icon name="right-arrow" /></a>
-			</div>
 		</div>
 	))}
 </div>
@@ -58,7 +54,7 @@ const doors = [
 		width: 100%;
 		padding: 1.25rem;
 		border: 0;
-		border-radius: 1rem 1rem 0 0;
+		border-radius: 1rem;
 		background: transparent;
 		color: var(--choice-color);
 		font: inherit;
@@ -67,7 +63,7 @@ const doors = [
 		transition: background-color 0.2s, color 0.2s;
 	}
 	.start:hover { background: color-mix(in oklab, var(--tw-accent) 8%, transparent); }
-	.start:focus-visible, a:focus-visible {
+	.start:focus-visible {
 		outline: 2px solid var(--tw-accent-ink);
 		outline-offset: 4px;
 	}
@@ -84,34 +80,12 @@ const doors = [
 		border-radius: 50%;
 	}
 	.indicator :global(svg) { opacity: 0; }
-	.selected { display: none; }
 	.door:has([aria-pressed='true']) .indicator {
 		background: var(--tw-accent-ink);
 		border-color: var(--tw-accent-ink);
 		color: var(--tw-on-accent);
 	}
 	.door:has([aria-pressed='true']) .indicator :global(svg) { opacity: 1; }
-	.door:has([aria-pressed='true']) .selected { display: inline; }
-	.door:has([aria-pressed='true']) .unselected { display: none; }
-	.reference {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		margin-inline: 1.25rem;
-		border-top: 1px solid color-mix(in oklab, var(--choice-border) 40%, transparent);
-		font-size: var(--sl-text-sm);
-	}
-	.selection { color: var(--choice-color); }
-	a {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		min-height: 2.75rem;
-		color: var(--tw-soft);
-		text-decoration: none;
-	}
-	a:hover { color: var(--tw-accent-ink); text-decoration: underline; text-underline-offset: 0.2em; }
 	@media (max-width: 36rem) {
 		.doors { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
 		.start { padding: 1rem 1.25rem; }
