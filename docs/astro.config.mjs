@@ -169,6 +169,7 @@ export default defineConfig({
 				},
 			},
 			social: [
+				{ icon: 'seti:godot', label: 'Godot Asset Store', href: 'https://store.godotengine.org/asset/outfox/tweens/' },
 				{ icon: 'discord', label: 'Discord', href: 'https://discord.gg/3UXVHnmEwd' },
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/outfox/tweens.gd' },
 			],
