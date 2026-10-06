@@ -60,7 +60,10 @@ const steps = LEARN.map((page) => ({
 			))}
 		</ol>
 	</nav>
-	<div class="ferret" aria-hidden="true"><img src="/ferret-vertical.svg" alt="" width="2247" height="4101" /></div>
+	<div class="ferret" aria-hidden="true">
+		<img src="/ferret-vertical.svg" alt="" width="2247" height="4101" />
+		<img class="nametag" src="/nametag-easy.svg" alt="" width="400" height="280" />
+	</div>
 </div>
 
 <style>
@@ -85,6 +88,14 @@ const steps = LEARN.map((page) => ({
 		width: 231.6%;
 		max-width: none;
 		height: auto;
+	}
+	/* Stuck to the chest, 520 units wide and centered near (1060, 1480) in the ferret's viewBox. */
+	.ferret .nametag {
+		top: 27.5%;
+		left: 6.1%;
+		width: 53.6%;
+		rotate: -6deg;
+		filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.3));
 	}
 	ol {
 		--dot: 2rem;

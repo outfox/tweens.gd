@@ -27,7 +27,7 @@ export const PATH = [
 		art: 'curve',
 		pages: [
 			{ link: '/easings/', label: 'Playground' },
-			{ slug: 'easing', label: 'Custom curves' },
+			{ slug: 'custom', label: 'Custom curves' },
 		],
 	},
 	{

@@ -50,7 +50,7 @@ const variants = sorted.filter(f => /\d$/.test(f));
 				</select></label>
 				<span class="join" aria-hidden="true">|</span>
 				<label class="tw-field"><span class="out-key">Out curve</span><select data-out aria-label="Out curve">
-					<option value="None">None (In only)</option><hr />
+					<option value="None">None (In only)&lrm;</option><hr />
 					{curves.map(f => <option value={f} selected={f === 'Elastic'}>{f}</option>)}<hr />
 					{variants.map(f => <option value={f}>{f}</option>)}
 				</select></label>
@@ -268,6 +268,11 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 	.pacing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 	.selectors { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .5rem; align-items: end; }
 	.join { font: 1.25rem var(--sl-font-mono); color: var(--tw-muted); padding-bottom: .4rem; }
+	/* The Out side mirrors the In side around the join. text-align-last aligns a select's shown value; the open list
+	   ignores text-align, so its options run right to left (the &lrm; keeps "None (In only)" closing its parenthesis). */
+	.tw-field:has([data-out]) { text-align: right; }
+	[data-out] { text-align-last: right; }
+	[data-out] option { direction: rtl; }
 	select { width: 100%; min-width: 0; color: var(--tw-text); background: var(--tw-stage); border: 1px solid var(--tw-outline); border-radius: .5rem; padding: .65rem .4rem; font: .85rem var(--sl-font-mono); }
 	/* Blend controls only apply when two different curves meet. */
 	.tw-field:has(:disabled) { opacity: .5; }
