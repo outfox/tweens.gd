@@ -1,0 +1,74 @@
+---
+title: "Materials and shaders"
+description: "Animate material properties or shader uniforms and choose their owner."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Animate a material to change every node using it. Use an instance uniform when each node needs its own shader value.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree. Materials below are configured resources; `mesh` is a `MeshInstance3D` using them.
+
+## Choose the playback lifetime
+
+Resources need an explicit lifetime. Use a node owner for an effect attached to that node, or the tree for an effect that should outlive it:
+
+```csharp
+material.TweenRoughness(0.2, 1, mesh);      // Stop when mesh leaves the tree.
+material.TweenRoughness(0.2, 1, GetTree()); // Stop when the tree shuts down.
+```
+
+These are alternative lifetime choices. Changing a mesh's material does not retarget a running tween.
+
+## Built-in material properties
+
+Use the [material catalog](/csharp/nodes/materials/) for albedo, roughness, emission, and UV helpers. They target `BaseMaterial3D`.
+
+<Aside type="caution" title="Sharing is visible">
+
+Tweening a shared resource changes all its users. For independent values, duplicate and assign the material once during scene setup.
+
+</Aside>
+
+```csharp
+var unique = (StandardMaterial3D)shared.Duplicate();
+mesh.MaterialOverride = unique;
+unique.TweenAlbedoColor(Colors.Red, 1, mesh);
+```
+
+<Aside type="tip" title="Enable the feature first">
+
+Alpha fading needs transparency; emission and normal mapping need their flags enabled. Tweens change values, so configure the material for the visible effect before starting playback.
+
+</Aside>
+
+## Ordinary shader uniforms
+
+For a shader declaring `uniform float dissolve = 0.25;`:
+
+```csharp
+shaderMaterial.TweenShaderParameter("dissolve", 1f, 0.5, mesh);
+```
+
+This changes the shared material's uniform. Names are case-sensitive and endpoints must match the declared type. Use `Color` for color uniforms and the matching vector type for vectors.
+
+## Per-instance shader uniforms
+
+For a shader declaring `instance uniform float pulse = 0.25;`:
+
+```csharp
+mesh.TweenInstanceShaderParameter("pulse", 1f, 0.5);
+```
+
+Only this node's instance value changes, even when it shares the material. Playback follows the node's normal lifetime.
+
+<Aside type="caution" title="Keep bindings stable">
+
+Replacing a bound shader or material can fail playback. Start a new tween after changing the binding. Shader default lookup also needs a working renderer.
+
+</Aside>
+
+The [material and uniform reference](/csharp/nodes/materials/#ordinary-shader-uniforms) covers supported types, validation, defaults, and restoring overrides.
+
+{/* Keep links to earlier guide sections working. */}
+<span id="manual-scheduling" />

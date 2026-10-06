@@ -24,7 +24,7 @@ public class ChainTests
                     From = entry.TryGetProperty("from", out var from) ? from.GetSingle() : null,
                     To = (float)Number("to"), Duration = Number("duration"), Delay = Number("delay"), Offset = Number("offset"),
                     Repeats = (int)Number("repeats"), RepeatInterval = Number("repeat_interval"), PingPongInterval = Number("ping_pong_interval"),
-                    UsePingPong = entry.TryGetProperty("use_ping_pong", out var ping) && ping.GetBoolean(),
+                    PingPong = entry.TryGetProperty("ping_pong", out var ping) && ping.GetBoolean(),
                     OnAdd = _ => trace.Add($"add:{i}"), OnStart = _ => trace.Add($"start:{i}"),
                     OnEnd = _ => { trace.Add($"end:{i}"); if (entry.TryGetProperty("end_set", out var value)) box.Value = value.GetSingle(); },
                 };

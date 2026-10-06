@@ -43,7 +43,7 @@ public sealed partial class SlimeHop
     private TweenInstance Blink() =>
         eyes.TweenScaleY(0.1, 0.07, options =>
         {
-            options.UsePingPong = true;
+            options.PingPong = true;
             options.Repeats = TweenOptions.Infinite;
             options.RepeatInterval = 2.2;
             options.Delay = 0.9;

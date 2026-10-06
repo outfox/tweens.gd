@@ -1,0 +1,40 @@
+---
+title: Frequently asked questions
+description: When to use tweens.gd and how its definitions differ from Godot’s Tween.
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+tweens.gd makes motion easy to reuse and quick to write, in C# and GDScript.
+
+<span id="wait-godot-already-has-tween" />
+
+## Why use it alongside Godot's Tween?
+
+<CardGrid>
+<Card title="Keep the motion">
+
+Define an animation once, then start independent copies on different nodes. Tune one definition instead of repeating property paths and settings.
+
+</Card>
+<Card title="Choose the syntax">
+
+Use explicit Godot values or brief tuples and arrays. C# also has extensions that start directly on a node.
+
+</Card>
+<Card title="Shape and vary">
+
+Mix In and Out easing families, add punch and shake, or scale a shared motion for a stronger hit.
+
+</Card>
+</CardGrid>
+
+## Where should I start?
+
+Follow the [five-step tutorial](/tutorial/). Use the [easing playground](/easings/) when you want to compare how curves feel.
+
+<Aside type="note" title="Both languages are in beta">
+
+APIs may change. Check [compatibility](/compatibility/) for engine and export requirements.
+
+</Aside>

@@ -1,5 +1,6 @@
 ---
 title: Modes and callbacks
+tableOfContents: true
 description: Process, time scale, and pause modes, callback suppression, and the callbacks each playback runs.
 ---
 
@@ -39,3 +40,31 @@ receives `(handle, value)`. See
 | `on_finally` | `Callable` | `Callable()` | Runs last, in every case, including failures |
 
 Pending cancellation and failed preparation run no playback callbacks. Release runs only for prepared adapters.
+
+## Callback order
+
+Starting a tween snapshots its configuration. Preparation and capture happen at
+activation, before `on_add`.
+
+Callbacks run synchronously, in this order:
+
+1. `on_add(handle)` at activation after capture.
+2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
+   it during the delay.
+3. `on_start(handle)` once, when the delay ends and playback begins.
+4. `on_update(handle, value)` at each sampled timeline boundary and eligible update,
+   plus once more when completion [restores the initial value](/gdscript/timing/#fill-and-restoration).
+5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
+   stops early.
+6. `on_finally(handle)` in every case, including failures.
+
+The handle's terminal state is visible inside terminal callbacks, and awaiting `end`
+resumes after them. A long frame doesn't replay the callbacks of skipped cycles.
+Tweens started in callbacks or after an await are independent roots: they begin
+on the next eligible update with no inherited frame time. Use a
+[Chain](/gdscript/sequences/) for linked timing.
+
+:::caution[Don't `await` inside callbacks]
+Callbacks must return before playback continues. Put anything that awaits in a
+separate coroutine that awaits `end`.
+:::

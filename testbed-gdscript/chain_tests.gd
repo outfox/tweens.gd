@@ -20,7 +20,7 @@ func run(suite: Object) -> bool:
 			var entry: Dictionary = test.entries[i]
 			var definition := T.property(^"amount", entry.to, entry.duration, 0, entry.get("delay", 0.0))
 			definition.from_value = entry.get("from", null)
-			for field in ["offset", "repeats", "repeat_interval", "ping_pong_interval", "use_ping_pong"]:
+			for field in ["offset", "repeats", "repeat_interval", "ping_pong_interval", "ping_pong"]:
 				if entry.has(field): definition.set(field, entry[field])
 			definition.on_add = func(_h): trace.append("add:%d" % i)
 			definition.on_start = func(_h): trace.append("start:%d" % i)

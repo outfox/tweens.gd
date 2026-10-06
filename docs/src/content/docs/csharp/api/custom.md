@@ -62,3 +62,38 @@ the `Tweens.*` definitions instead.
 A shorthand method's configure callback receives one of these builders:
 `TweenPosition` on a `Node2D` passes a `Position2DTween`. Write reusable
 configure methods against `TweenOptionsBuilder`, not `TweenOptions`.
+
+## Custom definitions and bindings
+
+Derive from `TweenDefinition<TTarget, TValue>` and implement the protected `Read`,
+`Write`, and `Interpolate` methods. `TTarget` is a reference type and `TValue` is a
+value type. The `Interpolators` helpers cover the built-in numeric and vector
+types:
+
+```csharp title="UniformZoomTween.cs"
+// Tweens a camera's zoom as one number, keeping X and Y equal.
+public sealed class UniformZoomTween : TweenDefinition<Camera2D, float>
+{
+    protected override float Read(Camera2D target) => target.Zoom.X;
+    protected override void Write(Camera2D target, float value) => target.Zoom = new Vector2(value, value);
+    protected override float Interpolate(float from, float to, float weight) => Interpolators.Float(from, to, weight);
+}
+```
+
+```csharp
+camera.Tween(new UniformZoomTween { To = 2, Duration = 0.5, Ease = InOut.SmootherStep });
+```
+
+`By`, factors, and deltas ([variations](/csharp/variations/)) work with int,
+float, double, vector, `Color`, `Quaternion`, and `Rect2` values. `By` reads the
+property back on every frame, so override `ReadsWrittenValue` to return `false`
+if `Read` doesn't return what `Write` stored; `By` is then added to the start
+value instead.
+
+For per-playback bindings, override `Prepare`, `Restore`, and `Release`.
+`Prepare` runs on the playback's private definition snapshot, before its initial
+read. `Restore` may write back a property value or remove an override instead.
+`Release` also runs after a failed preparation, and it must release only resources
+owned by that snapshot. The snapshot is shallow, so reference-valued configuration
+on a custom definition stays shared. Don't mutate that shared configuration while
+independent playbacks use it.

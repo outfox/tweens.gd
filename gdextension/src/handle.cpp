@@ -104,7 +104,7 @@ void TweensGdHandle::bind_values(const Variant &p_initial) {
 		h.relative = true;
 		// Callback-only definitions have nothing to read back, so they add to the captured start.
 		h.follows = options.from_value.get_type() == Variant::NIL && (h.adapter.is_valid() || !options.property.is_empty());
-		h.ping_pong = options.use_ping_pong;
+		h.ping_pong = options.ping_pong;
 		h.by = options.by_value;
 		h.zero = TweensGdInterpolation::zero(p_initial.get_type());
 		h.origin = h.from;

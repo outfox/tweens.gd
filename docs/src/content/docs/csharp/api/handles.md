@@ -50,3 +50,26 @@ describes each `Reason`.
 | --- | --- | --- |
 | `Target` | `TTarget` | The object the tween animates |
 | `Value` | `TValue` | The value read at start, then the latest value written |
+
+## Errors
+
+An exception in interpolation, easing, a setter, or a callback faults the tween.
+`End` throws when awaited, `Error` holds the exception, and several failures are
+kept in an `AggregateException`. Cleanup and `OnFinally` still run, and other
+tweens keep playing. Schedulers also report the error through
+`UnhandledException`, and the automatic runner forwards it to `GD.PushError`.
+
+:::caution[Catch errors in `async void` callbacks]
+`_Ready` and other Godot callbacks are often `async void`. Wrap their sequences in
+`try`/`catch`, or a faulted tween's exception is lost.
+:::
+
+## Stay on the main thread
+
+Create and control tweens, and await `End`, on Godot's main thread. `End` finishes
+there, and ordinary Godot async code keeps its synchronization context.
+
+- Don't block with `.Wait()` or `.Result`.
+- Don't use `Task.Run` or `ConfigureAwait(false)` around engine access.
+- Use Godot's `ToSignal` to wait for unrelated engine signals; tweens.gd has no
+  coroutine API.

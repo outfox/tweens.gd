@@ -105,7 +105,7 @@ String TweenSettings::validate() const {
 			return "A configured Callable is invalid.";
 		}
 	}
-	const double span = seconds + (use_ping_pong ? seconds + ping_pong_interval : 0.0) + repeat_interval;
+	const double span = seconds + (ping_pong ? seconds + ping_pong_interval : 0.0) + repeat_interval;
 	if (!Math::is_finite(span + wait)) {
 		return "Timeline is too long.";
 	}
@@ -166,7 +166,7 @@ void TweensGdDefinition::_bind_methods() {
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "delta_delay"), delta_delay);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "offset"), offset);
 	BIND_SETTING(PropertyInfo(Variant::INT, "repeats"), repeats);
-	BIND_SETTING(PropertyInfo(Variant::BOOL, "use_ping_pong"), use_ping_pong);
+	BIND_SETTING(PropertyInfo(Variant::BOOL, "ping_pong"), ping_pong);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "ping_pong_interval"), ping_pong_interval);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "repeat_interval"), repeat_interval);
 	BIND_SETTING(PropertyInfo(Variant::INT, "fill"), fill);
@@ -279,7 +279,7 @@ DEFINE_WITH(with_factor_delay, double, factor_delay)
 DEFINE_WITH(with_delta_delay, double, delta_delay)
 DEFINE_WITH(with_offset, double, offset)
 DEFINE_WITH(with_repeats, int64_t, repeats)
-DEFINE_WITH(with_ping_pong, bool, use_ping_pong)
+DEFINE_WITH(with_ping_pong, bool, ping_pong)
 DEFINE_WITH(with_ping_pong_interval, double, ping_pong_interval)
 DEFINE_WITH(with_repeat_interval, double, repeat_interval)
 DEFINE_WITH(with_fill, int64_t, fill)

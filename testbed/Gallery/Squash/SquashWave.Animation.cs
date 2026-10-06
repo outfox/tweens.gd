@@ -39,7 +39,7 @@ public sealed partial class SquashWave
     private void Cycle(TweenOptionsBuilder options)
     {
         options.Ease = DefaultEase;
-        options.UsePingPong = true;
+        options.PingPong = true;
         options.Repeats = TweenOptions.Infinite;
         options.RepeatInterval = 0.1;
         options.PingPongInterval = 0.05;

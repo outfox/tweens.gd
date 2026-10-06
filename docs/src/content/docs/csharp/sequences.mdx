@@ -1,0 +1,61 @@
+---
+title: "Sequences"
+description: "Play definitions in order, overlap them, or run independent tweens together."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Use a **Chain** to put several motions on one target's timeline. Use a **Group** when independent tweens should play together.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+## Play in order
+
+```csharp
+var animation = sprite.Chain([
+    new Tweens.Position2D((400, 180), 0.6),
+    new Tweens.Scale2D(1.2, 0.2),
+    new Tweens.ModulateAlpha(0, 0.3),
+]);
+await animation.End;
+```
+
+The sprite moves, grows, then fades. Each step captures its starting value when it activates, so it sees the preceding step's result.
+
+## Overlap and gaps
+
+Each entry's delay is relative to the previous entry's end. A positive delay adds a gap; a negative delay overlaps:
+
+```csharp
+var animation = sprite.Chain([
+    new Tweens.Position2D((400, 180), 0.6),
+    new Tweens.ModulateAlpha(0, 0.3) { Delay = -0.2 },
+]);
+```
+
+The fade starts at 0.4 seconds, while movement continues to 0.6. The Chain ends at 0.7 seconds.
+
+## Play together
+
+```csharp
+var together = sprite.Tween(
+    new Tweens.Position2D((400, 180), 0.6),
+    new Tweens.ModulateAlpha(0, 0.6));
+await together.End;
+```
+
+Group handles from different targets with `Group.Of(first, second)`. Pause, resume, or cancel through the returned controller.
+
+<Aside type="tip" title="When to use await">
+
+Use ordinary awaits for decisions, user input, and transitions between targets. Use a Chain when motions need a shared timeline: separate starts after an await begin on the next eligible update.
+
+</Aside>
+
+See the [Chain reference](/csharp/api/chains/) for pre-roll, capture order, and limits, or [Groups](/csharp/api/groups/) for parallel completion rules.
+
+{/* Keep links to earlier guide sections working. */}
+<span id="link-definitions" />
+<span id="pre-roll" />
+<span id="control-and-completion" />
+<span id="completion-driven-logic" />

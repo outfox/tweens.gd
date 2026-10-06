@@ -29,7 +29,7 @@
       "name": "ping pong turn and return",
       "options": {
         "duration": 1,
-        "use_ping_pong": true,
+        "ping_pong": true,
         "ping_pong_interval": 0.5
       },
       "samples": [
@@ -84,7 +84,7 @@
       "name": "ping pong repeat interval",
       "options": {
         "duration": 1,
-        "use_ping_pong": true,
+        "ping_pong": true,
         "repeat_interval": 1,
         "repeats": 1
       },
@@ -109,7 +109,7 @@
     {
       "name": "zero length legs",
       "options": {
-        "use_ping_pong": true,
+        "ping_pong": true,
         "ping_pong_interval": 1,
         "repeat_interval": 1,
         "repeats": 1

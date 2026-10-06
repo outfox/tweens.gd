@@ -60,3 +60,30 @@ describes each `Tweens.Reason`.
 | `cancelled` | signal | Emitted by `cancel()` |
 
 A cancelled `wait()` returns `Tweens.Reason.WAIT_CANCELLED`.
+
+## Errors
+
+GDScript has no exceptions to throw, so failures are reported as data. A tween
+that detects a problem ends with `FAILED`, and `handle.error` holds the message;
+several detected problems are joined with newlines. `on_finally` still runs, and
+other tweens keep playing. The automatic runner also reports the message to
+Godot's error log.
+
+A rejected start, such as a freed target, a target outside the tree, or an
+invalid definition, doesn't return `null`. It returns a handle that has already
+settled with `FAILED`. It schedules no work and runs no callbacks, its `target`
+and `value` are `null`, and `pause()`, `resume()`, `cancel()`, and `wait()` stay
+safe to call.
+
+:::caution[Script errors aren't caught]
+tweens.gd detects invalid configuration, stale Callables, non-numeric or
+non-finite easing, and non-finite interpolation. An error inside your own
+callback or property setter stays an ordinary Godot script error, and isn't
+guaranteed to become `FAILED`.
+:::
+
+## Stay on the main thread
+
+Create and control tweens, and await `end`, on Godot's main thread. A call
+from another thread reports an error and does nothing: starts return a handle
+that has already failed, and `wait()` returns `FAILED`.

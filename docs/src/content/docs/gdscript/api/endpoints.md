@@ -68,3 +68,34 @@ Two tweens may animate the same property. Tweens write in the order they were
 started, so each update the one started last wins. Component paths, such as
 `position:x` or `modulate:a`, read the other components on every write, so an x
 tween and a y tween combine.
+
+## Change the pacing with `skew`
+
+`skew` moves the In/Out split linearly from 0 to 1. The default, 0.5,
+preserves the balanced pair. At 0, the Out profile fills the duration; at 1,
+the In profile does. Intermediate values move the split in both time and value.
+The blend window follows it and shrinks near either endpoint.
+
+`weks` independently controls the ping-pong return: 0 front-loads the return,
+0.5 preserves it, and 1 rear-loads it. To retrace the outward curve, set
+`weks = 1 - skew`. Duration, intervals, and raw progress stay unchanged.
+
+These settings apply to paired In/Out flags. A single leg, legacy ease,
+custom function, or Godot Curve retains its authored profile. The numbered
+overshoot and rebound percentages describe the balanced pair and solo legs;
+moving the split also redistributes the paired legs' value ranges.
+
+## Rules
+
+- Factors and deltas apply once, when the tween starts. A non-retaining `fill`
+  restores the captured value, not an adjusted one.
+- For a quaternion, the factor scales the rotation angle and the delta rotates
+  about the node's own axes.
+- `factor_by` and `delta_by` need a `by_value`. `factor_to` and `delta_to` don't
+  apply with `by_value`. Both combinations are rejected.
+- Adjusting `from_value` fixes the start of a `by_value` tween, as an explicit
+  `from_value` does.
+- The adjusted duration and delay must not be negative, and `offset` must fit
+  within the adjusted duration.
+- Factors, deltas, `skew`, and `weks` must be finite. Both splits must be
+  in `[0, 1]`, even without ping-pong. Invalid values reject the start.

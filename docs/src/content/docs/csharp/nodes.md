@@ -61,4 +61,4 @@ Each group page lists the constraints specific to it. These apply everywhere:
   `Int32` limits. Native constraints still apply.
 - Setting a property doesn't enable a rendering feature or create a resource.
   Renderer support and sorting limitations are Godot's.
-- For shader parameters, see [shader uniforms](/csharp/shaders/).
+- For shader parameters, see [shader uniforms](/csharp/materials/).

@@ -3,15 +3,14 @@ title: Install
 description: Add tweens.gd to your Godot C# project from the Godot Asset Store or NuGet.
 ---
 
-import { CardGrid } from '@astrojs/starlight/components';
 import InstallCard from '../../../components/InstallCard.astro';
+import { Aside, CardGrid } from '@astrojs/starlight/components';
 
-tweens.gd is free and libre open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE).
-You can build it from source or get prebuilt versions through these official channels.
+Add tweens.gd to a Godot C# project. Choose the shared addon for both languages, or NuGet for C# alone.
 
-## Let's... *ease* into it
+<span id="lets-ease-into-it" />
 
-Choose one of these two methods:
+## Choose an install
 
 <CardGrid>
 <InstallCard title="Godot Asset Store" logo="godot-asset-store" href="https://store.godotengine.org/asset/outfox/tweens/">
@@ -35,12 +34,17 @@ dotnet add package tweens.gd
 
 ## Build your project
 
-Build your game with Godot 4.7.2 .NET or later. No plugin activation or autoload is required.
+Build your game with Godot 4.7.2 .NET. No plugin activation or autoload is required.
+
+<Aside type="caution" title="Choose one C# source">
+
+Installing both NuGet and the addon's C# sources creates duplicate types. For a mixed setup, [exclude the addon sources](/advanced-development/#using-nuget-together-with-the-gdscript-addon).
+
+</Aside>
 
 Once tweens.gd is installed and Godot is running, you're ready to write
 [your first tween](/csharp/quickstart/).
 
-## Odds and ends
+<span id="odds-and-ends" />
 
-*Psst, hey:* Bring your Godot C# game & tweens to the web with [2dog 🦴](https://2dog.dev), which supports
-publishing to `browser-wasm` and many other useful tricks. Free, libre open source, like all good things Godot.
+The library is free and open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE). See [compatibility](/compatibility/) for validated engines and exports.

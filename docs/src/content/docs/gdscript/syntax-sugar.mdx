@@ -1,0 +1,104 @@
+---
+title: "Syntax sugar"
+description: "Two API flavours and two ways to write endpoints: explicit types or sweet arrays."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Compare from '../../../components/Compare.astro';
+
+There's more than one way to tween a ferret!
+
+<span id="definitions" />
+<span id="two-flavours" />
+
+### Two API flavours
+
+**Structured** creates a definition object to reuse or vary (via `with_*()` copies). **Convenience** creates and starts a local animation in one `Tweens.play()` expression. GDScript uses helpers rather than node extensions.
+
+<Compare>
+
+```gdscript title="Structured"
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
+
+Tweens.play(sprite, arrive)
+```
+
+```gdscript title="Convenience"
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC))
+```
+
+</Compare>
+
+These are alternative ways to start the same motion. Both return a handle when played.
+
+<span id="endpoints" />
+
+## Safe and sweet endpoints
+
+Use a Godot value for an explicit type, or an array of components for a sweeter expression:
+
+<Compare>
+
+```gdscript title="Safe: explicit type"
+Tweens.play(sprite, Tweens.position_2d(Vector2(400, 180), 0.6))
+```
+
+```gdscript title="Sweet: array"
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
+```
+
+</Compare>
+
+Both move to the same position. Definition helpers accept the same forms.
+
+<Compare>
+
+```gdscript title="Clean: explicit & readable"
+var motion := Tweens.position_2d()
+motion.to_value = Vector2(400, 180)
+motion.duration = 0.6
+
+Tweens.play(sprite, motion)
+```
+
+```gdscript title="Quick: convenient & concise"
+var motion1 := Tweens.position_2d(Vector2(400, 180), 0.6)
+var motion2 := Tweens.position_2d([400, 180], 0.6)
+Tweens.play(sprite1, motion1)
+Tweens.play(sprite2, motion2)
+```
+
+</Compare>
+
+<Aside type="note" title="Choose your checks">
+
+Godot values state their types explicitly. Named helpers check endpoints when playback starts and convert arrays to the expected type; a wrong component count rejects the start with `FAILED`. GDScript has no tuple syntax or C# compile-time endpoint checks.
+
+</Aside>
+
+| Animate | Sweet endpoint |
+| --- | --- |
+| Uniform scale | `Tweens.scale_2d([1.2, 1.2], 0.2)` |
+| RGB color | `Tweens.modulate([1, 0.5, 0], 0.3)` |
+| Named or HTML color | `Tweens.modulate(Color("tomato"), 0.3)` |
+
+Three color components imply alpha 1. Arrays also work with `with_from()`, `with_to()`, and `with_by()`. For `Tweens.value()`, supply real vectors or colors so their type is known.
+
+## Easing and delay
+
+Arguments follow **endpoint, duration, ease, delay**. Times are seconds.
+
+```gdscript
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2))
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.2)
+```
+
+Set fields on a definition, or chain `with_*()` helpers for extra options. Definitions are mutable; use `with_*()` to vary a copy without changing the original:
+
+```gdscript
+var pulse := Tweens.scale_2d([1.2, 1.2], 0.2)
+pulse.ping_pong = true
+Tweens.play(sprite, pulse)
+Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())
+Tweens.play(single, pulse.with_ping_pong(false))
+```

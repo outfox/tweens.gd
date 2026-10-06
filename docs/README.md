@@ -77,6 +77,13 @@ When this check fails after an upgrade:
 
 - Learn is a five-step tutorial with a definite endpoint. Guides answer optional questions;
   Reference contains complete member lists and detailed rules.
+- The tutorial runs Install → Your first tween → Syntax sugar → Definitions → Control & completion.
+  Sequences is an optional guide. Easing progresses from Playground to Effects to Custom.
+- Guides use Starlight `Aside` for actionable hints and pitfalls, and `Card`/`LinkCard`
+  for choices and next steps. Keep the main flow to one example per concept; components
+  should make the page easier to scan, not hide a long explanation.
+- Materials and shader uniforms share one guide. The old shader URLs redirect there;
+  exhaustive binding and restoration rules live in the material reference.
 - Keep setup exceptions and library development notes under Project → Advanced development.
 - Teach one concept with one example before adding variations. Move exhaustive rules
   into reference, and link to them from the guide. Preserve old section anchors when moving content.

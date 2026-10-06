@@ -33,8 +33,8 @@ public readonly record struct ControlScaleX : ITweenDefinition<global::Godot.Con
     public global::tweens.gd.Duration @Offset { get => Options.@Offset; init => Options = Options with { @Offset = value }; }
     /// <inheritdoc cref="TweenOptions.Repeats"/>
     public int @Repeats { get => Options.@Repeats; init => Options = Options with { @Repeats = value }; }
-    /// <inheritdoc cref="TweenOptions.UsePingPong"/>
-    public bool @UsePingPong { get => Options.@UsePingPong; init => Options = Options with { @UsePingPong = value }; }
+    /// <inheritdoc cref="TweenOptions.PingPong"/>
+    public bool @PingPong { get => Options.@PingPong; init => Options = Options with { @PingPong = value }; }
     /// <inheritdoc cref="TweenOptions.Fill"/>
     public global::tweens.gd.FillMode @Fill { get => Options.@Fill; init => Options = Options with { @Fill = value }; }
     /// <inheritdoc cref="TweenOptions.Ease"/>

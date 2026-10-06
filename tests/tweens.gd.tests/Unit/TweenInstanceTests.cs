@@ -17,7 +17,7 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var definition = new PlainTween { To = 1, Duration = 1, Ease = InOut.Quad, Skew = skew, Weks = weks, UsePingPong = true };
+        var definition = new PlainTween { To = 1, Duration = 1, Ease = InOut.Quad, Skew = skew, Weks = weks, PingPong = true };
         var tween = scheduler.Add(box, definition);
         definition.Skew = definition.Weks = 0.5;
         scheduler.Update(0);
@@ -78,7 +78,7 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new PlainTween { To = 1, Skew = 0.5, Weks = 1, UsePingPong = pingPong });
+        var tween = scheduler.Add(box, new PlainTween { To = 1, Skew = 0.5, Weks = 1, PingPong = pingPong });
         scheduler.Update(0);
         Assert.Equal(expected, box.Value);
         Assert.Equal(Reason.Completed, tween.CompletionReason);
@@ -95,7 +95,7 @@ public class TweenInstanceTests
         {
             To = relative ? null : 1, By = relative ? 1 : null,
             Duration = 1, Delay = 0.5, Offset = 0.25,
-            UsePingPong = true, PingPongInterval = 0.5, RepeatInterval = 0.5, Repeats = 2,
+            PingPong = true, PingPongInterval = 0.5, RepeatInterval = 0.5, Repeats = 2,
             Ease = InOut.Quad, Skew = 1, Weks = 0,
         });
         foreach (var (delta, expected) in new (double, float)[]
@@ -194,7 +194,7 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new PlainTween { To = 1, Duration = 1, Ease = ease, UsePingPong = true });
+        var tween = scheduler.Add(box, new PlainTween { To = 1, Duration = 1, Ease = ease, PingPong = true });
         scheduler.Update(0.25);
         Assert.Equal(quarterWeight, box.Value);
         scheduler.Update(0.75);

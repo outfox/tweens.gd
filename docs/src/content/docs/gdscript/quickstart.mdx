@@ -3,8 +3,8 @@ title: Your first tween
 description: Make a sprite glide to the right, then fade out with a short GDScript script.
 ---
 
-import { Steps } from '@astrojs/starlight/components';
 import Moves from '../../../components/Moves.astro';
+import { Aside, Steps } from '@astrojs/starlight/components';
 
 Make a sprite glide 240 pixels to the right, then fade out. You'll write one
 short script and run it in a scene.
@@ -39,15 +39,17 @@ func _ready() -> void:
 	await Tweens.play(self, Tweens.modulate_alpha(0.0, 0.3)).end
 ```
 
-1. **Choose the move.** `arrive` moves the sprite 240 pixels right in 0.6 seconds.
-   `Out.CUBIC` makes it slow into place.
-2. **Start moving.** `Tweens.play(self, arrive)` plays the motion on this sprite.
-   Keep its handle in `movement` to wait for it.
-3. **Wait before fading.** `await movement.end` lets the movement finish before
-   the script continues.
-4. **Fade out.** The final call lowers the sprite's opacity to zero over 0.3 seconds.
+1. **Define.** Move 240 pixels right in 0.6 seconds; `Out.CUBIC` slows into place.
+2. **Play.** Start on this sprite and keep the returned handle.
+3. **Wait.** Continue when movement ends.
+4. **Fade.** Animate opacity to zero over 0.3 seconds.
 
 </Moves>
 
-Experiment with the values in the tween definition to get a feel for duration.
+<Aside type="tip" title="Try it">
 
+Change `0.6` to `1.2` to make the move take twice as long. Swap `Out.CUBIC` for `InOut.SINE` to soften both ends.
+
+</Aside>
+
+Next, [choose the syntax that reads best to you](/gdscript/syntax-sugar/).

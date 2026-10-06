@@ -1,122 +1,60 @@
 ---
-title: Timing and loops
-description: Duration, delay, repeats, ping-pong, fill modes, and what happens on long frames.
+title: "Timing and loops"
+description: "Add delays, repeat a motion, and choose what stays on screen."
 ---
 
 import TimingLab from '../../../components/TimingLab.astro';
 import FillModes from '../../../components/FillModes.astro';
-import Compare from '../../../components/Compare.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-A tween waits out its delay, plays a forward leg, and optionally returns and
-repeats. Most tweens only need `duration`, `delay`, and an ease. Everything else
-here is for loops and edge cases.
+Duration sets how long a motion takes; delay sets when it begins. Add ping-pong and repeats for idle motion that runs itself.
 
-Examples assume the global `Tweens` class and run
-on Godot's main thread in a method of an in-tree node.
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
 ## Loop forever
 
-For idle motion such as pulsing or bobbing, start one definition that
-ping-pongs forever. Each tween stops by itself when its node leaves the tree.
-Godot's `Tween` has no ping-pong, so it tweens back as a second step, and each
-node needs its own:
-
-<Compare>
-
-```gdscript title="Godot's Tween"
-var big := Vector2(1.1, 1.1)
-
-var tween1 := sprite1.create_tween().set_loops()
-tween1.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-tween1.tween_property(sprite1, "scale", big, 0.8)
-tween1.tween_property(sprite1, "scale", Vector2.ONE, 0.8)
-
-var tween2 := sprite2.create_tween().set_loops()
-tween2.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-tween2.tween_property(sprite2, "scale", big, 0.8)
-tween2.tween_property(sprite2, "scale", Vector2.ONE, 0.8)
-```
-
-```gdscript title="tweens.gd"
+```gdscript
 var pulse := Tweens.scale_2d([1.1, 1.1], 0.8, InOut.SINE) \
-	.with_ping_pong().with_repeats(Tweens.INFINITE)
+    .with_ping_pong().with_repeats(Tweens.INFINITE)
 
-Tweens.play(sprite1, pulse)
-Tweens.play(sprite2, pulse)
+Tweens.play(sprite, pulse)
 ```
 
-</Compare>
+The sprite grows for 0.8 seconds, shrinks for 0.8 seconds, and repeats until cancelled or removed from the tree.
 
-## Timing fields
+## Count cycles
 
-All times are in seconds, as GDScript `float` values.
+| Set | Result |
+| --- | --- |
+| `with_repeats(2)` | Three cycles: the first plus two repeats |
+| `with_ping_pong()` | Each cycle goes forward, then back |
+| `ping_pong_interval` | Wait at the far endpoint |
+| `repeat_interval` | Wait between cycles |
 
-| Field | Default | Meaning |
-| --- | --- | --- |
-| `duration` | `0.0` | Seconds per leg. Zero completes on the first eligible update. |
-| `factor_duration`, `delta_duration` | `1.0`, `0.0` | Scale and shift `duration` for [variations](/gdscript/variations/): the tween lasts `factor_duration × duration + delta_duration`. |
-| `delay` | `0.0` | Signed gap before the first leg; negative values pre-roll. |
-| `factor_delay`, `delta_delay` | `1.0`, `0.0` | Scale and shift `delay` for [variations](/gdscript/variations/), such as a stagger: the tween waits `factor_delay × delay + delta_delay`. |
-| `repeats` | `0` | Cycles after the first. `Tweens.INFINITE` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
-| `use_ping_pong` | `false` | A forward and a backward leg form one cycle. |
-| `ping_pong_interval` | `0.0` | Wait at the far endpoint before returning. |
-| `repeat_interval` | `0.0` | Wait between cycles, never after the last one. |
-| `offset` | `0.0` | Start this many seconds into the first forward leg, between zero and `duration`. The delay still comes first. |
-
-The helper factories set `duration` and `delay` from their second and fourth
-arguments, as in `Tweens.position_2d_y(to, 0.8, InOut.SINE, 0.2)`.
-Set the other fields on the returned definition, or vary a shared one with
-`with_*()` copies such as `with_repeats(2)`.
-
-For example, `duration = 0.5`, `use_ping_pong = true`, `ping_pong_interval = 0.2`,
-`repeat_interval = 0.3`, and `repeats = 1` take 2.7 seconds: two 1.2-second cycles
-and one 0.3-second gap. Drag the timeline to see each phase:
+**Try it:** add a return leg and drag the timeline to see where the intervals fit.
 
 <TimingLab lang="gdscript" />
 
-Non-finite times and negative durations, intervals, and offsets reject the start, and `Tweens.play()` returns an
-already-settled handle whose `end` reports `Tweens.Reason.FAILED` when awaited. A long frame
-advances to the correct phase, even across several cycles, without losing time at
-boundaries, but it doesn't replay the callbacks of the cycles it skipped.
-
 ## Fill and restoration
 
-`fill` decides what the property shows before the tween starts and after it ends.
+The default keeps the final value. For an entrance with a delay, use `with_fill(Tweens.Fill.BOTH)` so the starting value is visible while waiting.
 
-| `Tweens.Fill` | During the initial delay | On natural completion |
-| --- | --- | --- |
-| `RETAIN_FINAL_VALUE` (default) | Leave the property alone | Keep the final value |
-| `APPLY_FROM_DURING_DELAY` | Apply the from value | Restore the captured initial value |
-| `BOTH` | Apply the from value | Keep the final value |
-| `NONE` | Leave the property alone | Restore the captured initial value |
-
-Use `BOTH` for staggered entrances, so items that are still waiting show their
-`from_value` instead of their final one.
+**Try it:** switch fill modes to compare waiting and completion.
 
 <FillModes lang="gdscript" />
 
-A ping-pong tween ends at its starting endpoint, so that endpoint is its final
-value. Cancelling always keeps the latest value, whatever the fill mode. Shader
-restoration also preserves whether an explicit override existed (see
-[shader uniforms](/gdscript/shaders/)).
+<Aside type="note" title="Cancellation keeps the current value">
+
+Restoration applies on natural completion. Cancelling keeps the latest sample, regardless of fill mode.
+
+</Aside>
 
 ## Process and physics
 
-These fields belong to `TweensGdPlaybackOptions`, supplied at the start call. Definitions contain motion settings only.
+Playback uses process frames by default. Pass `Tweens.playback_options()` at the start for physics updates or unscaled time.
 
-`process_mode` defaults to `Tweens.Process.PROCESS`. Choose
-`Tweens.Process.PHYSICS` to update with physics instead. The automatic runner uses
-process and physics priority `1000`, so it runs after nodes with default priority.
+The [timing reference](/gdscript/api/timing/) lists every option, fill mode, and validation rule. [Playback modes](/gdscript/api/modes/) control the clock; [ownership](/gdscript/lifetime/) controls pausing with the scene.
 
-`use_unscaled_time = true` ignores `Engine.time_scale`. Process updates then use
-monotonic engine ticks, and physics updates use `1 / Engine.physics_ticks_per_second`
-per tick, which is simulation time rather than wall-clock time during catch-up.
-Neither field changes pause or ownership rules.
-
-## Progress
-
-A handle's `progress` is the current leg's position from 0 to 1, before easing. It
-runs backwards during a ping-pong return, and it isn't the fraction of all cycles
-completed.
-
-Signed delays place Chain entries relative to the preceding entry's end; see [Chains](/gdscript/sequences/).
+{/* Keep links to earlier guide sections working. */}
+<span id="timing-fields" />
+<span id="progress" />

@@ -18,7 +18,7 @@ public sealed partial class VertexDisplacement
     private void Cycle(TweenOptionsBuilder options)
     {
         options.Ease = DefaultEase;
-        options.UsePingPong = true;
+        options.PingPong = true;
         options.Repeats = TweenOptions.Infinite;
         options.RepeatInterval = 0.25;
         options.PingPongInterval = 0.15;

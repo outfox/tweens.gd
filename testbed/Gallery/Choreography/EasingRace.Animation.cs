@@ -27,7 +27,7 @@ public sealed partial class EasingRace
                 tweens.Add(racers[lane][position].TweenPositionX(FinishLine, Seconds, options =>
                 {
                     options.Ease = ease;
-                    options.UsePingPong = true;
+                    options.PingPong = true;
                     options.Repeats = TweenOptions.Infinite;
                     options.PingPongInterval = 0.3;
                     options.RepeatInterval = 0.3;

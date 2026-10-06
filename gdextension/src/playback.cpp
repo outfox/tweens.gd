@@ -14,7 +14,7 @@ void Timeline::configure(const TweenSettings &p_settings) {
 	delay = p_settings.effective_delay();
 	turn = p_settings.ping_pong_interval;
 	offset = p_settings.offset;
-	ping_pong = p_settings.use_ping_pong;
+	ping_pong = p_settings.ping_pong;
 	repeats = p_settings.repeats;
 	span = duration + (ping_pong ? turn + duration : 0.0) + p_settings.repeat_interval;
 	total = repeats == INFINITE_REPEATS ? Math::INF : span * (double(repeats) + 1.0) - p_settings.repeat_interval;

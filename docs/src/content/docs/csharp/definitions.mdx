@@ -1,91 +1,78 @@
 ---
-title: Reusable definitions
-description: Define a motion once, choose its endpoints, and change a copy for one start.
+title: "Reusable definitions"
+description: "Define once, start on several nodes, and vary a copy."
 ---
 
 import VaryStart from '../../../components/VaryStart.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-A definition describes a motion independently of the node playing it. Keep one
-definition for motion you reuse; each start gets its own snapshot.
+A definition describes motion. Each start copies its settings into independent playback, so one definition can animate many nodes.
 
-Examples assume `using Godot;` and `using tweens.gd;`, and run on Godot's main
-thread with nodes inside the tree.
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
 <span id="a-complete-example" />
 <span id="keep-definitions-in-fields" />
 
 ## Define once, start twice
 
-Keep the definition in a `static readonly` field so every instance can use it:
-
-```csharp title="Crate.cs"
-public partial class Crate : Node2D
+```csharp
+var nudge = new Tweens.Position2D
 {
-    static readonly Tweens.Position2D Nudge = new()
-    {
-        By = new Vector2(80, 0),
-        Duration = 0.2,
-        Ease = Out.Cubic,
-    };
+    By = new Vector2(80, 0),
+    Duration = 0.2,
+    Ease = Out.Cubic,
+};
 
-    public void PushPair(Node2D first, Node2D second)
-    {
-        first.Tween(Nudge);
-        second.Tween(Nudge);
-    }
-}
+sprite1.Tween(nudge);
+sprite2.Tween(nudge);
 ```
 
-Both nodes move 80 pixels right from their own positions. Editing `Nudge` tunes
-the motion in one place. Starting it returns a separate handle for each node.
+Both sprites move 80 pixels right from their own positions. Each start returns its own handle.
 
-## Leave out `From` or `To`
+<Aside type="tip" title="Keep reusable motion nearby">
 
-Use `To` for a destination, or `From` for an entrance:
+Store a shared definition in a `static readonly` field. The generated definitions are readonly record structs.
 
-| Definition | Motion |
+</Aside>
+
+<span id="leave-out-from-or-to" />
+<span id="move-by-an-offset-with-by" />
+
+## Choose the endpoints
+
+| Choose | Result |
 | --- | --- |
-| `new Tweens.Position2D { To = new Vector2(400, 180), Duration = 0.4 }` | Move from the current position to a fixed destination |
-| `new Tweens.Scale2D { From = Vector2.Zero, Duration = 0.4 }` | Grow from zero to the scale set in the scene |
+| `To` | Move to a destination |
+| `From` only | Animate an entrance to the value set in the scene |
+| `By` only | Add an offset, preserving other movement |
 
-If a definition has no `From` or `To`, it uses the property's value
-**when you start the tween** for that endpoint, before any delay. Set both
-endpoints when both must be fixed.
+An omitted endpoint uses the property's value when playback starts, before any delay.
 
-## Move by an offset with `By`
+<Aside type="note" title="Relative motion">
 
-`Nudge` uses `By` to add an offset. Other changes to the property are kept while
-it plays: two overlapping nudges move a crate 160 pixels in total.
+Use `To` or `By`, not both. Leave `From` out when an offset should add to other movement.
 
-Use either `To` or `By`. Leave `From` out for this additive motion; setting it
-makes the tween run between fixed endpoints, from `From` to `From + By`.
+</Aside>
 
-## Vary a start with `with`
+<span id="vary-a-start-with-with" />
 
-In `PushPair`, replace the second call with
-`second.Tween(Nudge with { Duration = 0.6 });`.
+## Vary one start
 
-`with` creates a modified value. The second node takes longer, but `Nudge` still
-has a duration of 0.2 seconds. Neither copy changes a tween already playing.
+Replace the second start with `sprite2.Tween(nudge with { Duration = 0.6 });`.
 
-**Try it:** change the second node's duration and press **Play both**. Both travel
-the same distance; the first always takes 0.2 seconds.
+The copy takes longer; the original still takes 0.2 seconds. Already running tweens keep their settings.
+
+**Try it:** change the second duration and play both.
 
 <VaryStart />
 
-For a duration that scales with the original instead of replacing it, use
-[factors and deltas](/csharp/variations/).
+Use [variations](/csharp/variations/) to scale the original values. The [definition reference](/csharp/api/definitions/) covers shared options and copying.
 
+Next, [control playback and wait for completion](/csharp/playback/).
+
+{/* Keep links to earlier guide sections working. */}
 <span id="share-timing-and-easing" />
 <span id="definition-or-shorthand" />
 <span id="what-each-start-copies" />
 <span id="when-tweens-compete" />
-
-Shared options, shorthand calls, and copying rules are covered in the
-[definition reference](/csharp/api/definitions/). See the
-[endpoint reference](/csharp/api/endpoints/) for repeats, callback values, and
-tweens that compete for one property.
-
 <span id="build-steps-from-methods" />
-
-Next, [combine motions into sequences](/csharp/sequences/).

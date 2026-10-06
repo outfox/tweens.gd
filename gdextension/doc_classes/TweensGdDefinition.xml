@@ -279,8 +279,8 @@
 			<return type="TweensGdDefinition" />
 			<param index="0" name="enabled" type="bool" default="true" />
 			<description>
-				Returns a copy with [member use_ping_pong] changed. The original definition is unchanged. C# equivalent:
-				[code]definition with { UsePingPong = value }[/code].
+				Returns a copy with [member ping_pong] changed. The original definition is unchanged. C# equivalent:
+				[code]definition with { PingPong = value }[/code].
 			</description>
 		</method>
 		<method name="with_ping_pong_interval" qualifiers="const">
@@ -475,7 +475,7 @@
 			End value. If the definition has no [member to_value], it uses the value captured at start.
 			Mutually exclusive with [member by_value]. C# equivalent: [code]To[/code].
 		</member>
-		<member name="use_ping_pong" type="bool" setter="set_use_ping_pong" getter="get_use_ping_pong" default="false">
+		<member name="ping_pong" type="bool" setter="set_ping_pong" getter="get_ping_pong" default="false">
 			Return to the start after each forward leg. Duration applies to each leg; defaults to false.
 		</member>
 		<member name="value_type" type="int" setter="set_value_type" getter="get_value_type" default="0">

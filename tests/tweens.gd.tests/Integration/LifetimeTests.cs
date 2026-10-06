@@ -288,7 +288,7 @@ public class LifetimeTests(HeadlessFixture godot)
         curve.AddPoint(new Vector2(1, 1));
         var node = scope.Add(new Node2D());
         var expected = 10 * curve.Sample(sampleTime);
-        var tween = node.TweenPositionX(10, 1, d => { d.Curve = curve; d.Skew = skew; d.Weks = skew; d.UsePingPong = true; });
+        var tween = node.TweenPositionX(10, 1, d => { d.Curve = curve; d.Skew = skew; d.Weks = skew; d.PingPong = true; });
         curve.ClearPoints();
         scope.Advance(0.5);
         Assert.Equal(expected, node.Position.X, 3);

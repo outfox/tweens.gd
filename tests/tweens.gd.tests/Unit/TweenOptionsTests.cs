@@ -12,7 +12,7 @@ public class TweenOptionsTests
     private static TweenOptions Everything() => new()
     {
         Duration = 1.5, FactorDuration = 2, DeltaDuration = -0.5, Delay = 0.25, FactorDelay = 3, DeltaDelay = 0.125, PingPongInterval = 0.5, RepeatInterval = 0.75, Offset = 0.125, Repeats = 3,
-        UsePingPong = true, Fill = FillMode.Both, Ease = EaseType.BounceOut,
+        PingPong = true, Fill = FillMode.Both, Ease = EaseType.BounceOut,
         Skew = 0.75, Weks = 0.5, EaseFunction = Ease,
         SuppressCallbacksWhenTargetInvalid = true,
     };
@@ -59,7 +59,7 @@ public class TweenOptionsTests
         Assert.Equal((Duration)0.75, builder.RepeatInterval);
         Assert.Equal((Duration)0.125, builder.Offset);
         Assert.Equal(3, builder.Repeats);
-        Assert.True(builder.UsePingPong);
+        Assert.True(builder.PingPong);
         Assert.Equal(FillMode.Both, builder.Fill);
         Assert.Equal(EaseType.BounceOut, builder.Ease);
         Assert.Equal(0.75, builder.Skew);

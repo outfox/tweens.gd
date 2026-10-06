@@ -14,7 +14,7 @@ public sealed partial class CurveFollower2D
     {
         To = 1,
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,
@@ -24,7 +24,7 @@ public sealed partial class CurveFollower2D
     {
         To = 20,
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,
@@ -34,7 +34,7 @@ public sealed partial class CurveFollower2D
     {
         To = new Vector2(1.6f, 1.6f),
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,

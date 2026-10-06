@@ -283,7 +283,7 @@
           "to": 10,
           "duration": 1,
           "offset": 0.5,
-          "use_ping_pong": true,
+          "ping_pong": true,
           "ping_pong_interval": 0.25,
           "repeat_interval": 0.5,
           "repeats": 1

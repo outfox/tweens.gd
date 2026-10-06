@@ -1,31 +1,56 @@
 ---
-title: Custom curves
-description: Ease with your own function or a Godot Curve, or reach for a ready-made effect.
+title: "Custom easing"
+description: "Shape interpolation with a function or an editor-authored Godot Curve."
 ---
 
-To compare the built-in curves, open the [easing playground](/easings/).
+import { Aside } from '@astrojs/starlight/components';
 
-See the [easing reference](/gdscript/api/easing/) for join methods, curve
-percentages, and migration from legacy names. For changing the pacing without
-changing families, see [`skew` and `weks`](/gdscript/variations/#change-the-pacing-with-skew).
+Supply your own easing when a built-in family does not fit. It maps normalized progress to an interpolation weight.
 
-### Effects
-For ready-made punch, shake, and breathing motion, use
-[effect factories](/gdscript/api/effects/).
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
-### Custom functions and curves
-
-For a shape the built-in families don't cover, supply a function from normalized
-progress to an interpolation weight:
+## Use a function
 
 ```gdscript
 var move := Tweens.position_2d_x(300.0, 0.6)
 move.ease_function = func(t: float) -> float: return t * t
+
 Tweens.play(sprite, move)
 ```
 
-`ease_function` overrides `ease`. 
+This starts slowly and accelerates. At halfway through the time, the weight is 0.25, so the sprite has travelled a quarter of the distance.
 
-A Godot `Curve` assigned to `curve` is another
-option; each playback gets its own copy. Set only one of `ease_function` and `curve`.
+<Aside type="tip" title="Time in, weight out">
 
+Progress runs from 0 to 1. Return 0 at the start and 1 at the end for an ordinary arrival. Weights outside that range create overshoot; a function ending at 0 returns to its starting value.
+
+</Aside>
+
+## Use a Godot Curve
+
+Create a `Curve` resource in the Inspector and shape its points over the 0–1 domain. Export a field to assign it:
+
+```gdscript title="curve_motion.gd"
+extends Sprite2D
+
+@export var motion_curve: Curve
+
+func _ready() -> void:
+    var move := Tweens.position_2d_x(300.0, 0.6)
+    move.curve = motion_curve
+    Tweens.play(self, move)
+```
+
+Each playback gets its own curve copy, so edits affect later starts.
+
+<Aside type="caution" title="Choose one custom source">
+
+Set `ease_function` or `curve`, not both. Either overrides the built-in ease. Custom profiles keep their own pacing instead of using the In/Out split controls.
+
+</Aside>
+
+Use the [playground](/easings/) for built-in families, [Effects](/gdscript/effects/) for punch and shake, or the [easing reference](/gdscript/api/easing/) for sampling details.
+
+{/* Keep links to earlier guide sections working. */}
+<span id="effects" />
+<span id="custom-functions-and-curves" />

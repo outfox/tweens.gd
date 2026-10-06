@@ -40,3 +40,24 @@ Linked starts use `add_chain(target, definitions, owner = null, options = null)`
   run.
 - `Tweens.cancel_tweens()` affects the automatic runner only; use
   `cancel_owner()` here.
+
+## Animate a plain object
+
+This example needs no scene or automatic runner. The scheduler advances the model halfway through a one-second motion:
+
+```gdscript title="meter_example.gd"
+extends RefCounted
+
+class Meter:
+	var value := 0.0
+
+static func sample_midpoint() -> float:
+	var meter := Meter.new()
+	var scheduler := TweensGdScheduler.new()
+	var fill := Tweens.property(^"value", 100.0, 1.0)
+	fill.from_value = 0.0
+	scheduler.add(meter, fill)
+	scheduler.update(0.5)
+	scheduler.dispose()
+	return meter.value # 50.0 with the default linear easing.
+```

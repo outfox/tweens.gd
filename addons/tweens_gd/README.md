@@ -49,7 +49,7 @@ before any positive delay. Ordinary awaits coordinate completion and game logic.
 
 C# uses PascalCase members and typed immutable definitions; GDScript uses
 snake_case members and mutable definitions with copy-returning `with_*()` methods.
-Other settings map directly, such as `UsePingPong` to `use_ping_pong`.
+Other settings map directly, such as `PingPong` to `ping_pong`.
 Timing is in seconds in both languages; C# also accepts `TimeSpan`.
 Vector and color endpoints accept numeric component arrays in both APIs. C# also
 accepts tuples, scalar scale values, and color strings. GDScript uses explicit
@@ -210,7 +210,7 @@ options.
 | `delay` | `0.0`; signed gap; negative values overlap or pre-roll |
 | `offset` | `0.0`; seconds into the first leg, between zero and duration; delay comes first |
 | `repeats` | `0`; cycles after the first; `Tweens.INFINITE` (`-1`) repeats until cancelled |
-| `use_ping_pong` | `false`; forward and return legs form one cycle |
+| `ping_pong` | `false`; forward and return legs form one cycle |
 | `ping_pong_interval` | `0.0`; wait at the far endpoint before returning |
 | `repeat_interval` | `0.0`; wait between cycles, never after the last |
 | `ease` | `Tweens.Ease.LINEAR`; composable In/Out flags or a legacy ease |

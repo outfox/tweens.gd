@@ -1,28 +1,20 @@
 ---
-title: Control and completion
-description: Use the handle to pause, resume, or cancel a tween and find out why it ended. Also covers callbacks, errors, and threading in GDScript.
+title: "Control and completion"
+description: "Pause or cancel through a handle, await its end, and react to completion."
 ---
 
 import PlaybackRemote from '../../../components/PlaybackRemote.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Every start returns a handle. Use it to pause, resume, or cancel playback, and
-await its `end` before continuing.
+Every start returns a handle. Keep it to control that playback, or await its end before continuing.
 
-Snippets run in a node script function with an in-tree `Sprite2D` named `sprite`,
-and assume the global `Tweens` class.
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
 ## Pause, resume, cancel
 
 <PlaybackRemote lang="gdscript" />
 
-Handles are `TweensGdHandle` objects. `is_paused` reports the pause state and
-can be assigned too. Cancelling keeps the latest value. To cancel every tween a
-node owns, call `Tweens.cancel_tweens(node)`; pass `true` as the second argument
-to include descendants.
-
-The handle also exposes `state`, `progress`, `value`, `target`, `is_terminal`,
-`is_settled`, `completion_reason`, and `error`. `progress` is the position within
-the current leg, and runs backwards on the return leg of a ping-pong.
+Cancelling keeps the latest value. `Tweens.cancel_tweens(sprite)` cancels all playback owned by that node.
 
 ## Await playback
 
@@ -31,88 +23,51 @@ var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 await movement.end
 ```
 
-Handles and groups expose `end`. Completion waits for callbacks and cleanup,
-including release hooks. You can ignore the returned reason; keep it only when
-your next action depends on how playback ended. See
-[cancellation and completion reasons](/gdscript/cancellation/) for guarded sequences
-and cancelling just one wait.
+The wait finishes after callbacks and cleanup. It also resumes when playback is cancelled or its owner leaves the tree.
 
-While running, `end` returns the handle's `ended(reason)` signal. Once settled,
-it returns the stored reason immediately, including when a start was rejected.
-GDScript's `await` handles both forms. Read and await the property in one expression;
-don't cache the signal for later, because signals do not replay.
+<Aside type="caution" title="Continue only after arrival">
 
-Use `ended.connect(callback)` for a signal subscription to a running tween.
-Use `await movement.end` for a wait that also works after completion.
-`movement.wait()` returns the same reason as `end`; pass it a `TweensGdCancellation` to
-[cancel only the wait](/gdscript/cancellation/#cancel-a-wait-not-the-tween).
+If the next action needs success, check `await movement.end == Tweens.Reason.COMPLETED`. The [cancellation guide](/gdscript/cancellation/) shows a guarded sequence.
+
+</Aside>
+
+<Aside type="note" title="Await the property directly">
+
+Use `await movement.end`, which also works after completion. Do not cache the `ended` signal for a later wait: signals do not replay.
+
+</Aside>
 
 ## Callbacks
 
-Definitions accept Callables in these fields. Set them on a shared definition,
-or on one start with `with_*()`:
+Use a callback for a small synchronous reaction:
 
 ```gdscript
-var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
-Tweens.play(sprite, arrive.with_on_start(func(_h): print("Moving")) \
-	.with_on_end(func(_h): print("Arrived")))
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) \
+    .with_on_end(func(_handle): print("Arrived"))
+Tweens.play(sprite, arrive)
 ```
 
-Starting a tween snapshots its configuration. Preparation and capture happen at
-activation, before `on_add`.
-
-Callbacks run synchronously, in this order:
-
-1. `on_add(handle)` at activation after capture.
-2. `on_update(handle, value)` with `from_value`, only when the fill mode applies
-   it during the delay.
-3. `on_start(handle)` once, when the delay ends and playback begins.
-4. `on_update(handle, value)` at each sampled timeline boundary and eligible update,
-   plus once more when completion [restores the initial value](/gdscript/timing/#fill-and-restoration).
-5. `on_end(handle)` on natural completion, or `on_cancel(handle)` when playback
-   stops early.
-6. `on_finally(handle)` in every case, including failures.
-
-The handle's terminal state is visible inside terminal callbacks, and awaiting `end`
-resumes after them. A long frame doesn't replay the callbacks of skipped cycles.
-Tweens started in callbacks or after an await are independent roots: they begin
-on the next eligible update with no inherited frame time. Use a
-[Chain](/gdscript/sequences/) for linked timing.
-
-:::caution[Don't `await` inside callbacks]
-Callbacks must return before playback continues. Put anything that awaits in a
-separate coroutine that awaits `end`.
-:::
+`on_end` runs on natural completion. `on_finally` also runs when playback stops early or fails. See [callback order](/gdscript/api/modes/#callback-order) for the full lifecycle.
 
 ## Errors
 
-GDScript has no exceptions to throw, so failures are reported as data. A tween
-that detects a problem ends with `FAILED`, and `handle.error` holds the message;
-several detected problems are joined with newlines. `on_finally` still runs, and
-other tweens keep playing. The automatic runner also reports the message to
-Godot's error log.
+Detected failures return `Tweens.Reason.FAILED`; read `handle.error` for the message. Arbitrary errors inside your scripts remain Godot script errors.
 
-A rejected start, such as a freed target, a target outside the tree, or an
-invalid definition, doesn't return `null`. It returns a handle that has already
-settled with `FAILED`. It schedules no work and runs no callbacks, its `target`
-and `value` are `null`, and `pause()`, `resume()`, `cancel()`, and `wait()` stay
-safe to call.
+<Aside type="caution" title="Use Godot’s main thread">
 
-:::caution[Script errors aren't caught]
-tweens.gd detects invalid configuration, stale Callables, non-numeric or
-non-finite easing, and non-finite interpolation. An error inside your own
-callback or property setter stays an ordinary Godot script error, and isn't
-guaranteed to become `FAILED`.
-:::
+Create, control, and await tweens on the main thread. Keep callbacks synchronous; put code that awaits after `await handle.end`.
 
-## Stay on the main thread
-
-Create and control tweens, and await `end`, on Godot's main thread. A call
-from another thread reports an error and does nothing: starts return a handle
-that has already failed, and `wait()` returns `FAILED`.
+</Aside>
 
 ## Where to go next
 
-You have finished the five-step tutorial. Explore [easing](/easings/) to
-shape motion, [timing and loops](/gdscript/timing/) for repeating animations, or the
-[property catalog](/gdscript/nodes/) to find something else to animate.
+You have finished the tutorial. Pick a next step:
+
+<CardGrid>
+<LinkCard title="Shape the motion" description="Compare easing curves." href="/easings/" />
+<LinkCard title="Build an animation" description="Link motions or play them together." href="/gdscript/sequences/" />
+<LinkCard title="Find a property" description="Choose what to animate next." href="/gdscript/nodes/" />
+</CardGrid>
+
+{/* Keep links to earlier guide sections working. */}
+<span id="stay-on-the-main-thread" />

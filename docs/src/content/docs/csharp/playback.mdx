@@ -1,23 +1,20 @@
 ---
-title: Control and completion
-description: Use the handle to pause, resume, or cancel a tween and find out why it ended. Also covers callbacks, errors, and threading.
+title: "Control and completion"
+description: "Pause or cancel through a handle, await its end, and react to completion."
 ---
 
 import PlaybackRemote from '../../../components/PlaybackRemote.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Every start returns a handle. Use it to pause, resume, or cancel playback, and
-await its `End` task before continuing.
+Every start returns a handle. Keep it to control that playback, or await its end before continuing.
 
-Snippets run in an async Node method with an in-tree `Sprite2D` named `sprite`,
-and assume `using Godot;`, `using tweens.gd;`, and `using System;`.
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
 ## Pause, resume, cancel
 
 <PlaybackRemote />
 
-Handles are `TweenInstance<TTarget, TValue>`. Their non-generic `TweenInstance`
-base lets you keep different tween types in one collection. Cancelling keeps the
-latest value. To cancel every tween a node owns, call `node.CancelTweens()`.
+Cancelling keeps the latest value. `sprite.CancelTweens()` cancels all playback owned by that node.
 
 ## Await playback
 
@@ -26,77 +23,49 @@ var movement = sprite.TweenPosition((400, 180), 0.6);
 await movement.End;
 ```
 
-Handles and groups expose an `End` task. Completion waits for callbacks and
-cleanup, including release hooks. You can ignore the returned reason; keep it
-only when your next action depends on how playback ended. See
-[cancellation and completion reasons](/csharp/cancellation/) for guarded sequences
-and cancelling just one wait.
+The wait finishes after callbacks and cleanup. It also resumes when playback is cancelled or its owner leaves the tree.
 
-`End` is a shared `Task<Reason>`. Any number of callers can await it, even after
-playback has ended. You can also pass it to APIs that accept a task.
+<Aside type="caution" title="Continue only after arrival">
 
-To start a tween without waiting, call
-`sprite.TweenPosition((400, 180), 0.6);`. The handle itself is not
-awaitable, so this also works in an async method without an unawaited-call warning.
+If the next action needs success, check `await movement.End == Reason.Completed`. The [cancellation guide](/csharp/cancellation/) shows a guarded sequence.
+
+</Aside>
+
+
 
 ## Callbacks
 
-Definitions accept typed callbacks. Set them on a shared definition, or on one
-start with `with`:
+Use a callback for a small synchronous reaction:
 
 ```csharp
-var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
-sprite.Tween(arrive with
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic)
 {
-    OnStart = _ => GD.Print("Moving"),
     OnEnd = _ => GD.Print("Arrived"),
-});
+};
+sprite.Tween(arrive);
 ```
 
-Starting a tween snapshots its configuration. Preparation and capture happen at
-activation, before `OnAdd`.
-
-Callbacks run in this order:
-
-1. `OnAdd` at activation after capture.
-2. `OnUpdate` with `From`, only when the fill mode applies it during the delay.
-3. `OnStart` once, when the delay ends and playback begins.
-4. `OnUpdate` at each sampled timeline boundary and eligible update, plus once more when
-   completion [restores the initial value](/csharp/timing/#fill-and-restoration).
-5. `OnEnd` on natural completion, or `OnCancel` when playback stops early.
-6. `OnFinally` in every case, including faults.
-
-The handle's terminal state is visible before terminal callbacks run, and each
-terminal callback runs at most once. A long frame doesn't replay the callbacks
-of skipped cycles. Tweens started in callbacks or after an await are independent
-roots: they begin on the next eligible update with no inherited frame time. Use a
-[Chain](/csharp/sequences/) for linked timing.
+`OnEnd` runs on natural completion. `OnFinally` also runs when playback stops early or fails. See [callback order](/csharp/api/modes/#callback-order) for the full lifecycle.
 
 ## Errors
 
-An exception in interpolation, easing, a setter, or a callback faults the tween.
-`End` throws when awaited, `Error` holds the exception, and several failures are
-kept in an `AggregateException`. Cleanup and `OnFinally` still run, and other
-tweens keep playing. Schedulers also report the error through
-`UnhandledException`, and the automatic runner forwards it to `GD.PushError`.
+An easing, setter, or callback exception faults playback. Awaiting `End` throws; catch it in async Godot callbacks such as `_Ready`.
 
-:::caution[Catch errors in `async void` callbacks]
-`_Ready` and other Godot callbacks are often `async void`. Wrap their sequences in
-`try`/`catch`, or a faulted tween's exception is lost.
-:::
+<Aside type="caution" title="Use Godot’s main thread">
 
-## Stay on the main thread
+Create and control tweens on the main thread. Await normally; avoid blocking with `.Wait()` or `.Result`, or moving engine access into `Task.Run`.
 
-Create and control tweens, and await `End`, on Godot's main thread. `End` finishes
-there, and ordinary Godot async code keeps its synchronization context.
-
-- Don't block with `.Wait()` or `.Result`.
-- Don't use `Task.Run` or `ConfigureAwait(false)` around engine access.
-- Use Godot's `ToSignal` to wait for unrelated engine signals; tweens.gd has no
-  coroutine API.
+</Aside>
 
 ## Where to go next
 
-You have finished the five-step tutorial. Explore [easing](/easings/) to
-shape motion, [timing and loops](/csharp/timing/) for repeating animations, or the
-[property catalog](/csharp/nodes/) to find something else to animate.
+You have finished the tutorial. Pick a next step:
+
+<CardGrid>
+<LinkCard title="Shape the motion" description="Compare easing curves." href="/easings/" />
+<LinkCard title="Build an animation" description="Link motions or play them together." href="/csharp/sequences/" />
+<LinkCard title="Find a property" description="Choose what to animate next." href="/csharp/nodes/" />
+</CardGrid>
+
+{/* Keep links to earlier guide sections working. */}
+<span id="stay-on-the-main-thread" />

@@ -58,7 +58,7 @@ public class GDScriptConformanceTests
                 From = Value(test, "from"), To = Value(test, "to"), By = Value(test, "by"),
                 Duration = Number("duration"), Delay = Number("delay"), Repeats = (int)Number("repeats"),
                 RepeatInterval = Number("repeat_interval"),
-                UsePingPong = o.TryGetProperty("use_ping_pong", out var ping) && ping.GetBoolean(),
+                PingPong = o.TryGetProperty("ping_pong", out var ping) && ping.GetBoolean(),
                 Fill = o.TryGetProperty("fill", out var fill) ? (FillMode)fill.GetInt32() : FillMode.RetainFinalValue,
                 FactorFrom = Number("factor_from", 1), DeltaFrom = Value(o, "delta_from"),
                 FactorTo = Number("factor_to", 1), DeltaTo = Value(o, "delta_to"),
@@ -92,7 +92,7 @@ public class GDScriptConformanceTests
                 Duration = Number("duration"), Delay = Number("delay"), Offset = Number("offset"),
                 Repeats = (int)Number("repeats"), RepeatInterval = Number("repeat_interval"),
                 PingPongInterval = Number("ping_pong_interval"),
-                UsePingPong = o.TryGetProperty("use_ping_pong", out var ping) && ping.GetBoolean(),
+                PingPong = o.TryGetProperty("ping_pong", out var ping) && ping.GetBoolean(),
             };
             var clock = new Playback(options);
             if (test.TryGetProperty("local_time", out var localTime)) clock.SampleAt(localTime.GetDouble());

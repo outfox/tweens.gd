@@ -37,7 +37,7 @@ struct TweenSettings {
 	double delta_delay = 0.0;
 	double offset = 0.0;
 	int64_t repeats = 0;
-	bool use_ping_pong = false;
+	bool ping_pong = false;
 	double ping_pong_interval = 0.0;
 	double repeat_interval = 0.0;
 	int64_t fill = tweens::FILL_RETAIN_FINAL_VALUE;
@@ -126,8 +126,8 @@ public:
 	double get_offset() const { return settings.offset; }
 	void set_repeats(int64_t p_value) { settings.repeats = p_value; }
 	int64_t get_repeats() const { return settings.repeats; }
-	void set_use_ping_pong(bool p_value) { settings.use_ping_pong = p_value; }
-	bool get_use_ping_pong() const { return settings.use_ping_pong; }
+	void set_ping_pong(bool p_value) { settings.ping_pong = p_value; }
+	bool get_ping_pong() const { return settings.ping_pong; }
 	void set_ping_pong_interval(double p_value) { settings.ping_pong_interval = p_value; }
 	double get_ping_pong_interval() const { return settings.ping_pong_interval; }
 	void set_repeat_interval(double p_value) { settings.repeat_interval = p_value; }

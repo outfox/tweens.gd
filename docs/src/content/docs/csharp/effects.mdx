@@ -1,0 +1,70 @@
+---
+title: "Effects"
+description: "Add punch, shake, or breathing motion with reusable effect functions."
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+Use `Tweens.FX` for motion that reacts, jitters, or breathes. Its factories create reusable functions; a tween supplies their duration and playback.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+## Pick an effect
+
+<CardGrid>
+<Card title="Punch">
+
+A damped oscillation for impacts and recoil. Starts and ends at rest with the default phase.
+
+</Card>
+<Card title="Shake">
+
+Seeded noise for rumble and jitter. Reuse a seed to reproduce the same shape.
+
+</Card>
+<Card title="Breathe">
+
+A smooth rise and fall for a gentle pulse. One whole cycle returns to rest.
+
+</Card>
+</CardGrid>
+
+## Add a punch
+
+```csharp
+var recoil = new Tweens.Position2DX
+{
+    By = 12,
+    Duration = 0.4,
+    EaseFunction = Tweens.FX.Punch(frequency: 6),
+};
+
+sprite.Tween(recoil);
+```
+
+The sprite oscillates along X and returns to its baseline. The offset supplies strength; the factory's default amplitude is 1.
+
+## Tune the feel
+
+| Setting | Change it to… |
+| --- | --- |
+| Frequency | Fit more oscillations into the duration |
+| Amplitude | Multiply the displacement |
+| Decay | Make punch or shake fade faster |
+| Attack | Ease into punch or shake before fading out |
+
+<Aside type="note" title="Frequency belongs to the whole tween">
+
+A frequency of 6 means six cycles over the duration, not six per second. For a rate per second, multiply the rate by the duration.
+
+</Aside>
+
+For independent axes, use `Shake2D`, `Punch3D`, or `BreatheQuaternion`. These return vector or rotation offsets: sample them in a callback or custom interpolator rather than the scalar ease slot.
+
+<Aside type="caution" title="Plan for interruption">
+
+Cancelling keeps the current sample. For an effect that must always return to rest, use a dedicated visual child and restore its baseline in a finally callback. Cancel an existing effect before starting another on that child.
+
+</Aside>
+
+The [effect reference](/csharp/api/effects/) shows vector sampling, restoration, and all factory arguments. For a shape of your own, use [custom easing](/csharp/custom/).

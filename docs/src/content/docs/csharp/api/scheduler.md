@@ -36,3 +36,38 @@ Linked starts use `AddChain(target, definitions, owner = null, options = default
   scheduler for them.
 - Dispose the scheduler when you're done, so remaining tweens end and their
   callbacks run.
+
+## Animate a plain object
+
+This example needs no scene or automatic runner. The scheduler advances the model halfway through a one-second motion:
+
+```csharp title="MeterExample.cs"
+using tweens.gd;
+
+public sealed class Meter
+{
+    public float Value { get; set; }
+}
+
+public static class MeterExample
+{
+    public static float SampleMidpoint()
+    {
+        var meter = new Meter();
+        using var scheduler = new TweenScheduler();
+        var definition = new Tweens.Property<Meter, float>(
+            target => target.Value,
+            (target, value) => target.Value = value,
+            Interpolators.Float)
+        {
+            From = 0,
+            To = 100,
+            Duration = 1,
+        };
+
+        scheduler.Add(meter, definition);
+        scheduler.Update(0.5);
+        return meter.Value; // 50 with the default linear easing.
+    }
+}
+```

@@ -314,7 +314,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                                 from, Offsets<TValue>.Zero);
                             follows = definition.From is null && definition.FactorFrom == 1 &&
                                 definition.DeltaFrom is null && definition.FollowsTarget;
-                            pingPong = definition.UsePingPong;
+                            pingPong = definition.PingPong;
                         }
                         break;
                 }

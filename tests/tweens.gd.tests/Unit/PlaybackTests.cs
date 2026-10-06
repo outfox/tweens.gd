@@ -48,7 +48,7 @@ public class PlaybackTests
     [Fact]
     public void PingPongWalksBothLegsAndEndsAtTheStart()
     {
-        var playback = Create(new TweenOptions { Duration = 1, UsePingPong = true, PingPongInterval = 0.5 });
+        var playback = Create(new TweenOptions { Duration = 1, PingPong = true, PingPongInterval = 0.5 });
         playback.Advance(1);
         Assert.Equal(1, playback.Progress);
         Assert.Equal(TweenState.Playing, playback.State);
@@ -80,7 +80,7 @@ public class PlaybackTests
     [Fact]
     public void PingPongRepeatIntervalHoldsTheStartBetweenCycles()
     {
-        var playback = Create(new TweenOptions { Duration = 1, UsePingPong = true, RepeatInterval = 1, Repeats = 1 });
+        var playback = Create(new TweenOptions { Duration = 1, PingPong = true, RepeatInterval = 1, Repeats = 1 });
         playback.Advance(2.5);
         Assert.Equal(TweenState.Interval, playback.State);
         Assert.Equal(0, playback.Progress);
@@ -92,7 +92,7 @@ public class PlaybackTests
     [Fact]
     public void ZeroDurationPingPongJumpsBetweenEndpoints()
     {
-        var playback = Create(new TweenOptions { UsePingPong = true, PingPongInterval = 1, RepeatInterval = 1, Repeats = 1 });
+        var playback = Create(new TweenOptions { PingPong = true, PingPongInterval = 1, RepeatInterval = 1, Repeats = 1 });
         playback.Advance(0.5);
         Assert.Equal(TweenState.Interval, playback.State);
         Assert.Equal(1, playback.Progress);

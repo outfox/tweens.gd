@@ -11,7 +11,7 @@ public sealed partial class InstanceUniforms
     private readonly Tweens.CanvasItemInstanceShaderParameter<float> amount = new("amount")
     {
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,

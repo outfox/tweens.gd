@@ -4,6 +4,8 @@ description: Combine installation methods, work on tweens.gd itself, or import t
 tableOfContents: true
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 Customize how tweens.gd fits into your project, or work on the library itself.
 
 ## Using NuGet together with the GDScript addon
@@ -17,7 +19,11 @@ in your game's project file to avoid duplicate types:
 </ItemGroup>
 ```
 
-Alternatively, omit the addon's `csharp/` directory.
+<Aside type="tip" title="Keep one C# implementation">
+
+Alternatively, omit the addon's `csharp/` directory. Keep its GDScript files and native binaries together.
+
+</Aside>
 
 ## Working on the library itself
 
@@ -34,6 +40,10 @@ If you also keep the addon for GDScript, [exclude its C# sources](#using-nuget-t
 ## Importing without the editor window
 
 To run a fresh checkout headlessly, first run `godot --headless --editor --import`
-to register the extension and populate the script-class cache. Godot 4.7.2 can
-crash on exit from this first import after it has registered the extension;
-later runs start normally.
+to register the extension and populate the script-class cache.
+
+<Aside type="caution" title="First-import crash">
+
+Godot 4.7.2 can crash on exit after the first headless import registers the extension. Rerun the import before continuing.
+
+</Aside>

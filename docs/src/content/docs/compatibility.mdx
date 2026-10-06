@@ -1,0 +1,71 @@
+---
+title: Compatibility
+description: Engine requirements, platform builds, and tested exports for both languages.
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+Both languages use Godot 4.7.2 and share the reusable-definition model. Choose the C# library for a .NET project or the native addon for GDScript.
+
+<Aside type="note" title="Beta APIs">
+
+Both implementations are in beta. APIs may change; a platform build does not guarantee every export configuration.
+
+</Aside>
+
+<CardGrid>
+<Card title="C#">
+
+Requires Godot .NET with matching GodotSharp 4.7.2 bindings. The library targets **.NET 8 and 10**; its package ID and namespace are `tweens.gd`.
+
+[Install C#](/csharp/installation/)
+
+</Card>
+<Card title="GDScript">
+
+Requires the bundled GDExtension. No .NET runtime, plugin activation, or autoload is needed. The combined addon can support both languages in one project.
+
+[Install GDScript](/gdscript/installation/)
+
+</Card>
+</CardGrid>
+
+## C# support
+
+CI builds and tests on Windows and runs rendering tests on Linux. Tests exercise the library's .NET 8 build as well as .NET 10.
+
+Trimmed, AOT, mobile, and web exports are not validated by the current checks. Your application supplies the matching engine.
+
+## GDScript support
+
+| Platform | Validation |
+| --- | --- |
+| Windows and Linux | Native builds and standard Godot 4.7.2 tests |
+| Windows export | Release export tested |
+| Web | Release exports with and without threads tested in Edge |
+| macOS | Universal native library built |
+| iOS and Android | Native libraries built; not tested on devices |
+
+<Aside type="tip" title="Web exports">
+
+Enable **Extensions Support** in the export preset.
+
+</Aside>
+
+<details>
+<summary>Native build architectures</summary>
+
+- Windows and Linux: x86_64, x86_32, arm64.
+- macOS: universal; iOS: arm64.
+- Android: arm64, arm32, x86_64, x86_32.
+- Web: wasm32, with and without threads.
+
+</details>
+
+Debug and Release tests also use 2dog's embedded engine. Other engine versions, browsers, and devices are not validated. See [GDScript API differences](/gdscript/api/#differences-from-c).
+
+## Rendering requirements
+
+Enable transparency, emission, normal mapping, and other rendering features before animating their values. Shader default lookup needs a working renderer; the dummy headless renderer may not supply it.
+
+See materials and shaders in [C#](/csharp/materials/) or [GDScript](/gdscript/materials/).

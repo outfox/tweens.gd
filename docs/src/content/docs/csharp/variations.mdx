@@ -1,142 +1,74 @@
 ---
-title: Variations
-description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and Skew and Weks change each leg's pacing.
+title: "Variations"
+description: "Scale a shared motion, add a stagger, or adjust its outward and return pacing."
 ---
 
-import Moves from '../../../components/Moves.astro';
 import VariationLab from '../../../components/VariationLab.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-Games rarely need a motion in just one version. A heavy hit kicks harder than a
-light one, and an enemy that spawns pops in from nothing. Instead of copying a
-definition and editing its numbers, start a variant of it. The variant stays
-tied to the definition, so when you tune the definition, every variant follows.
+Derive a stronger, slower, or later version of one definition. Factors multiply its values; deltas add to them when playback starts.
 
-Examples assume `using Godot;` and `using tweens.gd;`, and run on Godot's main
-thread.
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
-## A complete example
+<span id="a-complete-example" />
+<span id="factors-and-deltas" />
 
-An enemy recoils when hit, harder and longer for more damage:
+## Scale a motion
 
-<Moves>
-
-```csharp title="Enemy.cs" {"1":3-9} {"2":11-15} {"3":17}
-public partial class Enemy : Sprite2D
+```csharp
+var recoil = new Tweens.Position2DX
 {
-    static readonly Tweens.Position2DX Recoil = new()
-    {
-        By = -12,
-        Duration = 0.2,
-        Ease = InOut.Quad,
-        UsePingPong = true,
-    };
+    By = -12,
+    Duration = 0.2,
+    Ease = InOut.Quad,
+    PingPong = true,
+};
 
-    public void Hit(float damage) => this.Tween(Recoil with
-    {
-        FactorBy = damage / 10,
-        FactorDuration = 1 + damage / 100,
-    });
-
-    public void Crit() => this.Tween(Recoil with { FactorBy = 3, Skew = 0.25, Weks = 0.75 });
-}
+sprite.Tween(recoil with { FactorBy = 2, FactorDuration = 1.2 });
 ```
 
-1. **Define the motion once.** `Recoil` kicks the enemy 12 pixels back and
-   returns.
-2. **Scale it per hit.** `FactorBy` scales the kick with the damage, and
-   `FactorDuration` stretches the timing. A 20-damage hit kicks 24 pixels and
-   takes 0.24 seconds each way.
-3. **Change the pacing.** `Skew = 0.25` front-loads the same ease, so a critical
-   hit lands sooner. `Weks = 0.75` keeps it near the far endpoint longer before returning.
+This hit moves 24 pixels and takes 0.24 seconds each way. Tune the original distance or duration, and the factored version follows.
 
-</Moves>
+<Aside type="tip" title="Multiply, then add">
 
-Change `Recoil` to kick 16 pixels, or to ease with `CubicOut`, and every hit and
-crit follows. `Recoil with { By = -24 }` would also kick harder, but it replaces
-the value, so that variant no longer follows `Recoil`.
+`FactorDuration = 2` doubles the original duration. `DeltaDelay = 0.1` adds a tenth of a second to its delay. Replacing `Duration` instead gives the copy a fixed duration.
 
-Try it below. Each row starts one variant with its own sliders: **Hit** scales
-with the damage, and **Crit** uses its own factor. Each start has separate outward
-and return pacing controls. The curve and code
-show the row you used last. **Recoil kick** and **Recoil duration** tune the shared
-definition, and both variants follow.
-
-<VariationLab />
-
-## Factors and deltas
-
-When a tween starts, each factor multiplies its value and each delta is added
-after it:
-
-| Value | Becomes | Defaults |
-| --- | --- | --- |
-| `From` | `FactorFrom` × `From` + `DeltaFrom` | `1`, none |
-| `To` | `FactorTo` × `To` + `DeltaTo` | `1`, none |
-| `By` | `FactorBy` × `By` + `DeltaBy` | `1`, none |
-| `Duration` | `FactorDuration` × `Duration` + `DeltaDuration` | `1`, `0` |
-| `Delay` | `FactorDelay` × `Delay` + `DeltaDelay` | `1`, `0` |
-
-Deltas have the definition's value type, such as `Vector2` for a position.
-The duration and delay factors and deltas are timing options, so a shared
-`TweenOptions` can carry them: `options with { FactorDuration = 1.5 }`.
-`DeltaDelay` suits a stagger: `Pop with { DeltaDelay = i * 0.1 }` keeps `Pop`'s
-own delay and adds each item's offset to it.
+</Aside>
 
 ## Vary the current value
 
-If a definition has no `From` or `To`, it uses the property's value when the
-tween starts for that endpoint. A factor or delta then makes the motion
-relative to that value:
+Leave the destination unset and scale the captured value:
 
-```csharp title="Heart.cs"
-public partial class Heart : Sprite2D
+```csharp
+var beat = new Tweens.Scale2D
 {
-    static readonly Tweens.Scale2D Beat = new()
-    {
-        FactorTo = 1.2,
-        Duration = 0.15,
-        Ease = InOut.SmootherStep,
-        UsePingPong = true,
-    };
-
-    public void Pulse() => this.Tween(Beat);
-}
+    FactorTo = 1.2,
+    Duration = 0.15,
+    Ease = InOut.SmootherStep,
+    PingPong = true,
+};
+sprite.Tween(beat);
 ```
 
-The heart grows to 120% of whatever scale it has and comes back.
+The sprite grows to 120% of its current scale and returns. Use `DeltaDelay` for a stagger that preserves the definition's own delay.
 
-- `FactorFrom = 0` grows from zero to the current value.
-- `DeltaFrom = new Vector2(0, 40)` on a position starts 40 pixels lower and
-  rises to where the node is.
-- `DeltaTo` works like `By`, but only once: it's computed when the tween starts,
-  while `By` keeps up with other changes to the property as it plays.
+<span id="change-the-pacing-with-skew" />
 
-## Change the pacing with `Skew`
+## Change the pacing
 
-`Skew` moves the In/Out split linearly from 0 to 1. The default, 0.5,
-preserves the balanced pair. At 0, the Out profile fills the duration; at 1,
-the In profile does. Intermediate values move the split in both time and value.
-The blend window follows it and shrinks near either endpoint.
+`Skew` controls the outward In/Out split; `Weks` controls the return. Each ranges from 0 (front-loaded) to 1 (rear-loaded), with 0.5 balanced. Set the return split to one minus the outward split to retrace the curve.
 
-`Weks` independently controls the ping-pong return: 0 front-loads the return,
-0.5 preserves it, and 1 rear-loads it. To retrace the outward curve, set
-`Weks = 1 - Skew`. Duration, intervals, and raw progress stay unchanged.
+**Try it:** increase hit strength, then adjust the outward split. The distance changes with the factor; pacing changes with the split.
 
-These settings apply to paired In/Out flags. A single leg, legacy ease,
-custom function, or Godot Curve retains its authored profile. The numbered
-overshoot and rebound percentages describe the balanced pair and solo legs;
-moving the split also redistributes the paired legs' value ranges.
+<VariationLab />
 
-## Rules
+<Aside type="note" title="Paired easing only">
 
-- Factors and deltas apply once, when the tween starts. A non-retaining `Fill`
-  restores the captured value, not an adjusted one.
-- For a quaternion, the factor scales the rotation angle and the delta rotates
-  about the node's own axes.
-- `FactorBy` and `DeltaBy` need a `By`. `FactorTo` and `DeltaTo` don't apply to
-  a `By` tween. Both combinations are rejected.
-- Adjusting `From` fixes the start of a `By` tween, as an explicit `From` does.
-- The adjusted duration and delay must not be negative, and `Offset` must fit
-  within the adjusted duration.
-- Factors, `DeltaDuration`, `DeltaDelay`, `Skew`, and `Weks` must be finite.
-  Both splits must be in `[0, 1]`, even without ping-pong. Invalid values reject the start.
+The split controls apply to paired In/Out flags. Custom functions, Godot Curves, and single easing legs keep their authored shape.
+
+</Aside>
+
+The [endpoint reference](/csharp/api/endpoints/) covers every factor, delta, and combination rule.
+
+{/* Keep links to earlier guide sections working. */}
+<span id="rules" />

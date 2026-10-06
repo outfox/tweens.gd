@@ -3,13 +3,14 @@ title: Install
 description: Add tweens.gd to your Godot project from the Godot Asset Store or GitHub.
 ---
 
-import { CardGrid } from '@astrojs/starlight/components';
 import InstallCard from '../../../components/InstallCard.astro';
+import { Aside, CardGrid } from '@astrojs/starlight/components';
 
-tweens.gd is free and libre open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE).
-You can build it from source or get prebuilt versions through these official channels.
+Add tweens.gd to a Godot 4.7.2 project. The addon includes the GDScript API and its native extension; no .NET runtime is needed.
 
-## Let's... *ease* into it
+<span id="lets-ease-into-it" />
+
+## Choose an install
 
 Choose where to download the addon:
 
@@ -25,8 +26,6 @@ Get the shared addon with support for both C# and GDScript.
 <InstallCard title="GitHub" logo="github" href="https://github.com/outfox/tweens.gd/releases/latest">
 
 Get the addon ZIP from the [latest release](https://github.com/outfox/tweens.gd/releases/latest).
-Alongside the combined addon, releases will also offer lightweight GDScript-only builds.
-
 Choose the packaged addon from the release assets, then unpack it into your project root.
 
 </InstallCard>
@@ -43,6 +42,12 @@ If you choose the combined addon, its C# files can stay in a GDScript-only proje
 Once tweens.gd is installed and Godot is running, you're ready to write
 [your first tween](/gdscript/quickstart/).
 
-## Odds and ends
+<span id="odds-and-ends" />
+
+<Aside type="tip" title="Exporting to the Web">
 
 To export your game to the Web, turn on **Extensions Support** in the export preset.
+
+</Aside>
+
+The addon is free and open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE). See [compatibility](/compatibility/) for validated platforms.

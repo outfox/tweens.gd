@@ -1,132 +1,64 @@
 ---
-title: Variations
-description: Derive variants from one definition. Factors and deltas scale and shift its values and duration when it starts, and skew and weks change each leg's pacing.
+title: "Variations"
+description: "Scale a shared motion, add a stagger, or adjust its outward and return pacing."
 ---
 
-import Moves from '../../../components/Moves.astro';
 import VariationLab from '../../../components/VariationLab.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-Games rarely need a motion in just one version. A heavy hit kicks harder than a
-light one, and an enemy that spawns pops in from nothing. Instead of copying a
-definition and editing its numbers, start a variant of it. The variant stays
-tied to the definition, so when you tune the definition, every variant follows.
+Derive a stronger, slower, or later version of one definition. Factors multiply its values; deltas add to them when playback starts.
 
-Examples assume the global `Tweens` class and
-run on Godot's main thread, on nodes inside the tree.
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
-## A complete example
+<span id="a-complete-example" />
+<span id="factors-and-deltas" />
 
-An enemy recoils when hit, harder and longer for more damage:
+## Scale a motion
 
-<Moves>
+```gdscript
+var recoil := Tweens.position_2d_x(null, 0.2, InOut.QUAD) \
+    .with_by(-12.0).with_ping_pong()
 
-```gdscript title="enemy.gd" {"1":3-4} {"2":6-8} {"3":10-11}
-extends Sprite2D
-
-static var recoil := Tweens.position_2d_x(null, 0.2, InOut.QUAD) \
-	.with_by(-12.0).with_ping_pong()
-
-func hit(damage: float) -> void:
-	Tweens.play(self, recoil.with_factor_by(damage / 10.0) \
-		.with_factor_duration(1.0 + damage / 100.0))
-
-func crit() -> void:
-	Tweens.play(self, recoil.with_factor_by(3.0).with_skew(0.25).with_weks(0.75))
+Tweens.play(sprite, recoil.with_factor_by(2.0).with_factor_duration(1.2))
 ```
 
-1. **Define the motion once.** `recoil` kicks the enemy 12 pixels back and
-   returns.
-2. **Scale it per hit.** `with_factor_by()` scales the kick with the damage, and
-   `with_factor_duration()` stretches the timing. A 20-damage hit kicks 24 pixels
-   and takes 0.24 seconds each way.
-3. **Change the pacing.** `with_skew(0.25)` front-loads the same ease, so a
-   critical hit lands sooner. `with_weks(0.75)` keeps it near the far endpoint longer before returning.
+This hit moves 24 pixels and takes 0.24 seconds each way. Tune the original distance or duration, and the factored version follows.
 
-</Moves>
+<Aside type="tip" title="Multiply, then add">
 
-Change `recoil` to kick 16 pixels, or to ease with `InOut.CUBIC`, and every hit and
-crit follows. `recoil.with_by(-24.0)` would also kick harder, but it replaces the
-value, so that variant no longer follows `recoil`.
+`with_factor_duration(2.0)` doubles the original duration. `with_delta_delay(0.1)` adds a tenth of a second to its delay. `with_duration()` instead gives the copy a fixed duration.
 
-Try it below. Each row starts one variant with its own sliders: **Hit** scales
-with the damage, and **Crit** uses its own factor. Each start has separate outward
-and return pacing controls. The curve and code
-show the row you used last. **Recoil kick** and **Recoil duration** tune the shared
-definition, and both variants follow.
-
-<VariationLab lang="gdscript" />
-
-## Factors and deltas
-
-When a tween starts, each factor multiplies its value and each delta is added
-after it:
-
-| Value | Becomes | Defaults |
-| --- | --- | --- |
-| `from_value` | `factor_from` × `from_value` + `delta_from` | `1.0`, `null` |
-| `to_value` | `factor_to` × `to_value` + `delta_to` | `1.0`, `null` |
-| `by_value` | `factor_by` × `by_value` + `delta_by` | `1.0`, `null` |
-| `duration` | `factor_duration` × `duration` + `delta_duration` | `1.0`, `0.0` |
-| `delay` | `factor_delay` × `delay` + `delta_delay` | `1.0`, `0.0` |
-
-Deltas have the property's value type, such as `Vector2` for a position; `null`
-adds nothing. Each field has a `with_*()` method, such as `with_factor_to()` or
-`with_delta_duration()`. `delta_delay` suits a stagger:
-`pop.with_delta_delay(i * 0.1)` keeps `pop`'s own delay and adds each item's
-offset to it.
+</Aside>
 
 ## Vary the current value
 
-If a definition has no `from_value` or `to_value`, it uses the property's value
-when the tween starts for that endpoint. A factor or delta then makes the motion
-relative to that value:
+Leave the destination unset and scale the captured value:
 
-```gdscript title="heart.gd"
-extends Sprite2D
-
-static var beat := Tweens.scale_2d(null, 0.15, InOut.SMOOTHER_STEP) \
-	.with_factor_to(1.2).with_ping_pong()
-
-func pulse() -> void:
-	Tweens.play(self, beat)
+```gdscript
+var beat := Tweens.scale_2d(null, 0.15, InOut.SMOOTHER_STEP) \
+    .with_factor_to(1.2).with_ping_pong()
+Tweens.play(sprite, beat)
 ```
 
-The heart grows to 120% of whatever scale it has and comes back.
+The sprite grows to 120% of its current scale and returns. Use `with_delta_delay()` for a stagger that preserves the definition's own delay.
 
-- `with_factor_from(0.0)` grows from zero to the current value.
-- `with_delta_from([0, 40])` on a position starts 40 pixels lower and
-  rises to where the node is.
-- `delta_to` works like `by_value`, but only once: it's computed when the tween
-  starts, while `by_value` keeps up with other changes to the property as it
-  plays.
+<span id="change-the-pacing-with-skew" />
 
-## Change the pacing with `skew`
+## Change the pacing
 
-`skew` moves the In/Out split linearly from 0 to 1. The default, 0.5,
-preserves the balanced pair. At 0, the Out profile fills the duration; at 1,
-the In profile does. Intermediate values move the split in both time and value.
-The blend window follows it and shrinks near either endpoint.
+`skew` controls the outward In/Out split; `weks` controls the return. Each ranges from 0 (front-loaded) to 1 (rear-loaded), with 0.5 balanced. Set the return split to one minus the outward split to retrace the curve.
 
-`weks` independently controls the ping-pong return: 0 front-loads the return,
-0.5 preserves it, and 1 rear-loads it. To retrace the outward curve, set
-`weks = 1 - skew`. Duration, intervals, and raw progress stay unchanged.
+**Try it:** increase hit strength, then adjust the outward split. The distance changes with the factor; pacing changes with the split.
 
-These settings apply to paired In/Out flags. A single leg, legacy ease,
-custom function, or Godot Curve retains its authored profile. The numbered
-overshoot and rebound percentages describe the balanced pair and solo legs;
-moving the split also redistributes the paired legs' value ranges.
+<VariationLab lang="gdscript" />
 
-## Rules
+<Aside type="note" title="Paired easing only">
 
-- Factors and deltas apply once, when the tween starts. A non-retaining `fill`
-  restores the captured value, not an adjusted one.
-- For a quaternion, the factor scales the rotation angle and the delta rotates
-  about the node's own axes.
-- `factor_by` and `delta_by` need a `by_value`. `factor_to` and `delta_to` don't
-  apply with `by_value`. Both combinations are rejected.
-- Adjusting `from_value` fixes the start of a `by_value` tween, as an explicit
-  `from_value` does.
-- The adjusted duration and delay must not be negative, and `offset` must fit
-  within the adjusted duration.
-- Factors, deltas, `skew`, and `weks` must be finite. Both splits must be
-  in `[0, 1]`, even without ping-pong. Invalid values reject the start.
+The split controls apply to paired In/Out flags. Custom functions, Godot Curves, and single easing legs keep their authored shape.
+
+</Aside>
+
+The [endpoint reference](/gdscript/api/endpoints/) covers every factor, delta, and combination rule.
+
+{/* Keep links to earlier guide sections working. */}
+<span id="rules" />

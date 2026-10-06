@@ -1,0 +1,103 @@
+---
+title: "Syntax sugar"
+description: "Two API flavours and two ways to write endpoints: explicit types or sweet tuples and arrays."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Compare from '../../../components/Compare.astro';
+
+
+There's more than one way to tween a ferret!
+
+### Two API flavours
+
+**Structured** creates a strongly typed immutable record struct definition to reuse or vary (via the `with` keyword). **Convenience** defines and starts a local animation through a node extension.
+
+<Compare>
+
+```csharp title="Structured"
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
+
+sprite.Tween(arrive);
+```
+
+```csharp title="Convenience"
+sprite.TweenPosition((400, 180), 0.6, Out.Cubic);
+```
+
+</Compare>
+
+These are alternative ways to start the same motion. Both return a handle when played.
+
+<span id="endpoints" />
+
+## Safe and sweet endpoints
+
+Use a Godot value for an explicit type, a tuple for compiler-checked component counts, or an array expression if you want to be closer to the GDScript flavour:
+
+<Compare>
+
+```csharp title="Safe: explicit type"
+sprite.TweenPosition(new Vector2(400, 180), 0.6);
+```
+
+```csharp title="Sweet: tuple or array"
+sprite.TweenPosition((400, 180), 0.6);
+sprite.TweenPosition([400, 180], 0.6); 
+```
+
+</Compare>
+
+All three move to the same position. Structured constructors accept the same forms.
+
+<Compare>
+
+```csharp title="Clean: explicit & readable"
+var motion = new TweenPosition2D
+{
+	To = new Vector2(400, 180),
+	Duration = 0.6
+}
+
+sprite.Tween(motion);
+```
+
+```csharp title="Quick: convenient & concise"
+var motion1 = new TweenPosition2D(new Vector2(400, 180), 0.6);
+var motion2 = new TweenPosition2D((400, 180), 0.6);
+sprite1.Tween(motion1);
+sprite2.Tween(motion2);
+```
+
+</Compare>
+
+<Aside type="note" title="Choose your checks">
+
+Godot values and tuples are checked at compile time. Array expressions are checked when the tween is created; a wrong component count throws `ArgumentException`.
+
+</Aside>
+
+| Animate | Sweet endpoint |
+| --- | --- |
+| Uniform scale | `sprite.TweenScale(1.2, 0.2)` |
+| RGB color | `label.TweenModulate((1, 0.5, 0), 0.3)` |
+| Named or HTML color | `label.TweenModulate("tomato", 0.3)` |
+
+Three color components imply alpha 1. Numeric endpoints need no `f` suffix.
+
+## Easing and delay
+
+Arguments follow **endpoint, duration, ease, delay**. Times are seconds; C# also accepts `TimeSpan`.
+
+```csharp
+sprite.TweenPosition((400, 180), 0.6, Out.Cubic, 0.2);
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic, 0.2);
+```
+
+Use an initializer on a definition, or a configure callback on a convenience call, for extra options:
+
+```csharp
+var pulse = new Tweens.Scale2D(1.2, 0.2) { PingPong = true };
+sprite.TweenScale(1.2, 0.2, options => options.PingPong = true);
+single.Tween(pulse with { PingPong = false });
+```

@@ -16,9 +16,9 @@ const content = (cs: boolean): Record<string, { text: string; api?: string[] }> 
 		text: 'Describe a motion once and start it on any node.',
 		api: cs ? ['Tweens.Position2D', 'By', 'with { }'] : ['Tweens.position_2d()', 'with_by()', 'with_*()'],
 	},
-	sequences: {
-		text: 'Play motions one after another, overlapping where you like.',
-		api: cs ? ['Chain()', 'Delay = -0.6'] : ['Tweens.chain()', 'with_delay(-0.6)'],
+	'syntax-sugar': {
+		text: 'Choose structured definitions or convenience calls, with explicit or sweet endpoints.',
+		api: cs ? ['Vector2', '(x, y)', '[x, y]'] : ['Vector2', '[x, y]'],
 	},
 	playback: {
 		text: 'Pause or cancel a tween, and react to how it ended.',

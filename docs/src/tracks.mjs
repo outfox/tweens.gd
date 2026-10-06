@@ -17,8 +17,8 @@ export const PATH = [
 			{ link: '/tutorial/', label: 'Tutorial' },
 			{ slug: 'installation', label: 'Install' },
 			{ slug: 'quickstart', label: 'Your first tween' },
+			{ slug: 'syntax-sugar', label: 'Syntax sugar' },
 			{ slug: 'definitions', label: 'Definitions' },
-			{ slug: 'sequences', label: 'Sequences', gdscript: 'Sequences' },
 			{ slug: 'playback', label: 'Control & completion' },
 		],
 	},
@@ -27,7 +27,8 @@ export const PATH = [
 		art: 'curve',
 		pages: [
 			{ link: '/easings/', label: 'Playground' },
-			{ slug: 'custom', label: 'Custom curves' },
+			{ slug: 'effects', label: 'Effects' },
+			{ slug: 'custom', label: 'Custom' },
 		],
 	},
 	{
@@ -35,13 +36,12 @@ export const PATH = [
 		art: 'sketch',
 		collapsed: true,
 		pages: [
-			{ slug: 'syntax-sugar', label: 'Syntax sugar' },
 			{ slug: 'timing', label: 'Timing & loops' },
-			{ slug: 'variations', label: 'Variations' },
+			{ slug: 'sequences', label: 'Sequences' },
 			{ slug: 'lifetime', label: 'Lifetime & ownership' },
 			{ slug: 'cancellation', label: 'Cancellation & reasons' },
-			{ slug: 'materials', label: 'Materials' },
-			{ slug: 'shaders', label: 'Shader uniforms' },
+			{ slug: 'variations', label: 'Variations' },
+			{ slug: 'materials', label: 'Materials & shaders' },
 			{ slug: 'custom-tweens', label: 'Custom tweens', gdscript: 'Custom adapters' },
 		],
 	},
@@ -131,6 +131,8 @@ export const sidebar = () => [
 
 /** Old single-path URLs, kept working after the split. */
 export const redirects = {
+	'/csharp/shaders': '/csharp/materials/',
+	'/gdscript/shaders': '/gdscript/materials/',
 	'/concepts/definitions': '/csharp/definitions/',
 	'/concepts/easing': '/easings/',
 	'/concepts/timing': '/csharp/timing/',

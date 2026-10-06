@@ -12,7 +12,7 @@ var hops = 0
 
 func animate() -> void:
 	var blink = Tweens.scale_2d_y(0.1, 0.07)
-	blink.use_ping_pong = true
+	blink.ping_pong = true
 	blink.repeats = Tweens.INFINITE
 	blink.repeat_interval = 2.2
 	blink.delay = 0.9

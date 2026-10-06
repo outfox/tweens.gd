@@ -82,7 +82,7 @@ public class PlaybackTests
         using var scheduler = new TweenScheduler();
         var box = new Box();
         var tween = scheduler.Add(box, new BoxTween
-        { From = 0, To = 10, Duration = 1, UsePingPong = true, PingPongInterval = 0.5, RepeatInterval = 0.25, Repeats = 1 });
+        { From = 0, To = 10, Duration = 1, PingPong = true, PingPongInterval = 0.5, RepeatInterval = 0.25, Repeats = 1 });
         scheduler.Update(1);
         Assert.Equal(10, box.Value);
         scheduler.Update(0.25);
@@ -106,7 +106,7 @@ public class PlaybackTests
         using var whole = new TweenScheduler();
         using var pieces = new TweenScheduler();
         var definition = new BoxTween { From = -1, To = 2, Duration = 1, Delay = 0.25,
-            RepeatInterval = 0.25, PingPongInterval = 0.25, UsePingPong = pingPong, Repeats = TweenOptions.Infinite, Offset = 0.5 };
+            RepeatInterval = 0.25, PingPongInterval = 0.25, PingPong = pingPong, Repeats = TweenOptions.Infinite, Offset = 0.5 };
         var a = new Box(); var b = new Box();
         var first = whole.Add(a, definition); var second = pieces.Add(b, definition);
         whole.Update(123.5);
@@ -335,7 +335,7 @@ public class PlaybackTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
-        var tween = scheduler.Add(box, new BoxTween { From = 0, To = 10, UsePingPong = true, PingPongInterval = 1, RepeatInterval = 1, Repeats = 1 });
+        var tween = scheduler.Add(box, new BoxTween { From = 0, To = 10, PingPong = true, PingPongInterval = 1, RepeatInterval = 1, Repeats = 1 });
         scheduler.Update(0.5);
         Assert.Equal(10, box.Value);
         scheduler.Update(1);

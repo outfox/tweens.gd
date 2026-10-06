@@ -458,7 +458,7 @@ public class ComposedEasingTests
         using var scheduler = new TweenScheduler();
         var box = new Box();
         var ease = In.Quad | Out.Cubic;
-        var handle = scheduler.Add(box, new PlainTween { To = 1, Duration = 2, Ease = ease, Skew = 0.75, Weks = 0.25, UsePingPong = true });
+        var handle = scheduler.Add(box, new PlainTween { To = 1, Duration = 2, Ease = ease, Skew = 0.75, Weks = 0.25, PingPong = true });
         scheduler.Update(1);
         Assert.Equal(Easing.Evaluate(ease, 0.5f, skew: 0.75), box.Value);
         scheduler.Update(2);

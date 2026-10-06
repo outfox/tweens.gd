@@ -18,7 +18,7 @@ public class StructuredDefinitionTests
     private static readonly Dictionary<string, object?> OptionValues = new()
     {
         ["Duration"] = (Duration)1.25, ["FactorDuration"] = 2.0, ["DeltaDuration"] = (Duration)0.25, ["Delay"] = (Duration)0.5, ["FactorDelay"] = 3.0, ["DeltaDelay"] = (Duration)0.125, ["PingPongInterval"] = (Duration)0.25, ["RepeatInterval"] = (Duration)0.75,
-        ["Offset"] = (Duration)0.125, ["Repeats"] = 2, ["UsePingPong"] = true, ["UseUnscaledTime"] = true,
+        ["Offset"] = (Duration)0.125, ["Repeats"] = 2, ["PingPong"] = true, ["UseUnscaledTime"] = true,
         ["Fill"] = FillMode.None, ["Ease"] = EaseType.QuadIn, ["Skew"] = 0.75, ["Weks"] = 0.5, ["EaseFunction"] = Ease, ["Curve"] = null,
         ["ProcessMode"] = TweenProcessMode.Physics, ["PauseMode"] = TweenPauseMode.Always,
         ["SuppressCallbacksWhenTargetInvalid"] = true,

@@ -13,7 +13,7 @@ func animate() -> void:
 
 func cycle(definition, delay: float = 0.0):
 	definition.ease = InOut.CUBIC
-	definition.use_ping_pong = true
+	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE
 	definition.repeat_interval = 0.25
 	definition.ping_pong_interval = 0.15

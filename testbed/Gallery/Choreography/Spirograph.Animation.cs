@@ -20,7 +20,7 @@ public sealed partial class Spirograph
             sun.TweenScale(1.35, pulse, options =>
             {
                 options.Ease = InOut.Sine;
-                options.UsePingPong = true;
+                options.PingPong = true;
                 options.Repeats = TweenOptions.Infinite;
             }),
             Stage.TweenFloat(1, revolution, options =>

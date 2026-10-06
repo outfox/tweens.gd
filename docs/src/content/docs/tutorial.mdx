@@ -6,29 +6,38 @@ description: Learn tweens.gd in five short steps, in C# or GDScript.
 import Doors from '../../components/Doors.astro';
 import Lang from '../../components/Lang.astro';
 import Path from '../../components/Path.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Tweening means using code to animate nodes and resources, by changing their properties over time using ~~soft paws~~ smooth functions called "easings." 
+<Aside type="tip" title="Choose your language">
 
-<p id="language-hint">Choose your preferred scripting language. You can swap at any time by flipping the switch at the top of the page. The tweens.gd Addon supports both languages simultaneously in-engine, as well!</p>
+<p id="language-hint">Follow C# or GDScript. The switch at the top opens the matching page in the other language; the addon lets you use both in the same project.</p>
+
+</Aside>
 
 <Doors />
 
 <Path />
 
-## After the tutorial
+## Good to go?
 
 <Lang only="csharp">
 
-- Compare curves in the [easing playground](/easings/).
-- Read the [guides](/csharp/syntax-sugar/) for timing, loops, variations, and lifetime.
-- Look up members in the [API reference](/csharp/api/) and the [property catalog](/csharp/nodes/).
+<CardGrid>
+<LinkCard title="Shape motion" description="Choose an ease or add an effect." href="/easings/" />
+<LinkCard title="Combine motions" description="Play sequences and parallel animations." href="/csharp/sequences/" />
+<LinkCard title="Loop a motion" description="Add ping-pong, repeats, and delays." href="/csharp/timing/" />
+<LinkCard title="Look up an API" description="Find members and property adapters." href="/csharp/api/" />
+</CardGrid>
 
 </Lang>
 
 <Lang only="gdscript">
 
-- Compare curves in the [easing playground](/easings/).
-- Read the [guides](/gdscript/syntax-sugar/) for timing, loops, variations, and lifetime.
-- Look up members in the [API reference](/gdscript/api/) and the [property catalog](/gdscript/nodes/).
+<CardGrid>
+<LinkCard title="Shape motion" description="Choose an ease or add an effect." href="/easings/" />
+<LinkCard title="Combine motions" description="Play sequences and parallel animations." href="/gdscript/sequences/" />
+<LinkCard title="Loop a motion" description="Add ping-pong, repeats, and delays." href="/gdscript/timing/" />
+<LinkCard title="Look up an API" description="Find members and property adapters." href="/gdscript/api/" />
+</CardGrid>
 
 </Lang>

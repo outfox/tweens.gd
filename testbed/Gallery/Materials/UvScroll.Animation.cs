@@ -13,7 +13,7 @@ public sealed partial class UvScroll
     {
         To = 1,
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,
@@ -23,7 +23,7 @@ public sealed partial class UvScroll
     {
         To = new Vector3(2.5f, 2.5f, 1),
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,

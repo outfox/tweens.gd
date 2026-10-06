@@ -13,7 +13,7 @@ public sealed partial class CurveFollower3D
     {
         To = 1,
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,
@@ -23,7 +23,7 @@ public sealed partial class CurveFollower3D
     {
         To = 0.35f,
         Ease = DefaultEase,
-        UsePingPong = true,
+        PingPong = true,
         Repeats = TweenOptions.Infinite,
         RepeatInterval = 0.25,
         PingPongInterval = 0.15,

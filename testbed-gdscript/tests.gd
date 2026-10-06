@@ -295,7 +295,7 @@ func _composed_easing() -> void:
 	var definition := T.property(^"amount", 1.0, 2.0, combined)
 	definition.skew = 0.75
 	definition.weks = 0.25
-	definition.use_ping_pong = true
+	definition.ping_pong = true
 	var handle := scheduler.add(target, definition)
 	scheduler.update(1.0)
 	near(target.amount, T.Easing.evaluate(combined, 0.5, BlendType.MAKIMA, 0.2, 0.75), "split before blended easing")
@@ -470,7 +470,7 @@ func _factories_and_with() -> bool:
 			["with_factor_duration", 3.0, "factor_duration"], ["with_delta_duration", 0.5, "delta_duration"],
 			["with_factor_delay", 2.0, "factor_delay"], ["with_delta_delay", 0.25, "delta_delay"],
 			["with_delay", 0.5, "delay"], ["with_offset", 0.25, "offset"], ["with_repeats", 3, "repeats"],
-			["with_ping_pong", true, "use_ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
+			["with_ping_pong", true, "ping_pong"], ["with_ping_pong_interval", 0.1, "ping_pong_interval"],
 			["with_repeat_interval", 0.2, "repeat_interval"], ["with_fill", T.Fill.BOTH, "fill"],
 			["with_ease", T.Ease.BACK_OUT, "ease"], ["with_skew", 0.75, "skew"],
 			["with_weks", 0.5, "weks"],

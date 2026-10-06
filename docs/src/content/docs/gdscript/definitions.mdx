@@ -1,91 +1,78 @@
 ---
-title: Reusable definitions
-description: Define a motion once, choose its endpoints, and change a copy for one start.
+title: "Reusable definitions"
+description: "Define once, start on several nodes, and vary a copy."
 ---
 
 import VaryStart from '../../../components/VaryStart.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-A definition describes a motion independently of the node playing it. Keep one
-definition for motion you reuse; each start gets its own snapshot.
+A definition describes motion. Each start copies its settings into independent playback, so one definition can animate many nodes.
 
-Examples use the global `Tweens` class and run on Godot's main thread with nodes
-inside the tree.
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
 <span id="a-complete-example" />
 <span id="keep-definitions-in-static-variables" />
 
 ## Define once, start twice
 
-Keep the definition in a `static var` so every instance can use it:
+```gdscript
+var nudge := Tweens.position_2d(null, 0.2, Out.CUBIC).with_by([80, 0])
 
-```gdscript title="crate.gd"
-extends Node2D
-
-static var nudge := Tweens.position_2d(null, 0.2, Out.CUBIC) \
-	.with_by([80, 0])
-
-func push_pair(first: Node2D, second: Node2D) -> void:
-	Tweens.play(first, nudge)
-	Tweens.play(second, nudge)
+Tweens.play(sprite1, nudge)
+Tweens.play(sprite2, nudge)
 ```
 
-Both nodes move 80 pixels right from their own positions. Editing `nudge` tunes
-the motion in one place. Starting it returns a separate handle for each node.
+Both sprites move 80 pixels right from their own positions. Each start returns its own handle.
 
-## Leave out `from_value` or `to_value`
+<Aside type="tip" title="Keep reusable motion nearby">
 
-Use `to_value` for a destination, or `from_value` for an entrance:
+Store a shared definition in a `static var`. Treat it as read-only and use `with_*()` copies for individual starts.
 
-| Definition | Motion |
+</Aside>
+
+<span id="leave-out-from_value-or-to_value" />
+<span id="move-by-an-offset-with-by_value" />
+
+## Choose the endpoints
+
+| Choose | Result |
 | --- | --- |
-| `Tweens.position_2d(Vector2(400, 180), 0.4)` | Move from the current position to a fixed destination |
-| `Tweens.scale_2d(null, 0.4).with_from(Vector2.ZERO)` | Grow from zero to the scale set in the scene |
+| `to_value` | Move to a destination |
+| `from_value` only | Animate an entrance to the value set in the scene |
+| `by_value` only | Add an offset, preserving other movement |
 
-If a definition has no `from_value` or `to_value`, it uses the property's value
-**when you start the tween** for that endpoint, before any delay. Set both
-endpoints when both must be fixed.
+An omitted endpoint uses the property's value when playback starts, before any delay.
 
-## Move by an offset with `by_value`
+<Aside type="note" title="Relative motion">
 
-`nudge` uses `with_by()` to add an offset. Other changes to the property are kept
-while it plays: two overlapping nudges move a crate 160 pixels in total.
+Use `to_value` or `by_value`, not both. Leave `from_value` out when an offset should add to other movement.
 
-Use either `to_value` or `by_value`. Leave `from_value` out for this additive
-motion; setting it makes the tween run between fixed endpoints, from
-`from_value` to `from_value + by_value`.
+</Aside>
 
-## Vary a start with `with_*()`
+<span id="vary-a-start-with-with" />
 
-In `push_pair`, replace the second call with
-`Tweens.play(second, nudge.with_duration(0.6))`.
+## Vary one start
 
-`with_duration()` returns a modified copy. The second node takes longer, but
-`nudge` still has a duration of 0.2 seconds. Neither copy changes a tween already
-playing.
+```gdscript
+Tweens.play(sprite2, nudge.with_duration(0.6))
+```
 
-:::caution[Keep shared definitions read-only]
-GDScript definitions are mutable objects. Assigning `nudge.duration = 0.6`
-changes it for every later start. Use a `with_*()` copy to change just one start.
-:::
+The copy takes longer; the original still takes 0.2 seconds. Already running tweens keep their settings.
 
-**Try it:** change the second node's duration and press **Play both**. Both travel
-the same distance; the first always takes 0.2 seconds.
+**Try it:** change the second duration and play both.
 
 <VaryStart lang="gdscript" />
 
-For a duration that scales with the original instead of replacing it, use
-[factors and deltas](/gdscript/variations/).
+Use [variations](/gdscript/variations/) to scale the original values. The [definition reference](/gdscript/api/definitions/) covers shared options and copying.
 
+Next, [control playback and wait for completion](/gdscript/playback/).
+
+{/* Keep links to earlier guide sections working. */}
+<span id="leave-out-fromvalue-or-tovalue" />
+<span id="move-by-an-offset-with-byvalue" />
 <span id="share-timing-and-easing" />
 <span id="helper-or-property-path" />
 <span id="what-each-start-copies" />
 <span id="when-tweens-compete" />
-
-Shared timing, property paths, and copying rules are covered in the
-[definition reference](/gdscript/api/definitions/). See the
-[endpoint reference](/gdscript/api/endpoints/) for repeats, callback values, and
-tweens that compete for one property.
-
 <span id="build-steps-from-functions" />
-
-Next, [combine motions into groups and sequences](/gdscript/sequences/).
+<span id="vary-a-start-with-with_" />

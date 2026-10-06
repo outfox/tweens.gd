@@ -106,7 +106,7 @@ public readonly record struct TweenOptions
     /// <summary>Cycles after the first, or <see cref="Infinite"/>. A ping-pong cycle includes both legs.</summary>
     public int Repeats { get; init; }
     /// <summary>Return to the start after each forward leg. Duration applies to each leg; defaults to false.</summary>
-    public bool UsePingPong { get; init; }
+    public bool PingPong { get; init; }
     private readonly FillMode fill;
     // Encode the default so default(TweenOptions) and new TweenOptions() behave identically.
     /// <summary>Value behavior during delay and after natural completion. Defaults to RetainFinalValue.</summary>
@@ -143,7 +143,7 @@ public readonly record struct TweenOptions
         target.RepeatInterval = RepeatInterval;
         target.Offset = Offset;
         target.Repeats = Repeats;
-        target.UsePingPong = UsePingPong;
+        target.PingPong = PingPong;
         target.Fill = Fill;
         target.Ease = Ease;
         target.BlendType = BlendType;
@@ -182,8 +182,8 @@ public class TweenOptionsBuilder
     public Duration Offset { get; set; }
     /// <inheritdoc cref="TweenOptions.Repeats"/>
     public int Repeats { get; set; }
-    /// <inheritdoc cref="TweenOptions.UsePingPong"/>
-    public bool UsePingPong { get; set; }
+    /// <inheritdoc cref="TweenOptions.PingPong"/>
+    public bool PingPong { get; set; }
     /// <inheritdoc cref="TweenOptions.Fill"/>
     public FillMode Fill { get; set; } = FillMode.RetainFinalValue;
     /// <inheritdoc cref="TweenOptions.Ease"/>
@@ -215,7 +215,7 @@ public class TweenOptionsBuilder
         RepeatInterval = RepeatInterval,
         Offset = Offset,
         Repeats = Repeats,
-        UsePingPong = UsePingPong,
+        PingPong = PingPong,
         Fill = Fill,
         Ease = Ease,
         BlendType = BlendType,
@@ -271,7 +271,7 @@ internal sealed class Playback
         if (options.Repeats < TweenOptions.Infinite) throw new ArgumentOutOfRangeException(nameof(options.Repeats));
         if ((options.Fill & ~FillMode.Both) != 0)
             throw new ArgumentException("Invalid tween mode.", nameof(options));
-        pingPong = options.UsePingPong;
+        pingPong = options.PingPong;
         repeats = options.Repeats;
         var infinite = options.Repeats == TweenOptions.Infinite;
         span = duration + (pingPong ? turn + duration : 0) + repeat;

@@ -1,0 +1,55 @@
+---
+title: "Custom adapters"
+description: "Animate callback values or custom storage, then extend bindings when needed."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+When the catalog has no suitable property, animate a callback value or supply your own read and write operations.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+
+## Callback values
+
+```gdscript
+var score := Tweens.value(10.0, 100.0, 1.0)
+score.on_update = func(_handle, sample): label.text = str(roundi(sample))
+Tweens.play(self, score)
+```
+
+The label counts from 10 to 100. The owner controls playback's lifetime; the callback receives each sample.
+
+## Custom properties
+
+```gdscript title="health_bar.gd"
+extends Node2D
+
+var fill := 1.0
+static var drain := Tweens.property(^"fill", null, 0.4, InOut.SMOOTHER_STEP)
+
+func set_health(fraction: float) -> void:
+    Tweens.play(self, drain.with_to(fraction))
+```
+
+`Tweens.property()` reaches script variables as well as built-in properties. For storage outside a property, `Tweens.custom()` accepts getter and setter Callables.
+
+## Extend a binding
+
+For setup or cleanup per playback, extend `Tweens.Adapter`. Its hooks read, write, prepare, restore, and release a binding. Each start gets its own snapshot; referenced configuration stays shared unless you copy it yourself.
+
+<Aside type="caution" title="Release what your start owns">
+
+Keep per-playback state in the playback copy. Release only resources created or owned by that copy. See the reference for hook order and failed preparation.
+
+</Aside>
+
+<CardGrid>
+<LinkCard title="Custom bindings" description="Read/write hooks and per-playback cleanup." href="/gdscript/api/custom/" />
+<LinkCard title="Manual scheduling" description="Advance non-node models and tests yourself." href="/gdscript/api/scheduler/" />
+</CardGrid>
+
+{/* Keep links to earlier guide sections working. */}
+<span id="script-properties" />
+<span id="drive-a-scheduler-yourself" />
+<span id="custom-storage-with-callables" />
+<span id="adapters-with-bindings" />

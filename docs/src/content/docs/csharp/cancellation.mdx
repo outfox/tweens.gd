@@ -1,0 +1,60 @@
+---
+title: "Cancellation and reasons"
+description: "Stop playback or continue only after a successful arrival."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Awaiting a tween resumes when it ends, including cancellation. Check the reason when the next action requires a successful arrival.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+## Cancel playback
+
+Call `movement.Cancel()` to stop a tween. Its latest value stays visible and its waiters resume. Cancellation does not stop the surrounding async method.
+
+<Aside type="tip" title="Cancel a whole animation">
+
+Groups and Chains expose the same controls. To cancel everything owned by a node and its descendants, use `sprite.CancelTweens(includeChildren: true)`.
+
+</Aside>
+
+## Continue only on success
+
+```csharp
+var movement = sprite.TweenPosition((400, 180), 0.6);
+if (await movement.End != Reason.Completed)
+    return;
+
+await sprite.TweenModulateAlpha(0, 0.3).End;
+```
+
+The fade runs only after arrival. The early return also avoids starting it on a target that was freed during movement.
+
+## Why it ended
+
+| Reason | Meaning |
+| --- | --- |
+| `Completed` | Reached the natural end |
+| `Cancelled` | Cancel was called |
+| `TargetFreed` | Target was freed or queued for deletion |
+| `OwnerExited` | Owner left the tree |
+| `RunnerDisposed` | Tree or scheduler shut down |
+
+
+<Aside type="note" title="Tree exit can happen first">
+
+Freeing a node can report `OwnerExited` because Godot emits tree exit before invalidating it. Both mean playback stopped early.
+
+</Aside>
+
+## Cancel a wait, not the tween
+
+`AwaitDecommissionAsync(cancellationToken)` lets one caller stop waiting while playback and other waiters continue.
+
+A cancelled wait throws `OperationCanceledException`; cancelled playback returns `Reason.Cancelled`.
+
+See [handle wait helpers](/csharp/api/handles/) for the API and [errors](/csharp/api/handles/#errors) for failure handling.
+
+{/* Keep links to earlier guide sections working. */}
+<span id="loops" />

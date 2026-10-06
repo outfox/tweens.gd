@@ -1,119 +1,63 @@
 ---
-title: Timing and loops
-description: Duration, delay, repeats, ping-pong, fill modes, and what happens on long frames.
+title: "Timing and loops"
+description: "Add delays, repeat a motion, and choose what stays on screen."
 ---
 
 import TimingLab from '../../../components/TimingLab.astro';
 import FillModes from '../../../components/FillModes.astro';
-import Compare from '../../../components/Compare.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-A tween waits out its delay, plays a forward leg, and optionally returns and
-repeats. Most tweens only need `Duration`, `Delay`, and an ease. Everything else
-here is for loops and edge cases.
+Duration sets how long a motion takes; delay sets when it begins. Add ping-pong and repeats for idle motion that runs itself.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
 ## Loop forever
 
-For idle motion such as pulsing or bobbing, start one definition that
-ping-pongs forever. Each tween stops by itself when its node leaves the tree.
-Godot's `Tween` has no ping-pong, so it tweens back as a second step, and each
-node needs its own:
-
-<Compare>
-
-```csharp title="Godot's Tween"
-var big = new Vector2(1.1f, 1.1f);
-
-var tween1 = sprite1.CreateTween().SetLoops()
-    .SetTrans(Tween.TransitionType.Sine)
-    .SetEase(Tween.EaseType.InOut);
-tween1.TweenProperty(sprite1, "scale", big, 0.8);
-tween1.TweenProperty(sprite1, "scale", Vector2.One, 0.8);
-
-var tween2 = sprite2.CreateTween().SetLoops()
-    .SetTrans(Tween.TransitionType.Sine)
-    .SetEase(Tween.EaseType.InOut);
-tween2.TweenProperty(sprite2, "scale", big, 0.8);
-tween2.TweenProperty(sprite2, "scale", Vector2.One, 0.8);
-```
-
-```csharp title="tweens.gd"
+```csharp
 var pulse = new Tweens.Scale2D(1.1, 0.8, InOut.Sine)
 {
-    UsePingPong = true,
+    PingPong = true,
     Repeats = TweenOptions.Infinite,
 };
 
-sprite1.Tween(pulse);
-sprite2.Tween(pulse);
+sprite.Tween(pulse);
 ```
 
-</Compare>
+The sprite grows for 0.8 seconds, shrinks for 0.8 seconds, and repeats until cancelled or removed from the tree.
 
-## Timing options
+## Count cycles
 
-All times are double-precision seconds.
+| Set | Result |
+| --- | --- |
+| `Repeats = 2` | Three cycles: the first plus two repeats |
+| `PingPong = true` | Each cycle goes forward, then back |
+| `PingPongInterval` | Wait at the far endpoint |
+| `RepeatInterval` | Wait between cycles |
 
-| Option | Default | Meaning |
-| --- | --- | --- |
-| `Duration` | `0` | Seconds per leg. Zero completes on the first eligible update. |
-| `FactorDuration`, `DeltaDuration` | `1`, `0` | Scale and shift `Duration` for [variations](/csharp/variations/): the tween lasts `FactorDuration × Duration + DeltaDuration`. |
-| `Delay` | `0` | Signed gap before the first leg; negative values pre-roll. |
-| `FactorDelay`, `DeltaDelay` | `1`, `0` | Scale and shift `Delay` for [variations](/csharp/variations/), such as a stagger: the tween waits `FactorDelay × Delay + DeltaDelay`. |
-| `Repeats` | `0` | Cycles after the first. `TweenOptions.Infinite` (-1) repeats until cancelled. An infinite cycle that takes zero time is rejected. |
-| `UsePingPong` | `false` | A forward and a backward leg form one cycle. |
-| `PingPongInterval` | `0` | Wait at the far endpoint before returning. |
-| `RepeatInterval` | `0` | Wait between cycles, never after the last one. |
-| `Offset` | `0` | Start this many seconds into the first forward leg, within `[0, Duration]`. The delay still comes first. |
-
-For example, `Duration = 0.5`, `UsePingPong = true`, `PingPongInterval = 0.2`,
-`RepeatInterval = 0.3`, and `Repeats = 1` take 2.7 seconds: two 1.2-second cycles
-and one 0.3-second gap. Drag the timeline to see each phase:
+**Try it:** add a return leg and drag the timeline to see where the intervals fit.
 
 <TimingLab />
 
-Non-finite times and negative durations, intervals, and offsets are rejected. A long frame advances to the correct
-phase, even across several cycles, without losing time at boundaries, but it
-doesn't replay the callbacks of the cycles it skipped.
-
 ## Fill and restoration
 
-`Fill` decides what the property shows before the tween starts and after it ends.
+The default keeps the final value. For an entrance with a delay, use `Fill = FillMode.Both` so the starting value is visible while waiting.
 
-| `FillMode` | During the initial delay | On natural completion |
-| --- | --- | --- |
-| `RetainFinalValue` (default) | Leave the property alone | Keep the final value |
-| `ApplyFromDuringDelay` | Apply `From` | Restore the captured initial value |
-| `Both` | Apply `From` | Keep the final value |
-| `None` | Leave the property alone | Restore the captured initial value |
-
-Use `Both` for staggered entrances, so items that are still waiting show their
-`From` value instead of their final one.
+**Try it:** switch fill modes to compare waiting and completion.
 
 <FillModes />
 
-A ping-pong tween ends at its starting endpoint, so that endpoint is its final
-value. Cancelling always keeps the latest value, whatever the fill mode. Shader
-restoration also preserves whether an explicit override existed (see
-[shader uniforms](/csharp/shaders/)).
+<Aside type="note" title="Cancellation keeps the current value">
+
+Restoration applies on natural completion. Cancelling keeps the latest sample, regardless of fill mode.
+
+</Aside>
 
 ## Process and physics
 
-These fields belong to `PlaybackOptions`, supplied at the start call. Definitions contain motion settings only.
+Playback uses process frames by default. Pass `PlaybackOptions` at the start for physics updates or unscaled time.
 
-`ProcessMode` defaults to `TweenProcessMode.Process`. Choose
-`TweenProcessMode.Physics` to update with physics instead. The automatic runner
-uses process and physics priority `1000`, so it runs after nodes with default
-priority.
+The [timing reference](/csharp/api/timing/) lists every option, fill mode, and validation rule. [Playback modes](/csharp/api/modes/) control the clock; [ownership](/csharp/lifetime/) controls pausing with the scene.
 
-`UseUnscaledTime = true` ignores `Engine.TimeScale`. Process updates then use
-monotonic engine ticks, and physics updates use `1 / PhysicsTicksPerSecond` per
-tick, which is simulation time rather than wall-clock time during catch-up.
-Neither option changes pause or ownership rules.
-
-## Progress
-
-A handle's `Progress` is the current leg's position from 0 to 1, before easing. It
-runs backwards during a ping-pong return, and it isn't the fraction of all cycles
-completed.
-
-Signed delays place Chain entries relative to the preceding entry's end; see [Chains](/csharp/sequences/).
+{/* Keep links to earlier guide sections working. */}
+<span id="timing-options" />
+<span id="progress" />

@@ -52,12 +52,12 @@ public class DurationTests
             Duration = TimeSpan.FromSeconds(1), FactorDuration = 2, DeltaDuration = TimeSpan.FromSeconds(-0.5),
             Delay = TimeSpan.FromSeconds(0.25), FactorDelay = 2, DeltaDelay = TimeSpan.FromSeconds(-0.25),
             PingPongInterval = TimeSpan.FromSeconds(0.25), RepeatInterval = TimeSpan.FromSeconds(0.5),
-            Offset = TimeSpan.FromSeconds(0.125), UsePingPong = true, Repeats = 1,
+            Offset = TimeSpan.FromSeconds(0.125), PingPong = true, Repeats = 1,
         };
         var numeric = new TweenOptions
         {
             Duration = 1, FactorDuration = 2, DeltaDuration = -0.5, Delay = 0.25, FactorDelay = 2, DeltaDelay = -0.25,
-            PingPongInterval = 0.25, RepeatInterval = 0.5, Offset = 0.125, UsePingPong = true, Repeats = 1,
+            PingPongInterval = 0.25, RepeatInterval = 0.5, Offset = 0.125, PingPong = true, Repeats = 1,
         };
         Assert.Equal(numeric, options);
         var builder = new PlainTween();
