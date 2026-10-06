@@ -28,7 +28,8 @@ Built-in constructors and shorthand methods also accept these forms. Components 
 | `Color` | Three or four components, an HTML code, or a color name | `(1, 0.5, 0)`, `[1, 0.5, 0, 0.8]`, `"#ff8800"`, `"tomato"` |
 
 - Three color components leave the alpha at 1.
-- Tuples are checked by the compiler. A collection with the wrong number of components throws an `ArgumentException`.
+- The compiler checks a tuple's component count, and that each component converts to `double`.
+- When the tween is created, a collection with the wrong number of components throws an `ArgumentException`, and an unknown color name an `ArgumentOutOfRangeException`.
 
 ## Relative offsets
 
