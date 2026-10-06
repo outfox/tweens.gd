@@ -3,6 +3,7 @@
 Release versions come from tags such as `v0.1.3-beta`. The tag supplies the version
 for both the addon ZIP and NuGet packages; the project file retains its local
 development version. Tags with a SemVer prerelease suffix produce GitHub prereleases.
+Release titles match the tag exactly, such as `v0.1.3-beta`, without a project-name prefix.
 
 ## Prepare
 

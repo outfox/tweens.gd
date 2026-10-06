@@ -75,6 +75,10 @@ try {
                 if ($notesIndex -lt 0 -or $command[$notesIndex + 1] -ne $notesFile -or $command -contains '--generate-notes') {
                     throw 'Release creation must use the hand-written notes file.'
                 }
+                $titleIndex = [array]::IndexOf($command, '--title')
+                if ($titleIndex -lt 0 -or $command[$titleIndex + 1] -cne 'v0.1.0') {
+                    throw 'Release titles must match the tag without a project-name prefix.'
+                }
             }
         } elseif ($releaseTestState.Commands.Count -ne 0) { throw 'Lookup failure must not publish anything.' }
         if ($case.Notes -and $releaseTestState.Lookups -ne 0) { throw 'Invalid notes must fail before contacting GitHub.' }

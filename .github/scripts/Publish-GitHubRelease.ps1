@@ -30,7 +30,7 @@ switch ([int]$response.StatusCode) {
         gh release upload $Tag @packages --clobber
     }
     404 {
-        $options = @('--verify-tag', '--notes-file', $NotesFile, '--title', "tweens.gd $Tag")
+        $options = @('--verify-tag', '--notes-file', $NotesFile, '--title', $Tag)
         if ($Prerelease) { $options += '--prerelease' }
         gh release create $Tag @packages @options
     }
