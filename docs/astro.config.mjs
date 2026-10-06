@@ -120,6 +120,17 @@ export default defineConfig({
 		starlight({
 			title: 'tweens.gd',
 			description: "A tweening library for Godot (that doesn't suck.)",
+			// Starlight emits og:title/description/url and twitter:card; this adds the preview image.
+			head: [
+				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://tweens.gd/og-card.png' } },
+				{ tag: 'meta', attrs: { property: 'og:image:type', content: 'image/png' } },
+				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+				{ tag: 'meta', attrs: { property: 'og:image:alt', content: 'The tweens.gd logo: a happy ferret curled around the name' } },
+				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://tweens.gd/og-card.png' } },
+				{ tag: 'meta', attrs: { name: 'twitter:image:alt', content: 'The tweens.gd logo: a happy ferret curled around the name' } },
+				{ tag: 'meta', attrs: { name: 'theme-color', content: '#0e1620' } },
+			],
 			tableOfContents: false,
 			customCss: [
 				'@fontsource-variable/figtree',
