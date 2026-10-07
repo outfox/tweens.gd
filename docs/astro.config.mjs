@@ -119,6 +119,9 @@ export default defineConfig({
 		preloadImports,
 		starlight({
 			title: 'tweens.gd',
+			// The custom 404.md already generates /404 through Starlight's content route.
+			// Astro emits it as 404.html; a separate default route would duplicate it.
+			disable404Route: true,
 			description: "A tweening library for Godot (that doesn't suck.)",
 			// Starlight emits og:title/description/url and twitter:card; this adds the preview image.
 			head: [
