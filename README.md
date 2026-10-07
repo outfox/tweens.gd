@@ -31,8 +31,14 @@ May your code be short and your ferrets be long!
 
 <details>
 <summary>Acknowledgements</summary>
-- [Godot logo](https://godotengine.org/press/) by Andrea Calabró, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- "Easy, the Ferret" illustrations drawn by [foxy_maria](https://www.furaffinity.net/user/foxymaria/).
-- tweens.gd is released under the [MIT License](https://github.com/outfox/tweens.gd?tab=MIT-1-ov-file).
-- tweens.gd is made with math & ferrets, copyright © 2026 [its contributors](https://github.com/outfox/tweens.gd/graphs/contributors).
+	<p>
+		tweens.gd is made with math &amp; ferrets, copyright © 2026 <a href="https://github.com/outfox/tweens.gd/graphs/contributors">its contributors</a>.
+	</p>
+	<p>
+		<a href="https://godotengine.org/press/">Godot logo</a> by Andrea Calabró, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+	</p>
+	<p>"Easy, the Ferret" illustrations drawn by <a href="https://www.furaffinity.net/user/foxymaria/">foxy_maria</a>.</p>
+	<p>
+		tweens.gd is released under the <a href="https://github.com/outfox/tweens.gd?tab=MIT-1-ov-file">MIT License</a>.
+	</p>
 </details>
