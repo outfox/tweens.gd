@@ -121,8 +121,10 @@ const spin = play(
 
 	const WIDTH = 1152;
 	const HEIGHT = 648;
-	// Ghosts mark equal steps in time, so they bunch up where the icon is slow.
+	// Ghosts mark equal steps in time, so they bunch up where the icon is slow. Each lasts LIFE seconds, then fades.
 	const STEPS = 10;
+	const LIFE = 1;
+	const FADE = 0.4;
 
 	interface Pose {
 		x: number;
@@ -210,9 +212,13 @@ const spin = play(
 			for (const ghost of leaving) ghost.classList.add('is-leaving');
 			setTimeout(() => leaving.forEach((ghost) => ghost.remove()), 400);
 		};
-		const addGhost = (at: Pose) => {
+		// A ghost shows for a second from when the icon passed its spot, then fades out over FADE (the CSS animation).
+		const addGhost = (at: Pose, age: number) => {
+			if (age >= LIFE + FADE) return;
 			const ghost = document.createElement('span');
 			ghost.className = 'ghost';
+			ghost.style.animationDelay = `${(LIFE - age).toFixed(3)}s`;
+			ghost.addEventListener('animationend', () => ghost.remove());
 			place(ghost, at);
 			ghosts.append(ghost);
 		};
@@ -234,9 +240,11 @@ const spin = play(
 				y: lerp(from.y, to.y, ease(p)),
 				r: m.spin ? from.r + 360 * EASES.SmootherStep(p) : from.r,
 			});
+			// `time` is seconds into the move; a ghost's age counts from when the icon passed its spot.
 			let dropped = 0;
-			const drop = (upTo: number) => {
-				for (; dropped <= Math.min(upTo, STEPS - 1); dropped++) addGhost(at(dropped / STEPS));
+			const drop = (upTo: number, time: number) => {
+				for (; dropped <= Math.min(upTo, STEPS - 1); dropped++)
+					addGhost(at(dropped / STEPS), time - (dropped / STEPS) * seconds);
 			};
 			const set = (p: number) => {
 				pose = at(p);
@@ -244,15 +252,16 @@ const spin = play(
 			};
 			// Without motion, the ghosts alone show the ease.
 			if (reducedMotion()) {
-				drop(STEPS);
+				drop(STEPS, seconds);
 				set(1);
 				started = 0;
 				return;
 			}
 			started = performance.now() - elapsed * 1000;
 			const tick = (now: number) => {
-				const p = Math.min(1, (now - started) / 1000 / seconds);
-				drop(Math.floor(p * STEPS));
+				const time = (now - started) / 1000;
+				const p = Math.min(1, time / seconds);
+				drop(Math.floor(p * STEPS), time);
 				set(p);
 				if (p < 1) frame = requestAnimationFrame(tick);
 			};
@@ -429,12 +438,25 @@ const spin = play(
 	.icon {
 		filter: drop-shadow(0 4px 8px rgb(3 8 14 / 0.4));
 	}
+	/* The script delays the fade so each ghost lasts a second; FADE in the script matches its duration. */
 	.ghosts :global(.ghost) {
 		opacity: 0.2;
 		transition: opacity 0.35s;
+		animation: ghost-out 0.4s forwards;
 	}
 	.ghosts :global(.ghost.is-leaving) {
 		opacity: 0;
+	}
+	@keyframes ghost-out {
+		to {
+			opacity: 0;
+		}
+	}
+	/* Without motion the ghosts alone show the ease, so they stay. */
+	@media (prefers-reduced-motion: reduce) {
+		.ghosts :global(.ghost) {
+			animation: none;
+		}
 	}
 	/* The endpoint, in the color of the call's first argument. */
 	.target {
