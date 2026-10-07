@@ -154,9 +154,14 @@ jobs:
         run: dotnet pack csharp/tweens.gd.csproj -c Release --no-build --no-restore -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION -o artifacts/packages
       - name: Pack unified Godot Asset Store addon
         run: ./scripts/Pack-Addon.ps1 -Version $env:PACKAGE_VERSION
+      - name: Pack standalone tutorial project
+        run: ./scripts/Pack-Tutorial.ps1 -Version $env:PACKAGE_VERSION
       - name: Verify packages and smoke test the addon with 2dog
         timeout-minutes: 5
         run: dotnet msbuild build/Smoke.proj -p:Version=$env:PACKAGE_VERSION
+      - name: Smoke test the standalone tutorial project
+        timeout-minutes: 5
+        run: dotnet msbuild build/SmokeTutorial.proj
       - name: Upload packages
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -164,7 +169,8 @@ jobs:
           path: |
             artifacts/packages/*.nupkg
             artifacts/packages/*.snupkg
-            artifacts/packages/tweens.gd-*.zip
+            artifacts/packages/tweens.gd-${{ env.PACKAGE_VERSION }}.zip
+            artifacts/packages/tweens.gd-tutorial.zip
           if-no-files-found: error
       - name: Upload test results
         if: always()

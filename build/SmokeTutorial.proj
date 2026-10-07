@@ -1,0 +1,26 @@
+<Project DefaultTargets="Verify">
+  <Import Project="../tutorial/Directory.Build.props" />
+  <PropertyGroup>
+    <RepositoryRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))/</RepositoryRoot>
+    <TutorialArchive>$(RepositoryRoot)artifacts/packages/tweens.gd-tutorial.zip</TutorialArchive>
+    <ConsumerDirectory>$(RepositoryRoot)artifacts/smoke/tutorial-$([System.Guid]::NewGuid())</ConsumerDirectory>
+  </PropertyGroup>
+  <Target Name="Stage">
+    <Unzip SourceFiles="$(TutorialArchive)" DestinationFolder="$(ConsumerDirectory)/project" />
+    <!-- Block repository settings; the archive must build as a stock Godot project. -->
+    <Copy SourceFiles="../tests/smoke/addon/Directory.Build.props;../tests/smoke/addon/Directory.Build.targets"
+          DestinationFiles="$(ConsumerDirectory)/Directory.Build.props;$(ConsumerDirectory)/Directory.Build.targets" />
+    <ItemGroup>
+      <TutorialTests Include="../tutorial/tutorial.tests/EditorTests.cs;../tutorial/tutorial.tests/LessonTests.cs;../tutorial/tutorial.tests/PageTests.cs;../tutorial/tutorial.tests/TutorialFixture.cs;../tutorial/tutorial.tests/xunit.runner.json" />
+      <Verification Include="../tests/smoke/tutorial/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TutorialTests)" DestinationFiles="@(TutorialTests->'$(ConsumerDirectory)/verification/%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(Verification)" DestinationFiles="@(Verification->'$(ConsumerDirectory)/verification/%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="Verify" DependsOnTargets="Stage">
+    <Exec Command="dotnet build &quot;$(ConsumerDirectory)/project/tutorial.csproj&quot; -c Debug -p:TreatWarningsAsErrors=true" />
+    <Exec Command="dotnet build &quot;$(ConsumerDirectory)/project/tutorial.csproj&quot; -c Release -p:TreatWarningsAsErrors=true" />
+    <!-- Tests and their 2dog engine are added only after extraction; they never ship in the archive. -->
+    <Exec Command="pwsh -NoProfile -File &quot;$(RepositoryRoot)scripts/Test-TutorialPackage.ps1&quot; -Project &quot;$(ConsumerDirectory)/verification/Verification.csproj&quot; -TwoDogVersion $(TwoDogVersion)" Timeout="180000" />
+  </Target>
+</Project>
