@@ -25,20 +25,13 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
 
 This is a MIT licensed, free addon, and it supports both GDScript and C# out of the box. It's made out of love for indie devs and satisfying game feel. Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://discord.gg/3UXVHnmEwd).
 
-May your code be short and your ferrets be long!
-
-... dook, dook! ♥️
-
 <details>
 <summary>Acknowledgements</summary>
-	<p>
-		tweens.gd is made with math &amp; ferrets, copyright © 2026 <a href="https://github.com/outfox/tweens.gd/graphs/contributors">its contributors</a>.
-	</p>
-	<p>
-		<a href="https://godotengine.org/press/">Godot logo</a> by Andrea Calabró, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
-	</p>
-	<p>"Easy, the Ferret" illustrations drawn by <a href="https://www.furaffinity.net/user/foxymaria/">foxy_maria</a>.</p>
-	<p>
-		tweens.gd is released under the <a href="https://github.com/outfox/tweens.gd?tab=MIT-1-ov-file">MIT License</a>.
-	</p>
+	<a href="https://godotengine.org/press/">Godot logo</a> by Andrea Calabró, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. "Easy, the Ferret" illustrations drawn by <a href="https://www.furaffinity.net/user/foxymaria/">foxy_maria</a>
 </details>
+
+tweens.gd was made with math & ferrets.
+
+### May your code be short and your ferrets be long!
+
+... dook, dook! ♥️
