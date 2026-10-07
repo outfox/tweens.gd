@@ -274,6 +274,8 @@ jobs:
         run: npm run check:script-format
       - name: Build site
         run: npm run build
+      - name: Check LLM documentation
+        run: npm run check:llms
       - name: Check links
         run: npm run check:links
       - name: Check easing

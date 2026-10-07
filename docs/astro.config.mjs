@@ -7,6 +7,7 @@ import starlight from '@astrojs/starlight';
 import { codeThemeSelector, csharpDark, csharpLight, gdscriptDark, gdscriptLight } from './src/styles/code-themes.mjs';
 import { redirects, sidebar } from './src/tracks.mjs';
 import { checkSearchUpstream } from './scripts/check-search-upstream.mjs';
+import llmsDocumentation from './scripts/generate-llms.mjs';
 
 const elements = (node, tagName) => (node?.children ?? []).filter((c) => c.type === 'element' && c.tagName === tagName);
 const firstCode = (node) =>
@@ -117,6 +118,7 @@ export default defineConfig({
 		},
 		tableScroll,
 		preloadImports,
+		llmsDocumentation(),
 		starlight({
 			title: 'tweens.gd',
 			// The custom 404.md already generates /404 through Starlight's content route.

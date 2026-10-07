@@ -17,12 +17,21 @@ and `npm run astro -- dev stop`.
 
 ```powershell
 npm run build
+npm run check:llms
 npm run check:links
 npm run check:easing
 npm run preview -- --background
 ```
 
-The build emits `dist/`, including Pagefind search. The link check inspects
+The build emits `dist/`, including Pagefind search, `robots.txt`, `llms.txt`,
+`llms-full.txt`, and an `index.md` beside each documentation page. The LLM index
+follows the shared guides and both language tracks; the full file includes every
+published documentation page. Markdown is generated from rendered content so
+component examples and generated catalog tables are included, with links back
+to the interactive source pages. Redirects and the 404 page are excluded.
+The robots file permits all crawlers and advertises the sitemap index.
+The LLM check verifies sitemap coverage, export links, code fidelity, and catalog tables.
+The link check inspects
 generated HTML targets and anchors; it also rejects internal-document links and
 starter-template text. Preview the production build when checking search.
 
