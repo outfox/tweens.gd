@@ -1,7 +1,7 @@
 # Tutorial
 
 The website's five-step [tutorial](https://tweens.gd/tutorial/) as a Godot project: install, your first tween,
-reusable definitions, syntax and sugar, and control and completion. Choose C# or GDScript in the header; every
+reusing a definition, syntax and sugar, and awaiting completion. Choose C# or GDScript in the header; every
 step runs its lesson in the chosen language and shows the code that runs.
 
 ## Layout

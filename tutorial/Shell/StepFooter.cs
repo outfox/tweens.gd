@@ -13,11 +13,12 @@ public partial class StepFooter : HBoxContainer
         var next = GetNode<CardButton>("%Next");
         var step = page.Step;
 
-        GetNode<Label>("%PreviousTitle").Text = step > 1 ? Steps.All[step - 2].Label : "Tutorial";
+        // Numbered like the website's sidebar and pagination.
+        GetNode<Label>("%PreviousTitle").Text = step > 1 ? $"{step - 1}. {Steps.All[step - 2].Label}" : "Tutorial";
         previous.Pressed += () => page.Navigate?.Invoke(step - 1);
         if (step < Steps.All.Length)
         {
-            GetNode<Label>("%NextTitle").Text = Steps.All[step].Label;
+            GetNode<Label>("%NextTitle").Text = $"{step + 1}. {Steps.All[step].Label}";
             next.Pressed += () => page.Navigate?.Invoke(step + 1);
         }
         else

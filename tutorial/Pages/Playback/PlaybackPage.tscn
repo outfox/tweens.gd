@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://Shell/Dot.cs" id="11_dot"]
 [ext_resource type="PackedScene" path="res://Shell/LinkCard.tscn" id="12_linkcard"]
 [ext_resource type="PackedScene" path="res://Shell/StepFooter.tscn" id="13_stepfooter"]
+[ext_resource type="Script" path="res://Shell/Compare.cs" id="14_compare"]
+[ext_resource type="Script" path="res://Shell/CardGrid.cs" id="15_cardgrid"]
 
 [node name="PlaybackPage" type="Control"]
 layout_mode = 3
@@ -59,7 +61,7 @@ text = "STEP 5 OF 5"
 [node name="Title" type="Label" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
-text = "Control and completion"
+text = "Await Completion"
 
 [node name="Lead" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
@@ -69,35 +71,7 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "Every start returns a handle. Keep it to control that playback, or await its end before continuing."
-
-[node name="ContextCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree."
-
-[node name="ContextGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Examples use the global `Tweens` class in a node script, with targets inside the scene tree."
-
-[node name="RemoteGap" type="Control" parent="Scroll/Margin/Column/Content"]
-custom_minimum_size = Vector2(0, 8)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="PauseResumeCancel" type="Label" parent="Scroll/Margin/Column/Content"]
-layout_mode = 2
-theme_type_variation = &"SectionLabel"
-text = "Pause, resume, cancel"
+Markdown = "Every start returns a handle. Await it to continue once the tween ends, or use it to pause and cancel the tween on the way."
 
 [node name="Demo" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
@@ -204,28 +178,15 @@ text = "0.00"
 unique_name_in_owner = true
 theme_override_colors/font_color = Color(0.475, 0.871, 0.706, 1)
 
-[node name="CancelCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+[node name="ScriptingGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Cancelling keeps the latest value. `sprite.CancelTweens()` cancels all playback owned by that node."
-
-[node name="CancelGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Cancelling keeps the latest value. `Tweens.cancel_tweens(sprite)` cancels all playback owned by that node."
+mouse_filter = 2
 
 [node name="ScriptingIt" type="Label" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
-theme_type_variation = &"SubsectionLabel"
-text = "Scripting the remote"
+theme_type_variation = &"SectionLabel"
+text = "Scripting it"
 
 [node name="Instructions" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
 layout_mode = 2
@@ -234,7 +195,7 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "The remote's buttons call the methods of this script, on a scene's root `Node2D` with a `Sprite` child."
+Markdown = "The remote's buttons call this script's methods. To build your own, attach it to a scene's root `Node2D`, pick a `Sprite2D` for **Sprite** in the Inspector, and connect each button's `pressed` signal to its method."
 
 [node name="InstructionsGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
 layout_mode = 2
@@ -243,7 +204,7 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "The remote's buttons call the functions of this script, on a scene's root `Node2D` with a `Sprite` child."
+Markdown = "The remote's buttons call this script's functions. To build your own, attach it to a scene's root `Node2D`, pick a `Sprite2D` for **Sprite** in the Inspector, and connect each button's `pressed` signal to its function."
 
 [node name="Moves" type="Container" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
@@ -328,7 +289,7 @@ scroll_active = false
 autowrap_mode = 3
 size_flags_horizontal = 3
 script = ExtResource("5_prose")
-Markdown = "**Control it.** `Pause` holds the current value until `Resume`; `Cancel` stops for good."
+Markdown = "**Control it.** `Pause` holds the current value until `Resume`. `Cancel` stops for good and keeps the latest value."
 
 [node name="GDScriptNotes" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Moves" groups=["gdscript"]]
 layout_mode = 2
@@ -402,7 +363,7 @@ scroll_active = false
 autowrap_mode = 3
 size_flags_horizontal = 3
 script = ExtResource("5_prose")
-Markdown = "**Control it.** `pause()` holds the current value until `resume()`; `cancel()` stops for good."
+Markdown = "**Control it.** `pause()` holds the current value until `resume()`. `cancel()` stops for good and keeps the latest value."
 
 [node name="SceneCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
 layout_mode = 2
@@ -424,171 +385,117 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "This project's copy is `Lessons/Playback/playback_remote.tscn`."
 
-[node name="AwaitGap" type="Control" parent="Scroll/Margin/Column/Content"]
+[node name="CancelCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "To stop every tween a node owns without keeping their handles, call `sprite.CancelTweens()`."
+
+[node name="CancelGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "To stop every tween a node owns without keeping their handles, call `Tweens.cancel_tweens(sprite)`."
+
+[node name="ReactGap" type="Control" parent="Scroll/Margin/Column/Content"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="AwaitPlayback" type="Label" parent="Scroll/Margin/Column/Content"]
+[node name="ReactTitle" type="Label" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 theme_type_variation = &"SectionLabel"
-text = "Await playback"
+text = "React to the end"
 
-[node name="Await" parent="Scroll/Margin/Column/Content" instance=ExtResource("6_codeview")]
+[node name="Compare" type="Container" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
-size_flags_horizontal = 0
+script = ExtResource("14_compare")
+
+[node name="Left" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Compare/Left" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Await the handle to continue in the same method. `End` resumes however playback ended, so check the reason when the next step needs an arrival."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Compare/Left" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Await the handle to continue in the same function. `end` resumes however playback ended, so check the reason when the next step needs an arrival."
+
+[node name="Await" parent="Scroll/Margin/Column/Content/Compare/Left" instance=ExtResource("6_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
 unique_name_in_owner = true
 CSharpPath = ""
 GDScriptPath = ""
 Title = "Await"
+Compact = true
 
-[node name="AwaitText" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+[node name="Right" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Compare/Right" groups=["csharp"]]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "The wait finishes after callbacks and cleanup. It also resumes when playback is cancelled or its owner leaves the tree."
+Markdown = "A callback on the definition suits a small synchronous reaction. `OnEnd` runs only on natural completion."
 
-[node name="ArrivalCSharp" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
-layout_mode = 2
-theme_type_variation = &"Caution"
-
-[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/ArrivalCSharp"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/ArrivalCSharp/Body"]
-layout_mode = 2
-theme_type_variation = &"CautionTitle"
-text = "Continue only after arrival"
-
-[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/ArrivalCSharp/Body"]
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Compare/Right" groups=["gdscript"]]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "If the next action needs success, check `await movement.End == Reason.Completed`. The [cancellation guide](/csharp/cancellation/) shows a guarded sequence."
+Markdown = "A callback on the definition suits a small synchronous reaction. `on_end` runs only on natural completion."
 
-[node name="ArrivalGDScript" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+[node name="Callbacks" parent="Scroll/Margin/Column/Content/Compare/Right" instance=ExtResource("6_codeview")]
 layout_mode = 2
-theme_type_variation = &"Caution"
-
-[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/ArrivalGDScript"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/ArrivalGDScript/Body"]
-layout_mode = 2
-theme_type_variation = &"CautionTitle"
-text = "Continue only after arrival"
-
-[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/ArrivalGDScript/Body"]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "If the next action needs success, check `await movement.end == Tweens.Reason.COMPLETED`. The [cancellation guide](/gdscript/cancellation/) shows a guarded sequence."
-
-[node name="AwaitProperty" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
-layout_mode = 2
-theme_type_variation = &"Note"
-
-[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/AwaitProperty"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/AwaitProperty/Body"]
-layout_mode = 2
-theme_type_variation = &"NoteTitle"
-text = "Await the property directly"
-
-[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/AwaitProperty/Body"]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Use `await movement.end`, which also works after completion. Do not cache the `ended` signal for a later wait: signals do not replay."
-
-[node name="CallbacksGap" type="Control" parent="Scroll/Margin/Column/Content"]
-custom_minimum_size = Vector2(0, 8)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="CallbacksTitle" type="Label" parent="Scroll/Margin/Column/Content"]
-layout_mode = 2
-theme_type_variation = &"SectionLabel"
-text = "Callbacks"
-
-[node name="CallbacksLead" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Use a callback for a small synchronous reaction:"
-
-[node name="Callbacks" parent="Scroll/Margin/Column/Content" instance=ExtResource("6_codeview")]
-layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 3
 unique_name_in_owner = true
 CSharpPath = ""
 GDScriptPath = ""
 Title = "Callback"
+Compact = true
 
-[node name="CallbacksCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+[node name="FinallyCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "`OnEnd` runs on natural completion. `OnFinally` also runs when playback stops early or fails. See [callback order](/csharp/api/callbacks/#callback-order) for the full lifecycle."
+Markdown = "`OnFinally` also runs when playback stops early or fails; [callback order](/csharp/api/callbacks/#callback-order) shows the whole lifecycle."
 
-[node name="CallbacksGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+[node name="FinallyGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "`on_end` runs on natural completion. `on_finally` also runs when playback stops early or fails. See [callback order](/gdscript/api/callbacks/#callback-order) for the full lifecycle."
-
-[node name="ErrorsGap" type="Control" parent="Scroll/Margin/Column/Content"]
-custom_minimum_size = Vector2(0, 8)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="ErrorsTitle" type="Label" parent="Scroll/Margin/Column/Content"]
-layout_mode = 2
-theme_type_variation = &"SectionLabel"
-text = "Errors"
-
-[node name="ErrorsCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "An easing, setter, or callback exception faults playback. Awaiting `End` throws; catch it in async Godot callbacks such as `_Ready`."
-
-[node name="ErrorsGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
-layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-autowrap_mode = 3
-script = ExtResource("5_prose")
-Markdown = "Detected failures return `Tweens.Reason.FAILED`; read `handle.error` for the message. Arbitrary errors inside your scripts remain Godot script errors."
+Markdown = "`on_finally` also runs when playback stops early or fails; [callback order](/gdscript/api/callbacks/#callback-order) shows the whole lifecycle."
 
 [node name="ThreadCSharp" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
 layout_mode = 2
@@ -601,7 +508,7 @@ theme_override_constants/separation = 8
 [node name="Title" type="Label" parent="Scroll/Margin/Column/Content/ThreadCSharp/Body"]
 layout_mode = 2
 theme_type_variation = &"CautionTitle"
-text = "Use Godot’s main thread"
+text = "Await on Godot’s main thread"
 
 [node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/ThreadCSharp/Body"]
 layout_mode = 2
@@ -610,54 +517,66 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "Create and control tweens on the main thread. Await normally; avoid blocking with `.Wait()` or `.Result`, or moving engine access into `Task.Run`."
+Markdown = "An exception in an ease, setter, or callback faults playback, and awaiting `End` throws it. Catch it in `async void` methods such as `_Ready`. Create, control, and await tweens on the main thread, and never block on `End` with `.Wait()` or `.Result`."
 
-[node name="ThreadGDScript" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+[node name="AwaitProperty" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
 layout_mode = 2
 theme_type_variation = &"Caution"
 
-[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/ThreadGDScript"]
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/AwaitProperty"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/ThreadGDScript/Body"]
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/AwaitProperty/Body"]
 layout_mode = 2
 theme_type_variation = &"CautionTitle"
-text = "Use Godot’s main thread"
+text = "Await the property itself"
 
-[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/ThreadGDScript/Body"]
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/AwaitProperty/Body"]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "Create, control, and await tweens on the main thread. Keep callbacks synchronous; put code that awaits after `await handle.end`."
+Markdown = "Write `await movement.end`, which also works after the end. A cached `ended` signal doesn't replay, so a later wait on it never resumes. A detected failure ends with `Tweens.Reason.FAILED`, and `movement.error` holds the message."
 
-[node name="CardsGap" type="Control" parent="Scroll/Margin/Column/Content"]
+[node name="MoreGap" type="Control" parent="Scroll/Margin/Column/Content"]
 custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Cards" type="HBoxContainer" parent="Scroll/Margin/Column/Content"]
+[node name="More" type="Label" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_type_variation = &"SubsectionLabel"
+text = "Would you like to know more?"
 
-[node name="ShapeMotion" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
+[node name="Cards" type="Container" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
-Title = "Shape the motion"
-Description = "Compare easing curves."
-Path = "/easings/"
+script = ExtResource("15_cardgrid")
+MinColumnWidth = 300.0
 
-[node name="BuildAnimation" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
+[node name="Cancellation" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
 layout_mode = 2
-Title = "Build an animation"
+Title = "Cancellation"
+Description = "Stop tweens early and guard a sequence."
+Path = "/{lang}/cancellation/"
+
+[node name="Sequences" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
+layout_mode = 2
+Title = "Sequences"
 Description = "Link motions or play them together."
 Path = "/{lang}/sequences/"
 
-[node name="FindProperty" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
+[node name="Easings" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
 layout_mode = 2
-Title = "Find a property"
+Title = "Easings"
+Description = "Compare easing curves."
+Path = "/easings/"
+
+[node name="Catalog" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("12_linkcard")]
+layout_mode = 2
+Title = "Catalog"
 Description = "Choose what to animate next."
 Path = "/{lang}/nodes/"
 

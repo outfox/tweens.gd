@@ -6,7 +6,7 @@ using tweens.gd;
 namespace tutorial;
 
 /// <summary>
-/// "Reusable definitions": one hop definition started on five icons, each start a copy with its own delay. Height edits
+/// "Reuse a Definition": one hop definition started on five icons, each start a copy with its own delay. Height edits
 /// the definition and stagger the copies; each wave runs the lesson scene afresh, so it snapshots both when it starts.
 /// </summary>
 public partial class DefinitionsPage : Page

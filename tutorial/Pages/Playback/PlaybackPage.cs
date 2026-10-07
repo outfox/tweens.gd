@@ -4,7 +4,7 @@ using tweens.gd;
 namespace tutorial;
 
 /// <summary>
-/// "Control and completion": a remote for one playback handle. Each button calls the lesson's method of the same
+/// "Await Completion": a remote for one playback handle. Each button calls the lesson's method of the same
 /// name; the lesson reports how its await ended, and the code above flashes the line each action stands for.
 /// </summary>
 public partial class PlaybackPage : Page
@@ -82,12 +82,17 @@ public partial class PlaybackPage : Page
             """);
         GetNode<CodeView>("%Await").ShowCode(
             """
-            var movement = sprite.TweenPosition((400, 180), 0.6);
-            await movement.End;
+            var movement = sprite.TweenPosition((400, 180), 0.6, Out.Cubic);
+
+            if (await movement.End == Reason.Completed)
+                GD.Print("Arrived");
             """,
             """
-            var movement := Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
-            await movement.end
+            var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
+
+            var movement := Tweens.play(sprite, arrive)
+            if await movement.end == Tweens.Reason.COMPLETED:
+                print("Arrived")
             """);
         GetNode<CodeView>("%Callbacks").ShowCode(
             """
@@ -95,11 +100,13 @@ public partial class PlaybackPage : Page
             {
                 OnEnd = _ => GD.Print("Arrived"),
             };
+
             sprite.Tween(arrive);
             """,
             """
             var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) \
                 .with_on_end(func(_handle): print("Arrived"))
+
             Tweens.play(sprite, arrive)
             """);
         Load();

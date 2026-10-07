@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://Shell/CodeView.tscn" id="8_codeview"]
 [ext_resource type="PackedScene" path="res://Shell/Stage.tscn" id="9_stage"]
 [ext_resource type="PackedScene" path="res://Shell/StepFooter.tscn" id="10_stepfooter"]
+[ext_resource type="Script" path="res://Shell/CardGrid.cs" id="11_cardgrid"]
 
 [node name="SyntaxSugarPage" type="Control"]
 layout_mode = 3
@@ -64,29 +65,151 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "Okay, before this gets any more confusing..."
+Markdown = "No, you're not seeing things: there's more than one way to tween a ferret, and that's fully intentional. While developing tweens.gd, we set out to solve at least two, probably four, problems:"
 
-[node name="NotSeeingThings" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
+[node name="Needs" type="Container" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
-theme_type_variation = &"Note"
+script = ExtResource("11_cardgrid")
+Columns = 4
+MinColumnWidth = 200.0
+Gap = 12.0
 
-[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/NotSeeingThings"]
+[node name="FireOnce" type="PanelContainer" parent="Scroll/Margin/Column/Content/Needs"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_type_variation = &"LinkCard"
 
-[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/NotSeeingThings/Body"]
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Needs/FireOnce"]
 layout_mode = 2
-theme_type_variation = &"NoteTitle"
-text = "No, you're not seeing things."
+theme_override_constants/separation = 6
 
-[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/NotSeeingThings/Body"]
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Needs/FireOnce/Body"]
+layout_mode = 2
+theme_type_variation = &"StepTitle"
+text = "Fire once"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Column/Content/Needs/FireOnce/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"DoorHint"
+text = "A one-off that just does its thing."
+autowrap_mode = 3
+
+[node name="CSharp" type="Label" parent="Scroll/Margin/Column/Content/Needs/FireOnce/Body" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "sprite.TweenPosition(…)"
+
+[node name="GDScript" type="Label" parent="Scroll/Margin/Column/Content/Needs/FireOnce/Body" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "Tweens.play(self, …)"
+
+[node name="EachTime" type="PanelContainer" parent="Scroll/Margin/Column/Content/Needs"]
+layout_mode = 2
+theme_type_variation = &"LinkCard"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Needs/EachTime"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Needs/EachTime/Body"]
+layout_mode = 2
+theme_type_variation = &"StepTitle"
+text = "Set values each time"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Column/Content/Needs/EachTime/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"DoorHint"
+text = "Destinations or timings you want to specify each time."
+autowrap_mode = 3
+
+[node name="CSharp" type="Label" parent="Scroll/Margin/Column/Content/Needs/EachTime/Body" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "(to, 0.6, Out.Cubic)"
+
+[node name="GDScript" type="Label" parent="Scroll/Margin/Column/Content/Needs/EachTime/Body" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "(to, 0.6, Out.CUBIC)"
+
+[node name="Targets" type="PanelContainer" parent="Scroll/Margin/Column/Content/Needs"]
+layout_mode = 2
+theme_type_variation = &"LinkCard"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Needs/Targets"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Needs/Targets/Body"]
+layout_mode = 2
+theme_type_variation = &"StepTitle"
+text = "Several targets"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Column/Content/Needs/Targets/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"DoorHint"
+text = "The same motion, applied to several different nodes."
+autowrap_mode = 3
+
+[node name="CSharp" type="Label" parent="Scroll/Margin/Column/Content/Needs/Targets/Body" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "node.Tween(hop)"
+
+[node name="GDScript" type="Label" parent="Scroll/Margin/Column/Content/Needs/Targets/Body" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "Tweens.play(node, hop)"
+
+[node name="Variations" type="PanelContainer" parent="Scroll/Margin/Column/Content/Needs"]
+layout_mode = 2
+theme_type_variation = &"LinkCard"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Needs/Variations"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Needs/Variations/Body"]
+layout_mode = 2
+theme_type_variation = &"StepTitle"
+text = "Small variations"
+
+[node name="Text" type="Label" parent="Scroll/Margin/Column/Content/Needs/Variations/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"DoorHint"
+text = "Small variations for that extra juice."
+autowrap_mode = 3
+
+[node name="CSharp" type="Label" parent="Scroll/Margin/Column/Content/Needs/Variations/Body" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "hop with { Delay = 0.2 }"
+
+[node name="GDScript" type="Label" parent="Scroll/Margin/Column/Content/Needs/Variations/Body" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"ApiChip"
+text = "hop.with_delay(0.2)"
+
+[node name="Between" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 script = ExtResource("5_prose")
-Markdown = "There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.\n\nSome tweens may need...\n- to be fired off once, and just do their thing\n- destinations or timings you want to specify each time\n- to apply to several different targets (Nodes)\n- small variations for that extra juice"
+Markdown = "Between them, the Structured and Convenient syntaxes cover all four, and both take safe or sweet endpoints."
 
 [node name="Gap1" type="Control" parent="Scroll/Margin/Column/Content"]
 custom_minimum_size = Vector2(0, 12)

@@ -15,15 +15,15 @@ public static class Steps
 
     public static readonly Step[] All =
     [
-        new("Install", "res://Pages/Install/InstallPage.tscn",
+        new("Installation", "res://Pages/Install/InstallPage.tscn",
             "Add tweens.gd from the Godot Store or NuGet.",
             "Add tweens.gd from the Godot Store or GitHub Releases.",
             [], []),
-        new("Your first tween", "res://Pages/Quickstart/QuickstartPage.tscn",
+        new("Your First Tween", "res://Pages/Quickstart/QuickstartPage.tscn",
             "Send the Godot icon wherever you click.",
             "Send the Godot icon wherever you click.",
             ["this.TweenPosition()", "Out.Back"], ["Tweens.play()", "Tweens.position_2d()", "Out.BACK"]),
-        new("Definitions", "res://Pages/Definitions/DefinitionsPage.tscn",
+        new("Reuse a Definition", "res://Pages/Definitions/DefinitionsPage.tscn",
             "Define a motion once and start a copy on every node.",
             "Define a motion once and start a copy on every node.",
             ["Tweens.Position2DY", "with { }"], ["Tweens.position_2d_y()", "with_delay()"]),
@@ -31,9 +31,9 @@ public static class Steps
             "Choose structured definitions or convenient calls, with safe or sweet endpoints.",
             "Choose structured definitions or convenient calls, with safe or sweet endpoints.",
             ["Vector2", "(x, y)", "[x, y]"], ["Vector2", "[x, y]"]),
-        new("Control & completion", "res://Pages/Playback/PlaybackPage.tscn",
-            "Pause or cancel a tween, and react to how it ended.",
-            "Pause or cancel a tween, and react to how it ended.",
-            ["OnEnd", "CancelTweens()"], ["with_on_end()", "Tweens.cancel_tweens()"]),
+        new("Await Completion", "res://Pages/Playback/PlaybackPage.tscn",
+            "Await a tween's end, and pause or cancel it on the way.",
+            "Await a tween's end, and pause or cancel it on the way.",
+            ["await movement.End", "OnEnd"], ["await movement.end", "with_on_end()"]),
     ];
 }

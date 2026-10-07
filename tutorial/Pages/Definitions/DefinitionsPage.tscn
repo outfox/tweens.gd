@@ -75,7 +75,7 @@ text = "STEP 3 OF 5"
 [node name="Title" type="Label" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
-text = "Reusable definitions"
+text = "Reuse a Definition"
 
 [node name="Lead" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
