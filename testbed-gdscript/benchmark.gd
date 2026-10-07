@@ -8,9 +8,9 @@ const SAMPLES := 120
 
 static func run(owner: Node) -> String:
 	var results: Array = []
-	for workload in ["value", "position", "color", "resource"]:
-		for count in [100, 1000, 10000]:
-			for backend in ["gdscript", "godot_tween"]:
+	for workload: String in ["value", "position", "color", "resource"]:
+		for count: int in [100, 1000, 10000]:
+			for backend: String in ["gdscript", "godot_tween"]:
 				results.append(_measure(owner, workload, count, backend))
 	return JSON.stringify({
 		"engine": Engine.get_version_info(), "os": OS.get_name(), "cpu": OS.get_processor_name(),
@@ -40,19 +40,27 @@ static func _measure(owner: Node, workload: String, count: int, backend: String)
 	var builtin: Tween
 	var start := Time.get_ticks_usec()
 	if backend == "gdscript":
-		for target in targets: scheduler.add(target, definition)
+		for target in targets:
+			@warning_ignore("return_value_discarded")
+			scheduler.add(target, definition)
 	else:
 		builtin = owner.create_tween().set_parallel(true)
 		builtin.pause()
 		for target in targets:
-			if workload == "value": builtin.tween_method(_consume, 0.0, 1.0, 1000.0)
-			else: builtin.tween_property(target, definition.property, definition.to_value, 1000.0)
+			if workload == "value":
+				@warning_ignore("return_value_discarded")
+				builtin.tween_method(_consume, 0.0, 1.0, 1000.0)
+			else:
+				@warning_ignore("return_value_discarded")
+				builtin.tween_property(target, definition.property, definition.to_value, 1000.0)
 	var create_us := Time.get_ticks_usec() - start
 	var samples: Array[int] = []
 	for frame in range(WARMUP + SAMPLES):
 		start = Time.get_ticks_usec()
 		if backend == "gdscript": scheduler.update(1.0 / 60.0)
-		else: builtin.custom_step(1.0 / 60.0)
+		else:
+			@warning_ignore("return_value_discarded")
+			builtin.custom_step(1.0 / 60.0)
 		var elapsed := Time.get_ticks_usec() - start
 		if frame >= WARMUP: samples.append(elapsed)
 	samples.sort()
@@ -66,8 +74,8 @@ static func _measure(owner: Node, workload: String, count: int, backend: String)
 		"create_us": create_us, "dispose_us": dispose_us,
 		"median_update_us": samples[int(SAMPLES * 0.5)], "p95_update_us": samples[int(SAMPLES * 0.95) - 1]}
 
-static func _consume_value(_handle, _value) -> void:
+static func _consume_value(_handle: TweensGdHandle, _value: Variant) -> void:
 	pass
 
-static func _consume(_value) -> void:
+static func _consume(_value: Variant) -> void:
 	pass

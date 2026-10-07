@@ -53,15 +53,19 @@ internal static class Program
             Console.WriteLine($"GDScript restart probe: {result}");
             return result == 42 ? 0 : 1;
         }
-        foreach (var source in Directory.EnumerateFiles(ProjectSettings.GlobalizePath("res://addons/tweens_gd"), "*.gd"))
+        // Compile every script, so each failure prints its own parser diagnostics rather than only the first.
+        var root = ProjectSettings.GlobalizePath("res://");
+        var failed = 0;
+        foreach (var source in Directory.EnumerateFiles(root, "*.gd", SearchOption.AllDirectories))
         {
-            using var script = ResourceLoader.Load<GDScript>($"res://addons/tweens_gd/{Path.GetFileName(source)}");
-            if (script is null || !script.CanInstantiate())
-            {
-                Console.Error.WriteLine($"GDScript failed to compile: {source}");
-                return 1;
-            }
+            var path = "res://" + Path.GetRelativePath(root, source).Replace('\\', '/');
+            if (path.StartsWith("res://.godot/", StringComparison.Ordinal)) continue;
+            using var script = ResourceLoader.Load<GDScript>(path);
+            if (script is not null && script.CanInstantiate()) continue;
+            Console.Error.WriteLine($"GDScript failed to compile: {path}");
+            failed++;
         }
+        if (failed != 0) return 1;
         var tests = engine.Tree.CurrentScene;
         if (tests is null || !tests.HasMethod("run_tests"))
         {

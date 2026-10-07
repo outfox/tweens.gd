@@ -3,7 +3,8 @@
 extends RefCounted
 
 const T = preload("res://addons/tweens_gd/tweens.gd")
-var host: Node
+const Suite = preload("res://tests.gd")
+var host: Suite
 var factories := T.new()
 
 class Probe extends T.Adapter:
@@ -57,7 +58,7 @@ class Box extends RefCounted:
 			amount = value
 			if on_write.is_valid(): on_write.call()
 
-func run(owner: Node) -> bool:
+func run(owner: Suite) -> bool:
 	host = owner
 	_custom()
 	_curves()
@@ -70,7 +71,7 @@ func check(condition: bool, message: String) -> void:
 func _custom() -> void:
 	var scheduler := TweensGdScheduler.new()
 	var box := Box.new()
-	var definition := T.custom(func(t): return t.amount, func(t, v): t.amount = v)
+	var definition := T.custom(func(t: Box) -> float: return t.amount, func(t: Box, v: float) -> void: t.amount = v)
 	definition.to_value = 10.0
 	definition.duration = 1.0
 	definition.fill = T.Fill.NONE
@@ -79,7 +80,7 @@ func _custom() -> void:
 	host.near(box.amount, 6.0, "custom getter and setter interpolate")
 	scheduler.update(0.5)
 	check(h.is_settled and box.amount == 2.0, "custom adapter restores initial value")
-	var mixed := T.custom(func(t): return t.amount, func(t, v): t.amount = v)
+	var mixed := T.custom(func(t: Box) -> float: return t.amount, func(t: Box, v: float) -> void: t.amount = v)
 	mixed.from_value = 0
 	mixed.to_value = 1
 	mixed.duration = 1.0
@@ -88,7 +89,7 @@ func _custom() -> void:
 	check(typeof(floating.value) == TYPE_FLOAT and box.amount == 0.25, "custom float storage keeps fractional samples with integer endpoints")
 	floating.cancel()
 	box.amount = 2.0
-	var rounded := T.custom(func(t): return t.count, func(t, v): t.count = v)
+	var rounded := T.custom(func(t: Box) -> int: return t.count, func(t: Box, v: int) -> void: t.count = v)
 	rounded.from_value = 0.5
 	rounded.to_value = 3.5
 	rounded.duration = 1.0
@@ -96,14 +97,15 @@ func _custom() -> void:
 	scheduler.update(0.25)
 	check(typeof(integer.value) == TYPE_INT and box.count == 1, "custom integer storage rounds samples without truncating endpoints")
 	integer.cancel()
-	var custom := T.custom(func(t): return t.text, func(t, v): t.text = v,
-		func(a, b, t): return a if t < 0.5 else b,
-		func(v): return "" if v is String else "expected String")
+	var custom := T.custom(func(t: Box) -> String: return t.text, func(t: Box, v: String) -> void: t.text = v,
+		func(a: String, b: String, t: float) -> String: return a if t < 0.5 else b,
+		func(v: Variant) -> String: return "" if v is String else "expected String")
 	custom.to_value = "b"
 	custom.duration = 1.0
 	var text := scheduler.add(box, custom)
 	scheduler.update(0.75)
-	check(box.text == "b" and text.value == "b", "custom interpolation supports user-validated value types")
+	var interpolated: bool = box.text == "b" and text.value == "b"
+	check(interpolated, "custom interpolation supports user-validated value types")
 	text.cancel()
 	var adapter := Probe.new()
 	var source := TweensGdDefinition.new()
@@ -111,7 +113,7 @@ func _custom() -> void:
 	source.to_value = 8.0
 	source.duration = 1.0
 	source.fill = T.Fill.NONE
-	source.on_finally = func(_h): adapter.events.append("finally")
+	source.on_finally = func(_h: TweensGdHandle) -> void: adapter.events.append("finally")
 	var cloned := scheduler.add(box, source)
 	adapter.path = ^"missing"
 	scheduler.update(1.0)
@@ -138,14 +140,15 @@ func _custom() -> void:
 	adapter.fail_release = false
 	adapter.path = ^"observed"
 	var cancelled := scheduler.add(box, source)
-	box.on_write = func():
+	box.on_write = func() -> void:
 		cancelled.cancel()
 		check(not adapter.events.has("release") and not cancelled.is_settled, "adapter cleanup waits for active setter")
 	scheduler.update(0.5)
-	check(cancelled.is_settled and adapter.events.back() == "release", "reentrant setter cancellation cleans up")
+	var cleaned_up: bool = cancelled.is_settled and adapter.events.back() == "release"
+	check(cleaned_up, "reentrant setter cancellation cleans up")
 	box.on_write = Callable()
 	var stale := Node.new()
-	var stale_definition := T.custom(func(t): return t.amount, stale.set_meta.bind(&"sample").unbind(2))
+	var stale_definition := T.custom(func(t: Box) -> float: return t.amount, stale.set_meta.bind(&"sample").unbind(2))
 	stale_definition.to_value = 1.0
 	stale.free()
 	var stale_handle := scheduler.add(box, stale_definition)
@@ -166,20 +169,21 @@ func _custom() -> void:
 	copying.target_class = &"Node2D"
 	copying.to_value = 1.0
 	check(scheduler.add(doomed, copying).completion_reason == T.Reason.FAILED, "a copy() hook that frees the target is rejected")
-	for invalidation in ["target", "scheduler"]:
+	for invalidation: String in ["target", "scheduler"]:
 		var rejected_scheduler := TweensGdScheduler.new()
 		var target := Node.new()
 		host.add_child(target)
 		var rejecting := RejectingCopy.new()
 		rejecting.fail_release = true
-		rejecting.on_copy = func():
+		rejecting.on_copy = func() -> void:
 			if invalidation == "target": target.free()
 			else: rejected_scheduler.dispose()
 		var definition_copy := TweensGdDefinition.new()
 		definition_copy.adapter = rejecting
 		definition_copy.to_value = 1.0
 		var diagnostics: Array[String] = []
-		rejected_scheduler.error_reported.connect(func(message): diagnostics.append(message))
+		check(rejected_scheduler.error_reported.connect(func(message: String) -> void: diagnostics.append(message)) == OK,
+			invalidation + " error signal connects")
 		var copy_rejected := rejected_scheduler.add(target, definition_copy)
 		check(copy_rejected.is_settled and copy_rejected.completion_reason == T.Reason.FAILED, invalidation + " invalidation during copy rejects")
 		check(rejecting.events.is_empty(), invalidation + " rejection has no preparation or release hooks")
@@ -195,43 +199,50 @@ func _custom() -> void:
 func _create(class_name_: String) -> Object:
 	var concrete: Dictionary = {"CanvasItem": "Node2D", "Range": "ProgressBar", "SpriteBase3D": "Sprite3D",
 		"GeometryInstance3D": "MeshInstance3D", "Light2D": "PointLight2D", "Light3D": "OmniLight3D", "BaseMaterial3D": "StandardMaterial3D"}
-	var target: Object = ClassDB.instantiate(concrete.get(class_name_, class_name_))
+	var concrete_name: String = concrete.get(class_name_, class_name_)
+	var target: Object = ClassDB.instantiate(concrete_name)
 	if target is Resource: return target
 	if target is Control:
-		target.size = Vector2(100, 200)
-		target.offset_transform_enabled = true
-	if target is Range: target.step = 0
-	if target is Label or target is RichTextLabel: target.text = "a".repeat(100)
+		var control := target as Control
+		control.size = Vector2(100, 200)
+		control.offset_transform_enabled = true
+	if target is Range: (target as Range).step = 0
+	if target is Label or target is RichTextLabel: target.set(&"text", "a".repeat(100))
 	if target is Sprite2D:
-		target.hframes = 10
-		target.region_enabled = true
+		var sprite := target as Sprite2D
+		sprite.hframes = 10
+		sprite.region_enabled = true
 	if target is AnimatedSprite2D or target is AnimatedSprite3D:
-		target.sprite_frames = SpriteFrames.new()
-		for i in range(10): target.sprite_frames.add_frame(&"default", null)
+		var frames := SpriteFrames.new()
+		target.set(&"sprite_frames", frames)
+		for i in range(10): frames.add_frame(&"default", null)
 	if target is GPUParticles2D or target is GPUParticles3D or target is CPUParticles2D or target is CPUParticles3D:
-		target.emitting = false
+		target.set(&"emitting", false)
 	if target is PathFollow2D:
+		var follow := target as PathFollow2D
 		var path := Path2D.new()
 		path.curve = Curve2D.new()
 		path.curve.add_point(Vector2.ZERO)
 		path.curve.add_point(Vector2(100, 0))
 		host.add_child(path)
-		path.add_child(target)
-		target.loop = false
+		path.add_child(follow)
+		follow.loop = false
 	elif target is PathFollow3D:
+		var follow := target as PathFollow3D
 		var path := Path3D.new()
 		path.curve = Curve3D.new()
 		path.curve.add_point(Vector3.ZERO)
 		path.curve.add_point(Vector3(100, 0, 0))
 		host.add_child(path)
-		path.add_child(target)
-		target.loop = false
-	else: host.add_child(target)
+		path.add_child(follow)
+		follow.loop = false
+	else: host.add_child(target as Node)
 	if target is ScrollContainer:
-		target.get_h_scroll_bar().max_value = 1000
-		target.get_h_scroll_bar().page = 100
-		target.get_v_scroll_bar().max_value = 1000
-		target.get_v_scroll_bar().page = 100
+		var scroll := target as ScrollContainer
+		scroll.get_h_scroll_bar().max_value = 1000
+		scroll.get_h_scroll_bar().page = 100
+		scroll.get_v_scroll_bar().max_value = 1000
+		scroll.get_v_scroll_bar().page = 100
 	return target
 
 func _nudge(value: float) -> float:
@@ -239,28 +250,63 @@ func _nudge(value: float) -> float:
 
 func _perturb(value: Variant) -> Variant:
 	match typeof(value):
-		TYPE_FLOAT: return _nudge(value)
+		TYPE_FLOAT:
+			var number: float = value
+			return _nudge(number)
 		TYPE_INT: return value + 3
-		TYPE_VECTOR2: return Vector2(_nudge(value.x), _nudge(value.y))
-		TYPE_VECTOR3: return Vector3(_nudge(value.x), _nudge(value.y), _nudge(value.z))
-		TYPE_VECTOR4: return Vector4(_nudge(value.x), _nudge(value.y), _nudge(value.z), _nudge(value.w))
-		TYPE_COLOR: return Color(_nudge(value.r), _nudge(value.g), _nudge(value.b), _nudge(value.a))
-		TYPE_QUATERNION: return (value * Quaternion(Vector3.UP, 0.5)).normalized()
-		TYPE_RECT2: return Rect2(value.position + Vector2(0.5, 0.5), value.size + Vector2(0.5, 0.5))
+		TYPE_VECTOR2:
+			var v2: Vector2 = value
+			return Vector2(_nudge(v2.x), _nudge(v2.y))
+		TYPE_VECTOR3:
+			var v3: Vector3 = value
+			return Vector3(_nudge(v3.x), _nudge(v3.y), _nudge(v3.z))
+		TYPE_VECTOR4:
+			var v4: Vector4 = value
+			return Vector4(_nudge(v4.x), _nudge(v4.y), _nudge(v4.z), _nudge(v4.w))
+		TYPE_COLOR:
+			var color: Color = value
+			return Color(_nudge(color.r), _nudge(color.g), _nudge(color.b), _nudge(color.a))
+		TYPE_QUATERNION:
+			var rotation: Quaternion = value
+			return (rotation * Quaternion(Vector3.UP, 0.5)).normalized()
+		TYPE_RECT2:
+			var rect: Rect2 = value
+			return Rect2(rect.position + Vector2(0.5, 0.5), rect.size + Vector2(0.5, 0.5))
 	return null
 
 func _close(a: Variant, b: Variant) -> bool:
 	if typeof(a) != typeof(b): return false
 	match typeof(a):
-		TYPE_FLOAT: return absf(a - b) <= 0.001 * maxf(1.0, absf(a))
+		TYPE_FLOAT:
+			var x: float = a
+			var y: float = b
+			return absf(x - y) <= 0.001 * maxf(1.0, absf(x))
 		TYPE_INT: return a == b
-		TYPE_QUATERNION: return absf(a.normalized().dot(b.normalized())) >= 0.999
+		TYPE_QUATERNION:
+			var p: Quaternion = a
+			var q: Quaternion = b
+			return absf(p.normalized().dot(q.normalized())) >= 0.999
 		TYPE_RECT2: return _close(a.position, b.position) and _close(a.size, b.size)
-		TYPE_COLOR: return _close(Vector4(a.r, a.g, a.b, a.a), Vector4(b.r, b.g, b.b, b.a))
-		_: return (a - b).length() <= 0.001 * maxf(1.0, a.length())
+		TYPE_COLOR:
+			var c: Color = a
+			var d: Color = b
+			return _close(Vector4(c.r, c.g, c.b, c.a), Vector4(d.r, d.g, d.b, d.a))
+		TYPE_VECTOR2:
+			var u: Vector2 = a
+			var v: Vector2 = b
+			return (u - v).length() <= 0.001 * maxf(1.0, u.length())
+		TYPE_VECTOR3:
+			var u: Vector3 = a
+			var v: Vector3 = b
+			return (u - v).length() <= 0.001 * maxf(1.0, u.length())
+		_:
+			var u: Vector4 = a
+			var v: Vector4 = b
+			return (u - v).length() <= 0.001 * maxf(1.0, u.length())
 
-func _read(scheduler, target, factory: String) -> Variant:
-	var probe: TweensGdHandle = scheduler.add(target, factories.call(factory))
+func _read(scheduler: TweensGdScheduler, target: Object, factory: String) -> Variant:
+	var definition: TweensGdDefinition = factories.call(factory)
+	var probe: TweensGdHandle = scheduler.add(target, definition)
 	scheduler.update(0.0)
 	probe.cancel()
 	return probe.value
@@ -268,43 +314,47 @@ func _read(scheduler, target, factory: String) -> Variant:
 func _catalog() -> void:
 	var entries: Array = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/adapters.json"))
 	check(entries.size() == 331, "catalog covers every concrete C# property/value adapter")
-	for entry in entries:
+	for entry: Dictionary in entries:
+		var factory: String = entry.name
+		var target_class: String = entry.target
 		var scheduler := TweensGdScheduler.new()
-		var target := _create(entry.target)
-		var definition: TweensGdDefinition = factories.call(entry.name)
+		var target := _create(target_class)
+		var definition: TweensGdDefinition = factories.call(factory)
 		var probe := scheduler.add(target, definition)
 		scheduler.update(0.0)
-		check(probe.completion_reason != T.Reason.FAILED, entry.name + " starts: " + probe.error)
+		check(probe.completion_reason != T.Reason.FAILED, factory + " starts: " + probe.error)
 		if probe.completion_reason != T.Reason.FAILED:
 			var initial: Variant = probe.value
 			probe.cancel()
 			var first: Variant = _perturb(initial)
 			if entry.kind != "value":
-				scheduler.add(target, factories.call(entry.name, first))
+				var write: TweensGdDefinition = factories.call(factory, first)
+				@warning_ignore("return_value_discarded")
+				scheduler.add(target, write)
 				scheduler.update(0.0)
-				initial = _read(scheduler, target, entry.name)
-				check(_close(first, initial), entry.name + " writes its native property")
+				initial = _read(scheduler, target, factory)
+				check(_close(first, initial), factory + " writes its native property")
 			var to: Variant = _perturb(initial)
-			var move: TweensGdDefinition = factories.call(entry.name, to, 1.0)
+			var move: TweensGdDefinition = factories.call(factory, to, 1.0)
 			var playing := scheduler.add(target, move)
 			scheduler.update(0.5)
 			var expected: Variant = TweensGdInterpolation.interpolate(initial, to, 0.5, typeof(initial))
-			var actual: Variant = playing.value if entry.kind == "value" else _read(scheduler, target, entry.name)
-			check(_close(expected, actual), "%s midpoint: expected %s, got %s" % [entry.name, expected, actual])
+			var actual: Variant = playing.value if entry.kind == "value" else _read(scheduler, target, factory)
+			check(_close(expected, actual), "%s midpoint: expected %s, got %s" % [factory, expected, actual])
 			scheduler.update(0.5)
-			check(playing.completion_reason == T.Reason.COMPLETED and _close(playing.value, to), entry.name + " completes")
+			check(playing.completion_reason == T.Reason.COMPLETED and _close(playing.value, to), factory + " completes")
 			if entry.kind != "value":
 				move.to_value = initial
 				move.fill = T.Fill.NONE
 				var restore := scheduler.add(target, move)
 				scheduler.update(1.0)
-				check(restore.completion_reason == T.Reason.COMPLETED and _close(_read(scheduler, target, entry.name), to), entry.name + " restores captured property")
+				check(restore.completion_reason == T.Reason.COMPLETED and _close(_read(scheduler, target, factory), to), factory + " restores captured property")
 		scheduler.dispose()
-		if target is PathFollow2D or target is PathFollow3D: target.get_parent().free()
+		if target is PathFollow2D or target is PathFollow3D: (target as Node).get_parent().free()
 		elif target is Node: target.free()
 
 func _curves() -> void:
-	for bounds in [Vector2(-3, -1), Vector2(2, 5), Vector2(0, 1)]:
+	for bounds: Vector2 in [Vector2(-3, -1), Vector2(2, 5), Vector2(0, 1)]:
 		var curve := Curve.new()
 		curve.min_domain = minf(bounds.x, 0.0)
 		curve.max_domain = maxf(bounds.y, 1.0)
@@ -313,15 +363,18 @@ func _curves() -> void:
 		curve.min_value = -2.0
 		curve.max_value = 3.0
 		curve.bake_resolution = 37
+		@warning_ignore("return_value_discarded")
 		curve.add_point(Vector2(bounds.x, -1), 0.25, 0.5, Curve.TANGENT_FREE, Curve.TANGENT_LINEAR)
+		@warning_ignore("return_value_discarded")
 		curve.add_point(Vector2((bounds.x + bounds.y) / 2.0, 2), -0.25, 0.75)
+		@warning_ignore("return_value_discarded")
 		curve.add_point(Vector2(bounds.y, 1), 1.0, 0.0, Curve.TANGENT_LINEAR, Curve.TANGENT_FREE)
 		var definition := TweensGdDefinition.new()
 		definition.curve = curve
 		var copy := definition.copy().curve
 		check(copy != curve and copy.min_domain == curve.min_domain and copy.max_domain == curve.max_domain, "curve snapshot preserves non-default domains")
 		check(copy.min_value == -2.0 and copy.max_value == 3.0 and copy.bake_resolution == 37, "curve snapshot preserves range and bake resolution")
-		for fraction in [-0.5, 0.0, 0.25, 0.5, 0.75, 1.0, 1.5]:
+		for fraction: float in [-0.5, 0.0, 0.25, 0.5, 0.75, 1.0, 1.5]:
 			var x := lerpf(bounds.x, bounds.y, fraction)
 			host.near(copy.sample(x), curve.sample(x), "curve copy preserves mixed tangents and extrapolation")
 		curve.set_point_value(1, 0.0)
