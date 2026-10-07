@@ -1,0 +1,33 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <IsTrimmable>true</IsTrimmable>
+        <VerifyReferenceTrimCompatibility>true</VerifyReferenceTrimCompatibility>
+        <!-- TwoDogWebBoot.cs (web hosts) takes a function pointer to the source-generated plugins initializer;
+             harmless on desktop -->
+        <DefineConstants>$(DefineConstants);TWODOG_WEB_BOOT</DefineConstants>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- Keep nested host projects out of the default compile/content globs (their .gdignore hides them
+             from the Godot editor) -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);tutorial.2dog/**;tutorial.web/**;tutorial.tests/**</DefaultItemExcludes>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="2dog.godotsharp" Version="$(TwoDogVersion)" />
+        <PackageReference Include="2dog.godotsharp.editor" Version="$(TwoDogVersion)"
+                          Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Editor'" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Web bootstrap lives in the web host folder but must compile into THIS assembly: scripts resolve
+             from the assembly holding the source-generated plugins initializer. Inert without a web host -->
+        <Compile Include="tutorial.web/TwoDogWebBoot.cs"
+                 Condition="Exists('$(MSBuildThisFileDirectory)tutorial.web/TwoDogWebBoot.cs')"/>
+        <!-- The webxr host carries its own copy; compile it only when the plain
+             web host's is absent (one definition per assembly). -->
+        <Compile Include="tutorial.webxr/TwoDogWebBoot.cs"
+                 Condition="!Exists('$(MSBuildThisFileDirectory)tutorial.web/TwoDogWebBoot.cs') And Exists('$(MSBuildThisFileDirectory)tutorial.webxr/TwoDogWebBoot.cs')"/>
+        <!-- Same for the blazor host, last in line. -->
+        <Compile Include="tutorial.blazor/TwoDogWebBoot.cs"
+                 Condition="!Exists('$(MSBuildThisFileDirectory)tutorial.web/TwoDogWebBoot.cs') And !Exists('$(MSBuildThisFileDirectory)tutorial.webxr/TwoDogWebBoot.cs') And Exists('$(MSBuildThisFileDirectory)tutorial.blazor/TwoDogWebBoot.cs')"/>
+    </ItemGroup>
+</Project>

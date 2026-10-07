@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Editor" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="tutorial.2dog/tutorial.2dog.csproj" />
+  <Project Path="tutorial.csproj" />
+  <Project Path="tutorial.tests/tutorial.tests.csproj" />
+  <Project Path="tutorial.web/tutorial.web.csproj">
+    <BuildType Solution="Editor|*" Project="Debug" />
+    <Build Project="false" />
+  </Project>
+</Solution>
