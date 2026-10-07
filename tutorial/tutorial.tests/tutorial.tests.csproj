@@ -54,4 +54,12 @@
     <ItemGroup Condition="'$(Configuration)' == 'Editor'">
         <PackageReference Include="2dog.godotsharp.editor" Version="$(TwoDogVersion)" />
     </ItemGroup>
+
+    <!-- Godot fixtures own one engine per process; render checks run separately. -->
+    <ItemGroup Condition="'$(RenderingTests)' != 'true'">
+        <Compile Remove="RenderingTests.cs" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(RenderingTests)' == 'true'">
+        <Compile Remove="EditorTests.cs;LessonTests.cs;PageTests.cs;TutorialFixture.cs" />
+    </ItemGroup>
 </Project>

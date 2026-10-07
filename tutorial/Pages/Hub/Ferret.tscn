@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Pages/Hub/Ferret.cs" id="1_ferret"]
+[ext_resource type="Texture2D" path="res://Art/ferret.png" id="2_body"]
+[ext_resource type="Texture2D" path="res://Art/nametag.svg" id="3_tag"]
+
+[node name="Ferret" type="Control"]
+custom_minimum_size = Vector2(160, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 160.0
+offset_bottom = 440.0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_ferret")
+
+[node name="Body" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_body")
+expand_mode = 1
+stretch_mode = 5
+texture_filter = 4
+
+[node name="Nametag" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.316
+anchor_top = 0.275
+anchor_right = 0.7064
+anchor_bottom = 0.3743
+rotation = -0.10472
+pivot_offset_ratio = Vector2(0.5, 0)
+mouse_filter = 2
+texture = ExtResource("3_tag")
+expand_mode = 1
+stretch_mode = 5
+texture_filter = 4
+
+[node name="Shadow" type="TextureRect" parent="Nametag"]
+self_modulate = Color(0, 0, 0, 0.3)
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 1.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_tag")
+expand_mode = 1
+stretch_mode = 5
+texture_filter = 4

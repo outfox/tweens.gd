@@ -1,0 +1,672 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Pages/Quickstart/QuickstartPage.cs" id="1_quickstartpage"]
+[ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
+[ext_resource type="PackedScene" path="res://Lessons/Quickstart/ClickToMove.tscn" id="3_clicktomove"]
+[ext_resource type="PackedScene" path="res://Lessons/Quickstart/click_to_move.tscn" id="4_click_to_move"]
+[ext_resource type="Script" path="res://Shell/Prose.cs" id="5_prose"]
+[ext_resource type="PackedScene" path="res://Shell/Stage.tscn" id="6_stage"]
+[ext_resource type="Script" path="res://Pages/Quickstart/EaseChip.cs" id="7_easechip"]
+[ext_resource type="Script" path="res://Shell/PillButton.cs" id="8_pillbutton"]
+[ext_resource type="PackedScene" path="res://Shell/CodeView.tscn" id="9_codeview"]
+[ext_resource type="Script" path="res://Shell/Moves.cs" id="10_moves"]
+[ext_resource type="Script" path="res://Shell/Dot.cs" id="11_dot"]
+[ext_resource type="PackedScene" path="res://Shell/StepFooter.tscn" id="12_stepfooter"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Seconds"]
+bg_color = Color(0.549, 0.667, 1, 1)
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Pill"]
+bg_color = Color(0.102, 0.149, 0.208, 0.85)
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 5.0
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Pointer"]
+bg_color = Color(0.102, 0.149, 0.208, 0.85)
+content_margin_left = 6.0
+content_margin_top = 1.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_Ease"]
+resource_name = "Ease"
+
+[node name="QuickstartPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_quickstartpage")
+Step = 2
+CSharpScene = ExtResource("3_clicktomove")
+GDScriptScene = ExtResource("4_click_to_move")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 40
+
+[node name="Column" type="Container" parent="Scroll/Margin"]
+layout_mode = 2
+script = ExtResource("2_column")
+
+[node name="Content" type="VBoxContainer" parent="Scroll/Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Eyebrow" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"EyebrowLabel"
+text = "STEP 2 OF 5"
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Your first tween"
+
+[node name="Lead" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"LeadProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Click anywhere on the stage. The line of code at the bottom sends the Godot icon there."
+
+[node name="Widget" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"Widget"
+
+[node name="Layout" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Widget"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Top" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="StageFrame" type="MarginContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 0
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame" instance=ExtResource("6_stage")]
+unique_name_in_owner = true
+layout_mode = 2
+World = Vector2i(1152, 648)
+
+[node name="Chrome" type="Control" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Origin" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = 60.0
+offset_bottom = 24.0
+theme_type_variation = &"MonoLabel"
+text = "(0, 0)"
+
+[node name="Size" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -26.0
+offset_right = -10.0
+offset_bottom = -6.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_type_variation = &"MonoLabel"
+text = "1152 × 648"
+horizontal_alignment = 2
+
+[node name="Hint" type="PanelContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -72.0
+offset_top = -46.0
+offset_right = 72.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_Pill")
+
+[node name="Row" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome/Hint"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 7
+
+[node name="Key" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome/Hint/Row"]
+layout_mode = 2
+text = "●"
+theme_override_colors/font_color = Color(0.949, 0.737, 0.455, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="Text" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome/Hint/Row"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Click anywhere"
+theme_override_colors/font_color = Color(0.933, 0.957, 0.98, 1)
+
+[node name="Pointer" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame/Stage/Chrome"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+theme_type_variation = &"ValueLabel"
+text = "(864, 324)"
+theme_override_colors/font_color = Color(0.949, 0.737, 0.455, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_Pointer")
+
+[node name="Panel" type="MarginContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top"]
+custom_minimum_size = Vector2(262, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 0
+
+[node name="Fields" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Ease" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Legend" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Key" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Legend"]
+layout_mode = 2
+text = "●"
+theme_override_colors/font_color = Color(0.475, 0.871, 0.706, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="Name" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Legend"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Ease"
+
+[node name="Chips" type="HFlowContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="Linear" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Chips"]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"EaseChip"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_Ease")
+text = "Linear"
+script = ExtResource("7_easechip")
+Ease = 2097152
+metadata/leg = "Out"
+
+[node name="Cubic" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Chips"]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"EaseChip"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_Ease")
+text = "Cubic"
+script = ExtResource("7_easechip")
+Ease = 16777216
+metadata/leg = "Out"
+
+[node name="Back" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Chips"]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"EaseChip"
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_Ease")
+text = "Back"
+script = ExtResource("7_easechip")
+Ease = 8796093022208
+metadata/leg = "Out"
+
+[node name="Elastic" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Chips"]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"EaseChip"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_Ease")
+text = "Elastic"
+script = ExtResource("7_easechip")
+Ease = 140737488355328
+metadata/leg = "Out"
+
+[node name="Bounce" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Chips"]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"EaseChip"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_Ease")
+text = "Bounce"
+script = ExtResource("7_easechip")
+Ease = 36028797018963968
+metadata/leg = "Out"
+
+[node name="SmootherStep" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Ease/Chips"]
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"EaseChip"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_Ease")
+text = "Smootherstep"
+script = ExtResource("7_easechip")
+Ease = 8590983168
+metadata/leg = "InOut"
+
+[node name="Duration" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Legend" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Duration"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Key" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Duration/Legend"]
+layout_mode = 2
+text = "●"
+theme_override_colors/font_color = Color(0.549, 0.667, 1, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="Name" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Duration/Legend"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Duration"
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Duration/Legend"]
+layout_mode = 2
+theme_type_variation = &"ValueLabel"
+text = "1.2 s"
+unique_name_in_owner = true
+
+[node name="Seconds" type="HSlider" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Duration"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+min_value = 0.2
+max_value = 2.4
+step = 0.1
+value = 1.2
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_Seconds")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_Seconds")
+
+[node name="Push" type="Control" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Actions" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Spin" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"ToggleChip"
+toggle_mode = true
+text = "↻  Spin too"
+script = ExtResource("8_pillbutton")
+
+[node name="Replay" type="Button" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/Panel/Fields/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Replay"
+script = ExtResource("8_pillbutton")
+
+[node name="CallMargin" type="MarginContainer" parent="Scroll/Margin/Column/Content/Widget/Layout"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="Call" parent="Scroll/Margin/Column/Content/Widget/Layout/CallMargin" instance=ExtResource("9_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+unique_name_in_owner = true
+theme_type_variation = &"CodeInset"
+CSharpPath = ""
+GDScriptPath = ""
+ShowBar = false
+
+[node name="AfterCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The call takes an endpoint, a duration in seconds, and an ease. The stage has Godot's default window size, so each endpoint is the pixel your game would get. The faint copies are a tenth of the duration apart: they bunch up where the icon slows down."
+
+[node name="AfterGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The definition takes an endpoint, a duration in seconds, and an ease. The stage has Godot's default window size, so each endpoint is the pixel your game would get. The faint copies are a tenth of the duration apart: they bunch up where the icon slows down."
+
+[node name="SectionGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ScriptingIt" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Scripting it"
+
+[node name="Instructions" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Create a 2D scene and drag `icon.svg` from the FileSystem dock into it. Attach this script to the new `Icon` node, then run the scene and click around."
+
+[node name="Moves" type="Container" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+script = ExtResource("10_moves")
+
+[node name="Script" parent="Scroll/Margin/Column/Content/Moves" instance=ExtResource("9_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+unique_name_in_owner = true
+CSharpPath = "Quickstart/ClickToMove.cs"
+GDScriptPath = "Quickstart/click_to_move.gd"
+
+[node name="CSharpNotes" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Moves" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Note1" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note1"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_dot")
+Number = "1"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note1"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Catch the click.** Godot passes every mouse press that no UI control used to `_UnhandledInput`."
+
+[node name="Note2" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note2"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_dot")
+Number = "2"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note2"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Start the tween.** Move this node to the click in 1.2 seconds; `Out.Back` overshoots, then settles. The call returns at once, and the tween plays over the next frames. C# needs `this.` to call an extension method on the node itself."
+
+[node name="Note3" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note3"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_dot")
+Number = "3"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note3"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Tune it.** The panel above sets these properties, as the Inspector would. **Spin too** adds a second tween."
+
+[node name="GDScriptNotes" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Moves" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Note1" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note1"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_dot")
+Number = "1"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note1"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Catch the click.** Godot passes every mouse press that no UI control used to `_unhandled_input()`."
+
+[node name="Note2" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note2"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_dot")
+Number = "2"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note2"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Start the tween.** `Tweens.position_2d()` describes the move: to the click in 1.2 seconds, where `Out.BACK` overshoots, then settles. `Tweens.play()` starts it on this node and returns at once; the tween plays over the next frames."
+
+[node name="Note3" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note3"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("11_dot")
+Number = "3"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note3"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Tune it.** The panel above sets these variables, as the Inspector would. **Spin too** adds a second tween."
+
+[node name="SceneCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"SmallProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "This project's copy is `Lessons/Quickstart/ClickToMove.tscn`: open it and press F6."
+
+[node name="SceneGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"SmallProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "This project's copy is `Lessons/Quickstart/click_to_move.tscn`: open it and press F6."
+
+[node name="OthersCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Other properties work the same way, such as `TweenScale`, `TweenRotation`, and `TweenModulate`. The [catalog](/csharp/nodes/) lists them all."
+
+[node name="OthersGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Other properties work the same way, such as `Tweens.scale_2d()`, `Tweens.rotation_2d()`, and `Tweens.modulate()`. The [catalog](/gdscript/nodes/) lists them all."
+
+[node name="TryCSharp" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"Tip"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/TryCSharp"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/TryCSharp/Body"]
+layout_mode = 2
+theme_type_variation = &"NoteTitle"
+text = "Try it"
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/TryCSharp/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "- Pick **Bounce**, or drag the duration down to 0.4 s.\n- Turn on **Spin too**: `this.TweenRotation(Rotation + Mathf.Tau, 1.2, InOut.SmootherStep);` runs below the first tween. Tweens of different properties play together, so the icon spins on its way."
+
+[node name="TryGDScript" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"Tip"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/TryGDScript"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/TryGDScript/Body"]
+layout_mode = 2
+theme_type_variation = &"NoteTitle"
+text = "Try it"
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/TryGDScript/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "- Pick **Bounce**, or drag the duration down to 0.4 s.\n- Turn on **Spin too**: `Tweens.play(self, Tweens.rotation_2d(rotation + TAU, 1.2, InOut.SMOOTHER_STEP))` runs as a second line under the `if`. Tweens of different properties play together, so the icon spins on its way."
+
+[node name="FooterGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Footer" parent="Scroll/Margin/Column/Content" instance=ExtResource("12_stepfooter")]
+layout_mode = 2

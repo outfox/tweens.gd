@@ -1,0 +1,190 @@
+using Godot;
+
+namespace tutorial.Tests;
+
+/// <summary>The tutorial app and its pages, driven as a reader would, in both languages.</summary>
+[Collection<TutorialCollection>]
+public sealed class PageTests(TutorialFixture godot) : IDisposable
+{
+    private readonly Vector2I window = godot.Tree.Root.Size;
+
+    public void Dispose()
+    {
+        Languages.Set(Language.CSharp);
+        godot.Tree.Root.Size = window;
+    }
+
+    private Hosted<TutorialApp> App(Language language)
+    {
+        // The project's window size, so pages lay out as they do on screen and clicks land where they aim.
+        godot.Tree.Root.Size = new Vector2I(1280, 800);
+        Languages.Set(language);
+        var app = new Hosted<TutorialApp>(godot, GD.Load<PackedScene>("res://main.tscn").Instantiate<TutorialApp>());
+        godot.Frames(2);
+        return app;
+    }
+
+    private Page Open(TutorialApp app, int step)
+    {
+        app.Open(step);
+        godot.Seconds(0.6);
+        return app.CurrentPage!;
+    }
+
+    private static string LessonLanguage(Node lesson)
+        => lesson.FindChildren("*", owned: false).Prepend(lesson).Select(node => node.GetScript().Obj)
+            .OfType<Script>().Single() is GDScript ? "gd" : "cs";
+
+    [Theory]
+    [InlineData(Language.CSharp)]
+    [InlineData(Language.GDScript)]
+    public void EveryStepRunsItsLessonInTheChosenLanguageAndSwitches(Language language)
+    {
+        using var app = App(language);
+        for (var step = 1; step <= Steps.All.Length; step++)
+        {
+            var page = Open(app.Node, step);
+            Assert.Equal(step, page.Step);
+            foreach (var stage in page.FindChildren("*", owned: false).OfType<Stage>())
+            {
+                Assert.Equal(language == Language.GDScript ? "gd" : "cs", LessonLanguage(stage.Lesson!));
+                Assert.True(stage.Size.X >= 300 && stage.Size.Y >= 100, $"Stage of step {step} is {stage.Size}.");
+            }
+
+            // Switching language reloads every lesson as its twin, in place.
+            var other = language == Language.GDScript ? Language.CSharp : Language.GDScript;
+            Languages.Set(other);
+            godot.Seconds(0.5);
+            foreach (var stage in page.FindChildren("*", owned: false).OfType<Stage>())
+                Assert.Equal(other == Language.GDScript ? "gd" : "cs", LessonLanguage(stage.Lesson!));
+            Languages.Set(language);
+            godot.Seconds(0.2);
+        }
+        Open(app.Node, 0);
+        Assert.Equal(0, app.Node.CurrentStep);
+    }
+
+    [Theory]
+    [InlineData(Language.CSharp)]
+    [InlineData(Language.GDScript)]
+    public void ClickingTheStageSendsTheIconToThatPixel(Language language)
+    {
+        using var app = App(language);
+        var page = Open(app.Node, 2);
+        var stage = page.GetNode<Stage>("%Stage");
+        godot.Seconds(1.5);
+
+        // A real click through the window, so the stage's scaling maps it to the lesson's pixels.
+        var target = new Vector2(200, 500);
+        var screen = stage.GetGlobalRect().Position + target / stage.Zoom;
+        foreach (var pressed in new[] { true, false })
+            godot.Tree.Root.PushInput(new InputEventMouseButton
+                { ButtonIndex = MouseButton.Left, Pressed = pressed, Position = screen, GlobalPosition = screen });
+        godot.Seconds(1.4);
+        var icon = stage.Lesson!.GetNode<Node2D>("Icon");
+        Assert.True(icon.Position.DistanceTo(target) < 1.5f, $"Expected {target}, got {icon.Position}.");
+        Assert.Contains(language == Language.GDScript ? "[200, 500]" : "(200, 500)", page.GetNode<CodeView>("%Call").Text);
+
+        // An ease chip sets the script's property and replays the move from its start.
+        page.GetNode<Button>("%Chips/Bounce").ButtonPressed = true;
+        page.GetNode<Button>("%Chips/Bounce").EmitSignal(BaseButton.SignalName.Pressed);
+        godot.Frames(1);
+        icon = stage.Lesson!.GetNode<Node2D>("Icon");
+        Assert.Equal(1L << 55, icon.Get(Languages.Pick("Ease", "easing")).AsInt64());
+        godot.Seconds(1.4);
+        Assert.True(icon.Position.DistanceTo(target) < 1.5f);
+    }
+
+    [Theory]
+    [InlineData(Language.CSharp)]
+    [InlineData(Language.GDScript)]
+    public void EachWaveSnapshotsTheSettingsItStartsWith(Language language)
+    {
+        using var app = App(language);
+        var page = Open(app.Node, 3);
+        var stage = page.GetNode<Stage>("%Stage");
+        var first = stage.Lesson;
+        page.GetNode<HSlider>("%Height").Value = 160;
+        Assert.Same(first, stage.Lesson);
+        Assert.Equal(80, first!.Get(Languages.Member("Height")).AsDouble());
+        Assert.Contains(Languages.Pick("By = -160", "by_value = -160.0"), page.GetNode<CodeView>("%Widget").Text);
+
+        // The wave lasts 4 × 0.2 + 2 × 0.25 s and rests 0.8 s; the next one starts with the new height.
+        godot.Seconds(2.2);
+        Assert.NotSame(first, stage.Lesson);
+        Assert.Equal(160, stage.Lesson!.Get(Languages.Member("Height")).AsDouble());
+    }
+
+    [Theory]
+    [InlineData(Language.CSharp)]
+    [InlineData(Language.GDScript)]
+    public void TheRemoteControlsOneHandleAndShowsHowItEnded(Language language)
+    {
+        using var app = App(language);
+        var page = Open(app.Node, 5);
+        var state = page.GetNode<Label>("%State/Text");
+        void Press(string button) => page.GetNode<Button>($"%{button}").EmitSignal(BaseButton.SignalName.Pressed);
+
+        Assert.Equal("Ready", state.Text);
+        Press("Start");
+        godot.Seconds(0.5);
+        Assert.Equal("Playing", state.Text);
+        Press("Pause");
+        var sprite = page.GetNode<Stage>("%Stage").Lesson!.GetNode<Node2D>("Sprite");
+        var paused = sprite.Position;
+        godot.Seconds(0.5);
+        Assert.Equal(("Paused", paused), (state.Text, sprite.Position));
+        Press("Resume");
+        Press("Cancel");
+        godot.Frames(2);
+        Assert.Equal("Cancelled", state.Text);
+        Assert.Contains(Languages.Pick("// Reason.Cancelled", "# Tweens.Reason.CANCELLED"),
+            page.GetNode<CodeView>("%Remote").Text);
+
+        Press("Start");
+        godot.Seconds(2.6);
+        Assert.Equal("Completed", state.Text);
+        Assert.Equal("1.00", page.GetNode<Label>("%Progress").Text);
+    }
+
+    [Theory]
+    [InlineData(Language.CSharp)]
+    [InlineData(Language.GDScript)]
+    public void InstallCheckPassesForThisProject(Language language)
+    {
+        using var app = App(language);
+        var page = Open(app.Node, 1);
+        godot.Seconds(1);
+        var checks = page.GetNode<Container>("%Checks").GetChildren();
+        Assert.Equal(language == Language.GDScript ? 3 : 2, checks.Count);
+        Assert.All(checks, row => Assert.IsType<Dot>(row.GetChild(0)));
+    }
+
+    [Fact]
+    public void TheOverviewDoorsChooseTheLanguageAndTheStepsOpen()
+    {
+        using var app = App(Language.CSharp);
+        var hub = app.Node.CurrentPage!;
+        hub.GetNode<CardButton>("%GDScriptDoor").EmitSignal(CardButton.SignalName.Pressed);
+        godot.Seconds(1);
+        Assert.Equal(Language.GDScript, Languages.Current);
+        Assert.True(hub.GetNode<Control>("%Path").GetNode<Control>("GDScriptTrack").Visible);
+        Assert.False(hub.GetNode<Control>("%Path").GetNode<Control>("CSharpTrack").Visible);
+
+        hub.GetNode<Control>("%Path").GetNode<StepRow>("GDScriptTrack/Step3").EmitSignal(CardButton.SignalName.Pressed);
+        godot.Seconds(0.6);
+        Assert.Equal(3, app.Node.CurrentStep);
+    }
+
+    [Fact]
+    public void CodePanelsShowTheLessonFilesThatRun()
+    {
+        Assert.Contains("this.TweenPosition(click.Position, Seconds, Ease);", Sources.Read("Quickstart/ClickToMove.cs"));
+        Assert.Contains("hop.with_delay(i * stagger)", Sources.Read("Definitions/hop_wave.gd"));
+        var structured = Sources.Method(Sources.Read("SyntaxSugar/SyntaxSugar.cs"), "Structured", Language.CSharp);
+        Assert.Equal("var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);\n\nsprite.Tween(arrive with { Delay = 0.1 });",
+            structured);
+        var convenient = Sources.Method(Sources.Read("SyntaxSugar/syntax_sugar.gd"), "convenient_options", Language.GDScript);
+        Assert.Equal("Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())", convenient);
+    }
+}

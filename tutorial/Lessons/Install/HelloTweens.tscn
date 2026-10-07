@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://icon.svg" id="1_icon"]
+[ext_resource type="Script" path="res://Lessons/Install/HelloTweens.cs" id="2_script"]
+
+[node name="HelloTweens" type="Node2D"]
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(320, 180)
+texture = ExtResource("1_icon")
+script = ExtResource("2_script")

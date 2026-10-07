@@ -5,6 +5,11 @@
     </PropertyGroup>
     <Import Project="$(_TwoDogParentProps)" Condition="'$(_TwoDogParentProps)' != ''"/>
 
+    <!-- GDScript lessons need the addon's classes and native extension registered by an import. -->
+    <PropertyGroup>
+        <TwoDogRequireImport>true</TwoDogRequireImport>
+    </PropertyGroup>
+
     <!-- The package versions every host references. `2dog update` rewrites this block, `2dog doctor` checks it;
          the game project's Godot.NET.Sdk version stays in its csproj (SDK resolution runs before this file). -->
     <PropertyGroup Label="2dog">

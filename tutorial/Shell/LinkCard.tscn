@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Shell/LinkCard.cs" id="1_card"]
+
+[node name="LinkCard" type="PanelContainer"]
+size_flags_horizontal = 3
+theme_type_variation = &"LinkCard"
+script = ExtResource("1_card")
+Title = "Title"
+Description = "What the page explains."
+Normal = &"LinkCard"
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Copy" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Row/Copy"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StepTitle"
+text = "Title"
+
+[node name="Description" type="Label" parent="Row/Copy"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "What the page explains."
+autowrap_mode = 3
+
+[node name="Arrow" type="Label" parent="Row"]
+layout_mode = 2
+theme_type_variation = &"AccentLabel"
+theme_override_font_sizes/font_size = 20
+text = "↗"

@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Lessons/Definitions/hop_wave.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2_icon"]
+
+[node name="HopWave" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(128, 248)
+texture = ExtResource("2_icon")
+
+[node name="Icon2" type="Sprite2D" parent="."]
+position = Vector2(304, 248)
+texture = ExtResource("2_icon")
+
+[node name="Icon3" type="Sprite2D" parent="."]
+position = Vector2(480, 248)
+texture = ExtResource("2_icon")
+
+[node name="Icon4" type="Sprite2D" parent="."]
+position = Vector2(656, 248)
+texture = ExtResource("2_icon")
+
+[node name="Icon5" type="Sprite2D" parent="."]
+position = Vector2(832, 248)
+texture = ExtResource("2_icon")

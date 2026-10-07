@@ -1,6 +1,7 @@
 <Project Sdk="Godot.NET.Sdk/4.7.2">
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <IsTrimmable>true</IsTrimmable>
         <VerifyReferenceTrimCompatibility>true</VerifyReferenceTrimCompatibility>
@@ -12,6 +13,14 @@
              from the Godot editor) -->
         <DefaultItemExcludes>$(DefaultItemExcludes);tutorial.2dog/**;tutorial.web/**;tutorial.tests/**</DefaultItemExcludes>
     </PropertyGroup>
+    <ItemGroup>
+        <!-- C# lessons use the repository's library; GDScript lessons use the staged addon below. -->
+        <Compile Remove="addons/tweens_gd/csharp/**/*.cs" />
+        <ProjectReference Include="../csharp/tweens.gd.csproj" />
+        <!-- Code panels show the lesson files that run, including in trimmed and web exports. -->
+        <EmbeddedResource Include="Lessons/**/*.cs;Lessons/**/*.gd" LogicalName="Lessons/%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="Fonts/*.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="2dog.godotsharp" Version="$(TwoDogVersion)" />
         <PackageReference Include="2dog.godotsharp.editor" Version="$(TwoDogVersion)"
@@ -30,4 +39,15 @@
         <Compile Include="tutorial.blazor/TwoDogWebBoot.cs"
                  Condition="!Exists('$(MSBuildThisFileDirectory)tutorial.web/TwoDogWebBoot.cs') And !Exists('$(MSBuildThisFileDirectory)tutorial.webxr/TwoDogWebBoot.cs') And Exists('$(MSBuildThisFileDirectory)tutorial.blazor/TwoDogWebBoot.cs')"/>
     </ItemGroup>
+    <Target Name="StageGDScriptAddon" BeforeTargets="BeforeBuild">
+        <ItemGroup>
+            <TutorialAddon Include="../addons/tweens_gd/**/*" />
+            <!-- Mirror the addon, including its committed .uid files: files removed from the source must not linger.
+                 An open Godot editor runs the native library from a "~" copy it keeps locked; leave those alone. -->
+            <StagedTutorialAddon Include="addons/tweens_gd/**/*" Exclude="addons/tweens_gd/**/~*" />
+            <StaleTutorialAddon Include="@(StagedTutorialAddon)" Exclude="@(TutorialAddon->'addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
+        </ItemGroup>
+        <Delete Files="@(StaleTutorialAddon)" />
+        <Copy SourceFiles="@(TutorialAddon)" DestinationFiles="@(TutorialAddon->'addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    </Target>
 </Project>

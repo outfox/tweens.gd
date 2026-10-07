@@ -31,3 +31,6 @@ Thumbs.db
 # NuGet packages
 *.nupkg
 packages/
+
+# Canonical GDScript addon is staged by the project build.
+addons/tweens_gd/

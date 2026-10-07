@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Lessons/SyntaxSugar/syntax_sugar.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2_icon"]
+
+[node name="SyntaxSugar" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Left" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="Left"]
+position = Vector2(112, 180)
+texture = ExtResource("2_icon")
+
+[node name="Right" type="Node2D" parent="."]
+position = Vector2(576, 0)
+
+[node name="Sprite" type="Sprite2D" parent="Right"]
+position = Vector2(112, 180)
+texture = ExtResource("2_icon")

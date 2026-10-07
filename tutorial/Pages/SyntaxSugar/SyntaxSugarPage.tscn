@@ -1,0 +1,908 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Shell/Page.cs" id="1_page"]
+[ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
+[ext_resource type="PackedScene" path="res://Lessons/SyntaxSugar/SyntaxSugar.tscn" id="3_syntaxsugar"]
+[ext_resource type="PackedScene" path="res://Lessons/SyntaxSugar/syntax_sugar.tscn" id="4_syntax_sugar"]
+[ext_resource type="Script" path="res://Shell/Prose.cs" id="5_prose"]
+[ext_resource type="Script" path="res://Pages/SyntaxSugar/SugarSection.cs" id="6_sugarsection"]
+[ext_resource type="Script" path="res://Shell/Compare.cs" id="7_compare"]
+[ext_resource type="PackedScene" path="res://Shell/CodeView.tscn" id="8_codeview"]
+[ext_resource type="PackedScene" path="res://Shell/Stage.tscn" id="9_stage"]
+[ext_resource type="PackedScene" path="res://Shell/StepFooter.tscn" id="10_stepfooter"]
+
+[node name="SyntaxSugarPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_page")
+Step = 4
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 40
+
+[node name="Column" type="Container" parent="Scroll/Margin"]
+layout_mode = 2
+script = ExtResource("2_column")
+
+[node name="Content" type="VBoxContainer" parent="Scroll/Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Eyebrow" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"EyebrowLabel"
+text = "STEP 4 OF 5"
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Syntax & Sugar"
+
+[node name="Lead" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"LeadProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Okay, before this gets any more confusing..."
+
+[node name="NotSeeingThings" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"Note"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/NotSeeingThings"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/NotSeeingThings/Body"]
+layout_mode = 2
+theme_type_variation = &"NoteTitle"
+text = "No, you're not seeing things."
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/NotSeeingThings/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.\n\nSome tweens may need...\n- to be fired off once, and just do their thing\n- destinations or timings you want to specify each time\n- to apply to several different targets (Nodes)\n- small variations for that extra juice"
+
+[node name="Gap1" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Section1" type="VBoxContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+script = ExtResource("6_sugarsection")
+CSharpScene = ExtResource("3_syntaxsugar")
+GDScriptScene = ExtResource("4_syntax_sugar")
+LeftMethods = PackedStringArray("Structured", "FullyStructured")
+LeftLabels = PackedStringArray("Structured", "Fully Structured")
+RightMethods = PackedStringArray("Convenient")
+RightLabels = PackedStringArray("Convenient")
+ShowTargets = true
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Section1"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Definitions: Structured vs. Convenient"
+
+[node name="Compare" type="Container" parent="Scroll/Margin/Column/Content/Section1"]
+layout_mode = 2
+script = ExtResource("7_compare")
+
+[node name="Left" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section1/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1/Compare/Left" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The **Structured** syntax creates a strongly typed, immutable record struct definition to reuse, or to vary with the `with` keyword."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1/Compare/Left" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The **Structured** syntax creates a definition object to reuse, or to vary with `with_*()` copies."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section1/Compare/Left"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section1/Compare/Left/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section1/Compare/Left" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="Right" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section1/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The **Convenient** syntax defines and starts a local animation through an extension method, available on a wide variety of nodes and their descendants."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The **Convenient** syntax creates and starts a local animation in one `Tweens.play()` expression."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section1/Compare/Right"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section1/Compare/Right/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section1/Compare/Right" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="BelowCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "A single line is often all you need... until you don't, which is when the **Structured** syntax comes in super clutch. It's very useful once your game has a large number of tweens or you want to work on it with multiple devs."
+
+[node name="BelowGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "GDScript uses helpers rather than node extensions. Thus, it's always somewhat close to the Structured way of doing things. Just store the definition in a `var` and you're golden!"
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section1" instance=ExtResource("9_stage")]
+layout_mode = 2
+World = Vector2i(1152, 324)
+
+[node name="Chrome" type="Control" parent="Scroll/Margin/Column/Content/Section1/Stage"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LeftLane" type="Label" parent="Scroll/Margin/Column/Content/Section1/Stage/Chrome"]
+layout_mode = 0
+theme_type_variation = &"CaptionLabel"
+text = "Structured"
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="RightLane" type="Label" parent="Scroll/Margin/Column/Content/Section1/Stage/Chrome"]
+layout_mode = 1
+theme_type_variation = &"CaptionLabel"
+text = "Convenient"
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="After" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section1"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "These are alternative ways to start the same motion. Both return a handle when played."
+
+[node name="Gap2" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Section2" type="VBoxContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+script = ExtResource("6_sugarsection")
+CSharpScene = ExtResource("3_syntaxsugar")
+GDScriptScene = ExtResource("4_syntax_sugar")
+LeftMethods = PackedStringArray("SafeVector", "SafeTuple:csharp")
+LeftLabels = PackedStringArray("Explicit type", "Tuple")
+RightMethods = PackedStringArray("SweetArray")
+RightLabels = PackedStringArray("Array")
+ShowTargets = true
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Section2"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Values: Safe vs. Sweet"
+
+[node name="Compare" type="Container" parent="Scroll/Margin/Column/Content/Section2"]
+layout_mode = 2
+script = ExtResource("7_compare")
+
+[node name="Left" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section2/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/Compare/Left" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "A Godot value states the endpoint's type; a tuple leaves it out. The compiler checks both, down to the number of components and that each one is a number."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/Compare/Left" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "A Godot value states the endpoint's type explicitly."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section2/Compare/Left"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section2/Compare/Left/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section2/Compare/Left" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="Right" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section2/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Arrays are checked when the tween is created: a mismatched length throws `ArgumentException`."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "An array of components is shorter, and the start converts it to the expected type."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section2/Compare/Right"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section2/Compare/Right/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section2/Compare/Right" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="BelowCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Arrays read closest to GDScript, which is why the array syntax exists."
+
+[node name="BelowGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "An array of mismatched length rejects at start with `FAILED`."
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section2" instance=ExtResource("9_stage")]
+layout_mode = 2
+World = Vector2i(1152, 324)
+
+[node name="Chrome" type="Control" parent="Scroll/Margin/Column/Content/Section2/Stage"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LeftLane" type="Label" parent="Scroll/Margin/Column/Content/Section2/Stage/Chrome"]
+layout_mode = 0
+theme_type_variation = &"CaptionLabel"
+text = "Safe"
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="RightLane" type="Label" parent="Scroll/Margin/Column/Content/Section2/Stage/Chrome"]
+layout_mode = 1
+theme_type_variation = &"CaptionLabel"
+text = "Sweet"
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="AfterCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "All three move to the same position, and structured constructors accept the same forms."
+
+[node name="AfterGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Both move to the same position, and definition helpers accept the same forms. GDScript has no tuple syntax or C#'s compile-time endpoint checks."
+
+[node name="TableCSharp" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section2" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"Card"
+
+[node name="Grid" type="GridContainer" parent="Scroll/Margin/Column/Content/Section2/TableCSharp"]
+layout_mode = 2
+columns = 3
+theme_override_constants/h_separation = 28
+theme_override_constants/v_separation = 12
+
+[node name="Header0" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Animate"
+
+[node name="Header1" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Shorter endpoint"
+
+[node name="Header2" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Checked"
+
+[node name="Cell00" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "Uniform scale"
+
+[node name="Cell01" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "`sprite.TweenScale(1.2, 0.2)`"
+
+[node name="Cell02" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "By the compiler"
+
+[node name="Cell10" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "RGB color"
+
+[node name="Cell11" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "`label.TweenModulate((1, 0.5, 0), 0.3)`"
+
+[node name="Cell12" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "By the compiler"
+
+[node name="Cell20" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "Named or HTML color"
+
+[node name="Cell21" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "`label.TweenModulate(\"tomato\", 0.3)`"
+
+[node name="Cell22" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableCSharp/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "When the tween is created"
+
+[node name="TableGDScript" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section2" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"Card"
+
+[node name="Grid" type="GridContainer" parent="Scroll/Margin/Column/Content/Section2/TableGDScript"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 28
+theme_override_constants/v_separation = 12
+
+[node name="Header0" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Animate"
+
+[node name="Header1" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Sweet endpoint"
+
+[node name="Cell00" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "Uniform scale"
+
+[node name="Cell01" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "`Tweens.scale_2d([1.2, 1.2], 0.2)`"
+
+[node name="Cell10" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "RGB color"
+
+[node name="Cell11" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "`Tweens.modulate([1, 0.5, 0], 0.3)`"
+
+[node name="Cell20" type="Label" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+theme_type_variation = &"DoorHint"
+text = "Named or HTML color"
+
+[node name="Cell21" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2/TableGDScript/Grid"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "`Tweens.modulate(Color(\"tomato\"), 0.3)`"
+
+[node name="NotesCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Three color components imply alpha 1. Numeric endpoints need no `f` suffix."
+
+[node name="NotesGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section2" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Three color components imply alpha 1. Arrays also work with `with_from()`, `with_to()`, and `with_by()`. For `Tweens.value()`, supply real vectors or colors so their type is known."
+
+[node name="Gap3" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Section3" type="VBoxContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+script = ExtResource("6_sugarsection")
+CSharpScene = ExtResource("3_syntaxsugar")
+GDScriptScene = ExtResource("4_syntax_sugar")
+LeftMethods = PackedStringArray("Clean")
+LeftLabels = PackedStringArray("Clean")
+RightMethods = PackedStringArray("Quick", "QuickCall")
+RightLabels = PackedStringArray("Definition", "One call")
+ShowTargets = true
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Section3"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Easing and delay"
+
+[node name="IntroCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Arguments follow **endpoint, duration, ease, delay**. Times are seconds; C# also accepts `TimeSpan`."
+
+[node name="IntroGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Arguments follow **endpoint, duration, ease, delay**. Times are seconds."
+
+[node name="Compare" type="Container" parent="Scroll/Margin/Column/Content/Section3"]
+layout_mode = 2
+script = ExtResource("7_compare")
+
+[node name="Left" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section3/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3/Compare/Left" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "An initializer names every setting."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3/Compare/Left" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Fields name every setting."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section3/Compare/Left"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section3/Compare/Left/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section3/Compare/Left" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="Right" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section3/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Arguments take the same settings in order."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Helper arguments take the same settings in order."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section3/Compare/Right"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section3/Compare/Right/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section3/Compare/Right" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="BelowCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Constructors and convenient calls take the same arguments."
+
+[node name="BelowGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section3/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "A helper takes the same arguments on its own or inside `Tweens.play()`."
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section3" instance=ExtResource("9_stage")]
+layout_mode = 2
+World = Vector2i(1152, 324)
+
+[node name="Chrome" type="Control" parent="Scroll/Margin/Column/Content/Section3/Stage"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LeftLane" type="Label" parent="Scroll/Margin/Column/Content/Section3/Stage/Chrome"]
+layout_mode = 0
+theme_type_variation = &"CaptionLabel"
+text = "Clean: explicit & readable"
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="RightLane" type="Label" parent="Scroll/Margin/Column/Content/Section3/Stage/Chrome"]
+layout_mode = 1
+theme_type_variation = &"CaptionLabel"
+text = "Quick: convenient & concise"
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="Gap4" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Section4" type="VBoxContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+script = ExtResource("6_sugarsection")
+CSharpScene = ExtResource("3_syntaxsugar")
+GDScriptScene = ExtResource("4_syntax_sugar")
+LeftMethods = PackedStringArray("StructuredOptions")
+LeftLabels = PackedStringArray("Structured")
+RightMethods = PackedStringArray("ConvenientOptions")
+RightLabels = PackedStringArray("Convenient")
+ShowTargets = false
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Section4"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "More options"
+
+[node name="Compare" type="Container" parent="Scroll/Margin/Column/Content/Section4"]
+layout_mode = 2
+script = ExtResource("7_compare")
+
+[node name="Left" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section4/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section4/Compare/Left" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Set any other option in an initializer, and vary a copy with `with`."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section4/Compare/Left" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Set any other field on the definition. Definitions are mutable, so vary a copy with `with_*()` to leave the original unchanged."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section4/Compare/Left"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section4/Compare/Left/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section4/Compare/Left" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="Right" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Section4/Compare"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AboveCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section4/Compare/Right" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Set any other option in a configure callback, which receives the definition before it starts."
+
+[node name="AboveGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Section4/Compare/Right" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Chain `with_*()` copies on the helper inside the `Tweens.play()` call."
+
+[node name="Variants" type="PanelContainer" parent="Scroll/Margin/Column/Content/Section4/Compare/Right"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"LanguageSwitch"
+
+[node name="Choices" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Section4/Compare/Right/Variants"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Code" parent="Scroll/Margin/Column/Content/Section4/Compare/Right" instance=ExtResource("8_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
+GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
+Compact = true
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section4" instance=ExtResource("9_stage")]
+layout_mode = 2
+World = Vector2i(1152, 324)
+
+[node name="Chrome" type="Control" parent="Scroll/Margin/Column/Content/Section4/Stage"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LeftLane" type="Label" parent="Scroll/Margin/Column/Content/Section4/Stage/Chrome"]
+layout_mode = 0
+theme_type_variation = &"CaptionLabel"
+text = "Structured"
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="RightLane" type="Label" parent="Scroll/Margin/Column/Content/Section4/Stage/Chrome"]
+layout_mode = 1
+theme_type_variation = &"CaptionLabel"
+text = "Convenient"
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 212.0
+offset_bottom = 28.0
+
+[node name="SceneCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"SmallProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Every snippet above is a method of `Lessons/SyntaxSugar/SyntaxSugar.cs`, run on the sprites of `SyntaxSugar.tscn`."
+
+[node name="SceneGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"SmallProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Every snippet above is a function of `Lessons/SyntaxSugar/syntax_sugar.gd`, run on the sprites of `syntax_sugar.tscn`."
+
+[node name="FooterGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Footer" parent="Scroll/Margin/Column/Content" instance=ExtResource("10_stepfooter")]
+layout_mode = 2

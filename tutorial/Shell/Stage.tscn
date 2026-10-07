@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Shell/Stage.cs" id="1_stage"]
+[ext_resource type="Script" path="res://Shell/StageView.cs" id="2_view"]
+[ext_resource type="Script" path="res://Shell/StageGrid.cs" id="3_grid"]
+
+[node name="Stage" type="PanelContainer"]
+clip_children = 2
+custom_minimum_size = Vector2(0, 360)
+size_flags_horizontal = 3
+theme_type_variation = &"Stage"
+script = ExtResource("1_stage")
+
+[node name="View" type="SubViewportContainer" parent="."]
+layout_mode = 2
+stretch = true
+script = ExtResource("2_view")
+
+[node name="Viewport" type="SubViewport" parent="View"]
+unique_name_in_owner = true
+transparent_bg = true
+size = Vector2i(640, 360)
+size_2d_override = Vector2i(1152, 648)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="Grid" type="Node2D" parent="View/Viewport"]
+unique_name_in_owner = true
+script = ExtResource("3_grid")
+
+[node name="Underlay" type="Node2D" parent="View/Viewport"]
+unique_name_in_owner = true
+
+[node name="Overlay" type="Node2D" parent="View/Viewport"]
+unique_name_in_owner = true

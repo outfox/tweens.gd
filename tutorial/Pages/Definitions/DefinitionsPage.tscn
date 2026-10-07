@@ -1,0 +1,550 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Pages/Definitions/DefinitionsPage.cs" id="1_definitionspage"]
+[ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
+[ext_resource type="PackedScene" path="res://Lessons/Definitions/HopWave.tscn" id="3_hopwave"]
+[ext_resource type="PackedScene" path="res://Lessons/Definitions/hop_wave.tscn" id="4_hop_wave"]
+[ext_resource type="Script" path="res://Shell/Prose.cs" id="5_prose"]
+[ext_resource type="PackedScene" path="res://Shell/CodeView.tscn" id="6_codeview"]
+[ext_resource type="PackedScene" path="res://Shell/Stage.tscn" id="7_stage"]
+[ext_resource type="Script" path="res://Shell/Moves.cs" id="8_moves"]
+[ext_resource type="Script" path="res://Shell/Dot.cs" id="9_dot"]
+[ext_resource type="PackedScene" path="res://Shell/LinkCard.tscn" id="10_linkcard"]
+[ext_resource type="PackedScene" path="res://Shell/StepFooter.tscn" id="11_stepfooter"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Height"]
+bg_color = Color(0.949, 0.737, 0.455, 1)
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Stagger"]
+bg_color = Color(0.549, 0.667, 1, 1)
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="DefinitionsPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_definitionspage")
+Step = 3
+CSharpScene = ExtResource("3_hopwave")
+GDScriptScene = ExtResource("4_hop_wave")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 40
+
+[node name="Column" type="Container" parent="Scroll/Margin"]
+layout_mode = 2
+script = ExtResource("2_column")
+
+[node name="Content" type="VBoxContainer" parent="Scroll/Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Eyebrow" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"EyebrowLabel"
+text = "STEP 3 OF 5"
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Reusable definitions"
+
+[node name="Lead" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"LeadProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "A tween definition is a motion you can re-use on any compatible Node."
+
+[node name="Demo" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"Widget"
+
+[node name="Margin" type="MarginContainer" parent="Scroll/Margin/Column/Content/Demo"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="Layout" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Top" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Widget" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Top" instance=ExtResource("6_codeview")]
+layout_mode = 2
+size_flags_horizontal = 0
+unique_name_in_owner = true
+theme_type_variation = &"CodeInset"
+CSharpPath = ""
+GDScriptPath = ""
+ShowBar = false
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Top" instance=ExtResource("7_stage")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+World = Vector2i(960, 360)
+
+[node name="Controls" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="HeightField" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Legend" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/HeightField"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Key" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/HeightField/Legend"]
+layout_mode = 2
+text = "●"
+theme_override_colors/font_color = Color(0.949, 0.737, 0.455, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="Name" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/HeightField/Legend"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Height"
+theme_override_colors/font_color = Color(0.933, 0.957, 0.98, 1)
+
+[node name="Hint" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/HeightField/Legend"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "on the definition"
+size_flags_horizontal = 3
+
+[node name="HeightValue" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/HeightField/Legend"]
+layout_mode = 2
+theme_type_variation = &"ValueLabel"
+text = "80 px"
+unique_name_in_owner = true
+
+[node name="Height" type="HSlider" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/HeightField"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+min_value = 40.0
+max_value = 160.0
+step = 10.0
+value = 80.0
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_Height")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_Height")
+
+[node name="StaggerField" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Legend" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/StaggerField"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Key" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/StaggerField/Legend"]
+layout_mode = 2
+text = "●"
+theme_override_colors/font_color = Color(0.549, 0.667, 1, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="Name" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/StaggerField/Legend"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "Stagger"
+theme_override_colors/font_color = Color(0.933, 0.957, 0.98, 1)
+
+[node name="Hint" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/StaggerField/Legend"]
+layout_mode = 2
+theme_type_variation = &"FieldLabel"
+text = "on each copy"
+size_flags_horizontal = 3
+
+[node name="StaggerValue" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/StaggerField/Legend"]
+layout_mode = 2
+theme_type_variation = &"ValueLabel"
+text = "0.20 s"
+unique_name_in_owner = true
+
+[node name="Stagger" type="HSlider" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Controls/StaggerField"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+max_value = 0.5
+step = 0.02
+value = 0.2
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_Stagger")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_Stagger")
+
+[node name="Note" type="Label" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout"]
+layout_mode = 2
+theme_type_variation = &"CaptionLabel"
+text = "Changes apply to the next wave. Icons in the air keep the settings they started with."
+autowrap_mode = 3
+
+[node name="SectionGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ScriptingIt" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Scripting it"
+
+[node name="Instructions" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "In a 2D scene, drag `icon.svg` into the viewport a few times, side by side. Attach this script to the scene's root `Node2D` and run it."
+
+[node name="Moves" type="Container" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+script = ExtResource("8_moves")
+
+[node name="Script" parent="Scroll/Margin/Column/Content/Moves" instance=ExtResource("6_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+unique_name_in_owner = true
+CSharpPath = "Definitions/HopWave.cs"
+GDScriptPath = "Definitions/hop_wave.gd"
+
+[node name="CSharpNotes" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Moves" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Note1" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note1"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "1"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note1"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Define once.** `hop` lifts a node 80 pixels and drops it back; negative y is up in Godot. `By` is relative, so each icon hops from wherever it stands."
+
+[node name="Note2" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note2"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "2"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note2"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Find the nodes.** Every `Node2D` child of this node."
+
+[node name="Note3" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note3"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "3"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note3"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Start a copy on each.** `with` copies `hop` and changes only `Delay`, so `hop` itself keeps no delay. Each start returns its own handle."
+
+[node name="Note4" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note4"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "4"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/CSharpNotes/Note4"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Tune it.** The sliders above set `Height` and `Stagger`, as the Inspector would."
+
+[node name="GDScriptNotes" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Moves" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Note1" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note1"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "1"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note1"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Define once.** `hop` lifts a node 80 pixels and drops it back; negative y is up in Godot. `by_value` is relative, so each icon hops from wherever it stands."
+
+[node name="Note2" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note2"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "2"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note2"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Find the nodes.** Every child of this node."
+
+[node name="Note3" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note3"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "3"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note3"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Start a copy on each.** `with_delay()` copies `hop` with a new delay, so `hop` itself keeps none. Each start returns its own handle."
+
+[node name="Note4" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Number" type="Control" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note4"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("9_dot")
+Number = "4"
+Filled = true
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Moves/GDScriptNotes/Note4"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+size_flags_horizontal = 3
+script = ExtResource("5_prose")
+Markdown = "**Tune it.** The sliders above set `height` and `stagger`, as the Inspector would."
+
+[node name="SceneCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"SmallProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "This project's copy is `Lessons/Definitions/HopWave.tscn`: open it and press F6."
+
+[node name="SceneGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"SmallProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "This project's copy is `Lessons/Definitions/hop_wave.tscn`: open it and press F6."
+
+[node name="Snapshot" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Each start snapshots its definition. Change `hop` later, and only the starts after that follow; tweens already playing keep their settings."
+
+[node name="MoreGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="More" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"SubsectionLabel"
+text = "Would you like to know more?"
+
+[node name="Cards" type="HBoxContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Anatomy" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("10_linkcard")]
+layout_mode = 2
+Title = "Anatomy"
+Description = "Every field a definition can set."
+Path = "/{lang}/anatomy/"
+
+[node name="Variations" parent="Scroll/Margin/Column/Content/Cards" instance=ExtResource("10_linkcard")]
+layout_mode = 2
+Title = "Variations"
+Description = "Scale or shift a copy relative to the original."
+Path = "/{lang}/variations/"
+
+[node name="KeepCSharp" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"Tip"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/KeepCSharp"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/KeepCSharp/Body"]
+layout_mode = 2
+theme_type_variation = &"NoteTitle"
+text = "Keep reusable motion nearby"
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/KeepCSharp/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Store a shared definition in a `static readonly` field of a class you can use as your animation design system (or theme), shared across your project. The generated definitions are readonly record structs."
+
+[node name="KeepGDScript" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"Tip"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/KeepGDScript"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/KeepGDScript/Body"]
+layout_mode = 2
+theme_type_variation = &"NoteTitle"
+text = "Keep reusable motion nearby"
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/KeepGDScript/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Store a shared definition in a `static var` in a class you can use as your animation design system (or theme), shared across your project. Treat it as read-only and use `with_*()` copies for individual starts."
+
+[node name="FooterGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Footer" parent="Scroll/Margin/Column/Content" instance=ExtResource("11_stepfooter")]
+layout_mode = 2

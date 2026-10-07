@@ -1,0 +1,395 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Pages/Install/InstallPage.cs" id="1_installpage"]
+[ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
+[ext_resource type="PackedScene" path="res://Lessons/Install/HelloTweens.tscn" id="3_hellotweens"]
+[ext_resource type="PackedScene" path="res://Lessons/Install/hello_tweens.tscn" id="4_hello_tweens"]
+[ext_resource type="Script" path="res://Shell/Prose.cs" id="5_prose"]
+[ext_resource type="Script" path="res://Shell/CardButton.cs" id="6_cardbutton"]
+[ext_resource type="Texture2D" path="res://Art/godot-asset-store.svg" id="7_godot-asset-store"]
+[ext_resource type="Texture2D" path="res://Art/nuget.svg" id="8_nuget"]
+[ext_resource type="PackedScene" path="res://Shell/CodeView.tscn" id="9_codeview"]
+[ext_resource type="Texture2D" path="res://Art/github.svg" id="10_github"]
+[ext_resource type="PackedScene" path="res://Shell/Stage.tscn" id="11_stage"]
+[ext_resource type="Script" path="res://Shell/PillButton.cs" id="12_pillbutton"]
+[ext_resource type="PackedScene" path="res://Shell/StepFooter.tscn" id="13_stepfooter"]
+
+[node name="InstallPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_installpage")
+Step = 1
+CSharpScene = ExtResource("3_hellotweens")
+GDScriptScene = ExtResource("4_hello_tweens")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 40
+
+[node name="Column" type="Container" parent="Scroll/Margin"]
+layout_mode = 2
+script = ExtResource("2_column")
+
+[node name="Content" type="VBoxContainer" parent="Scroll/Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Eyebrow" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"EyebrowLabel"
+text = "STEP 1 OF 5"
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "Install"
+
+[node name="LeadCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"LeadProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Add tweens.gd to a Godot C# project. Choose the shared addon for both languages, or NuGet for C# alone."
+
+[node name="LeadGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"LeadProse"
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Add tweens.gd to a Godot 4.7.2 project. The addon includes the GDScript API and its native extension; no .NET runtime is needed."
+
+[node name="ChooseGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Choose" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Choose an install"
+
+[node name="Cards" type="HBoxContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Store" type="PanelContainer" parent="Scroll/Margin/Column/Content/Cards"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Install"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Cards/Store"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="StoreBanner" type="PanelContainer" parent="Scroll/Margin/Column/Content/Cards/Store/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+tooltip_text = "https://store.godotengine.org/asset/outfox/tweens/"
+theme_type_variation = &"Banner"
+script = ExtResource("6_cardbutton")
+Normal = &"Banner"
+metadata/url = "https://store.godotengine.org/asset/outfox/tweens/"
+
+[node name="Logo" type="TextureRect" parent="Scroll/Margin/Column/Content/Cards/Store/Body/StoreBanner"]
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("7_godot-asset-store")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Cards/Store/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Get the shared addon with support for both C# and GDScript."
+
+[node name="Steps" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Cards/Store/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "1. Download it from the [Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/).\n2. Unpack it into your project root, keeping the entire `addons/tweens_gd/` directory."
+
+[node name="NuGet" type="PanelContainer" parent="Scroll/Margin/Column/Content/Cards" groups=["csharp"]]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Install"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Cards/NuGet"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="NuGetBanner" type="PanelContainer" parent="Scroll/Margin/Column/Content/Cards/NuGet/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+tooltip_text = "https://www.nuget.org/packages/tweens.gd"
+theme_type_variation = &"Banner"
+script = ExtResource("6_cardbutton")
+Normal = &"Banner"
+metadata/url = "https://www.nuget.org/packages/tweens.gd"
+
+[node name="Logo" type="TextureRect" parent="Scroll/Margin/Column/Content/Cards/NuGet/Body/NuGetBanner"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("8_nuget")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Cards/NuGet/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Add the pure C# library through your package manager."
+
+[node name="Command" parent="Scroll/Margin/Column/Content/Cards/NuGet/Body" instance=ExtResource("9_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+unique_name_in_owner = true
+CSharpPath = ""
+GDScriptPath = ""
+Title = "PowerShell"
+
+[node name="GitHub" type="PanelContainer" parent="Scroll/Margin/Column/Content/Cards" groups=["gdscript"]]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Install"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Cards/GitHub"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="GitHubBanner" type="PanelContainer" parent="Scroll/Margin/Column/Content/Cards/GitHub/Body"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+tooltip_text = "https://github.com/outfox/tweens.gd/releases/latest"
+theme_type_variation = &"Banner"
+script = ExtResource("6_cardbutton")
+Normal = &"Banner"
+metadata/url = "https://github.com/outfox/tweens.gd/releases/latest"
+
+[node name="Logo" type="TextureRect" parent="Scroll/Margin/Column/Content/Cards/GitHub/Body/GitHubBanner"]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("10_github")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Cards/GitHub/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Get the addon ZIP from the [latest release](https://github.com/outfox/tweens.gd/releases/latest).\nChoose the packaged addon from the release assets, then unpack it into your project root."
+
+[node name="BuildGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Build" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Build your project"
+
+[node name="BuildCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Build your game with Godot 4.7.2 .NET. No plugin activation or autoload is required."
+
+[node name="OneSource" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+theme_type_variation = &"Caution"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/OneSource"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/OneSource/Body"]
+layout_mode = 2
+theme_type_variation = &"CautionTitle"
+text = "Choose one C# source"
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/OneSource/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Installing both NuGet and the addon's C# sources creates duplicate types. For a mixed setup, [exclude the addon sources](/advanced-development/#using-nuget-together-with-the-gdscript-addon)."
+
+[node name="BuildGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Keep the entire `addons/tweens_gd/` directory so its scripts, native libraries, and licenses stay together. The entry script should be at `res://addons/tweens_gd/tweens.gd`. If you choose the combined addon, its C# files can stay in a GDScript-only project."
+
+[node name="Web" type="PanelContainer" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+theme_type_variation = &"Tip"
+
+[node name="Body" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Web"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Scroll/Margin/Column/Content/Web/Body"]
+layout_mode = 2
+theme_type_variation = &"NoteTitle"
+text = "Exporting to the Web"
+
+[node name="Text" type="RichTextLabel" parent="Scroll/Margin/Column/Content/Web/Body"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "To export your game to the Web, turn on **Extensions Support** in the export preset."
+
+[node name="LicenseCSharp" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["csharp"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The library is free and open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE). See [compatibility](/compatibility/) for validated engines and exports."
+
+[node name="LicenseGDScript" type="RichTextLabel" parent="Scroll/Margin/Column/Content" groups=["gdscript"]]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "The addon is free and open source under the [MIT license](https://github.com/outfox/tweens.gd/blob/main/LICENSE). See [compatibility](/compatibility/) for validated platforms."
+
+[node name="CheckGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CheckTitle" type="Label" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"SectionLabel"
+text = "Check your install"
+
+[node name="CheckText" type="RichTextLabel" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+script = ExtResource("5_prose")
+Markdown = "Attach this script to any `Sprite2D` and run the scene. If the icon pops in, tweens.gd works. This project runs it right here, in the language you chose."
+
+[node name="Demo" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
+layout_mode = 2
+theme_type_variation = &"Widget"
+
+[node name="Margin" type="MarginContainer" parent="Scroll/Margin/Column/Content/Demo"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Layout" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout" instance=ExtResource("11_stage")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 0
+World = Vector2i(640, 360)
+
+[node name="Side" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="Script" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Side" instance=ExtResource("9_codeview")]
+layout_mode = 2
+size_flags_horizontal = 3
+unique_name_in_owner = true
+theme_type_variation = &"CodeInset"
+CSharpPath = "Install/HelloTweens.cs"
+GDScriptPath = "Install/hello_tweens.gd"
+
+[node name="Results" type="HBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Side"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Checks" type="VBoxContainer" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Side/Results"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Again" type="Button" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Side/Results"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+focus_mode = 0
+text = "Check again"
+script = ExtResource("12_pillbutton")
+
+[node name="FooterGap" type="Control" parent="Scroll/Margin/Column/Content"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Footer" parent="Scroll/Margin/Column/Content" instance=ExtResource("13_stepfooter")]
+layout_mode = 2
