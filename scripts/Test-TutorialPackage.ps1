@@ -20,8 +20,9 @@ for ($attempt = 1; $attempt -le 3; $attempt++) {
     }
     $failure = Get-Content -LiteralPath $log -Raw
     # Godot can crash during the initial GDExtension import. Retry only that native
-    # crash, never compilation failures, script errors or failing tutorial tests.
-    if ($attempt -eq 3 -or $failure -notmatch '2dog\.import\.dll.*exited with code (-1073741819|139)' -or $failure -match '(SCRIPT ERROR|Parse Error)') {
+    # crash, allowing wrapped log lines; never compilation failures, script errors
+    # or failing tutorial tests.
+    if ($attempt -eq 3 -or $failure -notmatch '(?s)2dog\.import\.dll.*?exited with code (-1073741819|139)' -or $failure -match '(SCRIPT ERROR|Parse Error)') {
         Get-Content -LiteralPath $log -Tail 40
         throw 'Tutorial project import failed.'
     }

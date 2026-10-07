@@ -5,7 +5,9 @@
 unity-tweens/
 plans/
 artifacts/
-docs-internal/
+# Keep historical internal docs local; publish only the authoritative release guide.
+/docs-internal/*
+!/docs-internal/RELEASING.md
 
 # GDExtension build outputs; libraries land in the ignored addons/tweens_gd/bin/
 .sconsign*.dblite

@@ -53,6 +53,10 @@ try {
     $tutorial = Join-Path $repository 'tutorial'
     foreach ($directory in 'Art', 'Fonts', 'Lessons', 'Pages', 'Shell', 'Themes') {
         foreach ($file in Get-ChildItem -LiteralPath (Join-Path $tutorial $directory) -File -Recurse) {
+            # Ignore OS metadata and editor backups while keeping unexpected project content an error.
+            if ($file.Name -in 'Thumbs.db', 'desktop.ini', '.DS_Store' -or $file.Name.StartsWith('._') -or $file.Name.EndsWith('~')) {
+                continue
+            }
             if ($file.Extension -notin '.cs', '.gd', '.uid', '.tscn', '.tres', '.png', '.svg', '.ttf', '.woff2', '.txt', '.import') {
                 throw "Unexpected tutorial file: $($file.FullName)"
             }
