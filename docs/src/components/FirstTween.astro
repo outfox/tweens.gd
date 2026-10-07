@@ -1,0 +1,637 @@
+---
+// The quickstart's tween: the Godot icon moves to each click in a 1152×648 stage, Godot's default window size.
+// The call under the stage shows each start's endpoint, duration, and ease, colored like the controls that set them.
+import { constant, type Lang } from '../scripts/lang';
+import { legEase, pairedLegEase, type EaseLeg } from '../scripts/motion';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+const gd = lang === 'gdscript';
+
+// Out legs suit arrivals; the paired smooth ease rests at both ends. Linear is the default, so its call omits the ease.
+const eases: { family: EaseLeg; label: string; leg?: 'Out' | 'InOut' }[] = [
+	{ family: 'Linear', label: 'Linear' },
+	{ family: 'Cubic', label: 'Cubic', leg: 'Out' },
+	{ family: 'Back', label: 'Back', leg: 'Out' },
+	{ family: 'Elastic', label: 'Elastic', leg: 'Out' },
+	{ family: 'Bounce', label: 'Bounce', leg: 'Out' },
+	{ family: 'SmootherStep', label: 'Smootherstep', leg: 'InOut' },
+];
+const sample = (family: EaseLeg, leg?: string) => (t: number) =>
+	leg === 'InOut' ? pairedLegEase(family, t) : leg ? legEase(family, 'Out', t) : t;
+// A 28×20 sparkline with room for the 30% default overshoot of Back and Elastic.
+const spark = (f: (t: number) => number) => {
+	let d = '';
+	for (let i = 0; i <= 48; i++) d += `${i ? 'L' : 'M'}${((i / 48) * 28).toFixed(2)} ${(17 - f(i / 48) * 14).toFixed(2)}`;
+	return d;
+};
+
+// Hand-highlighted code in the classes theme.css colors. Segments sit in a flex row, so no whitespace between them.
+const ty = (s: string) => `<span class="ty">${s}</span>`;
+const fn = (s: string) => `<span class="fn">${s}</span>`;
+const kw = (s: string) => `<span class="kw">${s}</span>`;
+const mb = (s: string) => `<span class="mb">${s}</span>`;
+const num = (s: string, data: string) => `<span class="num" ${data}>${s}</span>`;
+const ease = (leg: string, family: string) => `${ty(leg)}.${mb(gd ? constant(family) : family)}`;
+const play = (inner: string) => (gd ? `${ty('Tweens')}.${fn('play')}(${kw('self')}, ${inner})` : `${kw('this')}.${inner};`);
+
+interface Seg {
+	html: string;
+	role?: 'to' | 'seconds' | 'ease';
+	comma?: boolean;
+}
+const [open, close] = play('\0').split('\0');
+const move: Seg[] = [
+	{ html: open + (gd ? `${ty('Tweens')}.${fn('position_2d')}(` : `${fn('TweenPosition')}(`) },
+	{ html: gd ? `[${num('864', 'data-x')}, ${num('324', 'data-y')}]` : `(${num('864', 'data-x')}, ${num('324', 'data-y')})`, role: 'to' },
+	{ html: ', ' },
+	{ html: num('1.2', 'data-seconds'), role: 'seconds' },
+	{ html: ', ', comma: true },
+	{ html: ease('Out', 'Back'), role: 'ease' },
+	{ html: `)${close}` },
+];
+const spin = play(
+	gd
+		? `${ty('Tweens')}.${fn('rotation_2d')}(rotation + TAU, ${num('1.2', 'data-seconds')}, ${ease('InOut', 'SmootherStep')})`
+		: `${fn('TweenRotation')}(Rotation + ${ty('Mathf')}.${mb('Tau')}, ${num('1.2', 'data-seconds')}, ${ease('InOut', 'SmootherStep')})`,
+);
+---
+
+<div class="tw-widget ft not-content" data-first-tween data-code-lang={lang}>
+	<div class="layout">
+		<div
+			class="stage"
+			data-stage
+			role="button"
+			tabindex="0"
+			aria-label="Stage, 1152 by 648 pixels. Click to move the icon there, or press Enter for a random spot."
+		>
+			<span class="corner origin" aria-hidden="true">(0, 0)</span>
+			<span class="corner size" aria-hidden="true">1152 × 648</span>
+			<span class="ghosts" data-ghosts aria-hidden="true"></span>
+			<span class="target" data-target aria-hidden="true"></span>
+			<span class="icon" data-icon aria-hidden="true"></span>
+			<span class="pointer" data-pointer aria-hidden="true"></span>
+			<span class="hint" aria-hidden="true">
+				<i class="key to"></i><span class="by-pointer">Click anywhere</span><span class="by-touch">Tap anywhere</span><span class="by-key">Press Enter</span>
+			</span>
+		</div>
+
+		<pre class="code tw-code"><code class="line">{
+			move.map(({ html, role, comma }) => <span class="seg" data-role={role} data-ease-comma={comma} set:html={html} />)
+		}</code><code class="line" data-spin-line hidden><span class="seg" set:html={spin} /></code></pre>
+
+		<div class="panel">
+			<fieldset class="eases">
+				<legend><i class="key ease"></i>Ease</legend>
+				{
+					eases.map(({ family, label, leg }) => (
+						<label class="chip">
+							<input type="radio" name={`first-tween-ease-${lang}`} value={family} data-leg={leg ?? ''} checked={family === 'Back'} />
+							<svg viewBox="0 0 28 20" aria-hidden="true">
+								<path d={spark(sample(family, leg))} />
+							</svg>
+							{label}
+						</label>
+					))
+				}
+			</fieldset>
+			<label class="tw-field duration">
+				<span><i class="key seconds"></i>Duration <output data-seconds-out>1.2 s</output></span>
+				<input type="range" min="0.2" max="2.4" step="0.1" value="1.2" data-duration />
+			</label>
+			<div class="actions">
+				<label class="chip toggle">
+					<input type="checkbox" data-spin />
+					<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.5-3.6M13 2.5v2.5h-2.5" /></svg>
+					Spin too
+				</label>
+				<button type="button" class="tw-btn" data-replay>Replay</button>
+			</div>
+		</div>
+	</div>
+	<p class="sr-only" aria-live="polite" data-announce></p>
+</div>
+
+<script>
+	import { EASES, lerp, legEase, onceVisible, pairedLegEase, reducedMotion, type EaseLeg } from '../scripts/motion';
+	import { constant, langOf } from '../scripts/lang';
+
+	const WIDTH = 1152;
+	const HEIGHT = 648;
+	// Ghosts mark equal steps in time, so they bunch up where the icon is slow.
+	const STEPS = 10;
+
+	interface Pose {
+		x: number;
+		y: number;
+		r: number;
+	}
+	type Point = Omit<Pose, 'r'>;
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-first-tween]')) {
+		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+		const $$ = <T extends Element>(s: string) => [...root.querySelectorAll<T>(s)];
+		const stage = $<HTMLElement>('[data-stage]');
+		const icon = $<HTMLElement>('[data-icon]');
+		const target = $<HTMLElement>('[data-target]');
+		const ghosts = $<HTMLElement>('[data-ghosts]');
+		const pointer = $<HTMLElement>('[data-pointer]');
+		const duration = $<HTMLInputElement>('[data-duration]');
+		const spin = $<HTMLInputElement>('[data-spin]');
+		const announce = $<HTMLElement>('[data-announce]');
+		const gd = langOf(root) === 'gdscript';
+
+		let pose: Pose = { x: 288, y: 324, r: 0 };
+		let last: { from: Pose; to: Point } = { from: pose, to: { x: 864, y: 324 } };
+		let frame = 0;
+		let clicked = false;
+
+		const place = (el: HTMLElement, { x, y, r }: Partial<Pose>) => {
+			if (x !== undefined) el.style.setProperty('--x', x.toFixed(2));
+			if (y !== undefined) el.style.setProperty('--y', y.toFixed(2));
+			if (r !== undefined) el.style.setProperty('--r', r.toFixed(2));
+		};
+
+		const chosen = () => $<HTMLInputElement>('input[type="radio"]:checked');
+		const easeOf = () => {
+			const { value, dataset } = chosen();
+			const family = value as EaseLeg;
+			if (dataset.leg === 'InOut') return (t: number) => pairedLegEase(family, t);
+			if (dataset.leg === 'Out') return (t: number) => legEase(family, 'Out', t);
+			return (t: number) => t;
+		};
+		const easeName = () => {
+			const { value, dataset } = chosen();
+			return dataset.leg ? `${dataset.leg}.${gd ? constant(value) : value}` : 'no ease';
+		};
+
+		// Restarts a token's highlight, so each change flashes the argument it touched.
+		const flash = (role: string) => {
+			const el = $<HTMLElement>(`[data-role="${role}"]`);
+			el.classList.remove('is-new');
+			void el.offsetWidth;
+			el.classList.add('is-new');
+		};
+
+		const showCode = () => {
+			const { value, dataset } = chosen();
+			const seconds = Number(duration.value).toFixed(1);
+			$('[data-x]').textContent = String(last.to.x);
+			$('[data-y]').textContent = String(last.to.y);
+			for (const el of $$('[data-seconds]')) el.textContent = seconds;
+			$<HTMLOutputElement>('[data-seconds-out]').value = `${seconds} s`;
+			const ease = $<HTMLElement>('[data-role="ease"]');
+			ease.hidden = $<HTMLElement>('[data-ease-comma]').hidden = !dataset.leg;
+			if (dataset.leg)
+				ease.innerHTML = `<span class="ty">${dataset.leg}</span>.<span class="mb">${gd ? constant(value) : value}</span>`;
+			$<HTMLElement>('[data-spin-line]').hidden = !spin.checked;
+		};
+
+		const clearGhosts = () => {
+			const leaving = [...ghosts.children];
+			for (const ghost of leaving) ghost.classList.add('is-leaving');
+			setTimeout(() => leaving.forEach((ghost) => ghost.remove()), 400);
+		};
+		const addGhost = (at: Pose) => {
+			const ghost = document.createElement('span');
+			ghost.className = 'ghost';
+			place(ghost, at);
+			ghosts.append(ghost);
+		};
+
+		// A move starts from the icon's current pose, as a tween reads its start value when it begins.
+		const play = (to: Point) => {
+			cancelAnimationFrame(frame);
+			clearGhosts();
+			const from = pose;
+			const ease = easeOf();
+			const seconds = Number(duration.value);
+			const spinning = spin.checked;
+			last = { from, to };
+			showCode();
+			place(target, to);
+			target.classList.remove('is-on');
+			void target.offsetWidth;
+			target.classList.add('is-on');
+			const at = (p: number): Pose => ({
+				x: lerp(from.x, to.x, ease(p)),
+				y: lerp(from.y, to.y, ease(p)),
+				r: spinning ? from.r + 360 * EASES.SmootherStep(p) : from.r,
+			});
+			let dropped = 0;
+			const drop = (upTo: number) => {
+				for (; dropped <= Math.min(upTo, STEPS - 1); dropped++) addGhost(at(dropped / STEPS));
+			};
+			const set = (p: number) => {
+				pose = at(p);
+				place(icon, pose);
+			};
+			// Without motion, the ghosts alone show the ease.
+			if (reducedMotion()) {
+				drop(STEPS);
+				set(1);
+				return;
+			}
+			const start = performance.now();
+			const tick = (now: number) => {
+				const p = Math.min(1, (now - start) / 1000 / seconds);
+				drop(Math.floor(p * STEPS));
+				set(p);
+				if (p < 1) frame = requestAnimationFrame(tick);
+			};
+			frame = requestAnimationFrame(tick);
+		};
+
+		const replay = () => {
+			pose = last.from;
+			place(icon, pose);
+			play(last.to);
+		};
+
+		const moveTo = (to: Point) => {
+			if (!clicked) {
+				clicked = true;
+				root.classList.add('is-clicked');
+			}
+			play(to);
+			flash('to');
+			announce.textContent = `Moving to ${to.x}, ${to.y} in ${Number(duration.value).toFixed(1)} seconds, ${easeName()}.`;
+		};
+
+		// Clicks report whole CSS pixels and pointer moves fractions; truncating both makes the readout match the click.
+		const toStage = (event: MouseEvent): Point => {
+			const rect = stage.getBoundingClientRect();
+			const scale = (v: number, max: number) => Math.round(Math.min(max, Math.max(0, v * max)));
+			return {
+				x: scale((Math.trunc(event.clientX) - rect.left) / rect.width, WIDTH),
+				y: scale((Math.trunc(event.clientY) - rect.top) / rect.height, HEIGHT),
+			};
+		};
+
+		stage.addEventListener('click', (event) => moveTo(toStage(event)));
+		stage.addEventListener('keydown', (event) => {
+			if (event.key !== 'Enter' && event.key !== ' ') return;
+			event.preventDefault();
+			const spot = (max: number) => Math.round(96 + Math.random() * (max - 192));
+			moveTo({ x: spot(WIDTH), y: spot(HEIGHT) });
+		});
+		stage.addEventListener('pointermove', (event) => {
+			if (event.pointerType !== 'mouse') return;
+			const at = toStage(event);
+			place(pointer, at);
+			pointer.textContent = `(${at.x}, ${at.y})`;
+			pointer.classList.toggle('is-flipped', at.x > WIDTH - 200);
+			pointer.classList.add('is-on');
+		});
+		stage.addEventListener('pointerleave', () => pointer.classList.remove('is-on'));
+
+		for (const radio of $$<HTMLInputElement>('input[type="radio"]'))
+			radio.addEventListener('change', () => (replay(), flash('ease')));
+		duration.addEventListener('input', () => (showCode(), flash('seconds')));
+		duration.addEventListener('change', replay);
+		spin.addEventListener('change', replay);
+		$('[data-replay]').addEventListener('click', replay);
+
+		place(icon, pose);
+		showCode();
+		onceVisible(stage, () => setTimeout(() => clicked || replay(), 350), 0.6);
+	}
+</script>
+
+<style>
+	.ft {
+		--to: var(--tw-amber);
+		--seconds: var(--tw-blue);
+		--ease: var(--tw-mint);
+		container-type: inline-size;
+	}
+	/* Narrow: stage, call, controls. Wide: the controls sit beside the stage, like an inspector beside a viewport. */
+	.layout {
+		display: grid;
+		grid-template-areas: 'stage' 'code' 'panel';
+	}
+	@container (min-width: 44rem) {
+		.layout {
+			grid-template-areas: 'stage panel' 'code code';
+			grid-template-columns: minmax(0, 1fr) 16rem;
+		}
+		.panel {
+			border-left: 1px solid var(--tw-outline);
+		}
+		.actions {
+			margin-top: auto;
+		}
+		.code {
+			margin-bottom: 1.25rem;
+		}
+	}
+
+	/* A Godot viewport in miniature, with a 64-pixel grid. Children place themselves in its pixels with --x and --y. */
+	.stage {
+		grid-area: stage;
+		--px: calc(100cqw / 1152);
+		position: relative;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		container-type: inline-size;
+		background:
+			linear-gradient(to right, var(--tw-grid) 1px, transparent 1px) 0 0 / calc(100% / 18) 100%,
+			linear-gradient(to bottom, var(--tw-grid) 1px, transparent 1px) 0 0 / 100% calc(100% / 10.125),
+			var(--tw-bg);
+		cursor: crosshair;
+		outline: none;
+	}
+	.stage:focus-visible {
+		box-shadow: inset 0 0 0 2px var(--tw-accent);
+	}
+	.corner {
+		position: absolute;
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+		pointer-events: none;
+	}
+	.origin {
+		top: 0.4rem;
+		left: 0.5rem;
+	}
+	.size {
+		right: 0.5rem;
+		bottom: 0.4rem;
+	}
+	.icon,
+	.ghosts :global(.ghost),
+	.target,
+	.pointer {
+		position: absolute;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+	}
+	/* Sprite2D centers its texture on its position. */
+	.icon,
+	.ghosts :global(.ghost) {
+		width: calc(128 * var(--px));
+		aspect-ratio: 1;
+		translate: calc(var(--x) * var(--px) - 50%) calc(var(--y) * var(--px) - 50%);
+		rotate: calc(var(--r, 0) * 1deg);
+		background: url('/godot.svg') center / contain no-repeat;
+	}
+	.icon {
+		filter: drop-shadow(0 4px 8px rgb(3 8 14 / 0.4));
+	}
+	.ghosts :global(.ghost) {
+		opacity: 0.2;
+		transition: opacity 0.35s;
+	}
+	.ghosts :global(.ghost.is-leaving) {
+		opacity: 0;
+	}
+	/* The endpoint, in the color of the call's first argument. */
+	.target {
+		width: 1.6rem;
+		aspect-ratio: 1;
+		translate: calc(var(--x) * var(--px) - 50%) calc(var(--y) * var(--px) - 50%);
+		border: 2px solid var(--to);
+		border-radius: 50%;
+		background: radial-gradient(circle, var(--to) 2px, transparent 2.5px);
+		opacity: 0;
+	}
+	.target.is-on {
+		opacity: 1;
+		animation: pop 0.5s var(--ease-back-out);
+	}
+	@keyframes pop {
+		from {
+			scale: 0.2;
+		}
+	}
+	.pointer {
+		translate: calc(var(--x) * var(--px) + 0.9rem) calc(var(--y) * var(--px) + 0.9rem);
+		padding: 0.05rem 0.4rem;
+		border-radius: 0.3rem;
+		background: color-mix(in oklab, var(--tw-surface) 85%, transparent);
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-amber-ink);
+		white-space: nowrap;
+		opacity: 0;
+		transition: opacity 0.15s;
+	}
+	.pointer.is-flipped {
+		translate: calc(var(--x) * var(--px) - 100% - 0.6rem) calc(var(--y) * var(--px) + 0.9rem);
+	}
+	.pointer.is-on {
+		opacity: 1;
+	}
+	.hint {
+		position: absolute;
+		left: 50%;
+		bottom: 0.75rem;
+		translate: -50% 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.25rem 0.75rem;
+		border-radius: 999px;
+		background: color-mix(in oklab, var(--tw-surface) 85%, transparent);
+		color: var(--sl-color-white);
+		font-size: var(--sl-text-xs);
+		font-weight: 600;
+		pointer-events: none;
+		transition: opacity 0.4s;
+	}
+	.by-key,
+	.by-touch,
+	.stage:focus-visible :is(.by-pointer, .by-touch) {
+		display: none;
+	}
+	.stage:focus-visible .by-key {
+		display: inline;
+	}
+	@media (pointer: coarse) {
+		.by-pointer {
+			display: none;
+		}
+		.by-touch {
+			display: inline;
+		}
+	}
+	.is-clicked .hint {
+		opacity: 0;
+	}
+
+	/* Each control carries the color of the argument it sets. */
+	.key {
+		display: inline-block;
+		flex: none;
+		width: 0.6rem;
+		height: 0.6rem;
+		margin-inline-end: 0.45rem;
+		border-radius: 50%;
+	}
+	.hint .key {
+		margin: 0;
+	}
+	.key.to {
+		background: var(--to);
+	}
+	.key.seconds {
+		background: var(--seconds);
+	}
+	.key.ease {
+		background: var(--ease);
+	}
+
+	/* The call, each argument underlined in its control's color. */
+	.code {
+		grid-area: code;
+		margin: 1.25rem 1.25rem 0;
+		padding: 0.8rem 1rem;
+		border-radius: 0.8rem;
+		background: color-mix(in oklab, var(--tw-code-inset) 75%, transparent);
+		line-height: 2;
+		overflow-x: auto;
+	}
+	.line {
+		display: flex;
+		width: max-content;
+		padding: 0;
+		background: none;
+		font: inherit;
+		color: inherit;
+		white-space: pre;
+	}
+	.line[hidden],
+	.seg[hidden] {
+		display: none;
+	}
+	[data-role] {
+		border-radius: 0.25rem;
+		text-decoration: underline 2px var(--role);
+		text-decoration-skip-ink: none;
+		text-underline-offset: 0.4em;
+	}
+	[data-role='to'] {
+		--role: var(--to);
+	}
+	[data-role='seconds'] {
+		--role: var(--seconds);
+	}
+	[data-role='ease'] {
+		--role: var(--ease);
+	}
+	[data-role].is-new {
+		animation: hit 1s var(--ease-expo-out);
+	}
+	@keyframes hit {
+		from {
+			background: color-mix(in oklab, var(--role) 35%, transparent);
+		}
+	}
+
+	.panel {
+		grid-area: panel;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+		padding: 1.1rem 1.25rem 1.25rem;
+	}
+	.eases {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	legend,
+	.duration > span {
+		display: flex;
+		align-items: center;
+		font-size: var(--sl-text-xs);
+		color: var(--tw-muted);
+	}
+	legend {
+		float: left;
+		width: 100%;
+		margin-bottom: 0.3rem;
+	}
+	.duration output {
+		margin-inline-start: auto;
+	}
+	.duration input {
+		accent-color: var(--seconds);
+	}
+	.chip {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2rem;
+		padding: 0.2rem 0.75rem 0.2rem 0.5rem;
+		border: 1px solid transparent;
+		border-radius: 999px;
+		background: var(--tw-raised);
+		color: var(--sl-color-white);
+		font-size: var(--sl-text-xs);
+		font-weight: 600;
+		cursor: pointer;
+		transition:
+			background-color 0.2s,
+			border-color 0.2s,
+			translate 0.35s var(--ease-back-out);
+	}
+	.chip:hover {
+		background: var(--tw-raised-hover);
+		translate: 0 -2px;
+	}
+	.chip:has(:focus-visible) {
+		outline: 2px solid var(--tw-accent);
+		outline-offset: 2px;
+	}
+	.chip input {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+	.chip svg {
+		width: 1.4rem;
+		height: 1rem;
+		overflow: visible;
+		fill: none;
+		stroke: var(--tw-muted);
+		stroke-width: 1.6;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.chip:has(:checked) {
+		border-color: var(--ease);
+		background: color-mix(in oklab, var(--ease) 20%, var(--tw-raised));
+	}
+	.chip:has(:checked) svg {
+		stroke: var(--ease);
+	}
+	.toggle svg {
+		width: 1rem;
+	}
+	.toggle:has(:checked) {
+		border-color: var(--tw-muted);
+		background: var(--tw-raised-hover);
+	}
+	.toggle:has(:checked) svg {
+		stroke: var(--sl-color-white);
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	@media (pointer: coarse) {
+		.chip {
+			min-height: 2.75rem;
+		}
+	}
+</style>

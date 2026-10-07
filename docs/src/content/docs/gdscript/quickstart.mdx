@@ -1,53 +1,42 @@
 ---
 title: Your first tween
-description: Make a sprite glide to the right, then fade out with a short GDScript script.
+description: Send the Godot icon wherever you click, with one line of GDScript.
 ---
 
+import FirstTween from '../../../components/FirstTween.astro';
 import Moves from '../../../components/Moves.astro';
-import { Aside, Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
-Make a sprite glide 240 pixels to the right, then fade out. You'll write one
-short script and run it in a scene.
+A tween changes a property over time. Click anywhere on the stage, and one line of code sends the Godot icon there.
 
-<Steps>
+<FirstTween lang="gdscript" />
 
-1. [Install the addon](/gdscript/installation/) in your Godot project.
+The definition takes an endpoint, a duration in seconds, and an ease. The stage has Godot's default window size, so each endpoint is the pixel your game would get. The faint copies are a tenth of the duration apart: they bunch up where the icon slows down.
 
-2. Create a scene with a `Sprite2D`, give it a texture, and place it where there
-   is room to move right in the viewport.
+## Write the script
 
-3. Attach the script below as `move_and_fade.gd`, then play the scene.
-
-</Steps>
-
-## Move, then fade
+Create a 2D scene and drag `icon.svg` from the FileSystem dock into it. Attach this script to the new `Icon` node, then run the scene and click around.
 
 <Moves>
 
-```gdscript title="move_and_fade.gd" {"1":4-5} {"2":7} {"3":8} {"4":10}
+```gdscript title="click_to_move.gd" {"1":4} {"2":5}
 extends Sprite2D
 
-func _ready() -> void:
-	var target := position + Vector2(240, 0)
-	var arrive := Tweens.position_2d(target, 0.6, Out.CUBIC)
-
-	var movement := Tweens.play(self, arrive)
-	await movement.end
-
-	await Tweens.play(self, Tweens.modulate_alpha(0.0, 0.3)).end
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		Tweens.play(self, Tweens.position_2d(event.position, 1.2, Out.BACK))
 ```
 
-1. **Define.** Move 240 pixels right in 0.6 seconds; `Out.CUBIC` slows into place.
-2. **Play.** Start on this sprite and keep the returned handle.
-3. **Wait.** Continue when movement ends.
-4. **Fade.** Animate opacity to zero over 0.3 seconds.
+1. **Catch the click.** Godot passes every mouse press that no UI control used to `_unhandled_input()`.
+2. **Start the tween.** `Tweens.position_2d()` describes the move: to the click in 1.2 seconds, where `Out.BACK` overshoots, then settles. `Tweens.play()` starts it on this node and returns at once; the tween plays over the next frames.
 
 </Moves>
 
+Other properties work the same way, such as `Tweens.scale_2d()`, `Tweens.rotation_2d()`, and `Tweens.modulate()`. The [catalog](/gdscript/nodes/) lists them all.
+
 <Aside type="tip" title="Try it">
 
-Change `0.6` to `1.2` to make the move take twice as long. Swap `Out.CUBIC` for `InOut.SINE` to soften both ends.
+- Swap `Out.BACK` for `Out.BOUNCE`, or `1.2` for `0.4`.
+- Add `Tweens.play(self, Tweens.rotation_2d(rotation + TAU, 1.2, InOut.SMOOTHER_STEP))` as a second line under the `if`. Tweens of different properties play together, so the icon spins on its way. Turn on **Spin too** above to preview it.
 
 </Aside>
-
-Next, [choose the syntax that reads best to you](/gdscript/syntax-sugar/).
