@@ -64,7 +64,7 @@ static func _measure(owner: Node, workload: String, count: int, backend: String)
 		if target is Node: target.free()
 	return {"workload": workload, "count": count, "backend": backend,
 		"create_us": create_us, "dispose_us": dispose_us,
-		"median_update_us": samples[SAMPLES / 2], "p95_update_us": samples[int(SAMPLES * 0.95) - 1]}
+		"median_update_us": samples[int(SAMPLES * 0.5)], "p95_update_us": samples[int(SAMPLES * 0.95) - 1]}
 
 static func _consume_value(_handle, _value) -> void:
 	pass

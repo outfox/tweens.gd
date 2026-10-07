@@ -134,11 +134,14 @@ func _rendering() -> void:
 	for spatial in [false, true]:
 		var code := "shader_type spatial; instance uniform float pulse = 0.25;" if spatial else "shader_type canvas_item; instance uniform float pulse = 0.25;"
 		var instance_material := material(code)
-		var node: Node = MeshInstance3D.new() if spatial else ColorRect.new()
+		var node: Node
 		if spatial:
+			node = MeshInstance3D.new()
 			node.mesh = BoxMesh.new()
 			node.material_override = instance_material
-		else: node.material = instance_material
+		else:
+			node = ColorRect.new()
+			node.material = instance_material
 		host.add_child(node)
 		await host.get_tree().process_frame
 		var instance_definition := T.instance_shader_parameter(&"pulse", 0.75, 1.0)

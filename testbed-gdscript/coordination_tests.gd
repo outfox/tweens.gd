@@ -42,7 +42,9 @@ func check_end() -> void:
 	for grouped in [false, true]:
 		var handle := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 0.5))
 		var after: Array = []
-		continue_end(T.group([handle]) if grouped else handle, scheduler, after)
+		var source: Object = handle
+		if grouped: source = T.group([handle])
+		continue_end(source, scheduler, after)
 		scheduler.update(0.75)
 		scheduler.update(0.0)
 		host.check(after.size() == 1, "end continues a sequence")

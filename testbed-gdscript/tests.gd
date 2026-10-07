@@ -55,7 +55,8 @@ class DynamicProbe extends RefCounted:
 		if listed: properties.append({"name": "dynamic", "type": TYPE_FLOAT, "usage": PROPERTY_USAGE_DEFAULT})
 		return properties
 	func _get(property: StringName) -> Variant:
-		return 1.0 if property == &"dynamic" else null
+		if property == &"dynamic": return 1.0
+		return null
 
 func _ready() -> void:
 	if OS.has_feature("tweens_test_export") or "--run-tests" in OS.get_cmdline_user_args(): _run_standalone.call_deferred()
@@ -125,10 +126,10 @@ func _conformance() -> bool:
 			if sample.has("cycle"): near(clock.cycle, sample.cycle, test.name + " cycle")
 	for sample in data.easing:
 		near(T.Easing.evaluate(int(sample.ease), sample.t), sample.value, "ease %d" % sample.ease)
-	for ease in T.Ease.values():
-		near(T.Easing.evaluate(ease, 0.0), 0.0, "ease start")
-		near(T.Easing.evaluate(ease, 1.0), 1.0, "ease end")
-		check(is_nan(T.Easing.evaluate(ease, NAN)), "ease %d keeps NaN progress detectable" % ease)
+	for legacy in T.Ease.values():
+		near(T.Easing.evaluate(legacy, 0.0), 0.0, "ease start")
+		near(T.Easing.evaluate(legacy, 1.0), 1.0, "ease end")
+		check(is_nan(T.Easing.evaluate(legacy, NAN)), "ease %d keeps NaN progress detectable" % legacy)
 	_composed_easing()
 	var infinite := T.value(0.0, 1.0, 1.0)
 	infinite.repeats = T.INFINITE
@@ -159,11 +160,11 @@ func _composed_easing() -> void:
 		var entry: int = entries[entry_name]
 		for exit_name in exits:
 			var exit: int = exits[exit_name]
-			var combined: int = entry | exit
-			near(T.Easing.evaluate(combined, -1.0), 0.0, "composed start")
-			near(T.Easing.evaluate(combined, 2.0), 1.0, "composed end")
-			check(is_nan(T.Easing.evaluate(combined, NAN)), "composed NaN")
-			if entry and exit: near(T.Easing.evaluate(combined, 0.5), 0.5, "half legs meet at midpoint")
+			var composed: int = entry | exit
+			near(T.Easing.evaluate(composed, -1.0), 0.0, "composed start")
+			near(T.Easing.evaluate(composed, 2.0), 1.0, "composed end")
+			check(is_nan(T.Easing.evaluate(composed, NAN)), "composed NaN")
+			if entry and exit: near(T.Easing.evaluate(composed, 0.5), 0.5, "half legs meet at midpoint")
 			for i in range(101):
 				var t := i / 100.0
 				var a := T.Easing.evaluate(entry | exits[entry_name], t) if exit else T.Easing.evaluate(entry, t)
@@ -171,8 +172,8 @@ func _composed_easing() -> void:
 				var expected := lerpf(a, b, smoothstep(0.45, 0.55, t))
 				if entry == 0: expected = b
 				if exit == 0: expected = a
-				near(T.Easing.evaluate(combined, t, BlendType.SMOOTH_STEP), expected, "smoothstep comparison")
-				var actual := T.Easing.evaluate(combined, t)
+				near(T.Easing.evaluate(composed, t, BlendType.SMOOTH_STEP), expected, "smoothstep comparison")
+				var actual := T.Easing.evaluate(composed, t)
 				check(is_finite(actual), "finite default composition")
 				if exit == 0 or (entry and t <= 0.45): near(actual, a, "original In half")
 				if entry == 0 or (exit and t >= 0.55): near(actual, b, "original Out half")
@@ -312,8 +313,8 @@ func _composed_easing() -> void:
 func _constants(script: Script) -> Dictionary:
 	return script.get_script_constant_map()
 
-func _activated_add(scheduler: TweensGdScheduler, target: Variant, definition: TweensGdDefinition, owner: Variant = null) -> TweensGdHandle:
-	var handle := scheduler.add(target, definition, owner)
+func _activated_add(scheduler: TweensGdScheduler, target: Variant, definition: TweensGdDefinition, owner_node: Variant = null) -> TweensGdHandle:
+	var handle := scheduler.add(target, definition, owner_node)
 	scheduler.update(0.0)
 	return handle
 
@@ -772,11 +773,11 @@ func _lifetime() -> bool:
 	object.free()
 	scheduler.update(0.0)
 	check(freed.completion_reason == T.Reason.TARGET_FREED, "freed Object detected")
-	var owner := Node.new()
-	add_child(owner)
+	var owner_node := Node.new()
+	add_child(owner_node)
 	var resource := Gradient.new()
-	var bound := scheduler.add(resource, T.value(0.0, 1.0, 1.0), owner)
-	owner.free()
+	var bound := scheduler.add(resource, T.value(0.0, 1.0, 1.0), owner_node)
+	owner_node.free()
 	check(bound.completion_reason == T.Reason.OWNER_EXITED, "resource follows owner lifetime")
 	var parent := Node.new()
 	var other := Node.new()
@@ -814,11 +815,11 @@ func _setter_reentrancy() -> bool:
 	target.when_read = Callable()
 	target.free()
 	var holder: Array = []
-	var ease := T.value(0.0, 1.0, 1.0)
-	ease.ease_function = func(t):
+	var cancelling := T.value(0.0, 1.0, 1.0)
+	cancelling.ease_function = func(t):
 		holder[0].cancel()
 		return t
-	holder.append(scheduler.add(self, ease))
+	holder.append(scheduler.add(self, cancelling))
 	scheduler.update(0.5)
 	check(holder[0].is_settled and holder[0].value == 0.0, "easing can cancel without later writes")
 	holder.clear()
@@ -1035,11 +1036,11 @@ func _rejected_starts() -> void:
 	scheduler.dispose()
 	check(await scheduler.add(self, definition).wait() == T.Reason.FAILED, "disposed scheduler still returns an awaitable handle")
 	var getter_scheduler := TweensGdScheduler.new()
-	var owner := Node.new()
-	add_child(owner)
+	var owner_node := Node.new()
+	add_child(owner_node)
 	var resource := ResourceProbe.new()
-	resource.when_read = func(): owner.free()
-	var getter_failure := getter_scheduler.add(resource, T.property(^"amount", 1.0), owner)
+	resource.when_read = func(): owner_node.free()
+	var getter_failure := getter_scheduler.add(resource, T.property(^"amount", 1.0), owner_node)
 	getter_scheduler.update(0.0)
 	check(await getter_failure.wait() == T.Reason.OWNER_EXITED, "owner freed during activation interrupts the handle")
 	getter_scheduler.dispose()

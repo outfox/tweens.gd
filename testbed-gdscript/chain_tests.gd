@@ -120,43 +120,7 @@ class HookAdapter extends T.Adapter:
 
 func _edges(suite: Object) -> void:
 	for hook in ["prepare", "read", "validate", "add", "start", "write", "update", "end"]:
-		var scheduler := TweensGdScheduler.new()
-		var box := Box.new()
-		var state := {"chain": null, "hook": hook, "events": [], "paused": false, "updates": []}
-		var adapter := HookAdapter.new()
-		adapter.state = state
-		var definition := T.property(^"amount", 10.0, 1.0)
-		definition.adapter = adapter
-		definition.property = ^""
-		definition.on_add = func(_h):
-			state.events.append("add")
-			if hook == "add": state.chain.pause()
-		definition.on_start = func(_h):
-			state.events.append("start")
-			if hook == "start": state.chain.pause()
-		definition.on_update = func(_h, value):
-			state.updates.append(value)
-			if hook == "update" and not state.paused:
-				state.paused = true
-				state.chain.pause()
-		definition.on_end = func(_h):
-			state.events.append("end")
-			if hook == "end": state.chain.pause()
-		var next := T.property(^"amount", 20.0, 1.0)
-		next.on_add = func(_h): state.events.append("next")
-		var chain := scheduler.add_chain(box, [definition, next])
-		state.chain = chain
-		scheduler.update(10.0)
-		suite.check(chain.is_paused and not state.events.has("next"), hook + " interrupts activation/history")
-		if hook == "write": suite.check(state.updates.is_empty(), "writer pause defers update notification")
-		chain.resume()
-		scheduler.update(10.0)
-		suite.check(chain.is_settled and chain.error.is_empty(), hook + " resumes")
-		if hook == "write": suite.check(state.updates == [0.0, 10.0], "writer resume publishes pending update without replaying write")
-		for event in ["prepare", "read", "add", "start", "end", "release", "next"]:
-			suite.check(state.events.count(event) == 1, hook + " consumes " + event + " once")
-		state.chain = null
-		scheduler.dispose()
+		_hook_edge(suite, hook)
 	var scheduler := TweensGdScheduler.new()
 	var box := Box.new()
 	var trace: Array = []
@@ -192,6 +156,45 @@ func _edges(suite: Object) -> void:
 	suite.check(chain.is_settled and chain.error.contains("release fault"), "release failure survives Chain cancellation")
 	suite.check(state.events == ["prepare", "read", "release"], "pending entries have no preparation or cleanup hooks")
 	suite.check(chain.entry_count == 2 and chain.active_count == 0 and chain.pending_count == 0, "terminal Chain retains inspection counts")
+	state.chain = null
+	scheduler.dispose()
+
+func _hook_edge(suite: Object, hook: String) -> void:
+	var scheduler := TweensGdScheduler.new()
+	var box := Box.new()
+	var state := {"chain": null, "hook": hook, "events": [], "paused": false, "updates": []}
+	var adapter := HookAdapter.new()
+	adapter.state = state
+	var definition := T.property(^"amount", 10.0, 1.0)
+	definition.adapter = adapter
+	definition.property = ^""
+	definition.on_add = func(_h):
+		state.events.append("add")
+		if hook == "add": state.chain.pause()
+	definition.on_start = func(_h):
+		state.events.append("start")
+		if hook == "start": state.chain.pause()
+	definition.on_update = func(_h, value):
+		state.updates.append(value)
+		if hook == "update" and not state.paused:
+			state.paused = true
+			state.chain.pause()
+	definition.on_end = func(_h):
+		state.events.append("end")
+		if hook == "end": state.chain.pause()
+	var next := T.property(^"amount", 20.0, 1.0)
+	next.on_add = func(_h): state.events.append("next")
+	var chain := scheduler.add_chain(box, [definition, next])
+	state.chain = chain
+	scheduler.update(10.0)
+	suite.check(chain.is_paused and not state.events.has("next"), hook + " interrupts activation/history")
+	if hook == "write": suite.check(state.updates.is_empty(), "writer pause defers update notification")
+	chain.resume()
+	scheduler.update(10.0)
+	suite.check(chain.is_settled and chain.error.is_empty(), hook + " resumes")
+	if hook == "write": suite.check(state.updates == [0.0, 10.0], "writer resume publishes pending update without replaying write")
+	for event in ["prepare", "read", "add", "start", "end", "release", "next"]:
+		suite.check(state.events.count(event) == 1, hook + " consumes " + event + " once")
 	state.chain = null
 	scheduler.dispose()
 
