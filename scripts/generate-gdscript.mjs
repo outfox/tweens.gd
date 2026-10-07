@@ -74,7 +74,7 @@ for (const e of entries) {
   }
   gd += '\treturn definition\n';
 }
-let md = '# GDScript helper catalog\n\nGenerated from the C# property catalog. Each helper returns a reusable definition:\n`Tweens.position_2d(destination, seconds, In.SINE | Out.CUBIC)`. All helpers accept\n`(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.\nNative target and value types are checked at activation.\n\n';
+let md = '# GDScript helper catalog\n\nEach helper returns a reusable definition:\n`Tweens.position_2d(destination, seconds, In.SINE | Out.CUBIC)`. All helpers accept\n`(to = null, seconds = 0.0, easing = Tweens.Ease.LINEAR, delay = 0.0)`; null captures the current value.\nNative target and value types are checked at activation.\n\n';
 md += 'Property is the path each helper tweens. Compound helpers write several properties together, and\n';
 md += 'callback-value helpers write none.\n\n';
 // The path a helper writes: its definition's property, or its compound adapter's paths.
