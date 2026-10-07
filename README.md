@@ -25,10 +25,7 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
 
 This is a MIT licensed, free addon, and it supports both GDScript and C# out of the box. It's made out of love for indie devs and satisfying game feel. Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://discord.gg/3UXVHnmEwd).
 
-<details>
-<summary>Acknowledgements</summary>
-	<a href="https://godotengine.org/press/">Godot logo</a> by Andrea Calabró, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. "Easy, the Ferret" illustrations drawn by <a href="https://www.furaffinity.net/user/foxymaria/">foxy_maria</a>
-</details>
+[Godot logo](https://godotengine.org/press/) by Andrea Calabró, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). "Easy, the Ferret" illustrations drawn by [foxy_maria](https://www.furaffinity.net/user/foxymaria/). 
 
 tweens.gd was made with math & ferrets.
 
