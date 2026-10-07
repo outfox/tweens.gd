@@ -15,11 +15,11 @@ export const PATH = [
 		art: 'hop',
 		pages: [
 			{ link: '/tutorial/', label: 'Tutorial' },
-			{ slug: 'installation', label: 'Install' },
-			{ slug: 'quickstart', label: 'Your first tween' },
+			{ slug: 'installation', label: 'Installation' },
+			{ slug: 'quickstart', label: 'Your First Tween' },
 			{ slug: 'definitions', label: 'Reuse a Definition' },
 			{ slug: 'syntax-sugar', label: 'Syntax & Sugar' },
-			{ slug: 'playback', label: 'Control & completion' },
+			{ slug: 'playback', label: 'Await Completion' },
 		],
 	},
 	{
@@ -114,13 +114,19 @@ export const HUBS = PATH.flatMap(pagesOf).filter((page) => page.link);
 /** The hub entry for a content id such as 'tutorial', if the page is one. */
 export const hubOf = (id) => HUBS.find((page) => page.link === `/${id}/`);
 
+// The sidebar numbers the tutorial's steps; the tutorial hub draws its own numbers beside the plain labels.
+const label = (page, lang) => {
+	const step = LEARN.indexOf(page);
+	return step < 0 ? (page[lang] ?? page.label) : `${step + 1}. ${page[lang] ?? page.label}`;
+};
+
 const items = (pages, lang) =>
 	pages.map((page) =>
 		page.pages
-			? { label: page[lang] ?? page.label, collapsed: true, items: items(page.pages, lang) }
+			? { label: label(page, lang), collapsed: true, items: items(page.pages, lang) }
 			: page.link
-				? { label: page[lang] ?? page.label, link: page.link }
-				: { label: page[lang] ?? page.label, slug: `${lang}/${page.slug}` },
+				? { label: label(page, lang), link: page.link }
+				: { label: label(page, lang), slug: `${lang}/${page.slug}` },
 	);
 
 /** Starlight sidebar config: one top-level group per language, then the shared pages. */

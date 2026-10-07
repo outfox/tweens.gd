@@ -4,7 +4,7 @@ description: TweensGdHandle, what starting one GDScript definition returns, with
 tableOfContents: true
 ---
 
-`Tweens.play()` returns a `TweensGdHandle` that controls that playback alone. It never returns `null`: a [rejected start](/gdscript/api/start/#rejected-starts) returns a handle that has already failed. [Control & completion](/gdscript/playback/) introduces handles.
+`Tweens.play()` returns a `TweensGdHandle` that controls that playback alone. It never returns `null`: a [rejected start](/gdscript/api/start/#rejected-starts) returns a handle that has already failed. [Await Completion](/gdscript/playback/) introduces handles.
 
 ## Control
 

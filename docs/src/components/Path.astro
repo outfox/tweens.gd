@@ -21,8 +21,8 @@ const content = (cs: boolean): Record<string, { text: string; api?: string[] }> 
 		api: cs ? ['Vector2', '(x, y)', '[x, y]'] : ['Vector2', '[x, y]'],
 	},
 	playback: {
-		text: 'Pause or cancel a tween, and react to how it ended.',
-		api: cs ? ['OnEnd', 'CancelTweens()'] : ['with_on_end()', 'Tweens.cancel_tweens()'],
+		text: "Await a tween's end, and pause or cancel it on the way.",
+		api: cs ? ['await movement.End', 'OnEnd'] : ['await movement.end', 'with_on_end()'],
 	},
 });
 const tracks = (Object.keys(LANGS) as Lang[]).map((lang) => ({

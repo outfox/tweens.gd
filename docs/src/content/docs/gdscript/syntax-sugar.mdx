@@ -4,21 +4,13 @@ description: "Two API flavours and two ways to write endpoints: explicit types o
 ---
 
 import Compare from '../../../components/Compare.astro';
-import { Aside } from '@astrojs/starlight/components';
+import Needs from '../../../components/Needs.astro';
 
-Okay, before this gets any more confusing... 
+No, you're not seeing things: there's more than one way to tween a ferret, and that's fully intentional. While developing tweens.gd, we set out to solve at least two, probably four, problems:
 
-<Aside title="No, you're not seeing things.">
+<Needs lang="gdscript" />
 
-There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.
-
-Some tweens may need...  
-- to be fired off once, and just do their thing
-- destinations or timings you want to specify each time
-- to apply to several different targets (Nodes)
-- small variations for that extra juice
-
-</Aside>
+Between them, the Structured and Convenient syntaxes cover all four, and both take safe or sweet endpoints.
 
 ## Definitions: Structured vs. Convenient
 

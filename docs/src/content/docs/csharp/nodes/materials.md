@@ -126,4 +126,4 @@ doesn't assign or reconcile those declarations.
 
 See [ShaderMaterial](https://docs.godotengine.org/en/stable/classes/class_shadermaterial.html), [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html), and [GeometryInstance3D](https://docs.godotengine.org/en/stable/classes/class_geometryinstance3d.html).
 See [compatibility](/compatibility/) for rendering limits and
-[control and completion](/csharp/playback/) for fault handling.
+[handles](/csharp/api/handles/#errors) for fault handling.

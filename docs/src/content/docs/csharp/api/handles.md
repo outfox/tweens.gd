@@ -4,7 +4,7 @@ description: TweenInstance, what starting one C# definition returns, with its st
 tableOfContents: true
 ---
 
-Starting one definition returns a `TweenInstance<TTarget, TValue>` that controls that playback alone. The non-generic base class `TweenInstance` has every member but `Target` and `Value`, so handles of different types fit in one collection. [Control & completion](/csharp/playback/) introduces handles.
+Starting one definition returns a `TweenInstance<TTarget, TValue>` that controls that playback alone. The non-generic base class `TweenInstance` has every member but `Target` and `Value`, so handles of different types fit in one collection. [Await Completion](/csharp/playback/) introduces handles.
 
 ## Control
 

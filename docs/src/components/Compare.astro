@@ -1,5 +1,6 @@
 ---
-// Two code blocks side by side in a landscape window. In portrait, side by side only when both fit without scrolling.
+// Two code blocks side by side in a window at least 3:4 wide. In a taller one, side by side only when both fit
+// without scrolling.
 // Code keeps the site's one code size; a line too long for its half scrolls inside its block.
 // A `---` line splits the slot into two sides, each holding markdown above and below its one code block. Both sides'
 // code starts on one line, and on a narrow screen each side stacks as a unit.
@@ -70,8 +71,8 @@ const blank = (text: string) => !text.trim();
 		min-width: 0;
 		margin: 0;
 	}
-	/* A landscape window always compares side by side. */
-	@media (orientation: landscape) and (min-width: 40rem) {
+	/* A window at least 3:4 wide always compares side by side; that includes a barely portrait monitor such as 16:18. */
+	@media (min-aspect-ratio: 3 / 4) and (min-width: 40rem) {
 		.grid {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}

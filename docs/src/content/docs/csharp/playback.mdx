@@ -1,64 +1,101 @@
 ---
-title: "Control and completion"
-description: "Pause or cancel through a handle, await its end, and react to completion."
+title: "Await Completion"
+description: "Await a tween's end, check how it ended, and pause or cancel it on the way."
 ---
 
+import Compare from '../../../components/Compare.astro';
+import Moves from '../../../components/Moves.astro';
 import PlaybackRemote from '../../../components/PlaybackRemote.astro';
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Every start returns a handle. Keep it to control that playback, or await its end before continuing.
-
-Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
-
-## Pause, resume, cancel
+Every start returns a handle. Await it to continue once the tween ends, or use it to pause and cancel the tween on the way.
 
 <PlaybackRemote />
 
-Cancelling keeps the latest value. `sprite.CancelTweens()` cancels all playback owned by that node.
+## Scripting it
 
-## Await playback
+The remote's buttons call this script's methods. To build your own, attach it to a scene's root `Node2D`, pick a `Sprite2D` for **Sprite** in the Inspector, and connect each button's `pressed` signal to its method.
 
-```csharp
-var movement = sprite.TweenPosition((400, 180), 0.6);
-await movement.End;
+<Moves>
+
+```csharp title="PlaybackRemote.cs" {"1":17} {"2":18} {"3":21-25}
+using Godot;
+using tweens.gd;
+
+// The remote's buttons call these methods; Ended reports how the movement ended.
+public partial class PlaybackRemote : Node2D
+{
+    [Signal]
+    public delegate void EndedEventHandler(Reason reason);
+
+    [Export] private Sprite2D sprite = null!;
+    [Export] private Vector2 to = new(1024, 128);
+
+    private TweenInstance? movement;
+
+    public async void Start()
+    {
+        movement = sprite.TweenPosition(to, 2.4, InOut.SmootherStep);
+        EmitSignalEnded(await movement.End);
+    }
+
+    public void Pause() => movement?.Pause();
+
+    public void Resume() => movement?.Resume();
+
+    public void Cancel() => movement?.Cancel();
+}
 ```
 
-The wait finishes after callbacks and cleanup. It also resumes when playback is cancelled or its owner leaves the tree.
+1. **Keep the handle.** `TweenPosition` returns it at once, and `Start` keeps it in `movement`.
+2. **Await the end.** `await movement.End` resumes once playback ends, with the reason: `Completed`, `Cancelled`, or `OwnerExited` when the scene closes first.
+3. **Control it.** `Pause` holds the current value until `Resume`. `Cancel` stops for good and keeps the latest value.
 
-<Aside type="caution" title="Continue only after arrival">
+</Moves>
 
-If the next action needs success, check `await movement.End == Reason.Completed`. The [cancellation guide](/csharp/cancellation/) shows a guarded sequence.
+To stop every tween a node owns without keeping their handles, call `sprite.CancelTweens()`.
 
-</Aside>
+## React to the end
 
+<Compare>
 
+Await the handle to continue in the same method. `End` resumes however playback ended, so check the reason when the next step needs an arrival.
 
-## Callbacks
+```csharp title="Await"
+var movement = sprite.TweenPosition((400, 180), 0.6, Out.Cubic);
 
-Use a callback for a small synchronous reaction:
+if (await movement.End == Reason.Completed)
+    GD.Print("Arrived");
+```
 
-```csharp
+---
+
+A callback on the definition suits a small synchronous reaction. `OnEnd` runs only on natural completion.
+
+```csharp title="Callback"
 var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic)
 {
     OnEnd = _ => GD.Print("Arrived"),
 };
+
 sprite.Tween(arrive);
 ```
 
-`OnEnd` runs on natural completion. `OnFinally` also runs when playback stops early or fails. See [callback order](/csharp/api/callbacks/#callback-order) for the full lifecycle.
+</Compare>
 
-## Errors
+`OnFinally` also runs when playback stops early or fails; [callback order](/csharp/api/callbacks/#callback-order) shows the whole lifecycle.
 
-An easing, setter, or callback exception faults playback. Awaiting `End` throws; catch it in async Godot callbacks such as `_Ready`.
+<Aside type="caution" title="Await on Godot’s main thread">
 
-<Aside type="caution" title="Use Godot’s main thread">
-
-Create and control tweens on the main thread. Await normally; avoid blocking with `.Wait()` or `.Result`, or moving engine access into `Task.Run`.
+An exception in an ease, setter, or callback faults playback, and awaiting `End` throws it. Catch it in `async void` methods such as `_Ready`. Create, control, and await tweens on the main thread, and never block on `End` with `.Wait()` or `.Result`.
 
 </Aside>
 
+### Would you like to know more?
+
 <CardGrid>
-<LinkCard title="Shape the motion" description="Compare easing curves." href="/easings/" />
-<LinkCard title="Build an animation" description="Link motions or play them together." href="/csharp/sequences/" />
-<LinkCard title="Find a property" description="Choose what to animate next." href="/csharp/nodes/" />
+<LinkCard title="Cancellation" description="Stop tweens early and guard a sequence." href="/csharp/cancellation/" />
+<LinkCard title="Sequences" description="Link motions or play them together." href="/csharp/sequences/" />
+<LinkCard title="Easings" description="Compare easing curves." href="/easings/" />
+<LinkCard title="Catalog" description="Choose what to animate next." href="/csharp/nodes/" />
 </CardGrid>

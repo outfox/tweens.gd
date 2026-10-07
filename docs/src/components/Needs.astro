@@ -1,0 +1,89 @@
+---
+// The four needs that Syntax & Sugar answers, each with a glimpse of the form that serves it.
+import type { Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+const cs = lang === 'csharp';
+const needs = [
+	{ title: 'Fire once', text: 'A one-off that just does its thing.', api: cs ? 'sprite.TweenPosition(…)' : 'Tweens.play(self, …)' },
+	{ title: 'Set values each time', text: 'Destinations or timings you want to specify each time.', api: cs ? '(to, 0.6, Out.Cubic)' : '(to, 0.6, Out.CUBIC)' },
+	{ title: 'Several targets', text: 'The same motion, applied to several different nodes.', api: cs ? 'node.Tween(hop)' : 'Tweens.play(node, hop)' },
+	{ title: 'Small variations', text: 'Small variations for that extra juice.', api: cs ? 'hop with { Delay = 0.2 }' : 'hop.with_delay(0.2)' },
+];
+---
+
+<div class="needs not-content tw-wide">
+	<ul aria-label="Problems tweens.gd solves">
+		{
+			needs.map(({ title, text, api }) => (
+				<li>
+					<span class="title">{title}</span>
+					<span class="text">{text}</span>
+					<code class="tw-code">{api}</code>
+				</li>
+			))
+		}
+	</ul>
+</div>
+
+<style>
+	.needs {
+		container-type: inline-size;
+		margin-block: 1.5rem 0;
+	}
+	/* Four in a row, else two by two, so no card is left alone on its row. */
+	ul {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	@container (min-width: 26rem) {
+		ul {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@container (min-width: 54rem) {
+		ul {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+	li {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		margin: 0;
+		padding: 0.85rem 1rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 0.9rem;
+		background: var(--tw-surface);
+	}
+	.title {
+		color: var(--sl-color-white);
+		font: 700 1.05rem / 1.3 var(--tw-font-display);
+	}
+	/* The text grows, so each form sits on its card's bottom edge and the forms line up across a row. */
+	.text {
+		flex: 1;
+		color: var(--tw-soft);
+		font-size: var(--sl-text-sm);
+		line-height: 1.45;
+	}
+	code {
+		align-self: flex-start;
+		max-width: 100%;
+		margin-top: 0.35rem;
+		padding: 0.1rem 0.45rem;
+		border-radius: 0.4rem;
+		background: var(--tw-code-bg);
+		font-size: var(--sl-text-xs);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+</style>

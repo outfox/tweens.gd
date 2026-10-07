@@ -4,7 +4,11 @@ $docsRoot = Split-Path $PSScriptRoot -Parent
 $repoRoot = Split-Path $docsRoot -Parent
 $exampleOutput = Join-Path $repoRoot "artifacts/docs-examples/$([Guid]::NewGuid())"
 New-Item -ItemType Directory -Path $exampleOutput -Force | Out-Null
-$libraryProject = [System.Security.SecurityElement]::Escape((Join-Path $repoRoot 'csharp/tweens.gd.csproj'))
+$libraryPath = Join-Path $repoRoot 'csharp/tweens.gd.csproj'
+$libraryProject = [System.Security.SecurityElement]::Escape($libraryPath)
+# Examples declare [Signal]s and [Export]s, so they need the Godot source generators the library builds with.
+$generatorVersion = ([xml](Get-Content $libraryPath)).Project.ItemGroup.PackageReference |
+    Where-Object { $_.Include -eq 'Godot.SourceGenerators' } | Select-Object -ExpandProperty Version
 @"
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -13,8 +17,12 @@ $libraryProject = [System.Security.SecurityElement]::Escape((Join-Path $repoRoot
     <Nullable>enable</Nullable>
     <NoWarn>CS1998</NoWarn>
     <WarningsAsErrors>CS4014</WarningsAsErrors>
+    <GodotDisabledSourceGenerators>ScriptPathAttribute</GodotDisabledSourceGenerators>
   </PropertyGroup>
-  <ItemGroup><ProjectReference Include="$libraryProject" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$libraryProject" />
+    <PackageReference Include="Godot.SourceGenerators" Version="$generatorVersion" PrivateAssets="all" />
+  </ItemGroup>
 </Project>
 "@ | Set-Content (Join-Path $exampleOutput 'Examples.csproj')
 
