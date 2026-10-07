@@ -33,7 +33,8 @@ generated glue is deliberately excluded; each consumer's Godot SDK generates
 that for its assembly. `Pack-Addon.ps1` runs this check before packaging.
 The generator remains a private build dependency of the NuGet project. That
 project excludes the prepared files and generates its own definitions from
-the same addon sources. See [release instructions](../../RELEASING.md).
+the same addon sources. See
+[the authoritative release guide](../../docs-internal/RELEASING.md).
 
 Runtime binding state stays in the private per-playback class instance. A
 structured definition creates that instance directly; a mutable class definition

@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { gzipSync } from 'node:zlib';
 import { codeToTokens } from 'shiki';
 import { csharpDark, gdscriptDark } from '../src/styles/code-themes.mjs';
 
@@ -226,7 +227,11 @@ export const shadowFilter = `<filter id="shadow" x="-10%" y="-10%" width="120%" 
 <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#03080e" flood-opacity="0.5"/>
 </filter>`;
 
+/** Writes the SVG and a gzipped copy beside it as .svgz. */
 export const writeSvg = (path, svg, width, height) => {
+	const zipped = gzipSync(svg, { level: 9 });
 	writeFileSync(path, svg);
-	console.log(`${path}: ${width}x${height}, ${(svg.length / 1024).toFixed(1)} KiB`);
+	writeFileSync(`${path}z`, zipped);
+	const kib = (bytes) => `${(bytes / 1024).toFixed(1)} KiB`;
+	console.log(`${path}: ${width}x${height}, ${kib(Buffer.byteLength(svg))}, ${kib(zipped.length)} as .svgz`);
 };
