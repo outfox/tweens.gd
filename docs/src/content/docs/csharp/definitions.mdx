@@ -1,61 +1,61 @@
 ---
 title: "Reusable definitions"
-description: "Define once, start on several nodes, and vary a copy."
+description: "Define a motion once, start it on many nodes, and copy it with a change."
 ---
 
-import VaryStart from '../../../components/VaryStart.astro';
-import { Aside } from '@astrojs/starlight/components';
+import Moves from '../../../components/Moves.astro';
+import ReuseDemo from '../../../components/ReuseDemo.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-A definition describes motion. Each start copies its settings into independent playback, so one definition can animate many nodes.
+A tween definition is a motion you can re-use on any compatible Node.
 
-Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+<ReuseDemo />
 
-## Define once, start twice
+## Write the script
 
-```csharp
-var nudge = new Tweens.Position2D
+In a 2D scene, drag `icon.svg` into the viewport a few times, side by side. Attach this script to the scene's root `Node2D` and run it.
+
+<Moves>
+
+```csharp title="HopWave.cs" {"1":9-15} {"2":17} {"3":18-19}
+using System.Linq;
+using Godot;
+using tweens.gd;
+
+public partial class HopWave : Node2D
 {
-    By = new Vector2(80, 0),
-    Duration = 0.2,
-    Ease = Out.Cubic,
-};
+    public override void _Ready()
+    {
+        var hop = new Tweens.Position2DY
+        {
+            By = -80,
+            Duration = 0.25,
+            Ease = Out.Quad,
+            PingPong = true,
+        };
 
-sprite1.Tween(nudge);
-sprite2.Tween(nudge);
+        var icons = GetChildren().OfType<Node2D>().ToArray();
+        for (var i = 0; i < icons.Length; i++)
+            icons[i].Tween(hop with { Delay = i * 0.2 });
+    }
+}
 ```
 
-Both sprites move 80 pixels right from their own positions. Each start returns its own handle.
+1. **Define once.** `hop` lifts a node 80 pixels and drops it back; negative y is up in Godot. `By` is relative, so each icon hops from wherever it stands.
+2. **Find the nodes.** Every `Node2D` child of this node.
+3. **Start a copy on each.** `with` copies `hop` and changes only `Delay`, so `hop` itself keeps no delay. Each start returns its own handle.
+
+</Moves>
+
+Each start snapshots its definition. Change `hop` later, and only the starts after that follow; tweens already playing keep their settings.
+
+<CardGrid>
+<LinkCard title="Anatomy" description="Every field a definition can set." href="/csharp/anatomy/" />
+<LinkCard title="Variations" description="Scale or shift a copy relative to the original." href="/csharp/variations/" />
+</CardGrid>
 
 <Aside type="tip" title="Keep reusable motion nearby">
 
 Store a shared definition in a `static readonly` field. The generated definitions are readonly record structs.
 
 </Aside>
-
-## Choose the endpoints
-
-| Choose | Result |
-| --- | --- |
-| `To` | Move to a destination |
-| `From` only | Animate an entrance to the value set in the scene |
-| `By` only | Add an offset, preserving other movement |
-
-An omitted endpoint uses the property's value when playback starts, before any delay.
-
-<Aside type="note" title="Relative motion">
-
-Use `To` or `By`, not both. Leave `From` out when an offset should add to other movement.
-
-</Aside>
-
-## Vary one start
-
-Replace the second start with `sprite2.Tween(nudge with { Duration = 0.6 });`.
-
-The copy takes longer; the original still takes 0.2 seconds. Already running tweens keep their settings.
-
-**Try it:** change the second duration and play both.
-
-<VaryStart />
-
-Use [variations](/csharp/variations/) to scale the original values. The [definition reference](/csharp/api/definitions/) covers shared options and copying.

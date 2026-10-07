@@ -1,28 +1,49 @@
 ---
 title: "Reusable definitions"
-description: "Define once, start on several nodes, and vary a copy."
+description: "Define a motion once, start it on many nodes, and copy it with a change."
 ---
 
-import VaryStart from '../../../components/VaryStart.astro';
-import { Aside } from '@astrojs/starlight/components';
+import Moves from '../../../components/Moves.astro';
+import ReuseDemo from '../../../components/ReuseDemo.astro';
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-A definition describes motion. Each start copies its settings into independent playback, so one definition can animate many nodes.
+A tween definition is a motion you can re-use on any compatible Node.
 
-Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+<ReuseDemo lang="gdscript" />
 
-## Define once, start twice
+## Write the script
 
-```gdscript
-var nudge := Tweens.position_2d()
-nudge.by_value = [80, 0]
-nudge.duration = 0.2
-nudge.ease = Out.CUBIC
+In a 2D scene, drag `icon.svg` into the viewport a few times, side by side. Attach this script to the scene's root `Node2D` and run it.
 
-Tweens.play(sprite1, nudge)
-Tweens.play(sprite2, nudge)
+<Moves>
+
+```gdscript title="hop_wave.gd" {"1":4-8} {"2":10} {"3":11-12}
+extends Node2D
+
+func _ready() -> void:
+	var hop := Tweens.position_2d_y()
+	hop.by_value = -80.0
+	hop.duration = 0.25
+	hop.ease = Out.QUAD
+	hop.ping_pong = true
+
+	var icons := get_children()
+	for i in icons.size():
+		Tweens.play(icons[i], hop.with_delay(i * 0.2))
 ```
 
-Both sprites move 80 pixels right from their own positions. Each start returns its own handle.
+1. **Define once.** `hop` lifts a node 80 pixels and drops it back; negative y is up in Godot. `by_value` is relative, so each icon hops from wherever it stands.
+2. **Find the nodes.** Every child of this node.
+3. **Start a copy on each.** `with_delay()` copies `hop` with a new delay, so `hop` itself keeps none. Each start returns its own handle.
+
+</Moves>
+
+Each start snapshots its definition. Change `hop` later, and only the starts after that follow; tweens already playing keep their settings.
+
+<CardGrid>
+<LinkCard title="Anatomy" description="Every field a definition can set." href="/gdscript/anatomy/" />
+<LinkCard title="Variations" description="Scale or shift a copy relative to the original." href="/gdscript/variations/" />
+</CardGrid>
 
 <Aside type="tip" title="Keep reusable motion nearby">
 
@@ -30,32 +51,3 @@ Store a shared definition in a `static var`. Treat it as read-only and use `with
 
 </Aside>
 
-## Choose the endpoints
-
-| Choose | Result |
-| --- | --- |
-| `to_value` | Move to a destination |
-| `from_value` only | Animate an entrance to the value set in the scene |
-| `by_value` only | Add an offset, preserving other movement |
-
-An omitted endpoint uses the property's value when playback starts, before any delay.
-
-<Aside type="note" title="Relative motion">
-
-Use `to_value` or `by_value`, not both. Leave `from_value` out when an offset should add to other movement.
-
-</Aside>
-
-## Vary one start
-
-```gdscript
-Tweens.play(sprite2, nudge.with_duration(0.6))
-```
-
-The copy takes longer; the original still takes 0.2 seconds. Already running tweens keep their settings.
-
-**Try it:** change the second duration and play both.
-
-<VaryStart lang="gdscript" />
-
-Use [variations](/gdscript/variations/) to scale the original values. The [definition reference](/gdscript/api/definitions/) covers shared options and copying.
