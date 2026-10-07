@@ -49,8 +49,8 @@
     <Target Name="StageGDScriptAddon" BeforeTargets="BeforeBuild">
         <ItemGroup>
             <GalleryAddon Include="../addons/tweens_gd/**/*" />
-            <!-- Mirror the addon: files removed from the source must not linger. Godot keeps its generated .uid files. -->
-            <StagedGalleryAddon Include="addons/tweens_gd/**/*" Exclude="addons/tweens_gd/**/*.uid" />
+            <!-- Mirror the addon, including its committed .uid files: files removed from the source must not linger. -->
+            <StagedGalleryAddon Include="addons/tweens_gd/**/*" />
             <StaleGalleryAddon Include="@(StagedGalleryAddon)" Exclude="@(GalleryAddon->'addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
         </ItemGroup>
         <Delete Files="@(StaleGalleryAddon)" />

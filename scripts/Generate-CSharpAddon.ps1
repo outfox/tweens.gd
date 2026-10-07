@@ -36,4 +36,5 @@ foreach ($file in $files) {
 if ($Check -and $differences.Count) {
     throw "C# addon definitions are stale ($($differences.Count) files). Run ./scripts/Generate-CSharpAddon.ps1 and commit the output."
 }
+if (!$Check) { & (Join-Path $PSScriptRoot 'Generate-AddonUids.ps1') | Out-Null }
 Write-Output "$(if ($Check) { 'Verified' } else { 'Generated' }) $($files.Count) C# addon definitions."

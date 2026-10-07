@@ -133,6 +133,8 @@ jobs:
         run: dotnet run --project testbed-gdscript/host -c Release --no-build --no-restore
       - name: Check GDScript helper catalog
         run: node scripts/generate-gdscript.mjs --check
+      - name: Check addon UIDs
+        run: ./scripts/Generate-AddonUids.ps1 -Check
       - name: Test GDScript debug validation
         timeout-minutes: 2
         run: dotnet run --project testbed-gdscript/host -c Debug --no-restore

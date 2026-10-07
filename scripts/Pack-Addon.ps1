@@ -11,6 +11,7 @@ if ($Version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') { throw 'Use a sem
 & (Join-Path $PSScriptRoot 'Generate-CSharpAddon.ps1') -Check
 node (Join-Path $PSScriptRoot 'generate-gdscript.mjs') --check
 if ($LASTEXITCODE -ne 0) { throw 'GDScript catalog is stale.' }
+& (Join-Path $PSScriptRoot 'Generate-AddonUids.ps1') -Check
 $output = [IO.Path]::GetFullPath($OutputDirectory, $repository)
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $destination = Join-Path $output "tweens.gd-$Version.zip"
