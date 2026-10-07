@@ -9,7 +9,7 @@ dotnet build (Join-Path $repository 'csharp/tweens.gd.csproj') -c Release -f net
     -p:EmitCompilerGeneratedFiles=true "-p:CompilerGeneratedFilesOutputPath=$emission"
 if ($LASTEXITCODE -ne 0) { throw 'C# definition generation failed.' }
 # Never ship Godot's generators: the consuming Godot SDK must generate its own glue.
-$source = Join-Path $emission 'tweens.gd.Generators/Tweens.Generators.StructuredDefinitionGenerator'
+$source = Join-Path $emission 'tweens.gd.Generators/tweens.gd.Generators.StructuredDefinitionGenerator'
 $files = @(Get-ChildItem -LiteralPath $source -Filter '*.g.cs' -File | Sort-Object Name)
 if (!$files.Count) { throw 'No structured definitions were emitted.' }
 $destination = Join-Path $repository 'addons/tweens_gd/csharp/Generated'
@@ -36,4 +36,5 @@ foreach ($file in $files) {
 if ($Check -and $differences.Count) {
     throw "C# addon definitions are stale ($($differences.Count) files). Run ./scripts/Generate-CSharpAddon.ps1 and commit the output."
 }
+if (!$Check) { & (Join-Path $PSScriptRoot 'Generate-AddonUids.ps1') | Out-Null }
 Write-Output "$(if ($Check) { 'Verified' } else { 'Generated' }) $($files.Count) C# addon definitions."

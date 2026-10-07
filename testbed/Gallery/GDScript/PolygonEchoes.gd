@@ -15,7 +15,7 @@ func add_polygon(handles: Array, target: Polygon2D, delay: float) -> void:
 	handles.append(Tweens.play(target, cycle(Tweens.polygon_2d_offset([40, 0], seconds), delay)))
 	handles.append(Tweens.play(target, cycle(Tweens.rotation_2d(PI, seconds * 2.0), delay)))
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

@@ -23,7 +23,8 @@ func report(step: int, text: String) -> void:
 	handles.append(Tweens.play(targets.steps[step], options(Tweens.scale_2d(Vector2.ONE, 0.5), Tweens.Ease.ELASTIC_OUT, [2, 2])))
 	await Tweens.group(handles).wait()
 
-func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
+func options(definition: TweensGdDefinition, easing := InOut.LINEAR, from: Variant = null,
+		delay := 0.0) -> TweensGdDefinition:
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

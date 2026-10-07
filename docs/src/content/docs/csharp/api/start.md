@@ -90,7 +90,7 @@ sprite.Tween(new Tweens.Position2D((100, 0), 1), physics);
 
 - Start a node tween once the node is inside the tree, in `_Ready` or later; starting outside the tree throws. A node always owns its own tweens, and removing or reparenting it ends them.
 - A resource tween ends when its owner leaves the tree, or with its tree. Tweens never duplicate or dispose the resources they animate.
-- Starting snapshots the definition; preparation and capture happen on the first eligible update, before any positive delay. See [what each start copies](/csharp/api/definitions/#what-each-start-copies).
+- Starting snapshots the definition; preparation and capture happen on the first eligible update, before any positive delay. See [copy on start](/csharp/api/definitions/#copy-on-start).
 - If starting one definition of a group throws, the members already started are cancelled.
 - Tweens started in a callback or after an await begin on the next eligible update, with no inherited frame time.
 - Start and control tweens on Godot's main thread; other threads throw.

@@ -7,18 +7,18 @@ const GROUND = 62.0
 const APEX = -34.0
 const STRIDE = 75.0
 const BOUNDS = 151.0
-var direction = 1
+var direction := 1
 
 func animate() -> void:
 	while await bounce():
 		pass
 
 func bounce() -> bool:
-	var ball = targets.ball
-	var air = 0.36 * tempo
+	var ball: Node2D = targets.ball
+	var air := 0.36 * tempo
 	if abs(ball.position.x + direction * STRIDE) > BOUNDS:
 		direction = -direction
-	var destination = ball.position.x + direction * STRIDE
+	var destination := ball.position.x + direction * STRIDE
 	if await Tweens.play(ball, options(Tweens.scale_2d([0.72, 1.32], 0.07 * tempo), Out.QUAD)).wait() != Tweens.Reason.COMPLETED:
 		return false
 	travel(destination, air * 2.0)
@@ -54,17 +54,18 @@ func ripple(x: float) -> void:
 func kick_up_dust(x: float) -> void:
 	var handles: Array = []
 	for i in targets.dust.size():
-		var side = -1 if i % 2 == 0 else 1
-		var row = floori(i / 2.0)
-		var landing = Vector2(x + side * (26 + row * 16), GROUND - 10 - row * 5)
-		var dust = targets.dust[i]
+		var side := -1 if i % 2 == 0 else 1
+		var row := floori(i / 2.0)
+		var landing := Vector2(x + side * (26 + row * 16), GROUND - 10 - row * 5)
+		var dust: Node2D = targets.dust[i]
 		dust.position = Vector2(x + side * 14, GROUND - 3)
 		dust.scale = Vector2.ONE * (1.4 - row * 0.3)
 		handles.append(Tweens.play(dust, options(Tweens.position_2d(landing, 0.45 * tempo), Out.QUART)))
 		handles.append(Tweens.play(dust, options(Tweens.modulate_alpha(0.0, 0.45 * tempo), In.QUAD, 0.9)))
 	await Tweens.group(handles).wait()
 
-func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
+func options(definition: TweensGdDefinition, easing := InOut.LINEAR, from: Variant = null,
+		delay := 0.0) -> TweensGdDefinition:
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

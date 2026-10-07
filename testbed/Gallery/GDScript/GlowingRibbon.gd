@@ -11,7 +11,7 @@ func animate() -> void:
 		Tweens.play(targets.glow, cycle(Tweens.line_2d_default_color(Color(BLUE, 0.28), seconds))),
 	]).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

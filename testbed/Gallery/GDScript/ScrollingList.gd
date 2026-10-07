@@ -8,7 +8,7 @@ func animate() -> void:
 		Tweens.play(targets.scroll, cycle(Tweens.scroll_container_scroll_vertical(200, seconds * 2.0))),
 	]).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

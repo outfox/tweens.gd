@@ -6,8 +6,8 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 func animate() -> void:
 	var handles: Array = []
 	for i in targets.pills.size():
-		var pill = targets.pills[i]
-		var definitions = [
+		var pill: Polygon2D = targets.pills[i]
+		var definitions := [
 			Tweens.scale_2d_y(2.6, seconds * 0.5),
 			Tweens.scale_2d_x(0.62, seconds * 0.5),
 			Tweens.polygon_2d_color(pill.color.lightened(0.45), seconds * 0.5),
@@ -19,7 +19,7 @@ func animate() -> void:
 			handles.append(Tweens.play(pill, definition))
 	await Tweens.group(handles).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

@@ -4,10 +4,10 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 # Scene objects are supplied by the matching C# scene setup file.
 
 const POINTS = 10
-var squish
-var total = 0.0
-var shown = 0.0
-var random = RandomNumberGenerator.new()
+var squish: TweensGdChain
+var total := 0.0
+var shown := 0.0
+var random := RandomNumberGenerator.new()
 
 func animate() -> void:
 	random.randomize()
@@ -30,7 +30,7 @@ func squish_button() -> void:
 	await squish.end
 
 func flash() -> void:
-	var movement = options(Tweens.control_position([9, 5], 0.4 * tempo), InOut.LINEAR, Vector2.ZERO)
+	var movement := options(Tweens.control_position([9, 5], 0.4 * tempo), InOut.LINEAR, Vector2.ZERO)
 	movement.ease_function = Tweens.FX.punch(3.0)
 	await Tweens.group([
 		Tweens.play(targets.shaker, movement),
@@ -39,16 +39,16 @@ func flash() -> void:
 	]).wait()
 
 func throw_shard(shard: Polygon2D) -> void:
-	var flight = 0.9 * tempo
-	var angle = random.randf() * PI * 1.2 + PI * 0.9
-	var reach = 90.0 + random.randf() * 110.0
-	var landing = Vector2(cos(angle) * reach, 70.0 + random.randf() * 20.0)
-	var spin = angle + random.randf() * 12.0 - 6.0
-	var lift = 1.0 + random.randf()
+	var flight := 0.9 * tempo
+	var angle := random.randf() * PI * 1.2 + PI * 0.9
+	var reach := 90.0 + random.randf() * 110.0
+	var landing := Vector2(cos(angle) * reach, 70.0 + random.randf() * 20.0)
+	var spin := angle + random.randf() * 12.0 - 6.0
+	var lift := 1.0 + random.randf()
 	shard.position = Vector2.ZERO
 	shard.rotation = angle
 	shard.modulate = Color.WHITE
-	var arc = Tweens.position_2d_y(landing.y, flight)
+	var arc := Tweens.position_2d_y(landing.y, flight)
 	arc.ease_function = func(progress): return (2.0 + lift) * progress * progress - (1.0 + lift) * progress
 	await Tweens.group([
 		Tweens.play(shard, options(Tweens.position_2d_x(landing.x, flight), Out.QUART)),
@@ -66,7 +66,7 @@ func float_bonus() -> void:
 
 func add_to_score() -> void:
 	total += POINTS
-	var roll = options(Tweens.value(shown, total, 0.5 * tempo), Out.CUBIC, shown)
+	var roll := options(Tweens.value(shown, total, 0.5 * tempo), Out.CUBIC, shown)
 	roll.on_update = func(_handle, value):
 		shown = value
 		targets.score.text = "%03d" % roundi(value)
@@ -75,7 +75,8 @@ func add_to_score() -> void:
 		Tweens.play(targets.score, options(Tweens.control_scale(Vector2.ONE, 0.6 * tempo), Tweens.Ease.ELASTIC_OUT, [1.45, 1.45])),
 	]).wait()
 
-func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
+func options(definition: TweensGdDefinition, easing := InOut.LINEAR, from: Variant = null,
+		delay := 0.0) -> TweensGdDefinition:
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

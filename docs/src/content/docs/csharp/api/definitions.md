@@ -4,7 +4,7 @@ description: The built-in C# definition structs, their constructors, shared Twee
 tableOfContents: true
 ---
 
-A definition is an immutable description of one motion: a `readonly record struct` in the global `Tweens` namespace, one per property. Vary a copy with `with`; [reusable definitions](/csharp/definitions/) shows the pattern.
+A definition is an immutable description of one motion: a `readonly record struct` nested in the `Tweens` class, one per property. Vary a copy with `with`; [reusable definitions](/csharp/definitions/) shows the pattern.
 
 ```csharp
 var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic); // Constructor

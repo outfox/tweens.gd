@@ -11,6 +11,7 @@ if ($Version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') { throw 'Use a sem
 & (Join-Path $PSScriptRoot 'Generate-CSharpAddon.ps1') -Check
 node (Join-Path $PSScriptRoot 'generate-gdscript.mjs') --check
 if ($LASTEXITCODE -ne 0) { throw 'GDScript catalog is stale.' }
+& (Join-Path $PSScriptRoot 'Generate-AddonUids.ps1') -Check
 $output = [IO.Path]::GetFullPath($OutputDirectory, $repository)
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 $destination = Join-Path $output "tweens.gd-$Version.zip"
@@ -33,10 +34,13 @@ try {
         $relative = [IO.Path]::GetRelativePath($source, $file.FullName).Replace('\', '/')
         $native = $relative -in $libraries
         if ($file.Extension -notin '.gd', '.uid', '.md', '.cs', '.gdextension' -and $file.Name -ne 'LICENSE' -and !$native) { throw "Unexpected addon file: $relative" }
+        $bytes = [IO.File]::ReadAllBytes($file.FullName)
+        # Text ships as the repository stores it; .gitattributes keeps checkouts LF on every platform.
+        if (!$native -and [Array]::IndexOf($bytes, [byte]13) -ge 0) { throw "CR line endings in $relative; check it out again so .gitattributes applies." }
         $entry = $zip.CreateEntry("addons/tweens_gd/$relative", [IO.Compression.CompressionLevel]::Optimal)
         $entry.LastWriteTime = [DateTimeOffset]::new(2000, 1, 1, 0, 0, 0, [TimeSpan]::Zero)
         $content = $entry.Open()
-        try { $bytes = [IO.File]::ReadAllBytes($file.FullName); $content.Write($bytes, 0, $bytes.Length) }
+        try { $content.Write($bytes, 0, $bytes.Length) }
         finally { $content.Dispose() }
     }
 } finally { $zip.Dispose(); $stream.Dispose() }

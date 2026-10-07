@@ -3,13 +3,15 @@
 extends RefCounted
 
 const T = preload("res://addons/tweens_gd/tweens.gd")
+const Suite = preload("res://tests.gd")
 
-var _host: Node
+var _host: Suite
 
 func run(host: Node) -> bool:
 	_host = host
-	for test in [_conformance, _completion, _controls, _lifetimes, _failures, _reentrancy, _mixed_clocks, _independent_roots, _references]:
-		check(test.call() == true, "group test returned normally: " + test.get_method())
+	for test: Callable in [_conformance, _completion, _controls, _lifetimes, _failures, _reentrancy, _mixed_clocks, _independent_roots, _references]:
+		var returned: bool = test.call() == true
+		check(returned, "group test returned normally: " + test.get_method())
 	await _waits_and_validation()
 	return true
 
@@ -19,7 +21,7 @@ func check(condition: bool, message: String) -> void:
 func near(actual: float, expected: float, message: String) -> void:
 	_host.near(actual, expected, message)
 
-func start(scheduler, duration: float = 1.0) -> TweensGdHandle:
+func start(scheduler: TweensGdScheduler, duration: float = 1.0) -> TweensGdHandle:
 	return scheduler.add(RefCounted.new(), T.value(0.0, 1.0, duration))
 
 func _completion() -> bool:
@@ -34,7 +36,7 @@ func _completion() -> bool:
 	check(group.members == [a, b], "group snapshots members and deduplicates handles")
 	check(not group.is_terminal and not group.is_settled and group.completion_reason == -1, "new group is pending")
 	var results: Array[int] = []
-	group.ended.connect(func(reason): results.append(reason))
+	check(group.ended.connect(func(reason: int) -> void: results.append(reason)) == OK, "group ended signal connects")
 	scheduler.update(1.0)
 	check(a.is_settled and not group.is_terminal, "group waits for its longest member")
 	scheduler.update(1.0)
@@ -86,7 +88,7 @@ func _controls() -> bool:
 	return true
 
 func _lifetimes() -> bool:
-	for reason in [T.Reason.TARGET_FREED, T.Reason.OWNER_EXITED, T.Reason.RUNNER_DISPOSED]:
+	for reason: int in [T.Reason.TARGET_FREED, T.Reason.OWNER_EXITED, T.Reason.RUNNER_DISPOSED]:
 		var scheduler := TweensGdScheduler.new()
 		var other := TweensGdScheduler.new()
 		var owner := Node.new()
@@ -113,7 +115,7 @@ func _lifetimes() -> bool:
 func _failures() -> bool:
 	var scheduler := TweensGdScheduler.new()
 	var faulty := T.value(0.0, 1.0, 1.0)
-	faulty.ease_function = func(_t): return NAN
+	faulty.ease_function = func(_t: float) -> float: return NAN
 	var stale_owner := Node.new()
 	var cancellation := T.value(0.0, 1.0, 1.0)
 	cancellation.on_cancel = stale_owner.set_process.bind(true).unbind(1)
@@ -129,12 +131,12 @@ func _failures() -> bool:
 	var errors := group.errors
 	errors.clear()
 	check(group.errors.size() == 2, "error inspection cannot mutate group")
-	for reversed in [false, true]:
+	for reversed: bool in [false, true]:
 		var rejected := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, -1.0))
-		var active := start(scheduler)
-		var partial := T.group([active, rejected, rejected] if reversed else [rejected, active, rejected])
+		var live := start(scheduler)
+		var partial := T.group([live, rejected, rejected] if reversed else [rejected, live, rejected])
 		check(partial.is_settled and partial.completion_reason == T.Reason.FAILED, "already-rejected member settles group regardless of order")
-		check(active.is_settled and active.completion_reason == T.Reason.CANCELLED, "already-rejected member cancels live siblings")
+		check(live.is_settled and live.completion_reason == T.Reason.CANCELLED, "already-rejected member cancels live siblings")
 		check(partial.errors == [rejected.error], "duplicate rejected handle contributes one error")
 	var done := start(scheduler, 0.0)
 	scheduler.update(0.0)
@@ -149,32 +151,34 @@ func _failures() -> bool:
 func _reentrancy() -> bool:
 	var scheduler := TweensGdScheduler.new()
 	var events: Array[String] = []
-	var holder: Array = []
+	var holder: Array[TweensGdGroup] = []
 	var definition := T.value(0.0, 1.0, 1.0)
-	definition.on_update = func(_h, _v):
+	definition.on_update = func(_h: TweensGdHandle, _v: Variant) -> void:
 		events.append("update")
 		holder[0].cancel()
 		check(not holder[0].is_settled, "group waits for cancelled member's active callback")
 		events.append("returned")
-	definition.on_finally = func(_h): events.append("finally")
+	definition.on_finally = func(_h: TweensGdHandle) -> void: events.append("finally")
 	var a := scheduler.add(RefCounted.new(), definition)
 	var b := start(scheduler)
 	var group := T.group([a, b])
 	holder.append(group)
-	group.ended.connect(func(_r):
+	var on_ended := func(_r: int) -> void:
 		events.append("group")
 		check(a.is_settled and b.is_settled, "group signal sees all members settled")
-		group.cancel())
+		group.cancel()
+	check(group.ended.connect(on_ended) == OK, "reentrant group ended signal connects")
 	scheduler.update(0.5)
 	check(events == ["update", "finally", "returned", "group"], "group settlement follows reentrant callback return")
 	holder.clear()
 	var done := start(scheduler, 0.0)
 	scheduler.update(0.0)
 	var end := T.value(0.0, 1.0, 1.0)
-	end.on_end = func(h):
+	end.on_end = func(h: TweensGdHandle) -> void:
 		holder.append(T.group([h, done]))
 		check(h.is_terminal and not h.is_settled and not holder[0].is_settled, "group built in on_end waits for settlement")
-	end.on_finally = func(_h): check(not holder[0].is_settled, "group remains pending through finally")
+	end.on_finally = func(_h: TweensGdHandle) -> void: check(not holder[0].is_settled, "group remains pending through finally")
+	@warning_ignore("return_value_discarded")
 	scheduler.add(RefCounted.new(), end)
 	scheduler.update(1.0)
 	check(holder[0].is_settled and holder[0].completion_reason == T.Reason.COMPLETED, "group created during terminal callback completes")
@@ -182,13 +186,13 @@ func _reentrancy() -> bool:
 	scheduler.dispose()
 	return true
 
-func _continue(group, scheduler, results: Array, options: TweensGdPlaybackOptions = null) -> void:
+func _continue(group: TweensGdGroup, scheduler: TweensGdScheduler, results: Array, options: TweensGdPlaybackOptions = null) -> void:
 	var reason: int = await group.wait()
 	results.append(reason)
 	results.append(scheduler.add(RefCounted.new(), T.value(0.0, 1.0, 1.0), null, options))
 
 func _mixed_clocks() -> bool:
-	for mismatch in ["lane", "time", "scheduler", "next_lane", "next_time", "next_scheduler"]:
+	for mismatch: String in ["lane", "time", "scheduler", "next_lane", "next_time", "next_scheduler"]:
 		var scheduler := TweensGdScheduler.new()
 		var other := TweensGdScheduler.new()
 		var member_options := T.playback_options()
@@ -203,6 +207,7 @@ func _mixed_clocks() -> bool:
 		if mismatch in ["lane", "next_lane"]: next_options.process_mode = T.Process.PHYSICS
 		if mismatch in ["time", "next_time"]: next_options.use_unscaled_time = true
 		var next_scheduler: TweensGdScheduler = other if mismatch in ["scheduler", "next_scheduler"] else scheduler
+		@warning_ignore("missing_await")
 		_continue(group, next_scheduler, next, next_options)
 		match mismatch:
 			"lane":
@@ -219,18 +224,22 @@ func _mixed_clocks() -> bool:
 				other.update(1.5, 2.0)
 			_: scheduler.update(1.5, 2.0)
 		check(group.is_settled and group.completion_reason == T.Reason.COMPLETED and next.size() == 2, "mixed-clock group resumes: " + mismatch)
-		check(next[0] == T.Reason.COMPLETED and next[1].value == null and next[1].progress == 0.0, "continuation inherits no group credit: " + mismatch)
+		var reason: int = next[0]
+		var continued: TweensGdHandle = next[1]
+		check(reason == T.Reason.COMPLETED and continued.value == null and continued.progress == 0.0, "continuation inherits no group credit: " + mismatch)
 		var wrong_lane: int = T.Process.PROCESS if next_options.process_mode == T.Process.PHYSICS else T.Process.PHYSICS
 		next_scheduler.update(0.4, 0.8, wrong_lane)
-		check(next[1].value == null and next[1].progress == 0.0, "continuation waits for eligible lane: " + mismatch)
+		check(continued.value == null and continued.progress == 0.0, "continuation waits for eligible lane: " + mismatch)
 		var wrong_scheduler: TweensGdScheduler = scheduler if next_scheduler == other else other
 		wrong_scheduler.update(0.4, 0.8, next_options.process_mode)
-		check(next[1].value == null and next[1].progress == 0.0, "continuation waits for its scheduler: " + mismatch)
+		check(continued.value == null and continued.progress == 0.0, "continuation waits for its scheduler: " + mismatch)
 		next_scheduler.update(0.0, 0.0, next_options.process_mode)
-		near(next[1].value, 0.0, "first eligible update starts without inherited time: " + mismatch)
-		near(next[1].progress, 0.0, "zero delta gives no continuation credit: " + mismatch)
+		var started_value: float = continued.value
+		near(started_value, 0.0, "first eligible update starts without inherited time: " + mismatch)
+		near(continued.progress, 0.0, "zero delta gives no continuation credit: " + mismatch)
 		next_scheduler.update(0.25, 0.5, next_options.process_mode)
-		near(next[1].value, 0.5 if next_options.use_unscaled_time else 0.25, "continuation uses only its own update clock: " + mismatch)
+		var advanced_value: float = continued.value
+		near(advanced_value, 0.5 if next_options.use_unscaled_time else 0.25, "continuation uses only its own update clock: " + mismatch)
 		scheduler.dispose()
 		other.dispose()
 	return true
@@ -240,41 +249,55 @@ func _independent_roots() -> bool:
 	var other := TweensGdScheduler.new()
 	var group := T.group([start(other)])
 	var next: Array = []
+	@warning_ignore("missing_await")
 	_continue(group, scheduler, next)
 	var after: Array = []
 	var definition := T.value(0.0, 1.0, 0.5)
-	definition.on_end = func(_h):
+	definition.on_end = func(_h: TweensGdHandle) -> void:
 		group.cancel()
 		after.append(start(scheduler))
+	@warning_ignore("return_value_discarded")
 	scheduler.add(RefCounted.new(), definition)
 	scheduler.update(0.75)
 	check(next[1].value == null and after[0].value == null, "callback roots defer capture")
 	scheduler.update(0.0)
-	near(next[1].value, 0.0, "group continuation starts fresh")
-	near(after[0].value, 0.0, "callback root starts fresh")
+	var continued_value: float = next[1].value
+	near(continued_value, 0.0, "group continuation starts fresh")
+	var root_value: float = after[0].value
+	near(root_value, 0.0, "callback root starts fresh")
 	scheduler.dispose()
 	other.dispose()
 	return true
 
 func _conformance() -> bool:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/groups.json"))
-	for test in data.cases:
+	for test: Dictionary in data.cases:
+		var case_name: String = test.name
 		var scheduler := TweensGdScheduler.new()
 		var members: Array[TweensGdHandle] = []
-		for duration in test.durations: members.append(start(scheduler, duration))
+		for duration: float in test.durations: members.append(start(scheduler, duration))
 		var ordered: Array[TweensGdHandle] = []
-		for index in test.order: ordered.append(members[int(index)])
+		for index: int in test.order: ordered.append(members[index])
 		var group := T.group(ordered)
 		var next: Array = []
+		@warning_ignore("missing_await")
 		_continue(group, scheduler, next)
-		for sample in test.samples:
-			scheduler.update(sample.delta)
-			check(group.is_settled == sample.settled, test.name + " settlement")
-			check((next.size() == 2) == sample.settled, test.name + " continuation")
-		check(next[0] == T.Reason.COMPLETED, test.name + " reason")
-		check(next[1].value == null, test.name + " continuation waits for next update")
-		scheduler.update(test.next_delta)
-		check(absf(next[1].value - test.next_value) <= data.tolerance, test.name + " independent root delta")
+		for sample: Dictionary in test.samples:
+			var delta: float = sample.delta
+			scheduler.update(delta)
+			var settled: bool = sample.settled
+			check(group.is_settled == settled, case_name + " settlement")
+			check((next.size() == 2) == settled, case_name + " continuation")
+		var reason: int = next[0]
+		check(reason == T.Reason.COMPLETED, case_name + " reason")
+		var continued: TweensGdHandle = next[1]
+		check(continued.value == null, case_name + " continuation waits for next update")
+		var next_delta: float = test.next_delta
+		scheduler.update(next_delta)
+		var root_value: float = continued.value
+		var expected: float = test.next_value
+		var tolerance: float = data.tolerance
+		check(absf(root_value - expected) <= tolerance, case_name + " independent root delta")
 		scheduler.dispose()
 	return true
 
@@ -313,49 +336,57 @@ func _references() -> bool:
 	check(weak_dropped.get_ref() == null and weak_member.get_ref() == null and weak_watcher.get_ref() == null, "discarding scheduler/group creates no RefCounted cycle")
 	return true
 
-func _capture_group(group) -> void:
-	group.ended.connect(func(_reason): group.cancel())
+func _capture_group(group: TweensGdGroup) -> void:
+	check(group.ended.connect(func(_reason: int) -> void: group.cancel()) == OK, "captured group ended signal connects")
 
-func _record_wait(group, results: Array) -> void:
+func _record_wait(group: TweensGdGroup, results: Array) -> void:
 	results.append(await group.wait())
 
-func _temporary_wait(scheduler, results: Array) -> void:
+func _temporary_wait(scheduler: TweensGdScheduler, results: Array) -> void:
 	results.append(await T.group([start(scheduler)]).wait())
 
 func _waits_and_validation() -> void:
 	var scheduler := TweensGdScheduler.new()
 	var group := T.group([start(scheduler)])
 	var results: Array = []
+	@warning_ignore("missing_await")
 	_record_wait(group, results)
+	@warning_ignore("missing_await")
 	_record_wait(group, results)
+	@warning_ignore("missing_await")
 	_temporary_wait(scheduler, results)
 	check(results.is_empty(), "group waiters suspend")
 	scheduler.update(1.0)
 	check(results == [T.Reason.COMPLETED, T.Reason.COMPLETED, T.Reason.COMPLETED], "multiple and temporary group awaits resume")
-	check(await group.wait() == T.Reason.COMPLETED, "late group wait returns immediately")
-	check(await group.wait() == T.Reason.COMPLETED, "repeated group wait returns cached reason")
+	var late: int = await group.wait()
+	check(late == T.Reason.COMPLETED, "late group wait returns immediately")
+	var repeated: int = await group.wait()
+	check(repeated == T.Reason.COMPLETED, "repeated group wait returns cached reason")
 	var survivor := start(scheduler)
-	for input in [null, [], 42, [null], [survivor, null], [survivor, 42], [survivor, TweensGdDefinition.new()]]:
+	for input: Variant in [null, [], 42, [null], [survivor, null], [survivor, 42], [survivor, TweensGdDefinition.new()]]:
 		_host.failures.append_array(_host._collector.take_errors())
 		var invalid := T.group(input)
 		var diagnostics: Array[String] = _host._collector.take_errors()
 		check(invalid != null and invalid.is_settled and invalid.is_terminal, "invalid group is non-null and settled")
-		check(await invalid.wait() == T.Reason.FAILED and not invalid.error.is_empty(), "invalid group is immediately awaitable with diagnostic")
+		var failed: int = await invalid.wait()
+		check(failed == T.Reason.FAILED and not invalid.error.is_empty(), "invalid group is immediately awaitable with diagnostic")
 		check(diagnostics.size() == 1 and diagnostics[0].contains(invalid.error), "invalid group logs exactly its error")
 		check(invalid.members.is_empty() and not survivor.is_terminal, "group validates all input before subscribing or cancelling")
 		invalid.pause()
 		invalid.resume()
 		invalid.cancel()
 	var rejected := scheduler.add(RefCounted.new(), T.value(0.0, 1.0, -1.0))
-	check(await T.group([rejected]).wait() == T.Reason.FAILED, "group of rejected handles is immediately awaitable")
+	var rejected_reason: int = await T.group([rejected]).wait()
+	check(rejected_reason == T.Reason.FAILED, "group of rejected handles is immediately awaitable")
 	if OS.has_feature("web"):
 		scheduler.dispose()
 		return # Worker-thread rejection is covered on desktop; the Web preset is single-threaded.
 	_host.failures.append_array(_host._collector.take_errors())
 	var worker := Thread.new()
-	worker.start(func(): return T.group([survivor]))
+	check(worker.start(func() -> TweensGdGroup: return T.group([survivor])) == OK, "worker thread starts")
 	var worker_group: TweensGdGroup = worker.wait_to_finish()
-	var diagnostics: Array[String] = _host._collector.take_errors()
-	check(worker_group.is_settled and await worker_group.wait() == T.Reason.FAILED, "worker group creation returns failed group")
-	check(diagnostics.size() == 1 and not survivor.is_terminal, "worker rejection does not touch member state")
+	var worker_diagnostics: Array[String] = _host._collector.take_errors()
+	var worker_failed: bool = worker_group.is_settled and await worker_group.wait() == T.Reason.FAILED
+	check(worker_failed, "worker group creation returns failed group")
+	check(worker_diagnostics.size() == 1 and not survivor.is_terminal, "worker rejection does not touch member state")
 	scheduler.dispose()

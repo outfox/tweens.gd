@@ -7,8 +7,8 @@ const SAMPLES := 240
 
 static func run(owner: Node) -> String:
 	var results: Array = []
-	for count in [1000, 10000]:
-		for profile in [
+	for count: int in [1000, 10000]:
+		for profile: Array in [
 			["linear", T.Ease.LINEAR, BlendType.MAKIMA],
 			["legacy_sine", T.Ease.SINE_IN_OUT, BlendType.MAKIMA],
 			["paired_sine", InOut.SINE, BlendType.MAKIMA],
@@ -30,7 +30,8 @@ static func _measure(owner: Node, count: int, profile: Array) -> Dictionary:
 		var target := Node2D.new()
 		owner.add_child(target)
 		targets.append(target)
-	var definition := T.property(^"position", Vector2(100, 200), 1.0, profile[1])
+	var easing: int = profile[1]
+	var definition := T.property(^"position", Vector2(100, 200), 1.0, easing)
 	definition.from_value = Vector2.ZERO
 	definition.repeats = T.INFINITE
 	definition.blend_type = profile[2]
@@ -39,6 +40,7 @@ static func _measure(owner: Node, count: int, profile: Array) -> Dictionary:
 	var start := Time.get_ticks_usec()
 	for i in range(count):
 		definition.offset = float(i)/count
+		@warning_ignore("return_value_discarded")
 		scheduler.add(targets[i], definition)
 	var create_us := Time.get_ticks_usec()-start
 	var samples: Array[int] = []
@@ -50,5 +52,5 @@ static func _measure(owner: Node, count: int, profile: Array) -> Dictionary:
 	scheduler.dispose()
 	for target in targets: target.free()
 	return {"backend": "gdscript", "count": count, "profile": profile[0],
-		"median_update_us": samples[SAMPLES/2], "p95_update_us": samples[int(SAMPLES*0.95)-1],
+		"median_update_us": samples[int(SAMPLES * 0.5)], "p95_update_us": samples[int(SAMPLES*0.95)-1],
 		"create_us": create_us}

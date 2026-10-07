@@ -10,7 +10,7 @@ func animate() -> void:
 		Tweens.play(targets.spot, cycle(Tweens.light_energy_3d(3.0, seconds))),
 	]).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

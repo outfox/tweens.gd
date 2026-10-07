@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using OptionsModel = (string Properties, string Parameters, string Assignments, string Arguments);
 
-namespace Tweens.Generators;
+namespace tweens.gd.Generators;
 
 [Generator(LanguageNames.CSharp)]
 public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
@@ -194,7 +194,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         var instance = "TweenInstance<" + target + ", " + value + ">";
         var playback = "TweenDefinition<" + target + ", " + value + ">";
         var contract = "ITweenDefinition<" + target + ", " + value + ">";
-        var source = new StringBuilder(Header + "using global::System;\nusing global::tweens.gd;\n\nnamespace Tweens;\n\n");
+        var source = new StringBuilder();
         source.Append("/// <summary>Reusable immutable ").Append(name)
             .Append(" definition. Each start snapshots configuration; activation captures the current value.</summary>\n")
             .Append("public readonly record struct ").Append(name).Append(generic).Append(" : ").Append(contract);
@@ -271,8 +271,10 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 .Append("            Delta").Append(endpoint).Append(" = Delta").Append(endpoint).Append(",\n");
         foreach (var callback in Callbacks)
             source.Append("            ").Append(callback).Append(" = ").Append(callback).Append(",\n");
-        source.Append("        };\n        Options.CopyTo(playback);\n        return playback;\n    }\n}\n");
-        return source.ToString();
+        source.Append("        };\n        Options.CopyTo(playback);\n        return playback;\n    }\n}");
+        // Definitions nest in Tweens, so `using tweens.gd;` reaches them as Tweens.Name without a global namespace.
+        var nested = string.Join("\n", source.ToString().Split('\n').Select(line => line.Length == 0 ? line : "    " + line));
+        return Header + "using global::System;\n\nnamespace tweens.gd;\n\npublic static partial class Tweens\n{\n" + nested + "\n}\n";
     }
 
     // Twins of the extension methods with a shorter endpoint form, and with an easing and delay in place of configure.

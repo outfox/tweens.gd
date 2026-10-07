@@ -21,9 +21,10 @@ var _bindings: Array[Dictionary] = []
 var _shaders: Array[Shader] = []
 
 func copy() -> TweensGdAdapter:
-	var result = get_script().new()
-	result.parameter = parameter
-	result.instance_uniform = instance_uniform
+	var script: GDScript = get_script()
+	var result: TweensGdAdapter = script.new()
+	result.set(&"parameter", parameter)
+	result.set(&"instance_uniform", instance_uniform)
 	return result
 
 func prepare(target: Object) -> String:
@@ -36,43 +37,49 @@ func prepare(target: Object) -> String:
 	else:
 		if not target is ShaderMaterial: return "Shader parameter tweens require a ShaderMaterial."
 		_slots = [target]
-	for slot in _slots:
-		var material: Material = slot
+	for slot: Material in _slots:
+		var material := slot
 		var visited: Dictionary = {}
 		while material != null:
 			if not is_instance_valid(material): return "A live material is required."
 			if visited.has(material.get_instance_id()): return "Material next passes must not form a cycle."
 			visited[material.get_instance_id()] = true
-			var shader: Shader = material.shader if material is ShaderMaterial else null
-			if material is ShaderMaterial:
+			var shader_material := material as ShaderMaterial
+			var shader: Shader = shader_material.shader if shader_material != null else null
+			if shader_material != null:
 				if not is_instance_valid(shader): return "A live shader is required."
 				if not _shaders.has(shader):
 					_shaders.append(shader)
-					shader.changed.connect(_shader_changed)
+					if shader.changed.connect(_shader_changed) != OK: return "The shader cannot be watched for changes."
 			_bindings.append({"material": material, "next": material.next_pass, "shader": shader})
 			material = material.next_pass if instance_uniform else null
-	var metadata: Array = target.get_property_list() if instance_uniform else target.shader.get_shader_uniform_list()
+	var metadata: Array = target.get_property_list() if instance_uniform else (target as ShaderMaterial).shader.get_shader_uniform_list()
 	var name := "instance_shader_parameters/" + String(parameter) if instance_uniform else String(parameter)
-	for entry in metadata:
+	for entry: Dictionary in metadata:
 		if entry.name != name: continue
 		_uniform_type = entry.type
 		if not _uniform_type in [TYPE_INT, TYPE_FLOAT, TYPE_VECTOR2, TYPE_VECTOR3, TYPE_VECTOR4, TYPE_COLOR]:
 			return "The shader uniform type is unsupported."
-		if instance_uniform: _had_override = bool(entry.usage & PROPERTY_USAGE_STORAGE)
+		var usage: int = entry.usage
+		if instance_uniform: _had_override = (usage & PROPERTY_USAGE_STORAGE) != 0
 		return ""
 	return "No %s shader uniform named '%s' is available; check its declaration and renderer." % ["instance" if instance_uniform else "material", parameter]
 
 func read(target: Object) -> Variant:
 	if instance_uniform:
-		if _had_override: return target.get_instance_shader_parameter(parameter)
-		if target is CanvasItem:
-			return RenderingServer.canvas_item_get_instance_shader_parameter_default_value(target.get_canvas_item(), parameter)
-		return RenderingServer.instance_geometry_get_shader_parameter_default_value(target.get_instance(), parameter)
-	var value: Variant = target.get_shader_parameter(parameter)
+		var canvas := target as CanvasItem
+		if canvas != null:
+			if _had_override: return canvas.get_instance_shader_parameter(parameter)
+			return RenderingServer.canvas_item_get_instance_shader_parameter_default_value(canvas.get_canvas_item(), parameter)
+		var geometry := target as GeometryInstance3D
+		if _had_override: return geometry.get_instance_shader_parameter(parameter)
+		return RenderingServer.instance_geometry_get_shader_parameter_default_value(geometry.get_instance(), parameter)
+	var material := target as ShaderMaterial
+	var value: Variant = material.get_shader_parameter(parameter)
 	# Only the first read captures whether an override existed; later reads see this tween's writes.
 	if not _read: _had_override = value != null
 	_read = true
-	return value if value != null else RenderingServer.shader_get_parameter_default(target.shader.get_rid(), parameter)
+	return value if value != null else RenderingServer.shader_get_parameter_default(material.shader.get_rid(), parameter)
 
 func validate_value(value: Variant) -> String:
 	if typeof(value) != _uniform_type:
@@ -83,7 +90,9 @@ func validate_value(value: Variant) -> String:
 
 func interpolate(from: Variant, to: Variant, weight: float) -> Variant:
 	var value: Variant = super.interpolate(from, to, weight)
-	return clampi(value, -2147483648, 2147483647) if _uniform_type == TYPE_INT else value
+	if _uniform_type != TYPE_INT: return value
+	var integer: int = value
+	return clampi(integer, -2147483648, 2147483647)
 
 func write(target: Object, value: Variant) -> String:
 	var error := _validate_binding(target)
@@ -98,8 +107,9 @@ func restore(target: Object, initial: Variant) -> String:
 	return ""
 
 func _set_parameter(target: Object, value: Variant) -> void:
-	if instance_uniform: target.set_instance_shader_parameter(parameter, value)
-	else: target.set_shader_parameter(parameter, value)
+	if not instance_uniform: (target as ShaderMaterial).set_shader_parameter(parameter, value)
+	elif target is CanvasItem: (target as CanvasItem).set_instance_shader_parameter(parameter, value)
+	else: (target as GeometryInstance3D).set_instance_shader_parameter(parameter, value)
 
 func _shader_changed() -> void:
 	_changed = true
@@ -114,13 +124,16 @@ func _validate_binding(target: Object) -> String:
 		var material: Material = binding.material
 		if not is_instance_valid(material): return "A shader material was freed during playback."
 		if instance_uniform and material.next_pass != binding.next: return "The material pass binding changed during playback."
-		if material is ShaderMaterial and (not is_instance_valid(binding.shader) or material.shader != binding.shader):
+		var shader_material := material as ShaderMaterial
+		if shader_material != null and (not is_instance_valid(binding.shader) or shader_material.shader != binding.shader):
 			return "The shader binding changed during playback. Start a new tween for the new shader."
 	return ""
 
 func _get_mesh(target: Object) -> Mesh:
-	if target is MeshInstance3D: return target.mesh
-	if target is MultiMeshInstance3D and target.multimesh != null: return target.multimesh.mesh
+	var mesh_instance := target as MeshInstance3D
+	if mesh_instance != null: return mesh_instance.mesh
+	var multimesh_instance := target as MultiMeshInstance3D
+	if multimesh_instance != null and multimesh_instance.multimesh != null: return multimesh_instance.multimesh.mesh
 	return null
 
 func _get_slots(target: Object) -> Array:
@@ -128,11 +141,13 @@ func _get_slots(target: Object) -> Array:
 		var canvas: CanvasItem = target
 		while canvas.use_parent_material and canvas.get_parent() is CanvasItem: canvas = canvas.get_parent()
 		return [canvas.material]
-	var result: Array = [target.material_override, target.material_overlay]
+	var geometry := target as GeometryInstance3D
+	var result: Array = [geometry.material_override, geometry.material_overlay]
 	var mesh := _get_mesh(target)
 	if mesh != null:
+		var mesh_instance := target as MeshInstance3D
 		for surface in range(mesh.get_surface_count()):
-			result.append(target.get_active_material(surface) if target is MeshInstance3D else mesh.surface_get_material(surface))
+			result.append(mesh_instance.get_active_material(surface) if mesh_instance != null else mesh.surface_get_material(surface))
 	return result
 
 func release() -> String:

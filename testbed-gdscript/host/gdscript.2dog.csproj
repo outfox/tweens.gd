@@ -19,9 +19,9 @@
       <AddonSource Include="../../addons/tweens_gd/**/*" />
       <ConformanceSource Include="../../tests/conformance/*.json" />
     </ItemGroup>
-    <!-- Mirror the addon: files removed from the source must not linger. Godot keeps its generated .uid files. -->
+    <!-- Mirror the addon, including its committed .uid files: files removed from the source must not linger. -->
     <ItemGroup>
-      <StagedAddon Include="../addons/tweens_gd/**/*" Exclude="../addons/tweens_gd/**/*.uid" />
+      <StagedAddon Include="../addons/tweens_gd/**/*" />
       <StaleAddon Include="@(StagedAddon)" Exclude="@(AddonSource->'../addons/tweens_gd/%(RecursiveDir)%(Filename)%(Extension)')" />
     </ItemGroup>
     <Delete Files="@(StaleAddon)" />

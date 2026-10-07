@@ -1,71 +1,29 @@
 # tweens.gd for C#
 
-Download the addon from the
-[Godot Asset Store](https://store.godotengine.org/asset/outfox/tweens/) (recommended),
-or download the addon ZIP from
-[GitHub releases](https://github.com/outfox/tweens.gd/releases).
-Unpack it into your Godot .NET project root, keeping the entire `addons/tweens_gd/` directory.
-The project's normal C# build automatically includes these sources. No package
-reference, analyzer installation, plugin activation or autoload is needed.
-The validated targets are Godot .NET 4.7.2 with `net8.0`, Godot's default, and `net10.0`.
+Your Godot .NET project compiles these sources in its normal build: no package reference, plugin activation or
+autoload is needed. `Generated/` holds the definitions such as `Tweens.Position2D`; keep it with the rest.
 
 ```csharp
-using Godot;
 using tweens.gd;
 
 // From _Ready or later, with the target in the tree.
 await sprite.Tween(new Tweens.Position2D((400, 180), 0.6)).End;
 ```
 
-Use `using tweens.gd;` for extension methods and `Tweens.*` for reusable,
-immutable definitions. GDScript has its own API and runtime; the two can coexist.
-See the [C# guide](https://tweens.gd/csharp/quickstart/).
+Get started at https://tweens.gd/csharp/quickstart/
 
-## Generated definitions
+## Using the NuGet package instead
 
-`Generated/` contains the ordinary C# output of our Roslyn generator, prepared
-and committed by maintainers before release. Keep those files with the addon.
-Godot's own source generators still run through your project's Godot.NET.Sdk;
-their engine-specific output is deliberately not bundled here. The sources
-declare their own imports and nullable context, independent of your settings.
-
-## Optional NuGet installation
-
-C# users can use the `tweens.gd` NuGet package instead. It contains
-the compiled C# library and depends on GodotSharp, with no runtime dependency on
-our generator. Install it from your game's project directory:
+The `tweens.gd` package contains the same library, compiled:
 
 ```powershell
 dotnet add package tweens.gd
 ```
 
-If you keep the addon for GDScript while using NuGet (or a project reference),
-exclude the bundled C# sources in your game's `.csproj` to avoid duplicate types:
+If you keep the addon for GDScript, exclude these sources in your game's `.csproj` to avoid duplicate types:
 
 ```xml
 <ItemGroup>
   <Compile Remove="addons/tweens_gd/csharp/**/*.cs" />
 </ItemGroup>
 ```
-
-Alternatively, omit the `csharp/` directory when installing the addon. A
-GDScript-only project can leave it in place and does not need .NET.
-
-## Linked playback
-
-Use a Chain for one target and a flat list of definitions:
-
-```csharp
-var animation = sprite.Chain([
-    new Tweens.Position2D((100, 0), 1),
-    new Tweens.ModulateAlpha(0, 0.2) { Delay = -0.6 },
-]);
-await animation.End;
-```
-
-Signed delays link to the previous entry's own end. Negative starts pre-roll
-crossed callbacks on the first eligible update; completion waits for every tail.
-Starting snapshots configuration; capture and OnAdd happen at activation.
-Use `PlaybackOptions` at the start call for process, pause, and unscaled-time policy.
-Ordinary awaits wait for completion; independent follow-ups start on their next
-eligible update with no inherited frame time. Multi-target composition is future work.

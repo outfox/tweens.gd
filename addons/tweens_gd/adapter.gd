@@ -16,10 +16,13 @@ var _captured_type: int = TYPE_NIL
 ## Allocate playback bindings in [method prepare]. An unprepared copy can be discarded
 ## without calling [method release]; its RefCounted references are freed normally.
 func copy() -> TweensGdAdapter:
-	var result: TweensGdAdapter = get_script().new()
+	var script: GDScript = get_script()
+	var result: TweensGdAdapter = script.new()
 	# Match definition snapshots: scalar configuration is copied; captured objects remain shared.
 	for field in get_property_list():
-		if field.usage & PROPERTY_USAGE_SCRIPT_VARIABLE: result.set(field.name, get(field.name))
+		var usage: int = field["usage"]
+		var field_name: StringName = field["name"]
+		if usage & PROPERTY_USAGE_SCRIPT_VARIABLE: result.set(field_name, get(field_name))
 	return result
 
 ## Prepares bindings before the initial read. Return an error string, empty on success.
@@ -46,8 +49,9 @@ func interpolate(from: Variant, to: Variant, weight: float) -> Variant:
 func validate_value(value: Variant) -> String:
 	if not TweensGdInterpolation.supported(value) or not TweensGdInterpolation.finite(value):
 		return "Adapter values must be supported, finite values."
-	if typeof(value) == TYPE_QUATERNION and value.length_squared() == 0.0:
-		return "Quaternion endpoints must have nonzero length."
+	if typeof(value) == TYPE_QUATERNION:
+		var rotation: Quaternion = value
+		if rotation.length_squared() == 0.0: return "Quaternion endpoints must have nonzero length."
 	return ""
 
 ## Releases bindings owned by this playback copy once preparation was attempted, including

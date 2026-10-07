@@ -12,7 +12,7 @@ func animate() -> void:
 		handles.append(Tweens.play(target, cycle(Tweens.scale_2d_y(0.6, seconds))))
 	await Tweens.group(handles).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

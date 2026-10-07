@@ -14,7 +14,7 @@ var validator: Callable
 
 func prepare(_target: Object) -> String:
 	if not getter.is_valid() or not setter.is_valid(): return "Custom tweens need valid getter and setter Callables."
-	for callback in [interpolator, validator]:
+	for callback: Callable in [interpolator, validator]:
 		if not callback.is_null() and not callback.is_valid(): return "A custom adapter Callable is invalid."
 	return ""
 

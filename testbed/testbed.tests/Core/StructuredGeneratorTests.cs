@@ -3,7 +3,7 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Tweens.Generators;
+using tweens.gd.Generators;
 
 namespace testbed.Tests.Core;
 
@@ -96,7 +96,7 @@ public class StructuredGeneratorTests
         var (_, output, result) = Run(CreateCompilation(Contracts, Adapter));
         Assert.Equal(new[] { "Opacity.g.cs", "Property.g.cs" },
             result.GeneratedSources.Select(source => source.HintName).Order().ToArray());
-        var definition = output.GetTypeByMetadataName("Tweens.Opacity")!;
+        var definition = output.GetTypeByMetadataName("tweens.gd.Tweens+Opacity")!;
         Assert.True(definition.IsReadOnly);
         var contract = Assert.Single(definition.Interfaces, type => type.Name == "ITweenDefinition");
         Assert.Equal("Targets.Widget", contract.TypeArguments[0].ToDisplayString());
@@ -138,7 +138,7 @@ public class StructuredGeneratorTests
         Assert.Equal(4, result.GeneratedSources.Length);
         foreach (var name in new[] { "ShaderParameter", "CanvasItemInstanceShaderParameter", "GeometryInstanceShaderParameter" })
         {
-            var type = output.GetTypeByMetadataName("Tweens." + name + "`1")!;
+            var type = output.GetTypeByMetadataName("tweens.gd.Tweens+" + name + "`1")!;
             Assert.True(Assert.Single(type.TypeParameters).HasValueTypeConstraint);
             // The binding alone leaves the endpoints unset; with an endpoint, it is required.
             Assert.Contains(type.InstanceConstructors, constructor => constructor.Parameters.Length == 1
@@ -148,7 +148,7 @@ public class StructuredGeneratorTests
                 && constructor.Parameters[1] is { Name: "to", HasExplicitDefaultValue: false }
                 && constructor.Parameters.Skip(2).All(parameter => parameter.HasExplicitDefaultValue));
         }
-        var property = output.GetTypeByMetadataName("Tweens.Property`2")!;
+        var property = output.GetTypeByMetadataName("tweens.gd.Tweens+Property`2")!;
         Assert.True(property.TypeParameters[0].HasReferenceTypeConstraint);
         Assert.True(property.TypeParameters[1].HasValueTypeConstraint);
         Assert.Contains(property.InstanceConstructors, constructor
@@ -231,7 +231,7 @@ public class StructuredGeneratorTests
         var changedContracts = Contracts.Replace("public Duration Duration", "public Duration Delay");
         compilation = compilation.ReplaceSyntaxTree(compilation.SyntaxTrees.First(), Parse(changedContracts));
         var changed = Run(compilation, driver);
-        var definition = changed.Output.GetTypeByMetadataName("Tweens.Opacity")!;
+        var definition = changed.Output.GetTypeByMetadataName("tweens.gd.Tweens+Opacity")!;
         Assert.Single(definition.GetMembers("Delay"));
         Assert.Empty(definition.GetMembers("Duration"));
         Assert.Contains(definition.InstanceConstructors, constructor
@@ -240,7 +240,7 @@ public class StructuredGeneratorTests
         compilation = compilation.RemoveSyntaxTrees(compilation.SyntaxTrees.Last());
         var (_, removed, result) = Run(compilation, changed.Driver);
         Assert.Equal("Property.g.cs", Assert.Single(result.GeneratedSources).HintName);
-        Assert.Null(removed.GetTypeByMetadataName("Tweens.Opacity"));
+        Assert.Null(removed.GetTypeByMetadataName("tweens.gd.Tweens+Opacity"));
     }
 
     [Fact]
