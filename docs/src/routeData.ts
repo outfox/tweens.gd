@@ -7,10 +7,13 @@ type Link = Extract<Entry, { type: 'link' }>;
 
 const links = (entries: Entry[]): Link[] => entries.flatMap((e) => (e.type === 'link' ? [e] : links(e.entries)));
 
-/** Marks every link of a track with its language, so theme.css can hide the other track on a hub page. */
-const tag = (entries: Entry[], lang: string): Entry[] =>
+/** Marks every link of a track with its language, so theme.css can hide the other track on a hub page. Starlight marks
+ *  only the first link to the hub as current; `here` marks its copy in each track. */
+const tag = (entries: Entry[], lang: string, here: string): Entry[] =>
 	entries.map((e) =>
-		e.type === 'link' ? { ...e, attrs: { ...e.attrs, 'data-track': lang } } : { ...e, entries: tag(e.entries, lang) },
+		e.type === 'link'
+			? { ...e, isCurrent: e.isCurrent || e.href === here, attrs: { ...e.attrs, 'data-track': lang } }
+			: { ...e, entries: tag(e.entries, lang, here) },
 	);
 
 // The configured sidebar holds one group per language, then the shared pages (src/tracks.mjs).
@@ -34,7 +37,8 @@ export const onRequest = defineRouteMiddleware((context) => {
 		route.pagination = { prev: path[i - 1], next: i >= 0 ? path[i + 1] : undefined };
 	} else if (hubOf(route.id)) {
 		const langs = Object.keys(LANGS);
-		const entries = tracks.flatMap((t, i) => (t.type === 'group' ? tag(t.entries, langs[i]) : []));
+		const here = hubOf(route.id)!.link;
+		const entries = tracks.flatMap((t, i) => (t.type === 'group' ? tag(t.entries, langs[i], here) : []));
 		route.sidebar = [...entries, ...shared.map((g) => ({ ...g, collapsed: true }))];
 		route.pagination = { prev: undefined, next: undefined };
 	} else {
