@@ -141,6 +141,10 @@ jobs:
       - name: Test GDScript engine restarts
         timeout-minutes: 2
         run: dotnet run --project testbed-gdscript/host -c Release --no-build --no-restore -- --lifecycle
+      # GDScript warnings exist only in debug builds; the gallery project makes Godot's defaults errors.
+      - name: Check gallery GDScript warnings
+        timeout-minutes: 5
+        run: dotnet test testbed/testbed.tests/testbed.tests.csproj -c Debug --filter "FullyQualifiedName~GalleryLanguageTests"
       - name: Pack
         run: dotnet pack csharp/tweens.gd.csproj -c Release --no-build --no-restore -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION -o artifacts/packages
       - name: Pack unified Godot Asset Store addon

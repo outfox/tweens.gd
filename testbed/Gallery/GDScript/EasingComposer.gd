@@ -36,7 +36,7 @@ func refresh() -> void:
 	var exit_family: Array = FAMILIES[targets.exit.get_selected_id()]
 	var a: int = entry_family[0]
 	var b: int = exit_family[1]
-	var ease: int = a | b
+	var easing: int = a | b
 	var split: float = targets.skew.value
 	var method: int = targets.blend.selected
 	var width: float = targets.width.value
@@ -49,7 +49,7 @@ func refresh() -> void:
 	var exit_pair: int = exit_family[0] | b if a else b
 	targets.entryCurve.points = sample(entry_pair, split, method, width, 0.0, 1.0 if not b else split) if a else PackedVector2Array()
 	targets.exitCurve.points = sample(exit_pair, split, method, width, 0.0 if not a else split, 1.0) if b else PackedVector2Array()
-	targets.resultCurve.points = sample(ease, split, method, width)
+	targets.resultCurve.points = sample(easing, split, method, width)
 	targets.fit_preview.call()
 	var left := -200.0 + 400.0 * (split - width * minf(split,1.0-split))
 	var right := -200.0 + 400.0 * (split + width * minf(split,1.0-split))
@@ -57,7 +57,7 @@ func refresh() -> void:
 	targets.region.visible = not single
 	targets.recipe.text = "%s | %s    ·    Skew %.2f    ·    %s %d%%" % [targets.entry.get_item_text(targets.entry.selected), targets.exit.get_item_text(targets.exit.selected), split, targets.blend.get_item_text(method), roundi(width*100)]
 	targets.tracer.position = Vector2(-200, 66)
-	var motion := Tweens.position_2d_x(200.0, seconds, ease)
+	var motion := Tweens.position_2d_x(200.0, seconds, easing)
 	# For example: In.SINE | Out.CUBIC, or InOut.SINE.
 	motion.from_value = -200.0
 	motion.skew = split
@@ -69,9 +69,9 @@ func refresh() -> void:
 		targets.tracer.position = Vector2(-200.0 + 400.0 * handle.progress, 66.0 - 132.0 * ((x + 200.0) / 400.0))
 	preview = Tweens.play(targets.ball, motion)
 
-func sample(ease: int, split: float, method: int, width: float, start: float = 0.0, end: float = 1.0) -> PackedVector2Array:
+func sample(easing: int, split: float, method: int, width: float, from: float = 0.0, to: float = 1.0) -> PackedVector2Array:
 	var points := PackedVector2Array()
 	for i in range(241):
-		var t := start + (end-start)*i/240.0
-		points.append(Vector2(-200.0 + 400.0 * t, 66.0 - 132.0 * Tweens.Easing.evaluate(ease, t, method, width, split)))
+		var t := from + (to - from) * i / 240.0
+		points.append(Vector2(-200.0 + 400.0 * t, 66.0 - 132.0 * Tweens.Easing.evaluate(easing, t, method, width, split)))
 	return points

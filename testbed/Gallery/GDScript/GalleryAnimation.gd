@@ -17,6 +17,7 @@ func start(scene: Control, bindings: Dictionary, duration: float) -> void:
 	targets = bindings
 	seconds = duration
 	tempo = seconds / 1.8
+	@warning_ignore("redundant_await") # Examples override animate() with coroutines.
 	await animate()
 	finished.emit()
 

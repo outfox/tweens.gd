@@ -4,9 +4,9 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 # Scene objects are supplied by the matching C# scene setup file.
 
 func animate() -> void:
-	var pulse = options(Tweens.scale_2d([2.4, 2.4], 1.2), Out.QUART, Vector2.ONE)
+	var pulse := options(Tweens.scale_2d([2.4, 2.4], 1.2), Out.QUART, Vector2.ONE)
 	pulse.repeats = Tweens.INFINITE
-	var fade = options(Tweens.modulate_alpha(0.0, 1.2), In.QUAD, 1.0)
+	var fade := options(Tweens.modulate_alpha(0.0, 1.2), In.QUAD, 1.0)
 	fade.repeats = Tweens.INFINITE
 	await Tweens.group([
 		Tweens.play(targets.camera, cycle(Tweens.camera_2d_zoom([1.8, 1.8], seconds))),
@@ -15,7 +15,7 @@ func animate() -> void:
 		Tweens.play(targets.beacon, fade),
 	]).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE
@@ -24,7 +24,8 @@ func cycle(definition, delay: float = 0.0):
 	definition.delay = delay
 	return definition
 
-func options(definition, easing = InOut.LINEAR, from = null, delay: float = 0.0):
+func options(definition: TweensGdDefinition, easing := InOut.LINEAR, from: Variant = null,
+		delay := 0.0) -> TweensGdDefinition:
 	definition.ease = easing
 	definition.from_value = from
 	definition.delay = delay

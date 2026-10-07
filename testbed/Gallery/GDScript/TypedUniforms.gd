@@ -9,7 +9,7 @@ func animate() -> void:
 		Tweens.play(targets.material, cycle(Tweens.shader_parameter(&"offset", Vector2(0.25, 0.33), seconds)), stage),
 	]).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE

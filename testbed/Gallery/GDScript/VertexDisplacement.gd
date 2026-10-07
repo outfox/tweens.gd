@@ -6,7 +6,7 @@ extends "res://Gallery/GDScript/GalleryAnimation.gd"
 func animate() -> void:
 	await Tweens.play(targets.deformed, cycle(Tweens.instance_shader_parameter(&"amplitude", 0.22, seconds))).wait()
 
-func cycle(definition, delay: float = 0.0):
+func cycle(definition: TweensGdDefinition, delay: float = 0.0) -> TweensGdDefinition:
 	definition.ease = InOut.CUBIC
 	definition.ping_pong = true
 	definition.repeats = Tweens.INFINITE
