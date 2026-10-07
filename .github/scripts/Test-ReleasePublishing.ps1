@@ -13,6 +13,8 @@ function Invoke-WebRequest {
 }
 function Get-ChildItem {
     param($Path, [switch] $File)
+    [pscustomobject]@{ FullName = 'tweens.gd-0.1.0.zip' }
+    [pscustomobject]@{ FullName = 'tweens.gd-tutorial.zip' }
     [pscustomobject]@{ FullName = 'tweens.gd.0.1.0.nupkg' }
     [pscustomobject]@{ FullName = 'tweens.gd.0.1.0.snupkg' }
 }
@@ -65,6 +67,11 @@ try {
         if ($case.Command) {
             if ($releaseTestState.Commands.Count -ne 1 -or $releaseTestState.Commands[0][1] -ne $case.Command) {
                 throw "Expected exactly one gh release $($case.Command) call."
+            }
+            foreach ($asset in 'tweens.gd-0.1.0.zip', 'tweens.gd-tutorial.zip', 'tweens.gd.0.1.0.nupkg', 'tweens.gd.0.1.0.snupkg') {
+                if ($releaseTestState.Commands[0] -notcontains $asset) {
+                    throw "Release publication must include $asset."
+                }
             }
             if (($releaseTestState.Commands[0] -contains '--prerelease') -ne [bool]$case.Prerelease) {
                 throw 'Incorrect prerelease option.'

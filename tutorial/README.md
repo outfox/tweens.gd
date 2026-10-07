@@ -4,6 +4,13 @@ The website's five-step [tutorial](https://tweens.gd/tutorial/) as a Godot proje
 reusing a definition, syntax and sugar, and awaiting completion. Choose C# or GDScript in the header; every
 step runs its lesson in the chosen language and shows the code that runs.
 
+GitHub releases also include `tweens.gd-tutorial.zip`: a standalone Godot .NET
+project with the complete addon, scenes, scripts, and assets included. Extract it,
+import `project.godot` in Godot .NET 4.7.2, build with the .NET 8 SDK or later, and
+press F5. The archive needs no 2dog tools or repository checkout. Its bundled
+[README](../scripts/templates/tutorial/README.md) describes opening the project;
+release procedures live in [the release guide](../docs-internal/RELEASING.md).
+
 ## Layout
 
 - `Lessons/` holds what the tutorial teaches, one folder per step. Each lesson is a scene with a C# script and its
