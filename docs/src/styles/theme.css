@@ -36,7 +36,7 @@
 	--sl-content-width: var(--tw-docs-width);
 	--tw-measure: 46rem;
 	--sl-line-height: 1.7;
-	--sl-text-h1: 2.5rem;
+	--sl-text-h1: 2.25rem;
 	--sl-text-h2: 1.875rem;
 
 	/* Gallery palette, dark */
@@ -212,7 +212,7 @@
 
 @media (min-width: 50em) {
 	:root {
-		--sl-text-h1: 3.25rem;
+		--sl-text-h1: 2.75rem;
 		--sl-text-h2: 2.125rem;
 		--sl-text-h3: 1.5rem;
 	}

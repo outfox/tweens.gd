@@ -74,9 +74,3 @@ Compare against `Completed` rather than a particular early reason: freeing a nod
 - Create and control tweens, and await `End`, on Godot's main thread. `End` completes there, so ordinary Godot async code keeps its synchronization context.
 - Don't block with `.Wait()` or `.Result`, and keep engine access out of `Task.Run` and `ConfigureAwait(false)`.
 - tweens.gd has no coroutine API; use Godot's `ToSignal` for unrelated engine signals.
-
-<!-- Keep links to earlier sections working. -->
-<span id="control-playback"></span>
-<span id="read-the-state"></span>
-<span id="await-the-end"></span>
-<span id="stay-on-the-main-thread"></span>

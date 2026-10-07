@@ -274,6 +274,54 @@ export function legEase(family: EaseLeg, direction: 'In' | 'Out', t: number): nu
 	return ease(name as EaseName, t);
 }
 
+// Effect math from addons/tweens_gd/csharp/Easing/FX.cs, with the same defaults as Tweens.FX.
+
+const unit = (t: number) => Math.min(1, Math.max(0, t));
+const smoother = (t: number) => t * t * t * (t * (6 * t - 15) + 10);
+
+/** Ramps in over `attack` of the duration, then fades out; zero attack starts at full strength. */
+export const attackRelease = (attack = 0.1, decay = 2) => (progress: number) => {
+	const t = unit(progress);
+	if (t === 1) return 0;
+	if (attack === 0) return (1 - t) ** decay;
+	if (t <= attack) return smoother(t / attack);
+	return Math.max(0, 1 - smoother((t - attack) / (1 - attack))) ** decay;
+};
+
+export function punch(frequency = 6, amplitude = 1, decay = 2, phase = 0, attack = 0) {
+	const envelope = attackRelease(attack, decay);
+	return (progress: number) => {
+		const t = unit(progress);
+		return t === 1 ? 0 : amplitude * Math.sin(2 * Math.PI * (frequency * t + phase)) * envelope(t);
+	};
+}
+
+export function shake(frequency = 12, amplitude = 1, seed = 0, offset = 0, decay = 2, attack = 0.1) {
+	const envelope = attackRelease(attack, decay);
+	return (progress: number) => {
+		const t = unit(progress);
+		return t === 1 ? 0 : amplitude * noise(offset + frequency * t, seed) * envelope(t);
+	};
+}
+
+export const breathe = (frequency = 1, amplitude = 1, phase = 0) => (progress: number) =>
+	amplitude * (0.5 - 0.5 * Math.cos(2 * Math.PI * (frequency * unit(progress) + phase)));
+
+// Value noise on a periodic 20-bit lattice; the hash wraps in unsigned 32-bit arithmetic, as in FX.cs.
+function noise(position: number, seed: number) {
+	const cell = Math.floor(position);
+	const index = cell % 1048576;
+	const a = lattice(index, seed);
+	return a + (lattice(index + 1, seed) - a) * smoother(position - cell);
+}
+
+function lattice(index: number, seed: number) {
+	let h = (Math.imul(index & 0xfffff, 374761393) + Math.imul(seed, 668265263)) >>> 0;
+	h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0;
+	h = (h ^ (h >>> 16)) >>> 0;
+	return (h / 4294967295) * 2 - 1;
+}
+
 export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** `Element.animate` for small feedback pops, skipped under reduced motion (the CSS rule cannot reach script animations). */

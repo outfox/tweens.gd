@@ -70,6 +70,3 @@ public static class MeterExample
 - Tweens started during an update first advance on the next one, with no inherited time.
 - Node and resource tweens normally use the automatic runner. `CancelTweens()` reaches only the automatic runner, not your schedulers.
 - Dispose the scheduler when done, so remaining tweens end and run their callbacks.
-
-<!-- Keep links to earlier sections working. -->
-<span id="animate-a-plain-object"></span>

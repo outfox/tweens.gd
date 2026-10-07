@@ -24,8 +24,6 @@ label.Tween(new Tweens.Float
 
 The label counts from 10 to 100. `OnUpdate` receives each value; the node you start on owns playback. [Callback values](/csharp/nodes/values/) lists the other value types.
 
-<span id="custom-properties" />
-
 ## Getter and setter
 
 <Moves>
@@ -49,8 +47,6 @@ public partial class HealthBar : Node2D
 
 </Moves>
 
-<span id="extend-a-binding" />
-
 ## Custom bindings
 
 For setup or cleanup around each playback, derive from `TweenDefinition<TTarget, TValue>`. Override `Read`, `Write`, and `Interpolate`, and optionally `Prepare`, `Restore`, and `Release`. Each start works on a shallow copy, so referenced objects stay shared unless you copy them.
@@ -65,7 +61,3 @@ Keep per-playback state on the playback copy, and release only resources that co
 <LinkCard title="Custom definitions" description="Every hook, its order, and failed preparation." href="/csharp/api/custom/" />
 <LinkCard title="Manual scheduling" description="Advance tweens yourself, for plain objects and tests." href="/csharp/api/scheduler/" />
 </CardGrid>
-
-{/* Keep links to earlier guide sections working. */}
-<span id="drive-a-scheduler-yourself" />
-<span id="custom-definitions-and-bindings" />

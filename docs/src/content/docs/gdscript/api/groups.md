@@ -55,8 +55,3 @@ await step.end
 - If one member stops early or fails, the group cancels the others and keeps that member's reason.
 - A group has no `state`, `progress`, `target`, or `value`; read its members for those.
 - A group doesn't link timing: each member keeps its own start and delay. A [Chain](/gdscript/api/chains/) plays definitions in order.
-
-<!-- Keep links to earlier sections working. -->
-<span id="create-a-group"></span>
-<span id="control-the-group"></span>
-<span id="await-the-group"></span>

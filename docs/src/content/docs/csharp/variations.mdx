@@ -10,9 +10,6 @@ Derive a stronger, slower, or later version of one definition. Factors multiply 
 
 Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
-<span id="a-complete-example" />
-<span id="factors-and-deltas" />
-
 ## Scale a motion
 
 ```csharp
@@ -49,8 +46,6 @@ sprite.Tween(beat);
 
 The sprite grows to 120% of its current scale and back.
 
-<span id="change-the-pacing-with-skew" />
-
 ## Change the pacing
 
 `Skew` shifts the outward leg's balance between its In and Out halves; `Weks` does the same for the return. Both run from 0 (fast start) to 1 (fast finish), and 0.5 keeps the ease as written. Set `Weks = 1 - Skew` to retrace the outward curve.
@@ -66,6 +61,3 @@ The sprite grows to 120% of its current scale and back.
 </Aside>
 
 <LinkCard title="Endpoint reference" description="Every factor and delta, and how they combine." href="/csharp/api/endpoints/" />
-
-{/* Keep links to earlier guide sections working. */}
-<span id="rules" />

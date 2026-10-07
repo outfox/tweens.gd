@@ -1,7 +1,7 @@
 // Shared numeric fixtures run in C#, GDScript, and the actual website easing code.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { composeEase, canonicalFamily, FAMILIES, legEase, pairedLegEase, ease } from '../src/scripts/motion.ts';
+import { composeEase, canonicalFamily, FAMILIES, legEase, pairedLegEase, ease, shake } from '../src/scripts/motion.ts';
 
 const data = JSON.parse(readFileSync(new URL('../../tests/conformance/easing.json', import.meta.url), 'utf8'));
 for (const sample of data.cases) {
@@ -147,3 +147,11 @@ for (const split of [0,.01,.25,.5,.75,.99,1]) {
 }
 for (const invalid of [-1,1.01,NaN,Infinity]) assert.throws(()=>composeEase('Sine','Cubic',.5,invalid),RangeError);
 console.log('Linear splits: all pairs, endpoint profiles, shifted joins, mirrors and validation passed.');
+
+// The effect previews draw the same noise as Tweens.FX.Shake.
+const fx = JSON.parse(readFileSync(new URL('../../tests/conformance/fx.json', import.meta.url), 'utf8'));
+for (const row of fx.shake) {
+  const value = shake(row.frequency, row.amplitude, row.seed, row.offset, row.decay, row.attack)(row.t);
+  assert.ok(Math.abs(value - row.value) < 1e-5, JSON.stringify(row));
+}
+console.log(`Effects: ${fx.shake.length} shared shake samples passed.`);

@@ -1,0 +1,158 @@
+---
+// A Tweens.FX effect at its default settings: the Godot icon moves with it beside a plot of its offset over one play.
+// Both sample scripts/motion.ts, the docs' port of FX.cs, which check:easing tests against the shared fixtures.
+import type { Lang } from '../scripts/lang';
+import { breathe, punch, shake } from '../scripts/motion';
+
+type Effect = 'punch' | 'shake' | 'breathe';
+interface Props {
+	effect: Effect;
+	lang?: Lang;
+}
+const { effect, lang = 'csharp' } = Astro.props;
+
+const sample = { punch: punch(), shake: shake(), breathe: breathe() }[effect];
+const call = `Tweens.FX.${lang === 'gdscript' ? effect : effect[0].toUpperCase() + effect.slice(1)}()`;
+
+// Breathe rises from zero; punch and shake swing both ways around it.
+const W = 160;
+const H = 64;
+const PAD = 7;
+const lo = effect === 'breathe' ? 0 : -1;
+const y = (v: number) => PAD + ((1 - (v - lo) / (1 - lo)) * (H - 2 * PAD));
+let d = '';
+for (let i = 0; i <= 240; i++) d += `${i ? 'L' : 'M'}${((i / 240) * W).toFixed(2)} ${y(sample(i / 240)).toFixed(2)}`;
+---
+
+<figure class="fx not-content" data-fx={effect} data-lo={lo}>
+	<div class="stage" aria-hidden="true">
+		<span class="sprite" data-sprite></span>
+	</div>
+	<svg class="plot" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+		<path class="zero" d={`M0 ${y(0)}H${W}`} />
+		<path class="curve" d={d} />
+		<line class="playhead" data-playhead y1="0" y2={H} />
+		<path class="head" data-head d="M0 0h0" />
+	</svg>
+	<figcaption><code>{call}</code></figcaption>
+</figure>
+
+<script>
+	import { breathe, loop, punch, shake } from '../scripts/motion';
+
+	type Effect = 'punch' | 'shake' | 'breathe';
+	const W = 160;
+	const H = 64;
+	const PAD = 7;
+	const punchX = punch();
+	const shakeX = shake();
+	// Shake2D's default offset decorrelates the second axis.
+	const shakeY = shake(12, 1, 0, 101.37);
+	const breath = breathe();
+
+	// Seconds of motion, then of rest, and the sprite's pose at each progress; amplitudes in pixels.
+	const previews: Record<Effect, { play: number; rest: number; sample: (t: number) => number; pose: (t: number) => [number, number, number] }> = {
+		punch: { play: 0.8, rest: 1, sample: punchX, pose: (t) => [punchX(t) * 14, 0, 1] },
+		shake: { play: 1, rest: 0.9, sample: shakeX, pose: (t) => [shakeX(t) * 12, shakeY(t) * 12, 1] },
+		breathe: { play: 2.4, rest: 0, sample: breath, pose: (t) => [0, 0, 1 + breath(t) * 0.25] },
+	};
+
+	for (const figure of document.querySelectorAll<HTMLElement>('[data-fx]')) {
+		const { play, rest, sample, pose } = previews[figure.dataset.fx as Effect];
+		const lo = Number(figure.dataset.lo);
+		const sprite = figure.querySelector<HTMLElement>('[data-sprite]')!;
+		const playhead = figure.querySelector<SVGLineElement>('[data-playhead]')!;
+		const head = figure.querySelector<SVGPathElement>('[data-head]')!;
+		// Each preview starts at rest, which is also its still frame under reduced motion.
+		loop(figure, (seconds) => {
+			const time = seconds % (play + rest);
+			const playing = time < play;
+			const t = playing ? time / play : 1;
+			const [x, y, scale] = pose(t);
+			sprite.style.translate = `${x}px ${y}px`;
+			sprite.style.scale = String(scale);
+			const px = t * W;
+			playhead.setAttribute('x1', String(px));
+			playhead.setAttribute('x2', String(px));
+			head.setAttribute('d', `M${px} ${PAD + (1 - (sample(t) - lo) / (1 - lo)) * (H - 2 * PAD)}h0`);
+			figure.classList.toggle('is-resting', !playing);
+		}, play);
+	}
+</script>
+
+<style>
+	/* The three previews sit side by side where there is room. */
+	:global(.card-grid:has(.fx)) {
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	}
+	.fx {
+		display: grid;
+		grid-template-columns: 4.5rem 1fr;
+		gap: 0.5rem;
+		margin: 0 0 0.75rem;
+	}
+	.stage,
+	.plot {
+		border-radius: 0.6rem;
+		background: var(--tw-stage);
+	}
+	.stage {
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+	}
+	.sprite {
+		width: 2rem;
+		height: 2rem;
+		background: url('/godot.svg') center / contain no-repeat;
+		filter: drop-shadow(0 2px 4px rgb(3 8 14 / 0.35));
+	}
+	.plot {
+		display: block;
+		width: 100%;
+		height: 4.5rem;
+	}
+	.zero {
+		fill: none;
+		stroke: var(--tw-outline);
+		stroke-dasharray: 2 2;
+		vector-effect: non-scaling-stroke;
+	}
+	.curve {
+		fill: none;
+		stroke: var(--tw-accent);
+		stroke-width: 1.5;
+		stroke-linejoin: round;
+		opacity: 0.75;
+		vector-effect: non-scaling-stroke;
+	}
+	.playhead {
+		stroke: var(--tw-outline);
+		vector-effect: non-scaling-stroke;
+	}
+	/* A zero-length, round-capped path stays a circle in the stretched plot. */
+	.head {
+		stroke: var(--tw-accent);
+		stroke-width: 7;
+		stroke-linecap: round;
+		vector-effect: non-scaling-stroke;
+	}
+	:global(:root[data-theme='light']) .curve {
+		stroke: var(--tw-accent-ink);
+	}
+	:global(:root[data-theme='light']) .head {
+		stroke: var(--tw-accent-ink);
+	}
+	.playhead,
+	.head {
+		transition: opacity 0.25s;
+	}
+	.is-resting :is(.playhead, .head) {
+		opacity: 0;
+	}
+	figcaption {
+		grid-column: 1 / -1;
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+	}
+</style>

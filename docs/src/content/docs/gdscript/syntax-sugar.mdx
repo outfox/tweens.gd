@@ -1,5 +1,5 @@
 ---
-title: "Syntax sugar"
+title: "Syntax & Sugar"
 description: "Two API flavours and two ways to write endpoints: explicit types or sweet arrays."
 ---
 
@@ -7,27 +7,33 @@ import Compare from '../../../components/Compare.astro';
 
 There's more than one way to tween a ferret!
 
-<span id="definitions" />
-<span id="two-flavours" />
-
-## Two API flavours
+## Definitions: Structured vs. Convenient
 
 <Compare>
 
-**Structured** creates a definition object to reuse, or to vary with `with_*()` copies.
+The <u>**Structured**</u> syntax creates a definition object to reuse, or to vary with `with_*()` copies.
 
 ```gdscript title="Structured"
 var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
 
+Tweens.play(sprite, arrive.with_delay(0.1))
+```
+
+```gdscript title="Fully Structured"
+var arrive := Tweens.position_2d()
+arrive.To = new Vector2(400, 180)
+arrive.Duration = 0.6
+arrive.Ease = Out.CUBIC
+arrive.Delay = 0.1
 Tweens.play(sprite, arrive)
 ```
 
 ---
 
-**Convenient** creates and starts a local animation in one `Tweens.play()` expression.
+The <u>**Convenient**</u> syntax creates and starts a local animation in one `Tweens.play()` expression.
 
 ```gdscript title="Convenient"
-Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC))
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.1))
 ```
 
 GDScript uses helpers rather than node extensions.
@@ -36,9 +42,7 @@ GDScript uses helpers rather than node extensions.
 
 These are alternative ways to start the same motion. Both return a handle when played.
 
-<span id="endpoints" />
-
-## Safe and sweet endpoints
+## Values: Safe vs. Sweet
 
 <Compare>
 
@@ -56,7 +60,7 @@ An array of components is shorter, and the start converts it to the expected typ
 Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 ```
 
-An array with the wrong number of components rejects the start with `FAILED`.
+An array of mismatched length rejects at start with `FAILED`.
 
 </Compare>
 

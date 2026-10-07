@@ -3,26 +3,37 @@ title: "Effects"
 description: "Add punch, shake, or breathing motion with reusable effect functions."
 ---
 
+import EffectPreview from '../../../components/EffectPreview.astro';
 import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
 
+
+<Aside type="tip" title="Some functions hit different...">
 Use `Tweens.FX` for pre-made motions that react, jitter, or breathe. Its factories create reusable functions; a tween supplies their duration and playback.
 
-Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+You can also write your own, see [Functions](/csharp/functions).
+</Aside>
 
-## Pick an effect
+
+### Pre-made effects
 
 <CardGrid>
 <Card title="Punch">
+
+<EffectPreview effect="punch" />
 
 A damped oscillation for impacts and recoil. Starts and ends at rest with the default phase.
 
 </Card>
 <Card title="Shake">
 
+<EffectPreview effect="shake" />
+
 Seeded noise for rumble and jitter. Reuse a seed to reproduce the same shape.
 
 </Card>
 <Card title="Breathe">
+
+<EffectPreview effect="breathe" />
 
 A smooth rise and fall for a gentle pulse. One whole cycle returns to rest.
 

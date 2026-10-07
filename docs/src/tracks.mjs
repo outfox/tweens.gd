@@ -17,7 +17,7 @@ export const PATH = [
 			{ link: '/tutorial/', label: 'Tutorial' },
 			{ slug: 'installation', label: 'Install' },
 			{ slug: 'quickstart', label: 'Your first tween' },
-			{ slug: 'syntax-sugar', label: 'Syntax sugar' },
+			{ slug: 'syntax-sugar', label: 'Syntax & Sugar' },
 			{ slug: 'definitions', label: 'Definitions' },
 			{ slug: 'playback', label: 'Control & completion' },
 		],

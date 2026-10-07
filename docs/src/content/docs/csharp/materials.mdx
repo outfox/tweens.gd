@@ -10,8 +10,6 @@ Animate a material to change every node that uses it. Use an instance uniform wh
 
 Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree. `mesh` is a `MeshInstance3D` using the materials shown.
 
-<span id="choose-the-playback-lifetime" />
-
 ## Choose an owner
 
 A material isn't in the scene tree, so its tweens take an owner. A node ends playback when it leaves the tree; the tree keeps it running until shutdown:
@@ -22,8 +20,6 @@ material.TweenRoughness(0.2, 1, GetTree()); // Ends when the tree shuts down.
 ```
 
 The tween keeps animating this material, even if the mesh switches to another one.
-
-<span id="built-in-material-properties" />
 
 ## Material properties
 
@@ -41,8 +37,6 @@ Tweens change values, not material flags. Fading alpha needs transparency enable
 
 </Aside>
 
-<span id="ordinary-shader-uniforms" />
-
 ## Shader uniforms
 
 For a shader declaring `uniform float dissolve = 0.25;`:
@@ -52,8 +46,6 @@ shaderMaterial.TweenShaderParameter("dissolve", 1.0, 0.5, mesh);
 ```
 
 This changes the uniform for every node using the material. Names are case-sensitive, and the endpoint's type must match the uniform: `1.0` for a float, `1` for an int, `Color` for a color, and the matching vector type for a vector.
-
-<span id="per-instance-shader-uniforms" />
 
 ## Instance uniforms
 
@@ -82,6 +74,3 @@ Editing or replacing a bound shader faults playback, and so does swapping the ma
 </Aside>
 
 <LinkCard title="Material and uniform reference" description="Supported types, validation, defaults, and restoring overrides." href="/csharp/nodes/materials/" />
-
-{/* Keep links to earlier guide sections working. */}
-<span id="manual-scheduling" />

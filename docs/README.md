@@ -87,7 +87,8 @@ When this check fails after an upgrade:
   exhaustive binding and restoration rules live in the material reference.
 - Keep setup exceptions and library development notes under Project → Advanced development.
 - Teach one concept with one example before adding variations. Move exhaustive rules
-  into reference, and link to them from the guide. Preserve old section anchors when moving content.
+  into reference, and link to them from the guide. Update links when moving content; the site is
+  too new to need placeholder anchors for old section links.
 - Keep language twins in the same section order. Give demos one concrete experiment
   instead of repeating an explanation of every control.
 - Enable `tableOfContents: true` on reference pages with several sections.
