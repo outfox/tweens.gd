@@ -133,19 +133,17 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -184.0
-offset_top = -21.0
-offset_bottom = 21.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_type_variation = &"LanguageSwitch"
 
 [node name="Choices" type="HBoxContainer" parent="Layout/Header/Bar/LanguageSwitch" unique_id=1795873439]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="CSharpMode" type="Button" parent="Layout/Header/Bar/LanguageSwitch/Choices" unique_id=933215614]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 tooltip_text = "C# lessons and blue accents"
 focus_mode = 0
@@ -157,6 +155,7 @@ text = "C#"
 
 [node name="GDScriptMode" type="Button" parent="Layout/Header/Bar/LanguageSwitch/Choices" unique_id=1628454831]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 tooltip_text = "GDScript lessons and green accents"
 focus_mode = 0

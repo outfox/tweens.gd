@@ -64,17 +64,17 @@ public partial class DefinitionsPage : Page
             };
 
             for (var i = 0; i < icons.Length; i++)
-                icons[i].Tween(hop with { Delay = i * «stagger:0.2» });
+                icons[i].Tween(hop with { Delay = i * «stagger:0.20» });
             """,
             """
             var hop := Tweens.position_2d_y()
-            hop.by_value = «height:-80.0»
+            hop.by_value = «height:-80.00»
             hop.duration = 0.25
             hop.ease = Out.QUAD
             hop.ping_pong = true
 
             for i in icons.size():
-            	Tweens.play(icons[i], hop.with_delay(i * «stagger:0.2»))
+            	Tweens.play(icons[i], hop.with_delay(i * «stagger:0.20»))
             """);
         ShowValues(flash: null);
         Waves();
@@ -90,8 +90,9 @@ public partial class DefinitionsPage : Page
     private void ShowValues(string? flash)
     {
         // GDScript writes the height as a float, as its by_value expects.
-        var pixels = Format(height.Value, Languages.Pick("0", "0.0"));
-        var delay = Format(stagger.Value, "0.0#");
+        var pixels = Format(height.Value, Languages.Pick("0", "0.00"));
+        // Two decimals keep the code the same width while a slider moves.
+        var delay = Format(stagger.Value, "0.00");
         widget.SetSlot("height", "-" + pixels, quiet: flash != "height");
         script.SetSlot("height", pixels, quiet: flash != "height");
         widget.SetSlot("stagger", delay, quiet: flash != "stagger");

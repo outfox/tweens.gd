@@ -107,12 +107,33 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
         page.GetNode<HSlider>("%Height").Value = 160;
         Assert.Same(first, stage.Lesson);
         Assert.Equal(80, first!.Get(Languages.Member("Height")).AsDouble());
-        Assert.Contains(Languages.Pick("By = -160", "by_value = -160.0"), page.GetNode<CodeView>("%Widget").Text);
+        Assert.Contains(Languages.Pick("By = -160", "by_value = -160.00"), page.GetNode<CodeView>("%Widget").Text);
 
         // The wave lasts 4 × 0.2 + 2 × 0.25 s and rests 0.8 s; the next one starts with the new height.
         godot.Seconds(2.2);
         Assert.NotSame(first, stage.Lesson);
         Assert.Equal(160, stage.Lesson!.Get(Languages.Member("Height")).AsDouble());
+    }
+
+    [Theory]
+    [InlineData(Language.CSharp)]
+    [InlineData(Language.GDScript)]
+    public void TheDefinitionCodeKeepsItsWidthWhileSlidersMove(Language language)
+    {
+        using var app = App(language);
+        var page = Open(app.Node, 3);
+        var widget = page.GetNode<CodeView>("%Widget");
+        var stage = page.GetNode<Stage>("%Stage");
+        var sizes = new HashSet<(Vector2, Vector2)>();
+        foreach (var (slider, values) in new[] { ("%Stagger", new[] { 0, 0.2, 0.22, 0.5 }), ("%Height", [40, 100, 160]) })
+            foreach (var value in values)
+            {
+                page.GetNode<HSlider>(slider).Value = value;
+                godot.Frames(2);
+                sizes.Add((widget.Size, stage.Size));
+            }
+        Assert.Single(sizes);
+        Assert.Contains(Languages.Pick("i * 0.50 }", "i * 0.50))"), widget.Text);
     }
 
     [Theory]
@@ -158,6 +179,23 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
         var checks = page.GetNode<Container>("%Checks").GetChildren();
         Assert.Equal(language == Language.GDScript ? 3 : 2, checks.Count);
         Assert.All(checks, row => Assert.IsType<Dot>(row.GetChild(0)));
+    }
+
+    [Fact]
+    public void TheLanguageSwitchFillsItsTrackWithEqualButtons()
+    {
+        using var app = App(Language.CSharp);
+        var csharp = app.Node.GetNode<Button>("%CSharpMode");
+        var gdscript = app.Node.GetNode<Button>("%GDScriptMode");
+        var track = csharp.GetParent().GetParent<PanelContainer>();
+        Assert.Equal(csharp.Size, gdscript.Size);
+
+        var style = track.GetThemeStylebox("panel");
+        var inner = track.GetGlobalRect().GrowIndividual(-style.GetMargin(Side.Left), -style.GetMargin(Side.Top),
+            -style.GetMargin(Side.Right), -style.GetMargin(Side.Bottom));
+        var buttons = csharp.GetGlobalRect().Merge(gdscript.GetGlobalRect());
+        Assert.True(inner.Position.IsEqualApprox(buttons.Position) && inner.Size.IsEqualApprox(buttons.Size),
+            $"Buttons span {buttons}, the track's inside is {inner}.");
     }
 
     [Fact]
