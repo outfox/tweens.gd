@@ -74,3 +74,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Godot Engine logo by Andrea Calabró (https://godotengine.org/press/).
+The documentation site's demos animate the Godot icon in `docs/public/godot.svg`,
+an unmodified copy of Godot's default project icon.
+
+Copyright (c) 2017 Andrea Calabró
+
+Licensed under the Creative Commons Attribution 4.0 International license
+(CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
