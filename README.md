@@ -5,6 +5,8 @@
 tweens.gd is a fully free and libre open source tweening system for Godot 4 - playful and flexible as a ferret!\
 This addon values concise and consistent syntax, and offers more [interesting easing options](https://tweens.gd/easings/) than most.
 
+Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://discord.gg/3UXVHnmEwd).
+
 ### ... easy to get [started](https://tweens.gd/tutorial/)
 
 My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
@@ -23,7 +25,7 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
 
 ## Deets and dooks
 
-This is a MIT licensed, free addon, and it supports both GDScript and C# out of the box. It's made out of love for indie devs and satisfying game feel. Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://discord.gg/3UXVHnmEwd).
+This is a MIT licensed, free addon, and it supports both GDScript and C# out of the box. It's made out of love for indie devs and satisfying game feel. 
 
 [Godot logo](https://godotengine.org/press/) by Andrea Calabró, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). "Easy, the Ferret" illustrations drawn by [foxy_maria](https://www.furaffinity.net/user/foxymaria/). 
 
