@@ -80,6 +80,6 @@ Tweens.play(sprite, Tweens.position_2d([100, 0], 1.0), null, physics)
 ## Rules
 
 - Start a node tween once the node is inside the tree, in `_ready()` or later. A node always owns its own tweens, and removing or reparenting it ends them.
-- Starting snapshots the definition; preparation and capture happen on the first eligible update, before any positive delay. See [what each start copies](/gdscript/api/definitions/#what-each-start-copies).
+- Starting snapshots the definition; preparation and capture happen on the first eligible update, before any positive delay. See [copy on start](/gdscript/api/definitions/#copy-on-start).
 - Tweens started in a callback or after an await begin on the next eligible update, with no inherited frame time.
 - Use the API on Godot's main thread. A call from another thread reports an error and does nothing: starts return a handle that has already failed.

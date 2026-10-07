@@ -57,7 +57,7 @@ sprite.TweenPosition((400, 180), 0.5, snappy);
 | `ITweenDefinition<TTarget, TValue>` | Connects a definition to typed playback; `TTarget` is a class and `TValue` a struct |
 | `ITweenDefinition<TTarget>` | Lets [groups](/csharp/api/groups/) and [Chains](/csharp/api/chains/) mix value types; contravariant in `TTarget` |
 
-## What each start copies
+## Copy on start
 
 - Starting snapshots the configuration. Later `with` copies never reach running playback.
 - Preparation and property capture happen on the first eligible update, before any positive delay.

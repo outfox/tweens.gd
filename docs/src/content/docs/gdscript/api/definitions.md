@@ -87,7 +87,7 @@ Change a setting after the shared function has run, as in `snappy(Tweens.scale_2
 - Endpoint methods drop `_value`: `with_from()`, `with_to()`, and `with_by()`. `with_initial_value()` keeps its name.
 - `with_ping_pong()` and `with_suppress_callbacks_when_target_invalid()` default to `true`.
 
-## What each start copies
+## Copy on start
 
 - Starting snapshots the configuration. Later changes to the definition never reach running playback.
 - Preparation and property capture happen on the first eligible update, before any positive delay.
