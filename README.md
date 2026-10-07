@@ -13,7 +13,7 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
 
 [!["Tween Definitions" tutorial](docs/public/definitions.svg)](https://tweens.gd/tutorial/)
 
-### ... enjoy amazing [documentation](https://tweens.gd/easings/)
+### ... amazing [documentation](https://tweens.gd/easings/)
 
 [![Easing playground where you can test curves and get recipes.](docs/public/easing.svg)](https://tweens.gd/easings/)
 
