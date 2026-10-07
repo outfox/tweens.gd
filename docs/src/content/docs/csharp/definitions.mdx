@@ -49,6 +49,8 @@ public partial class HopWave : Node2D
 
 Each start snapshots its definition. Change `hop` later, and only the starts after that follow; tweens already playing keep their settings.
 
+### Would you like to know more?
+
 <CardGrid>
 <LinkCard title="Anatomy" description="Every field a definition can set." href="/csharp/anatomy/" />
 <LinkCard title="Variations" description="Scale or shift a copy relative to the original." href="/csharp/variations/" />
@@ -56,6 +58,6 @@ Each start snapshots its definition. Change `hop` later, and only the starts aft
 
 <Aside type="tip" title="Keep reusable motion nearby">
 
-Store a shared definition in a `static readonly` field. The generated definitions are readonly record structs.
+Store a shared definition in a `static readonly` field of a class you can use as your animation design system (or theme), shared across your project. The generated definitions are readonly record structs.
 
 </Aside>

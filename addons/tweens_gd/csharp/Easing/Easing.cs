@@ -52,14 +52,15 @@ namespace tweens.gd {
     // Back: peak = 4*s^3 / (27*(s+1)^2).
     static readonly float[] BackSolo = [1.701540198866824f, 2.5923889015162995f, 3.3940516581445603f, 4.155744652639195f, 4.894859521133737f];
     static readonly float[] BackPaired = [2.5923889015162995f, 4.155744652639195f, 5.619622918334311f, 7.042439379340937f, 8.44353560159325f];
-    const float ElasticSoloDecay = 17.553423501870573f;
-    // Solo damping relaxes after the main swing. Paired legs run at half their former frequency.
+    const float ElasticSoloDecay = 13;
+    // Solo damping relaxes after the main swing, so the default curve rests at about 90% of its duration.
+    // Paired legs run at half their former frequency.
     // Reproduce the calibrated peaks with scripts/calibrate-elastic.mjs.
-    const float ElasticSoloTail = 8;
+    const float ElasticSoloTail = 6;
     const float ElasticPairDecay = 7.537490798899971f;
-    const float ElasticSoloPeriod = 0.43031056027706766f;
+    const float ElasticSoloPeriod = 0.58f;
     const float ElasticPairPeriod = 0.6732985463200285f;
-    static readonly float[] ElasticSoloKick = [-0.2974298881021775f, 0.5992618094300022f, 1.036207742895828f, 1.3991518140146244f, 1.730459189003298f];
+    static readonly float[] ElasticSoloKick = [-0.4459853763131816f, 0.5308279022336841f, 0.9602276834507211f, 1.3110242679337114f, 1.6280394875512134f];
     static readonly float[] ElasticPairKick = [0.054242444203084675f, 0.9078807808396336f, 1.4611442537053763f, 1.9533326533438204f, 2.419656309841953f];
     static readonly float[] BounceSoloRoot = [Mathf.Sqrt(0.1f), Mathf.Sqrt(0.2f), Mathf.Sqrt(0.3f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.5f)];
     static readonly float[] BouncePairRoot = [Mathf.Sqrt(0.2f), Mathf.Sqrt(0.4f), Mathf.Sqrt(0.6f), Mathf.Sqrt(0.8f), 1];

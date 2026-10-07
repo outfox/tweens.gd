@@ -450,7 +450,7 @@
       "out": "Elastic",
       "progress": 0.1,
       "skew": 0.5,
-      "expected": 1.2855216252933235,
+      "expected": 1.168037105416807,
       "blend": 0.2
     },
     {
@@ -458,7 +458,7 @@
       "out": "Elastic",
       "progress": 0.27674,
       "skew": 0.5,
-      "expected": 0.9882263299486703,
+      "expected": 1.135000364807354,
       "blend": 0.2
     },
     {
@@ -466,7 +466,7 @@
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.5,
-      "expected": 1.0014170663600452,
+      "expected": 0.9628096135085952,
       "blend": 0.2
     },
     {
@@ -474,7 +474,7 @@
       "out": "Elastic",
       "progress": 0.7,
       "skew": 0.5,
-      "expected": 0.9980495592207533,
+      "expected": 1.0154315347438565,
       "blend": 0.2
     },
     {
@@ -498,7 +498,7 @@
       "out": "None",
       "progress": 0.3,
       "skew": 0.5,
-      "expected": 0.001950440779246665,
+      "expected": -0.015431534743856501,
       "blend": 0.2
     },
     {
@@ -506,7 +506,7 @@
       "out": "None",
       "progress": 0.72326,
       "skew": 0.5,
-      "expected": 0.011773670051329677,
+      "expected": -0.1350003648073539,
       "blend": 0.2
     },
     {
@@ -514,7 +514,7 @@
       "out": "None",
       "progress": 0.9,
       "skew": 0.5,
-      "expected": -0.2855216252933235,
+      "expected": -0.16803710541680683,
       "blend": 0.2
     },
     {
@@ -530,7 +530,7 @@
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.75,
-      "expected": 1.0014170663600452,
+      "expected": 0.9628096135085952,
       "blend": 0.2
     },
     {
@@ -698,7 +698,7 @@
       "out": "Elastic10",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.0994368694898362,
+      "expected": 1.0325542531626408,
       "blend": 0.2
     },
     {
@@ -706,7 +706,7 @@
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.09943686948983621,
+      "expected": -0.0325542531626406,
       "blend": 0.2
     },
     {
@@ -730,7 +730,7 @@
       "out": "Elastic20",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.1197928455460717,
+      "expected": 1.1982871918195481,
       "blend": 0.2
     },
     {
@@ -738,7 +738,7 @@
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.11979284554607172,
+      "expected": -0.19828719181954813,
       "blend": 0.2
     },
     {
@@ -762,7 +762,7 @@
       "out": "Elastic30",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.1296963292802638,
+      "expected": 1.2719368693287776,
       "blend": 0.2
     },
     {
@@ -770,7 +770,7 @@
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.12969632928026398,
+      "expected": -0.2719368693287776,
       "blend": 0.2
     },
     {
@@ -794,7 +794,7 @@
       "out": "Elastic40",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.1379147309246556,
+      "expected": 1.3324698425547399,
       "blend": 0.2
     },
     {
@@ -802,7 +802,7 @@
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.13791473092465556,
+      "expected": -0.3324698425547399,
       "blend": 0.2
     },
     {
@@ -826,7 +826,7 @@
       "out": "Elastic50",
       "progress": 0.2,
       "skew": 0.5,
-      "expected": 1.145410579117276,
+      "expected": 1.3874584103589804,
       "blend": 0.2
     },
     {
@@ -834,7 +834,7 @@
       "out": "None",
       "progress": 0.8,
       "skew": 0.5,
-      "expected": -0.14541057911727595,
+      "expected": -0.38745841035898043,
       "blend": 0.2
     },
     {
@@ -941,7 +941,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": -0.37878889533153826
+      "expected": -0.3801118985849712
     },
     {
       "in": "Back50",
@@ -977,7 +977,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": -0.35750860497147513
+      "expected": -0.3601966115816246
     },
     {
       "in": "Back50",
@@ -1004,7 +1004,7 @@
       "skew": 0.6,
       "blendType": "Makima",
       "blend": 0.6,
-      "expected": 0.08535504402588
+      "expected": 0.09186251477870008
     },
     {
       "in": "Elastic50",
@@ -1013,7 +1013,7 @@
       "skew": 0.6,
       "blendType": "Makima",
       "blend": 0.6,
-      "expected": 0.09536949400096678
+      "expected": 0.08914594861976727
     },
     {
       "in": "Elastic50",
@@ -1031,7 +1031,7 @@
       "skew": 0.6,
       "blendType": "Makima",
       "blend": 0.6,
-      "expected": 0.9357833642648102
+      "expected": 0.9356686048172782
     },
     {
       "in": "Elastic50",
@@ -1040,7 +1040,7 @@
       "skew": 0.6,
       "blendType": "Hermite",
       "blend": 0.6,
-      "expected": 0.08535504402588
+      "expected": 0.09186251477870008
     },
     {
       "in": "Elastic50",
@@ -1049,7 +1049,7 @@
       "skew": 0.6,
       "blendType": "Hermite",
       "blend": 0.6,
-      "expected": 0.052678872626541834
+      "expected": 0.04536785955406368
     },
     {
       "in": "Elastic50",
@@ -1067,7 +1067,7 @@
       "skew": 0.6,
       "blendType": "Hermite",
       "blend": 0.6,
-      "expected": 1.004650539486105
+      "expected": 1.0062900489068083
     },
     {
       "in": "Elastic50",
@@ -1076,7 +1076,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": 0.08535504402588
+      "expected": 0.09186251477870008
     },
     {
       "in": "Elastic50",
@@ -1085,7 +1085,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": -0.3001853774965843
+      "expected": -0.325389867320824
     },
     {
       "in": "Elastic50",
@@ -1112,7 +1112,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": 0.08535504402588
+      "expected": 0.09186251477870008
     },
     {
       "in": "Elastic50",
@@ -1121,7 +1121,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": -0.2879429430093995
+      "expected": -0.31050360522969794
     },
     {
       "in": "Elastic50",
@@ -1229,7 +1229,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": 0.31129069444094193
+      "expected": 0.30908932776514425
     },
     {
       "in": "Sine",
@@ -1265,7 +1265,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": 0.2503152817568106
+      "expected": 0.2458426637488407
     },
     {
       "in": "Sine",
@@ -1580,7 +1580,7 @@
       "skew": 0.6,
       "blendType": "Makima",
       "blend": 0.6,
-      "expected": 0.05219930226048587
+      "expected": 0.05683219660265988
     },
     {
       "in": "Elastic",
@@ -1589,7 +1589,7 @@
       "skew": 0.6,
       "blendType": "Makima",
       "blend": 0.6,
-      "expected": 0.09808301953283449
+      "expected": 0.09127391619690467
     },
     {
       "in": "Elastic",
@@ -1607,7 +1607,7 @@
       "skew": 0.6,
       "blendType": "Makima",
       "blend": 0.6,
-      "expected": 0.8106290318504491
+      "expected": 0.8105179100872532
     },
     {
       "in": "Elastic",
@@ -1616,7 +1616,7 @@
       "skew": 0.6,
       "blendType": "Hermite",
       "blend": 0.6,
-      "expected": 0.05219930226048587
+      "expected": 0.05683219660265988
     },
     {
       "in": "Elastic",
@@ -1625,7 +1625,7 @@
       "skew": 0.6,
       "blendType": "Hermite",
       "blend": 0.6,
-      "expected": 0.06524978733199373
+      "expected": 0.057363630287204495
     },
     {
       "in": "Elastic",
@@ -1643,7 +1643,7 @@
       "skew": 0.6,
       "blendType": "Hermite",
       "blend": 0.6,
-      "expected": 0.863594575153863
+      "expected": 0.8652209227481686
     },
     {
       "in": "Elastic",
@@ -1652,7 +1652,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": 0.05219930226048587
+      "expected": 0.05683219660265988
     },
     {
       "in": "Elastic",
@@ -1661,7 +1661,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": -0.21407132144206747
+      "expected": -0.23209118313214658
     },
     {
       "in": "Elastic",
@@ -1688,7 +1688,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": 0.05219930226048587
+      "expected": 0.05683219660265988
     },
     {
       "in": "Elastic",
@@ -1697,7 +1697,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": -0.20210752269205165
+      "expected": -0.21854618362583317
     },
     {
       "in": "Elastic",
@@ -1987,7 +1987,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": 0.1898078461732448
+      "expected": 0.1872453671109633
     },
     {
       "in": "Bounce20",
@@ -2014,7 +2014,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": 0.137165297096486
+      "expected": 0.13195899043026327
     },
     {
       "in": "Bounce20",
@@ -2699,7 +2699,7 @@
       "skew": 0.6,
       "blendType": "SmoothStep",
       "blend": 0.6,
-      "expected": -0.08733411454940052
+      "expected": -0.08989659361168201
     },
     {
       "in": "Jump20",
@@ -2726,7 +2726,7 @@
       "skew": 0.6,
       "blendType": "Linear",
       "blend": 0.6,
-      "expected": -0.11090582858532239
+      "expected": -0.11611213525154512
     },
     {
       "in": "Jump20",
@@ -3244,7 +3244,7 @@
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0,
-      "expected": 1.2965738391429407,
+      "expected": 1.2577968190913167,
       "blend": 0.2
     },
     {
@@ -3260,7 +3260,7 @@
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0,
-      "expected": 1.0014170663600452,
+      "expected": 0.9628096135085952,
       "blend": 0.2
     },
     {
@@ -3268,7 +3268,7 @@
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0,
-      "expected": 0.9969112457469758,
+      "expected": 1.0148357433474564,
       "blend": 0.2
     },
     {
@@ -3436,7 +3436,7 @@
       "out": "Elastic",
       "progress": 0.125,
       "skew": 0.01,
-      "expected": 1.2997739995445927,
+      "expected": 1.2345337813887125,
       "blend": 0.2
     },
     {
@@ -3452,7 +3452,7 @@
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.01,
-      "expected": 0.998396493920129,
+      "expected": 0.9610363523730028,
       "blend": 0.2
     },
     {
@@ -3460,7 +3460,7 @@
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0.01,
-      "expected": 0.9971900259392533,
+      "expected": 1.0147612298835975,
       "blend": 0.2
     },
     {
@@ -3644,7 +3644,7 @@
       "out": "Elastic",
       "progress": 0.5,
       "skew": 0.25,
-      "expected": 1.0511449322082806,
+      "expected": 1.081881769860631,
       "blend": 0.2
     },
     {
@@ -3652,7 +3652,7 @@
       "out": "Elastic",
       "progress": 0.875,
       "skew": 0.25,
-      "expected": 1.0027366479601063,
+      "expected": 1.0114624999888229,
       "blend": 0.2
     },
     {
