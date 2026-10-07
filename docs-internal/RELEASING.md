@@ -116,9 +116,9 @@ dotnet msbuild build/SmokeTutorial.proj
 The addon ZIP is rooted at `addons/tweens_gd/` and includes both languages,
 generated definitions, native libraries, documentation and licenses. It contains
 no build projects or tools that users must install. Packing requires every native
-library named in the manifest. Use `-AllowMissingNative` only for a local test
-archive when libraries for other platforms are unavailable; release archives
-must be complete and come from CI.
+library named in the manifest. For local testing when libraries for other
+platforms are unavailable, pass `-AllowMissingNative` to both `Pack-Addon.ps1`
+and `Pack-Tutorial.ps1`. Release archives must be complete and come from CI.
 
 `build/Smoke.proj` extracts the actual ZIP into fresh consumers. It checks Debug
 and Release source compilation in a `net8.0` Godot.NET.Sdk project with warnings
