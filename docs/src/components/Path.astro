@@ -9,8 +9,8 @@ const content = (cs: boolean): Record<string, { text: string; api?: string[] }> 
 		text: cs ? 'Add tweens.gd from the Godot Store or NuGet.' : 'Add tweens.gd from the Godot Store or GitHub Releases.',
 	},
 	quickstart: {
-		text: 'Move a sprite, wait for it to arrive, then fade it out.',
-		api: cs ? ['this.Tween()', 'await .End', 'Out.Cubic'] : ['Tweens.play()', 'await .end', 'Out.CUBIC'],
+		text: 'Send the Godot icon wherever you click.',
+		api: cs ? ['this.TweenPosition()', 'Out.Back'] : ['Tweens.play()', 'Tweens.position_2d()', 'Out.BACK'],
 	},
 	definitions: {
 		text: 'Describe a motion once and start it on any node.',

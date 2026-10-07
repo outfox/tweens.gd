@@ -1,59 +1,50 @@
 ---
 title: Your first tween
-description: Make a sprite glide to the right, then fade out with a short C# script.
+description: Send the Godot icon wherever you click, with one line of C#.
 ---
 
+import FirstTween from '../../../components/FirstTween.astro';
 import Moves from '../../../components/Moves.astro';
-import { Aside, Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
-Make a sprite glide 240 pixels to the right, then fade out. You'll write one
-short script and run it in a scene.
+A tween changes a property over time. Click anywhere on the stage, and one line of code sends the Godot icon there.
 
-<Steps>
+<FirstTween />
 
-1. [Install the library](/csharp/installation/) in your Godot C# project.
+The call takes an endpoint, a duration in seconds, and an ease. The stage has Godot's default window size, so each endpoint is the pixel your game would get. The faint copies are a tenth of the duration apart: they bunch up where the icon slows down.
 
-2. Create a scene with a `Sprite2D`, give it a texture, and place it where there
-   is room to move right in the viewport.
+## Write the script
 
-3. Attach the script below as `MoveAndFade.cs`, then play the scene.
-
-</Steps>
-
-## Move, then fade
+Create a 2D scene and drag `icon.svg` from the FileSystem dock into it. Attach this script to the new `Icon` node, then run the scene and click around.
 
 <Moves>
 
-```csharp title="MoveAndFade.cs" {"1":8} {"2":10} {"3":11} {"4":13}
+```csharp title="ClickToMove.cs" {"1":8} {"2":10}
 using Godot;
 using tweens.gd;
 
-public partial class MoveAndFade : Sprite2D
+public partial class ClickToMove : Sprite2D
 {
-    public override async void _Ready()
+    public override void _UnhandledInput(InputEvent @event)
     {
-        var arrive = new Tweens.Position2D(Position + new Vector2(240, 0), 0.6, Out.Cubic);
-
-        var movement = this.Tween(arrive);
-        await movement.End;
-
-        await this.TweenModulateAlpha(0, 0.3).End;
+        if (@event is InputEventMouseButton { Pressed: true } click)
+        {
+            this.TweenPosition(click.Position, 1.2, Out.Back);
+        }
     }
 }
 ```
 
-1. **Define.** Move 240 pixels right in 0.6 seconds; `Out.Cubic` slows into place.
-2. **Play.** Start on this sprite and keep the returned handle.
-3. **Wait.** Continue when movement ends.
-4. **Fade.** Animate opacity to zero over 0.3 seconds.
+1. **Catch the click.** Godot passes every mouse press that no UI control used to `_UnhandledInput`.
+2. **Start the tween.** Move this node to the click in 1.2 seconds; `Out.Back` overshoots, then settles. The call returns at once, and the tween plays over the next frames. C# needs `this.` to call an extension method on the node itself.
 
 </Moves>
 
+Other properties work the same way, such as `TweenScale`, `TweenRotation`, and `TweenModulate`. The [catalog](/csharp/nodes/) lists them all.
 
 <Aside type="tip" title="Try it">
 
-Change `0.6` to `1.2` to make the move take twice as long. Swap `Out.Cubic` for `InOut.Sine` to soften both ends.
+- Swap `Out.Back` for `Out.Bounce`, or `1.2` for `0.4`.
+- Add `this.TweenRotation(Rotation + Mathf.Tau, 1.2, InOut.SmootherStep);` below the first tween. Tweens of different properties play together, so the icon spins on its way. Turn on **Spin too** above to preview it.
 
 </Aside>
-
-Next, [choose the syntax that reads best to you](/csharp/syntax-sugar/).
