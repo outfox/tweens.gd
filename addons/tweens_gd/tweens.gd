@@ -96,7 +96,8 @@ static func shader_parameter(parameter: StringName, to: Variant = null, seconds:
 static func instance_shader_parameter(parameter: StringName, to: Variant = null, seconds: float = 0.0,
 		easing: int = Types.Ease.LINEAR, delay: float = 0.0) -> TweensGdDefinition:
 	var definition := shader_parameter(parameter, to, seconds, easing, delay)
-	definition.adapter.instance_uniform = true
+	var adapter: ShaderAdapter = definition.adapter
+	adapter.instance_uniform = true
 	return definition
 
 # Playback: one handle, a parallel group, or sequential awaits.
