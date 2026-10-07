@@ -30,6 +30,39 @@ The tag-driven workflow publishes directly once all checks succeed. Prepare the
 notes in the repository before tagging; GitHub's release-by-tag lookup does not
 find unpublished drafts, so a separate draft is not part of this workflow.
 
+After creating the GitHub release, the workflow publishes the C# package and its
+symbols to NuGet.org using Trusted Publishing. Only the publishing job can request
+a GitHub OIDC token; `NuGet/login` exchanges it for a short-lived NuGet API key
+immediately before the push. Reruns skip package versions already published.
+
+## NuGet Trusted Publishing setup
+
+1. Set the GitHub repository secret `NUGET_USER` to the NuGet.org **username** of
+   the user who created the policy, rather than an email address or API key.
+2. On NuGet.org, create a Trusted Publishing policy with these values:
+
+   | Field | Value |
+   | --- | --- |
+   | Repository owner | `outfox` |
+   | Repository | `tweens.gd` |
+   | Workflow file | `release.yml` |
+   | Environment | Leave empty; the workflow uses no environment |
+   | Package glob | `tweens.gd` |
+
+   Select the policy owner that owns the package, and allow publishing new packages
+   and package versions if this is the first NuGet release. A policy for another
+   repository or workflow, such as fennecs's `NuGet.yaml`, does not match this one.
+
+See [NuGet's Trusted Publishing documentation](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
+for policy ownership and activation details. No long-lived NuGet API key is needed.
+
+To publish packages from an existing GitHub release, run the **Release** workflow
+manually on `main` with its `tag` input, for example `v0.1.4-beta`. This validates
+the tag's version and downloads its exact `.nupkg` and `.snupkg` release assets;
+it does not rebuild the source or change the release tag or notes. Both files
+must be present before NuGet login. This also provides a retry path if NuGet
+publication failed after the GitHub release was created.
+
 ## Local package checks
 
 After building the native libraries for all platforms named in the addon manifest:
