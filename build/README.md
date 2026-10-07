@@ -6,6 +6,7 @@ work locally with the repository's .NET SDK:
 ```powershell
 dotnet msbuild build/Coverage.proj
 dotnet msbuild build/Smoke.proj -p:Version=0.1.0-pre
+dotnet msbuild build/SmokeTutorial.proj
 ```
 
 Pack the addon ZIP and NuGet packages into `artifacts/packages/` before running
@@ -15,6 +16,11 @@ SDK fixture checks source-install
 compilation; its separate 2dog host imports through `TwoDogImportGodotProject` and
 runs both languages. The NuGet fixture restores the exact local version into an
 isolated cache. Fixture props/targets block accidental repository settings.
+
+`SmokeTutorial.proj` extracts `tweens.gd-tutorial.zip`, builds its standalone
+Godot project in Debug and Release for .NET 8, and runs the tutorial's headless
+page and lesson tests in both languages against the extracted copy. Verification
+tools are staged separately and do not ship in the archive.
 
 Coverage defaults to Release with 99% line and 95% branch minimums for library
 sources. `Configuration`, `MinimumLine`, `MinimumBranch`, `Rendering`, and `NoBuild`
