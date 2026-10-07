@@ -1,0 +1,48 @@
+---
+title: "Curves"
+description: "Shape interpolation with a Godot Curve drawn in the Inspector."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Draw your own easing in the Inspector as a Godot `Curve` when a built-in family does not fit. The tween samples it over its progress.
+
+Examples use `using Godot;` and `using tweens.gd;`, with targets inside the scene tree.
+
+## Use a Godot Curve
+
+Create a `Curve` resource in the Inspector and shape its points over the 0–1 domain. Export a field to assign it:
+
+```csharp title="CurveMotion.cs"
+public partial class CurveMotion : Sprite2D
+{
+    [Export] public Curve MotionCurve { get; set; } = new();
+
+    public override void _Ready()
+    {
+        var move = new Tweens.Position2DX(300, 0.6) { Curve = MotionCurve };
+        this.Tween(move);
+    }
+}
+```
+
+Each playback gets its own curve copy, so edits affect later starts.
+
+<Aside type="tip" title="Time in, weight out">
+
+The x axis is progress, from 0 to 1. A height of 0 holds the start value and 1 the end value. Raise the curve's Max Value above 1 for overshoot.
+
+</Aside>
+
+<Aside type="caution" title="Choose one custom source">
+
+Set `Curve` or an [`EaseFunction`](/csharp/functions/), not both. Either overrides the built-in ease. Custom profiles keep their own pacing instead of using the In/Out split controls.
+
+</Aside>
+
+<CardGrid>
+<LinkCard title="Functions" description="Write an ease in code instead." href="/csharp/functions/" />
+<LinkCard title="Easing playground" description="Check whether a built-in family fits first." href="/easings/" />
+</CardGrid>
+
+The [easing reference](/csharp/api/easing/#custom-functions-and-curves) covers validation and failures.

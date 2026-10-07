@@ -1,0 +1,216 @@
+---
+title: "Porting Godot Tweens"
+description: "Legacy Ease functions for 1:1 visual parity with Godot."
+---
+
+import Compare from '../../components/Compare.astro';
+import Lang from '../../components/Lang.astro';
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Legacy eases carry the names of Godot's transitions and draw the same curves, so a ported tween moves as it did with Godot's `Tween`. For most families, the composable `In` and `Out` flags draw them too.
+
+<Lang only="csharp">
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+</Lang>
+
+<Lang only="gdscript">
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+
+</Lang>
+
+## Port a tween
+
+<Lang only="csharp">
+
+Join the transition and the ease into one name: `TransitionType.Elastic` with `EaseType.Out` becomes `EaseType.ElasticOut`.
+
+<Compare>
+
+```csharp title="Godot's Tween"
+var tween = sprite.CreateTween();
+tween.TweenProperty(sprite, "position", new Vector2(400, 180), 0.8)
+    .SetTrans(Tween.TransitionType.Elastic)
+    .SetEase(Tween.EaseType.Out);
+```
+
+```csharp title="tweens.gd"
+sprite.TweenPosition((400, 180), 0.8, EaseType.ElasticOut);
+```
+
+</Compare>
+
+<Aside type="caution" title="Godot eases in and out by default">
+
+A Godot tween that sets only the transition uses `EaseType.InOut`, so `SetTrans(Tween.TransitionType.Sine)` alone ports to `EaseType.SineInOut`. tweens.gd defaults to `Linear`.
+
+</Aside>
+
+</Lang>
+
+<Lang only="gdscript">
+
+Join the transition and the ease into one name: `TRANS_ELASTIC` with `EASE_OUT` becomes `Tweens.Ease.ELASTIC_OUT`.
+
+<Compare>
+
+```gdscript title="Godot's Tween"
+var tween := sprite.create_tween()
+tween.set_trans(Tween.TRANS_ELASTIC)
+tween.set_ease(Tween.EASE_OUT)
+tween.tween_property(sprite, "position", Vector2(400, 180), 0.8)
+```
+
+```gdscript title="tweens.gd"
+var arrive := Tweens.position_2d([400, 180], 0.8, Tweens.Ease.ELASTIC_OUT)
+
+Tweens.play(sprite, arrive)
+```
+
+</Compare>
+
+<Aside type="caution" title="Godot eases in and out by default">
+
+A Godot tween that sets only the transition uses `EASE_IN_OUT`, so `set_trans(Tween.TRANS_SINE)` alone ports to `Tweens.Ease.SINE_IN_OUT`. tweens.gd defaults to `LINEAR`.
+
+</Aside>
+
+</Lang>
+
+## Legacy eases
+
+<Lang only="csharp">
+
+<CardGrid>
+<Card title="Legacy names">
+
+`EaseType.SineIn`, `EaseType.BounceOut`: Godot's transition and ease in one name, with Godot's curve. Use them to port motion unchanged.
+
+</Card>
+<Card title="In and Out flags">
+
+`In.Sine`, `Out.Cubic`, `InOut.Back10`: mix families, choose overshoot strength, and tune the join. Use them for new motion.
+
+</Card>
+</CardGrid>
+
+Each Godot transition has a legacy name per ease. Where a flag draws the same curve, either works:
+
+| Godot transition | Legacy names | Same curve with flags |
+| --- | --- | --- |
+| `Linear` | `Linear` | `InOut.Linear` |
+| `Sine` | `SineIn`, `SineOut`, `SineInOut` | `In.Sine`, `Out.Sine`, `InOut.Sine` |
+| `Quad` | `QuadIn`, `QuadOut`, `QuadInOut` | `In.Quad`, `Out.Quad`, `InOut.Quad` |
+| `Cubic` | `CubicIn`, `CubicOut`, `CubicInOut` | `In.Cubic`, `Out.Cubic`, `InOut.Cubic` |
+| `Quart` | `QuartIn`, `QuartOut`, `QuartInOut` | `In.Quart`, `Out.Quart`, `InOut.Quart` |
+| `Quint` | `QuintIn`, `QuintOut`, `QuintInOut` | `In.Quint`, `Out.Quint`, `InOut.Quint` |
+| `Expo` | `ExpoIn`, `ExpoOut`, `ExpoInOut` | `In.Expo`, `Out.Expo`, `InOut.Expo` |
+| `Circ` | `CircIn`, `CircOut`, `CircInOut` | `In.Circ`, `Out.Circ`, `InOut.Circ` |
+| `Back` | `BackIn`, `BackOut`, `BackInOut` | `In.Back10`, `Out.Back10`, `InOut.Back10` |
+| `Elastic` | `ElasticIn`, `ElasticOut`, `ElasticInOut` | None |
+| `Bounce` | `BounceIn`, `BounceOut`, `BounceInOut` | None |
+| `Spring` | None | None; see [Spring and out-in](#spring-and-out-in) |
+
+- Flags measure overshoot as a share of the range, so Godot's Back is `Back10`. Elastic and Bounce flags are calibrated the same way; only their legacy names keep Godot's shapes, such as `EaseType.BounceOut`'s 25% first rebound.
+- Expo matches to within 0.1% of the range: Godot offsets its Expo curves slightly.
+- Don't combine legacy names with flags.
+- `EaseType.Linear`, zero, is the default.
+
+</Lang>
+
+<Lang only="gdscript">
+
+<CardGrid>
+<Card title="Legacy names">
+
+`Tweens.Ease.SINE_IN`, `Tweens.Ease.BOUNCE_OUT`: Godot's transition and ease in one name, with Godot's curve. Use them to port motion unchanged.
+
+</Card>
+<Card title="In and Out flags">
+
+`In.SINE`, `Out.CUBIC`, `InOut.BACK10`: mix families, choose overshoot strength, and tune the join. Use them for new motion.
+
+</Card>
+</CardGrid>
+
+Each Godot transition has a legacy name per ease in `Tweens.Ease`. Where a flag draws the same curve, either works:
+
+| Godot transition | Legacy names | Same curve with flags |
+| --- | --- | --- |
+| `TRANS_LINEAR` | `LINEAR` | `InOut.LINEAR` |
+| `TRANS_SINE` | `SINE_IN`, `SINE_OUT`, `SINE_IN_OUT` | `In.SINE`, `Out.SINE`, `InOut.SINE` |
+| `TRANS_QUAD` | `QUAD_IN`, `QUAD_OUT`, `QUAD_IN_OUT` | `In.QUAD`, `Out.QUAD`, `InOut.QUAD` |
+| `TRANS_CUBIC` | `CUBIC_IN`, `CUBIC_OUT`, `CUBIC_IN_OUT` | `In.CUBIC`, `Out.CUBIC`, `InOut.CUBIC` |
+| `TRANS_QUART` | `QUART_IN`, `QUART_OUT`, `QUART_IN_OUT` | `In.QUART`, `Out.QUART`, `InOut.QUART` |
+| `TRANS_QUINT` | `QUINT_IN`, `QUINT_OUT`, `QUINT_IN_OUT` | `In.QUINT`, `Out.QUINT`, `InOut.QUINT` |
+| `TRANS_EXPO` | `EXPO_IN`, `EXPO_OUT`, `EXPO_IN_OUT` | `In.EXPO`, `Out.EXPO`, `InOut.EXPO` |
+| `TRANS_CIRC` | `CIRC_IN`, `CIRC_OUT`, `CIRC_IN_OUT` | `In.CIRC`, `Out.CIRC`, `InOut.CIRC` |
+| `TRANS_BACK` | `BACK_IN`, `BACK_OUT`, `BACK_IN_OUT` | `In.BACK10`, `Out.BACK10`, `InOut.BACK10` |
+| `TRANS_ELASTIC` | `ELASTIC_IN`, `ELASTIC_OUT`, `ELASTIC_IN_OUT` | None |
+| `TRANS_BOUNCE` | `BOUNCE_IN`, `BOUNCE_OUT`, `BOUNCE_IN_OUT` | None |
+| `TRANS_SPRING` | None | None; see [Spring and out-in](#spring-and-out-in) |
+
+- Flags measure overshoot as a share of the range, so Godot's Back is `BACK10`. Elastic and Bounce flags are calibrated the same way; only their legacy names keep Godot's shapes, such as `Tweens.Ease.BOUNCE_OUT`'s 25% first rebound.
+- Expo matches to within 0.1% of the range: Godot offsets its Expo curves slightly.
+- Don't combine legacy names with flags.
+- `Tweens.Ease.LINEAR`, zero, is the default.
+
+</Lang>
+
+## Spring and out-in
+
+tweens.gd has no Spring transition and no out-in ease. To keep these curves, let Godot sample them in an ease function:
+
+<Lang only="csharp">
+
+```csharp
+var arrive = new Tweens.Position2D((400, 180), 0.8)
+{
+    EaseFunction = t => Tween.InterpolateValue(0f, 1f, t, 1,
+        Tween.TransitionType.Spring, Tween.EaseType.Out).AsSingle(),
+};
+
+sprite.Tween(arrive);
+```
+
+`Tween.InterpolateValue` samples any transition and ease, including `Tween.EaseType.OutIn`.
+
+</Lang>
+
+<Lang only="gdscript">
+
+```gdscript
+var arrive := Tweens.position_2d([400, 180], 0.8)
+arrive.ease_function = func(t: float) -> float:
+    return Tween.interpolate_value(0.0, 1.0, t, 1.0, Tween.TRANS_SPRING, Tween.EASE_OUT)
+
+Tweens.play(sprite, arrive)
+```
+
+`Tween.interpolate_value()` samples any transition and ease, including `Tween.EASE_OUT_IN`.
+
+</Lang>
+
+<Lang only="csharp">
+
+<CardGrid>
+<LinkCard title="Coming from Godot's Tween" description="Port loops, delays, callbacks, and signals." href="/csharp/api/#coming-from-godots-tween" />
+<LinkCard title="Easing playground" description="Compare every family and mix an In with a different Out." href="/easings/" />
+</CardGrid>
+
+The [easing reference](/csharp/api/easing/) lists every flag, and [Functions](/csharp/functions/) explains ease functions.
+
+</Lang>
+
+<Lang only="gdscript">
+
+<CardGrid>
+<LinkCard title="Coming from Godot's Tween" description="Port loops, delays, callbacks, and signals." href="/gdscript/api/#coming-from-godots-tween" />
+<LinkCard title="Easing playground" description="Compare every family and mix an In with a different Out." href="/easings/" />
+</CardGrid>
+
+The [easing reference](/gdscript/api/easing/) lists every flag, and [Functions](/gdscript/functions/) explains ease functions.
+
+</Lang>

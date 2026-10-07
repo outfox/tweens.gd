@@ -5,7 +5,7 @@ description: "Add punch, shake, or breathing motion with reusable effect functio
 
 import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
 
-Use `Tweens.FX` for motion that reacts, jitters, or breathes. Its factories create reusable functions; a tween supplies their duration and playback.
+Use `Tweens.FX` for pre-made motions that react, jitter, or breathe. Its factories create reusable functions; a tween supplies their duration and playback.
 
 Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
@@ -67,4 +67,4 @@ Cancelling keeps the current sample. For an effect that must always return to re
 
 </Aside>
 
-The [effect reference](/csharp/api/effects/) shows vector sampling, restoration, and all factory arguments. For a shape of your own, use [custom easing](/csharp/custom/).
+The [effect reference](/csharp/api/effects/) shows vector sampling, restoration, and all factory arguments. For a shape of your own, write an [ease function](/csharp/functions/) or draw a [curve](/csharp/curves/).

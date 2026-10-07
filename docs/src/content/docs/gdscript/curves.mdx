@@ -1,0 +1,46 @@
+---
+title: "Curves"
+description: "Shape interpolation with a Godot Curve drawn in the Inspector."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Draw your own easing in the Inspector as a Godot `Curve` when a built-in family does not fit. The tween samples it over its progress.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+
+## Use a Godot Curve
+
+Create a `Curve` resource in the Inspector and shape its points over the 0–1 domain. Export a field to assign it:
+
+```gdscript title="curve_motion.gd"
+extends Sprite2D
+
+@export var motion_curve: Curve
+
+func _ready() -> void:
+    var move := Tweens.position_2d_x(300.0, 0.6)
+    move.curve = motion_curve
+    Tweens.play(self, move)
+```
+
+Each playback gets its own curve copy, so edits affect later starts.
+
+<Aside type="tip" title="Time in, weight out">
+
+The x axis is progress, from 0 to 1. A height of 0 holds the start value and 1 the end value. Raise the curve's Max Value above 1 for overshoot.
+
+</Aside>
+
+<Aside type="caution" title="Choose one custom source">
+
+Set `curve` or an [`ease_function`](/gdscript/functions/), not both. Either overrides the built-in ease. Custom profiles keep their own pacing instead of using the In/Out split controls.
+
+</Aside>
+
+<CardGrid>
+<LinkCard title="Functions" description="Write an ease in code instead." href="/gdscript/functions/" />
+<LinkCard title="Easing playground" description="Check whether a built-in family fits first." href="/easings/" />
+</CardGrid>
+
+The [easing reference](/gdscript/api/easing/#custom-functions-and-curves) covers validation and failures.

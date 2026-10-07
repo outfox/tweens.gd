@@ -23,12 +23,14 @@ export const PATH = [
 		],
 	},
 	{
-		label: 'Easing',
+		label: 'Tweening',
 		art: 'spacing',
 		pages: [
-			{ link: '/easings/', label: 'Playground' },
+			{ link: '/easings/', label: 'Easings' },
 			{ slug: 'effects', label: 'Effects' },
-			{ slug: 'custom', label: 'Custom' },
+			{ slug: 'functions', label: 'Functions' },
+			{ slug: 'curves', label: 'Curves' },
+			{ link: '/porting/', label: 'Porting Godot Tweens' },
 		],
 	},
 	{
@@ -138,6 +140,9 @@ export const redirects = {
 	'/gdscript/timing': '/gdscript/loops/',
 	'/csharp/custom-tweens': '/csharp/custom-properties/',
 	'/gdscript/custom-tweens': '/gdscript/custom-properties/',
+	// Custom easing split into ease functions and Godot curves.
+	'/csharp/custom': '/csharp/functions/',
+	'/gdscript/custom': '/gdscript/functions/',
 	'/concepts/definitions': '/csharp/definitions/',
 	'/concepts/easing': '/easings/',
 	'/concepts/timing': '/csharp/loops/',
