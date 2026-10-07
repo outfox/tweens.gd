@@ -27,8 +27,8 @@ var movement = sprite.Tween(oopsVeryLate);
 await movement.End;
 ```
 
-1. **Define.** A [definition](/csharp/api/definitions/) has optional constructor arguments for [endpoint](/csharp/api/endpoints/), [timing](/csharp/api/timing/), [easing](/csharp/api/easing/), and [delay](/csharp/api/timing/#delay).
-2. **Initializers.** Set or mutate specifics you want when you're getting into the weeds during production.
+1. **Define.** A [definition](/csharp/api/definitions/) struct has optional constructor arguments for [endpoint](/csharp/api/endpoints/), [timing](/csharp/api/timing/), [easing](/csharp/api/easing/), and [delay](/csharp/api/timing/#delay).
+2. **Initialize.** Set or mutate specifics you want when you're getting into the weeds during production.
 3. **React.** [Callbacks](/csharp/api/callbacks/) run at fixed points of each playback.
 4. **Tweak.** Last-minute modifications close to the action.
 5. **Start.** [Starting playback](/csharp/api/start/) snapshots the definition and returns a [handle](/csharp/api/handles/).
