@@ -1,0 +1,42 @@
+---
+title: "Functions"
+description: "Shape interpolation with your own function of progress."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Supply your own easing as a function when a built-in family does not fit. It maps normalized progress to an interpolation weight.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+
+## Use a function
+
+```gdscript
+var move := Tweens.position_2d_x(300.0, 0.6)
+move.ease_function = func(t: float) -> float: return t * t
+
+Tweens.play(sprite, move)
+```
+
+This starts slowly and accelerates. At halfway through the time, the weight is 0.25, so the sprite has travelled a quarter of the distance.
+
+<Aside type="tip" title="Time in, weight out">
+
+Progress runs from 0 to 1. Return 0 at the start and 1 at the end for an ordinary arrival. Weights outside that range create overshoot; a function ending at 0 returns to its starting value.
+
+</Aside>
+
+<Aside type="caution" title="Choose one custom source">
+
+Set `ease_function` or a [`curve`](/gdscript/curves/), not both. Either overrides the built-in ease. Custom profiles keep their own pacing instead of using the In/Out split controls.
+
+</Aside>
+
+To keep the exact curve of a Godot transition, [sample it with `Tween.interpolate_value()`](/porting/#spring-and-out-in).
+
+<CardGrid>
+<LinkCard title="Curves" description="Draw an ease in the Inspector instead." href="/gdscript/curves/" />
+<LinkCard title="Effects" description="Ready-made functions for punch, shake, and breathing." href="/gdscript/effects/" />
+</CardGrid>
+
+The [easing reference](/gdscript/api/easing/#custom-functions-and-curves) covers validation and failures.

@@ -1,33 +1,53 @@
 ---
-title: "Syntax sugar"
+title: "Syntax & Sugar"
 description: "Two API flavours and two ways to write endpoints: explicit types or sweet arrays."
 ---
 
 import Compare from '../../../components/Compare.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-There's more than one way to tween a ferret!
+Okay, before this gets any more confusing... 
 
-<span id="definitions" />
-<span id="two-flavours" />
+<Aside title="No, you're not seeing things.">
 
-## Two API flavours
+There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.
+
+Some tweens may need...  
+- to be fired off once, and just do their thing
+- destinations or timings you want to specify each time
+- to apply to several different targets (Nodes)
+- small variations for that extra juice
+
+</Aside>
+
+## Definitions: Structured vs. Convenient
 
 <Compare>
 
-**Structured** creates a definition object to reuse, or to vary with `with_*()` copies.
+The <u>**Structured**</u> syntax creates a definition object to reuse, or to vary with `with_*()` copies.
 
 ```gdscript title="Structured"
 var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
+
+Tweens.play(sprite, arrive.with_delay(0.1))
+```
+
+```gdscript title="Fully Structured"
+var arrive := Tweens.position_2d()
+arrive.to_value = Vector2(400, 180)
+arrive.duration = 0.6
+arrive.ease = Out.CUBIC
+arrive.delay = 0.1
 
 Tweens.play(sprite, arrive)
 ```
 
 ---
 
-**Convenient** creates and starts a local animation in one `Tweens.play()` expression.
+The <u>**Convenient**</u> syntax creates and starts a local animation in one `Tweens.play()` expression.
 
 ```gdscript title="Convenient"
-Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC))
+Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6, Out.CUBIC, 0.1))
 ```
 
 GDScript uses helpers rather than node extensions.
@@ -36,9 +56,7 @@ GDScript uses helpers rather than node extensions.
 
 These are alternative ways to start the same motion. Both return a handle when played.
 
-<span id="endpoints" />
-
-## Safe and sweet endpoints
+## Values: Safe vs. Sweet
 
 <Compare>
 
@@ -56,7 +74,7 @@ An array of components is shorter, and the start converts it to the expected typ
 Tweens.play(sprite, Tweens.position_2d([400, 180], 0.6))
 ```
 
-An array with the wrong number of components rejects the start with `FAILED`.
+An array of mismatched length rejects at start with `FAILED`.
 
 </Compare>
 

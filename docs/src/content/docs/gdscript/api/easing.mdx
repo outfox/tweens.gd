@@ -16,7 +16,7 @@ Tweens.play(sprite, Tweens.position_2d_x(300.0, 1.2, In.SINE | Out.CUBIC))
 
 | Field | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `ease` | `int` | `LINEAR` | An `In` curve, an `Out` curve, both joined with `\|`, an `InOut` pair, or a legacy ease |
+| `ease` | `int` | `LINEAR` | An `In` curve, an `Out` curve, both joined with `\|`, an `InOut` pair, or a [legacy ease](/porting/#legacy-eases) |
 | `blend_type` | `int` | `BlendType.MAKIMA` | How [mixed pairs](#mixed-pairs) join |
 | `blend` | `float` | `0.1` | Width of the centered join window, in `[0, 1]` |
 | `skew` | `float` | `0.5` | Where the outward leg splits between In and Out; see [pacing](#pacing) |
@@ -115,24 +115,10 @@ The edge velocities stand in for the outer slopes that `makima` takes from neigh
 - A Godot `Curve` is sampled over the same 0 to 1 domain. Each start samples its own duplicate, so later edits reach only later starts.
 - Either one overrides `ease`; setting both is rejected.
 - The Callable runs synchronously on every update. If it becomes invalid or returns anything but a finite number, the tween ends with `FAILED`. A script error inside it stays an ordinary Godot script error.
-- [Effects](/gdscript/api/effects/) builds functions for punch, shake, and breathing; [custom easing](/gdscript/custom/) shows both in use.
+- [Effects](/gdscript/api/effects/) builds functions for punch, shake, and breathing; [Functions](/gdscript/functions/) and [Curves](/gdscript/curves/) show each in use.
 
 ## Sampling
 
 | Method | Returns | Meaning |
 | --- | --- | --- |
 | `Tweens.Easing.evaluate(ease, progress, blend_type, blend, skew)` | `float` | The weight at `progress`, without starting playback; the last three default to `MAKIMA`, `0.1`, and `0.5` |
-
-## Legacy eases
-
-`Tweens.Ease` keeps Godot-style names, such as `Tweens.Ease.SINE_IN`, with their original numeric values and shapes. Write `In.SINE`, `Out.SINE`, and `InOut.SINE` for `SINE_IN`, `SINE_OUT`, and `SINE_IN_OUT`, and likewise for the other families.
-
-- Back, Elastic, and Bounce flags use the percentage calibration; their legacy names keep the old shapes, such as `Tweens.Ease.BOUNCE_OUT`'s 25% first rebound.
-- Don't combine legacy names with flags.
-- `Tweens.Ease.LINEAR`, zero, is the default.
-
-{/* Keep links to earlier sections working. */}
-<span id="compose-an-ease" />
-<span id="choose-a-family" />
-<span id="choose-the-method-and-width" />
-<span id="migrate-existing-eases" />

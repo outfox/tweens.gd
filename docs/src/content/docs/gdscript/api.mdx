@@ -4,31 +4,11 @@ description: A map of the GDScript core API, from the definition you describe to
 ---
 
 import Compare from '../../../components/Compare.astro';
-import Moves from '../../../components/Moves.astro';
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-A definition describes a motion, starting it returns a handle, and the handle controls that one playback. These pages list every field and member of each, with the exact rules the guides leave out.
+A definition describes a motion, starting it returns a handle, and the handle controls that one playback. These pages list every field and member of each, with the exact rules the guides leave out. [Anatomy of a Tween](/gdscript/anatomy/) draws every field.
 
 Examples use the global `Tweens` class in a node script, with targets inside the scene tree. The native types are global too: `TweensGdDefinition`, `TweensGdHandle`, `TweensGdGroup`, `TweensGdChain`, `TweensGdPlaybackOptions`, `TweensGdScheduler`, and `TweensGdCancellation`. Use these names in type annotations.
-
-## Anatomy of a tween
-
-<Moves>
-
-```gdscript {"1":1} {"2":2} {"3":4} {"4":5}
-var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) \
-	.with_on_end(func(_handle): print("Arrived"))
-
-var movement := Tweens.play(sprite, arrive)
-await movement.end
-```
-
-1. **Define.** A [definition](/gdscript/api/definitions/) holds the [endpoint](/gdscript/api/endpoints/), [timing](/gdscript/api/timing/), and [easing](/gdscript/api/easing/).
-2. **React.** [Callbacks](/gdscript/api/callbacks/) run at fixed points of each playback.
-3. **Start.** [Starting playback](/gdscript/api/start/) snapshots the definition and returns a [handle](/gdscript/api/handles/).
-4. **Await.** `end` resumes with the [reason](/gdscript/api/handles/#tweensreason) playback ended.
-
-</Moves>
 
 ## Find a page
 

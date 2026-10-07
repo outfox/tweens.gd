@@ -1,39 +1,62 @@
 ---
-title: "Syntax sugar"
+title: "Syntax & Sugar"
 description: "Two API flavours and two ways to write endpoints: compiler-checked types and tuples, or sweet arrays."
 ---
 
 import Compare from '../../../components/Compare.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-There's more than one way to tween a ferret!
+Okay, before this gets any more confusing... 
 
-## Two API flavours
+<Aside title="No, you're not seeing things.">
+
+There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.
+
+Some tweens may need...  
+- to be fired off once, and just do their thing
+- destinations or timings you want to specify each time
+- to apply to several different targets (Nodes)
+- small variations for that extra juice
+
+</Aside>
+
+## Definitions: Structured vs. Convenient
 
 <Compare>
 
-**Structured** creates a strongly typed, immutable record struct definition to reuse, or to vary with the `with` keyword.
+The <u>**Structured**</u> syntax creates a strongly typed, immutable record struct definition to reuse, or to vary with the `with` keyword.
 
 ```csharp title="Structured"
 var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);
+
+sprite.Tween(arrive with { Delay = 0.1 });
+```
+
+```csharp title="Fully Structured"
+var arrive = new Tweens.Position2D
+{
+    To = new (400, 180),
+    Duration = 0.6,
+    Ease = Out.Cubic,
+    Delay = 0.1,
+};
 
 sprite.Tween(arrive);
 ```
 
 ---
 
-**Convenient** defines and starts a local animation through an extension method, available on a wide variety of nodes and their descendants.
+The <u>**Convenient**</u> syntax defines and starts a local animation through an extension method, available on a wide variety of nodes and their descendants.
 
 ```csharp title="Convenient"
-sprite.TweenPosition((400, 180), 0.6, Out.Cubic);
+sprite.TweenPosition((400, 180), 0.6, Out.Cubic, 0.1);
 ```
 
 </Compare>
 
 These are alternative ways to start the same motion. Both return a handle when played.
 
-<span id="endpoints" />
-
-## Safe and sweet endpoints
+## Values: Safe vs. Sweet
 
 <Compare>
 
@@ -46,9 +69,9 @@ sprite.TweenPosition((400, 180), 0.6);
 
 ---
 
-Arrays are checked when the tween is created: a wrong number of components throws `ArgumentException`.
+Arrays are checked when the tween is created: a mismatched length throws `ArgumentException`.
 
-An array expression reads closest to GDScript.
+Arrays read closest to GDScript, which is why the array syntax exists.
 
 ```csharp title="Sweet: array"
 sprite.TweenPosition([400, 180], 0.6);

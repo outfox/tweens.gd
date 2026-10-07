@@ -20,8 +20,6 @@ Tweens.play(label, score)
 
 The label counts from 10 to 100. `on_update` receives each value; the node you start on owns playback. [Callback values](/gdscript/nodes/values/) lists the other value types.
 
-<span id="custom-properties" />
-
 ## Script properties
 
 <Moves>
@@ -44,8 +42,6 @@ func set_health(fraction: float) -> void:
 
 For storage that no property path reaches, `Tweens.custom()` takes getter and setter Callables.
 
-<span id="extend-a-binding" />
-
 ## Custom adapters
 
 For setup or cleanup around each playback, extend `TweensGdAdapter` and assign an instance to a definition's `adapter`. Override `read` and `write`, and optionally `interpolate`, `prepare`, `restore`, and `release`. Each start works on a shallow `copy()`, so referenced objects stay shared unless you copy them.
@@ -60,8 +56,3 @@ Keep per-playback state on the playback copy, and release only resources that co
 <LinkCard title="Adapters" description="Every hook, its order, and failed preparation." href="/gdscript/api/custom/" />
 <LinkCard title="Manual scheduling" description="Advance tweens yourself, for plain objects and tests." href="/gdscript/api/scheduler/" />
 </CardGrid>
-
-{/* Keep links to earlier guide sections working. */}
-<span id="drive-a-scheduler-yourself" />
-<span id="custom-storage-with-callables" />
-<span id="adapters-with-bindings" />

@@ -10,9 +10,6 @@ A definition describes motion. Each start copies its settings into independent p
 
 Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
 
-<span id="a-complete-example" />
-<span id="keep-definitions-in-fields" />
-
 ## Define once, start twice
 
 ```csharp
@@ -35,9 +32,6 @@ Store a shared definition in a `static readonly` field. The generated definition
 
 </Aside>
 
-<span id="leave-out-from-or-to" />
-<span id="move-by-an-offset-with-by" />
-
 ## Choose the endpoints
 
 | Choose | Result |
@@ -54,8 +48,6 @@ Use `To` or `By`, not both. Leave `From` out when an offset should add to other 
 
 </Aside>
 
-<span id="vary-a-start-with-with" />
-
 ## Vary one start
 
 Replace the second start with `sprite2.Tween(nudge with { Duration = 0.6 });`.
@@ -69,10 +61,3 @@ The copy takes longer; the original still takes 0.2 seconds. Already running twe
 Use [variations](/csharp/variations/) to scale the original values. The [definition reference](/csharp/api/definitions/) covers shared options and copying.
 
 Next, [control playback and wait for completion](/csharp/playback/).
-
-{/* Keep links to earlier guide sections working. */}
-<span id="share-timing-and-easing" />
-<span id="definition-or-shorthand" />
-<span id="what-each-start-copies" />
-<span id="when-tweens-compete" />
-<span id="build-steps-from-methods" />

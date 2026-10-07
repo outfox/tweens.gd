@@ -47,8 +47,3 @@ await step.End;
 - If one member stops early or faults, the group cancels the others and reports that member's reason or exception.
 - A group has no `State` or `Progress`; read its members for those.
 - A group doesn't link timing: each member keeps its own start and delay. A [Chain](/csharp/api/chains/) plays definitions in order.
-
-<!-- Keep links to earlier sections working. -->
-<span id="create-a-group"></span>
-<span id="control-the-group"></span>
-<span id="await-the-group"></span>

@@ -78,7 +78,9 @@ When this check fails after an upgrade:
 - Learn is a five-step tutorial with a definite endpoint. Guides answer optional questions;
   Reference contains complete member lists and detailed rules.
 - The tutorial runs Install → Your first tween → Syntax sugar → Definitions → Control & completion.
-  Sequences is an optional guide. Easing progresses from Playground to Effects to Custom.
+  Sequences is an optional guide. Tweening opens with Anatomy/Definitions (`anatomy`), one schematic card per definition field
+  (`scripts/anatomy.ts`), then Easings (the playground), Effects, Functions, and Curves; Porting, a shared page,
+  maps Godot's Tween eases. A new definition field needs a card there.
 - Guides use Starlight `Aside` for actionable hints and pitfalls, and `Card`/`LinkCard`
   for choices and next steps. Keep the main flow to one example per concept; components
   should make the page easier to scan, not hide a long explanation.
@@ -86,7 +88,8 @@ When this check fails after an upgrade:
   exhaustive binding and restoration rules live in the material reference.
 - Keep setup exceptions and library development notes under Project → Advanced development.
 - Teach one concept with one example before adding variations. Move exhaustive rules
-  into reference, and link to them from the guide. Preserve old section anchors when moving content.
+  into reference, and link to them from the guide. Update links when moving content; the site is
+  too new to need placeholder anchors for old section links.
 - Keep language twins in the same section order. Give demos one concrete experiment
   instead of repeating an explanation of every control.
 - Enable `tableOfContents: true` on reference pages with several sections.
@@ -125,7 +128,8 @@ When this check fails after an upgrade:
 
 The public URL is `https://tweens.gd`, set as Astro `site` for canonical URLs and
 the sitemap. Links assume that domain-root deployment. statichost.eu builds and
-deploys the site automatically from a repository webhook; no workflow is needed here.
+deploys the site automatically from a repository webhook. CI's docs job runs the build, checks, and C# example
+compile when the site or the library sources it reads change.
 
 `public/_headers` sets statichost's response headers. Files whose names carry a content
 hash (Astro's `/_astro/` output, Pagefind's fragments and index chunks) are cached as

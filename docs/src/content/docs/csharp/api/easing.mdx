@@ -16,7 +16,7 @@ sprite.TweenPositionX(300, 1.2, In.Sine | Out.Cubic);
 
 | Member | Type | Default | Meaning |
 | --- | --- | --- | --- |
-| `Ease` | `EaseType` | `Linear` | An `In` curve, an `Out` curve, both joined with `\|`, an `InOut` pair, or a legacy ease |
+| `Ease` | `EaseType` | `Linear` | An `In` curve, an `Out` curve, both joined with `\|`, an `InOut` pair, or a [legacy ease](/porting/#legacy-eases) |
 | `BlendType` | `BlendType` | `Makima` | How [mixed pairs](#mixed-pairs) join |
 | `Blend` | `double` | `0.1` | Width of the centered join window, in `[0, 1]` |
 | `Skew` | `double` | `0.5` | Where the outward leg splits between In and Out; see [pacing](#pacing) |
@@ -112,24 +112,10 @@ The edge velocities stand in for the outer slopes that `makima` takes from neigh
 - `EaseFunction` maps normalized progress, from 0 to 1, to a weight. Return 0 at the start and 1 at the end for an ordinary arrival.
 - A Godot `Curve` is sampled over the same 0 to 1 domain. Each playback samples its own duplicate, so later edits reach only later starts.
 - Either one overrides `Ease`; setting both is rejected. If the function throws, the tween faults.
-- [Effects](/csharp/api/effects/) builds functions for punch, shake, and breathing; [custom easing](/csharp/custom/) shows both in use.
+- [Effects](/csharp/api/effects/) builds functions for punch, shake, and breathing; [Functions](/csharp/functions/) and [Curves](/csharp/curves/) show each in use.
 
 ## Sampling
 
 | Method | Returns | Meaning |
 | --- | --- | --- |
 | `Easing.Evaluate(ease, progress, blendType, blend, skew)` | `float` | The weight at `progress`, without starting playback; the last three default to `Makima`, `0.1`, and `0.5` |
-
-## Legacy eases
-
-`EaseType` keeps Godot-style names, such as `EaseType.SineIn`, with their original numeric values and shapes. Write `In.Sine`, `Out.Sine`, and `InOut.Sine` for `SineIn`, `SineOut`, and `SineInOut`, and likewise for the other families.
-
-- Back, Elastic, and Bounce flags use the percentage calibration; their legacy names keep the old shapes, such as `EaseType.BounceOut`'s 25% first rebound.
-- Don't combine legacy names with flags.
-- `EaseType.Linear`, zero, is the default.
-
-{/* Keep links to earlier sections working. */}
-<span id="compose-an-ease" />
-<span id="choose-a-family" />
-<span id="choose-the-method-and-width" />
-<span id="migrate-existing-eases" />

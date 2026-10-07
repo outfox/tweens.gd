@@ -59,6 +59,3 @@ static func sample_midpoint() -> float:
 - Tweens started during an update first advance on the next one, with no inherited time.
 - `Tweens.cancel_tweens()` reaches only the automatic runner; use `cancel_owner()` here.
 - Always dispose a manual scheduler, so remaining tweens end and run their callbacks.
-
-<!-- Keep links to earlier sections working. -->
-<span id="animate-a-plain-object"></span>

@@ -31,13 +31,24 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
 </script>
 
 <script>
-	import { onceVisible } from '../../scripts/motion';
+	import { reducedMotion } from '../../scripts/motion';
 
-	const headings = [...document.querySelectorAll('.sl-markdown-content .sl-heading-wrapper.level-h2')];
-	for (const heading of headings) {
-		if (heading.getBoundingClientRect().top < innerHeight) heading.classList.add('is-in');
-		else onceVisible(heading, () => heading.classList.add('is-in'), 0.6);
+	// Each h2's accent line breathes on its own clock, resting 1–4 s between breaths while on screen.
+	const headings = document.querySelectorAll<HTMLElement>('.sl-markdown-content .sl-heading-wrapper.level-h2');
+	for (const heading of reducedMotion() ? [] : headings) {
+		let timer = 0;
+		const breathe = () => heading.classList.add('is-breathing');
+		const rest = () => (timer = window.setTimeout(breathe, 1000 + Math.random() * 3000));
+		// The breath is the heading's own ::after animation (theme.css); other animations inside it bubble up here too.
+		heading.addEventListener('animationend', (e) => {
+			if (e.target !== heading || e.pseudoElement !== '::after') return;
+			heading.classList.remove('is-breathing');
+			rest();
+		});
+		new IntersectionObserver(([entry]) => {
+			clearTimeout(timer);
+			heading.classList.remove('is-breathing');
+			if (entry.isIntersecting) rest();
+		}).observe(heading);
 	}
-	// Enable the transition only after the settled state has painted, so nothing animates on load.
-	requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('tw-js')));
 </script>

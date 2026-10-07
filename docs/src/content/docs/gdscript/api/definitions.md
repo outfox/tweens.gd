@@ -93,7 +93,3 @@ Change a setting after the shared function has run, as in `snappy(Tweens.scale_2
 - Preparation and property capture happen on the first eligible update, before any positive delay.
 - Callables and the objects they capture stay shared; `curve` resources are duplicated for each start.
 - Each `copy()` and `with_*()` call creates a new definition object.
-
-<!-- Keep links to earlier sections working. -->
-<span id="with_-methods"></span>
-<span id="target-fields"></span>

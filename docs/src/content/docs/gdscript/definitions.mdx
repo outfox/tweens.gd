@@ -10,9 +10,6 @@ A definition describes motion. Each start copies its settings into independent p
 
 Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
 
-<span id="a-complete-example" />
-<span id="keep-definitions-in-static-variables" />
-
 ## Define once, start twice
 
 ```gdscript
@@ -33,9 +30,6 @@ Store a shared definition in a `static var`. Treat it as read-only and use `with
 
 </Aside>
 
-<span id="leave-out-from_value-or-to_value" />
-<span id="move-by-an-offset-with-by_value" />
-
 ## Choose the endpoints
 
 | Choose | Result |
@@ -52,8 +46,6 @@ Use `to_value` or `by_value`, not both. Leave `from_value` out when an offset sh
 
 </Aside>
 
-<span id="vary-a-start-with-with" />
-
 ## Vary one start
 
 ```gdscript
@@ -69,13 +61,3 @@ The copy takes longer; the original still takes 0.2 seconds. Already running twe
 Use [variations](/gdscript/variations/) to scale the original values. The [definition reference](/gdscript/api/definitions/) covers shared options and copying.
 
 Next, [control playback and wait for completion](/gdscript/playback/).
-
-{/* Keep links to earlier guide sections working. */}
-<span id="leave-out-fromvalue-or-tovalue" />
-<span id="move-by-an-offset-with-byvalue" />
-<span id="share-timing-and-easing" />
-<span id="helper-or-property-path" />
-<span id="what-each-start-copies" />
-<span id="when-tweens-compete" />
-<span id="build-steps-from-functions" />
-<span id="vary-a-start-with-with_" />

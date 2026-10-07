@@ -1,0 +1,170 @@
+---
+// One group of definition fields as cards: name (linked to its reference row), default, one line, and a schematic.
+// Fields and their drawings live in scripts/anatomy.ts. Accent marks what the field sets; muted marks context.
+import { fieldsOf, type Group } from '../scripts/anatomy';
+import type { Lang } from '../scripts/lang';
+
+interface Props {
+	group: Group;
+	lang?: Lang;
+}
+const { group, lang = 'csharp' } = Astro.props;
+const cards = fieldsOf(group, lang);
+// Long names break between words: before a capital in C#, after an underscore in GDScript.
+const words = (name: string) => name.split(/(?<=[a-z])(?=[A-Z])|(?<=_)/);
+---
+
+<ul class="fields not-content tw-wide">
+	{
+		cards.map((card) => (
+			<li class="field" id={card.id}>
+				<p class="head">
+					<a class="name" href={card.href}>
+						<code>
+							{words(card.name).map((word, i) => (
+								<>
+									{i > 0 && <wbr />}
+									{word}
+								</>
+							))}
+						</code>
+					</a>
+					{card.default && <span class="default">= {card.default}</span>}
+				</p>
+				<Fragment set:html={card.svg} />
+				<p class="text" set:html={card.text} />
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.fields {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+		gap: 0.75rem;
+		margin: 1.25rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0.75rem 0.85rem 0.85rem;
+		border: 1px solid var(--tw-outline);
+		border-radius: 0.9rem;
+		background: var(--tw-stage);
+		scroll-margin-top: calc(var(--sl-nav-height) + 1.5rem);
+		transition:
+			border-color 0.2s,
+			translate 0.4s var(--ease-back-out);
+	}
+	.field:hover,
+	.field:target {
+		border-color: var(--tw-accent);
+	}
+	.field:hover {
+		translate: 0 -2px;
+	}
+	.head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.25rem 0.5rem;
+		margin: 0;
+	}
+	.name {
+		text-decoration: none;
+	}
+	/* Outranks the theme's inline code chip. */
+	.field .name code {
+		padding: 0;
+		border: 0;
+		background: none;
+		font: 650 var(--sl-text-sm) var(--sl-font-mono);
+		color: var(--tw-accent-ink);
+	}
+	.name:hover code {
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+	.default {
+		font: var(--sl-text-2xs) var(--sl-font-mono);
+		color: var(--tw-muted);
+		white-space: nowrap;
+	}
+	.text {
+		margin: 0;
+		font-size: var(--sl-text-sm);
+		line-height: 1.5;
+		color: var(--tw-soft);
+	}
+	.text :global(code) {
+		font-size: 0.9em;
+		color: var(--sl-color-white);
+	}
+
+	/* Schematics, drawn in scripts/anatomy.ts. */
+	.field :global(svg) {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 240 / 72;
+		border-radius: 0.5rem;
+		background: var(--tw-surface);
+		overflow: visible;
+	}
+	.field :global(svg *) {
+		stroke-width: 1.5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		vector-effect: non-scaling-stroke;
+	}
+	.field :global(.sk) {
+		stroke: var(--tw-outline);
+	}
+	.field :global(.sm) {
+		stroke: var(--tw-muted);
+	}
+	.field :global(.sa) {
+		stroke: var(--tw-accent);
+	}
+	.field :global(:is(line, .none)) {
+		fill: none;
+	}
+	.field :global(.fm) {
+		fill: var(--tw-muted);
+		stroke: none;
+	}
+	.field :global(.fa) {
+		fill: var(--tw-accent);
+		stroke: none;
+	}
+	.field :global(.ring) {
+		fill: var(--tw-surface);
+	}
+	.field :global(.dash) {
+		stroke-dasharray: 3 4;
+	}
+	.field :global(.thick) {
+		stroke-width: 2.25;
+	}
+	.field :global(.faint) {
+		opacity: 0.3;
+	}
+	.field :global(.band) {
+		fill: var(--tw-accent);
+		opacity: 0.12;
+	}
+	.field :global(text) {
+		font: 9px var(--sl-font-mono);
+		fill: var(--tw-muted);
+		stroke: none;
+	}
+	.field :global(.ta) {
+		fill: var(--tw-accent-ink);
+	}
+</style>
