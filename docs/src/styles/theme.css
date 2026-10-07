@@ -1,7 +1,7 @@
 /* tweens.gd docs theme. Palette shared with testbed/Gallery/Palette.cs. */
 
 /* Lexie Readable has only these two weights: display weights above 500 render Bold.
-   scripts/prepare-fonts.py enables small-text smoothing in both bundled faces. */
+   scripts/prepare-lexie-fonts.py enables small-text smoothing in both bundled faces. */
 @font-face {
 	font-family: 'Lexie Readable';
 	font-style: normal;

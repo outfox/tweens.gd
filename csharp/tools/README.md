@@ -23,10 +23,10 @@ need no tweens.gd analyzer or package reference. Regenerate and commit these fil
 after changing adapters or options:
 
 ```powershell
-./scripts/Generate-CSharpAddon.ps1
+./scripts/Generate-CSharpDefinitions.ps1
 ```
 
-`./scripts/Generate-CSharpAddon.ps1 -Check` verifies freshness without writing
+`./scripts/Generate-CSharpDefinitions.ps1 -Check` verifies freshness without writing
 the addon. It rebuilds with `EmitCompilerGeneratedFiles` into a fresh temporary
 directory and selects only `StructuredDefinitionGenerator` output. Godot's own
 generated glue is deliberately excluded; each consumer's Godot SDK generates

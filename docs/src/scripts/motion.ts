@@ -76,7 +76,7 @@ export type EaseLeg = EaseFamily | 'None';
 export const canonicalFamily = (family: EaseLeg): EaseLeg => ['Back', 'Elastic', 'Bounce', 'Jump'].includes(family) ? (family + '30') as EaseLeg : family;
 const BACK_SOLO = [1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737];
 const BACK_PAIRED = [2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325];
-// Reproduce these peak calibrations with scripts/calibrate-elastic.mjs at the repository root.
+// Reproduce these peak calibrations with scripts/calibrate-elastic-easing.mjs at the repository root.
 const ELASTIC_SOLO_DECAY = 13, ELASTIC_SOLO_TAIL = 6, ELASTIC_PAIR_DECAY = 7.537490798899971;
 const ELASTIC_SOLO_PERIOD = 0.58, ELASTIC_PAIR_PERIOD = 0.6732985463200285;
 const ELASTIC_SOLO_KICK = [-0.4459853763131816, 0.5308279022336841, 0.9602276834507211, 1.3110242679337114, 1.6280394875512134];

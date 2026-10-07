@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 jobs:
-  # Library jobs run for changes outside docs/; the docs job for docs/ and the library sources the site reads.
+  # Library jobs run for changes outside docs/; the docs job also checks shared JavaScript utilities.
   # Manual runs, release tags, new branches, and history the diff can't reach run everything.
   changes:
     name: Detect changes
@@ -58,7 +58,7 @@ jobs:
               case $file in
                 '') ;;
                 docs/*) docs=true ;;
-                addons/tweens_gd/* | csharp/* | tests/conformance/* | .github/workflows/ci.yml) library=true; docs=true ;;
+                addons/tweens_gd/* | csharp/* | tests/conformance/* | scripts/*.mjs | scripts/.prettierrc.json | .github/workflows/ci.yml) library=true; docs=true ;;
                 *) library=true ;;
               esac
             done <<< "$files"
@@ -134,7 +134,7 @@ jobs:
         timeout-minutes: 2
         run: dotnet run --project testbed-gdscript/host -c Release --no-build --no-restore
       - name: Check GDScript helper catalog
-        run: node scripts/generate-gdscript.mjs --check
+        run: node scripts/generate-gdscript-catalog.mjs --check
       - name: Check addon UIDs
         run: ./scripts/Generate-AddonUids.ps1 -Check
       - name: Test GDScript debug validation
@@ -270,6 +270,8 @@ jobs:
           dotnet-version: 10.0.x
       - name: Install
         run: npm ci
+      - name: Check script formatting
+        run: npm run check:script-format
       - name: Build site
         run: npm run build
       - name: Check links
@@ -278,4 +280,4 @@ jobs:
         run: npm run check:easing
       - name: Compile C# examples
         shell: pwsh
-        run: ./scripts/Check-Examples.ps1
+        run: ./scripts/Test-CSharpDocExamples.ps1

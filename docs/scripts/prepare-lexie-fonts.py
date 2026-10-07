@@ -1,7 +1,7 @@
 """Enable small-text smoothing in the bundled Lexie Readable webfonts.
 
 Run from the repository root with:
-    uv run --no-project --with 'fonttools[woff]' python docs/scripts/prepare-fonts.py
+    uv run --no-project --with 'fonttools[woff]' python docs/scripts/prepare-lexie-fonts.py
 
 The supplied fonts omit the OpenType gasp table, leaving rasterization to
 browser defaults. Explicit smoothing avoids rough small text on Windows Chrome.

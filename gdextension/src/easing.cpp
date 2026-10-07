@@ -45,7 +45,7 @@ constexpr double BACK_PAIRED[] = {2.5923889015162995, 4.155744652639195, 5.61962
 constexpr double ELASTIC_SOLO_DECAY = 13.0;
 // Solo damping relaxes after the main swing, so the default curve rests at about 90% of its duration;
 // paired legs use half their former frequency.
-// Reproduce the calibrated peaks with scripts/calibrate-elastic.mjs.
+// Reproduce the calibrated peaks with scripts/calibrate-elastic-easing.mjs.
 constexpr double ELASTIC_SOLO_TAIL = 6.0;
 constexpr double ELASTIC_PAIR_DECAY = 7.537490798899971;
 constexpr double ELASTIC_SOLO_PERIOD = 0.58;

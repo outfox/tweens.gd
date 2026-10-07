@@ -55,7 +55,7 @@ namespace tweens.gd {
     const float ElasticSoloDecay = 13;
     // Solo damping relaxes after the main swing, so the default curve rests at about 90% of its duration.
     // Paired legs run at half their former frequency.
-    // Reproduce the calibrated peaks with scripts/calibrate-elastic.mjs.
+    // Reproduce the calibrated peaks with scripts/calibrate-elastic-easing.mjs.
     const float ElasticSoloTail = 6;
     const float ElasticPairDecay = 7.537490798899971f;
     const float ElasticSoloPeriod = 0.58f;

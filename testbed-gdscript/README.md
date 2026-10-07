@@ -62,8 +62,8 @@ the installed standard Godot editor:
 ```powershell
 scons -C gdextension platform=web target=template_release threads=no
 scons -C gdextension platform=web target=template_release threads=yes
-./scripts/Get-GodotTemplates.ps1
-./scripts/Export-GDScriptTests.ps1 -Godot C:/Tools/godot/Godot_v4.7.2-stable_win64_console.exe
+./scripts/Get-GodotExportTemplates.ps1
+./scripts/Invoke-GDScriptExportTests.ps1 -Godot C:/Tools/godot/Godot_v4.7.2-stable_win64_console.exe
 npm.cmd install --prefix artifacts/browser-test --no-audit --no-fund playwright-core@1.56.1
 node scripts/test-gdscript-web.mjs
 node scripts/test-gdscript-web.mjs gdscript-web-threads

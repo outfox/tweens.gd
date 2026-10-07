@@ -26,6 +26,10 @@ The build emits `dist/`, including Pagefind search. The link check inspects
 generated HTML targets and anchors; it also rejects internal-document links and
 starter-template text. Preview the production build when checking search.
 
+See [the website utility catalog](scripts/README.md) for each script's purpose,
+inputs, outputs, and SVG maintenance notes, and [script formatting](../scripts/README.md#formatting)
+for the repeatable Prettier, Ruff, and PowerShell commands.
+
 `npm run render:compare` redraws `public/compare.svg`, the home page comparison as an animated image for the Godot
 Asset Store page. Rerun it after changing the comparison's code in `index.mdx`; it needs uv for font subsetting.
 `npm run render:easing` and `npm run render:definitions` do the same for the easing playground and the definitions
@@ -125,7 +129,7 @@ When this check fails after an upgrade:
   class headings to the table of contents.
 - Keep release procedures, coverage reports, and implementation notes private.
 - Keep library versions, adapter names, and examples aligned with the source.
-- Check C# code fences with `pwsh ./scripts/Check-Examples.ps1` from this directory.
+- Check C# code fences with `pwsh ./scripts/Test-CSharpDocExamples.ps1` from this directory.
   It compiles snippets against the library using explicit context for fragments;
   it does not execute native examples or certify their rendered output. GDScript
   fences are not checked automatically yet.

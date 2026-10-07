@@ -4,25 +4,40 @@ import { fileURLToPath } from 'node:url';
 
 const output = resolve(dirname(fileURLToPath(import.meta.url)), '../dist');
 const origin = 'https://docs.invalid';
-const decode = (text) => text.replace(/&(?:amp|quot|apos|lt|gt|#\d+|#x[\da-f]+);/gi, (entity) => {
-  const named = { '&amp;': '&', '&quot;': '"', '&apos;': "'", '&lt;': '<', '&gt;': '>' };
-  if (named[entity]) return named[entity];
-  return String.fromCodePoint(entity.startsWith('&#x')
-    ? Number.parseInt(entity.slice(3, -1), 16) : Number(entity.slice(2, -1)));
-});
+const decode = (text) =>
+  text.replace(/&(?:amp|quot|apos|lt|gt|#\d+|#x[\da-f]+);/gi, (entity) => {
+    const named = { '&amp;': '&', '&quot;': '"', '&apos;': "'", '&lt;': '<', '&gt;': '>' };
+    if (named[entity]) return named[entity];
+    return String.fromCodePoint(
+      entity.startsWith('&#x')
+        ? Number.parseInt(entity.slice(3, -1), 16)
+        : Number(entity.slice(2, -1)),
+    );
+  });
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
-  return (await Promise.all(entries.map((entry) => entry.isDirectory()
-    ? walk(join(directory, entry.name)) : join(directory, entry.name)))).flat();
+  return (
+    await Promise.all(
+      entries.map((entry) =>
+        entry.isDirectory() ? walk(join(directory, entry.name)) : join(directory, entry.name),
+      ),
+    )
+  ).flat();
 }
 
 const pages = new Map();
 for (const file of (await walk(output)).filter((file) => file.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
-  const route = '/' + relative(output, file).split(sep).join('/').replace(/index\.html$/, '');
+  const route =
+    '/' +
+    relative(output, file)
+      .split(sep)
+      .join('/')
+      .replace(/index\.html$/, '');
   pages.set(file, {
-    html, route,
+    html,
+    route,
     ids: new Set([...html.matchAll(/\bid="([^"]*)"/g)].map((match) => decode(match[1]))),
   });
 }
@@ -52,7 +67,11 @@ for (const { html, route } of pages.values()) {
     try {
       if ((await stat(file)).isDirectory()) file = join(file, 'index.html');
       await stat(file);
-      if (target.hash && pages.has(file) && !pages.get(file).ids.has(decodeURIComponent(target.hash.slice(1)))) {
+      if (
+        target.hash &&
+        pages.has(file) &&
+        !pages.get(file).ids.has(decodeURIComponent(target.hash.slice(1)))
+      ) {
         errors.push(`${route}: missing anchor ${attribute}`);
       }
     } catch {

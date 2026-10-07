@@ -33,7 +33,8 @@ foreach ($page in Get-ChildItem (Join-Path $docsRoot 'src/content/docs') -Recurs
         $code = [regex]::Replace($code, '(?m)^using [\w.]+;', '')
         if ($code -match '(?m)^public (?:partial |sealed |static )*class ') {
             $compilation = "$imports`n#line $line `"$source`"`n$code"
-        } else {
+        }
+        else {
             # Context is documented on each page. These are compile-only parameters,
             # not engine objects created or exercised by this check.
             $compilation = @"
@@ -54,7 +55,11 @@ $code
         Set-Content (Join-Path $exampleOutput "Example$exampleCount.cs") $compilation
     }
 }
-if ($exampleCount -eq 0) { throw 'No C# examples found.' }
+if ($exampleCount -eq 0) {
+    throw 'No C# examples found.'
+}
 dotnet build (Join-Path $exampleOutput 'Examples.csproj') -c Release --nologo
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
 Write-Output "Compiled all $exampleCount C# documentation examples."

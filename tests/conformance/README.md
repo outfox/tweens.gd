@@ -17,7 +17,7 @@ samples also exercise the analytic derivatives used to construct the cubic join.
 website's `npm run check:easing` consume the same samples. Each implementation
 also checks every family pairing. Bare calibrated names alias their 30% variants. Elastic relaxes
 solo damping after the main swing, so a solo leg settles near 90% of its duration; peak strengths are preserved.
-`node scripts/calibrate-elastic.mjs` reproduces its calibrated parameters. Back/Elastic fixtures cover aliases, 10%–50%
+`node scripts/calibrate-elastic-easing.mjs` reproduces its calibrated parameters. Back/Elastic fixtures cover aliases, 10%–50%
 variants, and mixed joins; independent peak tests verify the named overshoot
 against the full tween range for solo curves and matching pairs. Bounce fixtures
 cover the same 10%–50% variants; separate tests find the first rebound depth,
