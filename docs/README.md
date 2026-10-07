@@ -30,7 +30,8 @@ starter-template text. Preview the production build when checking search.
 Asset Store page. Rerun it after changing the comparison's code in `index.mdx`; it needs uv for font subsetting.
 `npm run render:easing` and `npm run render:definitions` do the same for the easing playground and the definitions
 demo, as `public/easing.svg` and `public/definitions.svg`. Their scripts copy the layout and code of
-`EasingPlayground.astro` and `ReuseDemo.astro`, so update them along with those widgets.
+`EasingPlayground.astro` and `ReuseDemo.astro`, so update them along with those widgets. Each script also writes a
+gzipped `.svgz` copy beside its SVG.
 
 ## Structure
 
