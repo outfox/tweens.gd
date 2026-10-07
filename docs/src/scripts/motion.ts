@@ -276,19 +276,32 @@ export function legEase(family: EaseLeg, direction: 'In' | 'Out', t: number): nu
 
 // Effect math from addons/tweens_gd/csharp/Easing/FX.cs, with the same defaults as Tweens.FX.
 
-const unit = (t: number) => Math.min(1, Math.max(0, t));
+// Settings and progress are validated as in FX.cs, which throws ArgumentOutOfRangeException for the same inputs.
+const unit = (t: number) => {
+	if (!Number.isFinite(t)) throw new RangeError('Invalid effect progress');
+	return Math.min(1, Math.max(0, t));
+};
+const validate = (frequency: number, amplitude: number, offset: number) => {
+	if (!Number.isFinite(frequency) || frequency < 0 || !Number.isFinite(amplitude) || !Number.isFinite(offset))
+		throw new RangeError('Invalid effect settings');
+};
 const smoother = (t: number) => t * t * t * (t * (6 * t - 15) + 10);
 
 /** Ramps in over `attack` of the duration, then fades out; zero attack starts at full strength. */
-export const attackRelease = (attack = 0.1, decay = 2) => (progress: number) => {
-	const t = unit(progress);
-	if (t === 1) return 0;
-	if (attack === 0) return (1 - t) ** decay;
-	if (t <= attack) return smoother(t / attack);
-	return Math.max(0, 1 - smoother((t - attack) / (1 - attack))) ** decay;
+export const attackRelease = (attack = 0.1, decay = 2) => {
+	if (!Number.isFinite(attack) || attack < 0 || attack >= 1 || !Number.isFinite(decay) || decay <= 0)
+		throw new RangeError('Invalid effect envelope');
+	return (progress: number) => {
+		const t = unit(progress);
+		if (t === 1) return 0;
+		if (attack === 0) return (1 - t) ** decay;
+		if (t <= attack) return smoother(t / attack);
+		return Math.max(0, 1 - smoother((t - attack) / (1 - attack))) ** decay;
+	};
 };
 
 export function punch(frequency = 6, amplitude = 1, decay = 2, phase = 0, attack = 0) {
+	validate(frequency, amplitude, phase);
 	const envelope = attackRelease(attack, decay);
 	return (progress: number) => {
 		const t = unit(progress);
@@ -297,6 +310,9 @@ export function punch(frequency = 6, amplitude = 1, decay = 2, phase = 0, attack
 }
 
 export function shake(frequency = 12, amplitude = 1, seed = 0, offset = 0, decay = 2, attack = 0.1) {
+	validate(frequency, amplitude, offset);
+	// FX.cs takes the seed as an int.
+	if (!Number.isInteger(seed)) throw new RangeError('Invalid effect seed');
 	const envelope = attackRelease(attack, decay);
 	return (progress: number) => {
 		const t = unit(progress);
@@ -304,8 +320,10 @@ export function shake(frequency = 12, amplitude = 1, seed = 0, offset = 0, decay
 	};
 }
 
-export const breathe = (frequency = 1, amplitude = 1, phase = 0) => (progress: number) =>
-	amplitude * (0.5 - 0.5 * Math.cos(2 * Math.PI * (frequency * unit(progress) + phase)));
+export function breathe(frequency = 1, amplitude = 1, phase = 0) {
+	validate(frequency, amplitude, phase);
+	return (progress: number) => amplitude * (0.5 - 0.5 * Math.cos(2 * Math.PI * (frequency * unit(progress) + phase)));
+}
 
 // Value noise on a periodic 20-bit lattice; the hash wraps in unsigned 32-bit arithmetic, as in FX.cs.
 function noise(position: number, seed: number) {

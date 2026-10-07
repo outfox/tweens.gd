@@ -9,6 +9,7 @@ import { Aside } from '@astrojs/starlight/components';
 Okay, before this gets any more confusing... 
 
 <Aside title="No, you're not seeing things.">
+
 There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.
 
 Some tweens may need...  
@@ -16,6 +17,7 @@ Some tweens may need...
 - destinations or timings you want to specify each time
 - to apply to several different targets (Nodes)
 - small variations for that extra juice
+
 </Aside>
 
 ## Definitions: Structured vs. Convenient
@@ -44,7 +46,7 @@ sprite.Tween(arrive);
 
 ---
 
-The <u>**Convenient**</u> defines and starts a local animation through an extension method, available on a wide variety of nodes and their descendants.
+The <u>**Convenient**</u> syntax defines and starts a local animation through an extension method, available on a wide variety of nodes and their descendants.
 
 ```csharp title="Convenient"
 sprite.TweenPosition((400, 180), 0.6, Out.Cubic, 0.1);
@@ -69,7 +71,7 @@ sprite.TweenPosition((400, 180), 0.6);
 
 Arrays are checked when the tween is created: a mismatched length throws `ArgumentException`.
 
-The array syntax exists since they read closest to GDScript.
+Arrays read closest to GDScript, which is why the array syntax exists.
 
 ```csharp title="Sweet: array"
 sprite.TweenPosition([400, 180], 0.6);

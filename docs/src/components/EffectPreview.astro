@@ -1,65 +1,43 @@
 ---
 // A Tweens.FX effect at its default settings: the Godot icon moves with it beside a plot of its offset over one play.
-// Both sample scripts/motion.ts, the docs' port of FX.cs, which check:easing tests against the shared fixtures.
+// Plot and animation share scripts/effect-preview.ts, which samples the docs' port of FX.cs (tested by check:easing).
 import type { Lang } from '../scripts/lang';
-import { breathe, punch, shake } from '../scripts/motion';
+import { PLOT, plotPoint, plotY, type Effect } from '../scripts/effect-preview';
 
-type Effect = 'punch' | 'shake' | 'breathe';
 interface Props {
 	effect: Effect;
 	lang?: Lang;
 }
 const { effect, lang = 'csharp' } = Astro.props;
 
-const sample = { punch: punch(), shake: shake(), breathe: breathe() }[effect];
 const call = `Tweens.FX.${lang === 'gdscript' ? effect : effect[0].toUpperCase() + effect.slice(1)}()`;
-
-// Breathe rises from zero; punch and shake swing both ways around it.
-const W = 160;
-const H = 64;
-const PAD = 7;
-const lo = effect === 'breathe' ? 0 : -1;
-const y = (v: number) => PAD + ((1 - (v - lo) / (1 - lo)) * (H - 2 * PAD));
 let d = '';
-for (let i = 0; i <= 240; i++) d += `${i ? 'L' : 'M'}${((i / 240) * W).toFixed(2)} ${y(sample(i / 240)).toFixed(2)}`;
+for (let i = 0; i <= 240; i++) {
+	const [x, y] = plotPoint(effect, i / 240);
+	d += `${i ? 'L' : 'M'}${x.toFixed(2)} ${y.toFixed(2)}`;
+}
 ---
 
-<figure class="fx not-content" data-fx={effect} data-lo={lo}>
+<figure class="fx not-content" data-fx={effect}>
 	<div class="stage" aria-hidden="true">
 		<span class="sprite" data-sprite></span>
 	</div>
-	<svg class="plot" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-		<path class="zero" d={`M0 ${y(0)}H${W}`} />
+	<svg class="plot" viewBox={`0 0 ${PLOT.width} ${PLOT.height}`} preserveAspectRatio="none" aria-hidden="true">
+		<path class="zero" d={`M0 ${plotY(effect, 0)}H${PLOT.width}`} />
 		<path class="curve" d={d} />
-		<line class="playhead" data-playhead y1="0" y2={H} />
+		<line class="playhead" data-playhead y1="0" y2={PLOT.height} />
 		<path class="head" data-head d="M0 0h0" />
 	</svg>
 	<figcaption><code>{call}</code></figcaption>
 </figure>
 
 <script>
-	import { breathe, loop, punch, shake } from '../scripts/motion';
-
-	type Effect = 'punch' | 'shake' | 'breathe';
-	const W = 160;
-	const H = 64;
-	const PAD = 7;
-	const punchX = punch();
-	const shakeX = shake();
-	// Shake2D's default offset decorrelates the second axis.
-	const shakeY = shake(12, 1, 0, 101.37);
-	const breath = breathe();
-
-	// Seconds of motion, then of rest, and the sprite's pose at each progress; amplitudes in pixels.
-	const previews: Record<Effect, { play: number; rest: number; sample: (t: number) => number; pose: (t: number) => [number, number, number] }> = {
-		punch: { play: 0.8, rest: 1, sample: punchX, pose: (t) => [punchX(t) * 14, 0, 1] },
-		shake: { play: 1, rest: 0.9, sample: shakeX, pose: (t) => [shakeX(t) * 12, shakeY(t) * 12, 1] },
-		breathe: { play: 2.4, rest: 0, sample: breath, pose: (t) => [0, 0, 1 + breath(t) * 0.25] },
-	};
+	import { loop } from '../scripts/motion';
+	import { PREVIEWS, plotPoint, type Effect } from '../scripts/effect-preview';
 
 	for (const figure of document.querySelectorAll<HTMLElement>('[data-fx]')) {
-		const { play, rest, sample, pose } = previews[figure.dataset.fx as Effect];
-		const lo = Number(figure.dataset.lo);
+		const effect = figure.dataset.fx as Effect;
+		const { play, rest, pose } = PREVIEWS[effect];
 		const sprite = figure.querySelector<HTMLElement>('[data-sprite]')!;
 		const playhead = figure.querySelector<SVGLineElement>('[data-playhead]')!;
 		const head = figure.querySelector<SVGPathElement>('[data-head]')!;
@@ -71,10 +49,10 @@ for (let i = 0; i <= 240; i++) d += `${i ? 'L' : 'M'}${((i / 240) * W).toFixed(2
 			const [x, y, scale] = pose(t);
 			sprite.style.translate = `${x}px ${y}px`;
 			sprite.style.scale = String(scale);
-			const px = t * W;
+			const [px, py] = plotPoint(effect, t);
 			playhead.setAttribute('x1', String(px));
 			playhead.setAttribute('x2', String(px));
-			head.setAttribute('d', `M${px} ${PAD + (1 - (sample(t) - lo) / (1 - lo)) * (H - 2 * PAD)}h0`);
+			head.setAttribute('d', `M${px} ${py}h0`);
 			figure.classList.toggle('is-resting', !playing);
 		}, play);
 	}

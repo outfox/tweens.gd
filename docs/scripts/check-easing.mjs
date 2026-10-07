@@ -1,7 +1,7 @@
 // Shared numeric fixtures run in C#, GDScript, and the actual website easing code.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { composeEase, canonicalFamily, FAMILIES, legEase, pairedLegEase, ease, shake } from '../src/scripts/motion.ts';
+import { composeEase, canonicalFamily, FAMILIES, legEase, pairedLegEase, ease, attackRelease, breathe, punch, shake } from '../src/scripts/motion.ts';
 
 const data = JSON.parse(readFileSync(new URL('../../tests/conformance/easing.json', import.meta.url), 'utf8'));
 for (const sample of data.cases) {
@@ -154,4 +154,10 @@ for (const row of fx.shake) {
   const value = shake(row.frequency, row.amplitude, row.seed, row.offset, row.decay, row.attack)(row.t);
   assert.ok(Math.abs(value - row.value) < 1e-5, JSON.stringify(row));
 }
-console.log(`Effects: ${fx.shake.length} shared shake samples passed.`);
+// Invalid settings and progress throw, as FX.cs does.
+for (const make of [() => punch(-1), () => shake(NaN), () => breathe(1, Infinity), () => punch(6, 1, 2, NaN),
+  () => shake(12, 1, 0.5), () => attackRelease(1), () => attackRelease(-0.1), () => attackRelease(0.1, 0)])
+  assert.throws(make, RangeError);
+for (const progress of [NaN, Infinity, -Infinity]) for (const sample of [punch(), shake(), breathe()])
+  assert.throws(() => sample(progress), RangeError);
+console.log(`Effects: ${fx.shake.length} shared shake samples and input validation passed.`);

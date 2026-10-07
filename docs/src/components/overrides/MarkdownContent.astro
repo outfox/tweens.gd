@@ -39,8 +39,9 @@ import Default from '@astrojs/starlight/components/MarkdownContent.astro';
 		let timer = 0;
 		const breathe = () => heading.classList.add('is-breathing');
 		const rest = () => (timer = window.setTimeout(breathe, 1000 + Math.random() * 3000));
+		// The breath is the heading's own ::after animation (theme.css); other animations inside it bubble up here too.
 		heading.addEventListener('animationend', (e) => {
-			if (e.animationName !== 'tw-breathe') return;
+			if (e.target !== heading || e.pseudoElement !== '::after') return;
 			heading.classList.remove('is-breathing');
 			rest();
 		});
