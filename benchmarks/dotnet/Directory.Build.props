@@ -1,0 +1,4 @@
+<Project>
+  <!-- Share engine versions with the comparative host. -->
+  <Import Project="../Directory.Build.props" />
+</Project>

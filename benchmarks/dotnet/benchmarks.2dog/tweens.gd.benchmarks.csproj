@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>TweensBenchmarks</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <GodotProjectDir>..</GodotProjectDir>
+    <!-- Empty project: no addon, assets, scripts, import, or native extension. -->
+    <TwoDogRequireImport>false</TwoDogRequireImport>
+    <TwoDogVariant Condition="'$(Configuration)' == 'Debug'">debug</TwoDogVariant>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="2dog.engine" Version="$(TwoDogVersion)" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <ProjectReference Include="../../../csharp/tweens.gd.csproj" />
+  </ItemGroup>
+</Project>

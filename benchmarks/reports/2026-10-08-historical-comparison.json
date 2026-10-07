@@ -1,0 +1,748 @@
+{
+  "notes": [
+    "Three runs each; median of per-run C# medians, not pooled measurements.",
+    "Historical engine differs; this is observational, not a controlled commit bisect.",
+    "Original stopwatch harness, short warmup and default tiering; distinct from BenchmarkDotNet measurements.",
+    "Current native binaries were reused; only C# results are used here."
+  ],
+  "old_engine": {
+    "build": "2dog",
+    "hash": "1612363404adbcd3e45f9c3d43a7fd086a4867dd",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (2dog)",
+    "timestamp": 1790279502
+  },
+  "current_engine": {
+    "build": "2dog",
+    "hash": "c92dbe7d3c2792b57f43625ef2d65b71aeadad59",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (2dog)",
+    "timestamp": 1791055401
+  },
+  "summary": [
+    {
+      "count": 1000,
+      "workload": "value",
+      "old_us": 769,
+      "new_us": 2067,
+      "range_us": "2003-2103",
+      "ratio": 2.69
+    },
+    {
+      "count": 1000,
+      "workload": "position",
+      "old_us": 283,
+      "new_us": 603,
+      "range_us": "594-611",
+      "ratio": 2.13
+    },
+    {
+      "count": 1000,
+      "workload": "color",
+      "old_us": 270,
+      "new_us": 507,
+      "range_us": "502-595",
+      "ratio": 1.88
+    },
+    {
+      "count": 1000,
+      "workload": "resource",
+      "old_us": 133,
+      "new_us": 264,
+      "range_us": "264-266",
+      "ratio": 1.98
+    },
+    {
+      "count": 10000,
+      "workload": "value",
+      "old_us": 1840,
+      "new_us": 4458,
+      "range_us": "4423-4507",
+      "ratio": 2.42
+    },
+    {
+      "count": 10000,
+      "workload": "position",
+      "old_us": 2378,
+      "new_us": 5447,
+      "range_us": "5410-5951",
+      "ratio": 2.29
+    },
+    {
+      "count": 10000,
+      "workload": "color",
+      "old_us": 2272,
+      "new_us": 5176,
+      "range_us": "5156-5303",
+      "ratio": 2.28
+    },
+    {
+      "count": 10000,
+      "workload": "resource",
+      "old_us": 1439,
+      "new_us": 2659,
+      "range_us": "2649-2718",
+      "ratio": 1.85
+    }
+  ],
+  "old_csharp_results": [
+    {
+      "workload": "value",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 303,
+      "dispose_us": 118,
+      "median_update_us": 76,
+      "p95_update_us": 100
+    },
+    {
+      "workload": "value",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 4121,
+      "dispose_us": 1367,
+      "median_update_us": 826,
+      "p95_update_us": 946
+    },
+    {
+      "workload": "value",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 41995,
+      "dispose_us": 13170,
+      "median_update_us": 1812,
+      "p95_update_us": 2057
+    },
+    {
+      "workload": "position",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 401,
+      "dispose_us": 97,
+      "median_update_us": 26,
+      "p95_update_us": 26
+    },
+    {
+      "workload": "position",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3004,
+      "dispose_us": 1033,
+      "median_update_us": 272,
+      "p95_update_us": 307
+    },
+    {
+      "workload": "position",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 30367,
+      "dispose_us": 14832,
+      "median_update_us": 2329,
+      "p95_update_us": 2591
+    },
+    {
+      "workload": "color",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 351,
+      "dispose_us": 87,
+      "median_update_us": 25,
+      "p95_update_us": 26
+    },
+    {
+      "workload": "color",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 1950,
+      "dispose_us": 825,
+      "median_update_us": 270,
+      "p95_update_us": 306
+    },
+    {
+      "workload": "color",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 25464,
+      "dispose_us": 11335,
+      "median_update_us": 2200,
+      "p95_update_us": 2550
+    },
+    {
+      "workload": "resource",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 118,
+      "dispose_us": 13,
+      "median_update_us": 13,
+      "p95_update_us": 15
+    },
+    {
+      "workload": "resource",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 865,
+      "dispose_us": 44,
+      "median_update_us": 134,
+      "p95_update_us": 245
+    },
+    {
+      "workload": "resource",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 4496,
+      "dispose_us": 315,
+      "median_update_us": 1476,
+      "p95_update_us": 1602
+    },
+    {
+      "workload": "value",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 284,
+      "dispose_us": 89,
+      "median_update_us": 75,
+      "p95_update_us": 103
+    },
+    {
+      "workload": "value",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 2980,
+      "dispose_us": 1038,
+      "median_update_us": 769,
+      "p95_update_us": 923
+    },
+    {
+      "workload": "value",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 37269,
+      "dispose_us": 16832,
+      "median_update_us": 1870,
+      "p95_update_us": 2406
+    },
+    {
+      "workload": "position",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 477,
+      "dispose_us": 123,
+      "median_update_us": 26,
+      "p95_update_us": 40
+    },
+    {
+      "workload": "position",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3253,
+      "dispose_us": 1410,
+      "median_update_us": 291,
+      "p95_update_us": 355
+    },
+    {
+      "workload": "position",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 35556,
+      "dispose_us": 14624,
+      "median_update_us": 2378,
+      "p95_update_us": 3053
+    },
+    {
+      "workload": "color",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 408,
+      "dispose_us": 137,
+      "median_update_us": 24,
+      "p95_update_us": 52
+    },
+    {
+      "workload": "color",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 2139,
+      "dispose_us": 805,
+      "median_update_us": 267,
+      "p95_update_us": 378
+    },
+    {
+      "workload": "color",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 24657,
+      "dispose_us": 11579,
+      "median_update_us": 2315,
+      "p95_update_us": 3036
+    },
+    {
+      "workload": "resource",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 173,
+      "dispose_us": 20,
+      "median_update_us": 22,
+      "p95_update_us": 24
+    },
+    {
+      "workload": "resource",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 751,
+      "dispose_us": 48,
+      "median_update_us": 133,
+      "p95_update_us": 226
+    },
+    {
+      "workload": "resource",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 4487,
+      "dispose_us": 313,
+      "median_update_us": 1439,
+      "p95_update_us": 1641
+    },
+    {
+      "workload": "value",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 270,
+      "dispose_us": 99,
+      "median_update_us": 75,
+      "p95_update_us": 91
+    },
+    {
+      "workload": "value",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 2741,
+      "dispose_us": 1323,
+      "median_update_us": 761,
+      "p95_update_us": 1008
+    },
+    {
+      "workload": "value",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 37507,
+      "dispose_us": 15048,
+      "median_update_us": 1840,
+      "p95_update_us": 2448
+    },
+    {
+      "workload": "position",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 455,
+      "dispose_us": 147,
+      "median_update_us": 34,
+      "p95_update_us": 50
+    },
+    {
+      "workload": "position",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3068,
+      "dispose_us": 1403,
+      "median_update_us": 283,
+      "p95_update_us": 448
+    },
+    {
+      "workload": "position",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 33679,
+      "dispose_us": 14207,
+      "median_update_us": 2405,
+      "p95_update_us": 2878
+    },
+    {
+      "workload": "color",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 556,
+      "dispose_us": 103,
+      "median_update_us": 26,
+      "p95_update_us": 38
+    },
+    {
+      "workload": "color",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3010,
+      "dispose_us": 811,
+      "median_update_us": 277,
+      "p95_update_us": 426
+    },
+    {
+      "workload": "color",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 35700,
+      "dispose_us": 12034,
+      "median_update_us": 2272,
+      "p95_update_us": 3143
+    },
+    {
+      "workload": "resource",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 167,
+      "dispose_us": 16,
+      "median_update_us": 21,
+      "p95_update_us": 23
+    },
+    {
+      "workload": "resource",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 1194,
+      "dispose_us": 47,
+      "median_update_us": 132,
+      "p95_update_us": 254
+    },
+    {
+      "workload": "resource",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 4483,
+      "dispose_us": 780,
+      "median_update_us": 1439,
+      "p95_update_us": 1805
+    }
+  ],
+  "current_csharp_results": [
+    {
+      "workload": "value",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 414,
+      "dispose_us": 103,
+      "median_update_us": 199,
+      "p95_update_us": 204
+    },
+    {
+      "workload": "value",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3757,
+      "dispose_us": 1159,
+      "median_update_us": 2003,
+      "p95_update_us": 2468
+    },
+    {
+      "workload": "value",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 58793,
+      "dispose_us": 13299,
+      "median_update_us": 4458,
+      "p95_update_us": 5456
+    },
+    {
+      "workload": "position",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 679,
+      "dispose_us": 113,
+      "median_update_us": 59,
+      "p95_update_us": 60
+    },
+    {
+      "workload": "position",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 4282,
+      "dispose_us": 1140,
+      "median_update_us": 594,
+      "p95_update_us": 606
+    },
+    {
+      "workload": "position",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 51053,
+      "dispose_us": 10005,
+      "median_update_us": 5410,
+      "p95_update_us": 5956
+    },
+    {
+      "workload": "color",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 244,
+      "dispose_us": 66,
+      "median_update_us": 57,
+      "p95_update_us": 58
+    },
+    {
+      "workload": "color",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 1619,
+      "dispose_us": 780,
+      "median_update_us": 595,
+      "p95_update_us": 607
+    },
+    {
+      "workload": "color",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 29987,
+      "dispose_us": 9812,
+      "median_update_us": 5156,
+      "p95_update_us": 5703
+    },
+    {
+      "workload": "resource",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 134,
+      "dispose_us": 8,
+      "median_update_us": 24,
+      "p95_update_us": 31
+    },
+    {
+      "workload": "resource",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 526,
+      "dispose_us": 40,
+      "median_update_us": 264,
+      "p95_update_us": 268
+    },
+    {
+      "workload": "resource",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 13102,
+      "dispose_us": 207,
+      "median_update_us": 2649,
+      "p95_update_us": 3062
+    },
+    {
+      "workload": "value",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 389,
+      "dispose_us": 77,
+      "median_update_us": 209,
+      "p95_update_us": 212
+    },
+    {
+      "workload": "value",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3474,
+      "dispose_us": 1108,
+      "median_update_us": 2103,
+      "p95_update_us": 2534
+    },
+    {
+      "workload": "value",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 57899,
+      "dispose_us": 11153,
+      "median_update_us": 4423,
+      "p95_update_us": 4682
+    },
+    {
+      "workload": "position",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 542,
+      "dispose_us": 105,
+      "median_update_us": 59,
+      "p95_update_us": 63
+    },
+    {
+      "workload": "position",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 4076,
+      "dispose_us": 986,
+      "median_update_us": 611,
+      "p95_update_us": 652
+    },
+    {
+      "workload": "position",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 30708,
+      "dispose_us": 10371,
+      "median_update_us": 5951,
+      "p95_update_us": 7546
+    },
+    {
+      "workload": "color",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 265,
+      "dispose_us": 86,
+      "median_update_us": 60,
+      "p95_update_us": 67
+    },
+    {
+      "workload": "color",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 1694,
+      "dispose_us": 814,
+      "median_update_us": 507,
+      "p95_update_us": 526
+    },
+    {
+      "workload": "color",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 24579,
+      "dispose_us": 9923,
+      "median_update_us": 5303,
+      "p95_update_us": 5861
+    },
+    {
+      "workload": "resource",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 115,
+      "dispose_us": 4,
+      "median_update_us": 23,
+      "p95_update_us": 24
+    },
+    {
+      "workload": "resource",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 495,
+      "dispose_us": 35,
+      "median_update_us": 266,
+      "p95_update_us": 273
+    },
+    {
+      "workload": "resource",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 13476,
+      "dispose_us": 231,
+      "median_update_us": 2659,
+      "p95_update_us": 3049
+    },
+    {
+      "workload": "value",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 415,
+      "dispose_us": 93,
+      "median_update_us": 204,
+      "p95_update_us": 217
+    },
+    {
+      "workload": "value",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3524,
+      "dispose_us": 1132,
+      "median_update_us": 2067,
+      "p95_update_us": 2518
+    },
+    {
+      "workload": "value",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 60106,
+      "dispose_us": 11002,
+      "median_update_us": 4507,
+      "p95_update_us": 4718
+    },
+    {
+      "workload": "position",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 512,
+      "dispose_us": 89,
+      "median_update_us": 59,
+      "p95_update_us": 63
+    },
+    {
+      "workload": "position",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 3945,
+      "dispose_us": 911,
+      "median_update_us": 603,
+      "p95_update_us": 641
+    },
+    {
+      "workload": "position",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 28553,
+      "dispose_us": 9528,
+      "median_update_us": 5447,
+      "p95_update_us": 6179
+    },
+    {
+      "workload": "color",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 226,
+      "dispose_us": 72,
+      "median_update_us": 60,
+      "p95_update_us": 65
+    },
+    {
+      "workload": "color",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 1737,
+      "dispose_us": 870,
+      "median_update_us": 502,
+      "p95_update_us": 510
+    },
+    {
+      "workload": "color",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 24258,
+      "dispose_us": 9681,
+      "median_update_us": 5176,
+      "p95_update_us": 5717
+    },
+    {
+      "workload": "resource",
+      "count": 100,
+      "backend": "csharp",
+      "create_us": 111,
+      "dispose_us": 5,
+      "median_update_us": 24,
+      "p95_update_us": 25
+    },
+    {
+      "workload": "resource",
+      "count": 1000,
+      "backend": "csharp",
+      "create_us": 504,
+      "dispose_us": 34,
+      "median_update_us": 264,
+      "p95_update_us": 268
+    },
+    {
+      "workload": "resource",
+      "count": 10000,
+      "backend": "csharp",
+      "create_us": 12886,
+      "dispose_us": 380,
+      "median_update_us": 2718,
+      "p95_update_us": 5786
+    }
+  ]
+}
