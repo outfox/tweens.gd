@@ -1,0 +1,62 @@
+<div class="motion-notice" role="status">
+	<div class="message">
+		<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+		<strong>Animations are paused</strong>
+		<p>Reduce Motion or Animation Effects are off.<br />(e.g. in your accessibility settings)</p>
+		<button type="button" class="tw-btn is-primary" data-enable-motion>Enable this demo</button>
+		<small>Applies to this demo until you reload.</small>
+	</div>
+</div>
+
+<script>
+	import { reducedMotion } from '../scripts/motion';
+
+	const preference = matchMedia('(prefers-reduced-motion: reduce)');
+	const demos = document.querySelectorAll<HTMLElement>('[data-motion-demo]');
+	const sync = () => {
+		for (const demo of demos) {
+			// Keep the opt-in button available while the demo is paused.
+			for (const control of demo.querySelectorAll<HTMLElement>('button:not([data-enable-motion]), input, select, [role="button"], [role="slider"]')) {
+				control.inert = reducedMotion(demo);
+			}
+		}
+	};
+	sync();
+	preference.addEventListener('change', sync);
+	for (const demo of demos) {
+		demo.querySelector<HTMLButtonElement>('[data-enable-motion]')?.addEventListener('click', () => {
+			demo.setAttribute('data-motion-enabled', '');
+			sync();
+			demo.dispatchEvent(new Event('tweens:motion'));
+			demo.querySelector<HTMLElement>('[role="button"], button:not([data-enable-motion], [data-copy]), input, select')?.focus({ preventScroll: true });
+		});
+	}
+</script>
+
+<style>
+	.motion-notice {
+		display: none;
+		position: absolute;
+		inset: 0;
+		z-index: 10;
+		place-items: safe center;
+		overflow: auto;
+		padding: .75rem;
+		border-radius: inherit;
+		background: color-mix(in oklab, var(--tw-surface) 85%, transparent);
+		text-align: center;
+		color: var(--tw-text);
+		cursor: default;
+	}
+	.message { max-width: 26rem; font-size: .85rem; line-height: 1.5; }
+	.message svg { display: block; width: 1.5rem; height: 1.5rem; margin: 0 auto .4rem; fill: none; stroke: var(--tw-accent-ink); stroke-width: 3; stroke-linecap: round; }
+	.message strong { display: block; font-size: 1rem; text-wrap: balance; }
+	.message p { margin: .5rem 0 .9rem; text-wrap: balance; }
+	.message .tw-btn { margin-inline: auto; }
+	.message small { display: block; margin-top: .5rem; color: var(--tw-muted); font-size: .75rem; text-wrap: balance; }
+	:global([data-motion-demo]) { position: relative; isolation: isolate; }
+	@media (prefers-reduced-motion: reduce) {
+		.motion-notice { display: grid; }
+		:global([data-motion-enabled]) .motion-notice { display: none; }
+	}
+</style>

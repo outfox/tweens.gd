@@ -3,6 +3,7 @@
 // variant of one shared definition: FactorBy and FactorDuration scale it with the damage, Skew and Weks reshape each leg,
 // and tuning the definition's own kick moves every variant with it.
 import type { Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 interface Props {
 	lang?: Lang;
@@ -11,7 +12,8 @@ const { lang = 'csharp' } = Astro.props;
 const gd = lang === 'gdscript';
 ---
 
-<div class="tw-widget vl not-content" data-variation-lab data-code-lang={lang}>
+<div class="tw-widget vl not-content" data-variation-lab data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="play">
 		<div class="stage" aria-hidden="true">
 			<span class="rail"></span>
@@ -263,13 +265,14 @@ recoil.ping_pong = <span class="kw">true</span></pre>
 			const v = sync();
 			const what = name === 'hit' ? `Hit for ${v.damage} damage` : 'Crit';
 			announce.textContent = `${what}: kicks ${fmt(Math.abs(v.by), 1)} pixels, ${fmt(v.duration, 3)} seconds each way, skew ${fmt(v.skew, 2)}, weks ${fmt(v.weks, 2)}.`;
-			if (reducedMotion()) {
+			if (reducedMotion(root)) {
 				place(v.by, 1, v.skew);
 				return;
 			}
 			const leg = v.duration * (slowIn.checked ? SLOW : 1) * 1000;
 			const start = performance.now();
 			const frame = (now: number) => {
+				if (reducedMotion(root)) { place(0, 0, v.weks, true); return; }
 				// Ping-pong: each leg uses its own In/Out split.
 				const t = (now - start) / leg;
 				const returning = t > 1;

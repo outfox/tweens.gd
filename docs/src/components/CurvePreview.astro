@@ -1,11 +1,13 @@
 ---
 import { constant } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 const eases = ['Back', 'SmoothStep', 'Elastic', 'Bounce', 'Jump'];
 const ghosts = Array.from({ length: 11 }, (_, i) => i);
 ---
 
-<figure class="stage not-content" data-stage>
+<figure class="stage not-content" data-stage data-motion-demo>
+	<ReducedMotionNotice />
 	<figcaption class="code tw-code">
 		<span data-lang-only="csharp">
 			<span class="t-kw">var</span> <span class="t-var">hop</span> = <span class="t-kw">new</span> <span class="t-ty">Tweens.Position2D</span>(to, <span class="t-num">0.9</span>, <span class="code-ease">Out.<span class="t-ease" data-ease-label="csharp">{eases[0]}</span>);</span><br />
@@ -150,6 +152,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 		};
 
 		const frame = (t: number) => {
+			if (reducedMotion(stage)) { render(END); return; }
 			now = t;
 			if (!playing) return;
 			const local = t - playStart;
@@ -162,7 +165,7 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 			rewindFrom = y;
 			playStart = now;
 			playing = true;
-			if (reducedMotion()) {
+			if (reducedMotion(stage)) {
 				playing = false;
 				render(END);
 			}
@@ -176,8 +179,8 @@ const ghosts = Array.from({ length: 11 }, (_, i) => i);
 		);
 
 		setEase(0);
-		if (reducedMotion()) render(END);
-		else loop(stage, frame);
+		if (reducedMotion(stage)) render(END);
+		loop(stage, frame);
 	}
 </script>
 

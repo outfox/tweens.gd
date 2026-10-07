@@ -2,6 +2,7 @@
 // The quickstart's tween: the Godot icon moves to each click in a 1152×648 stage, Godot's default window size.
 // The call under the stage shows each start's endpoint, duration, and ease, colored like the controls that set them.
 import { constant, type Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 import { legEase, pairedLegEase, type EaseLeg } from '../scripts/motion';
 
 interface Props {
@@ -59,7 +60,8 @@ const spin = play(
 );
 ---
 
-<div class="tw-widget ft not-content" data-first-tween data-code-lang={lang}>
+<div class="tw-widget ft not-content" data-first-tween data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="layout">
 		<div
 			class="stage"
@@ -251,7 +253,7 @@ const spin = play(
 				place(icon, pose);
 			};
 			// Without motion, the ghosts alone show the ease.
-			if (reducedMotion()) {
+			if (reducedMotion(root)) {
 				drop(STEPS, seconds);
 				set(1);
 				started = 0;
@@ -260,7 +262,7 @@ const spin = play(
 			started = performance.now() - elapsed * 1000;
 			const tick = (now: number) => {
 				const time = (now - started) / 1000;
-				const p = Math.min(1, time / seconds);
+				const p = reducedMotion(root) ? 1 : Math.min(1, time / seconds);
 				drop(Math.floor(p * STEPS), time);
 				set(p);
 				if (p < 1) frame = requestAnimationFrame(tick);
@@ -380,9 +382,6 @@ const spin = play(
 		.actions {
 			margin-top: auto;
 		}
-		.code {
-			margin-bottom: 1.25rem;
-		}
 	}
 
 	/* A Godot viewport in miniature, with a 64-pixel grid. Children place themselves in its pixels with --x and --y. */
@@ -454,7 +453,7 @@ const spin = play(
 	}
 	/* Without motion the ghosts alone show the ease, so they stay. */
 	@media (prefers-reduced-motion: reduce) {
-		.ghosts :global(.ghost) {
+		.ft:not([data-motion-enabled]) .ghosts :global(.ghost) {
 			animation: none;
 		}
 	}
@@ -562,6 +561,11 @@ const spin = play(
 		background: color-mix(in oklab, var(--tw-code-inset) 75%, transparent);
 		line-height: 2;
 		overflow-x: auto;
+	}
+	@container (min-width: 44rem) {
+		.code {
+			margin-bottom: 1.25rem;
+		}
 	}
 	.line {
 		display: flex;

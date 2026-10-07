@@ -1,6 +1,7 @@
 ---
 // Owner exit and pause policy, acted out on a tiny scene tree (the lifetime pages).
 import { constant, type Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 interface Props {
 	lang?: Lang;
@@ -11,7 +12,8 @@ const modes = ['Bound', 'SceneTree', 'Always'];
 const modeLabel = (m: string) => (gd ? constant(m) : m);
 ---
 
-<div class="tw-widget od not-content" data-ownership data-code-lang={lang}>
+<div class="tw-widget od not-content" data-ownership data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="scene">
 		<ul class="tree" aria-label="Scene tree">
 			<li class="node root"><span class="n">root</span> <span class="tag" data-paused-tag>paused</span></li>

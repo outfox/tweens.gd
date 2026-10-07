@@ -1,6 +1,7 @@
 ---
 // Labelled tracks on one time axis, such as a Chain's entries or one tween's cycles. A playhead sweeps it in real time
 // when it scrolls into view; one already on screen at load stays still until Replay is pressed.
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 type Kind = 'play' | 'back' | 'wait';
 interface Segment {
 	from: number;
@@ -36,7 +37,8 @@ const summary = rows
 const nameWidth = Math.max(...rows.map((row) => row.label.length));
 ---
 
-<figure class="timeline not-content" data-timeline style={`--rows: ${rows.length}; --name: ${nameWidth}ch; --sweep: ${(end * pace).toFixed(3)}s`}>
+<figure class="timeline not-content" data-timeline data-motion-demo style={`--rows: ${rows.length}; --name: ${nameWidth}ch; --sweep: ${(end * pace).toFixed(3)}s`}>
+	<ReducedMotionNotice />
 	<div class="chart" role="img" aria-label={`${label}. ${summary}.`}>
 		{
 			rows.map((row, r) => (
@@ -88,7 +90,7 @@ const nameWidth = Math.max(...rows.map((row) => row.label.length));
 	import { onceVisible, reducedMotion } from '../scripts/motion';
 
 	const play = (figure: HTMLElement) => {
-		if (reducedMotion()) return;
+		if (reducedMotion(figure)) return;
 		figure.classList.remove('is-playing');
 		void figure.offsetWidth;
 		figure.classList.add('is-playing');
@@ -98,7 +100,7 @@ const nameWidth = Math.max(...rows.map((row) => row.label.length));
 		figure.addEventListener('animationend', (event) => {
 			if ((event.target as Element).classList.contains('playhead')) figure.classList.remove('is-playing');
 		});
-		if (figure.getBoundingClientRect().top >= innerHeight && !reducedMotion()) {
+		if (figure.getBoundingClientRect().top >= innerHeight && !reducedMotion(figure)) {
 			// Waits empty below the fold, then fills as the playhead passes.
 			figure.classList.add('is-armed');
 			onceVisible(figure, () => {
@@ -272,10 +274,5 @@ const nameWidth = Math.max(...rows.map((row) => row.label.length));
 		min-height: 1.9rem;
 		padding: 0.2rem 0.75rem;
 		font-size: var(--sl-text-xs);
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.replay {
-			display: none;
-		}
 	}
 </style>

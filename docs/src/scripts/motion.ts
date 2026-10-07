@@ -340,11 +340,13 @@ function lattice(index: number, seed: number) {
 	return (h / 4294967295) * 2 - 1;
 }
 
-export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+/** A demo may opt into motion for this page; the system preference still applies everywhere else. */
+export const reducedMotion = (el?: Element) =>
+	!el?.closest('[data-motion-enabled]') && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** `Element.animate` for small feedback pops, skipped under reduced motion (the CSS rule cannot reach script animations). */
 export const animate = (el: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) =>
-	reducedMotion() ? undefined : el.animate(keyframes, options);
+	reducedMotion(el) ? undefined : el.animate(keyframes, options);
 
 export const lerp = (a: number, b: number, w: number) => a + (b - a) * w;
 
@@ -359,19 +361,20 @@ export function tween(
 	onUpdate: (weight: number, progress: number) => void,
 	easeName: EaseName = 'CubicOut',
 	delay = 0,
+	el?: Element,
 ): TweenHandle {
 	let raf = 0;
 	let settle!: (r: 'completed' | 'cancelled') => void;
 	const completion = new Promise<'completed' | 'cancelled'>((r) => (settle = r));
-	if (reducedMotion()) {
+	if (reducedMotion(el)) {
 		onUpdate(1, 1);
 		settle('completed');
 		return { cancel() {}, completion };
 	}
 	const start = performance.now() + delay * 1000;
 	const step = (now: number) => {
-		const p = Math.min(1, Math.max(0, (now - start) / (duration * 1000)));
-		if (now >= start) onUpdate(ease(easeName, p), p);
+		const p = reducedMotion(el) ? 1 : Math.min(1, Math.max(0, (now - start) / (duration * 1000)));
+		if (p === 1 || now >= start) onUpdate(ease(easeName, p), p);
 		if (p < 1) raf = requestAnimationFrame(step);
 		else settle('completed');
 	};
@@ -390,10 +393,8 @@ export function tween(
  * Returns a stop function. Under reduced motion `frame` runs once at `stillTime`.
  */
 export function loop(el: Element, frame: (t: number, dt: number) => void, stillTime = 0) {
-	if (reducedMotion()) {
-		frame(stillTime, 0);
-		return () => {};
-	}
+	const preference = matchMedia('(prefers-reduced-motion: reduce)');
+	const demo = el.closest('[data-motion-demo]');
 	let raf = 0;
 	let visible = false;
 	let last = 0;
@@ -406,7 +407,7 @@ export function loop(el: Element, frame: (t: number, dt: number) => void, stillT
 		raf = requestAnimationFrame(tick);
 	};
 	const sync = () => {
-		const run = visible && !document.hidden;
+		const run = visible && !document.hidden && !reducedMotion(el);
 		if (run && !raf) {
 			last = 0;
 			raf = requestAnimationFrame(tick);
@@ -422,9 +423,13 @@ export function loop(el: Element, frame: (t: number, dt: number) => void, stillT
 	});
 	io.observe(el);
 	document.addEventListener('visibilitychange', sync);
+	preference.addEventListener('change', sync);
+	demo?.addEventListener('tweens:motion', sync);
 	return () => {
 		io.disconnect();
 		document.removeEventListener('visibilitychange', sync);
+		preference.removeEventListener('change', sync);
+		demo?.removeEventListener('tweens:motion', sync);
 		cancelAnimationFrame(raf);
 		raf = 0;
 	};

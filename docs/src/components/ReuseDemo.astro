@@ -2,6 +2,7 @@
 // One shared hop definition started on five icons, each start a copy with its own delay (the definitions pages).
 // Height edits the definition, so every icon follows; stagger edits the copies. Each wave snapshots both when it starts.
 import type { Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 interface Props {
 	lang?: Lang;
@@ -50,7 +51,8 @@ const columns = Math.max(...lines(gd ? '-160.0' : '-160', '0.22').map((line) => 
 const ICONS = 5;
 ---
 
-<div class="tw-widget rd not-content" data-reuse-demo data-code-lang={lang}>
+<div class="tw-widget rd not-content" data-reuse-demo data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="layout">
 		<div class="stage" aria-label="Five icons hop in a wave, one after another" role="img">
 			<span class="floor"></span>
@@ -128,23 +130,21 @@ const ICONS = 5;
 			$<HTMLOutputElement>('[data-stagger-out]').value = `${stagger.toFixed(2)} s`;
 			delays.forEach((label, i) => (label.textContent = `${(i * stagger).toFixed(2)} s`));
 		};
-		height.addEventListener('input', () => (show(), flash('height'), reducedMotion() && render(STILL, settings())));
-		stagger.addEventListener('input', () => (show(), flash('stagger'), reducedMotion() && render(STILL, settings())));
+		height.addEventListener('input', () => (show(), flash('height'), reducedMotion(root) && render(STILL, settings())));
+		stagger.addEventListener('input', () => (show(), flash('stagger'), reducedMotion(root) && render(STILL, settings())));
 		show();
 
-		if (reducedMotion()) render(STILL, settings());
-		else {
-			// Each wave snapshots the settings when it starts, as each start snapshots its definition.
-			let wave = settings();
-			let start = 0;
-			loop(root, (seconds) => {
-				if (seconds - start >= length(wave)) {
-					start = seconds;
-					wave = settings();
-				}
-				render(seconds - start, wave);
-			});
-		}
+		// Each wave snapshots the settings when it starts, as each start snapshots its definition.
+		let wave = settings();
+		let start = 0;
+		loop(root, (seconds) => {
+			if (reducedMotion(root)) { render(STILL, settings()); return; }
+			if (seconds - start >= length(wave)) {
+				start = seconds;
+				wave = settings();
+			}
+			render(seconds - start, wave);
+		});
 	}
 </script>
 

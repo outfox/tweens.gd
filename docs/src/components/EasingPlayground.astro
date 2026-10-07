@@ -1,5 +1,6 @@
 ---
 import { FAMILIES, canonicalFamily } from '../scripts/motion';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 import type { Lang } from '../scripts/lang';
 interface Props { lang?: Lang }
 const { lang = 'csharp' } = Astro.props;
@@ -9,7 +10,8 @@ const curves = sorted.filter(f => !/\d$/.test(f));
 const variants = sorted.filter(f => /\d$/.test(f));
 ---
 
-<div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang}>
+<div class="tw-widget ep not-content" data-easing-playground data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="ep-heading"><span class="eyebrow">EASING PLAYGROUND</span><span class="badge">{new Set(FAMILIES.map(canonicalFamily)).size} × {new Set(FAMILIES.map(canonicalFamily)).size} curves</span><button type="button" class="tw-btn" data-reset>Reset</button></div>
 	<div class="composer">
 		<div class="visual">
@@ -223,7 +225,7 @@ sprite.<span class="fn">Tween</span>(move <span class="kw">with</span> {'{'} To 
 		instances.push(self);
 		playButton.addEventListener('click', () => {
 			if (playing) { stop(); return; }
-			const handle = tween(+duration.value, (_, p) => draw(p), 'Linear');
+			const handle = tween(+duration.value, (_, p) => draw(p), 'Linear', 0, root);
 			setPlaying(handle);
 			handle.completion.then(() => { if (playing === handle) setPlaying(); });
 		});

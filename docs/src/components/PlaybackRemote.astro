@@ -1,6 +1,7 @@
 ---
 // A toy handle mirroring TweenInstance / TweensGdHandle: pause, resume, cancel, and an end that settles once.
 import type { Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 interface Props {
 	lang?: Lang;
@@ -8,7 +9,8 @@ interface Props {
 const { lang = 'csharp' } = Astro.props;
 ---
 
-<div class="tw-widget pr not-content" data-playback-remote data-code-lang={lang}>
+<div class="tw-widget pr not-content" data-playback-remote data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	{
 		lang === 'gdscript' ? (
 			<pre class="code tw-code" aria-hidden="true"><span data-line="start"><span class="kw">var</span> movement := Tweens.<span class="fn">play</span>(sprite, Tweens.<span class="fn">position_2d</span>(to, <span class="num">2.4</span>, InOut.<span class="mb">SMOOTHER_STEP</span>))</span>
@@ -105,7 +107,7 @@ const { lang = 'csharp' } = Astro.props;
 			elapsed = 0;
 			highlight('start');
 			setState('Playing');
-			if (reducedMotion()) {
+			if (reducedMotion(root)) {
 				elapsed = DURATION;
 				render();
 				setState('Completed');

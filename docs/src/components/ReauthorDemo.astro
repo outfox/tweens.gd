@@ -1,6 +1,7 @@
 ---
 // One named definition, three call sites. Editing the definition changes every future start.
 import { constant, type Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 interface Props {
 	lang?: Lang;
@@ -17,7 +18,8 @@ const sites = [
 ];
 ---
 
-<div class="tw-widget rd not-content" data-reauthor data-code-lang={lang}>
+<div class="tw-widget rd not-content" data-reauthor data-code-lang={lang} data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="def">
 		{
 			gd ? (
@@ -277,7 +279,7 @@ pop.from_value = Vector2.ZERO</pre>
 		text-align: center;
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.thing {
+		.rd:not([data-motion-enabled]) .thing {
 			scale: 1;
 		}
 	}

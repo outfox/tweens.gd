@@ -1,6 +1,7 @@
 ---
 // Interactive timeline for delays, repeats, and ping-pong on the loops pages.
 import { field, type Lang } from '../scripts/lang';
+import ReducedMotionNotice from './ReducedMotionNotice.astro';
 
 interface Props {
 	lang?: Lang;
@@ -11,7 +12,8 @@ const MAX_LOOPS = 4;
 const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 ---
 
-<div class="tw-widget tl not-content" data-timing-lab>
+<div class="tw-widget tl not-content" data-timing-lab data-motion-demo>
+	<ReducedMotionNotice />
 	<div class="stage">
 		<div class="tw-lane is-dotted lane" data-lane aria-hidden="true">
 			<span class="tw-lane-mark end" style="--x: 0"></span>
@@ -196,17 +198,16 @@ const slots = 1 + MAX_LOOPS * 3 + (MAX_LOOPS - 1);
 		build();
 		// Widths tween only on later edits, never on first paint.
 		requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-ready')));
-		if (reducedMotion()) {
+		if (reducedMotion(root)) {
 			time = total * 0.4;
 			draw(time);
-		} else {
-			loop(root, (_, dt) => {
-				if (scrubbing) return;
-				time += dt;
-				if (time > total + TAIL) time = 0;
-				draw(time);
-			});
 		}
+		loop(root, (_, dt) => {
+			if (scrubbing) return;
+			time += dt;
+			if (time > total + TAIL) time = 0;
+			draw(time);
+		});
 	}
 </script>
 

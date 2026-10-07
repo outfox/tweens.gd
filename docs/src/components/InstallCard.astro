@@ -2,7 +2,7 @@
 import { Card } from '@astrojs/starlight/components';
 
 interface Props {
-	/** Names the channel: the logo's alt text, or the wordmark next to NuGet's mark. */
+	/** Names the channel in the logo's alt text. */
 	title: string;
 	href: string;
 	logo: 'godot-asset-store' | 'github' | 'nuget';
@@ -10,18 +10,13 @@ interface Props {
 
 const { title, href, logo } = Astro.props;
 
-// Wordmarks come in a white and a black file; the page shows the one for its theme.
+// Wordmarks come in light- and dark-theme files; the page shows the one for its theme.
 const wordmarks = {
 	'godot-asset-store': { dark: '/godot-asset-store.svg', light: '/godot-asset-store-black.svg' },
 	github: { dark: '/github-logo-white.svg', light: '/github-logo-black.svg' },
+	nuget: { dark: '/logo-nuget-dark.svg', light: '/logo-nuget-light.svg' },
 };
-// Starlight's icon set has no NuGet mark, so it's drawn here and pairs with the name as its wordmark.
-const nuget =
-	'<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" fill-rule="evenodd"><path d="M0 2.2a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0-4.4 0zM11.4 5.4h6.6a6 6 0 0 1 6 6v6.6a6 6 0 0 1-6 6h-6.6a6 6 0 0 1-6-6v-6.6a6 6 0 0 1 6-6zM8 10.4a2.4 2.4 0 1 0 4.8 0a2.4 2.4 0 1 0-4.8 0zM13.6 17.6a4 4 0 1 0 8 0a4 4 0 1 0-8 0z"/></svg>';
-const art =
-	logo === 'nuget'
-		? `${nuget}<span>${title}</span>`
-		: `<img class="on-dark" src="${wordmarks[logo].dark}" alt="${title}"><img class="on-light" src="${wordmarks[logo].light}" alt="${title}">`;
+const art = `<img class="on-dark" src="${wordmarks[logo].dark}" alt="${title}"><img class="on-light" src="${wordmarks[logo].light}" alt="${title}">`;
 ---
 
 <Card title={`<a class="install-logo install-logo--${logo}" href="${href}">${art}</a>`}><slot /></Card>
@@ -75,10 +70,8 @@ const art =
 		translate: 0 -3px;
 		background: color-mix(in oklab, var(--sl-color-accent) 32%, var(--tw-surface));
 	}
-	.install-logo :is(img, svg, span) {
-		margin: 0;
-	}
 	.install-logo img {
+		margin: 0;
 		width: auto;
 		max-width: 85%;
 		height: calc(var(--banner) * 0.6);
@@ -90,18 +83,5 @@ const art =
 	:root[data-theme='light'] .install-logo .on-dark,
 	:root:not([data-theme='light']) .install-logo .on-light {
 		display: none;
-	}
-	.install-logo svg {
-		width: calc(var(--banner) * 0.46);
-		height: calc(var(--banner) * 0.46);
-		color: #6cb0f0;
-	}
-	:root[data-theme='light'] .install-logo svg {
-		color: #004880;
-	}
-	.install-logo span {
-		font-family: var(--tw-font-display);
-		font-size: calc(var(--banner) * 0.36);
-		font-weight: 700;
 	}
 </style>
