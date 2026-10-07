@@ -1,0 +1,64 @@
+---
+title: "Definitions"
+description: "Every field of a tween definition, drawn: endpoints, timing, easing, callbacks, and variations."
+---
+
+import DefinitionFields from '../../../components/DefinitionFields.astro';
+import Moves from '../../../components/Moves.astro';
+
+A definition describes one motion: where it goes, when it plays, how it paces, and what runs along the way. Every field has a default, so a definition sets only what it changes.
+
+Examples use `using Godot;` and `using tweens.gd;` in a Node method, with targets inside the scene tree.
+
+## Anatomy of a tween
+
+<Moves>
+
+```csharp {"1":1} {"2":3} {"3":6} {"4":7}
+var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic)
+{
+    OnEnd = _ => GD.Print("Arrived"),
+};
+
+var movement = sprite.Tween(arrive);
+await movement.End;
+```
+
+1. **Define.** A [definition](/csharp/api/definitions/) holds the [endpoint](/csharp/api/endpoints/), [timing](/csharp/api/timing/), and [easing](/csharp/api/easing/).
+2. **React.** [Callbacks](/csharp/api/callbacks/) run at fixed points of each playback.
+3. **Start.** [Starting playback](/csharp/api/start/) snapshots the definition and returns a [handle](/csharp/api/handles/).
+4. **Await.** `End` completes with the [reason](/csharp/api/handles/#reason) playback ended.
+
+</Moves>
+
+## Endpoints
+
+Where the motion starts and ends.
+
+<DefinitionFields group="endpoints" />
+
+## Timing
+
+When the motion plays, and how often.
+
+<DefinitionFields group="timing" />
+
+## Easing
+
+How the motion paces between its endpoints. The [easing playground](/easings/) draws every curve.
+
+<DefinitionFields group="easing" />
+
+## Callbacks
+
+Your code at fixed points of each playback.
+
+<DefinitionFields group="callbacks" />
+
+## Variations
+
+When a tween starts, each value becomes factor × value + delta. [Variations](/csharp/variations/) shows them in use.
+
+<DefinitionFields group="variations" />
+
+`Options` holds every timing and easing field as one `TweenOptions` value. Each name links to its row in the reference.

@@ -26,11 +26,12 @@ export const PATH = [
 		label: 'Tweening',
 		art: 'spacing',
 		pages: [
+			{ slug: 'anatomy', label: 'Definitions' },
 			{ link: '/easings/', label: 'Easings' },
 			{ slug: 'effects', label: 'Effects' },
 			{ slug: 'functions', label: 'Functions' },
-			{ slug: 'curves', label: 'Curves' },
-			{ link: '/porting/', label: 'Porting Godot Tweens' },
+			{ slug: 'curves', label: 'Godot Curves' },
+			{ link: '/porting/', label: 'Porting from Godot' },
 		],
 	},
 	{

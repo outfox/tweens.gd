@@ -4,8 +4,19 @@ description: "Two API flavours and two ways to write endpoints: explicit types o
 ---
 
 import Compare from '../../../components/Compare.astro';
+import { Aside } from '@astrojs/starlight/components';
 
-There's more than one way to tween a ferret!
+Okay, before this gets any more confusing... 
+
+<Aside title="No, you're not seeing things.">
+There's more than one way to tween a ferret! While developing tweens.gd, we realized that there are at least two, probably four, problems that we wanted to solve.
+
+Some tweens may need...  
+- to be fired off once, and just do their thing
+- destinations or timings you want to specify each time
+- to apply to several different targets (Nodes)
+- small variations for that extra juice
+</Aside>
 
 ## Definitions: Structured vs. Convenient
 

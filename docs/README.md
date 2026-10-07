@@ -78,8 +78,9 @@ When this check fails after an upgrade:
 - Learn is a five-step tutorial with a definite endpoint. Guides answer optional questions;
   Reference contains complete member lists and detailed rules.
 - The tutorial runs Install → Your first tween → Syntax sugar → Definitions → Control & completion.
-  Sequences is an optional guide. Easing progresses from Easings (the playground) to Effects, Functions, and Curves;
-  Porting, a shared page, maps Godot's Tween eases.
+  Sequences is an optional guide. Tweening opens with Definitions (`anatomy`), one schematic card per definition field
+  (`scripts/anatomy.ts`), then Easings (the playground), Effects, Functions, and Curves; Porting, a shared page,
+  maps Godot's Tween eases. A new definition field needs a card there.
 - Guides use Starlight `Aside` for actionable hints and pitfalls, and `Card`/`LinkCard`
   for choices and next steps. Keep the main flow to one example per concept; components
   should make the page easier to scan, not hide a long explanation.

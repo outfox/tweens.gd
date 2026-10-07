@@ -4,33 +4,11 @@ description: A map of the C# core API, from the definition you describe to the h
 ---
 
 import Compare from '../../../components/Compare.astro';
-import Moves from '../../../components/Moves.astro';
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-A definition describes a motion, starting it returns a handle, and the handle controls that one playback. These pages list every member of each, with the exact rules the guides leave out.
+A definition describes a motion, starting it returns a handle, and the handle controls that one playback. These pages list every member of each, with the exact rules the guides leave out. [Definitions](/csharp/anatomy/) draws every field.
 
 Examples use `using Godot;` and `using tweens.gd;`. Definitions such as `Tweens.Position2D` live in the global `Tweens` namespace and need no `using`.
-
-## Anatomy of a tween
-
-<Moves>
-
-```csharp {"1":1} {"2":3} {"3":6} {"4":7}
-var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic)
-{
-    OnEnd = _ => GD.Print("Arrived"),
-};
-
-var movement = sprite.Tween(arrive);
-await movement.End;
-```
-
-1. **Define.** A [definition](/csharp/api/definitions/) holds the [endpoint](/csharp/api/endpoints/), [timing](/csharp/api/timing/), and [easing](/csharp/api/easing/).
-2. **React.** [Callbacks](/csharp/api/callbacks/) run at fixed points of each playback.
-3. **Start.** [Starting playback](/csharp/api/start/) snapshots the definition and returns a [handle](/csharp/api/handles/).
-4. **Await.** `End` completes with the [reason](/csharp/api/handles/#reason) playback ended.
-
-</Moves>
 
 ## Find a page
 

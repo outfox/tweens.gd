@@ -1,0 +1,68 @@
+---
+title: "Definitions"
+description: "Every field of a tween definition, drawn: endpoints, timing, easing, callbacks, variations, and target."
+---
+
+import DefinitionFields from '../../../components/DefinitionFields.astro';
+import Moves from '../../../components/Moves.astro';
+
+A definition describes one motion: where it goes, when it plays, how it paces, and what runs along the way. Every field has a default, so a definition sets only what it changes.
+
+Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
+
+## Anatomy of a tween
+
+<Moves>
+
+```gdscript {"1":1} {"2":2} {"3":4} {"4":5}
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) \
+	.with_on_end(func(_handle): print("Arrived"))
+
+var movement := Tweens.play(sprite, arrive)
+await movement.end
+```
+
+1. **Define.** A [definition](/gdscript/api/definitions/) holds the [endpoint](/gdscript/api/endpoints/), [timing](/gdscript/api/timing/), and [easing](/gdscript/api/easing/).
+2. **React.** [Callbacks](/gdscript/api/callbacks/) run at fixed points of each playback.
+3. **Start.** [Starting playback](/gdscript/api/start/) snapshots the definition and returns a [handle](/gdscript/api/handles/).
+4. **Await.** `end` resumes with the [reason](/gdscript/api/handles/#tweensreason) playback ended.
+
+</Moves>
+
+## Endpoints
+
+Where the motion starts and ends.
+
+<DefinitionFields group="endpoints" lang="gdscript" />
+
+## Timing
+
+When the motion plays, and how often.
+
+<DefinitionFields group="timing" lang="gdscript" />
+
+## Easing
+
+How the motion paces between its endpoints. The [easing playground](/easings/) draws every curve.
+
+<DefinitionFields group="easing" lang="gdscript" />
+
+## Callbacks
+
+Your code at fixed points of each playback.
+
+<DefinitionFields group="callbacks" lang="gdscript" />
+
+## Variations
+
+When a tween starts, each value becomes factor × value + delta. [Variations](/gdscript/variations/) shows them in use.
+
+<DefinitionFields group="variations" lang="gdscript" />
+
+## Target
+
+What the definition writes. The named helpers and `Tweens.property()` set these for you.
+
+<DefinitionFields group="target" lang="gdscript" />
+
+Most fields have a `with_*()` copy method, such as `with_skew()`; the [definition reference](/gdscript/api/definitions/) lists them. Each name links to its row in the reference.
