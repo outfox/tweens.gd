@@ -28,3 +28,9 @@ This is a MIT licensed, free addon, and it supports both GDScript and C# out of 
 May your code be short and your ferrets be long!
 
 ... dook, dook! ♥️
+
+#### Acknowledgements
+- Godot logo by Andrea Calabró, licensed under CC BY 4.0.
+- "Easy, the Ferret" illustrations drawn by foxy_maria.
+- tweens.gd is released under the MIT License.
+- tweens.gd is made with math & ferrets
