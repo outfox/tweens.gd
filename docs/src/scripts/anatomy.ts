@@ -241,7 +241,7 @@ const FIELDS: Field[] = [
 	},
 	{
 		name: 'OnFinally', group: 'callbacks', page: 'callbacks',
-		text: 'Runs last, regardless how playback actually ended.',
+		text: 'Runs last, regardless of how tween playback actually ended.',
 		draw: (n) => bar(20, 140, 22, 'fm') + ring(146, 22) + dot(164, 22, 'fa', 3.5) + text(172, 25, n('OnFinally'), 'ta', 'start') +
 			bar(20, 90, 50, 'fm') + cross(96, 50, 'sm thick') + dot(114, 50, 'fa', 3.5) + text(122, 53, n('OnFinally'), 'ta', 'start') +
 			text(146, 38, 'ended') + text(96, 66, 'stopped'),
