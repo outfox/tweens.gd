@@ -29,9 +29,10 @@ May your code be short and your ferrets be long!
 
 ... dook, dook! ♥️
 
-#### Acknowledgements
-
+<details>
+<summary>Acknowledgements</summary>
 - [Godot logo](https://godotengine.org/press/) by Andrea Calabró, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - "Easy, the Ferret" illustrations drawn by [foxy_maria](https://www.furaffinity.net/user/foxymaria/).
 - tweens.gd is released under the [MIT License](https://github.com/outfox/tweens.gd?tab=MIT-1-ov-file).
 - tweens.gd is made with math & ferrets, copyright © 2026 [its contributors](https://github.com/outfox/tweens.gd/graphs/contributors).
+</details>
