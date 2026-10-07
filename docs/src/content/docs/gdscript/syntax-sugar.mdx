@@ -21,10 +21,11 @@ Tweens.play(sprite, arrive.with_delay(0.1))
 
 ```gdscript title="Fully Structured"
 var arrive := Tweens.position_2d()
-arrive.To = new Vector2(400, 180)
-arrive.Duration = 0.6
-arrive.Ease = Out.CUBIC
-arrive.Delay = 0.1
+arrive.to_value = Vector2(400, 180)
+arrive.duration = 0.6
+arrive.ease = Out.CUBIC
+arrive.delay = 0.1
+
 Tweens.play(sprite, arrive)
 ```
 
