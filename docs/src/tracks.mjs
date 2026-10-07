@@ -26,7 +26,7 @@ export const PATH = [
 		label: 'Tweening',
 		art: 'spacing',
 		pages: [
-			{ slug: 'anatomy', label: 'Definitions' },
+			{ slug: 'anatomy', label: 'Anatomy' },
 			{ link: '/easings/', label: 'Easings' },
 			{ slug: 'effects', label: 'Effects' },
 			{ slug: 'functions', label: 'Functions' },

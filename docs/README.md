@@ -78,7 +78,7 @@ When this check fails after an upgrade:
 - Learn is a five-step tutorial with a definite endpoint. Guides answer optional questions;
   Reference contains complete member lists and detailed rules.
 - The tutorial runs Install → Your first tween → Syntax sugar → Definitions → Control & completion.
-  Sequences is an optional guide. Tweening opens with Definitions (`anatomy`), one schematic card per definition field
+  Sequences is an optional guide. Tweening opens with Anatomy/Definitions (`anatomy`), one schematic card per definition field
   (`scripts/anatomy.ts`), then Easings (the playground), Effects, Functions, and Curves; Porting, a shared page,
   maps Godot's Tween eases. A new definition field needs a card there.
 - Guides use Starlight `Aside` for actionable hints and pitfalls, and `Card`/`LinkCard`
@@ -128,7 +128,8 @@ When this check fails after an upgrade:
 
 The public URL is `https://tweens.gd`, set as Astro `site` for canonical URLs and
 the sitemap. Links assume that domain-root deployment. statichost.eu builds and
-deploys the site automatically from a repository webhook; no workflow is needed here.
+deploys the site automatically from a repository webhook. CI's docs job runs the build, checks, and C# example
+compile when the site or the library sources it reads change.
 
 `public/_headers` sets statichost's response headers. Files whose names carry a content
 hash (Astro's `/_astro/` output, Pagefind's fragments and index chunks) are cached as

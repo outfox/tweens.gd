@@ -1,16 +1,14 @@
 ---
-title: "Definitions"
+title: "Anatomy of a Tween"
 description: "Every field of a tween definition, drawn: endpoints, timing, easing, callbacks, variations, and target."
 ---
 
 import DefinitionFields from '../../../components/DefinitionFields.astro';
 import Moves from '../../../components/Moves.astro';
 
-A definition describes one motion: where it goes, when it plays, how it paces, and what runs along the way. Every field has a default, so a definition sets only what it changes.
+Each tween is backed by a definition, describing one motion: where it goes, when it plays, how it paces, and what runs along the way. Every field has a default, so a definition sets only what it changes.
 
-Examples use the global `Tweens` class in a node script, with targets inside the scene tree.
-
-## Anatomy of a tween
+Once the addon is installed, you can use the `Tweens` class in a node script.
 
 <Moves>
 
