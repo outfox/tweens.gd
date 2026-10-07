@@ -108,7 +108,7 @@ public class StructuredDefinitionTests
         foreach (var adapter in adapters)
         {
             var name = adapter.Name.Replace("Tween", "");
-            var definition = assembly.GetType("Tweens." + name, throwOnError: true)!;
+            var definition = assembly.GetType("tweens.gd.Tweens+" + name, throwOnError: true)!;
             Assert.True(definition.IsValueType);
             Assert.NotNull(definition.GetCustomAttribute<IsReadOnlyAttribute>());
             Assert.Contains(definition.GetInterfaces(), type => type.IsGenericType

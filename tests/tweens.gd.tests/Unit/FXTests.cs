@@ -3,7 +3,7 @@
 
 using System.Text.Json;
 using Godot;
-using FX = global::Tweens.FX;
+using FX = tweens.gd.Tweens.FX;
 
 namespace tweens.gd.Tests.Unit;
 
@@ -125,15 +125,15 @@ public class FXTests
     {
         using var scheduler = new TweenScheduler();
         var target = new Target { Amount = 10, Position = new(4, 5) };
-        var scalar = new global::Tweens.Property<Target, float>(x => x.Amount, (x, v) => x.Amount = v, Interpolators.Float)
+        var scalar = new Tweens.Property<Target, float>(x => x.Amount, (x, v) => x.Amount = v, Interpolators.Float)
             { By = 2, Duration = 1, EaseFunction = FX.Punch(2) };
         scheduler.Add(target, scalar);
         var motion = FX.Shake2D(new(8, 4));
         var baseline = target.Position;
-        scheduler.Add(target, new global::Tweens.Property<Target, float>(_ => 0, (_, _) => { }, Interpolators.Float)
+        scheduler.Add(target, new Tweens.Property<Target, float>(_ => 0, (_, _) => { }, Interpolators.Float)
             { From = 0, To = 1, Duration = 1, OnUpdate = (_, t) => target.Position = baseline + motion(t) });
         var turn = FX.PunchQuaternion(new(0, 0.3f, 0));
-        scheduler.Add(target, new global::Tweens.Property<Target, Quaternion>(x => x.Rotation, (x, v) => x.Rotation = v,
+        scheduler.Add(target, new Tweens.Property<Target, Quaternion>(x => x.Rotation, (x, v) => x.Rotation = v,
             (from, _, t) => from * turn(t)) { Duration = 1 });
         scheduler.Update(0.125);
         Assert.Equal(11.53125f, target.Amount, 5);

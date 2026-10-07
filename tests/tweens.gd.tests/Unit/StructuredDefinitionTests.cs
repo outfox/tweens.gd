@@ -27,7 +27,7 @@ public class StructuredDefinitionTests
     private static readonly string[] Callbacks = ["OnAdd", "OnStart", "OnUpdate", "OnEnd", "OnCancel", "OnFinally"];
 
     private static IEnumerable<Type> DefinitionTypes() => typeof(TweenScheduler).Assembly.GetExportedTypes()
-        .Where(type => type.Namespace == "Tweens" && type.IsValueType)
+        .Where(type => type.DeclaringType == typeof(Tweens) && type.IsValueType)
         .OrderBy(type => type.Name);
 
     public static TheoryData<Type> Definitions() => new(DefinitionTypes());
