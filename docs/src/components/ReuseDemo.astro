@@ -1,0 +1,319 @@
+---
+// One shared hop definition started on five icons, each start a copy with its own delay (the definitions pages).
+// Height edits the definition, so every icon follows; stagger edits the copies. Each wave snapshots both when it starts.
+import type { Lang } from '../scripts/lang';
+
+interface Props {
+	lang?: Lang;
+}
+const { lang = 'csharp' } = Astro.props;
+const gd = lang === 'gdscript';
+
+// Hand-highlighted code in the classes theme.css colors.
+const ty = (s: string) => `<span class="ty">${s}</span>`;
+const fn = (s: string) => `<span class="fn">${s}</span>`;
+const kw = (s: string) => `<span class="kw">${s}</span>`;
+const mb = (s: string) => `<span class="mb">${s}</span>`;
+const num = (s: string) => `<span class="num">${s}</span>`;
+const lines = (heightValue: string, staggerValue: string) => {
+	const height = `<span class="num" data-role="height">${heightValue}</span>`;
+	const stagger = `<span class="num" data-role="stagger">${staggerValue}</span>`;
+	return gd
+		? [
+				`${kw('var')} hop := ${ty('Tweens')}.${fn('position_2d_y')}()`,
+				`hop.${mb('by_value')} = ${height}`,
+				`hop.${mb('duration')} = ${num('0.25')}`,
+				`hop.${mb('ease')} = ${ty('Out')}.${mb('QUAD')}`,
+				`hop.${mb('ping_pong')} = ${kw('true')}`,
+				'',
+				`${kw('for')} i ${kw('in')} icons.${fn('size')}():`,
+				`\t${ty('Tweens')}.${fn('play')}(icons[i], hop.${fn('with_delay')}(i * ${stagger}))`,
+			]
+		: [
+				`${kw('var')} hop = ${kw('new')} ${ty('Tweens')}.${ty('Position2DY')}`,
+				'{',
+				`    By = ${height},`,
+				`    Duration = ${num('0.25')},`,
+				`    Ease = ${ty('Out')}.${mb('Quad')},`,
+				`    PingPong = ${kw('true')},`,
+				'};',
+				'',
+				`${kw('for')} (${kw('var')} i = ${num('0')}; i &lt; icons.Length; i++)`,
+				`    icons[i].${fn('Tween')}(hop ${kw('with')} { Delay = i * ${stagger} });`,
+			];
+};
+const code = lines(gd ? '-80.0' : '-80', '0.2');
+// The block keeps the width of its widest values, plus a column for rounding, so the stage beside it doesn't resize
+// while a slider moves.
+const plain = (line: string) => line.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/\t/g, '    ');
+const columns = Math.max(...lines(gd ? '-160.0' : '-160', '0.22').map((line) => plain(line).length)) + 1;
+const ICONS = 5;
+---
+
+<div class="tw-widget rd not-content" data-reuse-demo data-code-lang={lang}>
+	<div class="layout">
+		<div class="stage" aria-label="Five icons hop in a wave, one after another" role="img">
+			<span class="floor"></span>
+			{
+				Array.from({ length: ICONS }, (_, i) => (
+					<>
+						<span class="shadow" style={`--i: ${i}`} data-shadow />
+						<span class="icon" style={`--i: ${i}`} data-icon />
+						<span class="delay" style={`--i: ${i}`} data-delay>
+							{(i * 0.2).toFixed(2)} s
+						</span>
+					</>
+				))
+			}
+		</div>
+		<pre class="code tw-code"><code style={`--columns: ${columns}`} set:html={code.join('\n')} /></pre>
+		<div class="controls">
+			<label class="tw-field height">
+				<span><i class="key"></i>Height <small>on the definition</small><output data-height-out>80 px</output></span>
+				<input type="range" min="40" max="160" step="10" value="80" data-height />
+			</label>
+			<label class="tw-field stagger">
+				<span><i class="key"></i>Stagger <small>on each copy</small><output data-stagger-out>0.20 s</output></span>
+				<input type="range" min="0" max="0.5" step="0.02" value="0.2" data-stagger />
+			</label>
+			<p data-note aria-live="polite">Changes apply to the next wave. Icons in the air keep the settings they started with.</p>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { EASES, loop, reducedMotion } from '../scripts/motion';
+	import { langOf } from '../scripts/lang';
+
+	// The definition in the code: a 0.25-second Out.Quad leg, played there and back.
+	const DURATION = 0.25;
+	const REST = 0.8;
+	// Under reduced motion, one frame mid-wave shows the stagger.
+	const STILL = 0.3;
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-reuse-demo]')) {
+		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
+		const $$ = <T extends Element>(s: string) => [...root.querySelectorAll<T>(s)];
+		const icons = $$<HTMLElement>('[data-icon]');
+		const shadows = $$<HTMLElement>('[data-shadow]');
+		const delays = $$<HTMLElement>('[data-delay]');
+		const height = $<HTMLInputElement>('[data-height]');
+		const stagger = $<HTMLInputElement>('[data-stagger]');
+		const gd = langOf(root) === 'gdscript';
+
+		const settings = () => ({ by: Number(height.value), stagger: Number(stagger.value) });
+		const length = (wave: { stagger: number }) => (icons.length - 1) * wave.stagger + 2 * DURATION + REST;
+
+		// A ping-pong leg plays the ease forward, then backward: up like a throw, down like a fall.
+		const render = (local: number, wave: ReturnType<typeof settings>) =>
+			icons.forEach((icon, i) => {
+				const t = local - i * wave.stagger;
+				const progress = t <= 0 || t >= 2 * DURATION ? 0 : t < DURATION ? t / DURATION : 2 - t / DURATION;
+				const lift = wave.by * EASES.QuadOut(progress);
+				icon.style.setProperty('--h', lift.toFixed(2));
+				shadows[i].style.setProperty('--h', lift.toFixed(2));
+			});
+
+		const flash = (role: string) => {
+			const el = $<HTMLElement>(`[data-role="${role}"]`);
+			el.classList.remove('is-new');
+			void el.offsetWidth;
+			el.classList.add('is-new');
+		};
+		const show = () => {
+			const { by, stagger } = settings();
+			$('[data-role="height"]').textContent = gd ? (-by).toFixed(1) : String(-by);
+			$('[data-role="stagger"]').textContent = String(Number(stagger.toFixed(2)));
+			$<HTMLOutputElement>('[data-height-out]').value = `${by} px`;
+			$<HTMLOutputElement>('[data-stagger-out]').value = `${stagger.toFixed(2)} s`;
+			delays.forEach((label, i) => (label.textContent = `${(i * stagger).toFixed(2)} s`));
+		};
+		height.addEventListener('input', () => (show(), flash('height'), reducedMotion() && render(STILL, settings())));
+		stagger.addEventListener('input', () => (show(), flash('stagger'), reducedMotion() && render(STILL, settings())));
+		show();
+
+		if (reducedMotion()) render(STILL, settings());
+		else {
+			// Each wave snapshots the settings when it starts, as each start snapshots its definition.
+			let wave = settings();
+			let start = 0;
+			loop(root, (seconds) => {
+				if (seconds - start >= length(wave)) {
+					start = seconds;
+					wave = settings();
+				}
+				render(seconds - start, wave);
+			});
+		}
+	}
+</script>
+
+<style>
+	.rd {
+		--height: var(--tw-amber);
+		--stagger: var(--tw-blue);
+		container-type: inline-size;
+	}
+	/* Narrow: stage, code, controls. Wide: the code beside the stage it drives. */
+	.layout {
+		display: grid;
+		grid-template-areas: 'stage' 'code' 'controls';
+	}
+	@container (min-width: 56rem) {
+		.layout {
+			grid-template-areas: 'code stage' 'controls controls';
+			grid-template-columns: auto minmax(0, 1fr);
+		}
+		.code {
+			margin: 1.25rem 0 0 1.25rem;
+		}
+		.stage {
+			align-self: center;
+			margin: 1.25rem 1.25rem 0;
+			border-radius: 0.8rem;
+		}
+	}
+
+	/* A 960×360 scene in its own pixels: five 128-pixel icons on a floor, 176 pixels apart. */
+	.stage {
+		grid-area: stage;
+		--px: calc(100cqw / 960);
+		position: relative;
+		aspect-ratio: 8 / 3;
+		overflow: hidden;
+		container-type: inline-size;
+		background:
+			linear-gradient(to right, var(--tw-grid) 1px, transparent 1px) 0 0 / calc(100% / 15) 100%,
+			linear-gradient(to bottom, var(--tw-grid) 1px, transparent 1px) 0 0 / 100% calc(100% / 5.625),
+			var(--tw-bg);
+	}
+	.floor {
+		position: absolute;
+		inset-inline: 0;
+		top: calc(312 * var(--px));
+		border-top: 2px solid var(--tw-outline);
+	}
+	.icon,
+	.shadow,
+	.delay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		--x: calc((128 + var(--i) * 176) * var(--px));
+	}
+	.icon {
+		width: calc(128 * var(--px));
+		aspect-ratio: 1;
+		translate: calc(var(--x) - 50%) calc((248 - var(--h, 0)) * var(--px) - 50%);
+		background: url('/godot.svg') center / contain no-repeat;
+		filter: drop-shadow(0 3px 6px rgb(3 8 14 / 0.35));
+	}
+	/* The shadow stays on the floor and fades as its icon rises. */
+	.shadow {
+		width: calc(104 * var(--px));
+		height: calc(16 * var(--px));
+		translate: calc(var(--x) - 50%) calc(312 * var(--px) - 50%);
+		scale: calc(1 - var(--h, 0) / 320);
+		border-radius: 50%;
+		background: color-mix(in oklab, var(--tw-outline) 80%, transparent);
+		opacity: calc(1 - var(--h, 0) / 200);
+	}
+	:global(:root[data-theme='light']) .shadow {
+		background: rgb(20 40 70 / 0.25);
+	}
+	.delay {
+		translate: calc(var(--x) - 50%) calc(338 * var(--px) - 50%);
+		font-family: var(--sl-font-mono);
+		font-size: clamp(0.55rem, calc(26 * var(--px)), var(--sl-text-2xs));
+		color: var(--tw-blue-ink);
+		white-space: nowrap;
+	}
+
+	.code {
+		grid-area: code;
+		margin: 1.25rem 1.25rem 0;
+		padding: 0.8rem 1rem;
+		border-radius: 0.8rem;
+		background: color-mix(in oklab, var(--tw-code-inset) 75%, transparent);
+		line-height: 1.8;
+		tab-size: 4;
+		overflow-x: auto;
+	}
+	.code code {
+		display: block;
+		min-width: calc(var(--columns) * 1ch);
+		padding: 0;
+		background: none;
+		font: inherit;
+		color: inherit;
+	}
+	.code :global([data-role]) {
+		border-radius: 0.25rem;
+		text-decoration: underline 2px var(--role);
+		text-decoration-skip-ink: none;
+		text-underline-offset: 0.4em;
+	}
+	.code :global([data-role='height']) {
+		--role: var(--height);
+	}
+	.code :global([data-role='stagger']) {
+		--role: var(--stagger);
+	}
+	.code :global([data-role].is-new) {
+		animation: hit 1s var(--ease-expo-out);
+	}
+	@keyframes hit {
+		from {
+			background: color-mix(in oklab, var(--role) 35%, transparent);
+		}
+	}
+
+	.controls {
+		grid-area: controls;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 1.5rem;
+		align-items: end;
+		padding: 1.1rem 1.25rem 1.25rem;
+	}
+	.controls label {
+		flex: 1 1 13rem;
+	}
+	.controls label > span {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	small {
+		color: var(--tw-muted);
+		font-size: inherit;
+		opacity: 0.8;
+	}
+	output {
+		margin-inline-start: auto;
+	}
+	.key {
+		width: 0.6rem;
+		height: 0.6rem;
+		border-radius: 50%;
+		flex: none;
+	}
+	.height .key {
+		background: var(--height);
+	}
+	.stagger .key {
+		background: var(--stagger);
+	}
+	.height input {
+		accent-color: var(--height);
+	}
+	.stagger input {
+		accent-color: var(--stagger);
+	}
+	.controls p {
+		flex: 1 1 100%;
+		margin: 0;
+		font-size: var(--sl-text-xs);
+		color: var(--tw-muted);
+	}
+</style>

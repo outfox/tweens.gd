@@ -4,7 +4,7 @@ description: Where a GDScript tween starts and ends, the forms an endpoint accep
 tableOfContents: true
 ---
 
-Endpoints say where a tween goes. Variations derive a stronger, slower, or later version from a definition's own values each time it starts. [Reusable definitions](/gdscript/definitions/#choose-the-endpoints) and [variations](/gdscript/variations/) introduce both.
+Endpoints say where a tween goes. Variations derive a stronger, slower, or later version from a definition's own values each time it starts. [Anatomy](/gdscript/anatomy/#endpoints) and [variations](/gdscript/variations/) introduce both.
 
 ## Endpoints
 

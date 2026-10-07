@@ -130,6 +130,16 @@ const spin = play(
 		r: number;
 	}
 	type Point = Omit<Pose, 'r'>;
+	/** A move's settings, snapshotted when it starts. A language switch carries the last one to the twin page. */
+	interface Move {
+		from: Pose;
+		to: Point;
+		family: string;
+		leg: string;
+		seconds: number;
+		spin: boolean;
+	}
+	const KEY = 'tweens-first-tween';
 
 	for (const root of document.querySelectorAll<HTMLElement>('[data-first-tween]')) {
 		const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
@@ -145,8 +155,8 @@ const spin = play(
 		const gd = langOf(root) === 'gdscript';
 
 		let pose: Pose = { x: 288, y: 324, r: 0 };
-		let last: { from: Pose; to: Point } = { from: pose, to: { x: 864, y: 324 } };
 		let frame = 0;
+		let started = 0;
 		let clicked = false;
 
 		const place = (el: HTMLElement, { x, y, r }: Partial<Pose>) => {
@@ -156,11 +166,16 @@ const spin = play(
 		};
 
 		const chosen = () => $<HTMLInputElement>('input[type="radio"]:checked');
-		const easeOf = () => {
-			const { value, dataset } = chosen();
-			const family = value as EaseLeg;
-			if (dataset.leg === 'InOut') return (t: number) => pairedLegEase(family, t);
-			if (dataset.leg === 'Out') return (t: number) => legEase(family, 'Out', t);
+		const settings = () => ({
+			family: chosen().value,
+			leg: chosen().dataset.leg ?? '',
+			seconds: Number(duration.value),
+			spin: spin.checked,
+		});
+		let move: Move = { from: pose, to: { x: 864, y: 324 }, ...settings() };
+		const easeOf = (family: string, leg: string) => {
+			if (leg === 'InOut') return (t: number) => pairedLegEase(family as EaseLeg, t);
+			if (leg === 'Out') return (t: number) => legEase(family as EaseLeg, 'Out', t);
 			return (t: number) => t;
 		};
 		const easeName = () => {
@@ -179,8 +194,8 @@ const spin = play(
 		const showCode = () => {
 			const { value, dataset } = chosen();
 			const seconds = Number(duration.value).toFixed(1);
-			$('[data-x]').textContent = String(last.to.x);
-			$('[data-y]').textContent = String(last.to.y);
+			$('[data-x]').textContent = String(move.to.x);
+			$('[data-y]').textContent = String(move.to.y);
 			for (const el of $$('[data-seconds]')) el.textContent = seconds;
 			$<HTMLOutputElement>('[data-seconds-out]').value = `${seconds} s`;
 			const ease = $<HTMLElement>('[data-role="ease"]');
@@ -202,15 +217,13 @@ const spin = play(
 			ghosts.append(ghost);
 		};
 
-		// A move starts from the icon's current pose, as a tween reads its start value when it begins.
-		const play = (to: Point) => {
+		// Runs a move from `elapsed` seconds in, which is zero unless it continues from the twin page.
+		const run = (m: Move, elapsed = 0) => {
 			cancelAnimationFrame(frame);
 			clearGhosts();
-			const from = pose;
-			const ease = easeOf();
-			const seconds = Number(duration.value);
-			const spinning = spin.checked;
-			last = { from, to };
+			move = m;
+			const { from, to, seconds } = m;
+			const ease = easeOf(m.family, m.leg);
 			showCode();
 			place(target, to);
 			target.classList.remove('is-on');
@@ -219,7 +232,7 @@ const spin = play(
 			const at = (p: number): Pose => ({
 				x: lerp(from.x, to.x, ease(p)),
 				y: lerp(from.y, to.y, ease(p)),
-				r: spinning ? from.r + 360 * EASES.SmootherStep(p) : from.r,
+				r: m.spin ? from.r + 360 * EASES.SmootherStep(p) : from.r,
 			});
 			let dropped = 0;
 			const drop = (upTo: number) => {
@@ -233,11 +246,12 @@ const spin = play(
 			if (reducedMotion()) {
 				drop(STEPS);
 				set(1);
+				started = 0;
 				return;
 			}
-			const start = performance.now();
+			started = performance.now() - elapsed * 1000;
 			const tick = (now: number) => {
-				const p = Math.min(1, (now - start) / 1000 / seconds);
+				const p = Math.min(1, (now - started) / 1000 / seconds);
 				drop(Math.floor(p * STEPS));
 				set(p);
 				if (p < 1) frame = requestAnimationFrame(tick);
@@ -245,10 +259,12 @@ const spin = play(
 			frame = requestAnimationFrame(tick);
 		};
 
+		// A move starts from the icon's current pose, as a tween reads its start value when it begins.
+		const play = (to: Point) => run({ from: pose, to, ...settings() });
 		const replay = () => {
-			pose = last.from;
+			pose = move.from;
 			place(icon, pose);
-			play(last.to);
+			run({ ...move, ...settings() });
 		};
 
 		const moveTo = (to: Point) => {
@@ -295,9 +311,40 @@ const spin = play(
 		spin.addEventListener('change', replay);
 		$('[data-replay]').addEventListener('click', replay);
 
-		place(icon, pose);
-		showCode();
-		onceVisible(stage, () => setTimeout(() => clicked || replay(), 350), 0.6);
+		addEventListener('pagehide', () => {
+			const elapsed = Math.min(move.seconds, (performance.now() - started) / 1000);
+			try {
+				sessionStorage.setItem(KEY, JSON.stringify({ move, elapsed, clicked, settings: settings(), at: Date.now() }));
+			} catch {}
+		});
+
+		// Arriving from the twin page's language switch (Head.astro): take over its controls and its last move, mid-flight
+		// if it was moving. Any other visit starts fresh.
+		const carried = (() => {
+			if (!(window as { __twCarry?: unknown }).__twCarry) return undefined;
+			try {
+				const saved = JSON.parse(sessionStorage.getItem(KEY) ?? 'null');
+				sessionStorage.removeItem(KEY);
+				return saved && Date.now() - saved.at < 15000 ? saved : undefined;
+			} catch {
+				return undefined;
+			}
+		})();
+		if (carried) {
+			const { settings: was, move: last } = carried;
+			for (const radio of $$<HTMLInputElement>('input[type="radio"]')) radio.checked = radio.value === was.family;
+			duration.value = String(was.seconds);
+			spin.checked = was.spin;
+			clicked = carried.clicked;
+			root.classList.toggle('is-clicked', clicked);
+			pose = last.from;
+			place(icon, pose);
+			run(last, carried.elapsed + (Date.now() - carried.at) / 1000);
+		} else {
+			place(icon, pose);
+			showCode();
+			onceVisible(stage, () => setTimeout(() => clicked || replay(), 350), 0.6);
+		}
 	}
 </script>
 
