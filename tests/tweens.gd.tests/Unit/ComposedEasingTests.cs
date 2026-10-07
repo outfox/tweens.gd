@@ -57,7 +57,7 @@ public class ComposedEasingTests
             if (paired) Assert.InRange(peaks[1] - peaks[0], .33f, .34f);
             else
             {
-                Assert.InRange(peaks[1] - peaks[0], .44f, .46f);
+                Assert.InRange(peaks[1] - peaks[0], .6f, .63f);
                 Assert.True(values[(int)(peaks[1] * 10000)] > 1.003f);
             }
             // Normalization avoids snapping to the target on the last sample.

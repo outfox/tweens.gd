@@ -208,7 +208,7 @@ func _composed_easing() -> void:
 			check(peaks.size() == 2, "elastic has two visible broad swings")
 			if peaks.size() == 2:
 				var spacing := (peaks[1]-peaks[0])/10000.0*(0.5 if paired else 1.0)
-				check(spacing > 0.33 and spacing < 0.34 if paired else spacing > 0.44 and spacing < 0.46, "elastic swing spacing")
+				check(spacing > 0.33 and spacing < 0.34 if paired else spacing > 0.6 and spacing < 0.63, "elastic swing spacing")
 				if not paired: check(values[peaks[1]] > 1.003, "elastic solo follow-through stays visible")
 			check(absf(values[-2]-1.0) < 0.00002, "elastic endpoint is continuous")
 	check(In.BOUNCE30 == In.BOUNCE and Out.BOUNCE30 == Out.BOUNCE and InOut.BOUNCE30 == InOut.BOUNCE, "bounce 30 aliases")

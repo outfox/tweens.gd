@@ -42,14 +42,15 @@ int64_t leg_bits(int64_t bits, bool out) {
 // Peak-calibrated parameters for 10%, 20%, ... 50% over the full tween range.
 constexpr double BACK_SOLO[] = {1.701540198866824, 2.5923889015162995, 3.3940516581445603, 4.155744652639195, 4.894859521133737};
 constexpr double BACK_PAIRED[] = {2.5923889015162995, 4.155744652639195, 5.619622918334311, 7.042439379340937, 8.44353560159325};
-constexpr double ELASTIC_SOLO_DECAY = 17.553423501870573;
-// Solo damping relaxes after the main swing; paired legs use half their former frequency.
+constexpr double ELASTIC_SOLO_DECAY = 13.0;
+// Solo damping relaxes after the main swing, so the default curve rests at about 90% of its duration;
+// paired legs use half their former frequency.
 // Reproduce the calibrated peaks with scripts/calibrate-elastic.mjs.
-constexpr double ELASTIC_SOLO_TAIL = 8.0;
+constexpr double ELASTIC_SOLO_TAIL = 6.0;
 constexpr double ELASTIC_PAIR_DECAY = 7.537490798899971;
-constexpr double ELASTIC_SOLO_PERIOD = 0.43031056027706766;
+constexpr double ELASTIC_SOLO_PERIOD = 0.58;
 constexpr double ELASTIC_PAIR_PERIOD = 0.6732985463200285;
-constexpr double ELASTIC_SOLO_KICK[] = {-0.2974298881021775, 0.5992618094300022, 1.036207742895828, 1.3991518140146244, 1.730459189003298};
+constexpr double ELASTIC_SOLO_KICK[] = {-0.4459853763131816, 0.5308279022336841, 0.9602276834507211, 1.3110242679337114, 1.6280394875512134};
 constexpr double ELASTIC_PAIR_KICK[] = {0.054242444203084675, 0.9078807808396336, 1.4611442537053763, 1.9533326533438204, 2.419656309841953};
 
 const double BOUNCE_SOLO_ROOT[] = {std::sqrt(0.1), std::sqrt(0.2), std::sqrt(0.3), std::sqrt(0.4), std::sqrt(0.5)};

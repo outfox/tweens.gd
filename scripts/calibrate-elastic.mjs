@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 
 const profiles = {
-  solo: { decay: 17.553423501870573, tail: 8, period: 0.43031056027706766, range: 1 },
+  solo: { decay: 13, tail: 6, period: 0.58, range: 1 },
   pair: { decay: 15.074981597799942 / 2, tail: 0, period: 0.33664927316001425 * 2, range: 0.5 },
 };
 
@@ -28,7 +28,7 @@ function peak(kick, profile) {
 for (const [name, profile] of Object.entries(profiles)) {
   const kicks = [];
   for (const percent of [10, 20, 30, 40, 50]) {
-    let left = -0.4, right = 8;
+    let left = -0.6, right = 8;
     const amount = percent / 100 / profile.range;
     assert.ok(peak(left, profile) < amount && peak(right, profile) > amount);
     for (let i = 0; i < 100; i++) {
