@@ -9,8 +9,8 @@ dotnet msbuild build/Smoke.proj -p:Version=0.1.0-pre
 ```
 
 Pack the addon ZIP and NuGet packages into `artifacts/packages/` before running
-`Smoke.proj` (see [RELEASING.md](../RELEASING.md)). Smoke tests always extract fresh
-consumers from those artifacts. The plain Godot SDK fixture checks source-install
+`Smoke.proj` (see [the authoritative release guide](../docs-internal/RELEASING.md)).
+Smoke tests always extract fresh consumers from those artifacts. The plain Godot SDK fixture checks source-install
 compilation; its separate 2dog host imports through `TwoDogImportGodotProject` and
 runs both languages. The NuGet fixture restores the exact local version into an
 isolated cache. Fixture props/targets block accidental repository settings.

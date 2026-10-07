@@ -11,6 +11,8 @@
     "check:easing": "node scripts/check-easing.mjs",
     "check:search": "node scripts/check-search-upstream.mjs",
     "render:compare": "node scripts/render-compare-svg.mjs",
+    "render:easing": "node scripts/render-easing-svg.mjs",
+    "render:definitions": "node scripts/render-definitions-svg.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
