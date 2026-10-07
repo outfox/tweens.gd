@@ -625,6 +625,10 @@ header.header {
 :root[data-lang='gdscript'] .sidebar-content .top-level > li:has([data-track='csharp']) {
 	display: none;
 }
+/* Starlight spaces groups with `li + li`, which hidden C# groups still satisfy; the first GDScript group stays on top. */
+:root[data-lang='gdscript'] .sidebar-content .top-level > li:has([data-track='csharp']) + li:has([data-track='gdscript']) {
+	margin-top: 0;
+}
 .sidebar-content summary .group-label {
 	font-family: var(--tw-font-display);
 	letter-spacing: 0.01em;
