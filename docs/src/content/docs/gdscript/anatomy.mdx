@@ -14,52 +14,63 @@ Examples use the global `Tweens` class in a node script, with targets inside the
 
 <Moves>
 
-```gdscript {"1":1} {"2":2} {"3":4} {"4":5}
-var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) \
-	.with_on_end(func(_handle): print("Arrived"))
+```gdscript {"1":1} {"2":2-3} {"3":4} {"4":6} {"5":8} {"6":10}
+var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC)
+arrive.delay = 0.1
+arrive.ease |= In.LINEAR
+arrive.on_end = func(_handle): print("Arrived")
 
-var movement := Tweens.play(sprite, arrive)
+var oops_very_late := arrive.with_delta_delay(2.0)
+
+var movement := Tweens.play(sprite, oops_very_late)
+
 await movement.end
 ```
 
-1. **Define.** A [definition](/gdscript/api/definitions/) holds the [endpoint](/gdscript/api/endpoints/), [timing](/gdscript/api/timing/), and [easing](/gdscript/api/easing/).
-2. **React.** [Callbacks](/gdscript/api/callbacks/) run at fixed points of each playback.
-3. **Start.** [Starting playback](/gdscript/api/start/) snapshots the definition and returns a [handle](/gdscript/api/handles/).
-4. **Await.** `end` resumes with the [reason](/gdscript/api/handles/#tweensreason) playback ended.
+1. **Define.** A [definition](/gdscript/api/definitions/) helper has optional arguments for [endpoint](/gdscript/api/endpoints/), [timing](/gdscript/api/timing/), [easing](/gdscript/api/easing/), and [delay](/gdscript/api/timing/#delay).
+2. **Fields.** Set or mutate specifics you want when you're getting into the weeds during production.
+3. **React.** [Callbacks](/gdscript/api/callbacks/) run at fixed points of each playback.
+4. **Tweak.** Last-minute modifications close to the action.
+5. **Start.** [Starting playback](/gdscript/api/start/) snapshots the definition and returns a [handle](/gdscript/api/handles/).
+6. **Await.** `end` resumes with the [reason](/gdscript/api/handles/#tweensreason) playback ended.
 
 </Moves>
 
-## Endpoints
+## Parameters
+
+Tween definitions may consist of dozens of parameters. It's dangerous to go alone, but the script editor's autocompletion has got your back. Usually, you'll find yourself relying on at most three or four of these, but there *might be different* needs for each tween.
+
+### Endpoints
 
 Where the motion starts and ends.
 
 <DefinitionFields group="endpoints" lang="gdscript" />
 
-## Timing
+### Timing
 
 When the motion plays, and how often.
 
 <DefinitionFields group="timing" lang="gdscript" />
 
-## Easing
+### Easing
 
 How the motion paces between its endpoints. The [easing playground](/easings/) draws every curve.
 
 <DefinitionFields group="easing" lang="gdscript" />
 
-## Callbacks
+### Callbacks
 
 Your code at fixed points of each playback.
 
 <DefinitionFields group="callbacks" lang="gdscript" />
 
-## Variations
+### Variations
 
 When a tween starts, each value becomes factor × value + delta. [Variations](/gdscript/variations/) shows them in use.
 
 <DefinitionFields group="variations" lang="gdscript" />
 
-## Target
+### Target
 
 What the definition writes. The named helpers and `Tweens.property()` set these for you.
 

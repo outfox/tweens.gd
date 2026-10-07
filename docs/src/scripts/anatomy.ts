@@ -90,7 +90,7 @@ const FIELDS: Field[] = [
 	// Endpoints
 	{
 		name: 'From', group: 'endpoints', page: 'endpoints', defaults: ['null', 'null'],
-		text: 'Start value. Leave it out to start from the property’s value.',
+		text: 'Start value. Leave it out to read the property’s current value as the tween starts.',
 		draw: (n) => lane() + ring(36, 44) + text(36, 62, 'current') + dot(96, 44) + text(96, 62, n('From'), 'ta') +
 			hop(96, 196, 40, 'sm', 'fm') + ring(204, 44) + text(204, 62, n('To')),
 	},
@@ -241,7 +241,7 @@ const FIELDS: Field[] = [
 	},
 	{
 		name: 'OnFinally', group: 'callbacks', page: 'callbacks',
-		text: 'Runs last, however playback ended.',
+		text: 'Runs last, regardless how playback actually ended.',
 		draw: (n) => bar(20, 140, 22, 'fm') + ring(146, 22) + dot(164, 22, 'fa', 3.5) + text(172, 25, n('OnFinally'), 'ta', 'start') +
 			bar(20, 90, 50, 'fm') + cross(96, 50, 'sm thick') + dot(114, 50, 'fa', 3.5) + text(122, 53, n('OnFinally'), 'ta', 'start') +
 			text(146, 38, 'ended') + text(96, 66, 'stopped'),
