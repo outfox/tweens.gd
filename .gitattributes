@@ -1,0 +1,2 @@
+# LF in every checkout, like Godot's project template, so packages built on Windows match the repository.
+* text=auto eol=lf
