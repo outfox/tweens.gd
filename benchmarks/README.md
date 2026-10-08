@@ -1,6 +1,38 @@
 # Benchmarks
 
+## Node3D engine-iteration comparison
+
+The `PositionIterationBenchmarks` collection in `dotnet/benchmarks.2dog` compares
+GodotSharp's built-in tweens with the automatic C# tweens.gd runtime. It contains only Node3D position tweens
+at 100 and 10,000 nodes. Both variants use the same seeded random starting
+positions and destinations, a 100-second duration, and Elastic-out easing.
+Each node owns one tween. There are no loops, callbacks, or manual scheduler updates.
+
+```powershell
+dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*PositionIterationBenchmarks*'
+```
+
+Each BenchmarkDotNet batch creates fresh nodes and tweens outside timing, calls
+`twodog.Engine.Iteration()` exactly twice to initialize playback, then measures
+1,024 calls to `Engine.Iteration()`. Each reported operation is one complete
+engine iteration. The headless engine uses a fixed 1/60-second simulation delta
+without a real-time frame cap, so each batch advances about 17.1 seconds and
+cannot exhaust the 100-second tweens. Setup and cleanup validate that every node
+has moved and every tween remains active; increasing the invocation count enough
+to finish the tweens fails validation. Destruction is also outside timing.
+
+The default job runs three warmup batches and ten measurement batches, with a
+fresh engine process per variant/count. Output is in
+`artifacts/benchmarkdotnet/`. Standard BenchmarkDotNet options such as
+`--list flat`, `--filter '*GodotSharp*'`, and `--artifacts <path>` are supported
+after `--` (keep the collection filter when passing run options). Memory diagnostics
+cover managed allocations only. The bounded batches can trigger BenchmarkDotNet's
+minimum-iteration-time warning at 100 nodes; inspect the reported uncertainty.
+
 ## C# BenchmarkDotNet suite
+
+The same host also contains the existing microbenchmark collections.
+Their scheduler-update measurements do not measure full engine iterations.
 
 The independent generic 2dog host in `dotnet/benchmarks.2dog` measures the C#
 library with BenchmarkDotNet 0.15.8. It was scaffolded with
@@ -28,7 +60,7 @@ dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --verify-or
 # Smoke only: verifies execution, not useful timing results.
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*' --job Dry
 
-# All cases (catalog uses short jobs; other suites use adaptive jobs).
+# All cases (catalog uses short jobs; position iteration uses bounded batches).
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*'
 
 # Focused investigation; multiple filters are supported.
@@ -50,6 +82,7 @@ workloads or baseline pairing.
 
 | Suite | What one reported operation measures |
 | --- | --- |
+| `PositionIterationBenchmarks` | One complete engine iteration with 100/10,000 active Node3D position tweens, comparing GodotSharp and the automatic C# tweens.gd runtime. |
 | `ManagedUpdateBenchmarks` | One frame of 100/1,000/10,000 custom float tweens on plain C# objects: absolute, relative, or callback. No engine is started. |
 | `EngineUpdateBenchmarks` | One frame at the same counts: value callback, Node2D position, color, or material roughness, through the C# API. |
 | `DefinitionCreationBenchmarks` | One tween creation, averaged over 128 starts on an existing node. Compares a struct passed per call, a previously boxed definition, and a mutable definition. |
@@ -64,7 +97,7 @@ it is Godot's main thread, and dispose it in `GlobalCleanup`. Engine startup,
 target creation and shutdown are untimed. `--inProcess` is rejected: the engine
 must not be reused/restarted across cases in a shared benchmark process.
 
-Update cases initialize once and repeat forever; pilot/warmup cannot exhaust
+Scheduler-update cases initialize once and repeat forever; pilot/warmup cannot exhaust
 them. Cleanup validates that every handle stayed live and fault-free, avoiding
 misleading measurements of empty schedulers. Managed fixtures create only the
 selected workload, so unused schedulers do not influence its heap layout.
@@ -78,7 +111,7 @@ each suite, not between suites.
 
 `MemoryDiagnoser` reports managed allocations and GC collections; it does not
 measure Godot/native memory, retained heap size, or total process memory. Zero
-allocated bytes is not zero CPU cost. All suites also use `ThreadingDiagnoser`,
+allocated bytes is not zero CPU cost. The existing microbenchmarks also use `ThreadingDiagnoser`,
 which reports managed thread-pool completions and monitor contention, not Godot's
 native worker-thread count. See the
 [initial optimization report](reports/2026-10-08-optimization.md) for measured

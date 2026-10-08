@@ -1,5 +1,6 @@
 .worktrees
 2dog
+benchmarks/reports/
 
 # Reference Project Scratch
 unity-tweens/
