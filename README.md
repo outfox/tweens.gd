@@ -18,7 +18,7 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's quite visual!
 
 | Quick and Accessible                              | Close to the Metal                                |
 |---------------------------------------------------|----------------------------------------------------
-| [Web based Tutorial](https://tweens.gd/tutorial/) | [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) <br/> GDScript + C#, requires [Godot .NET](https://godotengine.org/download)|
+| [Web based Tutorial](https://tweens.gd/tutorial/) <br/> *simulated your browser*| [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) <br/> *GDScript + C#, requires [Godot .NET](https://godotengine.org/download)*|
 
 ## Deets and dooks
 
