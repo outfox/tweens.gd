@@ -20,8 +20,11 @@ C# API as an alternative. The GitHub release publishes these artifacts:
 1. Choose a tag such as `v0.1.3-beta`. Tags must contain three numeric version
    components and may have a SemVer prerelease suffix; build metadata is not
    accepted. The tag supplies the version for all release artifacts. Leave the
-   project file's local development version unchanged. A prerelease suffix makes
-   the GitHub release a prerelease, and the release title matches the tag exactly.
+   project file's local development version unchanged. The release title matches
+   the tag exactly. We do not publish GitHub prereleases: publish every GitHub
+   release as a full release and mark the newest release as **Latest**, even when
+   its tag has a `-beta` or other SemVer prerelease suffix. The suffix still applies
+   to the NuGet package version.
 2. Review changes since the previous release and write `.github/releases/<tag>.md`.
    These committed files are the versioned changelog and the source of GitHub
    release notes. Lead with user-visible changes, then include any steps needed to
@@ -157,6 +160,19 @@ to generated notes. Prepare notes before tagging. A separate GitHub draft is not
 part of this workflow because the release-by-tag lookup does not find unpublished
 drafts. Reruns replace existing release assets without overwriting edited notes,
 and skip NuGet package versions already published.
+
+After publication, verify that the GitHub release is not marked **Pre-release**
+and is marked **Latest**. The current workflow derives the prerelease flag from
+the tag suffix, so clear it and mark the release latest when necessary:
+
+```powershell
+gh release edit $tag --repo outfox/tweens.gd --prerelease=false --latest
+```
+
+This keeps stable latest-release download links working. For the tutorial, use
+`https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip`.
+Keep the asset filename unchanged across releases; the URL order is
+`releases/latest/download/<asset-name>`.
 
 Only the NuGet publishing job can request a GitHub OIDC token. `NuGet/login`
 exchanges it for a short-lived API key immediately before the push. No long-lived
