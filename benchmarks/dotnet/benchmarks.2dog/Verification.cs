@@ -9,14 +9,15 @@ internal static class Verification
     internal static int Run()
     {
         var managed = new ManagedUpdateBenchmarks { Count = 1000 };
-        managed.Setup();
-        try
+        void Check(string name, Action setup, Action update)
         {
-            Measure("managed absolute", managed.Absolute);
-            Measure("managed relative", managed.Relative);
-            Measure("managed callback", managed.Callback);
+            setup();
+            try { Measure(name, update); }
+            finally { managed.Cleanup(); }
         }
-        finally { managed.Cleanup(); }
+        Check("managed absolute", managed.SetupAbsolute, managed.Absolute);
+        Check("managed relative", managed.SetupRelative, managed.Relative);
+        Check("managed callback", managed.SetupCallback, managed.Callback);
 
         var engine = new EngineUpdateBenchmarks { Count = 1000, Workload = EngineWorkload.Position };
         engine.Setup();

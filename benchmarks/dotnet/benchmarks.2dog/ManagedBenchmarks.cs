@@ -24,31 +24,32 @@ internal static class Definitions
 public class ManagedUpdateBenchmarks
 {
     [Params(100, 1000, 10000)] public int Count { get; set; }
-    private TweenScheduler absolute = null!, relative = null!, callback = null!;
+    private TweenScheduler scheduler = null!;
     private ValueTarget[] targets = null!;
     private TweenInstance[] handles = null!;
 
-    [GlobalSetup]
-    public void Setup()
+    [GlobalSetup(Target = nameof(Absolute))] public void SetupAbsolute() => Setup(false, false);
+    [GlobalSetup(Target = nameof(Relative))] public void SetupRelative() => Setup(true, false);
+    [GlobalSetup(Target = nameof(Callback))] public void SetupCallback() => Setup(false, true);
+
+    private void Setup(bool relative, bool callback)
     {
-        absolute = new(); relative = new(); callback = new();
+        scheduler = new();
         targets = new ValueTarget[Count];
-        handles = new TweenInstance[Count * 3];
-        var a = Definitions.Float(); var r = Definitions.Float(relative: true); var c = Definitions.Float(callback: true);
+        handles = new TweenInstance[Count];
+        var definition = Definitions.Float(relative, callback);
         for (var i = 0; i < Count; i++)
         {
             targets[i] = new();
-            handles[i * 3] = absolute.Add(targets[i], a);
-            handles[i * 3 + 1] = relative.Add(new ValueTarget(), r);
-            handles[i * 3 + 2] = callback.Add(new ValueTarget(), c);
+            handles[i] = scheduler.Add(targets[i], definition);
         }
-        absolute.Update(1.0 / 60); relative.Update(1.0 / 60); callback.Update(1.0 / 60);
+        scheduler.Update(1.0 / 60);
         Verify();
     }
 
-    [Benchmark(Baseline = true)] public void Absolute() => absolute.Update(1.0 / 60);
-    [Benchmark] public void Relative() => relative.Update(1.0 / 60);
-    [Benchmark] public void Callback() => callback.Update(1.0 / 60);
+    [Benchmark(Baseline = true)] public void Absolute() => scheduler.Update(1.0 / 60);
+    [Benchmark] public void Relative() => scheduler.Update(1.0 / 60);
+    [Benchmark] public void Callback() => scheduler.Update(1.0 / 60);
 
     private void Verify()
     {
@@ -60,7 +61,7 @@ public class ManagedUpdateBenchmarks
     public void Cleanup()
     {
         try { Verify(); }
-        finally { absolute.Dispose(); relative.Dispose(); callback.Dispose(); }
+        finally { scheduler.Dispose(); }
     }
 }
 

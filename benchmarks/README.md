@@ -9,6 +9,10 @@ and an empty Godot scene. It references the canonical library project and shares
 the comparative host's engine versions. No GDScript, GDExtension build, addon
 staging, installed Godot editor, or import is required.
 
+See the [optimization follow-up](reports/2026-10-08-followup.md) and
+[complete definition rankings](reports/2026-10-08-catalog-ranking.md) for measured
+results. The rankings are also available as CSV and JSON beside the report.
+
 Run from the repository root with .NET 10:
 
 ```powershell
@@ -17,6 +21,9 @@ dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --list flat
 
 # Workload validity and an independent warmed allocation sanity check (not timing).
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --verify
+
+# Verify every baseline pair and the cached report-grouping implementation.
+dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --verify-orderer
 
 # Smoke only: verifies execution, not useful timing results.
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*' --job Dry
@@ -37,6 +44,9 @@ measurements. `--artifacts` overrides it. Failed benchmark reports return a
 nonzero exit code. Use fresh output folders for comparisons; run sequentially
 on an otherwise idle machine with the same runtime, engine and power settings.
 The host leaves tiering/PGO at runtime defaults. Record any environment overrides.
+Report grouping caches BenchmarkDotNet's own logical-group keys; this avoids
+repeated catalog scans during baseline-table export without changing the timed
+workloads or baseline pairing.
 
 | Suite | What one reported operation measures |
 | --- | --- |
@@ -56,7 +66,9 @@ must not be reused/restarted across cases in a shared benchmark process.
 
 Update cases initialize once and repeat forever; pilot/warmup cannot exhaust
 them. Cleanup validates that every handle stayed live and fault-free, avoiding
-misleading measurements of empty schedulers. Updates include repeat timeline
+misleading measurements of empty schedulers. Managed fixtures create only the
+selected workload, so unused schedulers do not influence its heap layout.
+Updates include repeat timeline
 math. Creation uses iteration setup/cleanup and one invocation per iteration;
 disposal is outside its timed region. Its short iterations can produce BDN's
 minimum-iteration-time warning, so inspect the reported uncertainty and increase

@@ -2,15 +2,17 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Jobs;
 using Godot;
+using Perfolizer.Horology;
 using tweens.gd;
 
 namespace TweensBenchmarks;
 
 [MemoryDiagnoser]
 [ThreadingDiagnoser]
-[ShortRunJob]
-[IterationTime(100)]
+[Config(typeof(CatalogBenchmarkConfig))]
 public class AdapterCatalogBenchmarks : EngineBenchmark
 {
     [Params(100, 1000)] public int Count { get; set; }
@@ -88,6 +90,11 @@ public class AdapterCatalogBenchmarks : EngineBenchmark
         }
         finally { StopEngine(); }
     }
+}
+
+public sealed class CatalogBenchmarkConfig : ManualConfig
+{
+    public CatalogBenchmarkConfig() => AddJob(Job.ShortRun.WithIterationTime(TimeInterval.FromMilliseconds(100)).AsDefault());
 }
 
 internal interface ICatalogWorkload : IDisposable
