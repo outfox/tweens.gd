@@ -12,12 +12,13 @@ Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://di
 [![Comparison showing how much less code tweens.gd needs.](docs/public/compare.svg)](https://tweens.gd)
 
 ### ... easy to get [started](https://tweens.gd/tutorial/)
+My, *have we got* a **tutorial** for you! Just 5 steps, but it's quite visual! 
 
-My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
+[!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
 
-#### ➡️ [tweens.gd/tutorial](https://tweens.gd/tutorial/) ⬅️
-
-[!["Tween Definitions" tutorial](docs/public/definitions.svg)](https://tweens.gd/tutorial/)
+| Quick and Accessible                              | Close to the Metal                                |
+|---------------------------------------------------|----------------------------------------------------
+| [Web based Tutorial](https://tweens.gd/tutorial/) | [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) |
 
 ## Deets and dooks
 
