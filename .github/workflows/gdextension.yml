@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build:
+    if: github.repository == 'outfox/tweens.gd'
     name: Build ${{ matrix.platform }} ${{ matrix.arch }}${{ matrix.threads == 'no' && ' (no threads)' || '' }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -83,6 +84,7 @@ jobs:
           if-no-files-found: error
 
   test:
+    if: github.repository == 'outfox/tweens.gd'
     name: Test GDScript on ${{ matrix.name }}
     needs: build
     runs-on: ${{ matrix.os }}

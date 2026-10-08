@@ -2,12 +2,10 @@
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 
 name: CI
-
 on:
+  # Build repository branches only; external pull requests must not start builds.
   push:
-    branches: [main]
-    paths-ignore: ['README.md']
-  pull_request:
+    branches: ['**']
     paths-ignore: ['README.md']
   workflow_dispatch:
   workflow_call:
@@ -25,6 +23,7 @@ jobs:
   # The docs job also checks shared JavaScript utilities.
   # Manual runs, release tags, new branches, and history the diff can't reach run everything.
   changes:
+    if: github.repository == 'outfox/tweens.gd'
     name: Detect changes
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 5
@@ -74,10 +73,11 @@ jobs:
   gdextension:
     name: GDExtension
     needs: changes
-    if: needs.changes.outputs.library == 'true'
+    if: github.repository == 'outfox/tweens.gd' && (needs.changes.outputs.library == 'true')
     uses: ./.github/workflows/gdextension.yml
 
   build:
+    if: github.repository == 'outfox/tweens.gd'
     name: Build, test, and pack
     needs: gdextension
     runs-on: blacksmith-4vcpu-windows-2025
@@ -187,6 +187,7 @@ jobs:
           if-no-files-found: ignore
 
   rendering:
+    if: github.repository == 'outfox/tweens.gd'
     name: Rendering tests
     needs: gdextension
     runs-on: blacksmith-4vcpu-ubuntu-2404
@@ -254,7 +255,7 @@ jobs:
   docs:
     name: Documentation site
     needs: changes
-    if: needs.changes.outputs.docs == 'true'
+    if: github.repository == 'outfox/tweens.gd' && (needs.changes.outputs.docs == 'true')
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 15
     env:

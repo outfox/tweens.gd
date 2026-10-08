@@ -22,6 +22,7 @@ concurrency:
 
 jobs:
   version:
+    if: github.repository == 'outfox/tweens.gd'
     name: Validate release tag
     runs-on: blacksmith-4vcpu-windows-2025
     timeout-minutes: 5
@@ -41,7 +42,7 @@ jobs:
 
   build:
     needs: version
-    if: github.event_name == 'push'
+    if: github.repository == 'outfox/tweens.gd' && (github.event_name == 'push')
     uses: ./.github/workflows/ci.yml
     with:
       package-version: ${{ needs.version.outputs.version }}
@@ -49,7 +50,7 @@ jobs:
   github-release:
     name: Upload GitHub release packages
     needs: [version, build]
-    if: github.event_name == 'push'
+    if: github.repository == 'outfox/tweens.gd' && (github.event_name == 'push')
     runs-on: blacksmith-4vcpu-windows-2025
     timeout-minutes: 5
     permissions:
@@ -76,9 +77,10 @@ jobs:
     needs: [version, build, github-release]
     # Manual runs use packages from an existing release; their build/upload jobs are skipped.
     if: >-
-      always() && needs.version.result == 'success' &&
+      github.repository == 'outfox/tweens.gd' &&
+      (always() && needs.version.result == 'success' &&
       ((github.event_name == 'push' && needs.build.result == 'success' && needs.github-release.result == 'success') ||
-       github.event_name == 'workflow_dispatch')
+      github.event_name == 'workflow_dispatch'))
     runs-on: blacksmith-4vcpu-windows-2025
     timeout-minutes: 10
     permissions:
