@@ -16,9 +16,9 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's quite visual!
 
 [!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
 
-| Quick and Accessible                              | Close to the Metal                                |
-|---------------------------------------------------|----------------------------------------------------
-| [Web based Tutorial](https://tweens.gd/tutorial/) <br/> *1:1 simulated in your browser*| [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) <br/> *GDScript + C#, requires [Godot .NET](https://godotengine.org/download)*|
+| Quick and Accessible                              | Need to See to Believe                             | Feed me the raw Code|
+|---------------------------------------------------|----------------------------------------------------|----------------------------------------------------|
+| [Web based Tutorial](https://tweens.gd/tutorial/) (tweens.gd) <br/> *1:1 simulated in your browser*<br/>*+huge API reference*| [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) (📁.zip)<br/> *GDScript + C#, requires [Godot .NET](https://godotengine.org/download)*<br/> *compile & run it in the editor*| [Tutorial Lessons](https://github.com/outfox/tweens.gd/tree/main/tutorial/Lessons) (GitHub) <br/> *just the In-Engine version's tweens*<br/>*and basic scenes* |
 
 ## Deets and dooks
 
