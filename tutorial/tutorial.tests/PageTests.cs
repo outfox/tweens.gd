@@ -97,8 +97,8 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
             {
                 Assert.Equal(language == Language.GDScript ? "gd" : "cs", LessonLanguage(stage.Lesson!));
                 Assert.NotNull(stage.SceneLink);
-                Assert.Equal(stage.Lesson!.SceneFilePath, stage.SceneLink.Text);
-                Assert.True(stage.SceneLink.Disabled);
+                Assert.Equal(stage.Lesson!.SceneFilePath, stage.SceneLink.Path);
+                Assert.False(stage.SceneLink.Available);
                 Assert.True(stage.Size.X >= 300 && stage.Size.Y >= 100, $"Stage of step {step} is {stage.Size}.");
             }
 
@@ -109,13 +109,40 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
             foreach (var stage in page.FindChildren("*", owned: false).OfType<Stage>())
             {
                 Assert.Equal(other == Language.GDScript ? "gd" : "cs", LessonLanguage(stage.Lesson!));
-                Assert.Equal(stage.Lesson!.SceneFilePath, stage.SceneLink!.Text);
+                Assert.Equal(stage.Lesson!.SceneFilePath, stage.SceneLink!.Path);
             }
             Languages.Set(language);
             godot.Seconds(0.2);
         }
         Open(app.Node, 0);
         Assert.Equal(0, app.Node.CurrentStep);
+    }
+
+    [Fact]
+    public void SceneLinkInvitesClicksOnlyWhileItCanOpenTheScene()
+    {
+        using var app = App(Language.CSharp);
+        var stage = Open(app.Node, 2).GetNode<Stage>("%Stage");
+        var link = stage.SceneLink!;
+        var caption = link.GetNode<Label>("%Caption");
+        Assert.Equal("Scene", caption.Text);
+        Assert.Equal(Control.CursorShape.Arrow, link.MouseDefaultCursorShape);
+
+        // Tests run without an editor connection, so the link is forced on, past the stage's check.
+        stage.SceneLink = null;
+        link.Available = true;
+        godot.Seconds(5);
+        Assert.Equal("Open in editor", caption.Text);
+        Assert.Equal(Control.CursorShape.PointingHand, link.MouseDefaultCursorShape);
+        link.EmitSignal(CardButton.SignalName.Pressed);
+        godot.Seconds(0.5);
+        link.Available = false;
+        godot.Frames(2);
+        Assert.Equal("Scene", caption.Text);
+
+        // The page is freed while the link still breathes.
+        link.Available = true;
+        godot.Seconds(1);
     }
 
     [Theory]

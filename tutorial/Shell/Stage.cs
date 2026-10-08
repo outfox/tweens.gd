@@ -27,8 +27,8 @@ public partial class Stage : PanelContainer
     /// <summary>Godot's 64-pixel editor grid, in world pixels; zero hides it.</summary>
     [Export] public int GridStep { get; set; } = 64;
 
-    /// <summary>The scene-path button above this example, when hosted by a tutorial page.</summary>
-    [Export] public Button? SceneLink { get; set; }
+    /// <summary>The scene link above this example, when hosted by a tutorial page.</summary>
+    [Export] public SceneLink? SceneLink { get; set; }
 
     public SubViewport Viewport { get; private set; } = null!;
     public Node2D Underlay { get; private set; } = null!;
@@ -53,10 +53,7 @@ public partial class Stage : PanelContainer
     {
         if (Engine.IsEditorHint() || SceneLink is null)
             return;
-        SceneLink.Disabled = Lesson is null || !EngineDebugger.IsActive();
-        SceneLink.TooltipText = SceneLink.Disabled
-            ? "Run this tutorial from the Godot editor to open the scene."
-            : "Open this scene in the Godot editor";
+        SceneLink.Available = Lesson is not null && EngineDebugger.IsActive();
     }
 
     private void OpenScene()
@@ -85,7 +82,7 @@ public partial class Stage : PanelContainer
         configure?.Invoke(lesson);
         Lesson = lesson;
         if (SceneLink is not null)
-            SceneLink.Text = scene.ResourcePath;
+            SceneLink.Path = scene.ResourcePath;
         Viewport.AddChild(lesson);
         Viewport.MoveChild(lesson, Overlay.GetIndex());
         return lesson;
