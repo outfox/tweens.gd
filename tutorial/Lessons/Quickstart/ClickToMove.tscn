@@ -1,11 +1,11 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://de8cp1cn0am5a"]
 
-[ext_resource type="Texture2D" path="res://icon.svg" id="1_icon"]
-[ext_resource type="Script" path="res://Lessons/Quickstart/ClickToMove.cs" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://cs7c2e73fb8ph" path="res://icon.svg" id="1_icon"]
+[ext_resource type="Script" uid="uid://blr6qcme8iuwt" path="res://Lessons/Quickstart/ClickToMove.cs" id="2_script"]
 
-[node name="ClickToMove" type="Node2D"]
+[node name="ClickToMove" type="Node2D" unique_id=422661229]
 
-[node name="Icon" type="Sprite2D" parent="."]
+[node name="Icon" type="Sprite2D" parent="." unique_id=1324351192]
 position = Vector2(288, 324)
 texture = ExtResource("1_icon")
 script = ExtResource("2_script")
