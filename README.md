@@ -7,11 +7,11 @@ This addon values concise and consistent syntax, and offers more [interesting ea
 
 Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://discord.gg/3UXVHnmEwd).
 
-### **tweens.gd** respects your <u>[time](https://tweens.gd)</u> and your <u>keycaps!</u>
+## **tweens.gd** respects your <u>[time](https://tweens.gd)</u> and your <u>keycaps!</u>
 
 [![Comparison showing how much less code tweens.gd needs.](docs/public/compare.svg)](https://tweens.gd)
 
-### Interactive tutorials!
+## Interactive tutorials!
 My, *have we got* a **tutorial** for you! Just 5 steps, but it's quite visual! 
 
 [!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
