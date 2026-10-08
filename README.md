@@ -9,6 +9,8 @@ Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://di
 
 ## **tweens.gd** respects your <u>[time](https://tweens.gd)</u> and your <u>keycaps!</u>
 
+Write maintainable, reusable tweens that read clearly, without surprising side effects. Need something done quick, or done well? You have a choice between structured and convenient syntax. ([C#](https://tweens.gd/csharp/syntax-sugar/) | [GDScript](https://tweens.gd/gdscript/syntax-sugar/))
+
 [![Comparison showing how much less code tweens.gd needs.](docs/public/compare.svg)](https://tweens.gd)
 
 ## Interactive tutorials!
