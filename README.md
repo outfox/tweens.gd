@@ -16,7 +16,7 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's quite visual!
 
 [!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
 
-| Browsers Rule all 💫                             | I want to Believe 👾                                  | Feed it to me Raw 🍖|
+| Browsers *are* useful 💫                             | I want to believe 👾                                  | Feed it to me raw 🍖|
 |---------------------------------------------------|----------------------------------------------------|----------------------------------------------------|
 | [Web-based Tutorial](https://tweens.gd/tutorial/) (tweens.gd) <br/> *1:1 simulated in your browser*<br/>*huge searchable API reference*| [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) (📁.zip)<br/> *GDScript + C#, ready to edit & run*<br/> *open this project in [Godot .NET](https://godotengine.org/download)*| [Tutorial Lessons](https://github.com/outfox/tweens.gd/tree/main/tutorial/Lessons) (GitHub) <br/> *just the In-Engine version's*<br/>*basic tweens and scenes* |
 
