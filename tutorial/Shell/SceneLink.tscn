@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[node name="SceneLink" type="Button"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SceneLink"
+disabled = true
+text = "Lesson scene"
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true

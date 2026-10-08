@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://Shell/SceneLink.tscn" id="scene_link"]
+
 [ext_resource type="Script" path="res://Pages/Install/InstallPage.cs" id="1_installpage"]
 [ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
 [ext_resource type="PackedScene" path="res://Lessons/Install/HelloTweens.tscn" id="3_hellotweens"]
@@ -332,6 +334,8 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "Attach this script to any `Sprite2D` and run the scene. If the icon pops in, tweens.gd works. This project runs it right here, in the language you chose."
 
+[node name="SceneLink" parent="Scroll/Margin/Column/Content" instance=ExtResource("scene_link")]
+
 [node name="Demo" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 theme_type_variation = &"Widget"
@@ -347,7 +351,8 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout" instance=ExtResource("11_stage")]
+[node name="Stage" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout" node_paths=PackedStringArray("SceneLink") instance=ExtResource("11_stage")]
+SceneLink = NodePath("../../../../SceneLink")
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2

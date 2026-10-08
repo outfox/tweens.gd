@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://Shell/SceneLink.tscn" id="scene_link"]
+
 [ext_resource type="Script" path="res://Shell/Page.cs" id="1_page"]
 [ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
 [ext_resource type="PackedScene" path="res://Lessons/SyntaxSugar/SyntaxSugar.tscn" id="3_syntaxsugar"]
@@ -331,7 +333,10 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "GDScript uses helpers rather than node extensions. Thus, it's always somewhat close to the Structured way of doing things. Just store the definition in a `var` and you're golden!"
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Section1" instance=ExtResource("9_stage")]
+[node name="SceneLink" parent="Scroll/Margin/Column/Content/Section1" instance=ExtResource("scene_link")]
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section1" node_paths=PackedStringArray("SceneLink") instance=ExtResource("9_stage")]
+SceneLink = NodePath("../SceneLink")
 layout_mode = 2
 World = Vector2i(1152, 324)
 
@@ -489,7 +494,10 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "An array of mismatched length rejects at start with `FAILED`."
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Section2" instance=ExtResource("9_stage")]
+[node name="SceneLink" parent="Scroll/Margin/Column/Content/Section2" instance=ExtResource("scene_link")]
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section2" node_paths=PackedStringArray("SceneLink") instance=ExtResource("9_stage")]
+SceneLink = NodePath("../SceneLink")
 layout_mode = 2
 World = Vector2i(1152, 324)
 
@@ -842,7 +850,10 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "A helper takes the same arguments on its own or inside `Tweens.play()`."
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Section3" instance=ExtResource("9_stage")]
+[node name="SceneLink" parent="Scroll/Margin/Column/Content/Section3" instance=ExtResource("scene_link")]
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section3" node_paths=PackedStringArray("SceneLink") instance=ExtResource("9_stage")]
+SceneLink = NodePath("../SceneLink")
 layout_mode = 2
 World = Vector2i(1152, 324)
 
@@ -973,7 +984,10 @@ CSharpPath = "SyntaxSugar/SyntaxSugar.cs"
 GDScriptPath = "SyntaxSugar/syntax_sugar.gd"
 Compact = true
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Section4" instance=ExtResource("9_stage")]
+[node name="SceneLink" parent="Scroll/Margin/Column/Content/Section4" instance=ExtResource("scene_link")]
+
+[node name="Stage" parent="Scroll/Margin/Column/Content/Section4" node_paths=PackedStringArray("SceneLink") instance=ExtResource("9_stage")]
+SceneLink = NodePath("../SceneLink")
 layout_mode = 2
 World = Vector2i(1152, 324)
 

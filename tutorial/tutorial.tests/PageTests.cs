@@ -96,6 +96,9 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
             foreach (var stage in page.FindChildren("*", owned: false).OfType<Stage>())
             {
                 Assert.Equal(language == Language.GDScript ? "gd" : "cs", LessonLanguage(stage.Lesson!));
+                Assert.NotNull(stage.SceneLink);
+                Assert.Equal(stage.Lesson!.SceneFilePath, stage.SceneLink.Text);
+                Assert.True(stage.SceneLink.Disabled);
                 Assert.True(stage.Size.X >= 300 && stage.Size.Y >= 100, $"Stage of step {step} is {stage.Size}.");
             }
 
@@ -104,7 +107,10 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
             Languages.Set(other);
             godot.Seconds(0.5);
             foreach (var stage in page.FindChildren("*", owned: false).OfType<Stage>())
+            {
                 Assert.Equal(other == Language.GDScript ? "gd" : "cs", LessonLanguage(stage.Lesson!));
+                Assert.Equal(stage.Lesson!.SceneFilePath, stage.SceneLink!.Text);
+            }
             Languages.Set(language);
             godot.Seconds(0.2);
         }

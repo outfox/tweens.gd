@@ -23,6 +23,11 @@ C#. The bundled addon itself also works in GDScript-only projects.
 scene and press **F6** to run it on its own. `Pages/`, `Shell/`, and `Themes/`
 provide the tutorial UI; `Art/` and `Fonts/` provide its assets.
 
+While running from the editor, click the scene path above any example to open
+its scene in the editor. The path follows the selected language. Opening is
+disabled when the tutorial runs without an editor connection. The included
+`addons/tutorial_editor/` plugin provides this connection and is enabled by default.
+
 Keep `addons/tweens_gd/` intact: it contains both APIs, generated definitions,
 prebuilt native libraries, documentation, and licenses. Everything the tutorial
 needs is inside this project; its build does not reference a repository checkout.

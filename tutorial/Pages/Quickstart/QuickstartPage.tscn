@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://Shell/SceneLink.tscn" id="scene_link"]
+
 [ext_resource type="Script" path="res://Pages/Quickstart/QuickstartPage.cs" id="1_quickstartpage"]
 [ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
 [ext_resource type="PackedScene" path="res://Lessons/Quickstart/ClickToMove.tscn" id="3_clicktomove"]
@@ -104,6 +106,8 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "Click anywhere on the stage. The line of code at the bottom sends the Godot icon there."
 
+[node name="SceneLink" parent="Scroll/Margin/Column/Content" instance=ExtResource("scene_link")]
+
 [node name="Widget" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 theme_type_variation = &"Widget"
@@ -124,7 +128,8 @@ theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 0
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame" instance=ExtResource("6_stage")]
+[node name="Stage" parent="Scroll/Margin/Column/Content/Widget/Layout/Top/StageFrame" node_paths=PackedStringArray("SceneLink") instance=ExtResource("6_stage")]
+SceneLink = NodePath("../../../../../SceneLink")
 unique_name_in_owner = true
 layout_mode = 2
 World = Vector2i(1152, 648)

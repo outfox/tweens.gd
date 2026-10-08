@@ -69,6 +69,10 @@ window/size/min_height=600
 
 project/assembly_name="tutorial"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/tutorial_editor/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

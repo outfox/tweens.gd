@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://Shell/SceneLink.tscn" id="scene_link"]
+
 [ext_resource type="Script" path="res://Pages/Definitions/DefinitionsPage.cs" id="1_definitionspage"]
 [ext_resource type="Script" path="res://Shell/Column.cs" id="2_column"]
 [ext_resource type="PackedScene" path="res://Lessons/Definitions/HopWave.tscn" id="3_hopwave"]
@@ -87,6 +89,8 @@ autowrap_mode = 3
 script = ExtResource("5_prose")
 Markdown = "A tween definition is a motion you can re-use on any compatible Node."
 
+[node name="SceneLink" parent="Scroll/Margin/Column/Content" instance=ExtResource("scene_link")]
+
 [node name="Demo" type="PanelContainer" parent="Scroll/Margin/Column/Content"]
 layout_mode = 2
 theme_type_variation = &"Widget"
@@ -115,7 +119,8 @@ CSharpPath = ""
 GDScriptPath = ""
 ShowBar = false
 
-[node name="Stage" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Top" instance=ExtResource("7_stage")]
+[node name="Stage" parent="Scroll/Margin/Column/Content/Demo/Margin/Layout/Top" node_paths=PackedStringArray("SceneLink") instance=ExtResource("7_stage")]
+SceneLink = NodePath("../../../../../SceneLink")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
