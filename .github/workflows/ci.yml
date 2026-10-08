@@ -6,7 +6,9 @@ name: CI
 on:
   push:
     branches: [main]
+    paths-ignore: ['README.md']
   pull_request:
+    paths-ignore: ['README.md']
   workflow_dispatch:
   workflow_call:
     inputs:
@@ -19,7 +21,8 @@ permissions:
   contents: read
 
 jobs:
-  # Library jobs run for changes outside docs/; the docs job also checks shared JavaScript utilities.
+  # Ignore the root README; library jobs run for other changes outside docs/.
+  # The docs job also checks shared JavaScript utilities.
   # Manual runs, release tags, new branches, and history the diff can't reach run everything.
   changes:
     name: Detect changes
@@ -56,7 +59,7 @@ jobs:
             docs=false
             while IFS= read -r file; do
               case $file in
-                '') ;;
+                '' | README.md) ;;
                 docs/*) docs=true ;;
                 addons/tweens_gd/* | csharp/* | tests/conformance/* | scripts/*.mjs | scripts/.prettierrc.json | .github/workflows/ci.yml) library=true; docs=true ;;
                 *) library=true ;;
