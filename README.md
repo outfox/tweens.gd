@@ -7,6 +7,10 @@ This addon values concise and consistent syntax, and offers more [interesting ea
 
 Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://discord.gg/3UXVHnmEwd).
 
+### ... respects your <u>[time](https://tweens.gd)</u> and your <u>keycaps!</u>
+
+[![Comparison showing how much less code tweens.gd needs.](docs/public/compare.svg)](https://tweens.gd)
+
 ### ... easy to get [started](https://tweens.gd/tutorial/)
 
 My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
@@ -14,14 +18,6 @@ My, *have we got* a **tutorial** for you! Just 5 steps, but it's pure goodness!
 #### ➡️ [tweens.gd/tutorial](https://tweens.gd/tutorial/) ⬅️
 
 [!["Tween Definitions" tutorial](docs/public/definitions.svg)](https://tweens.gd/tutorial/)
-
-### ... amazing [documentation](https://tweens.gd/easings/)
-
-[![Easing playground where you can test curves and get recipes.](docs/public/easing.svg)](https://tweens.gd/easings/)
-
-### ... respects your <u>[time](https://tweens.gd)</u> and your <u>keycaps!</u>
-
-[![Comparison showing how much less code tweens.gd needs.](docs/public/compare.svg)](https://tweens.gd)
 
 ## Deets and dooks
 
