@@ -21,8 +21,29 @@ public class StructuredGeneratorTests
     private const string Contracts = """
         #nullable enable
         using System;
+        namespace Godot
+        {
+            public class SceneTree { }
+            public class Node { public SceneTree GetTree() => new(); }
+            public class Resource { }
+        }
         namespace tweens.gd
         {
+            public readonly record struct PlaybackOptions;
+            public sealed partial class TweenScheduler
+            {
+                internal TweenInstance<TTarget, TValue> AddValue<TTarget, TValue, TDefinition>(TTarget target,
+                    in TDefinition definition, Godot.Node? owner, Godot.SceneTree? tree, PlaybackOptions options)
+                    where TTarget : class where TValue : struct where TDefinition : struct, ITweenDefinition<TTarget, TValue>
+                    => new();
+            }
+            internal sealed class TweenRunner { internal TweenScheduler Scheduler { get; } = new(); }
+            internal static class TweenRuntime
+            {
+                internal static TweenRunner GetRunner(Godot.Node target) => new();
+                internal static TweenRunner GetRunner(Godot.SceneTree tree) => new();
+                internal static void ValidateOwner(Godot.Node owner) { }
+            }
             public enum EaseType { Linear }
             public readonly record struct Duration(double Seconds);
             public readonly record struct TweenOptions
@@ -71,7 +92,7 @@ public class StructuredGeneratorTests
                     Func<TValue, TValue, float, TValue> interpolate) { }
             }
         }
-        namespace Targets { public class Widget { } }
+        namespace Targets { public class Widget : Godot.Node { } }
         """;
 
     private const string Adapter = """
@@ -94,7 +115,7 @@ public class StructuredGeneratorTests
     public void DiscoversAliasedBaseTypesAndPartialAdaptersAndEmitsCompilableDefinitions()
     {
         var (_, output, result) = Run(CreateCompilation(Contracts, Adapter));
-        Assert.Equal(new[] { "Opacity.g.cs", "Property.g.cs" },
+        Assert.Equal(new[] { "Opacity.g.cs", "Property.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs" },
             result.GeneratedSources.Select(source => source.HintName).Order().ToArray());
         var definition = output.GetTypeByMetadataName("tweens.gd.Tweens+Opacity")!;
         Assert.True(definition.IsReadOnly);
@@ -119,6 +140,42 @@ public class StructuredGeneratorTests
     }
 
     [Fact]
+    public void EmitsCompilableStartsForNodeResourceAndCustomDefinitions()
+    {
+        const string starts = """
+            namespace tweens.gd
+            {
+                public sealed class ResourceOpacityTween()
+                    : PropertyTween<Godot.Resource, float>(_ => 0, (_, _) => { }, (a, b, t) => a);
+                internal static class Starts
+                {
+                    internal static void Use(TweenScheduler scheduler, Targets.Widget node, Godot.Resource resource,
+                        Godot.SceneTree tree, Tweens.Opacity opacity, Tweens.ResourceOpacity resourceOpacity,
+                        Tweens.Property<Targets.Widget, float> nodeProperty,
+                        Tweens.Property<Godot.Resource, float> resourceProperty)
+                    {
+                        scheduler.Add(node, in opacity);
+                        scheduler.Add(node, in opacity, node);
+                        node.Tween(in opacity);
+                        scheduler.Add(resource, in resourceOpacity);
+                        resource.Tween(in resourceOpacity, tree);
+                        resource.Tween(in resourceOpacity, node);
+                        node.Tween(resource, in resourceOpacity);
+                        node.Tween(in nodeProperty);
+                        resource.Tween(in resourceProperty, tree);
+                        resource.Tween(in resourceProperty, node);
+                        node.Tween(resource, in resourceProperty);
+                    }
+                }
+            }
+            """;
+        var (_, output, _) = Run(CreateCompilation(Contracts, Adapter, starts));
+        var scheduler = output.GetTypeByMetadataName("tweens.gd.TweenScheduler")!;
+        Assert.All(scheduler.GetMembers("Add").OfType<IMethodSymbol>(),
+            method => Assert.Equal(RefKind.In, method.Parameters[1].RefKind));
+    }
+
+    [Fact]
     public void EmitsShaderAndCustomPropertyConstructorsWithGenericConstraints()
     {
         const string shaders = """
@@ -135,7 +192,7 @@ public class StructuredGeneratorTests
             }
             """;
         var (_, output, result) = Run(CreateCompilation(Contracts, shaders));
-        Assert.Equal(4, result.GeneratedSources.Length);
+        Assert.Equal(6, result.GeneratedSources.Length);
         foreach (var name in new[] { "ShaderParameter", "CanvasItemInstanceShaderParameter", "GeometryInstanceShaderParameter" })
         {
             var type = output.GetTypeByMetadataName("tweens.gd.Tweens+" + name + "`1")!;
@@ -197,7 +254,8 @@ public class StructuredGeneratorTests
             }
             """;
         var (_, output, result) = Run(CreateCompilation(Contracts, extensions));
-        Assert.Equal(["Property.g.cs", "TweenExtensions.g.cs"], result.GeneratedSources.Select(source => source.HintName).Order());
+        Assert.Equal(["Property.g.cs", "TweenExtensions.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
+            result.GeneratedSources.Select(source => source.HintName).Order());
         var type = output.GetTypeByMetadataName("tweens.gd.TweenExtensions")!;
         string Forms(string name) => string.Join(" | ", type.GetMembers(name).OfType<IMethodSymbol>()
             .Select(method => method.Parameters[1].Type.ToDisplayString() + (method.Parameters.Any(p => p.Name == "ease") ? " eased" : ""))
@@ -239,7 +297,8 @@ public class StructuredGeneratorTests
 
         compilation = compilation.RemoveSyntaxTrees(compilation.SyntaxTrees.Last());
         var (_, removed, result) = Run(compilation, changed.Driver);
-        Assert.Equal("Property.g.cs", Assert.Single(result.GeneratedSources).HintName);
+        Assert.Equal(["Property.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
+            result.GeneratedSources.Select(source => source.HintName).Order());
         Assert.Null(removed.GetTypeByMetadataName("tweens.gd.Tweens+Opacity"));
     }
 
