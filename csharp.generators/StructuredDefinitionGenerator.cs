@@ -51,9 +51,19 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(definitions.Combine(options), static (output, input) =>
         {
             if (input.Right is not { } options) return;
-            var (name, adapter, target, value, kind) = input.Left;
+            var (name, adapter, target, value, kind, _) = input.Left;
             output.AddSource(name + ".g.cs", SourceText.From(
                 Render(name, adapter, target, value, kind, options), Encoding.UTF8));
+        });
+
+        context.RegisterSourceOutput(definitions.Collect(), static (output, definitions) =>
+        {
+            var scheduler = new StringBuilder(Header + "\nnamespace tweens.gd;\n\npublic sealed partial class TweenScheduler\n{\n");
+            var extensions = new StringBuilder(Header + "\nnamespace tweens.gd;\n\npublic static partial class TweenExtensions\n{\n");
+            foreach (var definition in definitions.OrderBy(d => d.Name, StringComparer.Ordinal))
+                RenderStarts(scheduler, extensions, definition.Name, definition.Target, definition.Value, definition.Kind, definition.Resource);
+            output.AddSource("TweenScheduler.g.cs", SourceText.From(scheduler.Append("}\n").ToString(), Encoding.UTF8));
+            output.AddSource("TweenStarts.g.cs", SourceText.From(extensions.Append("}\n").ToString(), Encoding.UTF8));
         });
 
         // Extension methods live in many partial files, so read the whole type rather than one declaration.
@@ -151,7 +161,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             assignments.Length == 0 ? "" : "        Options = new TweenOptions { " + assignments + " };\n", arguments.ToString());
     }
 
-    private static (string Name, string Adapter, string Target, string Value, DefinitionKind Kind)? ReadDefinition(
+    private static (string Name, string Adapter, string Target, string Value, DefinitionKind Kind, bool Resource)? ReadDefinition(
         GeneratorSyntaxContext context, CancellationToken token)
     {
         var symbol = ReadType(context, token);
@@ -166,9 +176,63 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 || parent.ContainingNamespace.ToDisplayString() != "tweens.gd") continue;
             return (symbol.Name.Substring(0, symbol.Name.Length - "Tween".Length),
                 symbol.ToDisplayString(TypeFormat), parent.TypeArguments[0].ToDisplayString(TypeFormat),
-                parent.TypeArguments[1].ToDisplayString(TypeFormat), kind.Value);
+                    parent.TypeArguments[1].ToDisplayString(TypeFormat), kind.Value, IsResource(parent.TypeArguments[0]));
         }
         return null;
+    }
+
+    private static bool IsResource(ITypeSymbol type)
+    {
+        for (var current = type as INamedTypeSymbol; current is not null; current = current.BaseType)
+            if (current.ToDisplayString() == "Godot.Resource") return true;
+        return false;
+    }
+
+    private static void RenderStarts(StringBuilder scheduler, StringBuilder extensions, string name, string target,
+        string value, DefinitionKind kind, bool resource)
+    {
+        var generic = kind == DefinitionKind.CustomProperty ? "<TTarget, TValue>"
+            : kind == DefinitionKind.ShaderParameter ? "<TValue>" : "";
+        var constraints = kind == DefinitionKind.CustomProperty ? " where TTarget : class where TValue : struct"
+            : kind == DefinitionKind.ShaderParameter ? " where TValue : struct" : "";
+        var definition = "Tweens." + name + generic;
+        var result = "TweenInstance<" + target + ", " + value + ">";
+        var add = "AddValue<" + target + ", " + value + ", " + definition + ">";
+        var parameters = target + " target, in " + definition + " definition";
+        const string options = "PlaybackOptions options = default";
+        const string doc = "    /// <summary>Starts a concrete immutable definition without boxing it.</summary>\n";
+        scheduler.Append(doc).Append("    public ").Append(result).Append(" Add").Append(generic)
+            .Append('(').Append(parameters).Append(", ").Append(options).Append(')').Append(constraints)
+            .Append("\n        => ").Append(add).Append("(target, in definition, ")
+            .Append(resource ? "null" : "target as global::Godot.Node").Append(", null, options);\n\n");
+        scheduler.Append(doc).Append("    public ").Append(result).Append(" Add").Append(generic)
+            .Append('(').Append(parameters).Append(", global::Godot.Node owner, ").Append(options).Append(')').Append(constraints)
+            .Append("\n    {\n        global::System.ArgumentNullException.ThrowIfNull(owner);\n        return ")
+            .Append(add).Append("(target, in definition, owner, null, options);\n    }\n\n");
+
+        if (!resource)
+        {
+            var nodeConstraints = kind == DefinitionKind.CustomProperty ? " where TTarget : global::Godot.Node where TValue : struct" : constraints;
+            extensions.Append(doc).Append("    public static ").Append(result).Append(" Tween").Append(generic)
+                .Append("(this ").Append(parameters).Append(", ").Append(options).Append(')').Append(nodeConstraints)
+                .Append("\n        => TweenRuntime.GetRunner(target).Scheduler.").Append(add)
+                .Append("(target, in definition, target, null, options);\n\n");
+        }
+        if (resource || kind == DefinitionKind.CustomProperty)
+        {
+            var resourceConstraints = kind == DefinitionKind.CustomProperty ? " where TTarget : global::Godot.Resource where TValue : struct" : constraints;
+            extensions.Append(doc).Append("    public static ").Append(result).Append(" Tween").Append(generic)
+                .Append("(this ").Append(parameters).Append(", global::Godot.SceneTree tree, global::Godot.Node? owner = null, ")
+                .Append(options).Append(')').Append(resourceConstraints)
+                .Append("\n        => TweenRuntime.GetRunner(tree).Scheduler.").Append(add)
+                .Append("(target, in definition, owner, tree, options);\n\n");
+            extensions.Append(doc).Append("    public static ").Append(result).Append(" Tween").Append(generic)
+                .Append("(this ").Append(parameters).Append(", global::Godot.Node owner, ").Append(options).Append(')').Append(resourceConstraints)
+                .Append("\n    {\n        TweenRuntime.ValidateOwner(owner);\n        return target.Tween(in definition, owner.GetTree(), owner, options);\n    }\n\n");
+            extensions.Append(doc).Append("    public static ").Append(result).Append(" Tween").Append(generic)
+                .Append("(this global::Godot.Node owner, ").Append(parameters).Append(", ").Append(options).Append(')').Append(resourceConstraints)
+                .Append("\n        => target.Tween(in definition, owner, options);\n\n");
+        }
     }
 
     private static DefinitionKind? GetDefinitionKind(INamedTypeSymbol symbol)

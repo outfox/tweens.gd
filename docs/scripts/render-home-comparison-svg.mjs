@@ -1,5 +1,5 @@
 // Renders the home page's comparison of Godot's Tween and tweens.gd as an animated SVG, public/compare.svg, for the
-// Godot Asset Store page. It cycles C# and GDScript with one and three sprites. Needs uv on the PATH.
+// Godot Asset Store page. It shows the three-sprite example, alternating C# and GDScript. Needs uv on the PATH.
 // Run from docs/: node scripts/render-home-comparison-svg.mjs
 import { readFileSync } from 'node:fs';
 import {
@@ -15,7 +15,6 @@ import {
   measure,
   mix,
   palette,
-  pill,
   pillStyle,
   round,
   reducedMotion,
@@ -25,16 +24,10 @@ import {
   writeSvg,
 } from './animated-svg-utils.mjs';
 
-const variants = ['One sprite', 'Three sprites'];
-const order = [
-  ['csharp', 0],
-  ['csharp', 1],
-  ['gdscript', 0],
-  ['gdscript', 1],
-];
+const order = ['csharp', 'gdscript'];
 
-// Seconds each example shows, and how long switches and code take to change.
-const SLOT = 4.5;
+// Seconds each language shows, and how long the switch and code take to change.
+const SLOT = 4;
 const MOVE = 0.45;
 const FADE_IN = 0.6;
 const FADE_OUT = 0.35;
@@ -52,6 +45,7 @@ const CODE = { size: 14, line: 22.4, advance: 14 * 0.6 };
 const FRAME = { padX: 20, padY: 16, bar: 38, radius: 14.4, tabRadius: 8, title: 15, gap: 24 };
 
 // The code blocks of index.mdx, in page order: one sprite, then three, each with a C# pair and a GDScript pair.
+// Only the three-sprite pairs are kept.
 const mdx = readFileSync('src/content/docs/index.mdx', 'utf8');
 const blocks = { csharp: [], gdscript: [] };
 for (const [, lang, title, code] of mdx.matchAll(
@@ -60,6 +54,7 @@ for (const [, lang, title, code] of mdx.matchAll(
   blocks[lang].push({ title, lines: code.replace(/\t/g, '    ').split(/\r?\n/) });
 if (blocks.csharp.length !== 4 || blocks.gdscript.length !== 4)
   throw new Error('Expected 4 C# and 4 GDScript blocks.');
+for (const lang of order) blocks[lang] = blocks[lang].slice(2);
 
 // Subsets each font to the characters it draws, and measures the display font's titles.
 const titles = [
@@ -73,7 +68,9 @@ const allCode = Object.values(blocks)
   .flat()
   .flatMap((b) => b.lines)
   .join('');
-const pillText = [...Object.values(languages).map((l) => l.label), ...variants].join('');
+const pillText = Object.values(languages)
+  .map((l) => l.label)
+  .join('');
 const monoFont = subsetFont(FONTS.mono, allCode + pillText);
 const displayFont = subsetFont(FONTS.display, titles.join(''));
 const titleWidths = Object.fromEntries(
@@ -122,23 +119,10 @@ ${lines.join('\n')}
 </g>`;
 };
 
-const lang = languagePill(
-  tl,
-  MARGIN.x,
-  MARGIN.top,
-  order.map(([l]) => l),
-);
-const variantPill = pill(tl, {
-  x: MARGIN.x + lang.width + 12,
-  y: MARGIN.top,
-  name: 'variant',
-  labels: variants,
-  picks: order.map(([, v]) => v),
-  accents: order.map(([l]) => languages[l]),
-});
-const css = [...lang.css, ...variantPill.css];
+const lang = languagePill(tl, MARGIN.x, MARGIN.top, order);
+const css = [...lang.css];
 
-// Each example fades and rises in, holds, then fades out upward while the switches move, before the next one arrives.
+// Each example fades and rises in, holds, then fades out upward while the switch moves, before the next one arrives.
 css.push(`@keyframes show {
 	0% { opacity: 0; transform: translateY(14px); animation-timing-function: ${EASE.expoOut}; }
 	${pct(FADE_IN)} { opacity: 1; transform: none; }
@@ -148,8 +132,8 @@ css.push(`@keyframes show {
 }`);
 
 const examples = [];
-for (const [k, [lang, variant]] of order.entries()) {
-  const [left, right] = blocks[lang].slice(variant * 2, variant * 2 + 2);
+for (const [k, lang] of order.entries()) {
+  const [left, right] = blocks[lang];
   const [leftTokens, rightTokens] = [
     await highlight(lang, left.lines),
     await highlight(lang, right.lines),
@@ -182,7 +166,6 @@ ${reducedMotion}
 ${shadowFilter}
 </defs>
 ${lang.svg}
-${variantPill.svg}
 ${examples.join('\n')}
 </svg>
 `;

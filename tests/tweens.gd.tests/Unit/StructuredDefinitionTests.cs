@@ -46,6 +46,25 @@ public class StructuredDefinitionTests
         Assert.True(definitions.Count > 300, $"Only {definitions.Count} definitions were generated.");
     }
 
+    [Fact]
+    public void EveryDefinitionHasConcreteSchedulerOverloads()
+    {
+        var methods = typeof(TweenScheduler).GetMethods().Where(m => m.Name == nameof(TweenScheduler.Add));
+        foreach (var definition in DefinitionTypes())
+        {
+            var overloads = methods.Where(method =>
+            {
+                var parameter = method.GetParameters()[1];
+                if (!parameter.IsIn || !parameter.ParameterType.IsByRef) return false;
+                var type = parameter.ParameterType.GetElementType()!;
+                return (type.IsGenericType ? type.GetGenericTypeDefinition() : type) == definition;
+            }).ToArray();
+            Assert.Equal(2, overloads.Length);
+            Assert.Contains(overloads, m => m.GetParameters().Length == 3);
+            Assert.Contains(overloads, m => m.GetParameters().Length == 4 && m.GetParameters()[2].ParameterType == typeof(Node));
+        }
+    }
+
     [Theory]
     [MemberData(nameof(Definitions))]
     public void EveryPropertyRoundTripsIntoTheIndependentPlayback(Type definition) => Run(nameof(Verify), definition);
@@ -211,6 +230,23 @@ public class StructuredDefinitionTests
 
     private readonly Tweens.Property<Box, float> movement = new(
         static target => target.Value, static (target, value) => target.Value = value, Interpolators.Float, 10, 1);
+
+    [Fact]
+    public void ConcreteStartsAllocateNoMoreThanPreboxedStarts()
+    {
+        var target = new Box();
+        ITweenDefinition<Box, float> boxed = movement;
+        void Concrete() { using var scheduler = new TweenScheduler(); scheduler.Add(target, movement).Cancel(); }
+        void Interface() { using var scheduler = new TweenScheduler(); scheduler.Add(target, boxed).Cancel(); }
+        static long Allocated(Action start)
+        {
+            for (var i = 0; i < 128; i++) start();
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 1024; i++) start();
+            return GC.GetAllocatedBytesForCurrentThread() - before;
+        }
+        Assert.Equal(Allocated(Interface), Allocated(Concrete));
+    }
 
     [Fact]
     public void ConstructorArgumentsMatchTheirInitializers()

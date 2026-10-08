@@ -125,4 +125,19 @@ public class GroupTests
         Assert.False(group.IsPaused);
         Assert.Equal(Reason.Cancelled, group.CompletionReason);
     }
+
+    [Fact]
+    public void PollingPausedMembersDoesNotAllocate()
+    {
+        using var scheduler = new TweenScheduler();
+        var group = Group.Of(Start(scheduler, 1), Start(scheduler, 2));
+        group.Pause();
+        for (var i = 0; i < 128; i++) _ = group.IsPaused;
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        var paused = true;
+        for (var i = 0; i < 1024; i++) paused &= group.IsPaused;
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        Assert.True(paused);
+        Assert.Equal(0, allocated);
+    }
 }

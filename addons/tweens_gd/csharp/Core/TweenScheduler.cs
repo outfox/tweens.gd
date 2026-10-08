@@ -13,7 +13,7 @@ using Godot;
 namespace tweens.gd;
 
 /// <summary>A manually driven playback scheduler, also used by the automatic Godot runner.</summary>
-public sealed class TweenScheduler : IDisposable
+public sealed partial class TweenScheduler : IDisposable
 {
     private readonly List<TweenInstance> instances = [];
     private readonly int thread = System.Environment.CurrentManagedThreadId;
@@ -52,6 +52,18 @@ public sealed class TweenScheduler : IDisposable
     {
         ValidateStart(target, owner, tree, options);
         ArgumentNullException.ThrowIfNull(definition);
+        var instance = new TweenInstance<TTarget, TValue>(this, target, definition.CreatePlayback(), owner, tree, options);
+        Enroll(instance);
+        return instance;
+    }
+
+    // Generated overloads retain the concrete struct type. A constrained interface
+    // call snapshots it without allocating an interface box.
+    internal TweenInstance<TTarget, TValue> AddValue<TTarget, TValue, TDefinition>(TTarget target,
+        in TDefinition definition, Node? owner, SceneTree? tree, PlaybackOptions options)
+        where TTarget : class where TValue : struct where TDefinition : struct, ITweenDefinition<TTarget, TValue>
+    {
+        ValidateStart(target, owner, tree, options);
         var instance = new TweenInstance<TTarget, TValue>(this, target, definition.CreatePlayback(), owner, tree, options);
         Enroll(instance);
         return instance;
@@ -196,7 +208,11 @@ public sealed class TweenScheduler : IDisposable
     {
         var kept = 0;
         for (var i = 0; i < instances.Count; i++)
-            if (!instances[i].IsTerminal) instances[kept++] = instances[i];
+        {
+            if (instances[i].IsTerminal) continue;
+            if (kept != i) instances[kept] = instances[i];
+            kept++;
+        }
         if (kept < instances.Count) instances.RemoveRange(kept, instances.Count - kept);
     }
 

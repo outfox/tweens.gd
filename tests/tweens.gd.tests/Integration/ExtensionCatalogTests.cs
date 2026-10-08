@@ -59,7 +59,8 @@ public class ExtensionCatalogTests(HeadlessFixture godot)
 
     private static Dictionary<string, MethodInfo[]> Families() => typeof(TweenExtensions)
         .GetMethods(BindingFlags.Public | BindingFlags.Static)
-        .Where(method => !method.IsGenericMethodDefinition && method.Name != nameof(TweenExtensions.CancelTweens))
+        .Where(method => !method.IsGenericMethodDefinition && method.Name != nameof(TweenExtensions.CancelTweens)
+            && method.Name != nameof(TweenExtensions.Tween))
         .GroupBy(method => $"{method.Name}({method.GetParameters()[0].ParameterType.Name})")
         .ToDictionary(group => group.Key, group => group.ToArray());
 
