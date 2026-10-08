@@ -30,7 +30,7 @@ This is a MIT licensed, free addon, and it supports both GDScript and C# out of 
 
 [Godot logo](https://godotengine.org/press/) by Andrea Calabró, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). "Easy, the Ferret" illustrations drawn by [foxy_maria](https://www.furaffinity.net/user/foxymaria/). 
 
-#### Ferrets and Robots play well together:
+### Ferrets and Robots play well together:
 
 **tweens.gd** is human-designed and exclusively uses human-made art. The development tools and workflows used to create the documentation, the library, its code generators, and CI infrastructure are pervasively LLM-supported.
 
