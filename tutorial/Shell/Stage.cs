@@ -46,6 +46,9 @@ public partial class Stage : PanelContainer
 
     private void Fit()
     {
+        // During editor assembly reload, the native node is ready before C# references are restored.
+        if (Viewport is null)
+            return;
         // The stage keeps the world's aspect ratio at any width.
         CustomMinimumSize = CustomMinimumSize with { Y = Mathf.Round(Size.X * World.Y / World.X) };
         Viewport.Size2DOverride = World;

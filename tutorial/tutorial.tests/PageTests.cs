@@ -35,6 +35,54 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
         => lesson.FindChildren("*", owned: false).Prepend(lesson).Select(node => node.GetScript().Obj)
             .OfType<Script>().Single() is GDScript ? "gd" : "cs";
 
+    [Fact]
+    public void StageAcceptsRestoredWorldBeforeItsViewportReference()
+    {
+        using var app = App(Language.CSharp);
+        var stage = Open(app.Node, 1).GetNode<Stage>("%Stage");
+        var viewport = stage.Viewport;
+        var property = typeof(Stage).GetProperty(nameof(Stage.Viewport))!;
+        // Assembly reload keeps the native node ready while rebuilding its managed references.
+        Assert.True(stage.IsNodeReady());
+        property.SetValue(stage, null);
+        try
+        {
+            stage.World = new Vector2I(800, 600);
+        }
+        finally
+        {
+            property.SetValue(stage, viewport);
+        }
+        stage.World = new Vector2I(640, 480);
+        Assert.Equal(stage.World, viewport.Size2DOverride);
+    }
+
+    [Fact]
+    public void CodeViewAcceptsRestoredPathsBeforeItsLabelReferences()
+    {
+        using var app = App(Language.CSharp);
+        var view = Open(app.Node, 1).GetNode<CodeView>("%Command");
+        const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+        var fields = new[] { "code", "file" }.Select(name => typeof(CodeView).GetField(name, flags)!).ToArray();
+        var labels = fields.Select(field => field.GetValue(view)).ToArray();
+        Assert.True(view.IsNodeReady());
+        foreach (var field in fields)
+            field.SetValue(view, null);
+        try
+        {
+            view.CSharpPath = "Quickstart/ClickToMove.cs";
+            view.GDScriptPath = "Quickstart/click_to_move.gd";
+            view.AddSlot("reload", Colors.White);
+        }
+        finally
+        {
+            for (var i = 0; i < fields.Length; i++)
+                fields[i].SetValue(view, labels[i]);
+        }
+        view.ShowCode("restored", "restored");
+        Assert.Equal("restored", view.Text);
+    }
+
     [Theory]
     [InlineData(Language.CSharp)]
     [InlineData(Language.GDScript)]

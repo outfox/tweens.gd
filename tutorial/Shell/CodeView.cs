@@ -189,7 +189,8 @@ public partial class CodeView : PanelContainer
 
     private void Refresh()
     {
-        if (!IsNodeReady())
+        // During editor assembly reload, the native node is ready before C# references are restored.
+        if (!IsNodeReady() || code is null || file is null)
             return;
         var gd = Languages.IsGDScript && !Engine.IsEditorHint();
         var path = gd ? gdscriptPath : csharpPath;
@@ -213,7 +214,7 @@ public partial class CodeView : PanelContainer
 
     private void Render()
     {
-        if (!IsNodeReady())
+        if (!IsNodeReady() || code is null)
             return;
         var language = Engine.IsEditorHint() ? Language.CSharp : Languages.Current;
         var bbcode = new StringBuilder();
