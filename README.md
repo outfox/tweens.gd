@@ -19,9 +19,9 @@ Find out what it's like in just five steps! Quickly on the web, or right on the 
 
 [!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
 
-| Browsers *are* handy 💫                             | I want to believe 👾                                  | Feed it to me raw 🍖|
+| Browsers *are* handy 💫                             | I want to believe 👾                                  | Read it to me raw 🍖|
 |---------------------------------------------------|----------------------------------------------------|----------------------------------------------------|
-| [Web-based Tutorial](https://tweens.gd/tutorial/) (tweens.gd) <br/> *1:1 simulated in your browser*<br/>*huge searchable API reference*| [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) (📁.zip)<br/> *GDScript + C#, ready to edit & run*<br/> *open this project in [Godot .NET](https://godotengine.org/download)*| [Tutorial Lessons](https://github.com/outfox/tweens.gd/tree/main/tutorial/Lessons) (GitHub) <br/> *just the In-Engine version's*<br/>*basic tweens and scenes* |
+| [Web-based Tutorial](https://tweens.gd/tutorial/) (tweens.gd) <br/> *~1:1 simulated in the browser*<br/>*searchable API reference*| [In-Engine Tutorial](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) (📁.zip)<br/> *GDScript + C#, ready to edit & run*<br/> *open this project in [Godot .NET](https://godotengine.org/download)*| [Tutorial Lessons](https://github.com/outfox/tweens.gd/tree/main/tutorial/Lessons) (GitHub) <br/> *just the In-Engine version's*<br/>*basic tweens and scenes* |
 
 
 ## Deets and dooks
