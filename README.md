@@ -13,7 +13,7 @@ Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://di
 
 ## Interactive tutorials!
 
-Find out what it's like in just five steps! Quickly on the web, or right on the metal using the in-engine tutorial that shows you the actual running scenes and code directly in your Godot editor.
+Find out what it's like in just five steps! Quickly on the web, or right on the metal using the in-engine tutorial that shows you the actual running scenes and code directly in your Godot editor. (both have similar look and feel)
 
 [!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
 
