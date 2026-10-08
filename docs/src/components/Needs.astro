@@ -53,15 +53,16 @@ const needs = [
 			grid-template-columns: repeat(4, minmax(0, 1fr));
 		}
 	}
+	/* Cards take the faint language accent tint of code blocks. */
 	li {
 		display: flex;
 		flex-direction: column;
 		gap: 0.3rem;
 		margin: 0;
 		padding: 0.85rem 1rem;
-		border: 1px solid var(--tw-outline);
+		border: 1px solid color-mix(in oklab, var(--tw-accent) 30%, var(--tw-outline));
 		border-radius: 0.9rem;
-		background: var(--tw-surface);
+		background: color-mix(in oklab, var(--tw-accent) var(--tw-code-tint), var(--tw-surface));
 	}
 	.title {
 		color: var(--sl-color-white);
