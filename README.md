@@ -12,7 +12,8 @@ Get support and show us your cool stuff on the [⤜outfox⤏ Discord](https://di
 [![Comparison showing how much less code tweens.gd needs.](docs/public/compare.svg)](https://tweens.gd)
 
 ## Interactive tutorials!
-My, *have we got* a **tutorial** for you! Just 5 steps, but it's quite visual! 
+
+Find out what it's like in just five steps! Quickly on the web, or right on the metal using the in-engine tutorial that shows you the actual running scenes and code directly in your Godot editor.
 
 [!["Tween Definitions" tutorial](https://tweens.gd/definitions.svg)](https://tweens.gd/tutorial/)
 
