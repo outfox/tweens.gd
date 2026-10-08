@@ -21,7 +21,7 @@ public abstract class EngineBenchmark
         // BDN's generated executable has a different entry assembly and output directory.
         var project = typeof(EngineBenchmark).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
             .Single(a => a.Key == "GodotProjectDir").Value!;
-        engine = new twodog.Engine("benchmarks", project, ["--headless", "--audio-driver", "Dummy"]);
+        engine = new twodog.Engine("benchmarks", project, ["--headless", "--audio-driver", "Dummy"]) { CaptureErrors = true };
         engine.Start();
         if (OS.GetThreadCallerId() != OS.GetMainThreadId())
             throw new InvalidOperationException("Benchmarks must run on Godot's main thread.");
@@ -36,12 +36,20 @@ public abstract class EngineBenchmark
         GC.WaitForPendingFinalizers();
         engine.Dispose();
         Environment.CurrentDirectory = previousDirectory;
+        CheckEngineErrors();
+    }
+
+    protected void CheckEngineErrors()
+    {
+        var errors = engine.Errors.Drain();
+        if (errors.Any()) throw new InvalidOperationException(string.Join("\n", errors));
     }
 }
 
 public enum EngineWorkload { ValueCallback, Position, Color, Resource }
 
 [MemoryDiagnoser]
+[ThreadingDiagnoser]
 public class EngineUpdateBenchmarks : EngineBenchmark
 {
     [Params(100, 1000, 10000)] public int Count { get; set; }
@@ -109,6 +117,7 @@ public class EngineUpdateBenchmarks : EngineBenchmark
 
 // Setup/teardown are untimed. Report time and managed bytes per created tween.
 [MemoryDiagnoser]
+[ThreadingDiagnoser]
 public class DefinitionCreationBenchmarks : EngineBenchmark
 {
     private const int Batch = 128;

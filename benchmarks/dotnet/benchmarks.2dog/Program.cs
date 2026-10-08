@@ -10,6 +10,11 @@ internal static class Program
     private static int Main(string[] args)
     {
         if (args is ["--verify"]) return TweensBenchmarks.Verification.Run();
+        if (args is ["--verify-catalog"])
+        {
+            new TweensBenchmarks.AdapterCatalogBenchmarks().VerifyCatalog();
+            return 0;
+        }
         // Engine startup belongs to GlobalSetup in each BDN child process.
         if (args.Any(a => a is "--inProcess" or "-i"))
             throw new ArgumentException("Use the default out-of-process toolchain for engine isolation.");

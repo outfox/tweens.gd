@@ -20,6 +20,7 @@ internal static class Definitions
 
 // No engine startup: public custom-storage API on ordinary managed objects.
 [MemoryDiagnoser]
+[ThreadingDiagnoser]
 public class ManagedUpdateBenchmarks
 {
     [Params(100, 1000, 10000)] public int Count { get; set; }
@@ -64,6 +65,7 @@ public class ManagedUpdateBenchmarks
 }
 
 [MemoryDiagnoser]
+[ThreadingDiagnoser]
 public class ManagedLifecycleBenchmarks
 {
     private readonly ValueTarget target = new();
@@ -117,6 +119,7 @@ public class ManagedLifecycleBenchmarks
 }
 
 [MemoryDiagnoser]
+[ThreadingDiagnoser]
 public class GroupPollingBenchmarks
 {
     [Params(4, 100)] public int Count { get; set; }
@@ -136,6 +139,7 @@ public class GroupPollingBenchmarks
 }
 
 [MemoryDiagnoser]
+[ThreadingDiagnoser]
 public class EasingBenchmarks
 {
     private float progress;

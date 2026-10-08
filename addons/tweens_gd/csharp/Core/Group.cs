@@ -36,8 +36,14 @@ public sealed class Group
     {
         get
         {
-            var active = members.Where(member => !member.IsTerminal).ToArray();
-            return active.Length > 0 && active.All(member => member.IsPaused);
+            var anyActive = false;
+            foreach (var member in members)
+            {
+                if (member.IsTerminal) continue;
+                if (!member.IsPaused) return false;
+                anyActive = true;
+            }
+            return anyActive;
         }
     }
 

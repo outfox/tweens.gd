@@ -34,7 +34,8 @@ internal sealed class ExecutionPlan
         this.root = root;
         EntryCount = leaves.Length;
         entries = new Entry[leaves.Length];
-        var times = new double[leaves.Length * 3];
+        var times = new double[leaves.Length * 3 + 1];
+        var timeCount = 0;
         var anchor = 0.0;
         for (var i = 0; i < leaves.Length; i++)
         {
@@ -47,14 +48,20 @@ internal sealed class ExecutionPlan
                 !double.IsPositiveInfinity(timing.Remaining) && !double.IsFinite(end))
                 throw new ArgumentException("The Chain schedule overflows.");
             entries[i] = new(leaves[i], activation, start, end);
-            times[i * 3] = activation;
-            times[i * 3 + 1] = start;
-            times[i * 3 + 2] = end;
+            times[timeCount++] = activation;
+            times[timeCount++] = start;
+            if (double.IsFinite(end)) times[timeCount++] = end;
             cursor = Math.Min(cursor, activation);
             Duration = Math.Max(Duration, end);
             anchor = end;
         }
-        boundaries = times.Where(double.IsFinite).Append(cursor).Distinct().Order().ToArray();
+        times[timeCount++] = cursor;
+        Array.Sort(times, 0, timeCount);
+        var unique = 1;
+        for (var i = 1; i < timeCount; i++)
+            if (times[i] != times[unique - 1]) times[unique++] = times[i];
+        Array.Resize(ref times, unique);
+        boundaries = times;
     }
 
     internal void Advance(double delta)
@@ -94,7 +101,7 @@ internal sealed class ExecutionPlan
                     {
                         // Reordered starts can activate an older definition after a later one.
                         // Preserve capture-before-activation, then reassert source-order priority.
-                        if (entries.Skip(index + 1).Any(e => e.Active && !e.Leaf.IsTerminal))
+                        if (HasActiveAfter(index))
                             reassertFrom = Math.Min(reassertFrom, index + 1);
                         entry.Active = true;
                         entry.Activating = true;
@@ -125,6 +132,13 @@ internal sealed class ExecutionPlan
             }
             if (cursor == horizon) return;
         }
+    }
+
+    private bool HasActiveAfter(int current)
+    {
+        for (var i = current + 1; i < entries.Length; i++)
+            if (entries[i].Active && !entries[i].Leaf.IsTerminal) return true;
+        return false;
     }
 
     private bool Sample(Entry entry)

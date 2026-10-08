@@ -21,14 +21,14 @@ dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --verify
 # Smoke only: verifies execution, not useful timing results.
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*' --job Dry
 
-# Normal BenchmarkDotNet adaptive measurements, all cases.
+# All cases (catalog uses short jobs; other suites use adaptive jobs).
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*'
 
 # Focused investigation; multiple filters are supported.
 dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*DefinitionCreation*' '*ManagedLifecycle*'
 
 # Reproduce the initial report's bounded measurement budget.
-dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*' --launchCount 2 --warmupCount 5 --iterationCount 10 --iterationTime 100 --artifacts artifacts/bdn-2026-10-08
+dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*DefinitionCreation*' '*ManagedLifecycle*' '*ManagedUpdate*' '*EngineUpdate*' '*GroupPolling*' '*EasingBenchmarks*' --launchCount 2 --warmupCount 5 --iterationCount 10 --iterationTime 100 --artifacts artifacts/bdn-followup
 ```
 
 Default output is `artifacts/benchmarkdotnet/`: Markdown, CSV, HTML, full JSON,
@@ -46,6 +46,7 @@ The host leaves tiering/PGO at runtime defaults. Record any environment override
 | `ManagedLifecycleBenchmarks` | Scheduler construction, start, and cancellation/completion/disposal; also four-entry chains and groups, and requesting an `End` task. |
 | `GroupPollingBenchmarks` | Reading `IsPaused` for 4 or 100 paused members. |
 | `EasingBenchmarks` | A public `Easing.Evaluate` call, for linear, cached composition, or custom skew. Includes lookup/construction, unlike playback's cached delegate. |
+| `AdapterCatalogBenchmarks` | Every generated definition on 100/1,000 targets, paired with its direct-write baseline. Includes every supported shader value type and nine custom-property value types. |
 
 The default out-of-process toolchain builds real BenchmarkDotNet child executables.
 Engine cases start Godot in `GlobalSetup` on the measurement thread, assert that
@@ -65,9 +66,60 @@ each suite, not between suites.
 
 `MemoryDiagnoser` reports managed allocations and GC collections; it does not
 measure Godot/native memory, retained heap size, or total process memory. Zero
-allocated bytes is not zero CPU cost. See the
+allocated bytes is not zero CPU cost. All suites also use `ThreadingDiagnoser`,
+which reports managed thread-pool completions and monitor contention, not Godot's
+native worker-thread count. See the
 [initial optimization report](reports/2026-10-08-optimization.md) for measured
 findings, source-level candidates, and limits.
+
+## Full definition ranking
+
+```powershell
+# Fast fixture/coverage check: every definition, no benchmark timing.
+dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --verify-catalog
+
+# Full ranking: 361 concrete definitions × 2 counts × 2 methods = 1,444 cases.
+dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*AdapterCatalogBenchmarks*' --artifacts artifacts/bdn-catalog
+
+# Export sorted cost, overhead, allocation and threading rankings.
+node benchmarks/summarize-catalog.mjs artifacts/bdn-catalog/results/TweensBenchmarks.AdapterCatalogBenchmarks-report-full.json artifacts/catalog-ranking
+
+# Follow up a family; BDN filters include parameter values.
+dotnet run --project benchmarks/dotnet/benchmarks.2dog -c Release -- --filter '*AdapterCatalogBenchmarks*ShaderParameter*'
+```
+
+The catalog is discovered from `Tweens` at runtime: currently 331 nongeneric
+definitions, 21 shader instantiations (three families × seven supported value
+types), and nine custom-property instantiations. New nongeneric definitions are
+included automatically; unknown generic families fail discovery until fixtures
+are supplied. The suite uses one launch, three warmup and three measurement
+iterations, targeting 100 ms per iteration. Short jobs locate broad outliers;
+repeat selected cases with longer measurements before deciding small differences.
+
+Each benchmark child starts a headless engine, creates distinct valid targets,
+and initializes infinite linear tweens. The `DirectWrite` baseline interpolates
+the same endpoints and calls the adapter's actual typed setter (including
+read/modify/write for component properties). These delegates are extracted once
+during setup; reflection and definition boxing stay outside timing. Shader
+baselines interpolate and set the typed uniform directly. Callback-value baselines
+write a sink; custom-property baselines use a plain C# field. Resources use their
+actual resource type rather than an invented node proxy.
+
+Values change with time in both methods. Setup checks a direct sample against
+the tween sample with tolerance for Godot normalization. Targets satisfy adapter
+preconditions (paths, sprite frames, scroll ranges, particle settings and physical
+light units); shaders use explicit initial overrides because headless rendering
+does not supply defaults. Faulted/terminal handles and Godot warnings/errors fail
+validation. No engine frames are rendered: GPU costs, drawing and automatic-runner
+scheduling are outside this ranking.
+
+Rank by `tween_ns_per_target` for total expense and by `overhead_ns_per_target`
+or `ratio_of_means` for scheduler/adapter premium over direct writes. The latter
+ratio is computed from means and is labeled separately from BDN's ratio statistic.
+The exporter marks values above Q3 + 3×IQR within each count as screening outliers,
+retains confidence intervals, and rejects missing/failed baseline pairs. Threading
+zeros are expected for main-thread workloads; they do not prove that native
+Godot internals used no worker threads.
 
 ## Comparative benchmark
 
