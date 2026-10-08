@@ -304,6 +304,6 @@ public sealed class PageTests(TutorialFixture godot) : IDisposable
         Assert.Equal("var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic);\n\nsprite.Tween(arrive with { Delay = 0.1 });",
             structured);
         var convenient = Sources.Method(Sources.Read("SyntaxSugar/syntax_sugar.gd"), "convenient_options", Language.GDScript);
-        Assert.Equal("Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())", convenient);
+        Assert.Equal("Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong().with_repeats(2))", convenient);
     }
 }

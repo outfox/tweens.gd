@@ -126,7 +126,7 @@ Tweens.play(sprite, pulse.with_repeats(2))
 Chain `with_*()` copies on the helper inside the `Tweens.play()` call.
 
 ```gdscript title="Convenient"
-Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())
+Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong().with_repeats(2))
 ```
 
 </Compare>

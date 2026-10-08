@@ -45,4 +45,4 @@ func structured_options(sprite: Sprite2D) -> void:
 	Tweens.play(sprite, pulse.with_repeats(2))
 
 func convenient_options(sprite: Sprite2D) -> void:
-	Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong())
+	Tweens.play(sprite, Tweens.scale_2d([1.2, 1.2], 0.2).with_ping_pong().with_repeats(2))

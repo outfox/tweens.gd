@@ -129,7 +129,11 @@ sprite.Tween(pulse with { Repeats = 2 });
 Set any other option in a configure callback, which receives the definition before it starts.
 
 ```csharp title="Convenient"
-sprite.TweenScale(1.2, 0.2, options => options.PingPong = true);
+sprite.TweenScale(1.2, 0.2, options =>
+{
+    options.PingPong = true;
+    options.Repeats = 2;
+});
 ```
 
 </Compare>

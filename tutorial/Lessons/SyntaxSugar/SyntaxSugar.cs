@@ -75,6 +75,10 @@ public partial class SyntaxSugar : Node2D
 
     public void ConvenientOptions(Sprite2D sprite)
     {
-        sprite.TweenScale(1.2, 0.2, options => options.PingPong = true);
+        sprite.TweenScale(1.2, 0.2, options =>
+        {
+            options.PingPong = true;
+            options.Repeats = 2;
+        });
     }
 }

@@ -125,8 +125,17 @@ public sealed class LessonTests(TutorialFixture godot) : IDisposable
         lesson.Call(Languages.Member(method), sprite);
         godot.Seconds(0.2);
         if (!moves)
+        {
             Assert.True(sprite.Scale.X > 1.15f, $"{method} pulses the sprite, got {sprite.Scale}.");
-        godot.Seconds(1.0);
+            for (var repeat = 1; repeat <= 2; repeat++)
+            {
+                godot.Seconds(0.4);
+                Assert.True(sprite.Scale.X > 1.15f, $"{method} repeat {repeat} pulses the sprite, got {sprite.Scale}.");
+            }
+            godot.Seconds(0.2);
+        }
+        else
+            godot.Seconds(1.0);
         Near(moves ? new Vector2(400, 180) : new Vector2(112, 180), sprite.Position);
         Near(Vector2.One, sprite.Scale, 1e-4f);
     }
