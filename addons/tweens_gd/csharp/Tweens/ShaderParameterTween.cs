@@ -20,6 +20,7 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
     private StringName? name;
     private ShaderWatch? watch;
     private bool? hadOverride;
+    protected override bool UsesColorInterpolation => typeof(TValue) == typeof(Color);
 
     protected override void Prepare(ShaderMaterial target)
     {

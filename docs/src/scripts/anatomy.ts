@@ -213,6 +213,22 @@ const FIELDS: Field[] = [
 
 	// Callbacks
 	{
+		name: 'ColorSpace', group: 'endpoints', page: 'definitions', defaults: ['ColorSpace.Oklab', 'Tweens.ColorSpace.OKLAB'],
+		text: 'Working coordinates for whole-color interpolation.',
+		draw: () => text(35, 26, 'Color') + arrow(62, 105, 36) + text(130, 39, 'OKLab', 'ta') + arrow(164, 208, 36),
+	},
+	{
+		name: 'AlphaMode', group: 'endpoints', page: 'definitions', defaults: ['AlphaMode.Premultiplied', 'Tweens.AlphaMode.PREMULTIPLIED'],
+		text: 'Premultiply working coordinates by alpha before interpolation.',
+		draw: () => text(55, 30, 'color × alpha') + arrow(100, 145, 36) + text(186, 39, 'interpolate', 'ta'),
+	},
+	{
+		name: 'ColorEncoding', group: 'endpoints', page: 'definitions', defaults: ['ColorEncoding.Srgb', 'Tweens.ColorEncoding.SRGB'],
+		text: 'RGB encoding accepted and returned at the Godot API boundary.',
+		draw: () => text(42, 39, 'sRGB') + arrow(70, 112, 36) + text(150, 39, 'working', 'ta') + arrow(184, 222, 36),
+	},
+
+	{
 		name: 'OnAdd', group: 'callbacks', page: 'callbacks',
 		text: 'Runs at activation, after the start value is captured.',
 		draw: (n) => callbacks(event(20, 44, n('OnAdd'), 'start')) + text(40, 62, 'delay'),

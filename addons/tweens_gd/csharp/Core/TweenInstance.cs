@@ -290,7 +290,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
         try
         {
             // Each binding hook is consumed once, even if it pauses its coordinator.
-            while (bindingPhase < 5)
+            while (bindingPhase < 6)
             {
                 switch (bindingPhase++)
                 {
@@ -316,6 +316,9 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                                 definition.DeltaFrom is null && definition.FollowsTarget;
                             pingPong = definition.PingPong;
                         }
+                        break;
+                    case 5:
+                        definition!.PrepareEndpoints(from, to);
                         break;
                 }
                 if (!CheckTarget() || PlaybackInterrupted) return;
@@ -403,7 +406,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     // factor * value + delta. The factor scales away from zero; for a quaternion that scales its rotation angle.
     private TValue Adjust(TValue value, double factor, TValue? delta)
     {
-        if (factor != 1) value = definition!.InterpolateValue(Offsets<TValue>.Zero, value, (float)factor);
+        if (factor != 1) value = definition!.InterpolateOffset(Offsets<TValue>.Zero, value, (float)factor);
         return delta is { } offset ? Offsets<TValue>.Add(value, offset) : value;
     }
 
@@ -412,10 +415,10 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     {
         Follow();
         if (!CheckTarget() || PlaybackInterrupted) return Value;
-        var offset = definition!.InterpolateValue(Offsets<TValue>.Zero, by, weight);
+        var offset = definition!.InterpolateOffset(Offsets<TValue>.Zero, by, weight);
         if (!CheckTarget() || PlaybackInterrupted) return Value;
         if (!pingPong && Clock.Cycle > 0)
-            offset = Offsets<TValue>.Add(definition.InterpolateValue(Offsets<TValue>.Zero, by, (float)Clock.Cycle), offset);
+            offset = Offsets<TValue>.Add(definition.InterpolateOffset(Offsets<TValue>.Zero, by, (float)Clock.Cycle), offset);
         applied = offset;
         return Offsets<TValue>.Add(origin, offset);
     }

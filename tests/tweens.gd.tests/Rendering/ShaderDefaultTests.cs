@@ -54,7 +54,7 @@ public class ShaderDefaultTests(Fixture godot)
             case "Vector4": Check(material, godot.Tree, "quad", Vector4.One * 0.25f, Vector4.One * 0.75f, Vector4.One * 0.5f); break;
             case "Color":
                 Check(material, godot.Tree, "tint", new Color(0.25f, 0.25f, 0.25f, 0.25f), new Color(0.75f, 0.75f, 0.75f, 0.75f),
-                    new Color(0.5f, 0.5f, 0.5f, 0.5f));
+                    new Color(0.616543f, 0.616543f, 0.616543f, 0.5f));
                 break;
         }
 
@@ -67,7 +67,9 @@ public class ShaderDefaultTests(Fixture godot)
             Assert.Equal(initial, tween.Value);
             scheduler.Update(0.5);
             Assert.Null(tween.Error);
-            Assert.Equal(middle, material.GetShaderParameter(name).As<T>());
+            var sampled = material.GetShaderParameter(name).As<T>();
+            if (middle is Color color) Assert.True(color.IsEqualApprox((Color)(object)sampled));
+            else Assert.Equal(middle, sampled);
             scheduler.Update(0.5);
             Assert.Equal(TweenState.Completed, tween.State);
             Assert.Equal(Variant.Type.Nil, material.GetShaderParameter(name).VariantType);
@@ -194,7 +196,7 @@ public class ShaderDefaultTests(Fixture godot)
             Check("pair", Vector2.One * 0.75f, Vector2.One * 0.5f);
             Check("triple", Vector3.One * 0.75f, Vector3.One * 0.5f);
             Check("quad", Vector4.One * 0.75f, Vector4.One * 0.5f);
-            Check("tint", new Color(0.75f, 0.75f, 0.75f, 0.75f), new Color(0.5f, 0.5f, 0.5f, 0.5f));
+            Check("tint", new Color(0.75f, 0.75f, 0.75f, 0.75f), new Color(0.616543f, 0.616543f, 0.616543f, 0.5f));
         }
         finally { node.Free(); }
 
@@ -206,7 +208,9 @@ public class ShaderDefaultTests(Fixture godot)
             var scheduler = TweenRuntime.GetRunner(node).Scheduler;
             scheduler.Update(0.5);
             Assert.Null(tween.Error);
-            Assert.Equal(middle, Get(node, name).As<T>());
+            var sampled = Get(node, name).As<T>();
+            if (middle is Color color) Assert.True(color.IsEqualApprox((Color)(object)sampled));
+            else Assert.Equal(middle, sampled);
             scheduler.Update(0.5);
             Assert.Equal(TweenState.Completed, tween.State);
             Assert.False(HasOverride(node, name));

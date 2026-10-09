@@ -217,9 +217,9 @@ String TweensGdScheduler::prepare_handle(TweensGdHandle &handle) {
 					const Variant zero = TweensGdInterpolation::zero(initial.get_type());
 					if (settings.adapter.is_valid()) {
 						settings.adapter->set(names().captured_type, int64_t(initial.get_type()));
-						handle.binding_adjusted = settings.adapter->call(names().interpolate, zero, handle.binding_adjusted, factors[i]);
+						handle.binding_adjusted = settings.adapter->call("interpolate_offset", zero, handle.binding_adjusted, factors[i]);
 					} else {
-						handle.binding_adjusted = TweensGdInterpolation::interpolate(zero, handle.binding_adjusted, factors[i], initial.get_type());
+						handle.binding_adjusted = TweensGdInterpolation::interpolate_offset(zero, handle.binding_adjusted, factors[i], initial.get_type());
 					}
 					if (!TweensGdInterpolation::compatible(initial, handle.binding_adjusted)) {
 						return "A factor changed the value type.";

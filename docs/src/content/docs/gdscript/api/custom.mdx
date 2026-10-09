@@ -67,6 +67,7 @@ Override `read` and `write`; the rest are optional. Hooks that return a `String`
 | `read(target)` | `Variant` | Read the current value |
 | `write(target, value)` | `String` | Write a value |
 | `interpolate(from, to, weight)` | `Variant` | Blend two values; `weight` leaves 0 to 1 when an ease overshoots. Handles every built-in value type unless overridden |
+| `interpolate_offset(from, to, weight)` | `Variant` | Blend relative offsets and factors. Color defaults use RGBA components. Override this too when a custom color interpolator needs its own relative math |
 | `validate_value(value)` | `String` | Reject unsupported or non-finite values. Handles every built-in value type unless overridden |
 | `prepare(target)` | `String` | Set up this playback's state |
 | `restore(target, initial)` | `String` | Undo the tween at a non-retaining end; calls `write()` unless overridden |

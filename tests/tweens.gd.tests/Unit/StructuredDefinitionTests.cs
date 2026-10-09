@@ -23,12 +23,14 @@ public class StructuredDefinitionTests
         ["Fill"] = FillMode.None, ["Ease"] = EaseType.QuadIn, ["Skew"] = 0.75, ["Weks"] = 0.5, ["EaseFunction"] = Ease, ["Curve"] = null,
         ["ProcessMode"] = TweenProcessMode.Physics, ["PauseMode"] = TweenPauseMode.Always,
         ["SuppressCallbacksWhenTargetInvalid"] = true,
+        ["ColorSpace"] = ColorSpace.Srgb, ["AlphaMode"] = AlphaMode.Straight, ["ColorEncoding"] = ColorEncoding.LinearRgb,
     };
 
     private static readonly string[] Callbacks = ["OnAdd", "OnStart", "OnUpdate", "OnEnd", "OnCancel", "OnFinally"];
 
     private static IEnumerable<Type> DefinitionTypes() => typeof(TweenScheduler).Assembly.GetExportedTypes()
-        .Where(type => type.DeclaringType == typeof(Tweens) && type.IsValueType)
+        .Where(type => type.DeclaringType == typeof(Tweens) && type.IsValueType
+            && type.GetInterfaces().Any(contract => contract.IsGenericType && contract.GetGenericTypeDefinition() == typeof(ITweenDefinition<,>)))
         .OrderBy(type => type.Name);
 
     public static TheoryData<Type> Definitions() => new(DefinitionTypes());

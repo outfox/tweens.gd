@@ -11,8 +11,8 @@ if ($LASTEXITCODE -ne 0) {
     throw 'C# definition generation failed.'
 }
 # Never ship Godot's generators: the consuming Godot SDK must generate its own glue.
-$source = Join-Path $emission 'tweens.gd.Generators/tweens.gd.Generators.StructuredDefinitionGenerator'
-$files = @(Get-ChildItem -LiteralPath $source -Filter '*.g.cs' -File | Sort-Object Name)
+$source = Join-Path $emission 'tweens.gd.Generators'
+$files = @(Get-ChildItem -LiteralPath $source -Filter '*.g.cs' -File -Recurse | Sort-Object Name)
 if (!$files.Count) {
     throw 'No structured definitions were emitted.'
 }

@@ -52,6 +52,12 @@ public static partial class Tweens
         public global::System.Func<float, float>? @EaseFunction { get => Options.@EaseFunction; init => Options = Options with { @EaseFunction = value }; }
         /// <inheritdoc cref="TweenOptions.Curve"/>
         public global::Godot.Curve? @Curve { get => Options.@Curve; init => Options = Options with { @Curve = value }; }
+        /// <inheritdoc cref="TweenOptions.ColorSpace"/>
+        public global::tweens.gd.ColorSpace @ColorSpace { get => Options.@ColorSpace; init => Options = Options with { @ColorSpace = value }; }
+        /// <inheritdoc cref="TweenOptions.AlphaMode"/>
+        public global::tweens.gd.AlphaMode @AlphaMode { get => Options.@AlphaMode; init => Options = Options with { @AlphaMode = value }; }
+        /// <inheritdoc cref="TweenOptions.ColorEncoding"/>
+        public global::tweens.gd.ColorEncoding @ColorEncoding { get => Options.@ColorEncoding; init => Options = Options with { @ColorEncoding = value }; }
         /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
         public bool @SuppressCallbacksWhenTargetInvalid { get => Options.@SuppressCallbacksWhenTargetInvalid; init => Options = Options with { @SuppressCallbacksWhenTargetInvalid = value }; }
 

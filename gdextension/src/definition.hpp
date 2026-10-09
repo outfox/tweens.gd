@@ -3,6 +3,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "keyframe_curve.hpp"
 
 #include <godot_cpp/classes/curve.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
@@ -42,12 +43,16 @@ struct TweenSettings {
 	double repeat_interval = 0.0;
 	int64_t fill = tweens::FILL_RETAIN_FINAL_VALUE;
 	int64_t ease = 0;
+	int64_t color_space = 0;
+	int64_t alpha_mode = 0;
+	int64_t color_encoding = 0;
 	int64_t blend_type = 0;
 	double blend = tweens::DEFAULT_BLEND;
 	double skew = 0.5;
 	double weks = 0.5;
 	Callable ease_function;
 	Ref<Curve> curve;
+	Ref<TweensGdKeyframeCurve> keyframe_curve;
 	bool suppress_callbacks_when_target_invalid = false;
 	Callable on_add;
 	Callable on_start;
@@ -136,6 +141,12 @@ public:
 	int64_t get_fill() const { return settings.fill; }
 	void set_ease(int64_t p_value) { settings.ease = p_value; }
 	int64_t get_ease() const { return settings.ease; }
+	void set_color_space(int64_t p_value) { settings.color_space = p_value; }
+	int64_t get_color_space() const { return settings.color_space; }
+	void set_alpha_mode(int64_t p_value) { settings.alpha_mode = p_value; }
+	int64_t get_alpha_mode() const { return settings.alpha_mode; }
+	void set_color_encoding(int64_t p_value) { settings.color_encoding = p_value; }
+	int64_t get_color_encoding() const { return settings.color_encoding; }
 	void set_blend_type(int64_t p_value) { settings.blend_type = p_value; }
 	int64_t get_blend_type() const { return settings.blend_type; }
 	void set_blend(double p_value) { settings.blend = p_value; }
@@ -148,6 +159,8 @@ public:
 	Callable get_ease_function() const { return settings.ease_function; }
 	void set_curve(const Ref<Curve> &p_value) { settings.curve = p_value; }
 	Ref<Curve> get_curve() const { return settings.curve; }
+	void set_keyframe_curve(const Ref<TweensGdKeyframeCurve> &p_value) { settings.keyframe_curve = p_value; }
+	Ref<TweensGdKeyframeCurve> get_keyframe_curve() const { return settings.keyframe_curve; }
 	void set_suppress_callbacks_when_target_invalid(bool p_value) { settings.suppress_callbacks_when_target_invalid = p_value; }
 	bool get_suppress_callbacks_when_target_invalid() const { return settings.suppress_callbacks_when_target_invalid; }
 	void set_on_add(const Callable &p_value) { settings.on_add = p_value; }
@@ -187,6 +200,9 @@ public:
 	Ref<TweensGdDefinition> with_repeat_interval(double p_seconds) const;
 	Ref<TweensGdDefinition> with_fill(int64_t p_mode) const;
 	Ref<TweensGdDefinition> with_ease(int64_t p_easing) const;
+	Ref<TweensGdDefinition> with_color_space(int64_t p_space) const;
+	Ref<TweensGdDefinition> with_alpha_mode(int64_t p_mode) const;
+	Ref<TweensGdDefinition> with_color_encoding(int64_t p_encoding) const;
 	Ref<TweensGdDefinition> with_blend_type(int64_t p_mode) const;
 	Ref<TweensGdDefinition> with_blend(double p_blend) const;
 	Ref<TweensGdDefinition> with_skew(double p_split) const;

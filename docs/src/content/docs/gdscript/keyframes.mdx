@@ -1,0 +1,65 @@
+---
+title: "Keyframes"
+description: "Reuse parallel value curves with sparse percentage keys."
+---
+
+Define several value curves once and play them together on different nodes. Each play captures its own missing starting values and returns a `TweensGdGroup` for pausing, cancellation, and completion.
+
+Examples assume `const Tweens = preload("res://addons/tweens_gd/tweens.gd")` and a `Node2D sprite` inside the scene tree.
+
+## Evenly spaced channels
+
+```gdscript
+var flight := Tweens.keyframes({
+    "position": [Vector2(0, 0), Vector2(120, -60), Vector2(240, 0)],
+    "scale": [1, 1.5, 1],
+    "modulate": [Color.CORAL, Color.GOLD, Color.CORAL],
+}, 1.2)
+
+var playing := Tweens.animate(sprite, flight)
+await playing.wait()
+```
+
+Each supplied channel needs at least two values. Its keys are evenly spaced over the full duration; channels may have different lengths. Arrays and supported packed numeric, vector, and color arrays are accepted. Scalars in a scale channel expand to uniform vectors.
+
+## Sparse percentage keys
+
+```gdscript
+var flight := Tweens.keyframes({
+    0: {"scale": 1},
+    35: {"x": 120, "scale": 1.5},
+    100: {"x": 240, "scale": 1, "interpolation": Out.QUAD},
+}, 1.2)
+
+Tweens.animate(sprite, flight)
+```
+
+Stops are numeric percentages from 0 through 100, including fractional values. Unset channels contribute no key at that stop. Each channel captures a missing zero-percent value when playback activates, before its delay. A missing final key holds the channel's last value to 100 percent. Definitions copy their input data and can be played concurrently. Configure `flight.options` before starting; each play snapshots those settings.
+
+Explicit paths can be dictionary keys, such as `50: {"position:x": 120}`. Paths stay on the target and its value components. A whole value and one of its components cannot appear in the same definition. Rotation, rotation-degrees, and quaternion channels are mutually exclusive. The aliases `x`, `y`, `z`, and `alpha` address `position:x`, `position:y`, `position:z`, and `modulate:a`.
+
+## Segment interpolation
+
+`Tweens.Interpolation.SMOOTH` is the default: a limited modified-Akima cubic that stays between adjacent key values in each working component. `LINEAR` connects keys directly; `STEP` holds until the next key. An easing such as `Out.QUAD` creates an eased linear segment. An arriving-key override applies only to channels present at that key. Zero-percent keys cannot specify an arriving interpolation.
+
+The definition's `options.ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear.
+
+## Color policy
+
+All built-in whole-color tweens, including keyframes and shader colors, default to OKLab with premultiplied alpha. Supply ordinary Godot `Color` values: the default boundary encoding is sRGB and the result has straight alpha. Conversion and premultiplication happen internally. Exact endpoints and exact color keys preserve the supplied color, including RGB hidden under zero alpha.
+
+```gdscript
+var fade := Tweens.modulate(Color(0, 0, 0, 0), 1.0)
+fade.color_space = Tweens.ColorSpace.OKLAB
+fade.alpha_mode = Tweens.AlphaMode.PREMULTIPLIED
+
+Tweens.play(sprite, fade)
+```
+
+Choose `Tweens.ColorSpace.SRGB` or `LINEAR_RGB` for another interpolation space, and `Tweens.AlphaMode.STRAIGHT` for independent RGB and alpha interpolation. Set `Tweens.ColorEncoding.LINEAR_RGB` only when the API receiving your values expects linear RGB. Keyframes take these policies through `flight.options`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
+
+## Playback and preparation
+
+`flight.play_on(scheduler, sprite)` supports a manually driven scheduler. Timing, delay, repeats, ping-pong, fill, easing, ownership, and cancellation use the ordinary tween runtime. All channel bindings are checked before enrolling the batch. A failed or cancelled member cancels its siblings through the returned group. `flight.validate()` reports definition errors; manual starts return a failed group on invalid bindings, and automatic starts also report an engine error.
+
+Definitions own arrays and prepared native curves; creating a definition allocates. The first binding prepares curves for the target value types and color policy. Explicit curves are reused; missing starts prepare independent curves per play. Native curve sampling uses value storage. Starting a batch still creates ordinary playback handles and a group. Mixing, additive composition, and momentum handoff are outside this API.

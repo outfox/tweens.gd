@@ -40,7 +40,8 @@ public class InterpolatorsTests
         Assert.Equal(new Vector2(1, 2), Interpolators.Vector2(Vector2.Zero, new Vector2(2, 4), 0.5f));
         Assert.Equal(new Vector3(1, 2, 3), Interpolators.Vector3(Vector3.Zero, new Vector3(2, 4, 6), 0.5f));
         Assert.Equal(new Vector4(1, 2, 3, 4), Interpolators.Vector4(Vector4.Zero, new Vector4(2, 4, 6, 8), 0.5f));
-        Assert.Equal(new Color(0.5f, 0.25f, 0, 1), Interpolators.Color(new Color(0, 0, 0, 1), new Color(1, 0.5f, 0, 1), 0.5f));
+        Assert.Equal(new Color(0.5f, 0.25f, 0, 1), Interpolators.Color(new Color(0, 0, 0, 1), new Color(1, 0.5f, 0, 1), 0.5f,
+            ColorSpace.Srgb, AlphaMode.Straight));
         Assert.Equal(new Rect2(1, 2, 3, 4), Interpolators.Rect2(new Rect2(0, 0, 2, 4), new Rect2(2, 4, 4, 4), 0.5f));
     }
 

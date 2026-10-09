@@ -89,7 +89,7 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         relative.Duration = 1;
         scheduler.Add(target, relative);
         scheduler.Update(0.5);
-        var half = relative.InterpolateValue(Offsets<TValue>.Zero, relative.By.Value, 0.5f);
+        var half = relative.InterpolateOffset(Offsets<TValue>.Zero, relative.By.Value, 0.5f);
         Values.AssertClose(Offsets<TValue>.Add(to, half), Read(), "halfway through a relative tween");
         scheduler.Update(0.5);
         Values.AssertClose(Offsets<TValue>.Add(to, relative.By.Value), Read(), "after a relative tween");
@@ -136,7 +136,7 @@ public class AdapterCatalogTests(HeadlessFixture godot)
         scheduler.Add(node, definition);
         scheduler.Update(0.5);
         scheduler.Update(0.5);
-        Values.AssertClose(Offsets<TValue>.Add(start, definition.InterpolateValue(Offsets<TValue>.Zero, definition.By.Value, 0.5f)),
+        Values.AssertClose(Offsets<TValue>.Add(start, definition.InterpolateOffset(Offsets<TValue>.Zero, definition.By.Value, 0.5f)),
             reported[1], adapter.Name);
         Values.AssertClose(Offsets<TValue>.Add(start, definition.By.Value), reported[2], adapter.Name);
     }

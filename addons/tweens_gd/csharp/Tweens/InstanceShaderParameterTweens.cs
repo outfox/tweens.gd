@@ -19,6 +19,7 @@ public abstract class InstanceShaderParameterTween<TNode, TValue>(string paramet
     private StringName? name;
     private InstanceShaderWatch? watch;
     private bool hadOverride;
+    protected override bool UsesColorInterpolation => typeof(TValue) == typeof(Color);
     protected abstract Variant GetParameter(TNode target, StringName name);
     protected abstract Variant GetDefault(TNode target, StringName name);
     protected abstract void SetParameter(TNode target, StringName name, Variant value);

@@ -95,6 +95,9 @@ void TweensGdHandle::bind_values(const Variant &p_initial) {
 	h.adapter = options.adapter;
 	if (h.adapter.is_valid()) {
 		h.adapter->set(names().captured_type, int64_t(p_initial.get_type()));
+		h.adapter->set("color_space", options.color_space);
+		h.adapter->set("alpha_mode", options.alpha_mode);
+		h.adapter->set("color_encoding", options.color_encoding);
 	}
 	h.initial = p_initial;
 	h.value = p_initial;
@@ -115,7 +118,14 @@ void TweensGdHandle::bind_values(const Variant &p_initial) {
 	h.has_start = !options.on_start.is_null();
 	h.has_ease_function = !options.ease_function.is_null();
 	h.has_curve = options.curve.is_valid();
-	h.typed = h.adapter.is_null() && !h.relative && h.lerp.prepare(h.from, h.to, p_initial.get_type());
+	if (options.keyframe_curve.is_valid()) {
+		h.options->keyframe_curve = options.keyframe_curve->capture_start(p_initial);
+		if (!h.options->keyframe_curve->get_error().is_empty()) { fail(h.options->keyframe_curve->get_error()); return; }
+		h.from = h.options->keyframe_curve->sample(0);
+		h.to = h.options->keyframe_curve->sample(1);
+		if (!TweensGdInterpolation::compatible(p_initial, h.from)) { fail("Keyframe values must match the captured property type."); return; }
+	}
+	h.typed = options.keyframe_curve.is_null() && h.adapter.is_null() && !h.relative && h.lerp.prepare(h.from, h.to, p_initial.get_type(), options.color_space, options.alpha_mode, options.color_encoding);
 }
 void TweensGdHandle::bind_lifetime() {
 	if (check_target() && is_alive(owner_id)) {
@@ -303,6 +313,8 @@ void TweensGdHandle::advance_inner(double p_local_time) {
 			}
 			applied = TweensGdInterpolation::add(cycles, offset_value);
 			sample = TweensGdInterpolation::add(origin, applied);
+		} else if (options->keyframe_curve.is_valid()) {
+			sample = options->keyframe_curve->sample(weight);
 		} else if (typed) {
 			if (!lerp.sample(weight, sample)) {
 				fail("Interpolation produced a non-finite value.");
@@ -359,8 +371,9 @@ void TweensGdHandle::advance_inner(double p_local_time) {
 Variant TweensGdHandle::interpolate_values(const Variant &p_from, const Variant &p_to, double p_weight) {
 	if (adapter.is_valid()) {
 		const Ref<RefCounted> hooks = adapter;
-		return hooks->call(names().interpolate, p_from, p_to, p_weight);
+		return hooks->call(relative ? StringName("interpolate_offset") : names().interpolate, p_from, p_to, p_weight);
 	}
+	if (relative) return TweensGdInterpolation::interpolate_offset(p_from, p_to, p_weight, initial.get_type());
 	return TweensGdInterpolation::interpolate(p_from, p_to, p_weight, initial.get_type());
 }
 

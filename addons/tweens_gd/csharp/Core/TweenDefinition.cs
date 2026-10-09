@@ -75,6 +75,11 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
 
     /// <summary>Prepare per-playback bindings on the private snapshot, before its initial read.</summary>
     protected virtual void Prepare(TTarget target) { }
+    /// <summary>Prepares sampling after endpoint capture and adjustments, before OnAdd and delay fill.</summary>
+    protected virtual void PrepareValues(TValue from, TValue to) { }
+    /// <summary>Use the shared color-space policy for absolute Color values. Custom interpolators opt in explicitly.</summary>
+    protected virtual bool UsesColorInterpolation => false;
+    private Godot.Vector4 colorFrom, colorTo;
     /// <summary>Restore captured state at non-retaining completion. May remove an override instead of writing a value.</summary>
     protected virtual void Restore(TTarget target, TValue initial) => Write(target, initial);
     /// <summary>Release only resources owned by this playback snapshot, including after failed preparation.</summary>
@@ -84,6 +89,13 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     protected virtual bool ReadsWrittenValue => true;
 
     internal void PrepareTarget(TTarget target) => Prepare(target);
+    internal void PrepareEndpoints(TValue from, TValue to)
+    {
+        PrepareValues(from, to);
+        if (!UsesColorInterpolation) return;
+        colorFrom = ColorInterpolation.Encode((Godot.Color)(object)from, ColorSpace, AlphaMode, ColorEncoding);
+        colorTo = ColorInterpolation.Encode((Godot.Color)(object)to, ColorSpace, AlphaMode, ColorEncoding);
+    }
     internal bool FollowsTarget => ReadsWrittenValue;
     internal void RestoreValue(TTarget target, TValue initial) => Restore(target, initial);
     internal void ReleaseSnapshot() => Release();
@@ -92,7 +104,16 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     internal TweenDefinition<TTarget, TValue> Snapshot() => (TweenDefinition<TTarget, TValue>)MemberwiseClone();
     internal TValue ReadValue(TTarget target) => Read(target);
     internal void WriteValue(TTarget target, TValue value) => Write(target, value);
-    internal TValue InterpolateValue(TValue from, TValue to, float weight) => Interpolate(from, to, weight);
+    internal TValue InterpolateValue(TValue from, TValue to, float weight)
+    {
+        if (!UsesColorInterpolation) return Interpolate(from, to, weight);
+        if (weight == 0) return from;
+        if (weight == 1) return to;
+        return (TValue)(object)ColorInterpolation.Decode(colorFrom.Lerp(colorTo, weight), ColorSpace, AlphaMode, ColorEncoding);
+    }
+    internal TValue InterpolateOffset(TValue from, TValue to, float weight) => UsesColorInterpolation
+        ? (TValue)(object)((Godot.Color)(object)from).Lerp((Godot.Color)(object)to, weight)
+        : Interpolate(from, to, weight);
 }
 
 /// <summary>Animate a custom property without reflection. Captured mutable objects remain shared.</summary>
@@ -103,7 +124,10 @@ public class PropertyTween<TTarget, TValue>(Func<TTarget, TValue> getter,
     private readonly Func<TTarget, TValue> getter = getter ?? throw new ArgumentNullException(nameof(getter));
     private readonly Action<TTarget, TValue> setter = setter ?? throw new ArgumentNullException(nameof(setter));
     private readonly Func<TValue, TValue, float, TValue> interpolate = interpolate ?? throw new ArgumentNullException(nameof(interpolate));
+    private readonly bool defaultColor = typeof(TValue) == typeof(Godot.Color) && interpolate.Equals(
+        (Func<Godot.Color, Godot.Color, float, Godot.Color>)Interpolators.Color);
     protected override TValue Read(TTarget target) => getter(target);
     protected override void Write(TTarget target, TValue value) => setter(target, value);
+    protected override bool UsesColorInterpolation => defaultColor;
     protected override TValue Interpolate(TValue from, TValue to, float weight) => interpolate(from, to, weight);
 }

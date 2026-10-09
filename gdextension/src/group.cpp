@@ -87,8 +87,8 @@ void TweensGdGroupWatcher::accept(uint32_t p_index) {
 }
 
 void TweensGdGroup::_bind_methods() {
-	ClassDB::bind_static_method("TweensGdGroup", D_METHOD("of", "tweens"), &TweensGdGroup::of);
 	ClassDB::bind_static_method("TweensGdGroup", D_METHOD("rejected", "message"), &TweensGdGroup::rejected);
+	ClassDB::bind_static_method("TweensGdGroup", D_METHOD("of", "tweens"), &TweensGdGroup::of);
 	ClassDB::bind_method(D_METHOD("get_members"), &TweensGdGroup::get_members);
 	ClassDB::bind_method(D_METHOD("is_settled"), &TweensGdGroup::is_settled);
 	ClassDB::bind_method(D_METHOD("is_terminal"), &TweensGdGroup::is_settled);

@@ -130,6 +130,12 @@ public readonly record struct TweenOptions
     public Func<float, float>? EaseFunction { get; init; }
     /// <summary>Custom progress-to-weight curve instead of Ease. Copied per playback; mutually exclusive with EaseFunction.</summary>
     public Godot.Curve? Curve { get; init; }
+    /// <summary>Color interpolation coordinates. Defaults to OKLab; does not affect scalar alpha or relative arithmetic.</summary>
+    public ColorSpace ColorSpace { get; init; }
+    /// <summary>Color opacity handling. Defaults to Premultiplied.</summary>
+    public AlphaMode AlphaMode { get; init; }
+    /// <summary>RGB encoding at the target API boundary. Defaults to ordinary Godot sRGB colors.</summary>
+    public ColorEncoding ColorEncoding { get; init; }
     /// <summary>Skip callbacks after the target or owner becomes invalid. Defaults to false.</summary>
     public bool SuppressCallbacksWhenTargetInvalid { get; init; }
 
@@ -154,6 +160,9 @@ public readonly record struct TweenOptions
         target.Weks = Weks;
         target.EaseFunction = EaseFunction;
         target.Curve = Curve;
+        target.ColorSpace = ColorSpace;
+        target.AlphaMode = AlphaMode;
+        target.ColorEncoding = ColorEncoding;
         target.SuppressCallbacksWhenTargetInvalid = SuppressCallbacksWhenTargetInvalid;
     }
 }
@@ -202,6 +211,12 @@ public class TweenOptionsBuilder
     public Func<float, float>? EaseFunction { get; set; }
     /// <inheritdoc cref="TweenOptions.Curve"/>
     public Godot.Curve? Curve { get; set; }
+    /// <inheritdoc cref="TweenOptions.ColorSpace"/>
+    public ColorSpace ColorSpace { get; set; }
+    /// <inheritdoc cref="TweenOptions.AlphaMode"/>
+    public AlphaMode AlphaMode { get; set; }
+    /// <inheritdoc cref="TweenOptions.ColorEncoding"/>
+    public ColorEncoding ColorEncoding { get; set; }
     /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
     public bool SuppressCallbacksWhenTargetInvalid { get; set; }
 
@@ -226,6 +241,9 @@ public class TweenOptionsBuilder
         Weks = Weks,
         EaseFunction = EaseFunction,
         Curve = Curve,
+        ColorSpace = ColorSpace,
+        AlphaMode = AlphaMode,
+        ColorEncoding = ColorEncoding,
         SuppressCallbacksWhenTargetInvalid = SuppressCallbacksWhenTargetInvalid,
     };
 }
@@ -252,6 +270,7 @@ internal sealed class Playback
 
     internal Playback(TweenOptions options)
     {
+        ColorInterpolation.Validate(options.ColorSpace, options.AlphaMode, options.ColorEncoding);
         Easing.ValidateBlend(options.BlendType, options.Blend);
         Nonnegative(options.Duration, nameof(options.Duration));
         if (!double.IsFinite(options.FactorDuration)) throw new ArgumentOutOfRangeException(nameof(options.FactorDuration));

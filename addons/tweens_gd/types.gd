@@ -8,6 +8,14 @@ extends RefCounted
 
 ## Repeat indefinitely until cancelled. Used by [code]definition.repeats[/code].
 const INFINITE := -1
+## Working color coordinates, independent of easing and curve interpolation.
+enum ColorSpace { OKLAB, SRGB, LINEAR_RGB }
+## Color opacity handling. Premultiplication is internal; Godot receives straight alpha.
+enum AlphaMode { PREMULTIPLIED, STRAIGHT }
+## RGB encoding expected by the target Godot API. Alpha remains linear.
+enum ColorEncoding { SRGB, LINEAR_RGB }
+## Segment value interpolation, independently of the tween's global easing.
+enum Interpolation { SMOOTH, LINEAR, STEP }
 ## Value behavior during delay and after natural completion. Cancellation does not restore the initial value.
 enum Fill {
 	## Leave the property untouched during delay; restore its initial value on natural completion.

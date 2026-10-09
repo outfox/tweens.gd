@@ -10,6 +10,12 @@ extends RefCounted
 ## C# equivalent: the protected operations of [code]TweenDefinition[/code].
 
 var _captured_type: int = TYPE_NIL
+## Working color coordinates: OKLab=0, sRGB=1, linear RGB=2. Copied from the definition at activation.
+var color_space := 0
+## Premultiplied=0, straight=1. Copied from the definition at activation.
+var alpha_mode := 0
+## Target API RGB encoding: sRGB=0, linear=1. Copied from the definition at activation.
+var color_encoding := 0
 
 ## Copies configuration for one playback. Captured Objects and Callables remain shared.
 ## Override to copy custom mutable data or omit transient playback state.
@@ -43,7 +49,19 @@ func restore(target: Object, initial: Variant) -> String:
 
 ## Interpolates endpoints using eased [param weight], which may overshoot [code][0, 1][/code].
 func interpolate(from: Variant, to: Variant, weight: float) -> Variant:
+	if typeof(from) == TYPE_COLOR:
+		var a: Color = from
+		var b: Color = to
+		return TweensGdInterpolation.interpolate_color(a, b, weight, color_space, alpha_mode, color_encoding)
 	return TweensGdInterpolation.interpolate(from, to, weight, _captured_type if _captured_type != TYPE_NIL else typeof(from))
+
+## Relative offsets and factors use Godot components rather than perceptual color coordinates.
+func interpolate_offset(from: Variant, to: Variant, weight: float) -> Variant:
+	if typeof(from) == TYPE_COLOR:
+		var a: Color = from
+		var b: Color = to
+		return a.lerp(b, weight)
+	return interpolate(from, to, weight)
 
 ## Validates endpoints and sampled values. Return an error string, empty on success.
 func validate_value(value: Variant) -> String:

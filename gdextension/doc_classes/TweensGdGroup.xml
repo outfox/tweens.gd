@@ -21,6 +21,7 @@
 		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
 	</tutorials>
 	<methods>
+		<method name="rejected" qualifiers="static"><return type="TweensGdGroup" /><param index="0" name="message" type="String" /><description>Creates an already-settled FAILED group with the supplied validation error and no members.</description></method>
 		<method name="cancel">
 			<return type="void" />
 			<description>

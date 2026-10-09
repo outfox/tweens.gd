@@ -49,6 +49,14 @@ void TweenSettings::set_property(const NodePath &p_property) {
 }
 
 String TweenSettings::validate() const {
+	if (keyframe_curve.is_valid()) {
+		if (!keyframe_curve->get_error().is_empty()) return keyframe_curve->get_error();
+		if (!is_null(from_value) || !is_null(to_value) || !is_null(by_value) || factor_from != 1 || factor_to != 1 || !is_null(delta_from) || !is_null(delta_to))
+			return "Keyframe curves do not accept relative endpoints, endpoint factors or deltas.";
+	}
+	if (color_space < 0 || color_space > 2 || alpha_mode < 0 || alpha_mode > 1 || color_encoding < 0 || color_encoding > 1) {
+		return "Unknown color space, alpha mode or color encoding.";
+	}
 	if (adapter.is_valid() && !property.is_empty()) {
 		return "Choose either an adapter or a property path.";
 	}
@@ -171,12 +179,16 @@ void TweensGdDefinition::_bind_methods() {
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "repeat_interval"), repeat_interval);
 	BIND_SETTING(PropertyInfo(Variant::INT, "fill"), fill);
 	BIND_SETTING(PropertyInfo(Variant::INT, "ease"), ease);
+	BIND_SETTING(PropertyInfo(Variant::INT, "color_space"), color_space);
+	BIND_SETTING(PropertyInfo(Variant::INT, "alpha_mode"), alpha_mode);
+	BIND_SETTING(PropertyInfo(Variant::INT, "color_encoding"), color_encoding);
 	BIND_SETTING(PropertyInfo(Variant::INT, "blend_type"), blend_type);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "blend"), blend);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "skew"), skew);
 	BIND_SETTING(PropertyInfo(Variant::FLOAT, "weks"), weks);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "ease_function"), ease_function);
 	BIND_SETTING(PropertyInfo(Variant::OBJECT, "curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), curve);
+	BIND_SETTING(PropertyInfo(Variant::OBJECT, "keyframe_curve", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT, "TweensGdKeyframeCurve"), keyframe_curve);
 	BIND_SETTING(PropertyInfo(Variant::BOOL, "suppress_callbacks_when_target_invalid"), suppress_callbacks_when_target_invalid);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "on_add"), on_add);
 	BIND_SETTING(PropertyInfo(Variant::CALLABLE, "on_start"), on_start);
@@ -210,6 +222,9 @@ void TweensGdDefinition::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("with_repeat_interval", "seconds"), &TweensGdDefinition::with_repeat_interval);
 	ClassDB::bind_method(D_METHOD("with_fill", "mode"), &TweensGdDefinition::with_fill);
 	ClassDB::bind_method(D_METHOD("with_ease", "easing"), &TweensGdDefinition::with_ease);
+	ClassDB::bind_method(D_METHOD("with_color_space", "space"), &TweensGdDefinition::with_color_space);
+	ClassDB::bind_method(D_METHOD("with_alpha_mode", "mode"), &TweensGdDefinition::with_alpha_mode);
+	ClassDB::bind_method(D_METHOD("with_color_encoding", "encoding"), &TweensGdDefinition::with_color_encoding);
 	ClassDB::bind_method(D_METHOD("with_blend_type", "mode"), &TweensGdDefinition::with_blend_type);
 	ClassDB::bind_method(D_METHOD("with_blend", "blend"), &TweensGdDefinition::with_blend);
 	ClassDB::bind_method(D_METHOD("with_skew", "split"), &TweensGdDefinition::with_skew);
@@ -284,6 +299,9 @@ DEFINE_WITH(with_ping_pong_interval, double, ping_pong_interval)
 DEFINE_WITH(with_repeat_interval, double, repeat_interval)
 DEFINE_WITH(with_fill, int64_t, fill)
 DEFINE_WITH(with_ease, int64_t, ease)
+DEFINE_WITH(with_color_space, int64_t, color_space)
+DEFINE_WITH(with_alpha_mode, int64_t, alpha_mode)
+DEFINE_WITH(with_color_encoding, int64_t, color_encoding)
 DEFINE_WITH(with_blend_type, int64_t, blend_type)
 DEFINE_WITH(with_blend, double, blend)
 DEFINE_WITH(with_skew, double, skew)

@@ -9,8 +9,16 @@ namespace testbed.Tests.Rendering;
 
 [Collection<RenderingCollection>]
 [Trait("Category", "Rendering")]
-public class GalleryRenderingTests(Fixture godot)
+public class GalleryRenderingTests
 {
+    private readonly Fixture godot;
+    public GalleryRenderingTests(Fixture godot)
+    {
+        this.godot = godot;
+        for (var frame = 0; frame < 3; frame++) godot.Engine.Iteration();
+        if (godot.Tree.CurrentScene is Gallery initial) initial.Free();
+    }
+
     [Theory]
     [InlineData(GalleryLanguage.CSharp)] [InlineData(GalleryLanguage.GDScript)]
     public void SourceLayoutUsesExtraSpaceAndCanShrinkBackWithoutClipping(GalleryLanguage language)
@@ -63,9 +71,11 @@ public class GalleryRenderingTests(Fixture godot)
     [InlineData(6, GalleryLanguage.GDScript)] [InlineData(7, GalleryLanguage.GDScript)]
     [InlineData(8, GalleryLanguage.CSharp)] [InlineData(8, GalleryLanguage.GDScript)]
     [InlineData(9, GalleryLanguage.CSharp)] [InlineData(9, GalleryLanguage.GDScript)]
+    [InlineData(10, GalleryLanguage.CSharp)] [InlineData(10, GalleryLanguage.GDScript)]
     public void EachPagePlaysAndReleasesItsNativeScene(int index, GalleryLanguage language)
     {
         var gallery = new Gallery(); godot.Tree.Root.AddChild(gallery);
+        gallery.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
         try
         {
             gallery.SelectLanguage(language);
@@ -74,10 +84,19 @@ public class GalleryRenderingTests(Fixture godot)
             var page = gallery.CurrentPage!;
             var animation = Assert.IsAssignableFrom<Task>(page.SequenceTask);
             var scheduler = TweenRuntime.GetRunner(gallery).Scheduler;
-            if (language == GalleryLanguage.CSharp) scheduler.Update(1.9);
-            else godot.Tree.GetMeta("_tweens_gd_runner").AsGodotObject().Get("scheduler").AsGodotObject().Call("update", 1.9);
+            var sampleTime = index == 10 ? 0.315 : 1.9;
+            if (language == GalleryLanguage.CSharp) scheduler.Update(sampleTime);
+            else godot.Tree.GetMeta("_tweens_gd_runner").AsGodotObject().Get("scheduler").AsGodotObject().Call("update", sampleTime);
             Assert.False(animation.IsCompleted);
             Assert.True(Descendants(page).OfType<SubViewport>().All(v => v.Size.X > 0 && v.Size.Y > 0));
+            if (index == 10)
+            {
+                for (var frame = 0; frame < 4; frame++) godot.Engine.Iteration();
+                var output = ProjectSettings.GlobalizePath($"res://../artifacts/keyframes-gallery-{language}.png");
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(output)!);
+                using var image = gallery.GetViewport().GetTexture().GetImage();
+                Assert.Equal(Error.Ok, image.SavePng(output));
+            }
             var sourceButtons = Descendants(page).OfType<Button>().Where(b => b.Text == (language == GalleryLanguage.CSharp ? "View C#" : "View GDScript")).ToArray();
             Assert.Equal(page.Effects.Count, sourceButtons.Length);
             for (var effect = 0; effect < sourceButtons.Length; effect++)
