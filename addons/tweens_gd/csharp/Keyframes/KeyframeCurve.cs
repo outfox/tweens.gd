@@ -25,7 +25,7 @@ public sealed class KeyframeCurve<T> where T : struct
     internal T FirstValue => keys[0].Value;
     internal T LastValue => keys[^1].Value;
 
-    /// <summary>Copies strictly increasing keys and prepares all explicit values and tangents.</summary>
+    /// <summary>Copies strictly increasing finite keys and prepares values and tangents. Quaternion squared lengths must be finite and nonzero.</summary>
     public KeyframeCurve(ReadOnlySpan<CurveKey<T>> keys, Interpolation interpolation = default,
         ColorSpace colorSpace = default, AlphaMode alphaMode = default, ColorEncoding colorEncoding = default)
     {
@@ -111,7 +111,7 @@ public sealed class KeyframeCurve<T> where T : struct
         {
             var end = stop < 0 ? 0 : keys.Length - 1;
             var derivative = mode.Kind == 0 ? tangents[end] : mode.Kind == 2 ? default
-                : (values[segment + 1] - values[segment]) / width;
+                : Slope(values[segment], values[segment + 1], width);
             if (mode.Kind == 3)
             {
                 const float h = 0.0001f;
@@ -124,16 +124,36 @@ public sealed class KeyframeCurve<T> where T : struct
         else if (mode.Kind != 0)
         {
             if (mode.Kind == 3) u = eases[segment + 1]!((float)u);
-            value = values[segment] + (values[segment + 1] - values[segment]) * u;
+            value = values[segment] * (1 - u) + values[segment + 1] * u;
         }
         else
         {
             var u2 = u * u; var u3 = u2 * u;
-            value = values[segment] * (2 * u3 - 3 * u2 + 1) + tangents[segment] * ((u3 - 2 * u2 + u) * width)
-                + values[segment + 1] * (-2 * u3 + 3 * u2) + tangents[segment + 1] * ((u3 - u2) * width);
+            value = default;
+            for (var c = 0; c < CurveValues<T>.Dimensions; c++)
+            {
+                var a = values[segment][c]; var b = values[segment + 1][c];
+                var m = tangents[segment][c]; var n = tangents[segment + 1][c];
+                // Scale only this segment's arithmetic; distant large keys must not underflow small values.
+                var scale = Math.Max(1, Math.Max(Math.Max(Math.Abs(a), Math.Abs(b)), Math.Max(Math.Abs(m), Math.Abs(n))));
+                var sampled = a / scale * (2 * u3 - 3 * u2 + 1) + m / scale * ((u3 - 2 * u2 + u) * width)
+                    + b / scale * (-2 * u3 + 3 * u2) + n / scale * ((u3 - u2) * width);
+                value = value.With(c, Math.Clamp(sampled, Math.Min(a / scale, b / scale), Math.Max(a / scale, b / scale)) * scale);
+            }
         }
         return CurveValues<T>.Decode(value, colorSpace, alphaMode, colorEncoding);
     }
+
+    private static double Slope(double from, double to, double width)
+    {
+        var difference = to - from;
+        return FiniteSlope(double.IsFinite(difference) ? difference / width : to / width - from / width);
+    }
+
+    private static double FiniteSlope(double value) => Math.Clamp(value, -double.MaxValue, double.MaxValue);
+
+    private static CurveVector Slope(CurveVector from, CurveVector to, double width)
+        => new(Slope(from.X, to.X, width), Slope(from.Y, to.Y, width), Slope(from.Z, to.Z, width), Slope(from.W, to.W, width));
 
     private void PrepareTangents()
     {
@@ -142,27 +162,39 @@ public sealed class KeyframeCurve<T> where T : struct
         for (var component = 0; component < CurveValues<T>.Dimensions; component++)
         {
             for (var i = 0; i < keys.Length - 1; i++)
-                slopes[i + 2] = (values[i + 1][component] - values[i][component]) / (keys[i + 1].At - keys[i].At);
-            slopes[1] = keys.Length == 2 ? slopes[2] : 2 * slopes[2] - slopes[3];
-            slopes[0] = 2 * slopes[1] - slopes[2];
-            slopes[keys.Length + 1] = keys.Length == 2 ? slopes[2] : 2 * slopes[keys.Length] - slopes[keys.Length - 1];
-            slopes[keys.Length + 2] = 2 * slopes[keys.Length + 1] - slopes[keys.Length];
+                slopes[i + 2] = Slope(values[i][component], values[i + 1][component], keys[i + 1].At - keys[i].At);
+            slopes[1] = keys.Length == 2 ? slopes[2] : FiniteSlope(2 * slopes[2] - slopes[3]);
+            slopes[0] = FiniteSlope(2 * slopes[1] - slopes[2]);
+            slopes[keys.Length + 1] = keys.Length == 2 ? slopes[2] : FiniteSlope(2 * slopes[keys.Length] - slopes[keys.Length - 1]);
+            slopes[keys.Length + 2] = FiniteSlope(2 * slopes[keys.Length + 1] - slopes[keys.Length]);
             for (var i = 0; i < keys.Length; i++)
             {
-                var left = Math.Abs(slopes[i + 1] - slopes[i]) + 0.5 * Math.Abs(slopes[i + 1] + slopes[i]);
-                var right = Math.Abs(slopes[i + 3] - slopes[i + 2]) + 0.5 * Math.Abs(slopes[i + 3] + slopes[i + 2]);
-                var tangent = left + right == 0 ? 0 : (right * slopes[i + 1] + left * slopes[i + 2]) / (left + right);
-                if (i > 0 && i < keys.Length - 1 && slopes[i + 1] * slopes[i + 2] <= 0) tangent = 0;
+                var scale = Math.Max(1, Math.Max(Math.Max(Math.Abs(slopes[i]), Math.Abs(slopes[i + 1])),
+                    Math.Max(Math.Abs(slopes[i + 2]), Math.Abs(slopes[i + 3]))));
+                var left = Math.Abs(slopes[i + 1] / scale - slopes[i] / scale) + 0.5 * Math.Abs(slopes[i + 1] / scale + slopes[i] / scale);
+                var right = Math.Abs(slopes[i + 3] / scale - slopes[i + 2] / scale) + 0.5 * Math.Abs(slopes[i + 3] / scale + slopes[i + 2] / scale);
+                var weight = left + right == 0 ? 0 : left / (left + right);
+                var tangent = slopes[i + 1] * (1 - weight) + slopes[i + 2] * weight;
+                if (i > 0 && i < keys.Length - 1 && Math.Sign(slopes[i + 1]) != Math.Sign(slopes[i + 2])) tangent = 0;
                 tangents[i] = tangents[i].With(component, tangent);
             }
             for (var i = 0; i < keys.Length - 1; i++)
             {
                 var delta = slopes[i + 2];
-                var a = delta == 0 ? 0 : Math.Max(0, tangents[i][component] / delta);
-                var b = delta == 0 ? 0 : Math.Max(0, tangents[i + 1][component] / delta);
-                var scale = a * a + b * b > 9 ? 3 / Math.Sqrt(a * a + b * b) : 1;
-                tangents[i] = tangents[i].With(component, a * scale * delta);
-                tangents[i + 1] = tangents[i + 1].With(component, b * scale * delta);
+                var sign = Math.Sign(delta);
+                var a = Math.Max(0, sign * tangents[i][component]);
+                var b = Math.Max(0, sign * tangents[i + 1][component]);
+                var largest = Math.Max(double.Epsilon, Math.Max(a, b));
+                var x = a / largest; var y = b / largest;
+                var length = Math.Sqrt(x * x + y * y);
+                // Compare and limit magnitudes without squaring huge ratios or dividing by tiny slopes.
+                if (largest / 3 > Math.Abs(delta) / length)
+                {
+                    a = (3 * x / length) * Math.Abs(delta);
+                    b = (3 * y / length) * Math.Abs(delta);
+                }
+                tangents[i] = tangents[i].With(component, sign * a);
+                tangents[i + 1] = tangents[i + 1].With(component, sign * b);
             }
         }
     }
@@ -190,6 +222,7 @@ internal static class CurveValues<T> where T : struct
         if (typeof(T) == typeof(float)) result = new((float)(object)value);
         else if (typeof(T) == typeof(double)) result = new((double)(object)value);
         else if (typeof(T) == typeof(int)) result = new((int)(object)value);
+        else if (typeof(T) == typeof(long)) result = new((long)(object)value);
         else if (typeof(T) == typeof(Vector2)) { var v = (Vector2)(object)value; result = new(v.X, v.Y); }
         else if (typeof(T) == typeof(Vector3)) { var v = (Vector3)(object)value; result = new(v.X, v.Y, v.Z); }
         else if (typeof(T) == typeof(Vector4)) { var v = (Vector4)(object)value; result = new(v.X, v.Y, v.Z, v.W); }
@@ -198,7 +231,8 @@ internal static class CurveValues<T> where T : struct
         else if (typeof(T) == typeof(Quaternion))
         {
             var v = (Quaternion)(object)value;
-            if (v.LengthSquared() == 0) throw new ArgumentException("Quaternion keys must be nonzero.");
+            if (!(v.LengthSquared() is > 0 and < float.PositiveInfinity))
+                throw new ArgumentException("Quaternion keys must have finite, nonzero squared length.");
             result = new(v.X, v.Y, v.Z, v.W);
         }
         else throw new NotSupportedException($"Keyframes do not support {typeof(T).Name} values.");
@@ -210,6 +244,12 @@ internal static class CurveValues<T> where T : struct
         if (typeof(T) == typeof(float)) return (T)(object)(float)v.X;
         if (typeof(T) == typeof(double)) return (T)(object)v.X;
         if (typeof(T) == typeof(int)) return (T)(object)(int)Math.Clamp(Math.Round(v.X, MidpointRounding.AwayFromZero), int.MinValue, int.MaxValue);
+        if (typeof(T) == typeof(long))
+        {
+            var rounded = Math.Round(v.X, MidpointRounding.AwayFromZero);
+            return (T)(object)(rounded >= 9223372036854775808.0 ? long.MaxValue
+                : rounded <= -9223372036854775808.0 ? long.MinValue : (long)rounded);
+        }
         if (typeof(T) == typeof(Vector2)) return (T)(object)new Vector2((float)v.X, (float)v.Y);
         if (typeof(T) == typeof(Vector3)) return (T)(object)new Vector3((float)v.X, (float)v.Y, (float)v.Z);
         if (typeof(T) == typeof(Vector4)) return (T)(object)new Vector4((float)v.X, (float)v.Y, (float)v.Z, (float)v.W);

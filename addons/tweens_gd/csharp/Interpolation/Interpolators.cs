@@ -53,8 +53,8 @@ public static class Interpolators
     /// <summary>Spherical quaternion interpolation. Weight may overshoot [0, 1].</summary>
     public static Quaternion Quaternion(Quaternion from, Quaternion to, float weight)
     {
-        if (from.LengthSquared() == 0 || to.LengthSquared() == 0)
-            throw new ArgumentException("Quaternion endpoints must be nonzero.");
+        if (!(from.LengthSquared() is > 0 and < float.PositiveInfinity) || !(to.LengthSquared() is > 0 and < float.PositiveInfinity))
+            throw new ArgumentException("Quaternion endpoints must have finite, nonzero squared length.");
         return from.Normalized().Slerp(to.Normalized(), weight).Normalized();
     }
 }

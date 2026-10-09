@@ -20,8 +20,9 @@ public class KeyframeCurveTests
             var keys = stops.Select((v, i) => new CurveKey<double>(v, values[i], modes is null || modes[i] == -1 ? null : Mode(modes[i], eases![i]))).ToArray();
             var curve = new KeyframeCurve<double>(keys, Mode(item.GetProperty("mode").GetInt32()));
             if (item.TryGetProperty("initial", out var initial)) curve = curve.CaptureStart(initial.GetDouble());
+            var scale = item.TryGetProperty("sample_scale", out var s) ? s.GetDouble() : 1;
             foreach (var sample in item.GetProperty("samples").EnumerateArray())
-                Assert.InRange(Math.Abs(curve.Sample(sample[0].GetDouble()) - sample[1].GetDouble()), 0, 0.00001);
+                Assert.InRange(Math.Abs(curve.Sample(sample[0].GetDouble()) / scale - sample[1].GetDouble() / scale), 0, 0.00001);
         }
         foreach (var item in json.RootElement.GetProperty("colors").EnumerateArray())
         {
@@ -96,6 +97,30 @@ public class KeyframeCurveTests
     }
 
     [Fact]
+    public void Int64KeysPreserveExactStopsRoundAndSaturateSamples()
+    {
+        var curve = KeyframeCurve<long>.EvenlySpaced([0, 5_000_000_000], Interpolation.Linear);
+        Assert.Equal(2_500_000_000, curve.Sample(0.5));
+        Assert.Equal(1, KeyframeCurve<long>.EvenlySpaced([0, 1]).Sample(0.5));
+        Assert.Equal(-1, KeyframeCurve<long>.EvenlySpaced([0, -1]).Sample(0.5));
+        var limits = KeyframeCurve<long>.EvenlySpaced([long.MinValue, long.MaxValue], Interpolation.Linear);
+        Assert.Equal(long.MinValue, limits.Sample(0)); Assert.Equal(long.MaxValue, limits.Sample(1));
+        Assert.Equal(long.MinValue, limits.Sample(-0.1)); Assert.Equal(long.MaxValue, limits.Sample(1.1));
+    }
+
+    [Fact]
+    public void SmoothHugeValuesRemainFiniteAndBoundedOnShortSegments()
+    {
+        double[] stops = [0, 0.001, 1, 99, 100];
+        double[] values = [-double.MaxValue, double.MaxValue, -double.MaxValue, 0, double.MaxValue];
+        var curve = new KeyframeCurve<double>(stops.Select((v, i) => new CurveKey<double>(v, values[i])).ToArray());
+        for (var segment = 0; segment < stops.Length - 1; segment++)
+            for (var i = 1; i < 100; i++)
+                Assert.InRange(curve.Sample((stops[segment] + (stops[segment + 1] - stops[segment]) * i / 100) / 100),
+                    Math.Min(values[segment], values[segment + 1]), Math.Max(values[segment], values[segment + 1]));
+    }
+
+    [Fact]
     public void InvalidDataFailsBeforeSampling()
     {
         Assert.Throws<ArgumentException>(() => new KeyframeCurve<double>([]));
@@ -106,7 +131,10 @@ public class KeyframeCurveTests
         Assert.Throws<ArgumentException>(() => new KeyframeCurve<double>([new(0, 1), new(0, 2)]));
         Assert.Throws<ArgumentException>(() => new KeyframeCurve<double>([new(0, 1, Interpolation.Linear)]));
         Assert.Throws<ArgumentException>(() => KeyframeCurve<double>.EvenlySpaced([0, double.NaN]));
+        Assert.Throws<ArgumentException>(() => KeyframeCurve<Color>.EvenlySpaced([new(1e30f, 1e30f, 1e30f), Colors.Blue]));
         Assert.Throws<ArgumentException>(() => KeyframeCurve<Quaternion>.EvenlySpaced([default, Quaternion.Identity]));
+        Assert.Throws<ArgumentException>(() => KeyframeCurve<Quaternion>.EvenlySpaced([new(float.MaxValue, 0, 0, 1), Quaternion.Identity]));
+        Assert.Throws<ArgumentException>(() => KeyframeCurve<Quaternion>.EvenlySpaced([new(float.Epsilon, 0, 0, 0), Quaternion.Identity]));
         Assert.Throws<NotSupportedException>(() => KeyframeCurve<DateTime>.EvenlySpaced([default, default]));
         var curve = KeyframeCurve<double>.EvenlySpaced([0, 1], EaseType.QuadIn);
         Assert.Throws<ArgumentOutOfRangeException>(() => curve.Sample(double.NaN));

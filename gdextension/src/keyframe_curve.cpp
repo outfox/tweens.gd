@@ -7,8 +7,19 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 namespace godot {
+
+namespace {
+double finite_slope(double value) {
+	return std::clamp(value, -std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+}
+double slope(double from, double to, double width) {
+	const double difference = to - from;
+	return finite_slope(std::isfinite(difference) ? difference / width : to / width - from / width);
+}
+} // namespace
 
 void TweensGdKeyframeCurve::_bind_methods() {
 	ClassDB::bind_static_method("TweensGdKeyframeCurve", D_METHOD("create", "values", "stops", "interpolation", "modes", "eases", "color_space", "alpha_mode", "color_encoding"),
@@ -74,10 +85,15 @@ void TweensGdKeyframeCurve::prepare() {
 			case Variant::COLOR: { const Vector4 v = encode_color(key.value, color_space, alpha_mode, color_encoding); for (int c = 0; c < 4; c++) key.c[c] = v[c]; break; }
 			case Variant::QUATERNION: {
 				const Quaternion v = key.value;
-				if (v.length_squared() == 0) { error = "Quaternion keys must be nonzero."; return; }
+				if (v.length_squared() == 0 || !std::isfinite(v.length_squared())) {
+					error = "Quaternion keys must have finite, nonzero squared length."; return;
+				}
 				key.value = v.normalized(); break;
 			}
 			default: break;
+		}
+		for (int c = 0; c < dimensions; c++) {
+			if (!std::isfinite(key.c[c])) { error = "Prepared keyframe components must be finite."; return; }
 		}
 	}
 	tangents();
@@ -88,22 +104,30 @@ void TweensGdKeyframeCurve::tangents() {
 	if (n < 2 || type == Variant::QUATERNION) return;
 	std::vector<double> d(n + 3);
 	for (int c = 0; c < dimensions; c++) {
-		for (size_t i = 0; i < n - 1; i++) d[i + 2] = (keys[i + 1].c[c] - keys[i].c[c]) / (keys[i + 1].at - keys[i].at);
-		d[1] = n == 2 ? d[2] : 2 * d[2] - d[3]; d[0] = 2 * d[1] - d[2];
-		d[n + 1] = n == 2 ? d[2] : 2 * d[n] - d[n - 1]; d[n + 2] = 2 * d[n + 1] - d[n];
+		for (size_t i = 0; i < n - 1; i++) d[i + 2] = slope(keys[i].c[c], keys[i + 1].c[c], keys[i + 1].at - keys[i].at);
+		d[1] = n == 2 ? d[2] : finite_slope(2 * d[2] - d[3]); d[0] = finite_slope(2 * d[1] - d[2]);
+		d[n + 1] = n == 2 ? d[2] : finite_slope(2 * d[n] - d[n - 1]); d[n + 2] = finite_slope(2 * d[n + 1] - d[n]);
 		for (size_t i = 0; i < n; i++) {
-			const double left = std::abs(d[i + 1] - d[i]) + 0.5 * std::abs(d[i + 1] + d[i]);
-			const double right = std::abs(d[i + 3] - d[i + 2]) + 0.5 * std::abs(d[i + 3] + d[i + 2]);
-			double m = left + right == 0 ? 0 : (right * d[i + 1] + left * d[i + 2]) / (left + right);
-			if (i > 0 && i < n - 1 && d[i + 1] * d[i + 2] <= 0) m = 0;
+			const double scale = std::max(1.0, std::max(std::max(std::abs(d[i]), std::abs(d[i + 1])), std::max(std::abs(d[i + 2]), std::abs(d[i + 3]))));
+			const double left = std::abs(d[i + 1] / scale - d[i] / scale) + 0.5 * std::abs(d[i + 1] / scale + d[i] / scale);
+			const double right = std::abs(d[i + 3] / scale - d[i + 2] / scale) + 0.5 * std::abs(d[i + 3] / scale + d[i + 2] / scale);
+			const double weight = left + right == 0 ? 0 : left / (left + right);
+			double m = d[i + 1] * (1 - weight) + d[i + 2] * weight;
+			if (i > 0 && i < n - 1 && ((d[i + 1] > 0) - (d[i + 1] < 0)) != ((d[i + 2] > 0) - (d[i + 2] < 0))) m = 0;
 			keys[i].m[c] = m;
 		}
 		for (size_t i = 0; i < n - 1; i++) {
 			const double delta = d[i + 2];
-			const double a = delta == 0 ? 0 : std::max(0.0, keys[i].m[c] / delta);
-			const double b = delta == 0 ? 0 : std::max(0.0, keys[i + 1].m[c] / delta);
-			const double scale = a * a + b * b > 9 ? 3 / std::sqrt(a * a + b * b) : 1;
-			keys[i].m[c] = a * scale * delta; keys[i + 1].m[c] = b * scale * delta;
+			const int sign = (delta > 0) - (delta < 0);
+			double a = std::max(0.0, sign * keys[i].m[c]);
+			double b = std::max(0.0, sign * keys[i + 1].m[c]);
+			const double largest = std::max(std::numeric_limits<double>::denorm_min(), std::max(a, b));
+			const double x = a / largest, y = b / largest;
+			const double length = std::sqrt(x * x + y * y);
+			if (largest / 3 > std::abs(delta) / length) {
+				a = (3 * x / length) * std::abs(delta); b = (3 * y / length) * std::abs(delta);
+			}
+			keys[i].m[c] = sign * a; keys[i + 1].m[c] = sign * b;
 		}
 	}
 }
@@ -160,15 +184,18 @@ Variant TweensGdKeyframeCurve::sample(double p_progress) const {
 	for (int c = 0; c < dimensions; c++) {
 		if (stop < 0 || stop > 100) {
 			const auto &end = stop < 0 ? keys.front() : keys.back();
-			double derivative = segment_mode == 0 ? end.m[c] : segment_mode == 2 ? 0 : (b.c[c] - a.c[c]) / width;
+			double derivative = segment_mode == 0 ? end.m[c] : segment_mode == 2 ? 0 : slope(a.c[c], b.c[c], width);
 			if (segment_mode == 3) derivative *= stop < 0 ? (ease(0.0001) - ease(0)) / 0.0001 : (ease(1) - ease(0.9999)) / 0.0001;
 			value[c] = end.c[c] + derivative * (stop - end.at);
 		} else if (segment_mode == 2) value[c] = a.c[c];
-		else if (segment_mode != 0) value[c] = a.c[c] + (b.c[c] - a.c[c]) * u;
+		else if (segment_mode != 0) value[c] = a.c[c] * (1 - u) + b.c[c] * u;
 		else {
 			const double u2 = u * u, u3 = u2 * u;
-			value[c] = a.c[c] * (2 * u3 - 3 * u2 + 1) + a.m[c] * (u3 - 2 * u2 + u) * width
-					+ b.c[c] * (-2 * u3 + 3 * u2) + b.m[c] * (u3 - u2) * width;
+			// Local scaling protects Hermite arithmetic without losing small values in distant segments.
+			const double scale = std::max(1.0, std::max(std::max(std::abs(a.c[c]), std::abs(b.c[c])), std::max(std::abs(a.m[c]), std::abs(b.m[c]))));
+			const double sampled = a.c[c] / scale * (2 * u3 - 3 * u2 + 1) + a.m[c] / scale * (u3 - 2 * u2 + u) * width
+					+ b.c[c] / scale * (-2 * u3 + 3 * u2) + b.m[c] / scale * (u3 - u2) * width;
+			value[c] = std::clamp(sampled, std::min(a.c[c] / scale, b.c[c] / scale), std::max(a.c[c] / scale, b.c[c] / scale)) * scale;
 		}
 	}
 	return decode(value);

@@ -36,13 +36,13 @@ Tweens.animate(sprite, flight)
 
 Stops are numeric percentages from 0 through 100, including fractional values. Unset channels contribute no key at that stop. Each channel captures a missing zero-percent value when playback activates, before its delay. A missing final key holds the channel's last value to 100 percent. Definitions copy their input data and can be played concurrently. Configure `flight.options` before starting; each play snapshots those settings.
 
-Explicit paths can be dictionary keys, such as `50: {"position:x": 120}`. Paths stay on the target and its value components. A whole value and one of its components cannot appear in the same definition. Rotation, rotation-degrees, and quaternion channels are mutually exclusive. The aliases `x`, `y`, `z`, and `alpha` address `position:x`, `position:y`, `position:z`, and `modulate:a`.
+Explicit paths can be dictionary keys, such as `50: {"position:x": 120}`. In sparse frames, `"interpolation"` is reserved for the arriving mode; use the channel-array form to animate a property with that name. Paths stay on the target and its value components. A whole value and one of its components cannot appear in the same definition. Rotation, rotation-degrees, and quaternion channels are mutually exclusive. The aliases `x`, `y`, `z`, and `alpha` address `position:x`, `position:y`, `position:z`, and `modulate:a`.
 
 ## Segment interpolation
 
 `Tweens.Interpolation.SMOOTH` is the default: a limited modified-Akima cubic that stays between adjacent key values in each working component. `LINEAR` connects keys directly; `STEP` holds until the next key. An easing such as `Out.QUAD` creates an eased linear segment. An arriving-key override applies only to channels present at that key. Zero-percent keys cannot specify an arriving interpolation.
 
-The definition's `options.ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear.
+The definition's `options.ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear. Quaternion squared lengths must be finite and nonzero. Integer channels preserve 64-bit keys exactly at their stops; intermediate samples round double-precision working values to the nearest integer, with ties away from zero and saturation at Int64 limits.
 
 ## Color policy
 
@@ -56,7 +56,7 @@ fade.alpha_mode = Tweens.AlphaMode.PREMULTIPLIED
 Tweens.play(sprite, fade)
 ```
 
-Choose `Tweens.ColorSpace.SRGB` or `LINEAR_RGB` for another interpolation space, and `Tweens.AlphaMode.STRAIGHT` for independent RGB and alpha interpolation. Set `Tweens.ColorEncoding.LINEAR_RGB` only when the API receiving your values expects linear RGB. Keyframes take these policies through `flight.options`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
+Choose `Tweens.ColorSpace.SRGB` or `Tweens.ColorSpace.LINEAR_RGB` for another interpolation space, and `Tweens.AlphaMode.STRAIGHT` for independent RGB and alpha interpolation. Set `Tweens.ColorEncoding.LINEAR_RGB` only when the API receiving your values expects linear RGB. Keyframes take these policies through `flight.options`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
 
 ## Playback and preparation
 

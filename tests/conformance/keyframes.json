@@ -1,5 +1,11 @@
 {
   "cases": [
+    { "name": "large smooth peak avoids intermediate overflow", "mode": 0, "stops": [0,50,100], "values": [-1.7976931348623157e308,1.7976931348623157e308,-1.7976931348623157e308], "sample_scale": 1.7976931348623157e308, "samples": [[0.25,6.741349255733684e307],[0.5,1.7976931348623157e308],[0.75,6.741349255733684e307]] },
+    { "name": "tiny smooth values retain their scale", "mode": 0, "stops": [0,100], "values": [0,1e-300], "sample_scale": 1e-300, "samples": [[0.25,2.5e-301],[0.5,5e-301],[0.75,7.5e-301]] },
+    { "name": "distant large key preserves small linear segment", "mode": 1, "stops": [0,25,50,75,100], "values": [0,1e-300,0,0,1e308], "sample_scale": 1e-300, "samples": [[0.125,5e-301],[0.25,1e-300],[0.375,5e-301]] },
+    { "name": "distant large key preserves small smooth segment", "mode": 0, "stops": [0,25,50,75,100], "values": [0,1e-300,0,0,1e308], "sample_scale": 1e-300, "samples": [[0.125,6.875e-301],[0.25,1e-300]] },
+    { "name": "large linear values avoid overflow", "mode": 1, "stops": [0,100], "values": [-1.7976931348623157e308,1.7976931348623157e308], "sample_scale": 1.7976931348623157e308, "samples": [[0,-1.7976931348623157e308],[0.25,-8.988465674311579e307],[0.5,0],[0.75,8.988465674311579e307],[1,1.7976931348623157e308]] },
+    { "name": "large smooth values avoid overflow", "mode": 0, "stops": [0,100], "values": [-1.7976931348623157e308,1.7976931348623157e308], "sample_scale": 1.7976931348623157e308, "samples": [[0,-1.7976931348623157e308],[0.25,-8.988465674311579e307],[0.5,0],[0.75,8.988465674311579e307],[1,1.7976931348623157e308]] },
     { "name": "fractional step arrives exactly", "mode": 2, "stops": [0,0.23,100], "values": [2,7,4], "samples": [[0.0022,2],[0.0023,7],[1,4]] },
     { "name": "smooth peak and endpoint tangents", "mode": 0, "stops": [0,50,100], "values": [0,10,0], "samples": [[-0.25,-7.5],[0.25,6.875],[0.5,10],[0.75,6.875],[1.25,-7.5]] },
     { "name": "two smooth keys form a line", "mode": 0, "stops": [0,100], "values": [0,10], "samples": [[-0.25,-2.5],[0,0],[0.25,2.5],[0.5,5],[1,10],[1.25,12.5]] },

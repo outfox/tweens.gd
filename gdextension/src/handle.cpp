@@ -95,9 +95,6 @@ void TweensGdHandle::bind_values(const Variant &p_initial) {
 	h.adapter = options.adapter;
 	if (h.adapter.is_valid()) {
 		h.adapter->set(names().captured_type, int64_t(p_initial.get_type()));
-		h.adapter->set("color_space", options.color_space);
-		h.adapter->set("alpha_mode", options.alpha_mode);
-		h.adapter->set("color_encoding", options.color_encoding);
 	}
 	h.initial = p_initial;
 	h.value = p_initial;

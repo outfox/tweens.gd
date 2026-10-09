@@ -140,6 +140,9 @@ String TweensGdScheduler::prepare_handle(TweensGdHandle &handle) {
 		}
 		handle.binding_phase = 1;
 		if (settings.adapter.is_valid()) {
+			settings.adapter->set("color_space", settings.color_space);
+			settings.adapter->set("alpha_mode", settings.alpha_mode);
+			settings.adapter->set("color_encoding", settings.color_encoding);
 			const String error = hook_error(settings.adapter->call(names().prepare, handle.target), "prepare");
 			if (!error.is_empty()) {
 				return error;
@@ -479,8 +482,9 @@ String TweensGdScheduler::check_endpoint(const TweenSettings &p_snapshot, const 
 	if (!TweensGdInterpolation::compatible(p_initial, p_endpoint)) {
 		return "Endpoints must match the captured value's type.";
 	}
-	if (p_endpoint.get_type() == Variant::QUATERNION && Quaternion(p_endpoint).length_squared() == 0.0) {
-		return "Quaternion endpoints must have nonzero length.";
+	if (p_endpoint.get_type() == Variant::QUATERNION && (Quaternion(p_endpoint).length_squared() == 0.0
+			|| !Math::is_finite(Quaternion(p_endpoint).length_squared()))) {
+		return "Quaternion endpoints must have finite, nonzero squared length.";
 	}
 	return String();
 }

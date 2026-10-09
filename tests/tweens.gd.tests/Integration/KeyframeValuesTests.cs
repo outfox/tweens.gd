@@ -13,7 +13,7 @@ public class KeyframeValuesTests(HeadlessFixture godot)
     [Fact]
     public void EverySupportedValueSurvivesVariantBindingAndNonfiniteComponentsAreRejected()
     {
-        Check(1.25); Check(7); Check(new Vector2(1, 2)); Check(new Vector3(1, 2, 3)); Check(new Vector4(1, 2, 3, 4));
+        Check(1.25); Check(7); Check(5_000_000_000L); Check(new Vector2(1, 2)); Check(new Vector3(1, 2, 3)); Check(new Vector4(1, 2, 3, 4));
         Check(new Rect2(1, 2, 3, 4)); Check(new Color(0.1f, 0.2f, 0.3f, 0.4f)); Check(Quaternion.Identity);
         static void Check<T>(T value) where T : struct
         {
@@ -23,7 +23,8 @@ public class KeyframeValuesTests(HeadlessFixture godot)
         }
         Variant[] invalid = ["string", default, double.PositiveInfinity, new Vector2(float.NaN, 0), new Vector3(0, float.NaN, 0),
             new Vector4(0, 0, 0, float.NaN), new Rect2(float.NaN, 0, 0, 0), new Rect2(0, 0, float.NaN, 0),
-            new Quaternion(0, 0, 0, 0), new Quaternion(float.NaN, 0, 0, 1), new Color(float.NaN, 0, 0, 1),
+            new Quaternion(0, 0, 0, 0), new Quaternion(float.NaN, 0, 0, 1), new Quaternion(float.MaxValue, 0, 0, 1),
+            new Quaternion(float.Epsilon, 0, 0, 0), new Color(float.NaN, 0, 0, 1),
             new Color(0, float.NaN, 0, 1), new Color(0, 0, float.NaN, 1), new Color(0, 0, 0, float.NaN)];
         foreach (var value in invalid) Assert.Throws<ArgumentException>(() => AnimationValues.Validate(value));
         Assert.Throws<ArgumentException>(() => AnimationValues.Read<double>((Variant)1));

@@ -208,10 +208,13 @@ Variant TweensGdInterpolation::interpolate(const Variant &p_from, const Variant 
 }
 
 Variant TweensGdInterpolation::interpolate_color(const Color &p_from, const Color &p_to, double p_weight, int64_t p_space, int64_t p_alpha, int64_t p_encoding) {
+	if (p_space < 0 || p_space > 2 || p_alpha < 0 || p_alpha > 1 || p_encoding < 0 || p_encoding > 1
+			|| !Math::is_finite(p_weight) || !finite(p_from) || !finite(p_to)) return Variant();
 	if (p_weight == 0) return p_from;
 	if (p_weight == 1) return p_to;
-	return decode_color(encode_color(p_from, p_space, p_alpha, p_encoding).lerp(
+	const Color result = decode_color(encode_color(p_from, p_space, p_alpha, p_encoding).lerp(
 			encode_color(p_to, p_space, p_alpha, p_encoding), p_weight), p_space, p_alpha, p_encoding);
+	return finite(result) ? Variant(result) : Variant();
 }
 
 Variant TweensGdInterpolation::interpolate_offset(const Variant &p_from, const Variant &p_to, double p_weight, int64_t p_value_type) {

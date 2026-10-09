@@ -20,7 +20,8 @@ func run(suite: Suite) -> bool:
 			var at: float = sample[0]
 			var actual: float = curve.sample(at)
 			var expected: float = sample[1]
-			suite.check(absf(actual - expected) <= 0.00001, "shared curve: %s at %s got %s expected %s" % [test.name, at, actual, expected])
+			var scale: float = test.get("sample_scale", 1.0)
+			suite.check(absf(actual / scale - expected / scale) <= 0.00001, "shared curve: %s at %s got %s expected %s" % [test.name, at, actual, expected])
 	for test: Dictionary in data.colors:
 		var from := _color(test.from)
 		var to := _color(test.to)
@@ -37,6 +38,7 @@ func run(suite: Suite) -> bool:
 		suite.check(_close(ordinary, expected), "shared color tween: " + str(test.name))
 	_playback(suite)
 	_validation(suite)
+	_numeric_validation(suite)
 	var hidden := Color(1, 0, 0, 0)
 	var fractional := TweensGdKeyframeCurve.create([Color.WHITE, hidden, Color.BLUE], PackedFloat64Array([0, 0.23, 100]))
 	var exact: Color = fractional.sample(0.23 / 100.0)
@@ -45,9 +47,57 @@ func run(suite: Suite) -> bool:
 		PackedInt64Array([-1, 3]), PackedInt64Array([0, T.Ease.QUAD_IN]))
 	for at: float in [-0.1, 0.0, 0.5, 1.0, 1.1]:
 		var actual: Quaternion = turn.sample(at)
-		var weight := at * at if at >= 0 and at <= 1 else at * 0.0001 if at < 0 else 1.0 + (at - 1.0) * 1.9999
+		var weight := _quad_weight(at)
 		suite.check(absf(actual.dot(Quaternion(Vector3.UP, weight))) > 0.99999, "quaternion ease and endpoint tangent")
 	return true
+
+static func _quad_weight(at: float) -> float:
+	# Finite differences for t² at the endpoints: h at zero, 2-h at one.
+	const H = 0.0001
+	if at < 0: return at * H
+	if at > 1: return 1.0 + (at - 1.0) * (2.0 - H)
+	return at * at
+
+func _numeric_validation(suite: Suite) -> void:
+	for weight: float in [0.0, 0.5, 1.0]:
+		for policy: Array in [[-1, 0, 0], [3, 0, 0], [0, -1, 0], [0, 2, 0], [0, 0, -1], [0, 0, 2]]:
+			var space: int = policy[0]
+			var alpha: int = policy[1]
+			var encoding: int = policy[2]
+			suite.check(TweensGdInterpolation.interpolate_color(Color.RED, Color.BLUE, weight, space, alpha, encoding) == null,
+				"color helper rejects unknown policies before endpoint shortcuts")
+		for invalid: Color in [Color(NAN, 0, 0, 1), Color(0, INF, 0, 1), Color(0, 0, NAN, 1), Color(0, 0, 0, INF)]:
+			suite.check(TweensGdInterpolation.interpolate_color(invalid, Color.BLUE, weight) == null, "color helper rejects invalid from")
+			suite.check(TweensGdInterpolation.interpolate_color(Color.RED, invalid, weight) == null, "color helper rejects invalid to")
+	for weight: float in [NAN, INF, -INF]:
+		suite.check(TweensGdInterpolation.interpolate_color(Color.RED, Color.BLUE, weight) == null, "color helper rejects nonfinite weights")
+	suite.check(TweensGdInterpolation.interpolate_color(Color.RED, Color.BLUE, 1e308, 1, 1) == null,
+		"color helper rejects decoded overflow")
+	for rotation: Quaternion in [Quaternion(1e30, 0, 0, 1), Quaternion(1e-30, 0, 0, 0)]:
+		var invalid := TweensGdKeyframeCurve.create([rotation, Quaternion.IDENTITY], PackedFloat64Array([0, 100]))
+		suite.check(not invalid.error.is_empty(), "quaternion curves reject nonfinite or zero squared lengths")
+	var huge_color := TweensGdKeyframeCurve.create([Color(1e30, 1e30, 1e30), Color.BLUE], PackedFloat64Array([0, 100]))
+	suite.check(not huge_color.error.is_empty(), "color curves reject overflow during working-space conversion")
+	var scheduler := TweensGdScheduler.new()
+	var target := Node.new()
+	suite.add_child(target)
+	target.set_meta("amount", 3000000000)
+	var animation := T.keyframes({100: {"metadata/amount": 5000000000}}, 1.0, T.Ease.LINEAR, T.Interpolation.LINEAR)
+	var group := animation.play_on(scheduler, target)
+	scheduler.update(0.5)
+	var amount: int = target.get_meta("amount")
+	suite.check(amount == 4000000000, "Int64 channels capture and sample beyond Int32 range")
+	scheduler.update(0.5)
+	amount = target.get_meta("amount")
+	suite.check(amount == 5000000000 and group.completion_reason == T.Reason.COMPLETED, "Int64 batch completes")
+	var limits := TweensGdKeyframeCurve.create([-9223372036854775807 - 1, 9223372036854775807], PackedFloat64Array([0, 100]), 1)
+	var low: int = limits.sample(0)
+	var high: int = limits.sample(1)
+	suite.check(low == -9223372036854775807 - 1 and high == 9223372036854775807, "Int64 keys stay exact")
+	low = limits.sample(-0.1)
+	high = limits.sample(1.1)
+	suite.check(low == -9223372036854775807 - 1 and high == 9223372036854775807, "Int64 overshoot saturates")
+	target.free()
 
 static func _color(value: Variant) -> Color:
 	var components: Array = value

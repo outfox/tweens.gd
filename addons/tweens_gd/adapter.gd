@@ -10,6 +10,7 @@ extends RefCounted
 ## C# equivalent: the protected operations of [code]TweenDefinition[/code].
 
 var _captured_type: int = TYPE_NIL
+var _interpolating_offset := false
 ## Working color coordinates: OKLab=0, sRGB=1, linear RGB=2. Copied from the definition at activation.
 var color_space := 0
 ## Premultiplied=0, straight=1. Copied from the definition at activation.
@@ -52,16 +53,17 @@ func interpolate(from: Variant, to: Variant, weight: float) -> Variant:
 	if typeof(from) == TYPE_COLOR:
 		var a: Color = from
 		var b: Color = to
+		if _interpolating_offset: return a.lerp(b, weight)
 		return TweensGdInterpolation.interpolate_color(a, b, weight, color_space, alpha_mode, color_encoding)
 	return TweensGdInterpolation.interpolate(from, to, weight, _captured_type if _captured_type != TYPE_NIL else typeof(from))
 
-## Relative offsets and factors use Godot components rather than perceptual color coordinates.
+## Relative offsets and factors use Godot components by default and dispatch custom [method interpolate] overrides.
 func interpolate_offset(from: Variant, to: Variant, weight: float) -> Variant:
-	if typeof(from) == TYPE_COLOR:
-		var a: Color = from
-		var b: Color = to
-		return a.lerp(b, weight)
-	return interpolate(from, to, weight)
+	var previous := _interpolating_offset
+	_interpolating_offset = true
+	var result: Variant = interpolate(from, to, weight)
+	_interpolating_offset = previous
+	return result
 
 ## Validates endpoints and sampled values. Return an error string, empty on success.
 func validate_value(value: Variant) -> String:
@@ -69,7 +71,8 @@ func validate_value(value: Variant) -> String:
 		return "Adapter values must be supported, finite values."
 	if typeof(value) == TYPE_QUATERNION:
 		var rotation: Quaternion = value
-		if rotation.length_squared() == 0.0: return "Quaternion endpoints must have nonzero length."
+		if rotation.length_squared() == 0.0 or not is_finite(rotation.length_squared()):
+			return "Quaternion endpoints must have finite, nonzero squared length."
 	return ""
 
 ## Releases bindings owned by this playback copy once preparation was attempted, including

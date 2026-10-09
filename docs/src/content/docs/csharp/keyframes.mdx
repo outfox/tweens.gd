@@ -36,13 +36,13 @@ sprite.Tween(flight);
 
 Stops are percentages from 0 through 100; use `Percent.Of(12.5)` for fractional stops. Unset channels contribute no key at that stop. Each channel captures a missing zero-percent value when playback activates, before its delay. A missing final key holds the channel's last value to 100 percent. Definitions copy their input data and can be played concurrently.
 
-Explicit paths use `Tweens.Keyframe.At(50, ("position:x", (Variant)120.0))`. Paths stay on the target and its value components. A whole value and one of its components cannot appear in the same definition. Rotation, rotation-degrees, and quaternion channels are mutually exclusive.
+Explicit paths use `Tweens.Keyframe.At(50, ("position:x", (Variant)120.0))`. GDScript reserves `"interpolation"` for the arriving mode in sparse frames; its channel-array form can animate a property with that name. C# explicit paths have no reserved names. Paths stay on the target and its value components. A whole value and one of its components cannot appear in the same definition. Rotation, rotation-degrees, and quaternion channels are mutually exclusive.
 
 ## Segment interpolation
 
 `Interpolation.Smooth` is the default: a limited modified-Akima cubic that stays between adjacent key values in each working component. `Interpolation.Linear` connects keys directly; `Interpolation.Step` holds until the next key. An easing such as `Out.Quad` creates an eased linear segment. An arriving-key override applies only to channels present at that key. Zero-percent keys cannot specify an arriving interpolation.
 
-The definition's `Ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear.
+The definition's `Ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear. Quaternion squared lengths must be finite and nonzero. Integer channels preserve 64-bit keys exactly at their stops; intermediate samples round double-precision working values to the nearest integer, with ties away from zero and saturation at Int64 limits.
 
 ## Color policy
 

@@ -68,6 +68,7 @@ public class KeyframesTests(HeadlessFixture godot)
     [Fact]
     public void InvalidBatchStartsNothingAndDoesNotLogGodotErrors()
     {
+        Assert.Empty(godot.Engine.Errors.Drain());
         using var scope = new SceneScope(godot);
         using var scheduler = new TweenScheduler();
         var target = scope.Add(new Node2D());
@@ -86,6 +87,24 @@ public class KeyframesTests(HeadlessFixture godot)
         Assert.Throws<ArgumentException>(() => new Tweens.Keyframes(x: [0, double.NaN]));
         Assert.Throws<ArgumentOutOfRangeException>(() => Percent.Of(101));
         Assert.Throws<ArgumentOutOfRangeException>(() => new Tweens.Keyframes(x: [0, 1], options: new TweenOptions { ColorSpace = (ColorSpace)99 }));
+        Assert.Empty(godot.Engine.Errors.Drain());
+    }
+
+    [Fact]
+    public void Int64ChannelsCaptureAndPlayBeyondInt32Range()
+    {
+        using var scope = new SceneScope(godot);
+        using var scheduler = new TweenScheduler();
+        var target = scope.Add(new Node());
+        target.SetMeta("amount", 3_000_000_000L);
+        var animation = new Tweens.Keyframes([Tweens.Keyframe.At(100, ("metadata/amount", (Variant)5_000_000_000L))],
+            interpolation: Interpolation.Linear);
+        var group = animation.Play(scheduler, target);
+        scheduler.Update(0.5);
+        Assert.Equal(4_000_000_000L, target.GetMeta("amount").AsInt64());
+        scheduler.Update(0.5);
+        Assert.Equal(5_000_000_000L, target.GetMeta("amount").AsInt64());
+        Assert.Equal(Reason.Completed, group.CompletionReason);
     }
 
     [Fact]

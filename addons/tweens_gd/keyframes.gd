@@ -4,6 +4,7 @@ class_name TweensGdKeyframes
 extends RefCounted
 ## Reusable parallel keyframe definition. Prepared native curves are shared between independent plays.
 ## Supply a channel-to-array Dictionary, or percentage stops mapping to sparse channel Dictionaries.
+## Sparse frames reserve "interpolation" for the arriving mode; use channel arrays for a property with that name.
 ## Configure [member options] before playback; each play snapshots those settings.
 
 ## Shared timing, easing and color policy. Endpoints and callbacks belong to individual channel tweens.

@@ -178,7 +178,7 @@ internal sealed class AnimationTrack
         if (prepared.TryGetValue(type, out var cached)) return cached;
         ITweenDefinition<Node> result = type switch
         {
-            Variant.Type.Float => Compile<double>(type), Variant.Type.Int => Compile<int>(type),
+            Variant.Type.Float => Compile<double>(type), Variant.Type.Int => Compile<long>(type),
             Variant.Type.Vector2 => Compile<Vector2>(type), Variant.Type.Vector3 => Compile<Vector3>(type),
             Variant.Type.Vector4 => Compile<Vector4>(type), Variant.Type.Color => Compile<Color>(type),
             Variant.Type.Quaternion => Compile<Quaternion>(type), Variant.Type.Rect2 => Compile<Rect2>(type),

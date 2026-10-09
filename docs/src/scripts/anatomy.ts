@@ -211,7 +211,7 @@ const FIELDS: Field[] = [
 			`<rect class="fa" x="16.5" y="${py(0) - 3.5}" width="7" height="7"/><rect class="fa" x="116.5" y="${n2(py(0.8) - 3.5)}" width="7" height="7"/><rect class="fa" x="216.5" y="${py(1) - 3.5}" width="7" height="7"/>`,
 	},
 
-	// Callbacks
+	// Color interpolation
 	{
 		name: 'ColorSpace', group: 'endpoints', page: 'definitions', defaults: ['ColorSpace.Oklab', 'Tweens.ColorSpace.OKLAB'],
 		text: 'Working coordinates for whole-color interpolation.',
@@ -228,6 +228,7 @@ const FIELDS: Field[] = [
 		draw: () => text(42, 39, 'sRGB') + arrow(70, 112, 36) + text(150, 39, 'working', 'ta') + arrow(184, 222, 36),
 	},
 
+	// Callbacks
 	{
 		name: 'OnAdd', group: 'callbacks', page: 'callbacks',
 		text: 'Runs at activation, after the start value is captured.',

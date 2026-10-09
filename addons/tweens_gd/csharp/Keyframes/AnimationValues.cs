@@ -19,7 +19,7 @@ internal static class AnimationValues
             Variant.Type.Vector3 => value.AsVector3().IsFinite(),
             Variant.Type.Vector4 => value.AsVector4().IsFinite(),
             Variant.Type.Rect2 => value.AsRect2().Position.IsFinite() && value.AsRect2().Size.IsFinite(),
-            Variant.Type.Quaternion => value.AsQuaternion().IsFinite() && value.AsQuaternion().LengthSquared() != 0,
+            Variant.Type.Quaternion => value.AsQuaternion().LengthSquared() is > 0 and < float.PositiveInfinity,
             Variant.Type.Color => float.IsFinite(value.AsColor().R) && float.IsFinite(value.AsColor().G)
                 && float.IsFinite(value.AsColor().B) && float.IsFinite(value.AsColor().A),
             _ => false,
@@ -34,7 +34,7 @@ internal static class AnimationValues
         {
             var number = value.AsDouble();
             if (type == Variant.Type.Float) return number;
-            if (type == Variant.Type.Int) return checked((int)Math.Round(number, MidpointRounding.AwayFromZero));
+            if (type == Variant.Type.Int) return checked((long)Math.Round(number, MidpointRounding.AwayFromZero));
             if (uniform && type == Variant.Type.Vector2) return new Vector2((float)number, (float)number);
             if (uniform && type == Variant.Type.Vector3) return new Vector3((float)number, (float)number, (float)number);
         }
@@ -43,13 +43,14 @@ internal static class AnimationValues
 
     internal static T Read<T>(Variant value) where T : struct
     {
-        var type = typeof(T) == typeof(double) ? Variant.Type.Float : typeof(T) == typeof(int) ? Variant.Type.Int
+        var type = typeof(T) == typeof(double) ? Variant.Type.Float : typeof(T) == typeof(int) || typeof(T) == typeof(long) ? Variant.Type.Int
             : typeof(T) == typeof(Vector2) ? Variant.Type.Vector2 : typeof(T) == typeof(Vector3) ? Variant.Type.Vector3
             : typeof(T) == typeof(Vector4) ? Variant.Type.Vector4 : typeof(T) == typeof(Color) ? Variant.Type.Color
             : typeof(T) == typeof(Quaternion) ? Variant.Type.Quaternion : Variant.Type.Rect2;
         if (value.VariantType != type) throw new ArgumentException($"Channel changed type from {type} to {value.VariantType}.");
         if (typeof(T) == typeof(double)) return (T)(object)value.AsDouble();
         if (typeof(T) == typeof(int)) return (T)(object)checked((int)value.AsInt64());
+        if (typeof(T) == typeof(long)) return (T)(object)value.AsInt64();
         if (typeof(T) == typeof(Vector2)) return (T)(object)value.AsVector2();
         if (typeof(T) == typeof(Vector3)) return (T)(object)value.AsVector3();
         if (typeof(T) == typeof(Vector4)) return (T)(object)value.AsVector4();
@@ -62,6 +63,7 @@ internal static class AnimationValues
     {
         if (typeof(T) == typeof(double)) return Variant.From((double)(object)value);
         if (typeof(T) == typeof(int)) return Variant.From((int)(object)value);
+        if (typeof(T) == typeof(long)) return Variant.From((long)(object)value);
         if (typeof(T) == typeof(Vector2)) return Variant.From((Vector2)(object)value);
         if (typeof(T) == typeof(Vector3)) return Variant.From((Vector3)(object)value);
         if (typeof(T) == typeof(Vector4)) return Variant.From((Vector4)(object)value);

@@ -23,9 +23,9 @@
 		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
 	</tutorials>
 	<methods>
-		<method name="with_color_space" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="value" type="int" /><description>Returns a copy with [member color_space] changed.</description></method>
-		<method name="with_alpha_mode" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="value" type="int" /><description>Returns a copy with [member alpha_mode] changed.</description></method>
-		<method name="with_color_encoding" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="value" type="int" /><description>Returns a copy with [member color_encoding] changed.</description></method>
+		<method name="with_color_space" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="space" type="int" /><description>Returns a copy with [member color_space] changed.</description></method>
+		<method name="with_alpha_mode" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="mode" type="int" /><description>Returns a copy with [member alpha_mode] changed.</description></method>
+		<method name="with_color_encoding" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="encoding" type="int" /><description>Returns a copy with [member color_encoding] changed.</description></method>
 		<method name="copy" qualifiers="const">
 			<return type="TweensGdDefinition" />
 			<description>

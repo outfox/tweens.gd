@@ -16,7 +16,7 @@
 			<param index="5" name="color_space" type="int" default="0" />
 			<param index="6" name="alpha_mode" type="int" default="0" />
 			<param index="7" name="color_encoding" type="int" default="0" />
-			<description>Copies strictly increasing percentage stops in [code][0, 100][/code] and prepares values and tangents. Interpolation: Smooth=0, Linear=1, Step=2. Optional arriving modes use -1 for the default or 3 for an easing from the matching eases entry; zero-percent keys require -1. Missing final keys hold. Inspect [member error] before use.</description>
+			<description>Copies strictly increasing percentage stops in [code][0, 100][/code] and prepares values and tangents. Interpolation: Smooth=0, Linear=1, Step=2. Arriving modes: -1 uses the curve default, 0 is Smooth, 1 is Linear, 2 is Step, and 3 uses the matching eases entry; zero-percent keys require -1. Color space: OKLab=0, sRGB=1, linear RGB=2; alpha: premultiplied=0, straight=1; encoding: sRGB=0, linear RGB=1. Quaternion squared lengths must be finite and nonzero. Missing final keys hold. Inspect [member error] before use.</description>
 		</method>
 		<method name="capture_start" qualifiers="const">
 			<return type="TweensGdKeyframeCurve" />

@@ -61,5 +61,7 @@ public class InterpolatorsTests
     {
         Assert.Throws<ArgumentException>(() => Interpolators.Quaternion(default, Quaternion.Identity, 0.5f));
         Assert.Throws<ArgumentException>(() => Interpolators.Quaternion(Quaternion.Identity, default, 0.5f));
+        Assert.Throws<ArgumentException>(() => Interpolators.Quaternion(new(float.MaxValue, 0, 0, 1), Quaternion.Identity, 0.5f));
+        Assert.Throws<ArgumentException>(() => Interpolators.Quaternion(Quaternion.Identity, new(float.MaxValue, 0, 0, 1), 0.5f));
     }
 }

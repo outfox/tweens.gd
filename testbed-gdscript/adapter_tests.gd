@@ -49,6 +49,7 @@ class RejectingCopy extends Probe:
 
 class Box extends RefCounted:
 	var amount := 2.0
+	var tint := Color(0, 0, 0, 0)
 	var count := 2
 	var text := "a"
 	var on_write: Callable
@@ -58,15 +59,74 @@ class Box extends RefCounted:
 			amount = value
 			if on_write.is_valid(): on_write.call()
 
+class ColorProbe extends T.Adapter:
+	var events: Array = []
+	var custom := false
+	func prepare(_target: Object) -> String:
+		events.append(["prepare", color_space, alpha_mode, color_encoding])
+		return ""
+	func read(target: Object) -> Variant:
+		events.append(["read", color_space, alpha_mode, color_encoding])
+		return target.get("tint")
+	func write(target: Object, value: Variant) -> String:
+		target.set("tint", value)
+		return ""
+	func interpolate(from: Variant, to: Variant, weight: float) -> Variant:
+		if not custom: return super.interpolate(from, to, weight)
+		var a: Color = from
+		var b: Color = to
+		return a.lerp(b, weight * weight)
+
 func run(owner: Suite) -> bool:
 	host = owner
 	_custom()
+	_colors()
 	_curves()
 	_catalog()
 	return true
 
 func check(condition: bool, message: String) -> void:
 	host.check(condition, message)
+
+func _colors() -> void:
+	var scheduler := TweensGdScheduler.new()
+	var box := Box.new()
+	var adapter := ColorProbe.new()
+	var definition := TweensGdDefinition.new()
+	definition.adapter = adapter
+	definition.color_space = T.ColorSpace.LINEAR_RGB
+	definition.alpha_mode = T.AlphaMode.STRAIGHT
+	definition.color_encoding = T.ColorEncoding.LINEAR_RGB
+	definition.to_value = Color.RED
+	definition.duration = 1.0
+	var h := scheduler.add(box, definition)
+	scheduler.update(0.5)
+	var prepared: Array = adapter.events[0]
+	var captured: Array = adapter.events[1]
+	check(prepared == ["prepare", 2, 1, 1] and captured == ["read", 2, 1, 1],
+		"definition color policy reaches prepare and initial read")
+	h.cancel()
+	adapter.custom = true
+	definition.to_value = null
+	definition.by_value = Color(1, 0, 0, 0)
+	box.tint = Color(0, 0, 0, 0)
+	var relative := scheduler.add(box, definition)
+	scheduler.update(0.5)
+	check(box.tint.r == 0.25, "relative color dispatches subclass interpolate override")
+	relative.cancel()
+	definition.factor_by = 2.0
+	box.tint = Color(0, 0, 0, 0)
+	var factored := scheduler.add(box, definition)
+	scheduler.update(0.5)
+	check(box.tint.r == 1.0, "color factors dispatch subclass interpolate override")
+	factored.cancel()
+	adapter.custom = false
+	definition.factor_by = 1.0
+	box.tint = Color(0, 0, 0, 0)
+	var base := scheduler.add(box, definition)
+	scheduler.update(0.5)
+	check(box.tint.r == 0.5, "base relative colors retain RGBA arithmetic")
+	base.cancel()
 
 func _custom() -> void:
 	var scheduler := TweensGdScheduler.new()
