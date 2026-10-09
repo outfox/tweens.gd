@@ -27,9 +27,8 @@ C# API as an alternative. The GitHub release publishes these artifacts:
    to the NuGet package version.
 2. Review changes since the previous release and write `.github/releases/<tag>.md`.
    These committed files are the versioned changelog and the source of GitHub
-   release notes. Lead with user-visible changes, then include any steps needed to
-   preserve previous behavior, documentation improvements, download names and a
-   comparison link.
+   release notes. Lead with user-visible changes, then documentation improvements,
+   download names and a comparison link.
 3. Regenerate affected addon files, run the checks below and confirm NuGet Trusted
    Publishing is configured before tagging.
 4. Commit implementation changes, generated files and release notes. Ensure CI

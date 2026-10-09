@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Godot;
 namespace testbed;
 
-/// <summary>One disposable playground: a grid of effect cards. Only the selected page is instantiated.</summary>
+/// <summary>One gallery page: a grid of effect cards. Only the selected page exists at a time.</summary>
 public abstract partial class GalleryPage : VBoxContainer
 {
     private readonly List<Resource> resources = [];

@@ -132,7 +132,44 @@ public class RuntimeTests(HeadlessFixture godot)
         using var scope = new SceneScope(godot);
         var runner = scope.Add(new TweenRunner());
         scope.Frames();
+        Assert.True(runner.Ticks > 0);
         runner.Free();
+    }
+
+    [Fact]
+    public async Task FreedRunnersSettleTheirTweensAndReadyHandlersBootstrapTheNext()
+    {
+        using var scope = new SceneScope(godot);
+        var stale = scope.Add(new Node2D()).TweenPositionX(10, 10);
+        var runner = TweenRuntime.GetRunner(godot.Tree);
+        scope.Frames();
+        runner.Free();
+        Assert.Equal(Reason.RunnerDisposed, await stale.End);
+
+        // Ready runs while the scope adds the node, so the runner it creates attaches later.
+        var node = new Node2D();
+        TweenInstance<Node2D, Vector2>? movement = null;
+        node.Ready += () => movement = node.TweenPosition(new Vector2(20, 30), 0);
+        scope.Add(node);
+        Assert.NotNull(movement);
+        var fresh = TweenRuntime.GetRunner(node);
+        Assert.False(fresh.IsInsideTree());
+        var thread = System.Environment.CurrentManagedThreadId;
+        var continuation = -1;
+        var observed = Observe();
+        scope.FramesUntil(() => observed.IsCompleted, 20);
+        await observed;
+        Assert.True(fresh.IsInsideTree());
+        Assert.Equal(thread, continuation);
+        Assert.Equal(new Vector2(20, 30), node.Position);
+
+        async Task Observe()
+        {
+            Assert.Equal(Reason.Completed, await movement!.End);
+            continuation = System.Environment.CurrentManagedThreadId;
+            // The continuation may start playback, which only Godot's main thread can.
+            node.TweenPosition(new Vector2(30, 40), 1).Cancel();
+        }
     }
 
     [Fact]
@@ -186,9 +223,12 @@ public class RuntimeTests(HeadlessFixture godot)
         queued.QueueFree();
         var freed = new Node2D();
         freed.Free();
+        var material = scope.Track(new StandardMaterial3D());
         foreach (var node in new[] { orphan, queued, freed })
         {
             Assert.Throws<ArgumentException>(() => node.TweenPositionX(1, 1));
+            Assert.Throws<ArgumentException>(() => material.TweenMetallic(1, 1, node));
+            Assert.Throws<ArgumentException>(() => material.TweenMetallic(1, 1, godot.Tree, owner: node));
             Assert.Throws<ArgumentException>(() => TweenRuntime.GetActiveCount(node));
             Assert.Throws<ArgumentException>(() => node.CancelTweens());
         }
@@ -240,15 +280,17 @@ public class RuntimeTests(HeadlessFixture godot)
     public void GroupsStartTogetherOnOneTarget()
     {
         using var scope = new SceneScope(godot);
-        var node = scope.Add(new Node2D());
+        // Members may target any base type of the node.
+        var node = scope.Add(new Sprite2D());
         var group = node.Tween(new Tweens.Position2DX { To = 10, Duration = 1 }, new Tweens.Rotation2D { To = 1, Duration = 2 },
-            new Tweens.Scale2D { To = Vector2.One * 2, Duration = 1 });
-        Assert.Equal(3, group.Members.Count);
+            new Tweens.Scale2D { To = Vector2.One * 2, Duration = 1 }, new Tweens.ModulateAlpha(0, 1));
+        Assert.Equal(4, group.Members.Count);
         scope.Advance(1);
         Assert.False(group.IsTerminal);
         scope.Advance(1);
         Assert.Equal(Reason.Completed, group.CompletionReason);
         Assert.Equal(new Vector2(10, 0), node.Position);
+        Assert.Equal(0, node.Modulate.A);
     }
 
     [Fact]
@@ -261,11 +303,22 @@ public class RuntimeTests(HeadlessFixture godot)
         Assert.Equal(0, TweenRuntime.GetActiveCount(node));
         Assert.Throws<ArgumentNullException>(() => node.Tween<Node2D>(first, null!));
         Assert.Equal(0, TweenRuntime.GetActiveCount(node));
-        var cancelled = 0;
-        var deferred = first with { OnCancel = _ => cancelled++ };
+        var calls = 0;
+        var deferred = first with { OnAdd = _ => calls++, OnCancel = _ => calls++ };
         var invalid = new Position2DXTween { Duration = 1, EaseFunction = static x => x, Curve = scope.Track(new Curve()) };
         Assert.Throws<ArgumentException>(() => node.Tween(deferred, deferred, invalid));
-        Assert.Equal(0, cancelled);
+        scope.Advance(0);
+        Assert.Equal(0, calls);
         Assert.Equal(0, TweenRuntime.GetActiveCount(node));
+    }
+
+    [Fact]
+    public void OptionsOverloadsValidateTheExplicitDuration()
+    {
+        using var scope = new SceneScope(godot);
+        // The offset exceeds the options' own duration, which the explicit one replaces before validation.
+        var tween = scope.Add(new Node2D()).TweenPositionX(10, 10, new TweenOptions { Duration = 1, Offset = 5 });
+        scope.Advance(1);
+        Assert.Equal(0.6f, tween.Progress);
     }
 }

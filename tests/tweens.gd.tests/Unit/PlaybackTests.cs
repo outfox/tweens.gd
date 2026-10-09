@@ -146,6 +146,10 @@ public class PlaybackTests
         playback.Advance(double.MaxValue);
         playback.Advance(double.MaxValue);
         Assert.True(playback.Completed);
+        // Zero-length cycles finish every repeat at once.
+        var instant = Create(new TweenOptions { Repeats = int.MaxValue });
+        instant.Advance(0);
+        Assert.True(instant.Completed);
     }
 
     [Theory]

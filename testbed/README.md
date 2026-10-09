@@ -1,84 +1,93 @@
-# tweens.gd testbed
+# testbed
 
-Nine pages and 33 examples run against either the beta C# library or the beta
-GDScript addon. The global language selector changes the running implementation
-and the source shown beside it.
+The gallery app: ten pages and 34 examples, each written in C# and in GDScript. A switch in the header picks the
+implementation that runs, and the source viewer shows the code that is running. Its tests compare the two languages.
+
+The gallery is a .NET app in both modes. Scenes are built by shared C# code, so geometry, materials and initial values
+are identical; only the animations, sequencing, callbacks and button handling differ. The non-.NET GDScript test
+project is `../testbed-gdscript/`.
+
+## Run
+
+GDScript mode needs the GDExtension for your platform; build it first (see `../gdextension/README.md`). From the
+repository root:
 
 ```powershell
 dotnet run --project testbed/testbed.2dog
 dotnet run --project testbed/testbed.2dog -- --gallery-language gdscript
+dotnet publish testbed/testbed.web   # browser build in testbed/testbed.web/AppBundle; needs the wasm-tools workload
 ```
 
-## Compare implementations
+| Option | Effect |
+| --- | --- |
+| `--gallery-language csharp\|gdscript` | Start in that language; the default is C# |
+| `--gallery-page <n>` | Open page `n`, zero-based in sidebar order |
+| `--gallery-source <n>` | Open the source view of example `n` on that page |
+| `--snapshot <file>` | Save a PNG after 20 frames, then quit |
+| `--gallery-snapshots <dir>` | Save a PNG of every page, then quit |
+| `--restart-check` | After the gallery quits, start a second engine in the same process |
 
-- Choose **C# · Beta** or **GDScript · Beta** in the header. Switching rebuilds
-  the current page with fresh initial values and ends the previous playback.
-- The selected page, open example and leg duration survive a language change.
-  Navigation and Restart page keep the selected language.
-- Click **View C#** or **View GDScript** to read the animation that runs. Opening
-  source does not restart playback. Copy file copies the complete selected file.
-- Scene construction is shared C# code, labeled **Shared scene · C#** in GDScript
-  mode. This keeps geometry, materials, resources and initial values identical.
-  Animation, sequencing, callbacks and button interactions use the selected library.
-
-This gallery is a .NET host in either mode. The GDScript addon itself needs no .NET;
-its engine is the addon's GDExtension, so build the library for your platform first
-(see `../gdextension/README.md`). `../testbed-gdscript/` is the standalone non-.NET
-addon/export test project.
-Building the gallery stages the canonical `../addons/tweens_gd/` into its ignored
-`addons/` directory. There is no separately maintained copy of the addon.
-
-## Easing composer
-
-The Easing page lets you select independent In and Out curves and tune skew while
-the preview runs in the selected language. The global leg-duration slider controls
-its duration. In occupies 0–0.5 and Out 0.5–1; matching families reproduce the
-conventional InOut curve exactly. Curves and skew survive duration changes, restarts, navigation and
-language changes. Amber and blue show the original halves; mint shows the result.
-Choose Makima, Hermite, SmoothStep, or Linear and adjust the join width. The shaded
-region marks the join window after skew has warped time.
-Choose None on either side to inspect a single curve.
-
-## Sources
-
-Each example has a C# scene file, a C# `.Animation.cs` file, and a GDScript file in
-`Gallery/GDScript/`. `SceneTargets` explicitly supplies native scene objects to
-the GDScript animation. No reflection or C# tween calls implement GDScript motion.
-
-Animation sources are embedded in the build. GDScript mode compiles and runs the
-embedded animation text displayed by the viewer. Each GDScript example includes
-the animation utilities it uses (`cycle`, `options`, `wait`, and `shake`), intentionally
-duplicated so their behavior is visible in the same file. The shared lifecycle and
-scene bindings remain in `Gallery/GDScript/GalleryAnimation.gd`, available as
-**Gallery host · GDScript** in the source viewer's file menu. New examples need both
-implementations and should include any animation utilities they use.
-
-## Validation and known differences
-
-```powershell
-dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release
-dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true
-```
-
-Run these suites separately: they build different tests into the same output.
-Headless comparison tests sample both implementations at the same fixed times,
-check finite completion and scene teardown, and exercise global switching,
-rapid selections, source identity and button clicks. Rendering tests run all
-nine pages in both languages, including the four shader examples.
-
-The easing race exposes a numeric difference at Expo/Elastic endpoints: C# uses
-single-precision progress for easing; GDScript uses double precision. A value
-just below an endpoint can round to that endpoint in C# and take a different
-formula branch. The observed difference on this 240-pixel track is about
-0.1171875 pixels. Comparison tests bound this specific case separately; they
-do not change either library's easing behavior. Confetti trajectories are random
-in both languages and are excluded from deterministic trajectory comparisons.
-
-## Capture a page
-
-Page and example indices are zero-based. Shaders need a real renderer.
+Other arguments go to Godot, such as `--headless`, `--quit-after 12`, `--rendering-method gl_compatibility` or
+`--fixed-fps 60`. Snapshots and the Shaders page need a renderer; headless, the Shaders page shows a notice instead.
 
 ```powershell
 dotnet run --project testbed/testbed.2dog -- --gallery-language gdscript --gallery-page 7 --gallery-source 0 --snapshot artifacts/gdscript-shader.png --rendering-method gl_compatibility
-dotnet run --project testbed/testbed.2dog -- --gallery-language csharp --gallery-snapshots artifacts/gallery-csharp --rendering-method gl_compatibility --fixed-fps 60
+dotnet run --project testbed/testbed.2dog -- --gallery-snapshots artifacts/gallery-csharp --rendering-method gl_compatibility --fixed-fps 60
 ```
+
+## Use
+
+- The header holds the language switch (**C# · Beta**, **GDScript · Beta**) and the leg duration (0.4–4 s, default
+  1.8 s). Changing either restarts the page from its initial state; the page and the open example stay selected.
+- The sidebar selects a page, and **Restart page** rebuilds it. A page shows its examples as cards.
+- **View C#** or **View GDScript** opens a card's source beside its preview without restarting it. The file menu also
+  shows the scene and helper files, and the toolbar copies the file, jumps to the tween code and toggles wrapping.
+- The Easing page composes an In and an Out curve with skew, blend method and join width; None leaves a single curve.
+  Amber and blue are the two halves, mint is the result.
+- The Colors page compares sRGB, linear RGB and OKLab, each with straight and premultiplied alpha. Press **50%**
+  or scrub to pause; **Animate** resumes. The tint-and-fade column treats RGB and opacity independently.
+
+## Layout
+
+- `Gallery.cs` is the shell that `main.tscn` runs: header, sidebar and the current page.
+- `Gallery/` holds the shared host: `GalleryPage` (a page of cards), `GalleryEffect` (one example's scene,
+  animation and resources), the source viewer, theme and palette.
+- `Gallery/<Page>/` holds a page's `<Page>Page.cs` and, per example, `<Example>.cs` (the scene, plus `SceneTargets`,
+  the nodes handed to GDScript) and `<Example>.Animation.cs` (the C# animation).
+- `Gallery/GDScript/<Example>.gd` is the GDScript animation. It extends `GalleryAnimation.gd`, which holds the shared
+  lifecycle and bindings, and carries the small helpers it uses (such as `cycle` or `options`) so that the file shows
+  everything that moves.
+- The build embeds the gallery sources. GDScript mode compiles the embedded `.gd` text, so the viewer shows exactly
+  what runs; no C# tween calls drive GDScript motion.
+- C# uses `../csharp/tweens.gd.csproj`. GDScript uses the addon, which the build copies from `../addons/tweens_gd/`
+  into the ignored `addons/`.
+- `testbed.2dog/` is the desktop host, `testbed.web/` the browser host and `testbed.tests/` the tests.
+
+## Add an example
+
+1. In the page folder, add `<Example>.cs` and `<Example>.Animation.cs`, and list the effect in the page's
+   `CreateEffects`.
+2. Add `Gallery/GDScript/<Example>.gd` with the same motion, animating only the nodes in `SceneTargets`.
+3. In `testbed.tests/Integration/`, add the example to the teardown test in `GalleryLifetimeTests.cs` and raise the
+   example count in `GallerySourceTests.cs`. The language comparison finds it on its own.
+
+## Test
+
+```powershell
+dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release
+dotnet test testbed/testbed.tests/testbed.tests.csproj -c Debug --filter "FullyQualifiedName~GalleryLanguageTests"
+dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true
+```
+
+Run each command on its own: they build different tests into the same output.
+
+- **Headless** tests run both languages side by side and sample them at the same times. They also cover teardown,
+  language and page switching, the composer controls, button clicks and that the viewer shows the compiled source.
+- **Debug** turns GDScript warnings into errors, so this run fails on a warning in any example.
+- **Rendering** tests play every page in both languages, compare the shader examples and check the source layout at
+  several window sizes.
+
+Two differences between the languages are expected. C# eases with single precision and GDScript with double, so a
+value just below an Expo or Elastic endpoint can round onto it in C#. On the easing race's 240-pixel track that moves
+a sample by 0.1171875 pixels, and the comparison allows exactly that. Confetti trajectories are random, so the
+comparison skips them.

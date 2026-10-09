@@ -112,6 +112,28 @@ public class TweenInstanceTests
         Assert.Equal(Reason.Completed, tween.CompletionReason);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void OneLargeDeltaReachesTheSameStateAsManySmallOnes(bool pingPong)
+    {
+        using var whole = new TweenScheduler();
+        using var pieces = new TweenScheduler();
+        var definition = new PlainTween
+        {
+            From = -1, To = 2, Duration = 1, Delay = 0.25, Offset = 0.5,
+            PingPong = pingPong, PingPongInterval = 0.25, RepeatInterval = 0.25, Repeats = TweenOptions.Infinite,
+        };
+        Box a = new(), b = new();
+        var first = whole.Add(a, definition);
+        var second = pieces.Add(b, definition);
+        whole.Update(123.5);
+        for (var i = 0; i < 494; i++) pieces.Update(0.25);
+        Assert.Equal(a.Value, b.Value);
+        Assert.Equal(first.State, second.State);
+        Assert.Equal(first.Progress, second.Progress);
+    }
+
     [Fact]
     public void WeksDoesNotAffectForwardOnlyRepeats()
     {
@@ -148,16 +170,17 @@ public class TweenInstanceTests
     }
 
     [Fact]
-    public void OmittedEndpointsUseTheValueCapturedAtAddition()
+    public void OmittedEndpointsUseTheValueCapturedAtActivation()
     {
         using var scheduler = new TweenScheduler();
         var toward = new Box { Value = 4 };
         var back = new Box { Value = 4 };
         scheduler.Add(toward, new PlainTween { From = 0, Duration = 1 });
         scheduler.Add(back, new PlainTween { To = 0, Duration = 1 });
+        back.Value = 8;
         scheduler.Update(0.25);
         Assert.Equal(1, toward.Value);
-        Assert.Equal(3, back.Value);
+        Assert.Equal(6, back.Value);
     }
 
     [Fact]
@@ -165,12 +188,16 @@ public class TweenInstanceTests
     {
         using var scheduler = new TweenScheduler();
         var box = new Box();
+        var later = new Box { Value = 20 };
         var definition = new PlainTween { To = 10, Duration = 1 };
         scheduler.Add(box, definition);
+        definition.To = 30;
+        scheduler.Add(later, definition);
         definition.To = -10;
         definition.Duration = 100;
         scheduler.Update(0.5);
         Assert.Equal(5, box.Value);
+        Assert.Equal(25, later.Value);
     }
 
     [Fact]
@@ -219,6 +246,23 @@ public class TweenInstanceTests
         Assert.Equal(3, box.Value);
     }
 
+    [Theory]
+    [InlineData(FillMode.None, 7, 7)]
+    [InlineData(FillMode.ApplyFromDuringDelay, 0, 7)]
+    [InlineData(FillMode.RetainFinalValue, 7, 10)]
+    [InlineData(FillMode.Both, 0, 10)]
+    public void FillModesDecideTheDelayAndFinalValues(FillMode fill, float duringDelay, float final)
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box { Value = 7 };
+        scheduler.Add(box, new PlainTween { From = 0, To = 10, Delay = 1, Duration = 1, Fill = fill });
+        Assert.Equal(7, box.Value);
+        scheduler.Update(0);
+        Assert.Equal(duringDelay, box.Value);
+        scheduler.Update(2);
+        Assert.Equal(final, box.Value);
+    }
+
     [Fact]
     public void DelayedApplyFromWritesAtActivationOnlyWhenRequested()
     {
@@ -263,6 +307,24 @@ public class TweenInstanceTests
     }
 
     [Fact]
+    public async Task FailingRestorationFaultsTheTweenAndStillReleases()
+    {
+        using var scheduler = new TweenScheduler();
+        var released = 0;
+        var tween = scheduler.Add(new Box(), new ProbeTween
+        {
+            To = 1, Duration = 1, Fill = FillMode.None,
+            Restoring = (_, _) => throw new FormatException(), Releasing = () => released++,
+        });
+        var end = tween.End;
+        scheduler.Update(1);
+        await Assert.ThrowsAsync<FormatException>(() => end);
+        Assert.Equal(TweenState.Faulted, tween.State);
+        Assert.Equal(1, released);
+        Assert.Equal(0, scheduler.ActiveCount);
+    }
+
+    [Fact]
     public void CancellingFromEachStageStopsBeforeTheNextStage()
     {
         using var scheduler = new TweenScheduler();
@@ -299,13 +361,15 @@ public class TweenInstanceTests
         TweenInstance? current = null;
 
         // The final update cancels before restoration.
-        current = scheduler.Add(new Box(), new PlainTween
+        var unrestored = new Box();
+        current = scheduler.Add(unrestored, new PlainTween
         {
             To = 5, Duration = 1, Fill = FillMode.None,
             OnUpdate = (t, v) => { if (v == 5) t.Cancel(); },
         });
         scheduler.Update(1);
         reasons.Add(current.CompletionReason);
+        Assert.Equal(5, unrestored.Value);
 
         // Restoration itself cancels, so the restored value is not reported.
         var restoredReports = 0;
@@ -406,6 +470,7 @@ public class TweenInstanceTests
         faultingDefinition.OnStart = _ => throw new FormatException();
         var faulted = scheduler.Add(new Box(), faultingDefinition);
         cancelled.Initialize();
+        cancelled.Cancel();
         cancelled.Cancel();
         scheduler.Update(1);
         Assert.Equal(["b cancel", "b finally", "a end", "a finally", "c finally"], events);
@@ -546,6 +611,12 @@ public class TweenInstanceTests
         Assert.Same(early.End, waiting);
         var cancellable = early.AwaitDecommissionAsync(TestContext.Current.CancellationToken);
         Assert.NotSame(early.End, cancellable);
+        // Cancelling a wait abandons only that wait.
+        using var source = new CancellationTokenSource();
+        var abandoned = early.AwaitDecommissionAsync(source.Token);
+        source.Cancel();
+        Assert.True(abandoned.IsCanceled);
+        Assert.False(early.IsTerminal);
         scheduler.Update(1);
         Assert.True(cancellable.IsCompletedSuccessfully);
         Assert.Equal(Reason.Completed, await cancellable);

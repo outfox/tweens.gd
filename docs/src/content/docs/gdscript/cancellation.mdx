@@ -44,15 +44,15 @@ Godot doesn't emit `finished` for a killed tween, so code awaiting it never cont
 | --- | --- |
 | `COMPLETED` | Reached the natural end |
 | `CANCELLED` | Cancelled through a handle or `cancel_tweens()` |
-| `TARGET_FREED` | Target was freed or queued for deletion |
-| `OWNER_EXITED` | Owner left the tree |
+| `TARGET_FREED` | Target was queued for deletion, or found freed |
+| `OWNER_EXITED` | Owner left the tree, or a separate owner was queued for deletion |
 | `RUNNER_DISPOSED` | Tree or scheduler shut down |
 | `FAILED` | Start or playback hit a problem; read `error` |
 | `WAIT_CANCELLED` | Only the wait was cancelled |
 
 <Aside type="caution" title="Compare against COMPLETED">
 
-Freeing a node reports `TARGET_FREED` after `queue_free()`, but `OWNER_EXITED` after `free()`, because Godot exits the tree first. Test for `COMPLETED` rather than a particular early reason.
+A node that owns its handle, as node targets do by default, reports `TARGET_FREED` after `queue_free()` but `OWNER_EXITED` after `free()`, because `free()` removes it from the tree before deleting it. Test for `COMPLETED` rather than a particular early reason.
 
 </Aside>
 

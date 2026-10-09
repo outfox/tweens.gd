@@ -10,16 +10,16 @@ namespace testbed.Tests.Integration;
 
 
 [Collection<HeadlessCollection>]
-public class DemoTests
+public class GalleryLifetimeTests
 {
     private readonly HeadlessFixture godot;
 
-    public DemoTests(HeadlessFixture godot)
+    public GalleryLifetimeTests(HeadlessFixture godot)
     {
         this.godot = godot;
         // The fixture boots the main scene. Remove it before checking the shared scheduler.
         Pump();
-        if (godot.Tree.CurrentScene is TweenDemo demo) demo.Free();
+        if (godot.Tree.CurrentScene is Gallery gallery) gallery.Free();
     }
 
     private void Pump() { for (var i = 0; i < 3; i++) godot.Engine.Iteration(); }
@@ -31,6 +31,7 @@ public class DemoTests
     [InlineData(nameof(CombinedTransforms))] [InlineData(nameof(CameraPan))] [InlineData(nameof(CurveFollower2D))]
     [InlineData(nameof(TextReveal))] [InlineData(nameof(ScrollingList))] [InlineData(nameof(RangeMeter))]
     [InlineData(nameof(OffsetTransforms))] [InlineData(nameof(GlowingRibbon))] [InlineData(nameof(LightSweep))]
+    [InlineData(nameof(ColorInterpolation))]
     [InlineData(nameof(ParticleStream))] [InlineData(nameof(PolygonEchoes))] [InlineData(nameof(CameraLens))]
     [InlineData(nameof(CurveFollower3D))] [InlineData(nameof(ParentedRotation))] [InlineData(nameof(Spotlight))]
     [InlineData(nameof(AlbedoFade))] [InlineData(nameof(EmissionPulse))] [InlineData(nameof(SharedMaterial))]
@@ -129,52 +130,52 @@ public class DemoTests
     [Fact]
     public void GalleryNavigationAndRestartDisposeThePreviousAnimation()
     {
-        var demo = GD.Load<PackedScene>("res://main.tscn").Instantiate<TweenDemo>();
-        godot.Tree.Root.AddChild(demo);
+        var gallery = GD.Load<PackedScene>("res://main.tscn").Instantiate<Gallery>();
+        godot.Tree.Root.AddChild(gallery);
         try
         {
             Pump();
             for (var round = 0; round < 2; round++)
-            for (var index = 0; index < TweenDemo.PageNames.Length; index++)
+            for (var index = 0; index < Gallery.PageNames.Length; index++)
             {
-                var old = demo.CurrentPage!;
+                var old = gallery.CurrentPage!;
                 var sequence = old.SequenceTask;
-                demo.SelectPage(index); Pump();
+                gallery.SelectPage(index); Pump();
                 Assert.False(GodotObject.IsInstanceValid(old));
                 if (sequence is not null) Assert.True(sequence.IsCompletedSuccessfully);
-                Assert.Equal(index, demo.SelectedPage);
+                Assert.Equal(index, gallery.SelectedPage);
 
-                var current = demo.CurrentPage!;
+                var current = gallery.CurrentPage!;
                 var animation = current.SequenceTask;
-                demo.RestartDemo(); Pump();
+                gallery.RestartPage(); Pump();
                 Assert.False(GodotObject.IsInstanceValid(current));
                 if (animation is not null) Assert.True(animation.IsCompletedSuccessfully);
-                if (demo.CurrentPage is not ShadersPage)
-                    Assert.False(Assert.IsAssignableFrom<Task>(demo.CurrentPage!.SequenceTask).IsCompleted);
+                if (gallery.CurrentPage is not ShadersPage)
+                    Assert.False(Assert.IsAssignableFrom<Task>(gallery.CurrentPage!.SequenceTask).IsCompleted);
             }
-            demo.SelectPage(1); demo.SelectPage(4); demo.SelectPage(0); Pump();
-            Assert.Equal(0, demo.SelectedPage);
-            Assert.False(demo.CurrentPage!.SequenceTask!.IsCompleted);
-            Assert.Throws<ArgumentOutOfRangeException>(() => demo.SelectPage(99));
+            gallery.SelectPage(1); gallery.SelectPage(4); gallery.SelectPage(0); Pump();
+            Assert.Equal(0, gallery.SelectedPage);
+            Assert.False(gallery.CurrentPage!.SequenceTask!.IsCompleted);
+            Assert.Throws<ArgumentOutOfRangeException>(() => gallery.SelectPage(99));
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Pump();
         Assert.Empty(godot.Errors.Drain());
     }
     [Fact]
     public void FreeingBeforeThePageStartsDropsTheDeferredStart()
     {
-        var demo = new TweenDemo(); godot.Tree.Root.AddChild(demo);
-        demo.Free();
+        var gallery = new Gallery(); godot.Tree.Root.AddChild(gallery);
+        gallery.Free();
         Pump();
         Assert.Empty(godot.Errors.Drain());
     }
     [Fact]
     public void LeavingDuringAnAwaitedSequenceSettlesItAndDisposesThePage()
     {
-        var demo = new TweenDemo(); godot.Tree.Root.AddChild(demo); Pump();
-        var page = demo.CurrentPage!; var sequence = page.SequenceTask!;
-        demo.Free();
+        var gallery = new Gallery(); godot.Tree.Root.AddChild(gallery); Pump();
+        var page = gallery.CurrentPage!; var sequence = page.SequenceTask!;
+        gallery.Free();
         Assert.True(sequence.IsCompletedSuccessfully);
         Assert.False(GodotObject.IsInstanceValid(page));
     }

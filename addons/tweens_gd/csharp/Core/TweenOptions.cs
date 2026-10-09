@@ -69,9 +69,11 @@ public enum Reason
     Completed,
     /// <summary>Playback was explicitly cancelled.</summary>
     Cancelled,
-    /// <summary>The target was freed or queued for deletion.</summary>
+    /// <summary>The target was queued for deletion, or found freed or disposed.</summary>
+    /// <remarks>Free() removes a node from the scene tree before deleting it, so a node that owns its tween, the
+    /// default for node targets, reports <see cref="OwnerExited"/> instead.</remarks>
     TargetFreed,
-    /// <summary>The owner left the scene tree.</summary>
+    /// <summary>The owner left the scene tree, or a separate owner node was queued for deletion.</summary>
     OwnerExited,
     /// <summary>The scheduler or scene tree was disposed.</summary>
     RunnerDisposed,

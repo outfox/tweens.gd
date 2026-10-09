@@ -74,7 +74,7 @@ internal static class Program
         engine.Start();
         PrintStartup(engine.Tree);
 
-        var gallery = engine.Tree.CurrentScene as TweenDemo;
+        var gallery = engine.Tree.CurrentScene as Gallery;
         gallery?.SelectLanguage(options.Language);
         SelectPage(gallery, options.GallerySnapshots is null ? options.GalleryPage : 0, options.GallerySource);
         var capturedPages = 0;
@@ -93,8 +93,8 @@ internal static class Program
             if (options.GallerySnapshots is null || frame % 60 != 0 || gallery is null) continue;
             var target = Path.Combine(options.GallerySnapshots, $"{capturedPages + 1:00}.png");
             SaveScreenshot(engine.Tree, target);
-            Console.WriteLine($"Captured {TweenDemo.PageNames[capturedPages]}");
-            if (++capturedPages == TweenDemo.PageNames.Length) engine.Tree.Quit();
+            Console.WriteLine($"Captured {Gallery.PageNames[capturedPages]}");
+            if (++capturedPages == Gallery.PageNames.Length) engine.Tree.Quit();
             else SelectPage(gallery, capturedPages, options.GallerySource);
         }
 
@@ -110,7 +110,7 @@ internal static class Program
         Console.WriteLine("Close the window to quit.");
     }
 
-    private static void SelectPage(TweenDemo? gallery, int page, int source)
+    private static void SelectPage(Gallery? gallery, int page, int source)
     {
         gallery?.SelectPage(page);
         if (source >= 0) gallery?.CurrentPage?.ShowSource(source);

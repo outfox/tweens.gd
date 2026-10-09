@@ -16,7 +16,7 @@ public class GalleryLanguageTests
     {
         this.godot = godot;
         Pump();
-        if (godot.Tree.CurrentScene is TweenDemo demo) demo.Free();
+        if (godot.Tree.CurrentScene is Gallery gallery) gallery.Free();
     }
 
     private void Pump() { for (var i = 0; i < 3; i++) godot.Engine.Iteration(); }
@@ -91,39 +91,39 @@ public class GalleryLanguageTests
     [Fact]
     public void GlobalSwitchChangesPlaybackAndSourceAndPreservesPageExampleAndDuration()
     {
-        var demo = new TweenDemo();
-        godot.Tree.Root.AddChild(demo);
+        var gallery = new Gallery();
+        godot.Tree.Root.AddChild(gallery);
         Pump();
         try
         {
-            var picker = Descendants(demo).OfType<OptionButton>().Single(n => n.Name == "LanguageSwitch");
-            var duration = Descendants(demo).OfType<HSlider>().Single();
+            var picker = Descendants(gallery).OfType<OptionButton>().Single(n => n.Name == "LanguageSwitch");
+            var duration = Descendants(gallery).OfType<HSlider>().Single();
             duration.Value = 0.8;
-            for (var pageIndex = 0; pageIndex < TweenDemo.PageNames.Length; pageIndex++)
+            for (var pageIndex = 0; pageIndex < Gallery.PageNames.Length; pageIndex++)
             {
-                demo.SelectPage(pageIndex);
+                gallery.SelectPage(pageIndex);
                 Pump();
-                demo.CurrentPage!.ShowSource(0);
+                gallery.CurrentPage!.ShowSource(0);
                 foreach (var language in new[] { GalleryLanguage.GDScript, GalleryLanguage.CSharp })
                 {
-                    var old = demo.CurrentPage!;
+                    var old = gallery.CurrentPage!;
                     var sequence = old.SequenceTask;
                     picker.Select((int)language);
                     picker.EmitSignal(OptionButton.SignalName.ItemSelected, (int)language);
                     Pump();
                     Assert.False(GodotObject.IsInstanceValid(old));
                     if (sequence is not null) Assert.True(sequence.IsCompletedSuccessfully);
-                    Assert.Equal(pageIndex, demo.SelectedPage);
-                    Assert.Equal(language, demo.Language);
-                    Assert.Equal(0, demo.CurrentPage!.SelectedEffect);
+                    Assert.Equal(pageIndex, gallery.SelectedPage);
+                    Assert.Equal(language, gallery.Language);
+                    Assert.Equal(0, gallery.CurrentPage!.SelectedEffect);
                     Assert.Equal(0.8, duration.Value);
-                    Assert.All(demo.CurrentPage.Effects, effect => Assert.Equal(language, effect.Language));
-                    var source = demo.CurrentPage.SourceView;
+                    Assert.All(gallery.CurrentPage.Effects, effect => Assert.Equal(language, effect.Language));
+                    var source = gallery.CurrentPage.SourceView;
                     Assert.EndsWith(language == GalleryLanguage.CSharp ? ".cs" : ".gd", source.Source.Path);
                     Assert.Equal(Godot.FileAccess.GetFileAsString("res://" + source.Source.Path).Replace("\r\n", "\n"), source.Code.Text);
                     if (language == GalleryLanguage.GDScript)
                     {
-                        Assert.Equal(0, TweenRuntime.GetRunner(demo).Scheduler.ActiveCount);
+                        Assert.Equal(0, TweenRuntime.GetRunner(gallery).Scheduler.ActiveCount);
                         var files = Descendants(source).OfType<OptionButton>().Single();
                         Assert.Equal("Shared scene · C#", files.GetItemText(1));
                         files.EmitSignal(OptionButton.SignalName.ItemSelected, 2);
@@ -135,19 +135,19 @@ public class GalleryLanguageTests
                         Assert.Equal(0, scheduler.Get("active_count").AsInt32());
                 }
             }
-            demo.SelectLanguage(GalleryLanguage.GDScript);
-            demo.SelectPage(2);
-            demo.SelectLanguage(GalleryLanguage.CSharp);
-            demo.SelectLanguage(GalleryLanguage.GDScript);
+            gallery.SelectLanguage(GalleryLanguage.GDScript);
+            gallery.SelectPage(2);
+            gallery.SelectLanguage(GalleryLanguage.CSharp);
+            gallery.SelectLanguage(GalleryLanguage.GDScript);
             Pump();
-            Assert.Equal(2, demo.SelectedPage);
-            Assert.Equal(0, TweenRuntime.GetRunner(demo).Scheduler.ActiveCount);
-            demo.RestartDemo();
+            Assert.Equal(2, gallery.SelectedPage);
+            Assert.Equal(0, TweenRuntime.GetRunner(gallery).Scheduler.ActiveCount);
+            gallery.RestartPage();
             Pump();
-            Assert.Equal(GalleryLanguage.GDScript, demo.CurrentPage!.Language);
-            Assert.Throws<ArgumentOutOfRangeException>(() => demo.SelectLanguage((GalleryLanguage)99));
+            Assert.Equal(GalleryLanguage.GDScript, gallery.CurrentPage!.Language);
+            Assert.Throws<ArgumentOutOfRangeException>(() => gallery.SelectLanguage((GalleryLanguage)99));
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Pump();
         Assert.Equal(0, GDScriptScheduler()!.Get("active_count").AsInt32());
         Assert.Empty(godot.Errors.Drain());
@@ -156,13 +156,13 @@ public class GalleryLanguageTests
     [Fact]
     public void GDScriptButtonClicksUseOnlyTheGDScriptScheduler()
     {
-        var demo = new TweenDemo();
-        demo.SelectLanguage(GalleryLanguage.GDScript);
-        godot.Tree.Root.AddChild(demo);
+        var gallery = new Gallery();
+        gallery.SelectLanguage(GalleryLanguage.GDScript);
+        godot.Tree.Root.AddChild(gallery);
         Pump();
         try
         {
-            var effect = Assert.IsType<JellyButton>(demo.CurrentPage!.Effects[2]);
+            var effect = Assert.IsType<JellyButton>(gallery.CurrentPage!.Effects[2]);
             var targets = effect.SceneTargets;
             var button = targets["button"].As<Button>();
             var score = targets["score"].As<Label>();
@@ -170,9 +170,9 @@ public class GalleryLanguageTests
             button.EmitSignal(BaseButton.SignalName.Pressed);
             for (var i = 0; i < 24; i++) GDScriptScheduler()!.Call("update", 0.025);
             Assert.Equal("020", score.Text);
-            Assert.Equal(0, TweenRuntime.GetRunner(demo).Scheduler.ActiveCount);
+            Assert.Equal(0, TweenRuntime.GetRunner(gallery).Scheduler.ActiveCount);
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Pump();
         Assert.Equal(0, GDScriptScheduler()!.Get("active_count").AsInt32());
         Assert.Empty(godot.Errors.Drain());
@@ -184,18 +184,18 @@ public class GalleryLanguageTests
     [Fact]
     public void ComposerControlsChangeRealPlaybackAndSurviveDurationAndLanguageChanges()
     {
-        var demo = new TweenDemo();
-        godot.Tree.Root.AddChild(demo);
+        var gallery = new Gallery();
+        godot.Tree.Root.AddChild(gallery);
         Pump();
         try
         {
-            demo.SelectPage(Array.IndexOf(TweenDemo.PageNames, "Easing"));
+            gallery.SelectPage(Array.IndexOf(Gallery.PageNames, "Easing"));
             Pump();
             foreach (var language in new[] { GalleryLanguage.CSharp, GalleryLanguage.GDScript })
             {
-                demo.SelectLanguage(language);
+                gallery.SelectLanguage(language);
                 Pump();
-                var targets = demo.CurrentPage!.Effects[0].SceneTargets;
+                var targets = gallery.CurrentPage!.Effects[0].SceneTargets;
                 var entry = targets["entry"].As<OptionButton>();
                 entry.Select(entry.GetItemIndex(3)); // Quad
                 entry.EmitSignal(OptionButton.SignalName.ItemSelected, entry.Selected);
@@ -206,10 +206,10 @@ public class GalleryLanguageTests
                 targets["blend"].As<OptionButton>().Select((int)BlendType.Linear);
                 targets["blend"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, (int)BlendType.Linear);
                 targets["width"].As<HSlider>().Value = 0.8;
-                var duration = Descendants(demo).OfType<HSlider>().Single(s => s.Name != "EasingSkew" && s.Name != "EasingWidth");
+                var duration = Descendants(gallery).OfType<HSlider>().Single(s => s.Name != "EasingSkew" && s.Name != "EasingWidth");
                 duration.Value = duration.Value == 2 ? 1 : 2; // Rebuild while keeping the composition.
                 Pump();
-                targets = demo.CurrentPage!.Effects[0].SceneTargets;
+                targets = gallery.CurrentPage!.Effects[0].SceneTargets;
                 Assert.Equal(3, targets["entry"].As<OptionButton>().GetSelectedId());
                 Assert.Equal(4, targets["exit"].As<OptionButton>().GetSelectedId());
                 Assert.Equal(0.75, targets["skew"].As<HSlider>().Value);
@@ -217,14 +217,14 @@ public class GalleryLanguageTests
                 Assert.Equal(0.8, targets["width"].As<HSlider>().Value);
                 // Reset again to remove wall-clock progress from Pump, then sample exactly halfway.
                 targets["entry"].As<OptionButton>().EmitSignal(OptionButton.SignalName.ItemSelected, targets["entry"].As<OptionButton>().Selected);
-                if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(demo).Scheduler.Update(duration.Value / 2);
+                if (language == GalleryLanguage.CSharp) TweenRuntime.GetRunner(gallery).Scheduler.Update(duration.Value / 2);
                 else GDScriptScheduler()!.Call("update", duration.Value / 2);
                 Assert.InRange(Math.Abs(targets["ball"].As<Polygon2D>().Position.X - (-200.0 / 3)), 0, 0.001);
                 var points = targets["resultCurve"].As<Line2D>().Points;
                 Assert.InRange(Math.Abs(points[120].Y - 22), 0, 0.001);
             }
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Pump();
         Assert.Empty(godot.Errors.Drain());
     }

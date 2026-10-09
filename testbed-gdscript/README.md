@@ -30,14 +30,12 @@ metadata/bindings have dedicated suites. `--rendering` opens a minimized OpenGL
 window and also checks shader defaults, instance uniforms and a rendered pixel.
 `--lifecycle` runs the full suite through three engine starts/stops in one process.
 
-The addon copies Curve points, tangents, bounds and bake resolution explicitly.
-The pinned 2dog 4.7.2.91 build crashes on `Curve.duplicate()` after an engine restart;
-`dotnet run --project testbed-gdscript/host -c Release -- --restart-probe` preserves
-the small no-addon reproduction in `restart_probe.gd` (this diagnostic intentionally
-reproduces the native crash and is not a passing CI test). The addon workaround is
-covered by the regular and restart suites.
-The announced 4.7.2.92 restart fixes are awaiting package availability; this
-validation remains pinned to .91 until the new package can be tested.
+The addon copies Curve points, tangents, bounds and bake resolution explicitly, because
+2dog 4.7.2.91 crashed on `Curve.duplicate()` after an engine restart. The regular and
+restart suites cover that workaround.
+`dotnet run --project testbed-gdscript/host -c Release -- --restart-probe` runs the small
+no-addon reproduction in `restart_probe.gd`; it is a manual diagnostic, not a CI test, and
+passes on 2dog 4.7.2.109. The project uses the newest 2dog through `testbed/Directory.Build.props`.
 
 To use an installed standard Godot executable instead:
 

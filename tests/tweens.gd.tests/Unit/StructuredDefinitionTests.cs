@@ -4,6 +4,7 @@
 using System.Linq.Expressions;
 using Expression = System.Linq.Expressions.Expression;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using Godot;
 using tweens.gd.Tests.Support;
@@ -44,6 +45,14 @@ public class StructuredDefinitionTests
         Assert.All(adapters, name => Assert.Contains(name, definitions));
         Assert.Contains("Property", definitions);
         Assert.True(definitions.Count > 300, $"Only {definitions.Count} definitions were generated.");
+
+        // Every definition is immutable: a readonly struct whose properties are init-only.
+        Assert.All(DefinitionTypes(), type =>
+        {
+            Assert.True(type.IsDefined(typeof(IsReadOnlyAttribute)), type.Name);
+            Assert.All(type.GetProperties(), property =>
+                Assert.Contains(typeof(IsExternalInit), property.SetMethod!.ReturnParameter.GetRequiredCustomModifiers()));
+        });
     }
 
     [Fact]
@@ -238,14 +247,16 @@ public class StructuredDefinitionTests
         ITweenDefinition<Box, float> boxed = movement;
         void Concrete() { using var scheduler = new TweenScheduler(); scheduler.Add(target, movement).Cancel(); }
         void Interface() { using var scheduler = new TweenScheduler(); scheduler.Add(target, boxed).Cancel(); }
-        static long Allocated(Action start)
+        // Bytes per start: alongside other tests, a one-off 736-byte allocation can land in either window.
+        static long PerStart(Action start)
         {
+            const int starts = 1024;
             for (var i = 0; i < 128; i++) start();
             var before = GC.GetAllocatedBytesForCurrentThread();
-            for (var i = 0; i < 1024; i++) start();
-            return GC.GetAllocatedBytesForCurrentThread() - before;
+            for (var i = 0; i < starts; i++) start();
+            return (GC.GetAllocatedBytesForCurrentThread() - before) / starts;
         }
-        Assert.Equal(Allocated(Interface), Allocated(Concrete));
+        Assert.Equal(PerStart(Interface), PerStart(Concrete));
     }
 
     [Fact]
@@ -310,12 +321,27 @@ public class StructuredDefinitionTests
     }
 
     [Fact]
+    public void InvalidTimingIsRejectedBeforeCallbacksOrWrites()
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box { Value = 3 };
+        var added = false;
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            scheduler.Add(box, movement with { Delay = double.NaN, OnAdd = _ => added = true }));
+        Assert.False(added);
+        Assert.Equal(3, box.Value);
+        Assert.Equal(0, scheduler.ActiveCount);
+    }
+
+    [Fact]
     public void DefinitionsAreValuesAndDefaultToRetainingTheFinalValue()
     {
         var copy = movement with { };
         Assert.Equal(movement, copy);
         Assert.Equal(movement.GetHashCode(), copy.GetHashCode());
         Assert.NotEqual(movement, movement with { Delay = 1 });
+        Assert.Equal(default(Tweens.Modulate), new Tweens.Modulate());
+        Assert.Equal(FillMode.RetainFinalValue, default(Tweens.Modulate).Fill);
         Assert.Equal(FillMode.RetainFinalValue, new Tweens.Modulate().Fill);
         Assert.Equal(FillMode.RetainFinalValue, ((ITweenDefinition<CanvasItem, Color>)new Tweens.Modulate()).CreatePlayback().Fill);
         Assert.Equal(new Tweens.Modulate { Options = new TweenOptions { Duration = 2 } }, new Tweens.Modulate { Duration = 2 });

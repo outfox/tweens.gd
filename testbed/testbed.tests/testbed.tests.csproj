@@ -20,7 +20,6 @@
 
     <!-- Test framework packages -->
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
         <PackageReference Include="coverlet.collector" Version="10.*"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.*"/>
         <PackageReference Include="xunit.v3" Version="3.*"/>
@@ -37,7 +36,6 @@
 
     <ItemGroup>
         <ProjectReference Include="../testbed.csproj"/>
-        <ProjectReference Include="../../csharp.generators/tweens.gd.Generators.csproj" />
     </ItemGroup>
 
     <!-- Godot project location: the parent directory (hosts are nested inside
@@ -56,12 +54,9 @@
     <ItemGroup Condition="'$(Configuration)' == 'Editor'">
         <PackageReference Include="GodotSharpEditor" Version="$(TwoDogGodotVersion)" />
     </ItemGroup>
-    <!-- Rendered shader contracts run in a separate process from the headless fixture. -->
-    <ItemGroup Condition="'$(RenderingTests)' != 'true'">
-        <Compile Remove="Integration/ShaderTweenTests.cs;Integration/MaterialRenderingTests.cs;Integration/GalleryRenderingTests.cs" />
-    </ItemGroup>
-    <ItemGroup Condition="'$(RenderingTests)' == 'true'">
-        <Compile Remove="BasicTests.cs;Core/**/*.cs;Integration/**/*.cs" />
-        <Compile Include="Integration/ShaderTweenTests.cs;Integration/MaterialRenderingTests.cs;Integration/GalleryRenderingTests.cs" />
+    <!-- One Godot engine per test process: -p:RenderingTests=true builds only Rendering/, which needs a display. -->
+    <ItemGroup>
+        <Compile Remove="Rendering/**/*.cs" Condition="'$(RenderingTests)' != 'true'" />
+        <Compile Remove="Integration/**/*.cs" Condition="'$(RenderingTests)' == 'true'" />
     </ItemGroup>
 </Project>

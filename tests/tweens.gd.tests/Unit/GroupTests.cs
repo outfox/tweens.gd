@@ -52,7 +52,7 @@ public class GroupTests
     }
 
     [Fact]
-    public async Task OneStoppedMemberCancelsTheOthers()
+    public async Task OneStoppedMemberCancelsTheOthersAndGivesTheGroupItsReason()
     {
         using var scheduler = new TweenScheduler();
         var a = Start(scheduler, 1);
@@ -62,6 +62,12 @@ public class GroupTests
         b.Cancel();
         Assert.All(new[] { a, b, c }, t => Assert.Equal(Reason.Cancelled, t.CompletionReason));
         Assert.Equal(Reason.Cancelled, await group.End);
+
+        var disposing = new TweenScheduler();
+        var disposed = Group.Of(Start(disposing, 1), Start(disposing, 1));
+        disposing.Dispose();
+        Assert.All(disposed.Members, t => Assert.True(t.IsTerminal));
+        Assert.Equal(Reason.RunnerDisposed, await disposed.End);
     }
 
     [Fact]

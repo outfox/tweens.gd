@@ -36,6 +36,13 @@
         </ProjectReference>
     </ItemGroup>
 
+    <!-- The generator's unit tests drive it through Roslyn. Every suite references it, as suites share
+         obj/project.assets.json; like the library, it builds once for all of them. -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+        <ProjectReference Include="../../csharp.generators/tweens.gd.Generators.csproj" GlobalPropertiesToRemove="TestSuite;LibraryFramework" />
+    </ItemGroup>
+
     <!-- The Godot project is the parent directory; .gdignore hides this project from Godot's importer. -->
     <PropertyGroup>
         <GodotProjectDir>..</GodotProjectDir>

@@ -44,15 +44,15 @@ Godot doesn't emit `finished` for a killed tween, so code awaiting it never cont
 | --- | --- |
 | `Completed` | Reached the natural end |
 | `Cancelled` | Cancelled through a handle or `CancelTweens` |
-| `TargetFreed` | Target was freed or queued for deletion |
-| `OwnerExited` | Owner left the tree |
+| `TargetFreed` | Target was queued for deletion, or found freed or disposed |
+| `OwnerExited` | Owner left the tree, or a separate owner was queued for deletion |
 | `RunnerDisposed` | Tree or scheduler shut down |
 
 Errors throw instead: a start with invalid arguments throws at the call, and awaiting `End` rethrows a fault from an easing, setter, or callback.
 
 <Aside type="caution" title="Compare against Completed">
 
-Freeing a node reports `TargetFreed` after `QueueFree()`, but `OwnerExited` after `Free()`, because Godot exits the tree first. Test for `Completed` rather than a particular early reason.
+A node that owns its tween, as node targets do by default, reports `TargetFreed` after `QueueFree()` but `OwnerExited` after `Free()`, because `Free()` removes it from the tree before deleting it. Test for `Completed` rather than a particular early reason.
 
 </Aside>
 

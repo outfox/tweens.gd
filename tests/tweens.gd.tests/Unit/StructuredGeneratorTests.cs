@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using tweens.gd.Generators;
 
-namespace testbed.Tests.Core;
+namespace tweens.gd.Tests.Unit;
 
 public class StructuredGeneratorTests
 {

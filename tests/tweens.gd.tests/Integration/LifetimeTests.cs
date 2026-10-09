@@ -37,14 +37,19 @@ public class LifetimeTests(HeadlessFixture godot)
         Assert.Equal(0, node.Position.X);
     }
 
-    [Fact]
-    public void RemovingTheTargetFromTheTreeSettlesAsOwnerExited()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task RemovingTheTargetFromTheTreeSettlesAsOwnerExited(bool treePaused)
     {
         using var scope = new SceneScope(godot);
         var node = scope.Add(new Node2D());
-        var tween = node.TweenPositionX(10, 1);
-        scope.Root.RemoveChild(node);
-        Assert.Equal(Reason.OwnerExited, tween.CompletionReason);
+        var end = node.TweenPositionX(10, 1).End;
+        godot.Tree.Paused = treePaused;
+        try { scope.Root.RemoveChild(node); }
+        finally { godot.Tree.Paused = false; }
+        Assert.True(end.IsCompleted);
+        Assert.Equal(Reason.OwnerExited, await end);
         node.Free();
     }
 
@@ -103,20 +108,35 @@ public class LifetimeTests(HeadlessFixture godot)
         node.Free();
     }
 
-    [Fact]
-    public void ResourceTweensFollowTheirOwnerNode()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ResourceTweensFollowTheirOwnerNode(bool paused)
     {
         using var scope = new SceneScope(godot);
         var material = scope.Track(new StandardMaterial3D());
         var removed = scope.Add(new Node());
         var queued = scope.Add(new Node());
-        var byRemoval = material.TweenMetallic(1, 1, removed);
+        TweenInstance[] byRemoval =
+        [
+            material.TweenMetallic(1, 1, removed),
+            material.Tween(new Tweens.MaterialMetallicSpecular(1, 1), removed),
+            removed.Tween(material, new Tweens.MaterialAlbedoAlpha(0, 1)),
+        ];
         var byQueue = material.TweenRoughness(0, 1, queued);
+        var unowned = material.Tween(new Tweens.MaterialNormalScale(2, 1), godot.Tree);
+        if (paused)
+        {
+            foreach (var tween in byRemoval) tween.Pause();
+            byQueue.Pause();
+        }
         scope.Root.RemoveChild(removed);
-        Assert.Equal(Reason.OwnerExited, byRemoval.CompletionReason);
+        Assert.All(byRemoval, tween => Assert.Equal(Reason.OwnerExited, tween.CompletionReason));
         queued.QueueFree();
         scope.Advance(0.25);
         Assert.Equal(Reason.OwnerExited, byQueue.CompletionReason);
+        scope.Advance(0.75);
+        Assert.Equal(Reason.Completed, unowned.CompletionReason);
         removed.Free();
     }
 
@@ -131,18 +151,104 @@ public class LifetimeTests(HeadlessFixture godot)
         Assert.Equal(Reason.TargetFreed, tween.CompletionReason);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task PausedTweensStillSettleWhenTheirTargetIsFreed(bool suppress)
+    {
+        using var scope = new SceneScope(godot);
+        var node = scope.Add(new Node2D());
+        var material = new StandardMaterial3D();
+        var calls = 0;
+        var queued = node.TweenPositionX(10, 1, d =>
+        {
+            d.SuppressCallbacksWhenTargetInvalid = suppress;
+            d.OnFinally = _ => calls++;
+        });
+        var disposed = material.TweenMetallic(1, 1, godot.Tree, d =>
+        {
+            d.SuppressCallbacksWhenTargetInvalid = suppress;
+            d.OnFinally = _ => calls++;
+        });
+        // Activated playback owes its terminal callbacks unless suppressed.
+        scope.Advance(0);
+        queued.Pause();
+        disposed.Pause();
+        node.QueueFree();
+        material.Dispose();
+        scope.Frames();
+        Assert.Equal(Reason.TargetFreed, await queued.End);
+        Assert.Equal(Reason.TargetFreed, await disposed.End);
+        Assert.Equal(suppress ? 0 : 2, calls);
+    }
+
+    // Each phase invalidates the target from a later hook: OnAdd, OnStart, the easing function or OnUpdate.
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public async Task TargetsInvalidatedFromCallbacksAreNotWrittenAgain(int phase)
+    {
+        using var scope = new SceneScope(godot);
+        var node = scope.Add(new Node2D());
+        var material = new StandardMaterial3D();
+        var freed = node.TweenPositionX(10, 1, d => InvalidateFrom(d, phase, node.Free));
+        var disposed = material.TweenRoughness(0, 1, godot.Tree, d => InvalidateFrom(d, phase, material.Dispose));
+        scope.Advance(1);
+        // Free() removes a node that owns its tween from the tree before deleting it, which reports OwnerExited.
+        Assert.Equal(Reason.OwnerExited, await freed.End);
+        Assert.Equal(Reason.TargetFreed, await disposed.End);
+    }
+
+    private static void InvalidateFrom<TTarget, TValue>(TweenDefinition<TTarget, TValue> definition, int phase,
+        Action invalidate) where TTarget : class where TValue : struct
+    {
+        // Restoring the start value would be one more write.
+        definition.Fill = FillMode.None;
+        switch (phase)
+        {
+            case 0: definition.OnAdd = _ => invalidate(); break;
+            case 1: definition.OnStart = _ => invalidate(); break;
+            case 2: definition.EaseFunction = t => { invalidate(); return t; }; break;
+            default: definition.OnUpdate = (_, _) => invalidate(); break;
+        }
+    }
+
     [Fact]
     public void TargetsInvalidatedWhilePreparingAreRejected()
     {
         using var scope = new SceneScope(godot);
         var node = scope.Add(new Node2D());
         var material = new StandardMaterial3D();
-        var a = node.Tween(new PreparingTween<Node2D>(n => n.QueueFree()));
+        var released = 0;
+        var a = node.Tween(new PreparingTween<Node2D>(n => n.QueueFree(), () => released++));
         scope.Advance(0);
         Assert.Equal(Reason.TargetFreed, a.CompletionReason);
-        var b = material.Tween(new PreparingTween<StandardMaterial3D>(m => m.Dispose()), godot.Tree);
+        var b = material.Tween(new PreparingTween<StandardMaterial3D>(m => m.Dispose(), () => released++), godot.Tree);
         scope.Advance(0);
         Assert.Equal(Reason.TargetFreed, b.CompletionReason);
+        Assert.Equal(2, released);
+    }
+
+    [Fact]
+    public void SharedResourcesAreAnimatedInPlaceAndOutliveTheirUsers()
+    {
+        using var scope = new SceneScope(godot);
+        var material = scope.Track(new StandardMaterial3D { Roughness = 0 });
+        var first = scope.Add(new MeshInstance3D { MaterialOverride = material });
+        var second = scope.Add(new MeshInstance3D { MaterialOverride = material });
+        var tween = material.TweenRoughness(1, 1, godot.Tree);
+        scope.Advance(0.5);
+        Assert.Same(material, first.MaterialOverride);
+        Assert.Same(material, second.MaterialOverride);
+        Assert.Equal(0.5f, material.Roughness);
+        first.MaterialOverride = null;
+        first.Free();
+        scope.Advance(0.5);
+        Assert.Equal(Reason.Completed, tween.CompletionReason);
+        Assert.Equal(1, material.Roughness);
+        Assert.Same(material, second.MaterialOverride);
     }
 
     [Fact]
@@ -216,6 +322,12 @@ public class LifetimeTests(HeadlessFixture godot)
         var always = node.TweenScale(Vector2.One * 2, 1, playback: new PlaybackOptions { PauseMode = TweenPauseMode.Always });
         var resource = material.TweenMetallic(1, 1, godot.Tree);
         var ownedResource = material.TweenRoughness(0, 1, godot.Tree, owner: node);
+        // Bound tweens follow whether their owner processes, so an always-processing owner keeps them running.
+        var processing = scope.Add(new Node2D { ProcessMode = Node.ProcessModeEnum.Always });
+        var processingBound = processing.TweenPositionX(10, 1);
+        var processingResource = material.TweenMetallicSpecular(1, 1, godot.Tree, owner: processing);
+        var held = processing.TweenRotation(1, 1, playback: new PlaybackOptions { PauseMode = TweenPauseMode.Always });
+        held.Pause();
         godot.Tree.Paused = true;
         try
         {
@@ -225,6 +337,9 @@ public class LifetimeTests(HeadlessFixture godot)
             Assert.Equal(0.5f, always.Progress);
             Assert.Equal(0, resource.Progress);
             Assert.Equal(0, ownedResource.Progress);
+            Assert.Equal(0.5f, processingBound.Progress);
+            Assert.Equal(0.5f, processingResource.Progress);
+            Assert.Equal(0, held.Progress);
         }
         finally { godot.Tree.Paused = false; }
         scope.Advance(0.5);
@@ -288,7 +403,14 @@ public class LifetimeTests(HeadlessFixture godot)
         curve.AddPoint(new Vector2(1, 1));
         var node = scope.Add(new Node2D());
         var expected = 10 * curve.Sample(sampleTime);
-        var tween = node.TweenPositionX(10, 1, d => { d.Curve = curve; d.Skew = skew; d.Weks = skew; d.PingPong = true; });
+        var tween = node.TweenPositionX(10, 1, d =>
+        {
+            d.Curve = curve;
+            d.Ease = EaseType.ExpoIn;
+            d.Skew = skew;
+            d.Weks = skew;
+            d.PingPong = true;
+        });
         curve.ClearPoints();
         scope.Advance(0.5);
         Assert.Equal(expected, node.Position.X, 3);
@@ -303,12 +425,14 @@ public class LifetimeTests(HeadlessFixture godot)
         }));
     }
 
-    private sealed class PreparingTween<TTarget>(Action<TTarget> prepare) : TweenDefinition<TTarget, float>
-        where TTarget : GodotObject
+    // Preparation always invalidates the target or owner here, so playback must never read or write.
+    private sealed class PreparingTween<TTarget>(Action<TTarget> prepare, Action? release = null)
+        : TweenDefinition<TTarget, float> where TTarget : GodotObject
     {
         protected override void Prepare(TTarget target) => prepare(target);
-        protected override float Read(TTarget target) => 0;
-        protected override void Write(TTarget target, float value) { }
+        protected override float Read(TTarget target) => throw new InvalidOperationException(nameof(Read));
+        protected override void Write(TTarget target, float value) => throw new InvalidOperationException(nameof(Write));
         protected override float Interpolate(float from, float to, float weight) => to;
+        protected override void Release() => release?.Invoke();
     }
 }

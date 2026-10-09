@@ -18,7 +18,7 @@ public class GallerySourceTests(HeadlessFixture godot)
     {
         var types = typeof(GalleryEffect).Assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(GalleryEffect)) && !t.IsAbstract && !t.IsNested).ToArray();
-        Assert.Equal(33, types.Length);
+        Assert.Equal(34, types.Length);
         foreach (var type in types)
         {
             var effect = (GalleryEffect)Activator.CreateInstance(type)!;
@@ -45,14 +45,14 @@ public class GallerySourceTests(HeadlessFixture godot)
     [Fact]
     public void EveryCardDisplaysTheExactCompiledSourceWithoutRestartingPlayback()
     {
-        var demo = new TweenDemo();
-        godot.Tree.Root.AddChild(demo);
+        var gallery = new Gallery();
+        godot.Tree.Root.AddChild(gallery);
         try
         {
-            for (var index = 0; index < TweenDemo.PageNames.Length; index++)
+            for (var index = 0; index < Gallery.PageNames.Length; index++)
             {
-                demo.SelectPage(index); Pump();
-                var page = demo.CurrentPage!;
+                gallery.SelectPage(index); Pump();
+                var page = gallery.CurrentPage!;
                 var buttons = Descendants(page).OfType<Button>().Where(b => b.Text == "View C#").ToArray();
                 Assert.NotEmpty(buttons);
                 var sequence = page.SequenceTask;
@@ -76,7 +76,7 @@ public class GallerySourceTests(HeadlessFixture godot)
                 Assert.All(buttons, button => Assert.True(button.IsVisibleInTree()));
             }
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Pump();
         Assert.Empty(godot.Errors.Drain());
     }
@@ -84,12 +84,12 @@ public class GallerySourceTests(HeadlessFixture godot)
     [Fact]
     public void HelpersAndSourceSelectionSurviveRestartAndDisposeWithThePage()
     {
-        var demo = new TweenDemo();
-        godot.Tree.Root.AddChild(demo); Pump();
+        var gallery = new Gallery();
+        godot.Tree.Root.AddChild(gallery); Pump();
         try
         {
-            demo.CurrentPage!.ShowSource(1);
-            var view = demo.CurrentPage.SourceView;
+            gallery.CurrentPage!.ShowSource(1);
+            var view = gallery.CurrentPage.SourceView;
             var files = Descendants(view).OfType<OptionButton>().Single();
             Assert.Equal("Animation", files.GetItemText(0));
             Assert.Equal("Scene & playback", files.GetItemText(1));
@@ -102,14 +102,14 @@ public class GallerySourceTests(HeadlessFixture godot)
                 Assert.Equal(Math.Max(0, view.Source.TweenLine), view.Code.GetCaretLine());
                 if (i == 1) Assert.Equal(animationPath.Replace(".Animation.cs", ".cs"), view.Source.Path);
             }
-            demo.RestartDemo(); Pump();
+            gallery.RestartPage(); Pump();
             Assert.False(GodotObject.IsInstanceValid(view));
-            Assert.Equal(1, demo.CurrentPage!.SelectedEffect);
-            Assert.True(demo.CurrentPage.SourceView.Visible);
-            demo.SelectPage(2); Pump();
-            Assert.Equal(-1, demo.CurrentPage!.SelectedEffect);
+            Assert.Equal(1, gallery.CurrentPage!.SelectedEffect);
+            Assert.True(gallery.CurrentPage.SourceView.Visible);
+            gallery.SelectPage(2); Pump();
+            Assert.Equal(-1, gallery.CurrentPage!.SelectedEffect);
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Pump();
         Assert.Empty(godot.Errors.Drain());
     }

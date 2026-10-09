@@ -45,13 +45,14 @@ public class InterpolatorsTests
     }
 
     [Fact]
-    public void QuaternionsSlerpBetweenNormalizedEndpoints()
+    public void QuaternionsSlerpTheShortPathBetweenNormalizedEndpoints()
     {
         var from = new Quaternion(Vector3.Up, 0) * 3;
         var to = new Quaternion(Vector3.Up, 1) * 0.5f;
         var middle = Interpolators.Quaternion(from, to, 0.5f);
         Assert.True(middle.IsNormalized());
         Assert.True(middle.IsEqualApprox(new Quaternion(Vector3.Up, 0.5f)));
+        Assert.True(Interpolators.Quaternion(from, -to, 0.5f).IsEqualApprox(middle));
     }
 
     [Fact]

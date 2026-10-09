@@ -23,6 +23,7 @@ public class TweenOptionsTests
         Assert.Equal(FillMode.RetainFinalValue, default(TweenOptions).Fill);
         Assert.Equal(FillMode.RetainFinalValue, new TweenOptions().Fill);
         Assert.Equal(default, new TweenOptions());
+        Assert.Equal(default, new TweenOptions { Fill = FillMode.RetainFinalValue });
         Assert.Equal(1, default(TweenOptions).FactorDuration);
         Assert.Equal(1, default(TweenOptions).FactorDelay);
         Assert.Equal(default, new TweenOptions { FactorDelay = 1 });

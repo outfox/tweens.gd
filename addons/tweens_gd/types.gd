@@ -56,9 +56,10 @@ enum Reason {
 	COMPLETED,
 	## Playback was explicitly cancelled.
 	CANCELLED,
-	## The target was freed or queued for deletion.
+	## The target was queued for deletion, or found freed. [method Object.free] removes a node from the scene tree
+	## before deleting it, so a node that owns its handle, the default for node targets, reports OWNER_EXITED instead.
 	TARGET_FREED,
-	## The owner left the scene tree.
+	## The owner left the scene tree, or a separate owner node was queued for deletion.
 	OWNER_EXITED,
 	## The scheduler or scene tree was disposed.
 	RUNNER_DISPOSED,

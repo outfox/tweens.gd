@@ -5,7 +5,7 @@ using Godot;
 using tweens.gd;
 using twodog.Testing;
 using twodog.Testing.Xunit;
-namespace testbed.Tests;
+namespace testbed.Tests.Rendering;
 
 [Collection<RenderingCollection>]
 [Trait("Category", "Rendering")]
@@ -17,20 +17,20 @@ public class GalleryRenderingTests(Fixture godot)
     {
         var window = godot.Tree.Root;
         var originalSize = window.Size;
-        var demo = new TweenDemo();
-        demo.SelectLanguage(language);
-        godot.Tree.Root.AddChild(demo);
-        demo.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+        var gallery = new Gallery();
+        gallery.SelectLanguage(language);
+        godot.Tree.Root.AddChild(gallery);
+        gallery.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
         try
         {
-            demo.CurrentPage!.ShowSource(0);
+            gallery.CurrentPage!.ShowSource(0);
             Vector2 startingCodeSize = default;
             foreach (var size in new[] { new Vector2I(1440, 720), new Vector2I(1920, 1080), new Vector2I(1200, 640), new Vector2I(1440, 720) })
             {
                 window.Size = size;
                 for (var i = 0; i < 6; i++) godot.Engine.Iteration();
-                var code = demo.CurrentPage.SourceView.Code;
-                var stage = Descendants(demo).OfType<Control>().Single(c => c.Name == "PreviewStage" && c.IsVisibleInTree());
+                var code = gallery.CurrentPage.SourceView.Code;
+                var stage = Descendants(gallery).OfType<Control>().Single(c => c.Name == "PreviewStage" && c.IsVisibleInTree());
                 foreach (var control in new Control[] { code, stage })
                 {
                     var rect = control.GetGlobalRect();
@@ -45,11 +45,11 @@ public class GalleryRenderingTests(Fixture godot)
                     Assert.True(code.Size.Y > startingCodeSize.Y);
                 }
             }
-            demo.CurrentPage.ShowGallery();
+            gallery.CurrentPage.ShowGallery();
             for (var i = 0; i < 3; i++) godot.Engine.Iteration();
-            Assert.Equal(4, Descendants(demo).OfType<Control>().Count(c => c.Name == "PreviewStage" && c.IsVisibleInTree()));
+            Assert.Equal(4, Descendants(gallery).OfType<Control>().Count(c => c.Name == "PreviewStage" && c.IsVisibleInTree()));
         }
-        finally { demo.Free(); window.Size = originalSize; }
+        finally { gallery.Free(); window.Size = originalSize; }
     }
 
     [Theory]
@@ -62,17 +62,18 @@ public class GalleryRenderingTests(Fixture godot)
     [InlineData(4, GalleryLanguage.GDScript)] [InlineData(5, GalleryLanguage.GDScript)]
     [InlineData(6, GalleryLanguage.GDScript)] [InlineData(7, GalleryLanguage.GDScript)]
     [InlineData(8, GalleryLanguage.CSharp)] [InlineData(8, GalleryLanguage.GDScript)]
+    [InlineData(9, GalleryLanguage.CSharp)] [InlineData(9, GalleryLanguage.GDScript)]
     public void EachPagePlaysAndReleasesItsNativeScene(int index, GalleryLanguage language)
     {
-        var demo = new testbed.TweenDemo(); godot.Tree.Root.AddChild(demo);
+        var gallery = new Gallery(); godot.Tree.Root.AddChild(gallery);
         try
         {
-            demo.SelectLanguage(language);
-            demo.SelectPage(index);
+            gallery.SelectLanguage(language);
+            gallery.SelectPage(index);
             for (var i = 0; i < 4; i++) godot.Engine.Iteration();
-            var page = demo.CurrentPage!;
+            var page = gallery.CurrentPage!;
             var animation = Assert.IsAssignableFrom<Task>(page.SequenceTask);
-            var scheduler = TweenRuntime.GetRunner(demo).Scheduler;
+            var scheduler = TweenRuntime.GetRunner(gallery).Scheduler;
             if (language == GalleryLanguage.CSharp) scheduler.Update(1.9);
             else godot.Tree.GetMeta("_tweens_gd_runner").AsGodotObject().Get("scheduler").AsGodotObject().Call("update", 1.9);
             Assert.False(animation.IsCompleted);
@@ -90,13 +91,13 @@ public class GalleryRenderingTests(Fixture godot)
                 Assert.True(view.Source.TweenLine > 0);
                 Assert.True(view.Code.Size.X > 0 && view.Code.Size.Y > 0);
             }
-            demo.RestartDemo();
+            gallery.RestartPage();
             Assert.True(animation.IsCompletedSuccessfully);
             Assert.False(GodotObject.IsInstanceValid(page));
             for (var i = 0; i < 3; i++) godot.Engine.Iteration();
-            Assert.False(Assert.IsAssignableFrom<Task>(demo.CurrentPage!.SequenceTask).IsCompleted);
+            Assert.False(Assert.IsAssignableFrom<Task>(gallery.CurrentPage!.SequenceTask).IsCompleted);
         }
-        finally { demo.Free(); }
+        finally { gallery.Free(); }
         Assert.Empty(godot.Errors.Drain());
     }
     [Theory]

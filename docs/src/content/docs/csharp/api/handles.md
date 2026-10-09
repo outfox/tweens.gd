@@ -52,11 +52,11 @@ Starting one definition returns a `TweenInstance<TTarget, TValue>` that controls
 | --- | --- |
 | `Reason.Completed` | Reached its natural end |
 | `Reason.Cancelled` | `Cancel()` or `CancelTweens()` stopped it |
-| `Reason.TargetFreed` | The target was disposed, freed, or queued for deletion |
-| `Reason.OwnerExited` | The owner left the scene tree |
+| `Reason.TargetFreed` | The target was queued for deletion, or found freed or disposed |
+| `Reason.OwnerExited` | The owner left the scene tree, or a separate owner node was queued for deletion |
 | `Reason.RunnerDisposed` | The runner, its tree, or a manual scheduler shut down |
 
-Compare against `Completed` rather than a particular early reason: freeing a node reports `TargetFreed` after `QueueFree()`, but `OwnerExited` after `Free()`, because Godot exits the tree first.
+Compare against `Completed` rather than a particular early reason: a node that owns its tween, as node targets do by default, reports `TargetFreed` after `QueueFree()` but `OwnerExited` after `Free()`, because `Free()` removes it from the tree before deleting it.
 
 ## Errors
 

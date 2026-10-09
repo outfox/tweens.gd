@@ -9,8 +9,8 @@ using tweens.gd;
 
 namespace testbed;
 
-/// <summary>Gallery shell. Pages own their examples; navigation destroys the previous playground.</summary>
-public partial class TweenDemo : Control
+/// <summary>Gallery shell: header, page navigation and the current page. Navigation frees the previous page.</summary>
+public partial class Gallery : Control
 {
     private static readonly (string Name, Func<GalleryPage> Create)[] Pages =
     [
@@ -23,6 +23,7 @@ public partial class TweenDemo : Control
         ("Materials", () => new MaterialsPage()),
         ("Shaders", () => new ShadersPage()),
         ("Easing", () => new EasingPage()),
+        ("Colors", () => new ColorsPage()),
     ];
 
     public static readonly string[] PageNames = Pages.Select(p => p.Name).ToArray();
@@ -120,7 +121,7 @@ public partial class TweenDemo : Control
         duration.ValueChanged += seconds =>
         {
             durationLabel.Text = $"{seconds:0.0} s";
-            RestartDemo();
+            RestartPage();
         };
         settings.AddChild(duration);
 
@@ -166,7 +167,7 @@ public partial class TweenDemo : Control
     {
         var actions = new HBoxContainer();
         actions.AddThemeConstantOverride("separation", 10);
-        ActionButton(actions, "Restart page", RestartDemo);
+        ActionButton(actions, "Restart page", RestartPage);
         return actions;
     }
 
@@ -192,7 +193,8 @@ public partial class TweenDemo : Control
         page.SizeFlagsVertical = SizeFlags.ExpandFill;
         content.AddChild(page);
 
-        // Start once the page's layout has settled. Bound to this node, so Godot drops the call if the demo is freed first.
+        // Start once the page's layout has settled. Bound to this node, so Godot drops the call if the gallery is
+        // freed first.
         CallDeferred(MethodName.StartSelectedPage, ++revision);
     }
 
@@ -217,10 +219,10 @@ public partial class TweenDemo : Control
         if (Language == language) return;
         Language = language;
         languagePicker?.Select((int)language);
-        RestartDemo();
+        RestartPage();
     }
 
-    public void RestartDemo()
+    public void RestartPage()
     {
         if (content is null) return;
         var selectedEffect = page?.SelectedEffect ?? -1;

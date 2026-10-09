@@ -123,6 +123,7 @@ public class EasingTests
     [Fact]
     public void UnknownEaseIsRejected()
     {
+        Assert.Equal(33, Enum.GetValues<EaseType>().Length);
         Assert.Throws<NotImplementedException>(() => Easing.Evaluate((EaseType)1234, 0.5f));
         Assert.Throws<NotImplementedException>(() => Easing.GetFunction((EaseType)(-1)));
     }

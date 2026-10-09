@@ -64,13 +64,13 @@ Prefer `await handle.end` to awaiting `ended`: awaiting the signal after it fire
 | --- | --- |
 | `Tweens.Reason.COMPLETED` | Reached its natural end |
 | `Tweens.Reason.CANCELLED` | `cancel()` or `cancel_tweens()` stopped it |
-| `Tweens.Reason.TARGET_FREED` | The target was freed or queued for deletion |
-| `Tweens.Reason.OWNER_EXITED` | The owner left the scene tree |
+| `Tweens.Reason.TARGET_FREED` | The target was queued for deletion, or found freed |
+| `Tweens.Reason.OWNER_EXITED` | The owner left the scene tree, or a separate owner node was queued for deletion |
 | `Tweens.Reason.RUNNER_DISPOSED` | The runner, its tree, or a manual scheduler shut down |
 | `Tweens.Reason.FAILED` | The start was rejected, or playback detected a problem; see `error` |
 | `Tweens.Reason.WAIT_CANCELLED` | Only from `wait()`: its token was cancelled, and playback continues |
 
-Compare against `COMPLETED` rather than a particular early reason: freeing a node reports `TARGET_FREED` after `queue_free()`, but `OWNER_EXITED` after `free()`, because Godot exits the tree first.
+Compare against `COMPLETED` rather than a particular early reason: a node that owns its handle, as node targets do by default, reports `TARGET_FREED` after `queue_free()` but `OWNER_EXITED` after `free()`, because `free()` removes it from the tree before deleting it.
 
 ## Errors
 

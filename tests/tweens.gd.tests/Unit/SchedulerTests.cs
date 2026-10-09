@@ -35,6 +35,8 @@ public class SchedulerTests
     {
         using var scheduler = new TweenScheduler();
         Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Update(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Update(double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Update(double.PositiveInfinity));
         Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Update(1, double.NaN));
         Assert.Throws<ArgumentOutOfRangeException>(() => scheduler.Update(1, mode: (TweenProcessMode)2));
     }
@@ -100,6 +102,32 @@ public class SchedulerTests
     }
 
     [Fact]
+    public void CancelCallbacksCanCancelAllOrDisposeTheScheduler()
+    {
+        using var scheduler = new TweenScheduler();
+        scheduler.Add(new Box(), new PlainTween { OnCancel = static t => t.Scheduler.CancelAll() });
+        scheduler.Add(new Box(), new PlainTween { OnCancel = static t => t.Scheduler.Dispose() });
+        var last = scheduler.Add(new Box(), new PlainTween());
+        scheduler.CancelAll();
+        Assert.True(last.IsTerminal);
+        Assert.Equal(0, scheduler.ActiveCount);
+    }
+
+    [Fact]
+    public void SteadyStateUpdatesDoNotAllocate()
+    {
+        using var scheduler = new TweenScheduler();
+        for (var i = 0; i < 100; i++)
+            scheduler.Add(new Box(), new PlainTween { Duration = 1, Repeats = TweenOptions.Infinite });
+        for (var i = 0; i < 100; i++) scheduler.Update(0.01);
+        // Bytes per update, so a one-off runtime allocation from parallel tests cannot fail it.
+        const int updates = 1024;
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < updates; i++) scheduler.Update(0.01);
+        Assert.Equal(0, (GC.GetAllocatedBytesForCurrentThread() - before) / updates);
+    }
+
+    [Fact]
     public void ObserverExceptionsAreSwallowed()
     {
         using var scheduler = new TweenScheduler();
@@ -132,21 +160,28 @@ public class SchedulerTests
         var after = new Box();
         scheduler.Add(new Box(), new PlainTween { Duration = 1, OnUpdate = (t, _) => t.Scheduler.Dispose() });
         var second = scheduler.Add(after, new PlainTween { To = 1, Duration = 1 });
+        var paused = scheduler.Add(new Box(), new PlainTween { Duration = 1 });
+        paused.Pause();
         scheduler.Update(0.5);
         Assert.Equal(0, after.Value);
         Assert.Equal(Reason.RunnerDisposed, second.CompletionReason);
+        Assert.Equal(Reason.RunnerDisposed, paused.CompletionReason);
+        Assert.True(paused.End.IsCompletedSuccessfully);
         Assert.Equal(0, scheduler.ActiveCount);
     }
 
-    [Fact]
-    public void DisposalDuringPreparationSettlesTheNewTween()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DisposalDuringPreparationSettlesTheNewTween(bool whileReading)
     {
         var scheduler = new TweenScheduler();
         var released = false;
         var tween = scheduler.Add(new Box(), new ProbeTween
         {
             Duration = 1,
-            Preparing = _ => scheduler.Dispose(),
+            Preparing = _ => { if (!whileReading) scheduler.Dispose(); },
+            Reader = b => { if (whileReading) scheduler.Dispose(); return b.Value; },
             Releasing = () => released = true,
         });
         Assert.False(released);
