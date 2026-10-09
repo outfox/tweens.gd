@@ -64,7 +64,7 @@ try {
             $entries.Add($relative, $file)
         }
     }
-    foreach ($name in 'project.godot', 'main.tscn', 'icon.svg', 'icon.svg.import') {
+    foreach ($name in 'project.godot', 'export_presets.cfg', 'main.tscn', 'icon.svg', 'icon.svg.import') {
         $entries.Add($name, (Get-Item -LiteralPath (Join-Path $tutorial $name)))
     }
     $entries.Add('LICENSE', (Get-Item -LiteralPath (Join-Path $repository 'LICENSE')))

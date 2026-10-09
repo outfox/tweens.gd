@@ -32,6 +32,15 @@ Keep `addons/tweens_gd/` intact: it contains both APIs, generated definitions,
 prebuilt native libraries, documentation, and licenses. Everything the tutorial
 needs is inside this project; its build does not reference a repository checkout.
 
+## Export presets
+
+`export_presets.cfg` includes Web, Windows Desktop, Linux, macOS, Android, and
+iOS presets. Web has extension support enabled and uses the bundled
+single-threaded WASM extension. Desktop defaults to x86_64 on Windows and Linux
+and universal on macOS; Android selects arm64 and x86_64. Mobile exports need
+their platform SDKs and signing settings. Stock Godot .NET cannot export C# to
+the web; use a 2dog web host for this tutorial's shared C# UI.
+
 Documentation: https://tweens.gd/tutorial/
 
 ## License

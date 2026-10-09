@@ -135,7 +135,9 @@ live in `artifacts/smoke/`.
 
 The separate `tweens.gd-tutorial.zip` is an importable Godot .NET project rooted
 at `project.godot`. It bundles the contents of the same-version addon ZIP,
-tutorial scenes and scripts, themes, artwork, fonts and licenses. Its standalone
+tutorial scenes and scripts, themes, artwork, fonts, licenses and export presets
+for Web (extensions enabled, threads disabled), Windows, Linux, macOS, Android
+and iOS. Its standalone
 `tutorial.csproj` targets .NET 8 and embeds lesson sources for the code panels; it has no repository
 references, 2dog packages, hosts, tests, build outputs or imported caches. Users
 need Godot .NET 4.7.2 and the .NET 8 SDK or later, then import, build and run.
