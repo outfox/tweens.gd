@@ -74,12 +74,14 @@ public sealed class KeyframeCurve<T> where T : struct
         return new(captured, interpolation, colorSpace, alphaMode, colorEncoding);
     }
 
-    /// <summary>Samples normalized eased progress; values outside [0, 1] extrapolate the endpoint tangent.</summary>
+    /// <summary>Samples normalized eased progress. Outside [0, 1], non-step segments extrapolate endpoint tangents;
+    /// step segments and implicit final holds retain their endpoint. Progress scaled to percent must remain finite.</summary>
     public T Sample(double progress)
     {
         if (!double.IsFinite(progress)) throw new ArgumentOutOfRangeException(nameof(progress));
         if (NeedsStart) throw new InvalidOperationException("Capture this curve's starting value before sampling.");
         var stop = progress * 100;
+        if (!double.IsFinite(stop)) throw new ArgumentOutOfRangeException(nameof(progress));
         var low = 0; var high = keys.Length - 1;
         while (low <= high)
         {

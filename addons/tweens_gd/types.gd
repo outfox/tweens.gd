@@ -15,7 +15,7 @@ enum AlphaMode { PREMULTIPLIED, STRAIGHT }
 ## RGB encoding expected by the target Godot API. Alpha remains linear.
 enum ColorEncoding { SRGB, LINEAR_RGB }
 ## Segment value interpolation, independently of the tween's global easing.
-enum Interpolation { SMOOTH, LINEAR, STEP }
+enum Interpolation { SMOOTH = -2, LINEAR = -3, STEP = -4 }
 ## Value behavior during delay and after natural completion. Cancellation does not restore the initial value.
 enum Fill {
 	## Leave the property untouched during delay; restore its initial value on natural completion.

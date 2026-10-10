@@ -49,6 +49,36 @@ public class ColorInterpolationTests
 
     private sealed class Box { public Color Value { get; set; } }
 
+    private sealed class DerivedColorProperty() : PropertyTween<Box, Color>(b => b.Value, (b, c) => b.Value = c, Interpolators.Color)
+    {
+        protected override Color Interpolate(Color from, Color to, float weight) => from.Lerp(to, weight * weight);
+    }
+
+    private sealed class OptOutColorProperty() : PropertyTween<Box, Color>(b => b.Value, (b, c) => b.Value = c, Interpolators.Color)
+    {
+        protected override bool UsesColorInterpolation => false;
+    }
+
+    [Fact]
+    public void DerivedColorInterpolatorsRetainAbsoluteAndRelativeOverrides()
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box { Value = Colors.Red };
+        var absolute = new DerivedColorProperty { To = new Color(0, 0, 0, 0), Duration = 1 };
+        scheduler.Add(box, absolute); scheduler.Update(0.5);
+        Assert.Equal(new Color(0.75f, 0, 0, 0.75f), box.Value);
+        scheduler.Update(0.5);
+        box.Value = Colors.Red;
+        var relative = new DerivedColorProperty { By = new Color(0, 0, 1, 0), Duration = 1 };
+        scheduler.Add(box, relative); scheduler.Update(0.5);
+        Assert.Equal(new Color(1, 0, 0.25f, 1), box.Value);
+        scheduler.Update(0.5);
+        box.Value = Colors.Red;
+        scheduler.Add(box, new OptOutColorProperty { To = new Color(0, 0, 0, 0), Duration = 1 });
+        scheduler.Update(0.5);
+        Assert.True(box.Value.IsEqualApprox(new Color(1, 0, 0, 0.5f)));
+    }
+
     [Fact]
     public void ImmutableGenericColorDefinitionsUseSharedOptionsAndSnapshotEachPlay()
     {

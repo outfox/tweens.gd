@@ -37,8 +37,31 @@ func run(suite: Suite) -> bool:
 		var ordinary: Color = TweensGdInterpolation.interpolate_color(from, to, at, space, alpha, encoding)
 		suite.check(_close(ordinary, expected), "shared color tween: " + str(test.name))
 	_playback(suite)
+	_interpolation_modes(suite)
 	_validation(suite)
 	_numeric_validation(suite)
+	var constant := TweensGdKeyframeCurve.create([3, 3], PackedFloat64Array([0, 100]))
+	for progress: float in data.progress_limits:
+		suite.check(constant.sample(progress) == null, "reject percentage overflow before integer decoding")
+	for test: Dictionary in data.numeric_types:
+		var values: Array = test.values
+		# JSON numbers are floats; preserve the fixture's intended dynamic key types.
+		var first: float = values[0]
+		var last: float = values[1]
+		if test.type == "int":
+			values[0] = int(first)
+			values[1] = last
+		else:
+			values[0] = first
+			values[1] = int(last)
+		var curve := TweensGdKeyframeCurve.create(values, PackedFloat64Array([0, 100]), 1)
+		for sample: Array in test.samples:
+			var at: float = sample[0]
+			var actual: Variant = curve.sample(at)
+			var number: float = actual
+			var expected: float = sample[1]
+			suite.check(typeof(actual) == (TYPE_INT if test.type == "int" else TYPE_FLOAT), "numeric sample keeps canonical type")
+			suite.check(number == expected, "mixed numeric curve: " + str(test.name))
 	var hidden := Color(1, 0, 0, 0)
 	var fractional := TweensGdKeyframeCurve.create([Color.WHITE, hidden, Color.BLUE], PackedFloat64Array([0, 0.23, 100]))
 	var exact: Color = fractional.sample(0.23 / 100.0)
@@ -50,6 +73,25 @@ func run(suite: Suite) -> bool:
 		var weight := _quad_weight(at)
 		suite.check(absf(actual.dot(Quaternion(Vector3.UP, weight))) > 0.99999, "quaternion ease and endpoint tangent")
 	return true
+
+func _interpolation_modes(suite: Suite) -> void:
+	var scheduler := TweensGdScheduler.new()
+	var target := Node2D.new()
+	suite.add_child(target)
+	for entry: Array in [[T.Interpolation.SMOOTH, 6.875], [T.Interpolation.LINEAR, 5.0], [T.Interpolation.STEP, 0.0], [T.Ease.LINEAR, 5.0]]:
+		var mode: int = entry[0]
+		var expected: float = entry[1]
+		var animation := T.keyframes({0: {"x": 0}, 50: {"x": 10}, 100: {"x": 0}}, 1.0, T.Ease.LINEAR, mode)
+		var group := animation.play_on(scheduler, target)
+		scheduler.update(0.25)
+		suite.near(target.position.x, expected, "segment modes and linear easing remain distinct")
+		group.cancel()
+	var arriving := T.keyframes({0: {"x": 0}, 50: {"x": 10, "interpolation": T.Ease.LINEAR}, 100: {"x": 0}})
+	var arriving_group := arriving.play_on(scheduler, target)
+	scheduler.update(0.25)
+	suite.near(target.position.x, 5.0, "arriving linear easing does not select smooth")
+	arriving_group.cancel()
+	target.free()
 
 static func _quad_weight(at: float) -> float:
 	# Finite differences for t² at the endpoints: h at zero, 2-h at one.
@@ -97,6 +139,16 @@ func _numeric_validation(suite: Suite) -> void:
 	low = limits.sample(-0.1)
 	high = limits.sample(1.1)
 	suite.check(low == -9223372036854775807 - 1 and high == 9223372036854775807, "Int64 overshoot saturates")
+	target.set_meta("amount", 0)
+	var exact := T.keyframes({0: {"metadata/amount": 9007199254740993}, 100: {"metadata/amount": 9007199254740995}})
+	@warning_ignore("return_value_discarded")
+	exact.play_on(scheduler, target)
+	scheduler.update(0.0)
+	amount = target.get_meta("amount")
+	suite.check(amount == 9007199254740993, "batch keeps explicit Int64 start beyond double precision")
+	scheduler.update(1.0)
+	amount = target.get_meta("amount")
+	suite.check(amount == 9007199254740995, "batch keeps explicit Int64 end beyond double precision")
 	target.free()
 
 static func _color(value: Variant) -> Color:

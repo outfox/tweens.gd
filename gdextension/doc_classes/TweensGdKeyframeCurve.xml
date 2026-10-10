@@ -16,9 +16,9 @@
 			<param index="5" name="color_space" type="int" default="0" />
 			<param index="6" name="alpha_mode" type="int" default="0" />
 			<param index="7" name="color_encoding" type="int" default="0" />
-			<description>Copies strictly increasing percentage stops in [code][0, 100][/code] and prepares values and tangents. Interpolation: Smooth=0, Linear=1, Step=2. Arriving modes: -1 uses the curve default, 0 is Smooth, 1 is Linear, 2 is Step, and 3 uses the matching eases entry; zero-percent keys require -1. Color space: OKLab=0, sRGB=1, linear RGB=2; alpha: premultiplied=0, straight=1; encoding: sRGB=0, linear RGB=1. Quaternion squared lengths must be finite and nonzero. Missing final keys hold. Inspect [member error] before use.</description>
+			<description>Copies strictly increasing percentage stops in [code][0, 100][/code] and prepares values and tangents. Native interpolation modes: Smooth=0, Linear=1, Step=2; these differ from the public Tweens.Interpolation constants. Arriving modes: -1 uses the curve default, 0 is Smooth, 1 is Linear, 2 is Step, and 3 uses the matching eases entry; zero-percent keys require -1. Color space: OKLab=0, sRGB=1, linear RGB=2; alpha: premultiplied=0, straight=1; encoding: sRGB=0, linear RGB=1. Mixed numeric keys use the first key's type; integer conversion rounds ties away from zero and saturates. Quaternion squared lengths must be finite and nonzero. Missing final keys hold. Inspect [member error] before use.</description>
 		</method>
-		<method name="capture_start" qualifiers="const">
+		<method name="capture_start">
 			<return type="TweensGdKeyframeCurve" />
 			<param index="0" name="initial" type="Variant" />
 			<description>Returns this curve if zero is explicit, or a separately prepared curve with a captured zero-percent key.</description>
@@ -26,7 +26,7 @@
 		<method name="needs_start" qualifiers="const"><return type="bool" /><description>True when zero is missing and a starting value must be captured before sampling.</description></method>
 		<method name="sample" qualifiers="const">
 			<return type="Variant" /><param index="0" name="progress" type="float" />
-			<description>Samples normalized eased progress. Lookup is independent of previous samples. Outside [code][0, 1][/code], extrapolates the endpoint tangent. Returns null for invalid data, nonfinite progress, or a missing captured start.</description>
+			<description>Samples normalized eased progress. Lookup is independent of previous samples. Outside [code][0, 1][/code], non-step segments extrapolate endpoint tangents; step segments and implicit final holds retain their endpoint. Returns null for invalid data, progress whose percentage is nonfinite, or a missing captured start.</description>
 		</method>
 	</methods>
 	<members><member name="error" type="String" getter="get_error" default="&quot;&quot;">Definition validation error, empty for a valid prepared curve.</member></members>

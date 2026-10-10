@@ -7,15 +7,17 @@ extends RefCounted
 ## Sparse frames reserve "interpolation" for the arriving mode; use channel arrays for a property with that name.
 ## Configure [member options] before playback; each play snapshots those settings.
 
+const Types = preload("types.gd")
+
 ## Shared timing, easing and color policy. Endpoints and callbacks belong to individual channel tweens.
 var options := TweensGdDefinition.new()
 var _tracks: Dictionary = {}
 var _prepared: Dictionary = {}
 var _error := ""
-var _interpolation := 0
+var _interpolation := int(Types.Interpolation.SMOOTH)
 
-## Copies and validates keys. Interpolation: Smooth=0, Linear=1, Step=2, or an existing easing constant.
-func _init(keys: Dictionary = {}, seconds: float = 1.0, easing: int = 0, interpolation: int = 0) -> void:
+## Copies and validates keys. Use Tweens.Interpolation constants or an existing easing constant.
+func _init(keys: Dictionary = {}, seconds: float = 1.0, easing: int = 0, interpolation: int = Types.Interpolation.SMOOTH) -> void:
 	options.duration = seconds
 	options.ease = easing
 	_interpolation = interpolation
@@ -93,7 +95,14 @@ static func _array(value: Variant) -> Array:
 	return []
 
 static func _valid_interpolation(value: int) -> bool:
-	return value in [0, 1, 2] or not is_nan(TweensGdEasing.evaluate(value, 0.5))
+	return value in [Types.Interpolation.SMOOTH, Types.Interpolation.LINEAR, Types.Interpolation.STEP] or not is_nan(TweensGdEasing.evaluate(value, 0.5))
+
+static func _native_mode(value: int) -> int:
+	match value:
+		Types.Interpolation.SMOOTH: return 0
+		Types.Interpolation.LINEAR: return 1
+		Types.Interpolation.STEP: return 2
+	return 3
 
 func _add(channel: Variant, stop: float, value: Variant, arriving: Variant) -> void:
 	if not (channel is String or channel is StringName):
@@ -152,7 +161,7 @@ func _compile(target: Object) -> Dictionary:
 				if typeof(value) in [TYPE_INT, TYPE_FLOAT]:
 					var number: float = value
 					if value_type == TYPE_FLOAT: value = number
-					elif value_type == TYPE_INT: value = roundi(number)
+					elif value_type == TYPE_INT and typeof(value) == TYPE_FLOAT: value = roundi(number)
 					elif path == "scale" and value_type == TYPE_VECTOR2: value = Vector2.ONE * value
 					elif path == "scale" and value_type == TYPE_VECTOR3: value = Vector3.ONE * value
 				if not TweensGdInterpolation.compatible(current, value): return {"error": "Key type does not match channel '%s'." % path}
@@ -163,10 +172,11 @@ func _compile(target: Object) -> Dictionary:
 				var arriving: int = entry.interpolation
 				if arriving == -1 and entry.at != 0.0: arriving = _interpolation
 				@warning_ignore("return_value_discarded")
-				modes.append(arriving if arriving in [-1, 0, 1, 2] else 3)
+				modes.append(-1 if arriving == -1 else _native_mode(arriving))
 				@warning_ignore("return_value_discarded")
-				eases.append(arriving if arriving not in [-1, 0, 1, 2] else 0)
-			curve = TweensGdKeyframeCurve.create(values, stops, _interpolation if _interpolation in [0, 1, 2] else 1,
+				eases.append(arriving if arriving != -1 and _native_mode(arriving) == 3 else 0)
+			var curve_mode := _native_mode(_interpolation)
+			curve = TweensGdKeyframeCurve.create(values, stops, curve_mode if curve_mode != 3 else 1,
 				modes, eases, options.color_space, options.alpha_mode, options.color_encoding)
 			if not curve.error.is_empty(): return {"error": "Channel '%s': %s" % [path, curve.error]}
 			_prepared[cache_key] = curve

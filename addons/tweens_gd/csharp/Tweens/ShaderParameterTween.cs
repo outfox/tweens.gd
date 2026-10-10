@@ -67,7 +67,7 @@ public sealed class ShaderParameterTween<TValue>(string parameter) : TweenDefini
         else target.SetShaderParameter(name!, default);
     }
     protected override TValue Interpolate(TValue from, TValue to, float weight)
-        => ShaderValues<TValue>.Interpolate(from, to, weight);
+        => UsesColorInterpolation ? InterpolateColor(from, to, weight) : ShaderValues<TValue>.Interpolate(from, to, weight);
     protected override void Release()
     {
         watch?.Dispose(); watch = null;

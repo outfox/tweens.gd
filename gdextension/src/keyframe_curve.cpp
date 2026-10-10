@@ -77,7 +77,15 @@ void TweensGdKeyframeCurve::prepare() {
 			error = "Keyframe values must be finite, supported and of compatible types."; return;
 		}
 		switch (type) {
-			case Variant::FLOAT: case Variant::INT: key.c[0] = double(key.value); break;
+			case Variant::FLOAT: key.value = double(key.value); key.c[0] = double(key.value); break;
+			case Variant::INT: {
+				// Normalize mixed numeric keys once, preserving original Int64 keys exactly.
+				if (key.value.get_type() != Variant::INT) {
+					const double number[] = { double(key.value) };
+					key.value = decode(number);
+				}
+				key.c[0] = double(key.value); break;
+			}
 			case Variant::VECTOR2: { const Vector2 v = key.value; key.c[0] = v.x; key.c[1] = v.y; break; }
 			case Variant::VECTOR3: { const Vector3 v = key.value; for (int c = 0; c < 3; c++) key.c[c] = v[c]; break; }
 			case Variant::VECTOR4: { const Vector4 v = key.value; for (int c = 0; c < 4; c++) key.c[c] = v[c]; break; }
@@ -164,6 +172,7 @@ Variant TweensGdKeyframeCurve::decode(const double *v) const {
 Variant TweensGdKeyframeCurve::sample(double p_progress) const {
 	if (!error.is_empty() || needs_start() || keys.empty() || !std::isfinite(p_progress)) return Variant();
 	const double stop = p_progress * 100;
+	if (!std::isfinite(stop)) return Variant();
 	const auto found = std::lower_bound(keys.begin(), keys.end(), p_progress, [](const Key &key, double progress) { return key.at / 100 < progress; });
 	if (found != keys.end() && found->at / 100 == p_progress) return found->value;
 	const size_t i = found == keys.begin() ? 0 : found == keys.end() ? keys.size() - 2 : size_t(found - keys.begin() - 1);

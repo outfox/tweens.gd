@@ -35,6 +35,18 @@ public class KeyframeCurveTests
             Assert.InRange(Math.Abs(value.R - expected.R) + Math.Abs(value.G - expected.G) + Math.Abs(value.B - expected.B) + Math.Abs(value.A - expected.A), 0, 0.00001);
             Assert.True(value.IsEqualApprox(Interpolators.Color(from, to, at, space, alpha, encoding)));
         }
+        foreach (var item in json.RootElement.GetProperty("numeric_types").EnumerateArray())
+        {
+            var values = item.GetProperty("values").EnumerateArray().Select(value => value.GetDouble()).ToArray();
+            var integer = item.GetProperty("type").GetString() == "int";
+            var ints = integer ? KeyframeCurve<long>.EvenlySpaced(values.Select(value => (long)Math.Round(value, MidpointRounding.AwayFromZero)).ToArray(), Interpolation.Linear) : null;
+            var floats = integer ? null : KeyframeCurve<double>.EvenlySpaced(values, Interpolation.Linear);
+            foreach (var sample in item.GetProperty("samples").EnumerateArray())
+                Assert.Equal(sample[1].GetDouble(), integer ? ints!.Sample(sample[0].GetDouble()) : floats!.Sample(sample[0].GetDouble()));
+        }
+        var constant = KeyframeCurve<long>.EvenlySpaced([3, 3]);
+        foreach (var progress in json.RootElement.GetProperty("progress_limits").EnumerateArray())
+            Assert.Throws<ArgumentOutOfRangeException>(() => constant.Sample(progress.GetDouble()));
     }
 
     private static Interpolation Mode(int mode, int ease = 0) => mode switch

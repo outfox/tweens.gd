@@ -40,9 +40,9 @@ Explicit paths can be dictionary keys, such as `50: {"position:x": 120}`. In spa
 
 ## Segment interpolation
 
-`Tweens.Interpolation.SMOOTH` is the default: a limited modified-Akima cubic that stays between adjacent key values in each working component. `LINEAR` connects keys directly; `STEP` holds until the next key. An easing such as `Out.QUAD` creates an eased linear segment. An arriving-key override applies only to channels present at that key. Zero-percent keys cannot specify an arriving interpolation.
+`Tweens.Interpolation.SMOOTH` is the default: a limited modified-Akima cubic that stays between adjacent key values in each working component. `LINEAR` connects keys directly; `STEP` holds until the next key. Interpolation constants use distinct values from easing constants; `Tweens.Ease.LINEAR` selects a linear segment. An easing such as `Out.QUAD` creates an eased linear segment. An arriving-key override applies only to channels present at that key. Zero-percent keys cannot specify an arriving interpolation.
 
-The definition's `options.ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear. Quaternion squared lengths must be finite and nonzero. Integer channels preserve 64-bit keys exactly at their stops; intermediate samples round double-precision working values to the nearest integer, with ties away from zero and saturation at Int64 limits.
+The definition's `options.ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents for non-step segments; step segments and implicit final holds retain their endpoint value. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear. Quaternion squared lengths must be finite and nonzero. Integer channels preserve 64-bit keys exactly at their stops; intermediate samples round double-precision working values to the nearest integer, with ties away from zero and saturation at Int64 limits. Progress scaled to percent must remain finite.
 
 ## Color policy
 
