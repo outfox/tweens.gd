@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,7 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using OptionsModel = (string Properties, string Parameters, string Assignments, string Arguments);
+using OptionsModel = (tweens.gd.Generators.EquatableArray<(string RequiredValue, string Source)> Properties, string Parameters, string Assignments, string Arguments);
 
 namespace tweens.gd.Generators;
 
@@ -36,7 +37,8 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 static (syntax, token) => ReadOptions(syntax, token))
             .Where(static source => source.HasValue)
             .Collect()
-            .Select(static (sources, _) => sources.SingleOrDefault());
+            .Select(static (sources, _) => sources.SingleOrDefault())
+            .WithTrackingName("Options");
 
         // Keep symbols inside the semantic transform. Value tuples of strings give
         // downstream steps value equality, so unrelated edits don't re-emit sources.
@@ -72,6 +74,12 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         {
             if (source.Length != 0) output.AddSource("TweenExtensions.g.cs", SourceText.From(source, Encoding.UTF8));
         });
+
+        // Roslyn can emit only C# sources. This comment-only artifact transports the shared
+        // binding manifest to Generate-CSharpDefinitions.ps1; it is never shipped in the addon.
+        var catalog = context.CompilationProvider.Select(static (compilation, token) => AdapterBindings.Manifest(compilation, token));
+        context.RegisterSourceOutput(catalog, static (output, source) =>
+            output.AddSource("TweenCatalog.g.cs", SourceText.From("/* TWEENS_GD_CATALOG\n" + source + "*/\n", Encoding.UTF8)));
     }
 
     private const string Span = "global::System.ReadOnlySpan<double>";
@@ -128,7 +136,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
     {
         var symbol = ReadType(context, token);
         if (symbol is null) return null;
-        var source = new StringBuilder();
+        var properties = new List<(string RequiredValue, string Source)>();
         var types = new string?[ConstructorOptions.Length];
         foreach (var property in symbol.GetMembers().OfType<IPropertySymbol>())
         {
@@ -137,10 +145,15 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 || property.SetMethod?.DeclaredAccessibility != Accessibility.Public) continue;
             var name = "@" + property.Name;
             var type = property.Type.ToDisplayString(TypeFormat);
+            var requiredValue = property.GetAttributes().FirstOrDefault(attribute =>
+                attribute.AttributeClass?.ToDisplayString() == "tweens.gd.TweenValueOptionAttribute")
+                ?.ConstructorArguments.FirstOrDefault().Value as ITypeSymbol;
+            var source = new StringBuilder();
             source.Append("    /// <inheritdoc cref=\"TweenOptions.").Append(property.Name).Append("\"/>\n")
                 .Append("    public ").Append(type).Append(' ').Append(name)
                 .Append(" { get => Options.").Append(name)
                 .Append("; init => Options = Options with { ").Append(name).Append(" = value }; }\n");
+            properties.Add((requiredValue?.ToDisplayString(TypeFormat) ?? "", source.ToString()));
             var index = Array.IndexOf(ConstructorOptions, property.Name);
             if (index >= 0) types[index] = type;
         }
@@ -157,7 +170,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             assignments.Append(assignments.Length == 0 ? "" : ", ").Append('@').Append(option).Append(" = ").Append(parameter);
             arguments.Append(", ").Append(parameter);
         }
-        return (source.ToString(), parameters.ToString(),
+        return (new EquatableArray<(string, string)>(properties), parameters.ToString(),
             assignments.Length == 0 ? "" : "        Options = new TweenOptions { " + assignments + " };\n", arguments.ToString());
     }
 
@@ -264,8 +277,13 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             .Append("public readonly record struct ").Append(name).Append(generic).Append(" : ").Append(contract);
         if (kind == DefinitionKind.CustomProperty) source.Append("\n    where TTarget : class where TValue : struct");
         else if (kind == DefinitionKind.ShaderParameter) source.Append("\n    where TValue : struct");
-        source.Append("\n{\n    /// <summary>Shared timing, easing, and playback modes. Individual option properties forward to this value.</summary>\n")
-            .Append("    public TweenOptions Options { get; init; }\n").Append(options.Properties).Append('\n')
+        source.Append("\n{\n    /// <summary>Shared timing, easing, and playback modes.")
+            .Append(kind == DefinitionKind.BuiltIn ? "" : " Configure value-specific policies here for generic definitions.")
+            .Append(" Individual option properties forward to this value.</summary>\n")
+            .Append("    public TweenOptions Options { get; init; }\n");
+        foreach (var property in options.Properties.Items)
+            if (property.RequiredValue.Length == 0 || property.RequiredValue == value) source.Append(property.Source);
+        source.Append('\n')
             .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.From\"/>\n")
             .Append("    public ").Append(value).Append("? From { get; init; }\n")
             .Append("    /// <inheritdoc cref=\"TweenDefinition{TTarget, TValue}.To\"/>\n")

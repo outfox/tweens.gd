@@ -58,6 +58,8 @@ Tweens.play(sprite, fade)
 
 Choose `Tweens.ColorSpace.SRGB` or `Tweens.ColorSpace.LINEAR_RGB` for another interpolation space, and `Tweens.AlphaMode.STRAIGHT` for independent RGB and alpha interpolation. Set `Tweens.ColorEncoding.LINEAR_RGB` only when the API receiving your values expects linear RGB. Keyframes take these policies through `flight.options`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
 
+GDScript definitions expose color settings dynamically; they affect built-in whole-color interpolation. In C#, concrete whole-color definitions expose these settings directly, while generic shader and custom-property definitions take them through `Options`.
+
 ## Playback and preparation
 
 `flight.play_on(scheduler, sprite)` supports a manually driven scheduler. Timing, delay, repeats, ping-pong, fill, easing, ownership, and cancellation use the ordinary tween runtime. All channel bindings are checked before enrolling the batch. A failed or cancelled member cancels its siblings through the returned group. `flight.validate()` reports definition errors; manual starts return a failed group on invalid bindings, and automatic starts also report an engine error.

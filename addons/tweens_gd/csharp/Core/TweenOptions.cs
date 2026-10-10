@@ -10,6 +10,14 @@ using System.Threading.Tasks;
 
 namespace tweens.gd;
 
+// The generator exposes these options directly only on definitions with the specified value type.
+[AttributeUsage(AttributeTargets.Property)]
+internal sealed class TweenValueOptionAttribute : Attribute
+{
+    public TweenValueOptionAttribute(Type valueType) => ValueType = valueType;
+    public Type ValueType { get; }
+}
+
 /// <summary>Value behavior during delay and after natural completion. Cancellation does not restore the initial value.</summary>
 /// <remarks>A relative tween that follows concurrent property changes removes only its own offset when restoring.</remarks>
 [Flags]
@@ -212,10 +220,13 @@ public class TweenOptionsBuilder
     /// <inheritdoc cref="TweenOptions.Curve"/>
     public Godot.Curve? Curve { get; set; }
     /// <inheritdoc cref="TweenOptions.ColorSpace"/>
+    [TweenValueOption(typeof(Godot.Color))]
     public ColorSpace ColorSpace { get; set; }
     /// <inheritdoc cref="TweenOptions.AlphaMode"/>
+    [TweenValueOption(typeof(Godot.Color))]
     public AlphaMode AlphaMode { get; set; }
     /// <inheritdoc cref="TweenOptions.ColorEncoding"/>
+    [TweenValueOption(typeof(Godot.Color))]
     public ColorEncoding ColorEncoding { get; set; }
     /// <inheritdoc cref="TweenOptions.SuppressCallbacksWhenTargetInvalid"/>
     public bool SuppressCallbacksWhenTargetInvalid { get; set; }

@@ -50,6 +50,27 @@ public class ColorInterpolationTests
     private sealed class Box { public Color Value { get; set; } }
 
     [Fact]
+    public void ImmutableGenericColorDefinitionsUseSharedOptionsAndSnapshotEachPlay()
+    {
+        using var scheduler = new TweenScheduler();
+        var box = new Box { Value = Colors.Red };
+        var definition = new Tweens.Property<Box, Color>(b => b.Value, (b, c) => b.Value = c,
+            Interpolators.Color, new Color(0, 0, 0, 0))
+        {
+            Options = new() { Duration = 1, ColorSpace = ColorSpace.Srgb, AlphaMode = AlphaMode.Straight },
+        };
+        scheduler.Add(box, in definition);
+        var premultiplied = definition with { Options = definition.Options with { AlphaMode = AlphaMode.Premultiplied } };
+        scheduler.Update(0.5);
+        Assert.Equal(new Color(0.5f, 0, 0, 0.5f), box.Value);
+        scheduler.Update(0.5);
+        box.Value = Colors.Red;
+        scheduler.Add(box, in premultiplied);
+        scheduler.Update(0.5);
+        Assert.True(box.Value.IsEqualApprox(new Color(1, 0, 0, 0.5f)));
+    }
+
+    [Fact]
     public void ExplicitPolicyIsSnapshottedAndCustomInterpolatorsKeepTheirMath()
     {
         using var scheduler = new TweenScheduler();

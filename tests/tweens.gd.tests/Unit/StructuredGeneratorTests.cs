@@ -3,6 +3,9 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reflection;
+using System.Text.Json;
 using tweens.gd.Generators;
 
 namespace tweens.gd.Tests.Unit;
@@ -25,7 +28,7 @@ public class StructuredGeneratorTests
         {
             public class SceneTree { }
             public class Node { public SceneTree GetTree() => new(); }
-            public class Resource { }
+            public class Resource { public float Value { get; set; } }
         }
         namespace tweens.gd
         {
@@ -115,7 +118,7 @@ public class StructuredGeneratorTests
     public void DiscoversAliasedBaseTypesAndPartialAdaptersAndEmitsCompilableDefinitions()
     {
         var (_, output, result) = Run(CreateCompilation(Contracts, Adapter));
-        Assert.Equal(new[] { "Opacity.g.cs", "Property.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs" },
+        Assert.Equal(new[] { "Opacity.g.cs", "Property.g.cs", "TweenCatalog.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs" },
             result.GeneratedSources.Select(source => source.HintName).Order().ToArray());
         var definition = output.GetTypeByMetadataName("tweens.gd.Tweens+Opacity")!;
         Assert.True(definition.IsReadOnly);
@@ -146,7 +149,7 @@ public class StructuredGeneratorTests
             namespace tweens.gd
             {
                 public sealed class ResourceOpacityTween()
-                    : PropertyTween<Godot.Resource, float>(_ => 0, (_, _) => { }, (a, b, t) => a);
+                    : PropertyTween<Godot.Resource, float>(n => n.Value, (n, value) => n.Value = value, (a, b, t) => a);
                 internal static class Starts
                 {
                     internal static void Use(TweenScheduler scheduler, Targets.Widget node, Godot.Resource resource,
@@ -192,7 +195,7 @@ public class StructuredGeneratorTests
             }
             """;
         var (_, output, result) = Run(CreateCompilation(Contracts, shaders));
-        Assert.Equal(6, result.GeneratedSources.Length);
+        Assert.Equal(7, result.GeneratedSources.Length);
         foreach (var name in new[] { "ShaderParameter", "CanvasItemInstanceShaderParameter", "GeometryInstanceShaderParameter" })
         {
             var type = output.GetTypeByMetadataName("tweens.gd.Tweens+" + name + "`1")!;
@@ -254,7 +257,7 @@ public class StructuredGeneratorTests
             }
             """;
         var (_, output, result) = Run(CreateCompilation(Contracts, extensions));
-        Assert.Equal(["Property.g.cs", "TweenExtensions.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
+        Assert.Equal(["Property.g.cs", "TweenCatalog.g.cs", "TweenExtensions.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
             result.GeneratedSources.Select(source => source.HintName).Order());
         var type = output.GetTypeByMetadataName("tweens.gd.TweenExtensions")!;
         string Forms(string name) => string.Join(" | ", type.GetMembers(name).OfType<IMethodSymbol>()
@@ -282,6 +285,153 @@ public class StructuredGeneratorTests
     }
 
     [Fact]
+    public void ValueScopedOptionsFollowTheirDeclaredTypeAndUpdateIncrementally()
+    {
+        var contracts = Contracts
+            .Replace("public EaseType Ease { get; init; }", "public bool Precision { get; init; } public EaseType Ease { get; init; }")
+            .Replace("public EaseType Ease { get; set; }", "[TweenValueOption(typeof(float))] public bool Precision { get; set; } public EaseType Ease { get; set; }");
+        const string sources = """
+            namespace tweens.gd
+            {
+                [System.AttributeUsage(System.AttributeTargets.Property)]
+                internal sealed class TweenValueOptionAttribute : System.Attribute
+                {
+                    public TweenValueOptionAttribute(System.Type valueType) { }
+                }
+                public sealed class CountTween() : PropertyTween<Targets.Widget, int>(_ => 0, (_, _) => { }, (a, b, t) => a);
+            }
+            """;
+        var compilation = CreateCompilation(contracts, Adapter, sources);
+        var (driver, output, _) = Run(compilation);
+        Assert.Single(output.GetTypeByMetadataName("tweens.gd.Tweens+Opacity")!.GetMembers("Precision"));
+        Assert.Empty(output.GetTypeByMetadataName("tweens.gd.Tweens+Count")!.GetMembers("Precision"));
+        Assert.Empty(output.GetTypeByMetadataName("tweens.gd.Tweens+Property`2")!.GetMembers("Precision"));
+        compilation = compilation.ReplaceSyntaxTree(compilation.SyntaxTrees.First(), Parse(contracts.Replace("typeof(float)", "typeof(int)")));
+        (_, output, _) = Run(compilation, driver);
+        Assert.Empty(output.GetTypeByMetadataName("tweens.gd.Tweens+Opacity")!.GetMembers("Precision"));
+        Assert.Single(output.GetTypeByMetadataName("tweens.gd.Tweens+Count")!.GetMembers("Precision"));
+    }
+
+    [Fact]
+    public void OnlyConcreteWholeColorDefinitionsExposeColorForwarders()
+    {
+        var definitions = typeof(Tweens).GetNestedTypes().Where(type => type.GetInterfaces()
+            .Any(contract => contract.IsGenericType && contract.GetGenericTypeDefinition() == typeof(ITweenDefinition<,>))).ToArray();
+        Assert.NotEmpty(definitions);
+        foreach (var option in new[] { nameof(TweenOptions.ColorSpace), nameof(TweenOptions.AlphaMode), nameof(TweenOptions.ColorEncoding) })
+        {
+            var applicability = typeof(TweenOptionsBuilder).GetProperty(option)!.GetCustomAttribute<TweenValueOptionAttribute>()!;
+            Assert.Equal(typeof(Godot.Color), applicability.ValueType);
+            foreach (var definition in definitions)
+            {
+                var value = definition.GetInterfaces().Single(contract => contract.IsGenericType
+                    && contract.GetGenericTypeDefinition() == typeof(ITweenDefinition<,>)).GetGenericArguments()[1];
+                Assert.Equal(value == typeof(Godot.Color), definition.GetProperty(option) is not null);
+                Assert.NotNull(definition.GetProperty(nameof(TweenOptions.Duration)));
+                Assert.NotNull(definition.GetProperty("Options"));
+            }
+        }
+    }
+
+    [Fact]
+    public void BindingManifestResolvesAliasesComponentsCompoundGettersAndPropertyOwners()
+    {
+        const string bindings = """
+            using Base = tweens.gd.PropertyTween<Godot.Node2D, float>;
+            namespace Godot
+            {
+                public struct Vector2 { public float X, Y; public Vector2(float x, float y) => (X, Y) = (x, y); }
+                public class CanvasItem : Node { public float Opacity { get; set; } }
+                public class Node2D : CanvasItem { public Vector2 Position { get; set; } }
+                public class GpuParticles2D : Node2D { }
+            }
+            namespace tweens.gd
+            {
+                internal static class EndpointComponents { internal static Godot.Vector2 ToVector2(System.ReadOnlySpan<double> value) => default; }
+                public sealed partial class X2DTween : Base
+                {
+                    public X2DTween() : base(target => { return target.Position.X; }, (_, _) => { }, (a, b, t) => a) { }
+                }
+                public sealed partial class X2DTween { }
+                public sealed class InheritedOpacityTween() : PropertyTween<Godot.GpuParticles2D, float>(
+                    target => target.Opacity, (_, _) => { }, (a, b, t) => a);
+                public sealed class PairTween() : PropertyTween<Godot.Node2D, Godot.Vector2>(
+                    target => new(target.Position.X, target.Position.Y), (_, _) => { }, (a, b, t) => a);
+                public sealed class Vector2Tween() : PropertyTween<Godot.Node, Godot.Vector2>(
+                    _ => new(0, 0), (_, _) => { }, (a, b, t) => a)
+                {
+                    protected override bool ReadsWrittenValue => false;
+                }
+            }
+            """;
+        var contracts = Contracts.Replace("public PropertyTween(Func<TTarget, TValue>",
+            "protected virtual bool ReadsWrittenValue => true; public PropertyTween(Func<TTarget, TValue>");
+        var (_, _, result) = Run(CreateCompilation(contracts, bindings));
+        var source = result.GeneratedSources.Single(source => source.HintName == "TweenCatalog.g.cs").SourceText.ToString();
+        using var manifest = JsonDocument.Parse(source["/* TWEENS_GD_CATALOG\n".Length..^3]);
+        var entries = manifest.RootElement.EnumerateArray().ToDictionary(entry => entry.GetProperty("csharp").GetString()!);
+        Assert.Equal(["position:x"], entries["X2D"].GetProperty("paths").EnumerateArray().Select(path => path.GetString()));
+        Assert.Equal(["Node2D"], entries["X2D"].GetProperty("declaringTypes").EnumerateArray().Select(owner => owner.GetString()));
+        Assert.Equal("GPUParticles2D", entries["InheritedOpacity"].GetProperty("target").GetString());
+        Assert.Equal(["CanvasItem"], entries["InheritedOpacity"].GetProperty("declaringTypes").EnumerateArray().Select(owner => owner.GetString()));
+        Assert.Equal("compound", entries["Pair"].GetProperty("kind").GetString());
+        Assert.Equal(["position:x", "position:y"], entries["Pair"].GetProperty("paths").EnumerateArray().Select(path => path.GetString()));
+        Assert.Equal("value", entries["Vector2"].GetProperty("kind").GetString());
+        Assert.Equal("vector2_value", entries["Vector2"].GetProperty("name").GetString());
+        Assert.Empty(entries["Vector2"].GetProperty("paths").EnumerateArray());
+    }
+
+    [Fact]
+    public void TypedKeyframeChannelsFollowGodotInheritanceAndPreserveDegreeChannels()
+    {
+        const string engine = """
+            namespace Godot
+            {
+                public struct Color { public float A; }
+                public struct Vector2 { public float X, Y; }
+                public struct Vector3 { public float X, Y, Z; }
+                public struct Quaternion { }
+                public class CanvasItem : Node { public Color Modulate { get; set; } public Color SelfModulate { get; set; } }
+                public class Node2D : CanvasItem
+                {
+                    public Vector2 Position { get; set; } public Vector2 Scale { get; set; }
+                    public float Rotation { get; set; } public float RotationDegrees { get; set; } public float Skew { get; set; }
+                }
+                public class Node3D : Node
+                {
+                    public Vector3 Position { get; set; } public Vector3 Scale { get; set; }
+                    public Vector3 Rotation { get; set; } public Vector3 RotationDegrees { get; set; } public Quaternion Quaternion { get; set; }
+                }
+                public class GeometryInstance3D : Node3D { public float Transparency { get; set; } }
+            }
+            """;
+        static Dictionary<string, string[]> Parameters(string engine)
+        {
+            var driver = CSharpGeneratorDriver.Create([new KeyframeApiGenerator().AsSourceGenerator()], parseOptions: ParseOptions)
+                .RunGenerators(CreateCompilation(Contracts, engine));
+            var result = Assert.Single(driver.GetRunResult().Results);
+            Assert.Empty(result.Diagnostics);
+            var source = result.GeneratedSources.Single(source => source.HintName == "KeyframeExtensions.g.cs").SourceText;
+            return CSharpSyntaxTree.ParseText(source, ParseOptions).GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>()
+                .Where(method => method.Identifier.ValueText.StartsWith("For"))
+                .ToDictionary(method => method.Identifier.ValueText, method => method.ParameterList.Parameters.Select(parameter => parameter.Identifier.ValueText).ToArray());
+        }
+        var parameters = Parameters(engine);
+        Assert.Equal(["modulate", "alpha", "selfModulate", "duration", "ease", "interpolation", "options"], parameters["ForCanvasItem"]);
+        Assert.Equal(["x", "y", "position", "rotation", "rotationDegrees", "scale", "skew", "modulate", "alpha", "selfModulate",
+            "duration", "ease", "interpolation", "options"], parameters["ForNode2D"]);
+        Assert.DoesNotContain("modulate", parameters["ForNode3D"]);
+        Assert.Contains("rotationDegrees", parameters["ForNode3D"]);
+        Assert.Contains("position", parameters["ForGeometryInstance3D"]);
+        Assert.Contains("transparency", parameters["ForGeometryInstance3D"]);
+        // Changing only the engine hierarchy changes inherited channels, without generator target-name branches.
+        parameters = Parameters(engine.Replace("GeometryInstance3D : Node3D", "GeometryInstance3D : CanvasItem"));
+        Assert.DoesNotContain("position", parameters["ForGeometryInstance3D"]);
+        Assert.Contains("modulate", parameters["ForGeometryInstance3D"]);
+        Assert.Contains("transparency", parameters["ForGeometryInstance3D"]);
+    }
+
+    [Fact]
     public void OptionChangesAndAdapterRemovalUpdateGeneratedSources()
     {
         var compilation = CreateCompilation(Contracts, Adapter);
@@ -297,7 +447,7 @@ public class StructuredGeneratorTests
 
         compilation = compilation.RemoveSyntaxTrees(compilation.SyntaxTrees.Last());
         var (_, removed, result) = Run(compilation, changed.Driver);
-        Assert.Equal(["Property.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
+        Assert.Equal(["Property.g.cs", "TweenCatalog.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
             result.GeneratedSources.Select(source => source.HintName).Order());
         Assert.Null(removed.GetTypeByMetadataName("tweens.gd.Tweens+Opacity"));
     }
@@ -311,6 +461,8 @@ public class StructuredGeneratorTests
         compilation = compilation.ReplaceSyntaxTree(unrelated, Parse("public class Unrelated { public int Value; }"));
         var (_, _, result) = Run(compilation, driver);
         Assert.All(result.TrackedSteps["Definitions"].SelectMany(step => step.Outputs),
+            output => Assert.True(output.Reason is IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged));
+        Assert.All(result.TrackedSteps["Options"].SelectMany(step => step.Outputs),
             output => Assert.True(output.Reason is IncrementalStepRunReason.Cached or IncrementalStepRunReason.Unchanged));
     }
 

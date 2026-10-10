@@ -59,6 +59,16 @@ sprite.Tween(fade);
 
 Choose `ColorSpace.Srgb` or `ColorSpace.LinearRgb` for another interpolation space, and `AlphaMode.Straight` for independent RGB and alpha interpolation. Set `ColorEncoding.LinearRgb` only when the API receiving your values expects linear RGB. Keyframes take these policies through `options: new TweenOptions { ... }`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
 
+Concrete whole-color definitions expose color settings directly. Scalar and vector definitions do not. Generic shader and custom-property definitions take color overrides through `Options`. Assigning `Options` replaces the complete value, including timing. For a `ShaderMaterial shaderMaterial` with a color uniform named `tint`:
+
+```csharp
+var tint = new Tweens.ShaderParameter<Color>("tint", Colors.Coral)
+{
+    Options = new() { Duration = 1, ColorSpace = ColorSpace.LinearRgb },
+};
+shaderMaterial.Tween(tint, sprite);
+```
+
 ## Playback and preparation
 
 `flight.Play(scheduler, sprite)` supports a manually driven scheduler. Timing, delay, repeats, ping-pong, fill, easing, ownership, and cancellation use the ordinary tween runtime. All channel bindings are checked before enrolling the batch. A failed or cancelled member cancels its siblings through the returned `Group`.

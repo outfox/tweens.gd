@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
@@ -20,8 +20,10 @@ public sealed class KeyframeApiGenerator : IIncrementalGenerator
         context.RegisterPostInitializationOutput(static output =>
         {
             output.AddSource("KeyframeValues.g.cs", SourceText.From(Values(), Encoding.UTF8));
-            output.AddSource("KeyframeExtensions.g.cs", SourceText.From(Extensions(), Encoding.UTF8));
         });
+        var extensions = context.CompilationProvider.Select(static (compilation, token) => Extensions(compilation, token));
+        context.RegisterSourceOutput(extensions, static (output, source) =>
+            output.AddSource("KeyframeExtensions.g.cs", SourceText.From(source, Encoding.UTF8)));
     }
 
     private static string Values()
@@ -57,30 +59,26 @@ public sealed class KeyframeApiGenerator : IIncrementalGenerator
         return source.ToString().TrimEnd() + "\n";
     }
 
-    private static string Extensions()
+    private static string Extensions(Compilation compilation, CancellationToken token)
     {
+        // The public aliases are independent of target classes. Availability and value types
+        // come from Godot's properties, including keyframe-only channels such as RotationDegrees.
+        var channels = new[] {
+            ("x", "Position", "X"), ("y", "Position", "Y"), ("z", "Position", "Z"), ("position", "Position", ""),
+            ("rotation", "Rotation", ""), ("rotationDegrees", "RotationDegrees", ""), ("scale", "Scale", ""),
+            ("skew", "Skew", ""), ("quaternion", "Quaternion", ""), ("transparency", "Transparency", ""),
+            ("modulate", "Modulate", ""), ("alpha", "Modulate", "A"), ("selfModulate", "SelfModulate", ""),
+        };
         var factories = new StringBuilder(Header + "public static partial class Tweens\n{\n    public sealed partial class Keyframes\n    {\n");
         var extensions = new StringBuilder("public static partial class TweenExtensions\n{\n");
         foreach (var target in new[] { "CanvasItem", "Node2D", "Node3D", "GeometryInstance3D" })
         {
-            var fields = new List<(string Name, string Type, string Path)>();
-            var dimension = target == "Node2D" ? 2 : 3;
-            if (target != "CanvasItem")
-            {
-                fields.Add(("x", "Real", "position:x")); fields.Add(("y", "Real", "position:y"));
-                if (dimension == 3) fields.Add(("z", "Real", "position:z"));
-                fields.Add(("position", "Point" + dimension, "position"));
-                fields.Add(("rotation", dimension == 2 ? "Real" : "Point3", "rotation"));
-                fields.Add(("rotationDegrees", dimension == 2 ? "Real" : "Point3", "rotation_degrees"));
-                fields.Add(("scale", "Scale" + dimension, "scale"));
-                fields.Add(dimension == 2 ? ("skew", "Real", "skew") : ("quaternion", "global::Godot.Quaternion", "quaternion"));
-                if (target == "GeometryInstance3D") fields.Add(("transparency", "Real", "transparency"));
-            }
-            if (target is "CanvasItem" or "Node2D")
-            {
-                fields.Add(("modulate", "global::Godot.Color", "modulate")); fields.Add(("alpha", "Real", "modulate:a"));
-                fields.Add(("selfModulate", "global::Godot.Color", "self_modulate"));
-            }
+            if (compilation.GetTypeByMetadataName("Godot." + target) is not { } targetType) continue;
+            token.ThrowIfCancellationRequested();
+            var fields = channels.Select(channel => (Name: channel.Item1,
+                    Property: AdapterBindings.ResolveProperty(targetType, channel.Item2, channel.Item3)))
+                .Where(field => field.Property.HasValue)
+                .Select(field => (field.Name, Type: KeyType(field.Property!.Value.Value, field.Name), field.Property.Value.Path)).ToArray();
             var parameters = string.Join(",\n            ", fields.Select(field => "global::System.ReadOnlySpan<" + field.Type + "> " + field.Name + " = default"));
             const string options = ",\n            Duration? duration = null, EaseType? ease = null, Interpolation interpolation = default, TweenOptions? options = null";
             factories.Append("        /// <summary>Creates reusable typed ").Append(target).Append(" channel curves.</summary>\n")
@@ -97,4 +95,12 @@ public sealed class KeyframeApiGenerator : IIncrementalGenerator
         }
         return factories.Append("    }\n}\n\n").Append(extensions).Append("}\n").ToString();
     }
+
+    private static string KeyType(ITypeSymbol value, string name) => value.ToDisplayString() switch
+    {
+        "float" or "double" => "Real",
+        "Godot.Vector2" => name == "scale" ? "Scale2" : "Point2",
+        "Godot.Vector3" => name == "scale" ? "Scale3" : "Point3",
+        _ => value.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+    };
 }
