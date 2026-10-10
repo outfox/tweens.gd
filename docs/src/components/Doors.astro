@@ -1,17 +1,23 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
+import logotype from '../../public/godot-logotype.svg?raw';
+
+// Godot's lettering is inlined, so it renders as crisply as text and takes the text color.
+const lettering = { viewBox: logotype.match(/viewBox="([^"]+)"/)![1], d: logotype.match(/\sd="([^"]+)"/)![1] };
 
 // The language doors start the web simulation; the in-engine tutorial runs the same steps as a Godot project.
 const doors = [
-	{ lang: 'csharp', name: 'C#', requirements: 'Godot 4.7.2 .NET (web simulation)' },
-	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2 (web simulation)' },
+	{ lang: 'csharp', name: 'C#', requirements: 'Godot 4.7.2 .NET' },
+	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2' },
 ];
 ---
 
 <div class="tracks not-content tw-wide">
 	<a class="engine" href="/tutorial/in-engine/">
+		<span class="gutter" aria-hidden="true"></span>
 		<span class="choice-copy">
-			<span class="name">Start with… Godot!</span>
+			<span class="name">Start in…</span>
+			<svg class="logotype" viewBox={lettering.viewBox} role="img" aria-label="Godot"><path d={lettering.d} /></svg>
 			<span class="requirements">In-engine, Godot 4.7.2 .NET</span>
 		</span>
 		<span class="pitch">
@@ -21,15 +27,18 @@ const doors = [
 			</span>
 			<span class="cta">Get the tutorial project <Icon name="right-arrow" /></span>
 		</span>
+		<span class="gutter end" aria-hidden="true"></span>
+		<span class="ribbon">The real deal!</span>
 	</a>
 	<div class="doors" id="choose-a-language" data-lang-switch data-shared role="group" aria-label="Tutorial language">
 		{doors.map((d) => (
 			<div class="door" data-door={d.lang}>
 				<button class="start" type="button" data-lang-choice={d.lang} aria-describedby="language-hint">
 					<span class="choice-copy">
-						<span class="name">Start with {d.name}</span>
+						<span class="name">… or with {d.name}</span>
 						<span class="requirements">{d.requirements}</span>
 					</span>
+					<span class="mode">(web simulation)</span>
 					<span class="indicator" aria-hidden="true"><Icon name="check" /></span>
 				</button>
 			</div>
@@ -82,8 +91,10 @@ const doors = [
 		animation: godot-in 0.9s 0.1s var(--ease-back-out) backwards;
 		transition: rotate 0.5s var(--ease-back-out), scale 0.5s var(--ease-back-out), opacity 0.2s;
 	}
+	/* The entrance moves transform and filter, which stack on the rotate, scale, and opacity that hovering transitions,
+	   so a hover during the entrance blends in instead of cutting it off. */
 	@keyframes godot-in {
-		from { rotate: -50deg; scale: 0.8; opacity: 0; }
+		from { transform: rotate(-30deg) scale(0.8); filter: opacity(0); }
 	}
 	.engine:hover {
 		translate: 0 -2px;
@@ -99,7 +110,34 @@ const doors = [
 		outline: 2px solid var(--tw-accent-ink);
 		outline-offset: 4px;
 	}
-	.engine .name { font-size: 1.85rem; }
+	/* An outlined lead-in over Godot's own lettering, drawn in the text color so it suits either theme. */
+	.engine .name {
+		font: 900 2.75rem / 1.1 var(--tw-font-outline);
+		letter-spacing: 0;
+	}
+	.logotype {
+		display: block;
+		width: 11rem;
+		fill: currentColor;
+	}
+	/* A red band across the top right corner, centered on a point --inset in from each edge so its words clear the
+	   rounded corner; the card clips the band's ends. */
+	.ribbon {
+		--inset: 3.6rem;
+		position: absolute;
+		top: calc(var(--inset) - 0.7rem);
+		right: calc(var(--inset) - 8rem);
+		width: 16rem;
+		padding-block: 0.3rem;
+		rotate: 45deg;
+		background: #c62828;
+		box-shadow: 0 3px 10px -4px rgb(0 0 0 / 0.5);
+		color: #fff;
+		font: 900 0.8rem / 1.2 var(--tw-font-display);
+		letter-spacing: 0.08em;
+		text-align: center;
+		text-transform: uppercase;
+	}
 	.pitch {
 		display: grid;
 		justify-items: start;
@@ -110,18 +148,19 @@ const doors = [
 		color: var(--tw-soft);
 		font-size: var(--sl-text-sm);
 		line-height: 1.5;
+		text-wrap: pretty;
 	}
 	.cta {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.55rem 0.9rem 0.55rem 1.15rem;
+		padding: 0.55em 0.8em 0.55em 1.1em;
 		border-radius: 999px;
 		background: var(--tw-accent-ink);
 		box-shadow: 0 6px 16px -8px var(--tw-accent);
 		color: var(--tw-on-accent);
-		font-size: var(--sl-text-sm);
-		font-weight: 700;
+		font-size: var(--sl-text-lg);
+		font-weight: 900;
 		transition: box-shadow 0.3s;
 	}
 	.cta :global(svg) {
@@ -130,16 +169,19 @@ const doors = [
 	}
 	.engine:hover .cta { box-shadow: 0 10px 22px -8px var(--tw-accent); }
 	.engine:hover .cta :global(svg) { translate: 3px 0; }
-	/* On a wide card the copy keeps a fifth of the card free on each side, leaving the icon room at the left. The
-	   pitch sits centered below the title until both fit side by side; then it takes the left. */
-	@container (min-width: 40rem) {
-		.engine { padding-inline: 20%; justify-items: center; text-align: center; }
-		.pitch { justify-items: center; }
+	.gutter { display: none; }
+	/* A narrow card stacks the copy, and the band tucks further into the corner, clear of it. */
+	@container (width < 40rem) {
+		.ribbon { --inset: 2.9rem; font-size: 0.7rem; }
 	}
-	@container (min-width: 58rem) {
-		.engine { grid-template-columns: minmax(0, 1fr) auto; justify-items: stretch; text-align: end; }
-		.engine .choice-copy { grid-area: 1 / 2; }
-		.pitch { grid-area: 1 / 1; justify-items: start; text-align: start; }
+	/* Side by side, the pitch takes the left and the title the right. The gutters prefer a fifth of the card each but
+	   give way first when space runs short, before the pitch narrows; the end one keeps the title clear of the band. */
+	@container (width >= 40rem) {
+		.engine { display: flex; gap: 2rem; padding-inline: 0; }
+		.gutter { display: block; flex: 0 1000 calc(20% - 2rem); }
+		.gutter.end { order: 3; min-width: 4.5rem; }
+		.pitch { order: 1; flex: 0 1 auto; min-width: 15rem; }
+		.engine .choice-copy { order: 2; flex: none; justify-items: end; margin-inline-start: auto; text-align: end; }
 	}
 	.doors {
 		display: grid;
@@ -147,6 +189,7 @@ const doors = [
 		gap: 1rem;
 	}
 	.door {
+		container-type: inline-size;
 		--choice-background: var(--tw-stage);
 		--choice-border: var(--tw-outline);
 		--choice-color: var(--sl-color-white);
@@ -164,11 +207,12 @@ const doors = [
 		background-image: radial-gradient(ellipse at 0 0, color-mix(in oklab, var(--tw-accent) 22%, transparent), transparent 80%);
 		box-shadow: 0 10px 28px -22px var(--tw-accent);
 	}
+	/* The mode sits at the right, beside the indicator, until the card gets too narrow; then it joins the copy. */
 	.start {
-		display: flex;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto auto;
 		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
+		gap: 0.4rem 1rem;
 		width: 100%;
 		padding: 1.25rem;
 		border: 0;
@@ -186,8 +230,18 @@ const doors = [
 		outline-offset: 4px;
 	}
 	.choice-copy { display: grid; gap: 0.4rem; }
-	.name { font: 700 1.35rem / 1.25 var(--tw-font-display); }
+	.name { font: 900 1.35rem / 1.25 var(--tw-font-display); }
 	.requirements { color: var(--tw-soft); font-size: var(--sl-text-sm); line-height: 1.5; }
+	.mode {
+		color: var(--tw-muted);
+		font-size: var(--sl-text-xs);
+		white-space: nowrap;
+	}
+	@container (max-width: 26rem) {
+		.start { grid-template-columns: minmax(0, 1fr) auto; }
+		.mode { grid-area: 2 / 1; }
+		.indicator { grid-area: 1 / 2 / span 2; }
+	}
 	.indicator {
 		display: grid;
 		place-items: center;
@@ -208,7 +262,8 @@ const doors = [
 		.tracks, .doors { gap: 0.75rem; }
 		.doors { grid-template-columns: minmax(0, 1fr); }
 		.engine { min-height: 0; padding: 1.25rem; }
-		.engine .name { font-size: 1.55rem; }
+		.engine .name { font-size: 2.25rem; }
+		.logotype { width: 9rem; }
 		.start { padding: 1rem 1.25rem; }
 	}
 	@media (prefers-reduced-motion: reduce) {

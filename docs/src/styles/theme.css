@@ -1,7 +1,7 @@
 /* tweens.gd docs theme. Palette shared with testbed/Gallery/Palette.cs. */
 
-/* Lexie Readable has only these two weights: display weights above 500 render Bold.
-   scripts/prepare-lexie-fonts.py enables small-text smoothing in both bundled faces. */
+/* Lexie Readable: Regular and Bold with italics, and Heavy. Weights above 500 render Bold, above 700 Heavy.
+   scripts/prepare-lexie-fonts.py enables small-text smoothing in every bundled face. */
 @font-face {
 	font-family: 'Lexie Readable';
 	font-style: normal;
@@ -11,12 +11,39 @@
 }
 @font-face {
 	font-family: 'Lexie Readable';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../../fonts/lexiereadable-italic-webfont.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Lexie Readable';
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
 	src: url('../../fonts/lexiereadable-bold-webfont.woff2') format('woff2');
 }
-
+@font-face {
+	font-family: 'Lexie Readable';
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../../fonts/lexiereadable-bolditalic-webfont.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Lexie Readable';
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url('../../fonts/lexiereadable-heavy-webfont.woff2') format('woff2');
+}
+/* Heavy Outline draws each Heavy glyph as an outline, for large display text. It stays invisible until loaded. */
+@font-face {
+	font-family: 'Lexie Readable Outline';
+	font-weight: 900;
+	font-display: block;
+	src: url('../../fonts/lexiereadable-heavyoutline-webfont.woff2') format('woff2');
+}
 :root {
 	/* Library curves as CSS easing, sampled from addons/tweens_gd/csharp/Easing/Easing.cs. */
 	--ease-back-out: linear(0, 0.185, 0.349, 0.493, 0.618, 0.726, 0.817, 0.894, 0.956, 1.005, 1.043, 1.07, 1.088, 1.097, 1.1, 1.097, 1.089, 1.078, 1.064, 1.049, 1.035, 1.021, 1.01, 1.003, 1);
@@ -29,6 +56,7 @@
 	--sl-font: 'Lexie Readable', 'Figtree Variable', system-ui, sans-serif;
 	--sl-font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 	--tw-font-display: 'Lexie Readable', 'Figtree Variable', system-ui, sans-serif;
+	--tw-font-outline: 'Lexie Readable Outline', var(--tw-font-display);
 
 	/* The lane runs as wide as code, tables, and demos need; prose inside it keeps a readable measure.
 	   The header aligns to the docs lane on every page (Header.astro), so it reads the width from here. */
@@ -250,7 +278,7 @@ h4,
 	letter-spacing: -0.02em;
 }
 .sl-markdown-content :is(h2, h3, h4):not(:where(.not-content *)) {
-	font-weight: 720;
+	font-weight: 900;
 	text-wrap: balance;
 }
 .sl-markdown-content h2:not(:where(.not-content *)) {

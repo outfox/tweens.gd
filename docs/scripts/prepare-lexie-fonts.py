@@ -14,7 +14,8 @@ from fontTools.ttLib import TTFont, newTable
 
 
 fonts = Path(__file__).resolve().parents[1] / "fonts"
-for name in ("lexiereadable-regular-webfont.woff2", "lexiereadable-bold-webfont.woff2"):
+faces = ("regular", "italic", "bold", "bolditalic", "heavy", "heavyoutline")
+for name in (f"lexiereadable-{face}-webfont.woff2" for face in faces):
     path = fonts / name
     font = TTFont(path, recalcTimestamp=False)
     gasp = newTable("gasp")

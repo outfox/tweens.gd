@@ -106,7 +106,8 @@ The documentation site's demos animate the Godot icon in `docs/public/godot.svg`
 an unmodified copy of Godot's default project icon. The in-engine tutorial page links
 to Godot's download page with `docs/public/godot-logo-dark.svg` and
 `docs/public/godot-logo-light.svg`, unmodified copies of the press kit's large color
-logos for dark and light backgrounds.
+logos for dark and light backgrounds. Its in-engine card uses the large logo's lettering
+alone, cropped to its bounds, in `docs/public/godot-logotype.svg`.
 
 Copyright (c) 2017 Andrea Calabró
 
