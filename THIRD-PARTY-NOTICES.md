@@ -103,7 +103,10 @@ SOFTWARE.
 
 Godot Engine logo by Andrea Calabró (https://godotengine.org/press/).
 The documentation site's demos animate the Godot icon in `docs/public/godot.svg`,
-an unmodified copy of Godot's default project icon.
+an unmodified copy of Godot's default project icon. The in-engine tutorial page links
+to Godot's download page with `docs/public/godot-logo-dark.svg` and
+`docs/public/godot-logo-light.svg`, unmodified copies of the press kit's large color
+logos for dark and light backgrounds.
 
 Copyright (c) 2017 Andrea Calabró
 

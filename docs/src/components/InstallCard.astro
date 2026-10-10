@@ -5,13 +5,14 @@ interface Props {
 	/** Names the channel in the logo's alt text. */
 	title: string;
 	href: string;
-	logo: 'godot-asset-store' | 'github' | 'nuget';
+	logo: 'godot' | 'godot-asset-store' | 'github' | 'nuget';
 }
 
 const { title, href, logo } = Astro.props;
 
 // Wordmarks come in light- and dark-theme files; the page shows the one for its theme.
 const wordmarks = {
+	godot: { dark: '/godot-logo-dark.svg', light: '/godot-logo-light.svg' },
 	'godot-asset-store': { dark: '/godot-asset-store.svg', light: '/godot-asset-store-black.svg' },
 	github: { dark: '/github-logo-white.svg', light: '/github-logo-black.svg' },
 	nuget: { dark: '/logo-nuget-dark.svg', light: '/logo-nuget-light.svg' },
@@ -79,6 +80,10 @@ const art = `<img class="on-dark" src="${wordmarks[logo].dark}" alt="${title}"><
 	}
 	.install-logo--github img {
 		height: calc(var(--banner) * 0.44);
+	}
+	/* Godot's press logo carries its own margin. */
+	.install-logo--godot img {
+		height: calc(var(--banner) * 0.9);
 	}
 	:root[data-theme='light'] .install-logo .on-dark,
 	:root:not([data-theme='light']) .install-logo .on-light {

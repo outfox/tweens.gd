@@ -1,0 +1,44 @@
+---
+title: In-Engine Tutorial
+description: Download the five-step tutorial as a Godot project and run it in the editor.
+---
+
+import InstallCard from '../../../components/InstallCard.astro';
+import { CardGrid, Steps } from '@astrojs/starlight/components';
+
+The [tutorial](/tutorial/)'s five steps, as a Godot project. Each step runs its lesson scene and shows the code that
+runs, in C# or GDScript.
+
+<CardGrid>
+<InstallCard title="GitHub" logo="github" href="https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip">
+
+Download [`tweens.gd-tutorial.zip`](https://github.com/outfox/tweens.gd/releases/latest/download/tweens.gd-tutorial.zip) from the latest release. The project includes the tweens.gd addon.
+
+</InstallCard>
+<InstallCard title="Godot" logo="godot" href="https://godotengine.org/download/">
+
+Download Godot 4.7.2 .NET from [godotengine.org](https://godotengine.org/download/), and the
+[.NET 8 SDK or later](https://dotnet.microsoft.com/download). The tutorial's interface is written in C#, so the
+GDScript lessons need the .NET edition too.
+
+</InstallCard>
+</CardGrid>
+
+## Open and run
+
+<Steps>
+
+1. Extract the ZIP into a new folder.
+
+2. Open it like any Godot project: in the Project Manager, choose **Import**, select the folder's `project.godot`,
+   and let the editor finish importing.
+
+3. Poke around as much as you like. `Lessons/` holds a C# scene and a GDScript scene for each step; open one and
+   press **F6** to run it on its own.
+
+4. Press **Play** (**F5**) and choose C# or GDScript in the tutorial's header. Godot builds the C# project first;
+   that build can need internet access to restore the Godot .NET SDK from NuGet.
+
+</Steps>
+
+While the tutorial runs from the editor, **Open in editor** above an example opens that example's scene.

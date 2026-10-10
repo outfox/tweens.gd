@@ -1,32 +1,150 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
 
+// The language doors start the web simulation; the in-engine tutorial runs the same steps as a Godot project.
 const doors = [
-	{ lang: 'csharp', name: 'C#', requirements: 'Godot 4.7.2 .NET' },
-	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2' },
+	{ lang: 'csharp', name: 'C#', requirements: 'Godot 4.7.2 .NET (web simulation)' },
+	{ lang: 'gdscript', name: 'GDScript', requirements: 'Godot 4.7.2 (web simulation)' },
 ];
 ---
 
-<div class="doors not-content tw-wide" id="choose-a-language" data-lang-switch data-shared role="group" aria-label="Tutorial language">
-	{doors.map((d) => (
-		<div class="door" data-door={d.lang}>
-			<button class="start" type="button" data-lang-choice={d.lang} aria-describedby="language-hint">
-				<span class="choice-copy">
-					<span class="name">Start with {d.name}</span>
-					<span class="requirements">{d.requirements}</span>
-				</span>
-				<span class="indicator" aria-hidden="true"><Icon name="check" /></span>
-			</button>
-		</div>
-	))}
+<div class="tracks not-content tw-wide">
+	<a class="engine" href="/tutorial/in-engine/">
+		<span class="choice-copy">
+			<span class="name">Start with… Godot!</span>
+			<span class="requirements">In-engine, Godot 4.7.2 .NET</span>
+		</span>
+		<span class="pitch">
+			<span class="blurb">
+				Download and open our interactive tutorial in the Godot editor. Each lesson comes as a C# and a GDScript
+				scene, ready to run and edit.
+			</span>
+			<span class="cta">Get the tutorial project <Icon name="right-arrow" /></span>
+		</span>
+	</a>
+	<div class="doors" id="choose-a-language" data-lang-switch data-shared role="group" aria-label="Tutorial language">
+		{doors.map((d) => (
+			<div class="door" data-door={d.lang}>
+				<button class="start" type="button" data-lang-choice={d.lang} aria-describedby="language-hint">
+					<span class="choice-copy">
+						<span class="name">Start with {d.name}</span>
+						<span class="requirements">{d.requirements}</span>
+					</span>
+					<span class="indicator" aria-hidden="true"><Icon name="check" /></span>
+				</button>
+			</div>
+		))}
+	</div>
 </div>
 
 <style>
+	.tracks {
+		container-type: inline-size;
+		display: grid;
+		gap: 1rem;
+		margin-block: 1.5rem;
+	}
+	/* The primary choice takes a strong tint of the language accent. Its icon swings in at the left, faded and cropped
+	   by the card, and hovering lifts the card and turns the icon a little further. */
+	.engine {
+		--tint: 28%;
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		align-items: center;
+		gap: 1rem 2rem;
+		min-height: 8.5rem;
+		padding: 1.5rem;
+		border: 1px solid color-mix(in oklab, var(--tw-accent) 70%, var(--tw-outline));
+		border-radius: 1rem;
+		background: linear-gradient(110deg, color-mix(in oklab, var(--tw-accent) var(--tint), var(--tw-stage)), var(--tw-stage) 75%);
+		box-shadow: 0 14px 36px -24px var(--tw-accent);
+		color: var(--sl-color-white);
+		text-decoration: none;
+		transition: border-color 0.2s, box-shadow 0.3s, translate 0.35s var(--ease-back-out);
+	}
+	:global(:root[data-theme='light']) .engine { --tint: 18%; }
+	.engine::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		top: 50%;
+		left: -2rem;
+		width: 18rem;
+		aspect-ratio: 1;
+		translate: 0 -50%;
+		rotate: -20deg;
+		background: url('/godot.svg') center / contain no-repeat;
+		mask-image: radial-gradient(closest-side, #000 35%, transparent);
+		opacity: 0.35;
+		animation: godot-in 0.9s 0.1s var(--ease-back-out) backwards;
+		transition: rotate 0.5s var(--ease-back-out), scale 0.5s var(--ease-back-out), opacity 0.2s;
+	}
+	@keyframes godot-in {
+		from { rotate: -50deg; scale: 0.8; opacity: 0; }
+	}
+	.engine:hover {
+		translate: 0 -2px;
+		border-color: var(--tw-accent);
+		box-shadow: 0 18px 40px -20px var(--tw-accent);
+	}
+	.engine:hover::before {
+		rotate: -12deg;
+		scale: 1.06;
+		opacity: 0.45;
+	}
+	.engine:focus-visible {
+		outline: 2px solid var(--tw-accent-ink);
+		outline-offset: 4px;
+	}
+	.engine .name { font-size: 1.85rem; }
+	.pitch {
+		display: grid;
+		justify-items: start;
+		gap: 0.9rem;
+	}
+	.blurb {
+		max-width: 24rem;
+		color: var(--tw-soft);
+		font-size: var(--sl-text-sm);
+		line-height: 1.5;
+	}
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.55rem 0.9rem 0.55rem 1.15rem;
+		border-radius: 999px;
+		background: var(--tw-accent-ink);
+		box-shadow: 0 6px 16px -8px var(--tw-accent);
+		color: var(--tw-on-accent);
+		font-size: var(--sl-text-sm);
+		font-weight: 700;
+		transition: box-shadow 0.3s;
+	}
+	.cta :global(svg) {
+		font-size: 1.25rem;
+		transition: translate 0.35s var(--ease-back-out);
+	}
+	.engine:hover .cta { box-shadow: 0 10px 22px -8px var(--tw-accent); }
+	.engine:hover .cta :global(svg) { translate: 3px 0; }
+	/* On a wide card the copy keeps a fifth of the card free on each side, leaving the icon room at the left. The
+	   pitch sits centered below the title until both fit side by side; then it takes the left. */
+	@container (min-width: 40rem) {
+		.engine { padding-inline: 20%; justify-items: center; text-align: center; }
+		.pitch { justify-items: center; }
+	}
+	@container (min-width: 58rem) {
+		.engine { grid-template-columns: minmax(0, 1fr) auto; justify-items: stretch; text-align: end; }
+		.engine .choice-copy { grid-area: 1 / 2; }
+		.pitch { grid-area: 1 / 1; justify-items: start; text-align: start; }
+	}
 	.doors {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1rem;
-		margin-block: 1.5rem;
 	}
 	.door {
 		--choice-background: var(--tw-stage);
@@ -87,10 +205,14 @@ const doors = [
 	}
 	.door:has([aria-pressed='true']) .indicator :global(svg) { opacity: 1; }
 	@media (max-width: 36rem) {
-		.doors { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
+		.tracks, .doors { gap: 0.75rem; }
+		.doors { grid-template-columns: minmax(0, 1fr); }
+		.engine { min-height: 0; padding: 1.25rem; }
+		.engine .name { font-size: 1.55rem; }
 		.start { padding: 1rem 1.25rem; }
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.door, .start { transition: none; }
+		.engine, .engine::before, .cta, .cta :global(svg), .door, .start { transition: none; }
+		.engine::before { animation: none; }
 	}
 </style>

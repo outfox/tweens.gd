@@ -112,8 +112,9 @@ export const firstSlug = LEARN[0].slug;
 /** Hub pages are shared pages that both tracks list, such as the tutorial overview and the easing playground. */
 export const HUBS = PATH.flatMap(pagesOf).filter((page) => page.link);
 
-/** The hub entry for a content id such as 'tutorial', if the page is one. */
-export const hubOf = (id) => HUBS.find((page) => page.link === `/${id}/`);
+/** The hub entry for a content id such as 'tutorial', if the page is one or sits under one, as 'tutorial/in-engine'
+ *  does. A page under a hub shares its sidebar and title art. */
+export const hubOf = (id) => HUBS.find((page) => `/${id}/`.startsWith(page.link));
 
 // The sidebar numbers the tutorial's steps; the tutorial hub draws its own numbers beside the plain labels.
 const label = (page, lang) => {
