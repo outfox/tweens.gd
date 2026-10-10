@@ -11,8 +11,8 @@ import { csharpDark, gdscriptDark } from '../src/styles/code-themes.mjs';
 
 export const FONTS = {
   mono: 'node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2',
-  text: 'fonts/LexieReadable-Regular.woff2',
-  display: 'fonts/LexieReadable-Bold.woff2',
+  text: 'fonts/lexiereadable-regular-webfont.woff2',
+  display: 'fonts/lexiereadable-bold-webfont.woff2',
 };
 
 // Dark gallery palette and accents (theme.css).
