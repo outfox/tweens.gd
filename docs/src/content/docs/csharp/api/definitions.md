@@ -4,7 +4,7 @@ description: The built-in C# definition structs, their constructors, shared Twee
 tableOfContents: true
 ---
 
-A definition is an immutable description of one motion: a `readonly record struct` nested in the `Tweens` class, one per property. Vary a copy with `with`; [reusable definitions](/csharp/definitions/) shows the pattern.
+A property definition is an immutable description of one motion: a `readonly record struct` nested in the `Tweens` class, one per property. Vary a copy with `with`; [reusable definitions](/csharp/definitions/) shows the pattern. [Keyframes](/csharp/keyframes/) define several parallel value curves in one reusable object.
 
 ```csharp
 var arrive = new Tweens.Position2D((400, 180), 0.6, Out.Cubic); // Constructor
@@ -29,6 +29,7 @@ Every definition has the same members, listed by role:
 - [Endpoints & variations](/csharp/api/endpoints/): `From`, `To`, `By`, and their factors and deltas.
 - [Timing](/csharp/api/timing/): `Duration`, `Delay`, `Offset`, `Repeats`, `PingPong`, intervals, and `Fill`.
 - [Easing](/csharp/api/easing/): `Ease`, `BlendType`, `Blend`, `Skew`, `Weks`, `EaseFunction`, and `Curve`.
+- [Color interpolation](/csharp/keyframes/#color-policy): `ColorSpace`, `AlphaMode`, and `ColorEncoding`; defaults are OKLab, premultiplied alpha, and sRGB input/output.
 - [Callbacks](/csharp/api/callbacks/): `OnAdd` through `OnFinally`, and `SuppressCallbacksWhenTargetInvalid`.
 
 | Member | Type | Meaning |
@@ -36,6 +37,20 @@ Every definition has the same members, listed by role:
 | `Options` | `TweenOptions` | Every timing and easing member, `SuppressCallbacksWhenTargetInvalid`, and the duration and delay factors, as one value |
 
 ## Shared options
+
+### ColorSpace
+
+Whole-color interpolation defaults to `ColorSpace.Oklab`; `Srgb` and `LinearRgb` select other working spaces.
+
+### AlphaMode
+
+`AlphaMode.Premultiplied` is the default. `Straight` interpolates color coordinates and alpha independently.
+
+### ColorEncoding
+
+`ColorEncoding.Srgb` accepts ordinary Godot Colors. `LinearRgb` supports APIs expecting linear values. Input and output use straight alpha. See the [color policy](/csharp/keyframes/#color-policy) for exact endpoints and relative arithmetic.
+
+### Options value
 
 `TweenOptions` is a readonly record struct holding the members of `Options`. A definition's flat members, such as `Duration`, read and write that same value. Assign one to several definitions, list overrides after it, or pass it to a [shorthand method](/csharp/api/start/#shorthand-methods):
 

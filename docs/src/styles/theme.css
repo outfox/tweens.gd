@@ -7,14 +7,14 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url('../../fonts/LexieReadable-Regular.woff2') format('woff2');
+	src: url('../../fonts/lexiereadable-regular-webfont.woff2') format('woff2');
 }
 @font-face {
 	font-family: 'Lexie Readable';
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
-	src: url('../../fonts/LexieReadable-Bold.woff2') format('woff2');
+	src: url('../../fonts/lexiereadable-bold-webfont.woff2') format('woff2');
 }
 
 :root {

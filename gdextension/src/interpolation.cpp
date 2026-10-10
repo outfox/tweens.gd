@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Moritz Voss
 #include "interpolation.hpp"
+#include "color_interpolation.hpp"
 
 #include <godot_cpp/classes/class_db_singleton.hpp>
 #include <godot_cpp/classes/script.hpp>
@@ -107,6 +108,8 @@ void TweensGdInterpolation::_bind_methods() {
 	ClassDB::bind_static_method(name, D_METHOD("compatible", "initial", "endpoint"), &TweensGdInterpolation::compatible);
 	ClassDB::bind_static_method(name, D_METHOD("finite", "value"), &TweensGdInterpolation::finite);
 	ClassDB::bind_static_method(name, D_METHOD("interpolate", "from", "to", "weight", "value_type"), &TweensGdInterpolation::interpolate);
+	ClassDB::bind_static_method(name, D_METHOD("interpolate_color", "from", "to", "weight", "color_space", "alpha_mode", "color_encoding"), &TweensGdInterpolation::interpolate_color, DEFVAL(0), DEFVAL(0), DEFVAL(0));
+	ClassDB::bind_static_method(name, D_METHOD("interpolate_offset", "from", "to", "weight", "value_type"), &TweensGdInterpolation::interpolate_offset);
 	ClassDB::bind_static_method(name, D_METHOD("zero", "value_type"), &TweensGdInterpolation::zero);
 	ClassDB::bind_static_method(name, D_METHOD("add", "value", "offset"), &TweensGdInterpolation::add);
 	ClassDB::bind_static_method(name, D_METHOD("remove", "value", "offset"), &TweensGdInterpolation::remove);
@@ -202,6 +205,21 @@ Variant TweensGdInterpolation::interpolate(const Variant &p_from, const Variant 
 		lerp.sample(p_weight, result);
 	}
 	return result;
+}
+
+Variant TweensGdInterpolation::interpolate_color(const Color &p_from, const Color &p_to, double p_weight, int64_t p_space, int64_t p_alpha, int64_t p_encoding) {
+	if (p_space < 0 || p_space > 2 || p_alpha < 0 || p_alpha > 1 || p_encoding < 0 || p_encoding > 1
+			|| !Math::is_finite(p_weight) || !finite(p_from) || !finite(p_to)) return Variant();
+	if (p_weight == 0) return p_from;
+	if (p_weight == 1) return p_to;
+	const Color result = decode_color(encode_color(p_from, p_space, p_alpha, p_encoding).lerp(
+			encode_color(p_to, p_space, p_alpha, p_encoding), p_weight), p_space, p_alpha, p_encoding);
+	return finite(result) ? Variant(result) : Variant();
+}
+
+Variant TweensGdInterpolation::interpolate_offset(const Variant &p_from, const Variant &p_to, double p_weight, int64_t p_value_type) {
+	if (p_value_type == Variant::COLOR) return Color(p_from).lerp(Color(p_to), p_weight);
+	return interpolate(p_from, p_to, p_weight, p_value_type);
 }
 
 Variant TweensGdInterpolation::zero(int64_t p_value_type) {
@@ -301,7 +319,7 @@ Variant TweensGdInterpolation::read_property(Object *p_target, const NodePath &p
 	return value;
 }
 
-bool TypedLerp::prepare(const Variant &p_from, const Variant &p_to, Variant::Type p_type) {
+bool TypedLerp::prepare(const Variant &p_from, const Variant &p_to, Variant::Type p_type, int64_t p_space, int64_t p_alpha, int64_t p_encoding) {
 	type = p_type;
 	switch (p_type) {
 		case Variant::INT:
@@ -342,12 +360,11 @@ bool TypedLerp::prepare(const Variant &p_from, const Variant &p_to, Variant::Typ
 			return true;
 		}
 		case Variant::COLOR: {
-			const Color from = p_from;
-			const Color to = p_to;
-			for (int index = 0; index < 4; index++) {
-				from_components[index] = from[index];
-				to_components[index] = to[index];
-			}
+			color_from = p_from;
+			color_to = p_to;
+			color_space = p_space; alpha_mode = p_alpha; color_encoding = p_encoding;
+			working_from = encode_color(color_from, p_space, p_alpha, p_encoding);
+			working_to = encode_color(color_to, p_space, p_alpha, p_encoding);
 			return true;
 		}
 		case Variant::RECT2: {
@@ -424,8 +441,8 @@ bool TypedLerp::sample(double p_weight, Variant &r_value) const {
 			return result.is_finite();
 		}
 		case Variant::COLOR: {
-			components(4);
-			const Color result(c[0], c[1], c[2], c[3]);
+			const Color result = p_weight == 0 ? color_from : p_weight == 1 ? color_to
+					: decode_color(working_from.lerp(working_to, p_weight), color_space, alpha_mode, color_encoding);
 			r_value = Variant(result);
 			return Math::is_finite(result.r) && Math::is_finite(result.g) && Math::is_finite(result.b) && Math::is_finite(result.a);
 		}

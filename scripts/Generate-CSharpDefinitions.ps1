@@ -11,8 +11,22 @@ if ($LASTEXITCODE -ne 0) {
     throw 'C# definition generation failed.'
 }
 # Never ship Godot's generators: the consuming Godot SDK must generate its own glue.
-$source = Join-Path $emission 'tweens.gd.Generators/tweens.gd.Generators.StructuredDefinitionGenerator'
-$files = @(Get-ChildItem -LiteralPath $source -Filter '*.g.cs' -File | Sort-Object Name)
+$source = Join-Path $emission 'tweens.gd.Generators'
+$emitted = @(Get-ChildItem -LiteralPath $source -Filter '*.g.cs' -File -Recurse | Sort-Object Name)
+$catalog = @($emitted | Where-Object Name -EQ 'TweenCatalog.g.cs')
+if ($catalog.Count -ne 1) {
+    throw 'Expected one shared binding manifest from Roslyn.'
+}
+$catalogSource = [IO.File]::ReadAllText($catalog[0].FullName).Replace("`r`n", "`n")
+$marker = "/* TWEENS_GD_CATALOG`n"
+if (!$catalogSource.StartsWith($marker) -or !$catalogSource.EndsWith("*/`n")) {
+    throw 'Invalid Roslyn binding manifest artifact.'
+}
+$manifest = $catalogSource.Substring($marker.Length, $catalogSource.Length - $marker.Length - 3)
+# Validate the transport before copying it. This tool-only source never goes into the addon.
+$null = ConvertFrom-Json -InputObject $manifest
+$manifestTarget = Join-Path $repository 'tests/conformance/adapters.json'
+$files = @($emitted | Where-Object Name -NE 'TweenCatalog.g.cs')
 if (!$files.Count) {
     throw 'No structured definitions were emitted.'
 }
@@ -28,6 +42,14 @@ if (!$Check) {
     }
 }
 $differences = @($stale | ForEach-Object Name)
+if ($Check) {
+    if (!(Test-Path -LiteralPath $manifestTarget) -or [IO.File]::ReadAllText($manifestTarget).Replace("`r`n", "`n") -cne $manifest) {
+        $differences += 'tests/conformance/adapters.json'
+    }
+}
+else {
+    [IO.File]::WriteAllText($manifestTarget, $manifest)
+}
 foreach ($file in $files) {
     $target = Join-Path $destination $file.Name
     $content = [IO.File]::ReadAllText($file.FullName).Replace("`r`n", "`n")

@@ -503,7 +503,7 @@ public class PropertyContractTests(HeadlessFixture godot)
             int x => (int)Math.Round(Mix(x, (int)target, weight), MidpointRounding.AwayFromZero),
             Vector2 x => x * (float)(1 - weight) + (Vector2)target * (float)weight,
             Vector3 x => x * (float)(1 - weight) + (Vector3)target * (float)weight,
-            Color x => x * (float)(1 - weight) + (Color)target * (float)weight,
+            Color x => Interpolators.Color(x, (Color)target, (float)weight),
             Quaternion x => new Quaternion(Vector3.Up, (float)Mix(x.GetAngle(), ((Quaternion)target).GetAngle(), weight)),
             Rect2 x => new Rect2((Vector2)Expected(x.Position, ((Rect2)target).Position, "", weight),
                 (Vector2)Expected(x.Size, ((Rect2)target).Size, "", weight)),
@@ -559,7 +559,7 @@ public class PropertyContractTests(HeadlessFixture godot)
         Assert.Equal(new Vector2(1, 2), Midpoint(new Vector2Tween(), new Vector2(2, 4)));
         Assert.Equal(new Vector3(1, 2, 3), Midpoint(new Vector3Tween(), new Vector3(2, 4, 6)));
         Assert.Equal(new Vector4(1, 2, 3, 4), Midpoint(new Vector4Tween(), new Vector4(2, 4, 6, 8)));
-        Assert.Equal(new Color(0.5f, 0, 0, 0.5f), Midpoint(new ColorTween(), new Color(1, 0, 0)));
+        AssertClose(new Color(1, 0, 0, 0.5f), Midpoint(new ColorTween(), new Color(1, 0, 0)), "premultiplied default");
         Assert.Equal(new Rect2(1, 2, 3, 4), Midpoint(new Rect2Tween(), new Rect2(2, 4, 6, 8)));
         Assert.True(Midpoint(new QuaternionTween(), new Quaternion(Vector3.Up, 0.6f)).IsEqualApprox(new Quaternion(Vector3.Up, 0.3f)));
     }

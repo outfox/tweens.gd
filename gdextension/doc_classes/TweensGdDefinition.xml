@@ -23,6 +23,14 @@
 		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
 	</tutorials>
 	<methods>
+		<method name="through" qualifiers="const">
+			<return type="TweensGdDefinition" />
+			<param index="0" name="curve" type="TweensGdKeyframeCurve" />
+			<description>Copies the definition, replacing from_value and to_value with a prepared value curve. Retains storage binding, timing and callbacks. The curve owns its color policy. Relative endpoints and endpoint adjustments remain invalid. Returns null for a null curve.</description>
+		</method>
+		<method name="with_color_space" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="space" type="int" /><description>Returns a copy with [member color_space] changed.</description></method>
+		<method name="with_alpha_mode" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="mode" type="int" /><description>Returns a copy with [member alpha_mode] changed.</description></method>
+		<method name="with_color_encoding" qualifiers="const"><return type="TweensGdDefinition" /><param index="0" name="encoding" type="int" /><description>Returns a copy with [member color_encoding] changed.</description></method>
 		<method name="copy" qualifiers="const">
 			<return type="TweensGdDefinition" />
 			<description>
@@ -341,6 +349,10 @@
 		</method>
 	</methods>
 	<members>
+		<member name="color_space" type="int" setter="set_color_space" getter="get_color_space" default="0">Whole-color interpolation space: OKLab=0 (default), sRGB=1, linear RGB=2. Does not change relative RGBA arithmetic.</member>
+		<member name="alpha_mode" type="int" setter="set_alpha_mode" getter="get_alpha_mode" default="0">Premultiplied=0 (default), Straight=1. Input and output remain ordinary straight-alpha Godot Colors.</member>
+		<member name="color_encoding" type="int" setter="set_color_encoding" getter="get_color_encoding" default="0">RGB encoding at the API boundary: sRGB=0 (default), linear RGB=1. Use linear only for APIs that expect linear values.</member>
+		<member name="keyframe_curve" type="TweensGdKeyframeCurve" setter="set_keyframe_curve" getter="get_keyframe_curve">Prepared value curve used by TweensGdKeyframes. Missing starts are captured per play. Endpoint values and endpoint adjustments cannot be combined with a keyframe curve.</member>
 		<member name="adapter" type="RefCounted" setter="set_adapter" getter="get_adapter">
 			Custom storage operations, copied for each playback. Use a [TweensGdAdapter] or [member property], not both.
 		</member>

@@ -33,6 +33,32 @@ public class ShaderDefaultTests(Fixture godot)
     }
 
     [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void SampledShaderBindingRestoresAbsenceAndSurvivesConcurrentPlays(bool explicitOverride, bool nested)
+    {
+        using var shader = new Shader { Code = "shader_type canvas_item; uniform float amount = 0.25;" };
+        using var first = new ShaderMaterial { Shader = shader };
+        using var second = new ShaderMaterial { Shader = shader };
+        using var scheduler = new TweenScheduler();
+        if (explicitOverride) first.SetShaderParameter("amount", 0.25f);
+        second.SetShaderParameter("amount", 0.75f);
+        var source = new Tweens.ShaderParameter<float>("amount") { Duration = 1, Fill = FillMode.None };
+        var sampled = source.Through(new KeyframeCurve<float>([new(100, 1)]));
+        if (nested) sampled = sampled.Through(new KeyframeCurve<float>([new(100, 1)]));
+        var a = scheduler.Add(first, sampled); var b = scheduler.Add(second, sampled);
+        scheduler.Update(0.5);
+        Assert.Equal(0.625f, first.GetShaderParameter("amount").AsSingle());
+        Assert.Equal(0.875f, second.GetShaderParameter("amount").AsSingle());
+        scheduler.Update(0.5);
+        Assert.Equal(explicitOverride ? Variant.Type.Float : Variant.Type.Nil, first.GetShaderParameter("amount").VariantType);
+        Assert.Equal(0.75f, second.GetShaderParameter("amount").AsSingle());
+        Assert.Equal(Reason.Completed, a.CompletionReason); Assert.Equal(Reason.Completed, b.CompletionReason);
+    }
+
+    [Theory]
     [InlineData("float")]
     [InlineData("double")]
     [InlineData("int")]
@@ -54,7 +80,7 @@ public class ShaderDefaultTests(Fixture godot)
             case "Vector4": Check(material, godot.Tree, "quad", Vector4.One * 0.25f, Vector4.One * 0.75f, Vector4.One * 0.5f); break;
             case "Color":
                 Check(material, godot.Tree, "tint", new Color(0.25f, 0.25f, 0.25f, 0.25f), new Color(0.75f, 0.75f, 0.75f, 0.75f),
-                    new Color(0.5f, 0.5f, 0.5f, 0.5f));
+                    new Color(0.616543f, 0.616543f, 0.616543f, 0.5f));
                 break;
         }
 
@@ -67,7 +93,9 @@ public class ShaderDefaultTests(Fixture godot)
             Assert.Equal(initial, tween.Value);
             scheduler.Update(0.5);
             Assert.Null(tween.Error);
-            Assert.Equal(middle, material.GetShaderParameter(name).As<T>());
+            var sampled = material.GetShaderParameter(name).As<T>();
+            if (middle is Color color) Assert.True(color.IsEqualApprox((Color)(object)sampled));
+            else Assert.Equal(middle, sampled);
             scheduler.Update(0.5);
             Assert.Equal(TweenState.Completed, tween.State);
             Assert.Equal(Variant.Type.Nil, material.GetShaderParameter(name).VariantType);
@@ -194,7 +222,7 @@ public class ShaderDefaultTests(Fixture godot)
             Check("pair", Vector2.One * 0.75f, Vector2.One * 0.5f);
             Check("triple", Vector3.One * 0.75f, Vector3.One * 0.5f);
             Check("quad", Vector4.One * 0.75f, Vector4.One * 0.5f);
-            Check("tint", new Color(0.75f, 0.75f, 0.75f, 0.75f), new Color(0.5f, 0.5f, 0.5f, 0.5f));
+            Check("tint", new Color(0.75f, 0.75f, 0.75f, 0.75f), new Color(0.616543f, 0.616543f, 0.616543f, 0.5f));
         }
         finally { node.Free(); }
 
@@ -206,7 +234,9 @@ public class ShaderDefaultTests(Fixture godot)
             var scheduler = TweenRuntime.GetRunner(node).Scheduler;
             scheduler.Update(0.5);
             Assert.Null(tween.Error);
-            Assert.Equal(middle, Get(node, name).As<T>());
+            var sampled = Get(node, name).As<T>();
+            if (middle is Color color) Assert.True(color.IsEqualApprox((Color)(object)sampled));
+            else Assert.Equal(middle, sampled);
             scheduler.Update(0.5);
             Assert.Equal(TweenState.Completed, tween.State);
             Assert.False(HasOverride(node, name));

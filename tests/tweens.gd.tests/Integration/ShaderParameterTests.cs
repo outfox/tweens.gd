@@ -30,7 +30,7 @@ public class ShaderParameterTests(HeadlessFixture godot)
         Check(material, scheduler, "pair", Vector2.Zero, new Vector2(2, 4), new Vector2(1, 2));
         Check(material, scheduler, "triple", Vector3.Zero, new Vector3(2, 4, 6), new Vector3(1, 2, 3));
         Check(material, scheduler, "quad", Vector4.Zero, new Vector4(2, 4, 6, 8), new Vector4(1, 2, 3, 4));
-        Check(material, scheduler, "tint", new Color(0, 0, 0, 0), new Color(1, 1, 1, 1), new Color(0.5f, 0.5f, 0.5f, 0.5f));
+        Check(material, scheduler, "tint", new Color(0, 0, 0, 0), new Color(1, 1, 1, 1), new Color(1, 1, 1, 0.5f));
 
         static void Check<[MustBeVariant] T>(ShaderMaterial material, TweenScheduler scheduler, string name, T initial, T to, T middle)
             where T : struct
@@ -39,7 +39,9 @@ public class ShaderParameterTests(HeadlessFixture godot)
             var tween = scheduler.Add(material, new Tweens.ShaderParameter<T>(name) { To = to, Duration = 1 });
             Assert.Equal(default, tween.Value);
             scheduler.Update(0.5);
-            Assert.Equal(middle, ShaderValues<T>.Read(material.GetShaderParameter(name)));
+            var sampled = ShaderValues<T>.Read(material.GetShaderParameter(name));
+            if (middle is Color color) Assert.True(color.IsEqualApprox((Color)(object)sampled));
+            else Assert.Equal(middle, sampled);
             scheduler.Update(0.5);
             Assert.Equal(to, ShaderValues<T>.Read(material.GetShaderParameter(name)));
         }

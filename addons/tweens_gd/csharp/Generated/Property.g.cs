@@ -13,7 +13,7 @@ public static partial class Tweens
     public readonly record struct Property<TTarget, TValue> : ITweenDefinition<TTarget, TValue>
         where TTarget : class where TValue : struct
     {
-        /// <summary>Shared timing, easing, and playback modes. Individual option properties forward to this value.</summary>
+        /// <summary>Shared timing, easing, and playback modes. Configure value-specific policies here for generic definitions. Individual option properties forward to this value.</summary>
         public TweenOptions Options { get; init; }
         /// <inheritdoc cref="TweenOptions.Duration"/>
         public global::tweens.gd.Duration @Duration { get => Options.@Duration; init => Options = Options with { @Duration = value }; }

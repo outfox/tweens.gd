@@ -23,12 +23,14 @@ public class StructuredDefinitionTests
         ["Fill"] = FillMode.None, ["Ease"] = EaseType.QuadIn, ["Skew"] = 0.75, ["Weks"] = 0.5, ["EaseFunction"] = Ease, ["Curve"] = null,
         ["ProcessMode"] = TweenProcessMode.Physics, ["PauseMode"] = TweenPauseMode.Always,
         ["SuppressCallbacksWhenTargetInvalid"] = true,
+        ["ColorSpace"] = ColorSpace.Srgb, ["AlphaMode"] = AlphaMode.Straight, ["ColorEncoding"] = ColorEncoding.LinearRgb,
     };
 
     private static readonly string[] Callbacks = ["OnAdd", "OnStart", "OnUpdate", "OnEnd", "OnCancel", "OnFinally"];
 
     private static IEnumerable<Type> DefinitionTypes() => typeof(TweenScheduler).Assembly.GetExportedTypes()
-        .Where(type => type.DeclaringType == typeof(Tweens) && type.IsValueType)
+        .Where(type => type.DeclaringType == typeof(Tweens) && type.IsValueType
+            && type.GetInterfaces().Any(contract => contract.IsGenericType && contract.GetGenericTypeDefinition() == typeof(ITweenDefinition<,>)))
         .OrderBy(type => type.Name);
 
     public static TheoryData<Type> Definitions() => new(DefinitionTypes());
@@ -50,7 +52,7 @@ public class StructuredDefinitionTests
         Assert.All(DefinitionTypes(), type =>
         {
             Assert.True(type.IsDefined(typeof(IsReadOnlyAttribute)), type.Name);
-            Assert.All(type.GetProperties(), property =>
+            Assert.All(type.GetProperties().Where(property => property.SetMethod is not null), property =>
                 Assert.Contains(typeof(IsExternalInit), property.SetMethod!.ReturnParameter.GetRequiredCustomModifiers()));
         });
     }
@@ -98,10 +100,11 @@ public class StructuredDefinitionTests
     }
 
     // Shader and custom definitions lead with their binding.
-    private static object?[] Binding(Type definition) => definition.GetGenericArguments().Length switch
+    private static object?[] Binding(Type definition) => definition.Name switch
     {
-        1 => ["amount"],
-        2 => [(Func<Box, float>)(b => b.Value), (Action<Box, float>)((b, v) => b.Value = v),
+        var name when name.Contains("ShaderParameter") => ["amount"],
+        var name when name.StartsWith("ColorProperty") => [(Func<Box, Color>)(_ => default), (Action<Box, Color>)((_, _) => { })],
+        var name when name.StartsWith("Property") => [(Func<Box, float>)(b => b.Value), (Action<Box, float>)((b, v) => b.Value = v),
             (Func<float, float, float, float>)Interpolators.Float],
         _ => [],
     };
@@ -126,6 +129,19 @@ public class StructuredDefinitionTests
     private static void VerifyConstructor<TDefinition, TTarget, TValue>()
         where TDefinition : struct, ITweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
     {
+        if (typeof(TDefinition).IsGenericType && typeof(TDefinition).GetGenericTypeDefinition() == typeof(Tweens.Sampled<,>))
+        {
+            var curve = KeyframeCurve<TValue>.EvenlySpaced([Sample<TValue>(0.25f), Sample<TValue>(0.75f)]);
+            var sampling = new Tweens.Sampled<TTarget, TValue>(new PropertyBinding<TTarget, TValue>(static _ => default, static (_, _) => { }),
+                curve, new TweenTiming { Duration = 1.25, Ease = EaseType.QuadIn, Delay = 0.5 });
+            Assert.Same(curve, sampling.Curve);
+            Assert.Equal((Duration)1.25, sampling.Timing.Duration);
+            Assert.Equal((Duration)0.5, sampling.Timing.Delay);
+            Assert.Equal(EaseType.QuadIn, sampling.Timing.Ease);
+            var constructor = Assert.Single(typeof(TDefinition).GetConstructors());
+            Assert.Equal(["binding", "curve", "timing"], constructor.GetParameters().Select(p => p.Name));
+            return;
+        }
         var timing = new TweenOptions { Duration = 1.25, Ease = EaseType.QuadIn, Delay = 0.5 };
         var to = Sample<TValue>(0.75f);
         var binding = Binding(typeof(TDefinition));
@@ -148,19 +164,20 @@ public class StructuredDefinitionTests
 
         // Every shorthand form sets the converted endpoint and passes the timing through.
         var shorthands = constructors.Where(constructor => constructor != primary && constructor.GetParameters().Length > binding.Length).ToArray();
-        var forms = shorthands.Select(constructor => constructor.GetParameters()[0].ParameterType);
+        var forms = shorthands.Select(constructor => constructor.GetParameters()[binding.Length].ParameterType);
         Assert.Equal(Shorthands.Forms(typeof(TValue), typeof(TDefinition).Name).OrderBy(type => type.FullName), forms.OrderBy(type => type.FullName));
         foreach (var constructor in shorthands)
         {
-            var (argument, expected) = Shorthands.Create(constructor.GetParameters()[0].ParameterType, to);
-            var shorthand = (TDefinition)Shorthands.Invoke(constructor, [argument, (Duration)1.25, EaseType.QuadIn, (Duration)0.5])!;
+            var (argument, expected) = Shorthands.Create(constructor.GetParameters()[binding.Length].ParameterType, to);
+            var shorthand = (TDefinition)Shorthands.Invoke(constructor, [.. binding, argument, (Duration)1.25, EaseType.QuadIn, (Duration)0.5])!;
             Assert.Equal(expected, Get(shorthand, "To"));
             Assert.Equal(timing, Get(shorthand, "Options"));
         }
     }
 
     private static Type Close(Type definition) => definition.IsGenericTypeDefinition
-        ? definition.MakeGenericType(definition.GetGenericArguments().Length == 2 ? [typeof(Box), typeof(float)] : [typeof(float)])
+        ? definition.MakeGenericType(definition.GetGenericArguments().Length == 2 ? [typeof(Box), typeof(float)]
+            : definition.Name.StartsWith("ColorProperty") ? [typeof(Box)] : [typeof(float)])
         : definition;
 
     private static Type Contract(Type definition) => definition.GetInterfaces()
@@ -169,6 +186,19 @@ public class StructuredDefinitionTests
     private static void Verify<TDefinition, TTarget, TValue>()
         where TDefinition : struct, ITweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
     {
+        if (typeof(TDefinition).IsGenericType && typeof(TDefinition).GetGenericTypeDefinition() == typeof(Tweens.Sampled<,>))
+        {
+            var curve = KeyframeCurve<TValue>.EvenlySpaced([Sample<TValue>(0.25f), Sample<TValue>(0.75f)]);
+            var source = new Tweens.Sampled<TTarget, TValue>(new PropertyBinding<TTarget, TValue>(static _ => default, static (_, _) => { }), curve);
+            var modified = source with { Timing = new TweenTiming { Duration = 1.25, Delay = 0.5, Fill = FillMode.None } };
+            var created = ((ITweenDefinition<TTarget, TValue>)modified).CreatePlayback();
+            Assert.Equal(modified.Timing, created.ToOptions().Timing);
+            Assert.Equal(Sample<TValue>(0.25f), created.From);
+            Assert.Equal(Sample<TValue>(0.75f), created.To);
+            Assert.Same(curve, modified.Curve);
+            Assert.NotSame(created, ((ITweenDefinition<TTarget, TValue>)modified).CreatePlayback());
+            return;
+        }
         object boxed = Empty<TDefinition>();
 
         // Assign through the init accessors, then read everything back.
@@ -203,7 +233,9 @@ public class StructuredDefinitionTests
         Assert.Equal(FillMode.None, options.Fill);
 
         var playback = structured.CreatePlayback();
-        Assert.Equal(typeof(TDefinition).Name.Split('`')[0] + "Tween", playback.GetType().Name.Split('`')[0]);
+        var adapterName = typeof(TDefinition).Name.Split('`')[0];
+        if (adapterName.StartsWith("Color") && (adapterName.EndsWith("ShaderParameter") || adapterName == "ColorProperty")) adapterName = adapterName[5..];
+        Assert.Equal(adapterName + "Tween", playback.GetType().Name.Split('`')[0]);
         Assert.Equal(options, playback.ToOptions());
         Assert.Equal(expected["From"], playback.From);
         Assert.Equal(expected["To"], playback.To);

@@ -1,6 +1,6 @@
 # testbed
 
-The gallery app: ten pages and 34 examples, each written in C# and in GDScript. A switch in the header picks the
+The gallery app: eleven pages and 35 examples, each written in C# and in GDScript. A switch in the header picks the
 implementation that runs, and the source viewer shows the code that is running. Its tests compare the two languages.
 
 The gallery is a .NET app in both modes. Scenes are built by shared C# code, so geometry, materials and initial values
@@ -46,6 +46,8 @@ dotnet run --project testbed/testbed.2dog -- --gallery-snapshots artifacts/galle
   Amber and blue are the two halves, mint is the result.
 - The Colors page compares sRGB, linear RGB and OKLab, each with straight and premultiplied alpha. Press **50%**
   or scrub to pause; **Animate** resumes. The tint-and-fade column treats RGB and opacity independently.
+- The Keyframes page plays one sparse definition on three flyers with different captured starting positions.
+  Position, scale, rotation and color share its duration, ping-pong and repeats.
 
 ## Layout
 

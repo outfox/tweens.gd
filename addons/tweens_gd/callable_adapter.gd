@@ -31,6 +31,10 @@ func interpolate(from: Variant, to: Variant, weight: float) -> Variant:
 	if not interpolator.is_valid(): return null
 	return interpolator.call(from, to, weight)
 
+func interpolate_offset(from: Variant, to: Variant, weight: float) -> Variant:
+	if not interpolator.is_null(): return interpolate(from, to, weight)
+	return super.interpolate_offset(from, to, weight)
+
 func validate_value(value: Variant) -> String:
 	if validator.is_null(): return super.validate_value(value)
 	if not validator.is_valid(): return "The custom validator Callable is no longer valid."

@@ -24,6 +24,7 @@ public partial class Gallery : Control
         ("Shaders", () => new ShadersPage()),
         ("Easing", () => new EasingPage()),
         ("Colors", () => new ColorsPage()),
+        ("Keyframes", () => new KeyframesPage()),
     ];
 
     public static readonly string[] PageNames = Pages.Select(p => p.Name).ToArray();

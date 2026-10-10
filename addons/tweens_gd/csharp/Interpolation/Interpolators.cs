@@ -33,16 +33,28 @@ public static class Interpolators
     public static Vector3 Vector3(Vector3 from, Vector3 to, float weight) => from.Lerp(to, weight);
     /// <summary>Linear Vector4 interpolation. Weight may overshoot [0, 1].</summary>
     public static Vector4 Vector4(Vector4 from, Vector4 to, float weight) => from.Lerp(to, weight);
-    /// <summary>Linear Color interpolation. Weight may overshoot [0, 1].</summary>
-    public static Color Color(Color from, Color to, float weight) => from.Lerp(to, weight);
+    /// <summary>Interpolates ordinary Godot colors in premultiplied OKLab. Weight may overshoot [0, 1].</summary>
+    public static Color Color(Color from, Color to, float weight) => Color(from, to, weight,
+        ColorSpace.Oklab, AlphaMode.Premultiplied, ColorEncoding.Srgb);
+
+    /// <summary>Interpolates Godot colors with explicit working coordinates, alpha handling and boundary encoding.</summary>
+    public static Color Color(Color from, Color to, float weight, ColorSpace space, AlphaMode alpha,
+        ColorEncoding encoding = ColorEncoding.Srgb)
+    {
+        ColorInterpolation.Validate(space, alpha, encoding);
+        if (weight == 0) return from;
+        if (weight == 1) return to;
+        return ColorInterpolation.Decode(ColorInterpolation.Encode(from, space, alpha, encoding).Lerp(
+            ColorInterpolation.Encode(to, space, alpha, encoding), weight), space, alpha, encoding);
+    }
     /// <summary>Linear Rect2 interpolation. Weight may overshoot [0, 1].</summary>
     public static Rect2 Rect2(Rect2 from, Rect2 to, float weight)
         => new(from.Position.Lerp(to.Position, weight), from.Size.Lerp(to.Size, weight));
     /// <summary>Spherical quaternion interpolation. Weight may overshoot [0, 1].</summary>
     public static Quaternion Quaternion(Quaternion from, Quaternion to, float weight)
     {
-        if (from.LengthSquared() == 0 || to.LengthSquared() == 0)
-            throw new ArgumentException("Quaternion endpoints must be nonzero.");
+        if (!(from.LengthSquared() is > 0 and < float.PositiveInfinity) || !(to.LengthSquared() is > 0 and < float.PositiveInfinity))
+            throw new ArgumentException("Quaternion endpoints must have finite, nonzero squared length.");
         return from.Normalized().Slerp(to.Normalized(), weight).Normalized();
     }
 }

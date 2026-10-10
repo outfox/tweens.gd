@@ -26,6 +26,8 @@ const Easing = preload("easing.gd")
 const FX = preload("fx.gd")
 ## Base adapter for custom storage. C# equivalent: [code]TweenDefinition[/code] property operations.
 const Adapter = preload("adapter.gd")
+## Storage binding without custom interpolation. C# equivalent: [code]TweenBinding[/code].
+const Binding = preload("binding.gd")
 ## Adapter configured with getter, setter, interpolator, and validator Callables.
 const CallableAdapter = preload("callable_adapter.gd")
 ## Adapter for material or instance shader uniforms.
@@ -44,6 +46,34 @@ const State = Types.State
 const Reason = Types.Reason
 ## Legacy easing constants. Prefer [In], [Out], and [InOut] for new definitions.
 const Ease = Types.Ease
+## Color interpolation coordinates. Defaults to OKLAB.
+const ColorSpace = Types.ColorSpace
+## Color opacity handling. Defaults to PREMULTIPLIED.
+const AlphaMode = Types.AlphaMode
+## RGB encoding at the Godot API boundary. Defaults to SRGB.
+const ColorEncoding = Types.ColorEncoding
+## Segment value interpolation. Existing easing constants can also be used for eased linear segments.
+const Interpolation = Types.Interpolation
+## Reusable keyframe definition type.
+const Keyframes = preload("keyframes.gd")
+
+## Creates a reusable parallel animation from channel arrays or sparse percentage keys.
+static func keyframes(keys: Dictionary, seconds: float = 1.0, easing: int = Types.Ease.LINEAR,
+		interpolation: int = Types.Interpolation.SMOOTH) -> TweensGdKeyframes:
+	return Keyframes.new(keys, seconds, easing, interpolation)
+
+## Plays a reusable keyframe definition or creates one from a Dictionary. Each play has independent captured starts.
+static func animate(target: Object, keys: Variant, seconds: float = 1.0, easing: int = Types.Ease.LINEAR,
+		interpolation: int = Types.Interpolation.SMOOTH, owner: Variant = null,
+		options: TweensGdPlaybackOptions = null) -> TweensGdGroup:
+	if keys is TweensGdKeyframes:
+		var definition: TweensGdKeyframes = keys
+		return definition.play(target, owner, options)
+	if keys is Dictionary:
+		var data: Dictionary = keys
+		return keyframes(data, seconds, easing, interpolation).play(target, owner, options)
+	push_error("Animate needs a keyframe definition or a Dictionary.")
+	return TweensGdGroup.rejected("Animate needs a keyframe definition or a Dictionary.")
 
 # Definitions: configure first, then play as often as needed.
 

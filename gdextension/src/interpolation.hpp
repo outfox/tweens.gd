@@ -21,6 +21,8 @@ public:
 	// Arrays of numbers stand in for vectors and colors: [x, y], [r, g, b] or [r, g, b, a]. Anything else is kept.
 	static Variant coerce(const Variant &p_value, Variant::Type p_type);
 	static Variant interpolate(const Variant &p_from, const Variant &p_to, double p_weight, int64_t p_value_type);
+	static Variant interpolate_color(const Color &p_from, const Color &p_to, double p_weight, int64_t p_space = 0, int64_t p_alpha = 0, int64_t p_encoding = 0);
+	static Variant interpolate_offset(const Variant &p_from, const Variant &p_to, double p_weight, int64_t p_value_type);
 	// The offset that changes nothing, or null if by_value does not support the type.
 	static Variant zero(int64_t p_value_type);
 	// Quaternion offsets rotate about the value's own (local) axes.
@@ -47,9 +49,12 @@ class TypedLerp {
 	real_t to_components[4] = {};
 	Quaternion from_rotation;
 	Quaternion to_rotation;
+	Color color_from, color_to;
+	Vector4 working_from, working_to;
+	int64_t color_space = 0, alpha_mode = 0, color_encoding = 0;
 
 public:
-	bool prepare(const Variant &p_from, const Variant &p_to, Variant::Type p_type);
+	bool prepare(const Variant &p_from, const Variant &p_to, Variant::Type p_type, int64_t p_space = 0, int64_t p_alpha = 0, int64_t p_encoding = 0);
 	// Returns false when the sample is not finite.
 	bool sample(double p_weight, Variant &r_value) const;
 };

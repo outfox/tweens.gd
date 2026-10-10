@@ -140,6 +140,11 @@ String TweensGdScheduler::prepare_handle(TweensGdHandle &handle) {
 		}
 		handle.binding_phase = 1;
 		if (settings.adapter.is_valid()) {
+			if (settings.adapter->has_method(names().interpolate)) {
+				settings.adapter->set("color_space", settings.color_space);
+				settings.adapter->set("alpha_mode", settings.alpha_mode);
+				settings.adapter->set("color_encoding", settings.color_encoding);
+			}
 			const String error = hook_error(settings.adapter->call(names().prepare, handle.target), "prepare");
 			if (!error.is_empty()) {
 				return error;
@@ -215,11 +220,11 @@ String TweensGdScheduler::prepare_handle(TweensGdHandle &handle) {
 				handle.adjustment_phase = 1;
 				if (factors[i] != 1.0) {
 					const Variant zero = TweensGdInterpolation::zero(initial.get_type());
-					if (settings.adapter.is_valid()) {
+					if (settings.adapter.is_valid() && settings.adapter->has_method("interpolate_offset")) {
 						settings.adapter->set(names().captured_type, int64_t(initial.get_type()));
-						handle.binding_adjusted = settings.adapter->call(names().interpolate, zero, handle.binding_adjusted, factors[i]);
+						handle.binding_adjusted = settings.adapter->call("interpolate_offset", zero, handle.binding_adjusted, factors[i]);
 					} else {
-						handle.binding_adjusted = TweensGdInterpolation::interpolate(zero, handle.binding_adjusted, factors[i], initial.get_type());
+						handle.binding_adjusted = TweensGdInterpolation::interpolate_offset(zero, handle.binding_adjusted, factors[i], initial.get_type());
 					}
 					if (!TweensGdInterpolation::compatible(initial, handle.binding_adjusted)) {
 						return "A factor changed the value type.";
@@ -479,8 +484,9 @@ String TweensGdScheduler::check_endpoint(const TweenSettings &p_snapshot, const 
 	if (!TweensGdInterpolation::compatible(p_initial, p_endpoint)) {
 		return "Endpoints must match the captured value's type.";
 	}
-	if (p_endpoint.get_type() == Variant::QUATERNION && Quaternion(p_endpoint).length_squared() == 0.0) {
-		return "Quaternion endpoints must have nonzero length.";
+	if (p_endpoint.get_type() == Variant::QUATERNION && (Quaternion(p_endpoint).length_squared() == 0.0
+			|| !Math::is_finite(Quaternion(p_endpoint).length_squared()))) {
+		return "Quaternion endpoints must have finite, nonzero squared length.";
 	}
 	return String();
 }

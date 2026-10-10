@@ -3,7 +3,7 @@
 import { composeEase } from './motion';
 import { constant, snake, type Lang } from './lang';
 
-export type Group = 'endpoints' | 'timing' | 'easing' | 'callbacks' | 'variations' | 'target';
+export type Group = 'endpoints' | 'timing' | 'easing' | 'color' | 'callbacks' | 'variations' | 'target';
 
 /** A field's name: C# PascalCase, GDScript snake_case with `_value` on the endpoints. */
 export const fieldName = (lang: Lang, name: string) =>
@@ -209,6 +209,23 @@ const FIELDS: Field[] = [
 			line(120, py(0.8), 92, py(0.75), 'sm') + line(120, py(0.8), 148, py(0.85), 'sm') + dot(92, py(0.75), 'fm', 2.5) +
 			dot(148, py(0.85), 'fm', 2.5) + line(20, py(0), 60, py(0), 'sm') + dot(60, py(0), 'fm', 2.5) +
 			`<rect class="fa" x="16.5" y="${py(0) - 3.5}" width="7" height="7"/><rect class="fa" x="116.5" y="${n2(py(0.8) - 3.5)}" width="7" height="7"/><rect class="fa" x="216.5" y="${py(1) - 3.5}" width="7" height="7"/>`,
+	},
+
+	// Color interpolation
+	{
+		name: 'ColorSpace', group: 'color', page: 'definitions', defaults: ['ColorSpace.Oklab', 'Tweens.ColorSpace.OKLAB'],
+		text: 'Working coordinates for whole-color interpolation.',
+		draw: () => text(35, 26, 'Color') + arrow(62, 105, 36) + text(130, 39, 'OKLab', 'ta') + arrow(164, 208, 36),
+	},
+	{
+		name: 'AlphaMode', group: 'color', page: 'definitions', defaults: ['AlphaMode.Premultiplied', 'Tweens.AlphaMode.PREMULTIPLIED'],
+		text: 'Premultiply working coordinates by alpha before interpolation.',
+		draw: () => text(55, 30, 'color × alpha') + arrow(100, 145, 36) + text(186, 39, 'interpolate', 'ta'),
+	},
+	{
+		name: 'ColorEncoding', group: 'color', page: 'definitions', defaults: ['ColorEncoding.Srgb', 'Tweens.ColorEncoding.SRGB'],
+		text: 'RGB encoding accepted and returned at the Godot API boundary.',
+		draw: () => text(42, 39, 'sRGB') + arrow(70, 112, 36) + text(150, 39, 'working', 'ta') + arrow(184, 222, 36),
 	},
 
 	// Callbacks

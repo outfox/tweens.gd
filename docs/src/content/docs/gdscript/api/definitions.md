@@ -4,7 +4,7 @@ description: The GDScript factories and named helpers, the with_ methods that va
 tableOfContents: true
 ---
 
-A `TweensGdDefinition` is a mutable description of one motion. Each start snapshots it, so a change reaches only later starts; `with_*()` methods return a changed copy instead. [Reusable definitions](/gdscript/definitions/) shows the pattern.
+A `TweensGdDefinition` is a mutable description of one motion. Each start snapshots it, so a change reaches only later starts; `with_*()` methods return a changed copy instead. [Reusable definitions](/gdscript/definitions/) shows the pattern. [Keyframes](/gdscript/keyframes/) define several parallel value curves in one reusable object.
 
 ```gdscript
 var arrive := Tweens.position_2d([400, 180], 0.6, Out.CUBIC) # Factory
@@ -46,7 +46,25 @@ Every definition has the same fields, listed by role:
 - [Endpoints & variations](/gdscript/api/endpoints/): `from_value`, `to_value`, `by_value`, and their factors and deltas.
 - [Timing](/gdscript/api/timing/): `duration`, `delay`, `offset`, `repeats`, `ping_pong`, intervals, and `fill`.
 - [Easing](/gdscript/api/easing/): `ease`, `blend_type`, `blend`, `skew`, `weks`, `ease_function`, and `curve`.
+- [Color interpolation](/gdscript/keyframes/#color-policy): `color_space`, `alpha_mode`, and `color_encoding`; defaults are OKLab, premultiplied alpha, and sRGB input/output.
 - [Callbacks](/gdscript/api/callbacks/): `on_add` through `on_finally`, and `suppress_callbacks_when_target_invalid`.
+
+<span id="color-space"></span>
+### color_space
+
+Whole-color interpolation defaults to `Tweens.ColorSpace.OKLAB`; `SRGB` and `LINEAR_RGB` select other working spaces.
+
+<span id="alpha-mode"></span>
+### alpha_mode
+
+`Tweens.AlphaMode.PREMULTIPLIED` is the default. `STRAIGHT` interpolates color coordinates and alpha independently.
+
+<span id="color-encoding"></span>
+### color_encoding
+
+`Tweens.ColorEncoding.SRGB` accepts ordinary Godot Colors. `LINEAR_RGB` supports APIs expecting linear values. Input and output use straight alpha. See the [color policy](/gdscript/keyframes/#color-policy) for exact endpoints and relative arithmetic.
+
+### Binding fields
 
 The binding fields choose what a definition animates. Factories set them, and they have no `with_*()` methods:
 

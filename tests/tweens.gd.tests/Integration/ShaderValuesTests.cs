@@ -81,7 +81,7 @@ public class ShaderValuesTests(HeadlessFixture godot)
         Assert.Equal(new Vector2(1, 1), ShaderValues<Vector2>.Interpolate(Vector2.Zero, new Vector2(2, 2), 0.5f));
         Assert.Equal(new Vector3(1, 1, 1), ShaderValues<Vector3>.Interpolate(Vector3.Zero, new Vector3(2, 2, 2), 0.5f));
         Assert.Equal(new Vector4(1, 1, 1, 1), ShaderValues<Vector4>.Interpolate(Vector4.Zero, new Vector4(2, 2, 2, 2), 0.5f));
-        Assert.Equal(new Color(0.5f, 0.5f, 0.5f, 0.5f), ShaderValues<Color>.Interpolate(new Color(0, 0, 0, 0), new Color(1, 1, 1, 1), 0.5f));
+        Assert.True(new Color(1, 1, 1, 0.5f).IsEqualApprox(ShaderValues<Color>.Interpolate(new Color(0, 0, 0, 0), new Color(1, 1, 1, 1), 0.5f)));
         Assert.Throws<NotSupportedException>(() => ShaderValues<Quaternion>.Interpolate(Quaternion.Identity, Quaternion.Identity, 0.5f));
     }
 }

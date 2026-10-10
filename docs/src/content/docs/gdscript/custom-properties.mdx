@@ -20,7 +20,7 @@ Tweens.play(label, score)
 
 The label counts from 10 to 100. `on_update` receives each value; the node you start on owns playback. [Callback values](/gdscript/nodes/values/) lists the other value types.
 
-## Script properties
+## Property bindings
 
 <Moves>
 
@@ -42,9 +42,11 @@ func set_health(fraction: float) -> void:
 
 For storage that no property path reaches, `Tweens.custom()` takes getter and setter Callables.
 
-## Custom adapters
+## Custom bindings
 
-For setup or cleanup around each playback, extend `TweensGdAdapter` and assign an instance to a definition's `adapter`. Override `read` and `write`, and optionally `interpolate`, `prepare`, `restore`, and `release`. Each start works on a shallow `copy()`, so referenced objects stay shared unless you copy them.
+For storage independent of interpolation, extend `Tweens.Binding` and assign an instance to a definition's `adapter`. Override `read` and `write`, with optional `prepare`, `restore`, and `release` hooks. The same binding works with ordinary endpoints or a prepared `keyframe_curve`; see [keyframes](/gdscript/keyframes/#storage-timing-and-sampling).
+
+Extend `Tweens.Adapter` when custom endpoint interpolation is also needed, and override `interpolate`. Each start works on a shallow `copy()`, so referenced objects stay shared unless you copy them. Override `copy()` for custom mutable configuration.
 
 <Aside type="caution" title="Release only what your copy owns">
 

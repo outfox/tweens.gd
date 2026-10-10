@@ -1,0 +1,96 @@
+---
+title: "Keyframes"
+description: "Reuse parallel value curves with sparse percentage keys."
+---
+
+Define several value curves once and play them together on different nodes. Each play captures its own missing starting values and returns a `Group` for pausing, cancellation, and completion.
+
+Examples use `using Godot;` and `using tweens.gd;`, with a `Node2D sprite` inside the scene tree.
+
+## Evenly spaced channels
+
+```csharp
+var flight = Tweens.Keyframes.ForNode2D(
+    position: [(0, 0), (120, -60), (240, 0)],
+    scale: [1, 1.5, 1],
+    modulate: [Colors.Coral, Colors.Gold, Colors.Coral],
+    duration: 1.2);
+
+var playing = sprite.Animate(flight);
+await playing.End;
+```
+
+Each supplied channel needs at least two values. Its keys are evenly spaced over the full duration; channels may have different lengths. `ForCanvasItem`, `ForNode2D`, `ForNode3D`, and `ForGeometryInstance3D` provide typed factories. The same named channels can be passed directly to the corresponding node's `Animate` extension.
+
+## Sparse percentage keys
+
+```csharp
+var flight = new Tweens.Keyframes([
+    Tweens.Keyframe.At(0, scale: 1),
+    Tweens.Keyframe.At(35, x: 120, scale: 1.5),
+    Tweens.Keyframe.At(100, x: 240, scale: 1, interpolation: Out.Quad),
+], duration: 1.2);
+
+sprite.Tween(flight);
+```
+
+Stops are percentages from 0 through 100; use `Percent.Of(12.5)` for fractional stops. Unset channels contribute no key at that stop. Each channel captures a missing zero-percent value when playback activates, before its delay. A missing final key holds the channel's last value to 100 percent. Definitions copy their input data and can be played concurrently.
+
+Explicit paths use `Tweens.Keyframe.At(50, ("position:x", (Variant)120.0))`. GDScript reserves `"interpolation"` for the arriving mode in sparse frames; its channel-array form can animate a property with that name. C# explicit paths have no reserved names. Paths stay on the target and its value components. A whole value and one of its components cannot appear in the same definition. Rotation, rotation-degrees, and quaternion channels are mutually exclusive.
+
+## Segment interpolation
+
+`Interpolation.Smooth` is the default: a limited modified-Akima cubic that stays between adjacent key values in each working component. `Interpolation.Linear` connects keys directly; `Interpolation.Step` holds until the next key. An easing such as `Out.Quad` creates an eased linear segment. An arriving-key override applies only to channels present at that key. Zero-percent keys cannot specify an arriving interpolation.
+
+The definition's `Ease` controls progress over the whole animation. Segment interpolation then samples that progress, including reverse and nonmonotonic playback. Overshoot extrapolates endpoint tangents for non-step segments; step segments and implicit final holds retain their endpoint value. Quaternion channels use normalized shortest-arc spherical interpolation; Smooth uses the same spherical segment as Linear. Quaternion squared lengths must be finite and nonzero. Integer channels preserve 64-bit keys exactly at their stops; intermediate samples round double-precision working values to the nearest integer, with ties away from zero and saturation at Int64 limits. Progress scaled to percent must remain finite.
+
+## Color policy
+
+All built-in whole-color tweens, including keyframes and shader colors, default to OKLab with premultiplied alpha. Supply ordinary Godot `Color` values: the default boundary encoding is sRGB and the result has straight alpha. Conversion and premultiplication happen internally. Exact endpoints and exact color keys preserve the supplied color, including RGB hidden under zero alpha.
+
+```csharp
+var fade = new Tweens.Modulate(new Color(0, 0, 0, 0), 1)
+{
+    ColorSpace = ColorSpace.Oklab,
+    AlphaMode = AlphaMode.Premultiplied,
+};
+sprite.Tween(fade);
+```
+
+Choose `ColorSpace.Srgb` or `ColorSpace.LinearRgb` for another interpolation space, and `AlphaMode.Straight` for independent RGB and alpha interpolation. Set `ColorEncoding.LinearRgb` only when the API receiving your values expects linear RGB. Keyframes take these policies through `options: new TweenOptions { ... }`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
+
+Concrete whole-color definitions expose color settings directly. `ColorShaderParameter`, `ColorCanvasItemInstanceShaderParameter`, `ColorGeometryInstanceShaderParameter`, and `ColorProperty<TTarget>` provide the same settings for shader and custom storage. Scalar and vector definitions do not expose them. Generic definitions remain available and take color overrides through `Options`; assigning `Options` replaces the complete value, including timing. For a `ShaderMaterial shaderMaterial` with a color uniform named `tint`:
+
+```csharp
+var tint = new Tweens.ColorShaderParameter("tint", Colors.Coral, 1)
+{
+    ColorSpace = ColorSpace.LinearRgb,
+};
+shaderMaterial.Tween(tint, sprite);
+```
+
+## Storage, timing, and sampling
+
+A binding reads and writes storage. A sampler produces values from eased progress. Timing controls that progress. Keyframe batches use these same parts as ordinary tweens.
+
+`Through` replaces a definition's `From` and `To` with a curve, retaining its storage binding, timing, and callbacks. Relative endpoints and endpoint adjustments are rejected. The array overload prepares evenly spaced keys using the definition's color policy. For a `ShaderMaterial shaderMaterial` with a color uniform named `tint`:
+
+```csharp
+var pulse = new Tweens.ColorShaderParameter("tint", Colors.Coral, 1)
+    .Through([Colors.Coral, Colors.Gold, Colors.Coral]);
+
+var slower = pulse with { Timing = pulse.Timing with { Duration = 2 } };
+shaderMaterial.Tween(slower, sprite);
+```
+
+An explicit `KeyframeCurve<T>` owns its prepared value policy. Passing it to `Through(curve)` uses that policy; timing remains independent. Missing zero-percent keys capture the binding's value at activation. Shader bindings preserve their override-restoration and change-detection behavior.
+
+`TweenBinding<TTarget, TValue>` describes custom storage without interpolation. `PropertyBinding<TTarget, TValue>` takes a getter and setter. Reuse either with `PropertyTween<TTarget, TValue>` for endpoints or `Tweens.Sampled<TTarget, TValue>` for a prepared curve. Each playback copies stateful bindings before preparation; immutable property bindings share their delegates. These definitions work with the existing scheduler, groups, and chains.
+
+`TweenTiming` holds clock, easing, and fill settings. `ColorPolicy` holds working space, alpha mode, and boundary encoding. `TweenOptions` combines them and keeps the existing short option properties. GDScript exposes these settings on its definition object instead of separate C# value types.
+
+## Playback and preparation
+
+`flight.Play(scheduler, sprite)` supports a manually driven scheduler. Timing, delay, repeats, ping-pong, fill, easing, ownership, and cancellation use the ordinary tween runtime. All channel bindings are checked before enrolling the batch. A failed or cancelled member cancels its siblings through the returned `Group`.
+
+Definitions own arrays and prepared curves; creating a definition allocates. The first binding prepares curves for the target value types. Explicit curves are reused; missing starts prepare independent curves per play. Sampling a prepared `KeyframeCurve<T>` allocates no managed memory. Starting a batch still creates ordinary playback handles and a group. Mixing, additive composition, and momentum handoff are outside this API.

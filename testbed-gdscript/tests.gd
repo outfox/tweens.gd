@@ -14,6 +14,7 @@ const AdapterTests = preload("adapter_tests.gd")
 const ShaderTests = preload("shader_tests.gd")
 const CoordinationTests = preload("coordination_tests.gd")
 const FXTests = preload("fx_tests.gd")
+const KeyframeTests = preload("keyframe_tests.gd")
 
 var finished := false
 var trace_runs := false
@@ -105,6 +106,7 @@ func run_tests() -> void:
 	check(await GroupTests.new().run(self) == true, "group suite returned normally")
 	check(AdapterTests.new().run(self), "adapter suite returned normally")
 	check(FXTests.new().run(self), "FX suite returned normally")
+	check(KeyframeTests.new().run(self), "keyframe suite returned normally")
 	check(await ShaderTests.new().run(self), "shader suite returned normally")
 	check(await CoordinationTests.new().run(self), "coordination suite returned normally")
 	await _automatic_runner()
@@ -743,13 +745,17 @@ func _interpolation() -> bool:
 	var target := RefCounted.new()
 	for pair: Array in [[0.0, 10.0, 5.0], [0, 3, 2], [Vector2.ZERO, Vector2(2, 4), Vector2(1, 2)],
 			[Vector3.ZERO, Vector3(2, 4, 6), Vector3(1, 2, 3)], [Vector4.ZERO, Vector4(2, 4, 6, 8), Vector4(1, 2, 3, 4)],
-			[Color(0, 0, 0, 0), Color.WHITE, Color(0.5, 0.5, 0.5, 0.5)],
 			[Rect2(0, 0, 0, 0), Rect2(2, 4, 6, 8), Rect2(1, 2, 3, 4)]]:
 		var h := scheduler.add(target, T.value(pair[0], pair[1], 1.0))
 		scheduler.update(0.5)
 		var interpolated: bool = h.value == pair[2]
 		check(interpolated, "interpolate type %s: got %s, expected %s (state %s, error %s)" % [type_string(typeof(pair[0])), h.value, pair[2], h.state, h.error])
 		h.cancel()
+	var fade := scheduler.add(target, T.value(Color.RED, Color(0, 0, 0, 0), 1.0))
+	scheduler.update(0.5)
+	var faded_color: Color = fade.value
+	check(faded_color.is_equal_approx(Color(1, 0, 0, 0.5)), "default premultiplied OKLab preserves the fading tint")
+	fade.cancel()
 	var extreme := scheduler.add(target, T.value(-1.7e308, 1.7e308, 1.0))
 	scheduler.update(0.0)
 	var kept_start: bool = extreme.value == -1.7e308

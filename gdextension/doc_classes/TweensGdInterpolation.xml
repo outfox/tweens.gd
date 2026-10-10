@@ -14,6 +14,15 @@
 		<link title="GDScript API">https://tweens.gd/gdscript/api/</link>
 	</tutorials>
 	<methods>
+		<method name="interpolate_color" qualifiers="static">
+			<return type="Variant" /><param index="0" name="from" type="Color" /><param index="1" name="to" type="Color" /><param index="2" name="weight" type="float" />
+			<param index="3" name="color_space" type="int" default="0" /><param index="4" name="alpha_mode" type="int" default="0" /><param index="5" name="color_encoding" type="int" default="0" />
+			<description>Interpolates whole colors with a selected policy. Defaults to premultiplied OKLab, ordinary sRGB Godot Color input and straight-alpha output. Exact endpoints preserve supplied colors. RGB is not gamut-clamped. Returns null for invalid policies or values.</description>
+		</method>
+		<method name="interpolate_offset" qualifiers="static">
+			<return type="Variant" /><param index="0" name="from" type="Variant" /><param index="1" name="to" type="Variant" /><param index="2" name="weight" type="float" /><param index="3" name="value_type" type="int" />
+			<description>Interpolates relative offsets and factors. Colors use RGBA component arithmetic; other values use ordinary typed interpolation.</description>
+		</method>
 		<method name="add" qualifiers="static">
 			<return type="Variant" />
 			<param index="0" name="value" type="Variant" />

@@ -9,6 +9,7 @@
 #include "group.hpp"
 #include "handle.hpp"
 #include "interpolation.hpp"
+#include "keyframe_curve.hpp"
 #include "playback.hpp"
 #include "playback_options.hpp"
 #include "runner.hpp"
@@ -26,6 +27,7 @@ static void initialize_tweens_gd(ModuleInitializationLevel p_level) {
 	}
 	tweens::initialize();
 	GDREGISTER_CLASS(TweensGdDefinition);
+	GDREGISTER_ABSTRACT_CLASS(TweensGdKeyframeCurve);
 	GDREGISTER_CLASS(TweensGdPlaybackOptions);
 	GDREGISTER_ABSTRACT_CLASS(TweensGdChain);
 	GDREGISTER_CLASS(TweensGdScheduler);
