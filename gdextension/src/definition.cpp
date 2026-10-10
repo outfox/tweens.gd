@@ -141,6 +141,7 @@ TweenSettings *TweenSettings::snapshot() const {
 
 void TweensGdDefinition::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("copy"), &TweensGdDefinition::copy);
+	ClassDB::bind_method(D_METHOD("through", "curve"), &TweensGdDefinition::through);
 	ClassDB::bind_method(D_METHOD("validate"), &TweensGdDefinition::validate);
 	ClassDB::bind_static_method("TweensGdDefinition",
 			D_METHOD("named", "path", "target_class", "value_type", "to", "seconds", "easing", "delay"), &TweensGdDefinition::named);
@@ -247,6 +248,15 @@ Ref<TweensGdDefinition> TweensGdDefinition::copy() const {
 	TweenSettings *copied = settings.snapshot();
 	result->settings = std::move(*copied);
 	memdelete(copied);
+	return result;
+}
+
+Ref<TweensGdDefinition> TweensGdDefinition::through(const Ref<TweensGdKeyframeCurve> &p_curve) const {
+	if (p_curve.is_null()) return Ref<TweensGdDefinition>();
+	Ref<TweensGdDefinition> result = copy();
+	result->settings.from_value = Variant();
+	result->settings.to_value = Variant();
+	result->settings.keyframe_curve = p_curve;
 	return result;
 }
 

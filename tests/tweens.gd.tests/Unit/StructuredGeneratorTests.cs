@@ -235,6 +235,10 @@ public class StructuredGeneratorTests
             }
             namespace tweens.gd
             {
+                public static class Interpolators
+                {
+                    public static Godot.Color Color(Godot.Color from, Godot.Color to, float weight) => from;
+                }
                 internal static class EndpointComponents
                 {
                     internal static Godot.Vector2 ToVector2(System.ReadOnlySpan<double> to) => default;
@@ -257,7 +261,7 @@ public class StructuredGeneratorTests
             }
             """;
         var (_, output, result) = Run(CreateCompilation(Contracts, extensions));
-        Assert.Equal(["Property.g.cs", "TweenCatalog.g.cs", "TweenExtensions.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
+        Assert.Equal(["ColorProperty.g.cs", "Property.g.cs", "TweenCatalog.g.cs", "TweenExtensions.g.cs", "TweenScheduler.g.cs", "TweenStarts.g.cs"],
             result.GeneratedSources.Select(source => source.HintName).Order());
         var type = output.GetTypeByMetadataName("tweens.gd.TweenExtensions")!;
         string Forms(string name) => string.Join(" | ", type.GetMembers(name).OfType<IMethodSymbol>()
@@ -324,6 +328,13 @@ public class StructuredGeneratorTests
             Assert.Equal(typeof(Godot.Color), applicability.ValueType);
             foreach (var definition in definitions)
             {
+                if (definition.IsGenericType && definition.GetGenericTypeDefinition() == typeof(Tweens.Sampled<,>))
+                {
+                    Assert.NotNull(definition.GetProperty(nameof(Tweens.Sampled<object, float>.Curve)));
+                    Assert.NotNull(definition.GetProperty(nameof(Tweens.Sampled<object, float>.Timing)));
+                    Assert.Null(definition.GetProperty(option));
+                    continue;
+                }
                 var value = definition.GetInterfaces().Single(contract => contract.IsGenericType
                     && contract.GetGenericTypeDefinition() == typeof(ITweenDefinition<,>)).GetGenericArguments()[1];
                 Assert.Equal(value == typeof(Godot.Color), definition.GetProperty(option) is not null);

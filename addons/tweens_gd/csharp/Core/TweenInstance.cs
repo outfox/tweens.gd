@@ -90,7 +90,8 @@ public abstract class TweenInstance
         Mode = playback.ProcessMode;
         pauseMode = playback.PauseMode;
         Unscaled = playback.UseUnscaledTime;
-        Clock = new Playback(options.ToOptions());
+        ColorInterpolation.Validate(options.ColorSpace, options.AlphaMode, options.ColorEncoding);
+        Clock = Playback.FromTiming(options.ToOptions().Timing);
     }
 
     /// <summary>Explicitly pauses playback.</summary>
@@ -227,9 +228,9 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     where TTarget : class where TValue : struct
 {
     private TweenDefinition<TTarget, TValue>? definition;
-    private Func<float, float>? ease;
-    private Func<float, float>? returnEase;
-    private Curve? curve;
+    private TweenProgress easing;
+    private ITweenBinding<TTarget, TValue>? binding;
+    private ITweenSampler<TValue>? sampler;
     private TValue initial, from, to, by;
     // A By tween writes origin + applied. Following tweens move origin along with outside changes to the property.
     private bool relative, follows, pingPong;
@@ -250,10 +251,10 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     {
         Target = target;
         definition = source;
+        binding = source;
+        sampler = source;
         try
         {
-            if (definition.Curve is not null && definition.EaseFunction is not null)
-                throw new ArgumentException("Specify either Curve or EaseFunction, not both.", nameof(source));
             if (definition.By is not null && definition.To is not null)
                 throw new ArgumentException("Specify either To or By, not both.", nameof(source));
             var adjustsFrom = definition.FactorFrom != 1 || definition.DeltaFrom is not null;
@@ -267,18 +268,12 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 throw new ArgumentOutOfRangeException(nameof(source), "Factors must be finite.");
             if ((definition.By is not null || adjustsFrom || adjustsTo) && !Offsets<TValue>.Supported)
                 throw Offsets<TValue>.Unsupported();
-            ease = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend, definition.Skew);
-            returnEase = definition.EaseFunction ?? Easing.GetFunction(definition.Ease, definition.BlendType, definition.Blend, 1 - definition.Weks);
+            easing = new TweenProgress(definition.ToOptions().Timing);
             plan = new ExecutionPlan(this, [this]);
-            if (definition.Curve is not null)
-            {
-                curve = (Curve)definition.Curve.Duplicate();
-                ease = returnEase = curve.Sample;
-            }
         }
         catch
         {
-            curve?.Dispose();
+            easing.Dispose();
             throw;
         }
     }
@@ -296,10 +291,10 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                 {
                     case 0:
                         prepared = true;
-                        definition!.PrepareTarget(Target);
+                        binding!.PrepareTarget(Target);
                         break;
                     case 1:
-                        Value = initial = definition!.ReadValue(Target);
+                        Value = initial = binding!.ReadValue(Target);
                         break;
                     case 2:
                         from = Adjust(definition!.From ?? initial, definition.FactorFrom, definition.DeltaFrom);
@@ -313,12 +308,12 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
                             (relative, by, origin, applied) = (true, Adjust(offset, definition.FactorBy, definition.DeltaBy),
                                 from, Offsets<TValue>.Zero);
                             follows = definition.From is null && definition.FactorFrom == 1 &&
-                                definition.DeltaFrom is null && definition.FollowsTarget;
+                                definition.DeltaFrom is null && binding!.FollowsTarget;
                             pingPong = definition.PingPong;
                         }
                         break;
                     case 5:
-                        definition!.PrepareEndpoints(from, to);
+                        sampler!.Prepare(from, to);
                         break;
                 }
                 if (!CheckTarget() || PlaybackInterrupted) return;
@@ -370,11 +365,9 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
             }
             if (samplePhase == 0)
             {
-                var time = Math.Clamp(Progress, 0, 1);
-                var weight = (Clock.Returning ? returnEase! : ease!)(time);
-                if (!float.IsFinite(weight)) throw new InvalidOperationException("Easing returned a non-finite value.");
+                var weight = easing.Sample(Progress, Clock.Returning);
                 if (!CheckTarget() || PlaybackInterrupted) return false;
-                var value = relative ? Offset(weight) : definition!.InterpolateValue(from, to, weight);
+                var value = relative ? Offset(weight) : sampler!.Sample(from, to, weight);
                 if (!CheckTarget() || PlaybackInterrupted) return false;
                 samplePhase = 1;
                 Apply(value);
@@ -397,7 +390,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     private void Apply(TValue value)
     {
         if (!CheckTarget()) return;
-        definition!.WriteValue(Target, value);
+        binding!.WriteValue(Target, value);
         Value = value;
         updatePending = true;
         NotifyUpdate();
@@ -406,7 +399,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     // factor * value + delta. The factor scales away from zero; for a quaternion that scales its rotation angle.
     private TValue Adjust(TValue value, double factor, TValue? delta)
     {
-        if (factor != 1) value = definition!.InterpolateOffset(Offsets<TValue>.Zero, value, (float)factor);
+        if (factor != 1) value = sampler!.SampleOffset(Offsets<TValue>.Zero, value, (float)factor);
         return delta is { } offset ? Offsets<TValue>.Add(value, offset) : value;
     }
 
@@ -415,10 +408,10 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     {
         Follow();
         if (!CheckTarget() || PlaybackInterrupted) return Value;
-        var offset = definition!.InterpolateOffset(Offsets<TValue>.Zero, by, weight);
+        var offset = sampler!.SampleOffset(Offsets<TValue>.Zero, by, weight);
         if (!CheckTarget() || PlaybackInterrupted) return Value;
         if (!pingPong && Clock.Cycle > 0)
-            offset = Offsets<TValue>.Add(definition.InterpolateOffset(Offsets<TValue>.Zero, by, (float)Clock.Cycle), offset);
+            offset = Offsets<TValue>.Add(sampler.SampleOffset(Offsets<TValue>.Zero, by, (float)Clock.Cycle), offset);
         applied = offset;
         return Offsets<TValue>.Add(origin, offset);
     }
@@ -427,7 +420,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
     private void Follow()
     {
         if (!follows) return;
-        var current = definition!.ReadValue(Target);
+        var current = binding!.ReadValue(Target);
         if (!EqualityComparer<TValue>.Default.Equals(current, Value)) origin = Offsets<TValue>.Remove(current, applied);
     }
 
@@ -449,7 +442,7 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
             restorePrepared = true;
             if (!CheckTarget() || PlaybackInterrupted) return false;
         }
-        definition!.RestoreValue(Target, restoreValue);
+        binding!.RestoreValue(Target, restoreValue);
         Value = restoreValue;
         updatePending = true;
         NotifyUpdate();
@@ -479,13 +472,13 @@ public sealed class TweenInstance<TTarget, TValue> : TweenInstance
 
     protected override void Release()
     {
-        try { if (prepared) definition?.ReleaseSnapshot(); }
+        try { if (prepared) binding?.ReleaseSnapshot(); }
         finally
         {
             definition = null;
-            ease = returnEase = null;
-            curve?.Dispose();
-            curve = null;
+            binding = null;
+            sampler = null;
+            easing.Dispose();
         }
     }
 }

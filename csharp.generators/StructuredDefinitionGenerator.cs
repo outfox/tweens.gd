@@ -53,9 +53,16 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(definitions.Combine(options), static (output, input) =>
         {
             if (input.Right is not { } options) return;
-            var (name, adapter, target, value, kind, _) = input.Left;
+            var (name, adapter, target, value, kind, _, _) = input.Left;
             output.AddSource(name + ".g.cs", SourceText.From(
                 Render(name, adapter, target, value, kind, options), Encoding.UTF8));
+            if (kind is DefinitionKind.CustomProperty or DefinitionKind.ShaderParameter && input.Left.ColorAvailable)
+            {
+                var colorKind = kind == DefinitionKind.CustomProperty ? DefinitionKind.ColorProperty : DefinitionKind.ColorShaderParameter;
+                output.AddSource("Color" + name + ".g.cs", SourceText.From(
+                    Render("Color" + name, adapter.Replace("TValue", "global::Godot.Color"), target,
+                        "global::Godot.Color", colorKind, options), Encoding.UTF8));
+            }
         });
 
         context.RegisterSourceOutput(definitions.Collect(), static (output, definitions) =>
@@ -63,7 +70,12 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             var scheduler = new StringBuilder(Header + "\nnamespace tweens.gd;\n\npublic sealed partial class TweenScheduler\n{\n");
             var extensions = new StringBuilder(Header + "\nnamespace tweens.gd;\n\npublic static partial class TweenExtensions\n{\n");
             foreach (var definition in definitions.OrderBy(d => d.Name, StringComparer.Ordinal))
+            {
                 RenderStarts(scheduler, extensions, definition.Name, definition.Target, definition.Value, definition.Kind, definition.Resource);
+                if (definition.ColorAvailable && definition.Kind is DefinitionKind.CustomProperty or DefinitionKind.ShaderParameter)
+                    RenderStarts(scheduler, extensions, "Color" + definition.Name, definition.Target, "global::Godot.Color",
+                        definition.Kind == DefinitionKind.CustomProperty ? DefinitionKind.ColorProperty : DefinitionKind.ColorShaderParameter, definition.Resource);
+            }
             output.AddSource("TweenScheduler.g.cs", SourceText.From(scheduler.Append("}\n").ToString(), Encoding.UTF8));
             output.AddSource("TweenStarts.g.cs", SourceText.From(extensions.Append("}\n").ToString(), Encoding.UTF8));
         });
@@ -174,7 +186,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             assignments.Length == 0 ? "" : "        Options = new TweenOptions { " + assignments + " };\n", arguments.ToString());
     }
 
-    private static (string Name, string Adapter, string Target, string Value, DefinitionKind Kind, bool Resource)? ReadDefinition(
+    private static (string Name, string Adapter, string Target, string Value, DefinitionKind Kind, bool Resource, bool ColorAvailable)? ReadDefinition(
         GeneratorSyntaxContext context, CancellationToken token)
     {
         var symbol = ReadType(context, token);
@@ -189,7 +201,8 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
                 || parent.ContainingNamespace.ToDisplayString() != "tweens.gd") continue;
             return (symbol.Name.Substring(0, symbol.Name.Length - "Tween".Length),
                 symbol.ToDisplayString(TypeFormat), parent.TypeArguments[0].ToDisplayString(TypeFormat),
-                    parent.TypeArguments[1].ToDisplayString(TypeFormat), kind.Value, IsResource(parent.TypeArguments[0]));
+                    parent.TypeArguments[1].ToDisplayString(TypeFormat), kind.Value, IsResource(parent.TypeArguments[0]),
+                    context.SemanticModel.Compilation.GetTypeByMetadataName("Godot.Color") is not null);
         }
         return null;
     }
@@ -205,9 +218,9 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         string value, DefinitionKind kind, bool resource)
     {
         var generic = kind == DefinitionKind.CustomProperty ? "<TTarget, TValue>"
-            : kind == DefinitionKind.ShaderParameter ? "<TValue>" : "";
+            : kind == DefinitionKind.ShaderParameter ? "<TValue>" : kind == DefinitionKind.ColorProperty ? "<TTarget>" : "";
         var constraints = kind == DefinitionKind.CustomProperty ? " where TTarget : class where TValue : struct"
-            : kind == DefinitionKind.ShaderParameter ? " where TValue : struct" : "";
+            : kind == DefinitionKind.ShaderParameter ? " where TValue : struct" : kind == DefinitionKind.ColorProperty ? " where TTarget : class" : "";
         var definition = "Tweens." + name + generic;
         var result = "TweenInstance<" + target + ", " + value + ">";
         var add = "AddValue<" + target + ", " + value + ", " + definition + ">";
@@ -225,15 +238,17 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
 
         if (!resource)
         {
-            var nodeConstraints = kind == DefinitionKind.CustomProperty ? " where TTarget : global::Godot.Node where TValue : struct" : constraints;
+            var nodeConstraints = kind == DefinitionKind.CustomProperty ? " where TTarget : global::Godot.Node where TValue : struct"
+                : kind == DefinitionKind.ColorProperty ? " where TTarget : global::Godot.Node" : constraints;
             extensions.Append(doc).Append("    public static ").Append(result).Append(" Tween").Append(generic)
                 .Append("(this ").Append(parameters).Append(", ").Append(options).Append(')').Append(nodeConstraints)
                 .Append("\n        => TweenRuntime.GetRunner(target).Scheduler.").Append(add)
                 .Append("(target, in definition, target, null, options);\n\n");
         }
-        if (resource || kind == DefinitionKind.CustomProperty)
+        if (resource || kind is DefinitionKind.CustomProperty or DefinitionKind.ColorProperty)
         {
-            var resourceConstraints = kind == DefinitionKind.CustomProperty ? " where TTarget : global::Godot.Resource where TValue : struct" : constraints;
+            var resourceConstraints = kind == DefinitionKind.CustomProperty ? " where TTarget : global::Godot.Resource where TValue : struct"
+                : kind == DefinitionKind.ColorProperty ? " where TTarget : global::Godot.Resource" : constraints;
             extensions.Append(doc).Append("    public static ").Append(result).Append(" Tween").Append(generic)
                 .Append("(this ").Append(parameters).Append(", global::Godot.SceneTree tree, global::Godot.Node? owner = null, ")
                 .Append(options).Append(')').Append(resourceConstraints)
@@ -267,7 +282,7 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
     private static string Render(string name, string adapter, string target, string value, DefinitionKind kind, OptionsModel options)
     {
         var generic = kind == DefinitionKind.CustomProperty ? "<TTarget, TValue>"
-            : kind == DefinitionKind.ShaderParameter ? "<TValue>" : "";
+            : kind == DefinitionKind.ShaderParameter ? "<TValue>" : kind == DefinitionKind.ColorProperty ? "<TTarget>" : "";
         var instance = "TweenInstance<" + target + ", " + value + ">";
         var playback = "TweenDefinition<" + target + ", " + value + ">";
         var contract = "ITweenDefinition<" + target + ", " + value + ">";
@@ -276,9 +291,10 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             .Append(" definition. Each start snapshots configuration; activation captures the current value.</summary>\n")
             .Append("public readonly record struct ").Append(name).Append(generic).Append(" : ").Append(contract);
         if (kind == DefinitionKind.CustomProperty) source.Append("\n    where TTarget : class where TValue : struct");
+        else if (kind == DefinitionKind.ColorProperty) source.Append("\n    where TTarget : class");
         else if (kind == DefinitionKind.ShaderParameter) source.Append("\n    where TValue : struct");
         source.Append("\n{\n    /// <summary>Shared timing, easing, and playback modes.")
-            .Append(kind == DefinitionKind.BuiltIn ? "" : " Configure value-specific policies here for generic definitions.")
+            .Append(kind is DefinitionKind.CustomProperty or DefinitionKind.ShaderParameter ? " Configure value-specific policies here for generic definitions." : "")
             .Append(" Individual option properties forward to this value.</summary>\n")
             .Append("    public TweenOptions Options { get; init; }\n");
         foreach (var property in options.Properties.Items)
@@ -306,24 +322,26 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
         // Binding parameters lead, then the endpoint and the constructor options.
         var binding = "";
         var bound = "";
-        if (kind == DefinitionKind.ShaderParameter)
+        if (kind is DefinitionKind.ShaderParameter or DefinitionKind.ColorShaderParameter)
         {
             source.Append("\n    /// <summary>Name of the shader uniform. Resolved and validated when playback starts.</summary>\n")
                 .Append("    public string Parameter { get; init; }\n");
             binding = "string parameter, ";
             bound = "        Parameter = parameter;\n";
         }
-        else if (kind == DefinitionKind.CustomProperty)
+        else if (kind is DefinitionKind.CustomProperty or DefinitionKind.ColorProperty)
         {
             source.Append("\n    /// <summary>Reads the current value from the target.</summary>\n")
-                .Append("    public Func<TTarget, TValue> Getter { get; init; }\n")
+                .Append("    public Func<TTarget, ").Append(value).Append("> Getter { get; init; }\n")
                 .Append("    /// <summary>Writes the interpolated value to the target.</summary>\n")
-                .Append("    public Action<TTarget, TValue> Setter { get; init; }\n")
+                .Append("    public Action<TTarget, ").Append(value).Append("> Setter { get; init; }\n");
+            if (kind == DefinitionKind.CustomProperty) source
                 .Append("    /// <summary>Interpolates endpoints using eased weight, which may overshoot [0, 1].</summary>\n")
                 .Append("    public Func<TValue, TValue, float, TValue> Interpolate { get; init; }\n");
-            binding = "Func<TTarget, TValue> getter, Action<TTarget, TValue> setter,\n"
-                + "        Func<TValue, TValue, float, TValue> interpolate, ";
-            bound = "        Getter = getter;\n        Setter = setter;\n        Interpolate = interpolate;\n";
+            binding = "Func<TTarget, " + value + "> getter, Action<TTarget, " + value + "> setter,"
+                + (kind == DefinitionKind.CustomProperty ? "\n        Func<TValue, TValue, float, TValue> interpolate, " : " ");
+            bound = "        Getter = getter;\n        Setter = setter;\n"
+                + (kind == DefinitionKind.CustomProperty ? "        Interpolate = interpolate;\n" : "");
         }
         // Constructor endpoints are never null; an endpoint left unset in an initializer is read at start. Float
         // endpoints take doubles, so 0.5 needs no suffix.
@@ -337,16 +355,19 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             .Append(options.Parameters).Append(")\n    {\n")
             .Append(bound).Append(single ? "        To = (float)to;\n" : "        To = to;\n")
             .Append(options.Assignments).Append("    }\n");
-        if (kind == DefinitionKind.BuiltIn)
+        if (kind is DefinitionKind.BuiltIn or DefinitionKind.ColorProperty or DefinitionKind.ColorShaderParameter)
             foreach (var (type, conversion, summary) in Shorthands(value, name))
                 source.Append("\n    /// <summary>Sets the endpoint from ").Append(summary).Append(" and common timing.</summary>\n")
-                    .Append("    public ").Append(name).Append('(').Append(type).Append(" to").Append(options.Parameters)
-                    .Append(")\n        : this(").Append(conversion).Append(options.Arguments).Append(") { }\n");
+                    .Append("    public ").Append(name).Append('(').Append(binding).Append(type).Append(" to").Append(options.Parameters)
+                    .Append(")\n        : this(").Append(kind == DefinitionKind.ColorProperty ? "getter, setter, "
+                        : kind == DefinitionKind.ColorShaderParameter ? "parameter, " : "")
+                    .Append(conversion).Append(options.Arguments).Append(") { }\n");
 
         source.Append('\n').Append("    ").Append(playback).Append(' ').Append(contract).Append(".CreatePlayback()\n    {\n")
             .Append("        var playback = new ").Append(adapter)
-            .Append(kind == DefinitionKind.ShaderParameter ? "(Parameter)"
-                : kind == DefinitionKind.CustomProperty ? "(Getter, Setter, Interpolate)" : "()")
+            .Append(kind is DefinitionKind.ShaderParameter or DefinitionKind.ColorShaderParameter ? "(Parameter)"
+                : kind == DefinitionKind.CustomProperty ? "(Getter, Setter, Interpolate)"
+                : kind == DefinitionKind.ColorProperty ? "(Getter, Setter, Interpolators.Color)" : "()")
             .Append("\n        {\n            From = From,\n            To = To,\n            By = By,\n");
         foreach (var endpoint in Endpoints)
             source.Append("            Factor").Append(endpoint).Append(" = Factor").Append(endpoint).Append(",\n")
@@ -423,5 +444,5 @@ public sealed class StructuredDefinitionGenerator : IIncrementalGenerator
             : " = " + literal + (value is float ? "f" : "");
     }
 
-    private enum DefinitionKind { BuiltIn, ShaderParameter, CustomProperty }
+    private enum DefinitionKind { BuiltIn, ShaderParameter, CustomProperty, ColorProperty, ColorShaderParameter }
 }

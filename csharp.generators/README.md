@@ -12,6 +12,19 @@ endpoint type. Generic definitions retain the complete `Options` value. Target
 classes do not determine whether a value option applies: a scalar alpha channel
 does not have whole-color settings, even on a node with color properties.
 
+The generic shader and custom-property models also emit closed color definitions.
+These reuse their existing adapters, expose color options directly, and omit the
+custom property's interpolator argument. They add no per-node specializations.
+
+At runtime, storage uses `ITweenBinding<TTarget, TValue>` and sampling uses
+`ITweenSampler<TValue>`. Existing mutable definitions implement both facets, so
+virtual custom hooks remain authoritative without extra adapter allocations.
+`TweenTiming` and `ColorPolicy` are independent values behind `TweenOptions`.
+`Through` snapshots a definition's binding and callbacks and attaches a prepared
+curve. Named keyframe channels use the same sampled definition with a validated
+property-path binding. Prepared curves can be shared; playback binding resources
+and captured starts cannot.
+
 `AdapterBindings` reads getter operations, including aliases, component access,
 compound values, and inherited properties. Its manifest records target and value
 types, binding kind, paths, and the Godot classes declaring those paths. GDScript

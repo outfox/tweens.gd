@@ -18,6 +18,8 @@ public sealed class KeyframeCurve<T> where T : struct
     private readonly ColorSpace colorSpace;
     private readonly AlphaMode alphaMode;
     private readonly ColorEncoding colorEncoding;
+    /// <summary>Color policy prepared into this curve. It is independent of playback timing.</summary>
+    public ColorPolicy Policy => new() { Space = colorSpace, AlphaMode = alphaMode, Encoding = colorEncoding };
     /// <summary>Whether playback must supply a captured value at zero percent.</summary>
     public bool NeedsStart => keys[0].At != 0;
     /// <summary>Number of supplied keys, including a synthetic final hold when required.</summary>

@@ -24,7 +24,7 @@ label.Tween(new Tweens.Float
 
 The label counts from 10 to 100. `OnUpdate` receives each value; the node you start on owns playback. [Callback values](/csharp/nodes/values/) lists the other value types.
 
-## Getter and setter
+## Property bindings
 
 <Moves>
 
@@ -49,7 +49,11 @@ public partial class HealthBar : Node2D
 
 ## Custom bindings
 
-For setup or cleanup around each playback, derive from `TweenDefinition<TTarget, TValue>`. Override `Read`, `Write`, and `Interpolate`, and optionally `Prepare`, `Restore`, and `Release`. Each start works on a shallow copy, so referenced objects stay shared unless you copy them.
+For storage independent of interpolation, derive from `TweenBinding<TTarget, TValue>`. Override `Read` and `Write`, with optional `Prepare`, `Restore`, and `Release` hooks. `PropertyBinding<TTarget, TValue>` supplies these operations from a getter and setter. The same binding works with `PropertyTween<TTarget, TValue>` for endpoints or `Tweens.Sampled<TTarget, TValue>` for a prepared keyframe curve.
+
+`Tweens.ColorProperty<TTarget>` provides a shorter color definition: getter, setter, destination, and timing, with premultiplied OKLab supplied automatically. Its `Through` extension uses the same storage for several keys; see [keyframes](/csharp/keyframes/#storage-timing-and-sampling).
+
+Deriving from `TweenDefinition<TTarget, TValue>` remains available when one class supplies both storage and custom interpolation. Each start works on a shallow copy, so referenced objects stay shared unless you copy them. Storage-only bindings can override `Copy` for custom mutable configuration.
 
 <Aside type="caution" title="Release only what your copy owns">
 

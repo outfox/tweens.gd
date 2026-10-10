@@ -28,7 +28,7 @@ public interface ITweenDefinition<TTarget, TValue> : ITweenDefinition<TTarget>
 /// <summary>A mutable, reusable definition. Starting snapshots configuration; activation captures the current value.</summary>
 /// <remarks>Override <see cref="Read"/>, <see cref="Write"/>, and <see cref="Interpolate"/> for custom storage.
 /// In GDScript, use TweensGdDefinition with a TweensGdAdapter. Immutable C# definitions live in the Tweens namespace.</remarks>
-public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, ITweenDefinition<TTarget, TValue>
+public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, ITweenDefinition<TTarget, TValue>, ITweenBinding<TTarget, TValue>, ITweenSampler<TValue>
     where TTarget : class where TValue : struct
 {
     TweenDefinition<TTarget, TValue> ITweenDefinition<TTarget, TValue>.CreatePlayback() => Snapshot();
@@ -79,8 +79,7 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     protected virtual void PrepareValues(TValue from, TValue to) { }
     /// <summary>Prepare Color endpoints for <see cref="InterpolateColor"/>. Custom interpolators opt in explicitly.</summary>
     protected virtual bool UsesColorInterpolation => false;
-    private Godot.Vector4 colorFrom, colorTo;
-    private bool interpolatingOffset;
+    private EndpointSampling<TValue> sampling;
     /// <summary>Restore captured state at non-retaining completion. May remove an override instead of writing a value.</summary>
     protected virtual void Restore(TTarget target, TValue initial) => Write(target, initial);
     /// <summary>Release only resources owned by this playback snapshot, including after failed preparation.</summary>
@@ -89,59 +88,101 @@ public abstract class TweenDefinition<TTarget, TValue> : TweenOptionsBuilder, IT
     /// instead of to the current value.</summary>
     protected virtual bool ReadsWrittenValue => true;
 
-    internal void PrepareTarget(TTarget target) => Prepare(target);
     internal void PrepareEndpoints(TValue from, TValue to)
     {
         PrepareValues(from, to);
         if (!UsesColorInterpolation) return;
-        colorFrom = ColorInterpolation.Encode((Godot.Color)(object)from, ColorSpace, AlphaMode, ColorEncoding);
-        colorTo = ColorInterpolation.Encode((Godot.Color)(object)to, ColorSpace, AlphaMode, ColorEncoding);
+        sampling.PrepareColor(from, to, ToOptions());
     }
-    internal bool FollowsTarget => ReadsWrittenValue;
-    internal void RestoreValue(TTarget target, TValue initial) => Restore(target, initial);
-    internal void ReleaseSnapshot() => Release();
 
     // Clone custom configuration as well, so subsequent property edits do not change bindings.
-    internal TweenDefinition<TTarget, TValue> Snapshot()
+    internal virtual TweenDefinition<TTarget, TValue> Snapshot()
     {
         var snapshot = (TweenDefinition<TTarget, TValue>)MemberwiseClone();
-        snapshot.interpolatingOffset = false;
+        snapshot.sampling = default;
         return snapshot;
     }
-    internal TValue ReadValue(TTarget target) => Read(target);
-    internal void WriteValue(TTarget target, TValue value) => Write(target, value);
     internal TValue InterpolateValue(TValue from, TValue to, float weight) => Interpolate(from, to, weight);
+
+    void ITweenSampler<TValue>.Prepare(TValue from, TValue to) => PrepareEndpoints(from, to);
+    TValue ITweenSampler<TValue>.Sample(TValue from, TValue to, float weight) => InterpolateValue(from, to, weight);
+    TValue ITweenSampler<TValue>.SampleOffset(TValue from, TValue to, float weight) => InterpolateOffset(from, to, weight);
+
+    ITweenBinding<TTarget, TValue> ITweenBinding<TTarget, TValue>.CopyBinding() => Snapshot();
+    void ITweenBinding<TTarget, TValue>.PrepareTarget(TTarget target) => Prepare(target);
+    TValue ITweenBinding<TTarget, TValue>.ReadValue(TTarget target) => Read(target);
+    void ITweenBinding<TTarget, TValue>.WriteValue(TTarget target, TValue value) => Write(target, value);
+    void ITweenBinding<TTarget, TValue>.RestoreValue(TTarget target, TValue initial) => Restore(target, initial);
+    void ITweenBinding<TTarget, TValue>.ReleaseSnapshot() => Release();
+    bool ITweenBinding<TTarget, TValue>.FollowsTarget => ReadsWrittenValue;
 
     /// <summary>Samples prepared Color endpoints using the shared policy, or RGBA components during relative
     /// interpolation. Enable <see cref="UsesColorInterpolation"/> before calling this from <see cref="Interpolate"/>.</summary>
     protected TValue InterpolateColor(TValue from, TValue to, float weight)
     {
-        if (interpolatingOffset) return (TValue)(object)((Godot.Color)(object)from).Lerp((Godot.Color)(object)to, weight);
-        if (weight == 0) return from;
-        if (weight == 1) return to;
-        return (TValue)(object)ColorInterpolation.Decode(colorFrom.Lerp(colorTo, weight), ColorSpace, AlphaMode, ColorEncoding);
+        return sampling.Color(from, to, weight);
     }
     internal TValue InterpolateOffset(TValue from, TValue to, float weight)
     {
-        var previous = interpolatingOffset;
-        interpolatingOffset = true;
+        var previous = sampling.IsOffset;
+        sampling.IsOffset = true;
         try { return Interpolate(from, to, weight); }
-        finally { interpolatingOffset = previous; }
+        finally { sampling.IsOffset = previous; }
     }
 }
 
 /// <summary>Animate a custom property without reflection. Captured mutable objects remain shared.</summary>
-public class PropertyTween<TTarget, TValue>(Func<TTarget, TValue> getter,
-    Action<TTarget, TValue> setter, Func<TValue, TValue, float, TValue> interpolate)
-    : TweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
+public class PropertyTween<TTarget, TValue> : TweenDefinition<TTarget, TValue> where TTarget : class where TValue : struct
 {
-    private readonly Func<TTarget, TValue> getter = getter ?? throw new ArgumentNullException(nameof(getter));
-    private readonly Action<TTarget, TValue> setter = setter ?? throw new ArgumentNullException(nameof(setter));
-    private readonly Func<TValue, TValue, float, TValue> interpolate = interpolate ?? throw new ArgumentNullException(nameof(interpolate));
-    private readonly bool defaultColor = typeof(TValue) == typeof(Godot.Color) && interpolate.Equals(
-        (Func<Godot.Color, Godot.Color, float, Godot.Color>)Interpolators.Color);
-    protected override TValue Read(TTarget target) => getter(target);
-    protected override void Write(TTarget target, TValue value) => setter(target, value);
+    private readonly Func<TTarget, TValue>? getter;
+    private readonly Action<TTarget, TValue>? setter;
+    private readonly Func<TValue, TValue, float, TValue> interpolate;
+    private readonly bool defaultColor;
+    private ITweenBinding<TTarget, TValue>? binding;
+
+    /// <summary>Defines custom storage and endpoint interpolation. Captured references remain shared.</summary>
+    public PropertyTween(Func<TTarget, TValue> getter, Action<TTarget, TValue> setter,
+        Func<TValue, TValue, float, TValue> interpolate) : this(interpolate)
+    {
+        this.getter = getter ?? throw new ArgumentNullException(nameof(getter));
+        this.setter = setter ?? throw new ArgumentNullException(nameof(setter));
+    }
+
+    /// <summary>Uses a reusable storage binding with endpoint interpolation; each start copies the binding.</summary>
+    public PropertyTween(ITweenBinding<TTarget, TValue> binding, Func<TValue, TValue, float, TValue> interpolate) : this(interpolate)
+        => this.binding = binding ?? throw new ArgumentNullException(nameof(binding));
+
+    private PropertyTween(Func<TValue, TValue, float, TValue> interpolate)
+    {
+        this.interpolate = interpolate ?? throw new ArgumentNullException(nameof(interpolate));
+        defaultColor = typeof(TValue) == typeof(Godot.Color) && interpolate.Equals(
+            (Func<Godot.Color, Godot.Color, float, Godot.Color>)Interpolators.Color);
+    }
+
+    internal override TweenDefinition<TTarget, TValue> Snapshot()
+    {
+        var snapshot = (PropertyTween<TTarget, TValue>)base.Snapshot();
+        if (binding is not null)
+        {
+            snapshot.binding = binding.CopyBinding();
+            ArgumentNullException.ThrowIfNull(snapshot.binding);
+        }
+        return snapshot;
+    }
+    protected override void Prepare(TTarget target) => binding?.PrepareTarget(target);
+    protected override TValue Read(TTarget target) => binding is null ? getter!(target) : binding.ReadValue(target);
+    protected override void Write(TTarget target, TValue value)
+    {
+        if (binding is null) setter!(target, value);
+        else binding.WriteValue(target, value);
+    }
+    protected override void Restore(TTarget target, TValue initial)
+    {
+        if (binding is null) base.Restore(target, initial);
+        else binding.RestoreValue(target, initial);
+    }
+    protected override void Release() => binding?.ReleaseSnapshot();
+    protected override bool ReadsWrittenValue => binding?.FollowsTarget ?? true;
     protected override bool UsesColorInterpolation => defaultColor;
     protected override TValue Interpolate(TValue from, TValue to, float weight) => UsesColorInterpolation
         ? InterpolateColor(from, to, weight) : interpolate(from, to, weight);

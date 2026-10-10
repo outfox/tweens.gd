@@ -93,7 +93,8 @@ void TweensGdHandle::bind_values(const Variant &p_initial) {
 	auto &h = *this;
 	const TweenSettings &options = *h.options;
 	h.adapter = options.adapter;
-	if (h.adapter.is_valid()) {
+	h.has_interpolator = h.adapter.is_valid() && h.adapter->has_method(names().interpolate);
+	if (h.has_interpolator) {
 		h.adapter->set(names().captured_type, int64_t(p_initial.get_type()));
 	}
 	h.initial = p_initial;
@@ -122,7 +123,7 @@ void TweensGdHandle::bind_values(const Variant &p_initial) {
 		h.to = h.options->keyframe_curve->sample(1);
 		if (!TweensGdInterpolation::compatible(p_initial, h.from)) { fail("Keyframe values must match the captured property type."); return; }
 	}
-	h.typed = options.keyframe_curve.is_null() && h.adapter.is_null() && !h.relative && h.lerp.prepare(h.from, h.to, p_initial.get_type(), options.color_space, options.alpha_mode, options.color_encoding);
+	h.typed = options.keyframe_curve.is_null() && !h.has_interpolator && !h.relative && h.lerp.prepare(h.from, h.to, p_initial.get_type(), options.color_space, options.alpha_mode, options.color_encoding);
 }
 void TweensGdHandle::bind_lifetime() {
 	if (check_target() && is_alive(owner_id)) {
@@ -366,7 +367,7 @@ void TweensGdHandle::advance_inner(double p_local_time) {
 }
 
 Variant TweensGdHandle::interpolate_values(const Variant &p_from, const Variant &p_to, double p_weight) {
-	if (adapter.is_valid()) {
+	if (has_interpolator) {
 		const Ref<RefCounted> hooks = adapter;
 		return hooks->call(relative ? StringName("interpolate_offset") : names().interpolate, p_from, p_to, p_weight);
 	}

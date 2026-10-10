@@ -5,6 +5,18 @@ extends RefCounted
 const T = preload("res://addons/tweens_gd/tweens.gd")
 const Suite = preload("res://tests.gd")
 
+class Store extends RefCounted:
+	var amount := 2.0
+	var tint := Color.RED
+
+class Storage extends T.Binding:
+	var field := &"amount"
+	func read(target: Object) -> Variant:
+		return target.get(field)
+	func write(target: Object, value: Variant) -> String:
+		target.set(field, value)
+		return ""
+
 func run(suite: Suite) -> bool:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://conformance/keyframes.json"))
 	for test: Dictionary in data.cases:
@@ -40,6 +52,8 @@ func run(suite: Suite) -> bool:
 	_interpolation_modes(suite)
 	_validation(suite)
 	_numeric_validation(suite)
+	var binding_playback: Dictionary = data.binding_playback
+	_shared_bindings(suite, binding_playback)
 	var constant := TweensGdKeyframeCurve.create([3, 3], PackedFloat64Array([0, 100]))
 	for progress: float in data.progress_limits:
 		suite.check(constant.sample(progress) == null, "reject percentage overflow before integer decoding")
@@ -73,6 +87,70 @@ func run(suite: Suite) -> bool:
 		var weight := _quad_weight(at)
 		suite.check(absf(actual.dot(Quaternion(Vector3.UP, weight))) > 0.99999, "quaternion ease and endpoint tangent")
 	return true
+
+func _shared_bindings(suite: Suite, data: Dictionary) -> void:
+	var scheduler := TweensGdScheduler.new()
+	var store := Store.new()
+	var storage := Storage.new()
+	var definition := TweensGdDefinition.new()
+	definition.adapter = storage
+	definition.duration = 1.0
+	definition.delay = 0.25
+	definition.fill = T.Fill.NONE
+	definition.to_value = 999.0
+	var values: Array = []
+	var stops := PackedFloat64Array()
+	for key: Array in data.keys:
+		var stop: float = key[0]
+		values.append(key[1])
+		@warning_ignore("return_value_discarded")
+		stops.append(stop)
+	var curve := TweensGdKeyframeCurve.create(values, stops, 1)
+	var sampled := definition.through(curve)
+	storage.field = &"other"
+	var shader := Shader.new()
+	shader.code = "shader_type canvas_item; uniform float amount;"
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter(&"amount", 2.0)
+	var shader_definition := T.shader_parameter(&"amount", 999.0, 1.0)
+	shader_definition.delay = 0.25
+	shader_definition.fill = T.Fill.NONE
+	var custom := scheduler.add(store, sampled)
+	var uniform := scheduler.add(material, shader_definition.through(curve))
+	for step: Array in data.steps:
+		var delta: float = step[0]
+		var expected: float = step[1]
+		scheduler.update(delta)
+		var actual: float = material.get_shader_parameter(&"amount")
+		suite.check(is_equal_approx(store.amount, expected), "custom binding curve capture and restoration")
+		suite.check(is_equal_approx(actual, expected), "shader binding curve capture and restoration")
+	suite.check(custom.completion_reason == T.Reason.COMPLETED and uniform.completion_reason == T.Reason.COMPLETED,
+		"sampled bindings use ordinary playback")
+	var color_storage := Storage.new()
+	color_storage.field = &"tint"
+	definition = TweensGdDefinition.new()
+	definition.adapter = color_storage
+	definition.to_value = Color(0, 0, 0, 0)
+	definition.duration = 1.0
+	@warning_ignore("return_value_discarded")
+	scheduler.add(store, definition)
+	scheduler.update(0.5)
+	suite.check(_close(store.tint, Color(1, 0, 0, 0.5)), "binding-only endpoint sampler uses premultiplied OKLab")
+	scheduler.cancel_all()
+	store.amount = 2.0
+	storage.field = &"amount"
+	definition = TweensGdDefinition.new()
+	definition.adapter = storage
+	definition.by_value = 2.0
+	definition.factor_by = 2.0
+	definition.duration = 1.0
+	@warning_ignore("return_value_discarded")
+	scheduler.add(store, definition)
+	scheduler.update(0.5)
+	suite.check(is_equal_approx(store.amount, 4.0), "binding-only relative sampler uses component arithmetic")
+	scheduler.cancel_all()
+	suite.check(TweensGdDefinition.new().through(null) == null, "through requires a curve")
 
 func _interpolation_modes(suite: Suite) -> void:
 	var scheduler := TweensGdScheduler.new()

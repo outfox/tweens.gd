@@ -58,7 +58,28 @@ Tweens.play(sprite, fade)
 
 Choose `Tweens.ColorSpace.SRGB` or `Tweens.ColorSpace.LINEAR_RGB` for another interpolation space, and `Tweens.AlphaMode.STRAIGHT` for independent RGB and alpha interpolation. Set `Tweens.ColorEncoding.LINEAR_RGB` only when the API receiving your values expects linear RGB. Keyframes take these policies through `flight.options`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
 
-GDScript definitions expose color settings dynamically; they affect built-in whole-color interpolation. In C#, concrete whole-color definitions expose these settings directly, while generic shader and custom-property definitions take them through `Options`.
+GDScript definitions expose color settings dynamically; they affect built-in whole-color interpolation. In C#, whole-color definitions, including specialized shader and custom-property definitions, expose these settings directly. Generic C# definitions retain overrides through `Options`.
+
+## Storage, timing, and sampling
+
+A binding reads and writes storage. A sampler produces values from eased progress. Timing controls that progress. Keyframe batches use these same parts as ordinary tweens.
+
+`through(curve)` copies a definition and replaces its endpoints with a prepared curve, retaining its storage binding, timing, and callbacks. Relative endpoints and endpoint adjustments are rejected when validated. An explicit curve owns its value policy. For a `ShaderMaterial shader_material` with a color uniform named `tint`:
+
+```gdscript
+var curve := TweensGdKeyframeCurve.create(
+    [Color.CORAL, Color.GOLD, Color.CORAL], PackedFloat64Array([0, 50, 100]))
+var pulse := Tweens.shader_parameter(&"tint", Color.CORAL, 1.0).through(curve)
+
+var slower := pulse.with_duration(2.0)
+Tweens.play(shader_material, slower, sprite)
+```
+
+Missing zero-percent keys capture the binding's value at activation. Shader bindings preserve their override-restoration and change-detection behavior. A null curve returns null from `through`.
+
+Extend `Tweens.Binding` for custom storage without interpolation. Override `read` and `write`, with optional `prepare`, `restore`, and `release` hooks, then assign it to a definition's `adapter`. The same binding works with ordinary endpoints or `keyframe_curve`. Each playback copies stateful bindings before preparation. Extend `Tweens.Adapter` when custom endpoint interpolation is also needed. Definitions work with the existing scheduler, groups, and chains.
+
+GDScript keeps timing and color settings on its definition object. C# also provides separate `TweenTiming` and `ColorPolicy` value types, combined by `TweenOptions`; curve-backed C# definitions vary their clock through `Timing`.
 
 ## Playback and preparation
 

@@ -26,6 +26,8 @@ const Easing = preload("easing.gd")
 const FX = preload("fx.gd")
 ## Base adapter for custom storage. C# equivalent: [code]TweenDefinition[/code] property operations.
 const Adapter = preload("adapter.gd")
+## Storage binding without custom interpolation. C# equivalent: [code]TweenBinding[/code].
+const Binding = preload("binding.gd")
 ## Adapter configured with getter, setter, interpolator, and validator Callables.
 const CallableAdapter = preload("callable_adapter.gd")
 ## Adapter for material or instance shader uniforms.

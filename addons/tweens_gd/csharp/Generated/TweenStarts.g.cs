@@ -169,6 +169,10 @@ public static partial class TweenExtensions
         => TweenRuntime.GetRunner(target).Scheduler.AddValue<global::Godot.CanvasItem, TValue, Tweens.CanvasItemInstanceShaderParameter<TValue>>(target, in definition, target, null, options);
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<global::Godot.CanvasItem, global::Godot.Color> Tween(this global::Godot.CanvasItem target, in Tweens.ColorCanvasItemInstanceShaderParameter definition, PlaybackOptions options = default)
+        => TweenRuntime.GetRunner(target).Scheduler.AddValue<global::Godot.CanvasItem, global::Godot.Color, Tweens.ColorCanvasItemInstanceShaderParameter>(target, in definition, target, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public static TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> Tween(this global::Godot.CanvasLayer target, in Tweens.CanvasLayerOffset definition, PlaybackOptions options = default)
         => TweenRuntime.GetRunner(target).Scheduler.AddValue<global::Godot.CanvasLayer, global::Godot.Vector2, Tweens.CanvasLayerOffset>(target, in definition, target, null, options);
 
@@ -635,6 +639,10 @@ public static partial class TweenExtensions
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public static TweenInstance<global::Godot.GeometryInstance3D, TValue> Tween<TValue>(this global::Godot.GeometryInstance3D target, in Tweens.GeometryInstanceShaderParameter<TValue> definition, PlaybackOptions options = default) where TValue : struct
         => TweenRuntime.GetRunner(target).Scheduler.AddValue<global::Godot.GeometryInstance3D, TValue, Tweens.GeometryInstanceShaderParameter<TValue>>(target, in definition, target, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<global::Godot.GeometryInstance3D, global::Godot.Color> Tween(this global::Godot.GeometryInstance3D target, in Tweens.ColorGeometryInstanceShaderParameter definition, PlaybackOptions options = default)
+        => TweenRuntime.GetRunner(target).Scheduler.AddValue<global::Godot.GeometryInstance3D, global::Godot.Color, Tweens.ColorGeometryInstanceShaderParameter>(target, in definition, target, null, options);
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public static TweenInstance<global::Godot.Node2D, global::Godot.Vector2> Tween(this global::Godot.Node2D target, in Tweens.GlobalPosition2D definition, PlaybackOptions options = default)
@@ -1411,6 +1419,25 @@ public static partial class TweenExtensions
         => target.Tween(in definition, owner, options);
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<TTarget, global::Godot.Color> Tween<TTarget>(this TTarget target, in Tweens.ColorProperty<TTarget> definition, PlaybackOptions options = default) where TTarget : global::Godot.Node
+        => TweenRuntime.GetRunner(target).Scheduler.AddValue<TTarget, global::Godot.Color, Tweens.ColorProperty<TTarget>>(target, in definition, target, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<TTarget, global::Godot.Color> Tween<TTarget>(this TTarget target, in Tweens.ColorProperty<TTarget> definition, global::Godot.SceneTree tree, global::Godot.Node? owner = null, PlaybackOptions options = default) where TTarget : global::Godot.Resource
+        => TweenRuntime.GetRunner(tree).Scheduler.AddValue<TTarget, global::Godot.Color, Tweens.ColorProperty<TTarget>>(target, in definition, owner, tree, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<TTarget, global::Godot.Color> Tween<TTarget>(this TTarget target, in Tweens.ColorProperty<TTarget> definition, global::Godot.Node owner, PlaybackOptions options = default) where TTarget : global::Godot.Resource
+    {
+        TweenRuntime.ValidateOwner(owner);
+        return target.Tween(in definition, owner.GetTree(), owner, options);
+    }
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<TTarget, global::Godot.Color> Tween<TTarget>(this global::Godot.Node owner, TTarget target, in Tweens.ColorProperty<TTarget> definition, PlaybackOptions options = default) where TTarget : global::Godot.Resource
+        => target.Tween(in definition, owner, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public static TweenInstance<global::Godot.Node, global::Godot.Quaternion> Tween(this global::Godot.Node target, in Tweens.Quaternion definition, PlaybackOptions options = default)
         => TweenRuntime.GetRunner(target).Scheduler.AddValue<global::Godot.Node, global::Godot.Quaternion, Tweens.Quaternion>(target, in definition, target, null, options);
 
@@ -1511,6 +1538,21 @@ public static partial class TweenExtensions
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public static TweenInstance<global::Godot.ShaderMaterial, TValue> Tween<TValue>(this global::Godot.Node owner, global::Godot.ShaderMaterial target, in Tweens.ShaderParameter<TValue> definition, PlaybackOptions options = default) where TValue : struct
+        => target.Tween(in definition, owner, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<global::Godot.ShaderMaterial, global::Godot.Color> Tween(this global::Godot.ShaderMaterial target, in Tweens.ColorShaderParameter definition, global::Godot.SceneTree tree, global::Godot.Node? owner = null, PlaybackOptions options = default)
+        => TweenRuntime.GetRunner(tree).Scheduler.AddValue<global::Godot.ShaderMaterial, global::Godot.Color, Tweens.ColorShaderParameter>(target, in definition, owner, tree, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<global::Godot.ShaderMaterial, global::Godot.Color> Tween(this global::Godot.ShaderMaterial target, in Tweens.ColorShaderParameter definition, global::Godot.Node owner, PlaybackOptions options = default)
+    {
+        TweenRuntime.ValidateOwner(owner);
+        return target.Tween(in definition, owner.GetTree(), owner, options);
+    }
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public static TweenInstance<global::Godot.ShaderMaterial, global::Godot.Color> Tween(this global::Godot.Node owner, global::Godot.ShaderMaterial target, in Tweens.ColorShaderParameter definition, PlaybackOptions options = default)
         => target.Tween(in definition, owner, options);
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>

@@ -81,6 +81,7 @@ class TweensGdHandle : public RefCounted {
 	// Settings are immutable until finish(), so the per-frame path tests plain flags.
 	TypedLerp lerp;
 	bool typed = false;
+	bool has_interpolator = false;
 	bool has_property = false;
 	bool has_update = false;
 	bool has_start = false;

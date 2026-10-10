@@ -449,6 +449,17 @@ public sealed partial class TweenScheduler
     }
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<global::Godot.CanvasItem, global::Godot.Color> Add(global::Godot.CanvasItem target, in Tweens.ColorCanvasItemInstanceShaderParameter definition, PlaybackOptions options = default)
+        => AddValue<global::Godot.CanvasItem, global::Godot.Color, Tweens.ColorCanvasItemInstanceShaderParameter>(target, in definition, target as global::Godot.Node, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<global::Godot.CanvasItem, global::Godot.Color> Add(global::Godot.CanvasItem target, in Tweens.ColorCanvasItemInstanceShaderParameter definition, global::Godot.Node owner, PlaybackOptions options = default)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(owner);
+        return AddValue<global::Godot.CanvasItem, global::Godot.Color, Tweens.ColorCanvasItemInstanceShaderParameter>(target, in definition, owner, null, options);
+    }
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public TweenInstance<global::Godot.CanvasLayer, global::Godot.Vector2> Add(global::Godot.CanvasLayer target, in Tweens.CanvasLayerOffset definition, PlaybackOptions options = default)
         => AddValue<global::Godot.CanvasLayer, global::Godot.Vector2, Tweens.CanvasLayerOffset>(target, in definition, target as global::Godot.Node, null, options);
 
@@ -1733,6 +1744,17 @@ public sealed partial class TweenScheduler
     {
         global::System.ArgumentNullException.ThrowIfNull(owner);
         return AddValue<global::Godot.GeometryInstance3D, TValue, Tweens.GeometryInstanceShaderParameter<TValue>>(target, in definition, owner, null, options);
+    }
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<global::Godot.GeometryInstance3D, global::Godot.Color> Add(global::Godot.GeometryInstance3D target, in Tweens.ColorGeometryInstanceShaderParameter definition, PlaybackOptions options = default)
+        => AddValue<global::Godot.GeometryInstance3D, global::Godot.Color, Tweens.ColorGeometryInstanceShaderParameter>(target, in definition, target as global::Godot.Node, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<global::Godot.GeometryInstance3D, global::Godot.Color> Add(global::Godot.GeometryInstance3D target, in Tweens.ColorGeometryInstanceShaderParameter definition, global::Godot.Node owner, PlaybackOptions options = default)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(owner);
+        return AddValue<global::Godot.GeometryInstance3D, global::Godot.Color, Tweens.ColorGeometryInstanceShaderParameter>(target, in definition, owner, null, options);
     }
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
@@ -3067,6 +3089,17 @@ public sealed partial class TweenScheduler
     }
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<TTarget, global::Godot.Color> Add<TTarget>(TTarget target, in Tweens.ColorProperty<TTarget> definition, PlaybackOptions options = default) where TTarget : class
+        => AddValue<TTarget, global::Godot.Color, Tweens.ColorProperty<TTarget>>(target, in definition, target as global::Godot.Node, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<TTarget, global::Godot.Color> Add<TTarget>(TTarget target, in Tweens.ColorProperty<TTarget> definition, global::Godot.Node owner, PlaybackOptions options = default) where TTarget : class
+    {
+        global::System.ArgumentNullException.ThrowIfNull(owner);
+        return AddValue<TTarget, global::Godot.Color, Tweens.ColorProperty<TTarget>>(target, in definition, owner, null, options);
+    }
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
     public TweenInstance<global::Godot.Node, global::Godot.Quaternion> Add(global::Godot.Node target, in Tweens.Quaternion definition, PlaybackOptions options = default)
         => AddValue<global::Godot.Node, global::Godot.Quaternion, Tweens.Quaternion>(target, in definition, target as global::Godot.Node, null, options);
 
@@ -3317,6 +3350,17 @@ public sealed partial class TweenScheduler
     {
         global::System.ArgumentNullException.ThrowIfNull(owner);
         return AddValue<global::Godot.ShaderMaterial, TValue, Tweens.ShaderParameter<TValue>>(target, in definition, owner, null, options);
+    }
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<global::Godot.ShaderMaterial, global::Godot.Color> Add(global::Godot.ShaderMaterial target, in Tweens.ColorShaderParameter definition, PlaybackOptions options = default)
+        => AddValue<global::Godot.ShaderMaterial, global::Godot.Color, Tweens.ColorShaderParameter>(target, in definition, null, null, options);
+
+    /// <summary>Starts a concrete immutable definition without boxing it.</summary>
+    public TweenInstance<global::Godot.ShaderMaterial, global::Godot.Color> Add(global::Godot.ShaderMaterial target, in Tweens.ColorShaderParameter definition, global::Godot.Node owner, PlaybackOptions options = default)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(owner);
+        return AddValue<global::Godot.ShaderMaterial, global::Godot.Color, Tweens.ColorShaderParameter>(target, in definition, owner, null, options);
     }
 
     /// <summary>Starts a concrete immutable definition without boxing it.</summary>

@@ -87,63 +87,60 @@ public enum Reason
     RunnerDisposed,
 }
 
-/// <summary>Immutable timing configuration. Use with expressions to vary a reusable value.</summary>
+/// <summary>Immutable timing and value configuration. Use with expressions to vary a reusable value.</summary>
 public readonly record struct TweenOptions
 {
-    /// <summary>A <see cref="Repeats"/> value that repeats until cancelled.</summary>
-    public const int Infinite = -1;
+    /// <summary>A value that repeats until cancelled.</summary>
+    public const int Infinite = TweenTiming.Infinite;
+    /// <summary>Clock, easing, and fill settings. Defaults match the individual option properties.</summary>
+    public TweenTiming Timing { get; init; }
+    /// <summary>Color working space, opacity handling, and boundary encoding.</summary>
+    public ColorPolicy ColorPolicy { get; init; }
 
-    /// <summary>Duration of one leg, in seconds. Defaults to zero; must be finite and nonnegative.</summary>
-    public Duration Duration { get; init; }
-    private readonly double? factorDuration;
-    /// <summary>Scales <see cref="Duration"/> at start: the tween lasts FactorDuration * Duration + DeltaDuration.</summary>
-    public double FactorDuration { get => factorDuration ?? 1; init => factorDuration = value == 1 ? null : value; }
-    /// <summary>Added to <see cref="Duration"/> at start, after <see cref="FactorDuration"/>.</summary>
-    public Duration DeltaDuration { get; init; }
-    /// <summary>Signed gap before the first leg. Positive values wait after capture; negative values overlap or pre-roll.</summary>
-    public Duration Delay { get; init; }
-    private readonly double? factorDelay;
-    /// <summary>Scales the signed gap at start: FactorDelay * Delay + DeltaDelay.</summary>
-    public double FactorDelay { get => factorDelay ?? 1; init => factorDelay = value == 1 ? null : value; }
-    /// <summary>Added to <see cref="Delay"/> at start, after <see cref="FactorDelay"/>.</summary>
-    public Duration DeltaDelay { get; init; }
-    /// <summary>Hold between the forward and return legs, in seconds. Defaults to zero.</summary>
-    public Duration PingPongInterval { get; init; }
-    /// <summary>Hold between cycles, in seconds. No hold follows the final cycle.</summary>
-    public Duration RepeatInterval { get; init; }
-    /// <summary>Start this many seconds into the first leg, after the delay. Must not exceed the adjusted duration.</summary>
-    public Duration Offset { get; init; }
-    /// <summary>Cycles after the first, or <see cref="Infinite"/>. A ping-pong cycle includes both legs.</summary>
-    public int Repeats { get; init; }
-    /// <summary>Return to the start after each forward leg. Duration applies to each leg; defaults to false.</summary>
-    public bool PingPong { get; init; }
-    private readonly FillMode fill;
-    // Encode the default so default(TweenOptions) and new TweenOptions() behave identically.
-    /// <summary>Value behavior during delay and after natural completion. Defaults to RetainFinalValue.</summary>
-    public FillMode Fill { get => fill ^ FillMode.RetainFinalValue; init => fill = value ^ FillMode.RetainFinalValue; }
-    /// <summary>Combine one In and one Out with |, use an InOut pair, or select a single curve. Legacy EaseType names retain their original shapes.</summary>
-    public EaseType Ease { get; init; }
-    /// <summary>How mixed In/Out legs join. Defaults to Makima; matching families keep their conventional shape.</summary>
-    public BlendType BlendType { get; init; }
-    private readonly double? blend;
-    /// <summary>Centered transition width in [0, 1]. Defaults to 0.1 (45%–55% at the neutral split); zero directly splices the halves.</summary>
-    public double Blend { get => blend ?? Easing.DefaultBlend; init => blend = value == Easing.DefaultBlend ? null : value; }
-    private readonly double? skew;
-    /// <summary>In/Out split in [0, 1]: 0 selects Out, 0.5 is balanced, 1 selects In. Applies to paired easing flags.</summary>
-    public double Skew { get => skew ?? 0.5; init => skew = value == 0.5 ? null : value; }
-    private readonly double? weks;
-    /// <summary>Independent ping-pong return split in [0, 1]: 0 front-loads the return, 0.5 is balanced, 1 rear-loads it.</summary>
-    public double Weks { get => weks ?? 0.5; init => weks = value == 0.5 ? null : value; }
-    /// <summary>Custom progress-to-weight function instead of Ease. Mutually exclusive with Curve.</summary>
-    public Func<float, float>? EaseFunction { get; init; }
-    /// <summary>Custom progress-to-weight curve instead of Ease. Copied per playback; mutually exclusive with EaseFunction.</summary>
-    public Godot.Curve? Curve { get; init; }
+    /// <inheritdoc cref="TweenTiming.Duration"/>
+    public Duration Duration { get => Timing.Duration; init => Timing = Timing with { Duration = value }; }
+    /// <inheritdoc cref="TweenTiming.FactorDuration"/>
+    public double FactorDuration { get => Timing.FactorDuration; init => Timing = Timing with { FactorDuration = value }; }
+    /// <inheritdoc cref="TweenTiming.DeltaDuration"/>
+    public Duration DeltaDuration { get => Timing.DeltaDuration; init => Timing = Timing with { DeltaDuration = value }; }
+    /// <inheritdoc cref="TweenTiming.Delay"/>
+    public Duration Delay { get => Timing.Delay; init => Timing = Timing with { Delay = value }; }
+    /// <inheritdoc cref="TweenTiming.FactorDelay"/>
+    public double FactorDelay { get => Timing.FactorDelay; init => Timing = Timing with { FactorDelay = value }; }
+    /// <inheritdoc cref="TweenTiming.DeltaDelay"/>
+    public Duration DeltaDelay { get => Timing.DeltaDelay; init => Timing = Timing with { DeltaDelay = value }; }
+    /// <inheritdoc cref="TweenTiming.PingPongInterval"/>
+    public Duration PingPongInterval { get => Timing.PingPongInterval; init => Timing = Timing with { PingPongInterval = value }; }
+    /// <inheritdoc cref="TweenTiming.RepeatInterval"/>
+    public Duration RepeatInterval { get => Timing.RepeatInterval; init => Timing = Timing with { RepeatInterval = value }; }
+    /// <inheritdoc cref="TweenTiming.Offset"/>
+    public Duration Offset { get => Timing.Offset; init => Timing = Timing with { Offset = value }; }
+    /// <inheritdoc cref="TweenTiming.Repeats"/>
+    public int Repeats { get => Timing.Repeats; init => Timing = Timing with { Repeats = value }; }
+    /// <inheritdoc cref="TweenTiming.PingPong"/>
+    public bool PingPong { get => Timing.PingPong; init => Timing = Timing with { PingPong = value }; }
+    /// <inheritdoc cref="TweenTiming.Fill"/>
+    public FillMode Fill { get => Timing.Fill; init => Timing = Timing with { Fill = value }; }
+    /// <inheritdoc cref="TweenTiming.Ease"/>
+    public EaseType Ease { get => Timing.Ease; init => Timing = Timing with { Ease = value }; }
+    /// <inheritdoc cref="TweenTiming.BlendType"/>
+    public BlendType BlendType { get => Timing.BlendType; init => Timing = Timing with { BlendType = value }; }
+    /// <inheritdoc cref="TweenTiming.Blend"/>
+    public double Blend { get => Timing.Blend; init => Timing = Timing with { Blend = value }; }
+    /// <inheritdoc cref="TweenTiming.Skew"/>
+    public double Skew { get => Timing.Skew; init => Timing = Timing with { Skew = value }; }
+    /// <inheritdoc cref="TweenTiming.Weks"/>
+    public double Weks { get => Timing.Weks; init => Timing = Timing with { Weks = value }; }
+    /// <inheritdoc cref="TweenTiming.EaseFunction"/>
+    public Func<float, float>? EaseFunction { get => Timing.EaseFunction; init => Timing = Timing with { EaseFunction = value }; }
+    /// <inheritdoc cref="TweenTiming.Curve"/>
+    public Godot.Curve? Curve { get => Timing.Curve; init => Timing = Timing with { Curve = value }; }
     /// <summary>Color interpolation coordinates. Defaults to OKLab; does not affect scalar alpha or relative arithmetic.</summary>
-    public ColorSpace ColorSpace { get; init; }
+    public ColorSpace ColorSpace { get => ColorPolicy.Space; init => ColorPolicy = ColorPolicy with { Space = value }; }
     /// <summary>Color opacity handling. Defaults to Premultiplied.</summary>
-    public AlphaMode AlphaMode { get; init; }
+    public AlphaMode AlphaMode { get => ColorPolicy.AlphaMode; init => ColorPolicy = ColorPolicy with { AlphaMode = value }; }
     /// <summary>RGB encoding at the target API boundary. Defaults to ordinary Godot sRGB colors.</summary>
-    public ColorEncoding ColorEncoding { get; init; }
+    public ColorEncoding ColorEncoding { get => ColorPolicy.Encoding; init => ColorPolicy = ColorPolicy with { Encoding = value }; }
     /// <summary>Skip callbacks after the target or owner becomes invalid. Defaults to false.</summary>
     public bool SuppressCallbacksWhenTargetInvalid { get; init; }
 
@@ -279,9 +276,15 @@ internal sealed class Playback
     /// <summary>Whether the adjusted delay is longer than zero.</summary>
     internal bool HasDelay => delay > 0;
 
-    internal Playback(TweenOptions options)
+    internal Playback(TweenOptions options) : this(options.Timing)
     {
         ColorInterpolation.Validate(options.ColorSpace, options.AlphaMode, options.ColorEncoding);
+    }
+
+    internal static Playback FromTiming(TweenTiming timing) => new(timing);
+
+    private Playback(TweenTiming options)
+    {
         Easing.ValidateBlend(options.BlendType, options.Blend);
         Nonnegative(options.Duration, nameof(options.Duration));
         if (!double.IsFinite(options.FactorDuration)) throw new ArgumentOutOfRangeException(nameof(options.FactorDuration));

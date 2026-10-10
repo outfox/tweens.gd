@@ -59,15 +59,35 @@ sprite.Tween(fade);
 
 Choose `ColorSpace.Srgb` or `ColorSpace.LinearRgb` for another interpolation space, and `AlphaMode.Straight` for independent RGB and alpha interpolation. Set `ColorEncoding.LinearRgb` only when the API receiving your values expects linear RGB. Keyframes take these policies through `options: new TweenOptions { ... }`. RGB is not clamped to the display gamut. Smooth's bound applies to working coordinates, not the decoded RGB gamut. Alpha-only channels interpolate as scalars; relative color offsets and factors use RGBA components.
 
-Concrete whole-color definitions expose color settings directly. Scalar and vector definitions do not. Generic shader and custom-property definitions take color overrides through `Options`. Assigning `Options` replaces the complete value, including timing. For a `ShaderMaterial shaderMaterial` with a color uniform named `tint`:
+Concrete whole-color definitions expose color settings directly. `ColorShaderParameter`, `ColorCanvasItemInstanceShaderParameter`, `ColorGeometryInstanceShaderParameter`, and `ColorProperty<TTarget>` provide the same settings for shader and custom storage. Scalar and vector definitions do not expose them. Generic definitions remain available and take color overrides through `Options`; assigning `Options` replaces the complete value, including timing. For a `ShaderMaterial shaderMaterial` with a color uniform named `tint`:
 
 ```csharp
-var tint = new Tweens.ShaderParameter<Color>("tint", Colors.Coral)
+var tint = new Tweens.ColorShaderParameter("tint", Colors.Coral, 1)
 {
-    Options = new() { Duration = 1, ColorSpace = ColorSpace.LinearRgb },
+    ColorSpace = ColorSpace.LinearRgb,
 };
 shaderMaterial.Tween(tint, sprite);
 ```
+
+## Storage, timing, and sampling
+
+A binding reads and writes storage. A sampler produces values from eased progress. Timing controls that progress. Keyframe batches use these same parts as ordinary tweens.
+
+`Through` replaces a definition's `From` and `To` with a curve, retaining its storage binding, timing, and callbacks. Relative endpoints and endpoint adjustments are rejected. The array overload prepares evenly spaced keys using the definition's color policy. For a `ShaderMaterial shaderMaterial` with a color uniform named `tint`:
+
+```csharp
+var pulse = new Tweens.ColorShaderParameter("tint", Colors.Coral, 1)
+    .Through([Colors.Coral, Colors.Gold, Colors.Coral]);
+
+var slower = pulse with { Timing = pulse.Timing with { Duration = 2 } };
+shaderMaterial.Tween(slower, sprite);
+```
+
+An explicit `KeyframeCurve<T>` owns its prepared value policy. Passing it to `Through(curve)` uses that policy; timing remains independent. Missing zero-percent keys capture the binding's value at activation. Shader bindings preserve their override-restoration and change-detection behavior.
+
+`TweenBinding<TTarget, TValue>` describes custom storage without interpolation. `PropertyBinding<TTarget, TValue>` takes a getter and setter. Reuse either with `PropertyTween<TTarget, TValue>` for endpoints or `Tweens.Sampled<TTarget, TValue>` for a prepared curve. Each playback copies stateful bindings before preparation; immutable property bindings share their delegates. These definitions work with the existing scheduler, groups, and chains.
+
+`TweenTiming` holds clock, easing, and fill settings. `ColorPolicy` holds working space, alpha mode, and boundary encoding. `TweenOptions` combines them and keeps the existing short option properties. GDScript exposes these settings on its definition object instead of separate C# value types.
 
 ## Playback and preparation
 

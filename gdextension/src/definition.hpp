@@ -83,6 +83,7 @@ public:
 	const TweenSettings &get_settings() const { return settings; }
 
 	Ref<TweensGdDefinition> copy() const;
+	Ref<TweensGdDefinition> through(const Ref<TweensGdKeyframeCurve> &p_curve) const;
 	String validate() const;
 	static Ref<TweensGdDefinition> named(const NodePath &p_path, const StringName &p_target_class, int64_t p_value_type,
 			const Variant &p_to, double p_seconds, int64_t p_ease, double p_delay);

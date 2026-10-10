@@ -196,35 +196,9 @@ internal sealed class AnimationTrack
             using var value = AnimationValues.Coerce(keys[i].Value, type, keys[i].Uniform);
             typed[i] = new(keys[i].At, AnimationValues.Read<T>(value), keys[i].Interpolation);
         }
-        return new CurveDefinition<T>(nativePath, new KeyframeCurve<T>(typed, interpolation, options.ColorSpace, options.AlphaMode, options.ColorEncoding), options);
+        return new Tweens.Sampled<Node, T>(new PropertyPathBinding<T>(nativePath),
+            new KeyframeCurve<T>(typed, interpolation, options.ColorSpace, options.AlphaMode, options.ColorEncoding), options.Timing);
     }
-}
-
-internal sealed class CurveDefinition<T> : TweenDefinition<Node, T> where T : struct
-{
-    private readonly NodePath path;
-    private readonly KeyframeCurve<T> curve;
-    private KeyframeCurve<T>? playback;
-    internal CurveDefinition(NodePath path, KeyframeCurve<T> curve, TweenOptions options)
-    {
-        this.path = path; this.curve = curve;
-        From = curve.NeedsStart ? null : curve.FirstValue;
-        To = curve.LastValue;
-        options.CopyTo(this);
-    }
-    protected override T Read(Node target)
-    {
-        using var value = target.GetIndexed(path);
-        return AnimationValues.Read<T>(value);
-    }
-    protected override void PrepareValues(T from, T to) => playback = curve.CaptureStart(from);
-    protected override void Write(Node target, T value)
-    {
-        using var variant = AnimationValues.Write(value);
-        target.SetIndexed(path, variant);
-    }
-    protected override T Interpolate(T from, T to, float weight) => playback!.Sample(weight);
-    protected override void Release() => playback = null;
 }
 
 public static partial class TweenExtensions

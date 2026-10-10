@@ -33,6 +33,32 @@ public class ShaderDefaultTests(Fixture godot)
     }
 
     [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void SampledShaderBindingRestoresAbsenceAndSurvivesConcurrentPlays(bool explicitOverride, bool nested)
+    {
+        using var shader = new Shader { Code = "shader_type canvas_item; uniform float amount = 0.25;" };
+        using var first = new ShaderMaterial { Shader = shader };
+        using var second = new ShaderMaterial { Shader = shader };
+        using var scheduler = new TweenScheduler();
+        if (explicitOverride) first.SetShaderParameter("amount", 0.25f);
+        second.SetShaderParameter("amount", 0.75f);
+        var source = new Tweens.ShaderParameter<float>("amount") { Duration = 1, Fill = FillMode.None };
+        var sampled = source.Through(new KeyframeCurve<float>([new(100, 1)]));
+        if (nested) sampled = sampled.Through(new KeyframeCurve<float>([new(100, 1)]));
+        var a = scheduler.Add(first, sampled); var b = scheduler.Add(second, sampled);
+        scheduler.Update(0.5);
+        Assert.Equal(0.625f, first.GetShaderParameter("amount").AsSingle());
+        Assert.Equal(0.875f, second.GetShaderParameter("amount").AsSingle());
+        scheduler.Update(0.5);
+        Assert.Equal(explicitOverride ? Variant.Type.Float : Variant.Type.Nil, first.GetShaderParameter("amount").VariantType);
+        Assert.Equal(0.75f, second.GetShaderParameter("amount").AsSingle());
+        Assert.Equal(Reason.Completed, a.CompletionReason); Assert.Equal(Reason.Completed, b.CompletionReason);
+    }
+
+    [Theory]
     [InlineData("float")]
     [InlineData("double")]
     [InlineData("int")]
