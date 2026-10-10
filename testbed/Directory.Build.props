@@ -13,8 +13,8 @@
          build/Smoke.proj. 2dog floats to its newest stable build for Godot 4.7.2; keep it floating rather than
          pinning it with `2dog update`. The game project's Godot.NET.Sdk version stays in its csproj. -->
     <PropertyGroup Label="2dog">
-        <TwoDogVersion>4.7.2.*</TwoDogVersion>
-        <TwoDogNativesVersion>4.7.2.*</TwoDogNativesVersion>
+        <TwoDogVersion>4.7.2.112</TwoDogVersion>
+        <TwoDogNativesVersion>4.7.2.21</TwoDogNativesVersion>
         <TwoDogGodotVersion>4.7.2</TwoDogGodotVersion>
         <TwoDogAvaloniaVersion>12.1.1</TwoDogAvaloniaVersion>
         <TwoDogWindowsAppSdkVersion>2.4.0</TwoDogWindowsAppSdkVersion>

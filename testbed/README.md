@@ -1,6 +1,6 @@
 # testbed
 
-The gallery app: eleven pages and 35 examples, each written in C# and in GDScript. A switch in the header picks the
+The gallery app: twelve pages and 36 examples, each written in C# and in GDScript. A switch in the header picks the
 implementation that runs, and the source viewer shows the code that is running. Its tests compare the two languages.
 
 The gallery is a .NET app in both modes. Scenes are built by shared C# code, so geometry, materials and initial values
@@ -48,6 +48,9 @@ dotnet run --project testbed/testbed.2dog -- --gallery-snapshots artifacts/galle
   or scrub to pause; **Animate** resumes. The tint-and-fade column treats RGB and opacity independently.
 - The Keyframes page plays one sparse definition on three flyers with different captured starting positions.
   Position, scale, rotation and color share its duration, ping-pong and repeats.
+- The Showreel page is a 20-second loop at the default leg duration. Every animated node plays one keyframe definition
+  spanning the loop, except the streaks and flat shapes: each repeats a short pass along a stream whose rotation sets the
+  flow direction. GPU particles emit while keyframes raise their amount ratio.
 
 ## Layout
 

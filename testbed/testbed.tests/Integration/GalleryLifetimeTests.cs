@@ -32,7 +32,7 @@ public class GalleryLifetimeTests
     [InlineData(nameof(TextReveal))] [InlineData(nameof(ScrollingList))] [InlineData(nameof(RangeMeter))]
     [InlineData(nameof(OffsetTransforms))] [InlineData(nameof(GlowingRibbon))] [InlineData(nameof(LightSweep))]
     [InlineData(nameof(ColorInterpolation))]
-    [InlineData(nameof(KeyframeFlight))]
+    [InlineData(nameof(KeyframeFlight))] [InlineData(nameof(Showreel))]
     [InlineData(nameof(ParticleStream))] [InlineData(nameof(PolygonEchoes))] [InlineData(nameof(CameraLens))]
     [InlineData(nameof(CurveFollower3D))] [InlineData(nameof(ParentedRotation))] [InlineData(nameof(Spotlight))]
     [InlineData(nameof(AlbedoFade))] [InlineData(nameof(EmissionPulse))] [InlineData(nameof(SharedMaterial))]

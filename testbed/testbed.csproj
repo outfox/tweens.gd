@@ -25,6 +25,7 @@
         <EmbeddedResource Include="Gallery/**/*.cs" LogicalName="GallerySource/%(RecursiveDir)%(Filename)%(Extension)" />
         <EmbeddedResource Include="Gallery/**/*.gd" LogicalName="GallerySource/%(RecursiveDir)%(Filename)%(Extension)" />
         <Content Include="Fonts/OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+        <Content Include="Fonts/BricolageGrotesque-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
     <Target Name="StageGDScriptAddon" BeforeTargets="BeforeBuild">
         <ItemGroup>

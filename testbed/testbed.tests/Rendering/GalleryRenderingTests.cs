@@ -72,6 +72,7 @@ public class GalleryRenderingTests
     [InlineData(8, GalleryLanguage.CSharp)] [InlineData(8, GalleryLanguage.GDScript)]
     [InlineData(9, GalleryLanguage.CSharp)] [InlineData(9, GalleryLanguage.GDScript)]
     [InlineData(10, GalleryLanguage.CSharp)] [InlineData(10, GalleryLanguage.GDScript)]
+    [InlineData(11, GalleryLanguage.CSharp)] [InlineData(11, GalleryLanguage.GDScript)]
     public void EachPagePlaysAndReleasesItsNativeScene(int index, GalleryLanguage language)
     {
         var gallery = new Gallery(); godot.Tree.Root.AddChild(gallery);

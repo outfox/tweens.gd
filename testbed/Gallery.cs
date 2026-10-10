@@ -25,6 +25,7 @@ public partial class Gallery : Control
         ("Easing", () => new EasingPage()),
         ("Colors", () => new ColorsPage()),
         ("Keyframes", () => new KeyframesPage()),
+        ("Showreel", () => new ShowreelPage()),
     ];
 
     public static readonly string[] PageNames = Pages.Select(p => p.Name).ToArray();
@@ -129,10 +130,12 @@ public partial class Gallery : Control
         return settings;
     }
 
-    private VBoxContainer BuildSidebar()
+    /// <summary>Page navigation. It scrolls when the window is shorter than the page list.</summary>
+    private ScrollContainer BuildSidebar()
     {
-        var sidebar = new VBoxContainer { CustomMinimumSize = new Vector2(194, 0) };
-        sidebar.AddThemeConstantOverride("separation", 6);
+        var scroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
+        var sidebar = scroll.Add(new VBoxContainer { CustomMinimumSize = new Vector2(194, 0) });
+        sidebar.AddThemeConstantOverride("separation", 4);
         sidebar.AddChild(GalleryTheme.Label("EXAMPLES", 12, Palette.Muted));
 
         var idle = GalleryTheme.Box(Colors.Transparent, 8, 0, null, 14, 8);
@@ -147,7 +150,7 @@ public partial class Gallery : Control
             var button = new Button
             {
                 Text = $"{i + 1:00}  {PageNames[i]}", ToggleMode = true, FocusMode = FocusModeEnum.None,
-                Alignment = HorizontalAlignment.Left, CustomMinimumSize = new Vector2(194, 38),
+                Alignment = HorizontalAlignment.Left, CustomMinimumSize = new Vector2(194, 36),
             };
             button.AddThemeStyleboxOverride("normal", idle);
             button.AddThemeStyleboxOverride("hover", hover);
@@ -161,7 +164,7 @@ public partial class Gallery : Control
 
         sidebar.AddChild(new Control { CustomMinimumSize = new Vector2(0, 6) });
         sidebar.AddChild(GalleryTheme.Label("Settings apply to\nthe current page.", 14, Palette.Muted));
-        return sidebar;
+        return scroll;
     }
 
     private HBoxContainer BuildActions()

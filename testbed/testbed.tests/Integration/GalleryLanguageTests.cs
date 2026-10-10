@@ -290,7 +290,7 @@ public class GalleryLanguageTests
         "color", "default_color", "width", "offset", "zoom", "value", "scroll_vertical", "spread", "gravity",
         "texture_scale", "energy", "progress_ratio", "v_offset", "h_offset", "fov", "light_color", "light_energy", "spot_angle",
         "albedo_color", "roughness", "emission", "emission_energy_multiplier", "uv1_offset", "uv1_scale",
-        "offset_transform_position", "offset_transform_rotation", "offset_transform_scale", "points"
+        "offset_transform_position", "offset_transform_rotation", "offset_transform_scale", "points", "transparency"
     ];
 
     private static void Compare(Variant a, Variant b, string path, int tick)

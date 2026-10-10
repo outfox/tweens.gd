@@ -16,24 +16,6 @@ config/name="tweens.gd"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.7", "C#")
 
-[display]
-
-window/size/viewport_width=1440
-window/size/viewport_height=720
-window/size/window_width_override=1440
-window/size/window_height_override=720
-window/size/min_width=1200
-window/size/min_height=640
-window/vsync/vsync_mode=3
-
-[dotnet]
-
-project/assembly_name="testbed"
-
-[rendering]
-
-anti_aliasing/quality/msaa_3d=2
-
 [debug]
 
 gdscript/warnings/unassigned_variable=2
@@ -73,3 +55,21 @@ gdscript/warnings/confusable_temporary_modification=2
 gdscript/warnings/property_used_as_function=2
 gdscript/warnings/constant_used_as_function=2
 gdscript/warnings/function_used_as_property=2
+
+[display]
+
+window/size/viewport_width=1440
+window/size/viewport_height=720
+window/size/window_width_override=1440
+window/size/window_height_override=720
+window/vsync/vsync_mode=3
+window/size/min_width=1200
+window/size/min_height=640
+
+[dotnet]
+
+project/assembly_name="testbed"
+
+[rendering]
+
+anti_aliasing/quality/msaa_3d=2

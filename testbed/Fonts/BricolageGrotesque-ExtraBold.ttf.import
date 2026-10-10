@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dijctuamqfmnv"
-path="res://.godot/imported/JetBrainsMono-Regular.ttf-da435ff962bcccf72180248eec12c044.fontdata"
+uid="uid://dnv5m0ddsha70"
+path="res://.godot/imported/BricolageGrotesque-ExtraBold.ttf-da32916e6ffbc8d02ff931e5f4fdfc7c.fontdata"
 
 [deps]
 
-source_file="res://Fonts/JetBrainsMono-Regular.ttf"
-dest_files=["res://.godot/imported/JetBrainsMono-Regular.ttf-da435ff962bcccf72180248eec12c044.fontdata"]
+source_file="res://Fonts/BricolageGrotesque-ExtraBold.ttf"
+dest_files=["res://.godot/imported/BricolageGrotesque-ExtraBold.ttf-da32916e6ffbc8d02ff931e5f4fdfc7c.fontdata"]
 
 [params]
 
@@ -17,7 +17,7 @@ antialiasing=1
 generate_mipmaps=false
 disable_embedded_bitmaps=true
 multichannel_signed_distance_field=true
-msdf_pixel_range=8
+msdf_pixel_range=16
 msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
