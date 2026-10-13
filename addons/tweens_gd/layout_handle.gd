@@ -1,0 +1,74 @@
+class_name TweensGdLayoutHandle
+extends RefCounted
+
+signal ended(reason: int)
+
+var completion_reason := -1
+var error := ""
+var is_terminal: bool:
+	get:
+		return completion_reason != -1
+var is_animating: bool:
+	get:
+		return not is_terminal and (_group != null or _following)
+var is_paused: bool:
+	get:
+		return _group.is_paused if _group != null and not _following else _paused
+var end: Variant:
+	get:
+		var result: Variant = completion_reason
+		if completion_reason == -1:
+			result = ended
+		return result
+
+var _group: TweensGdGroup
+var _paused := false
+var _cancel_requested := false
+var _following := false
+
+static func rejected(message: String) -> TweensGdLayoutHandle:
+	var handle := TweensGdLayoutHandle.new()
+	handle._finish(Tweens.Reason.FAILED, message)
+	return handle
+
+func pause() -> void:
+	if is_terminal:
+		return
+	_paused = true
+	if _group != null:
+		_group.pause()
+
+func resume() -> void:
+	if is_terminal:
+		return
+	_paused = false
+	if _group != null:
+		_group.resume()
+
+func cancel() -> void:
+	if is_terminal:
+		return
+	_cancel_requested = true
+	if _group != null:
+		_group.cancel()
+
+func _attach_group(group: TweensGdGroup) -> void:
+	_group = group
+	_following = false
+	if _paused:
+		_group.pause()
+	if _cancel_requested:
+		_group.cancel()
+
+func _set_following(value: bool) -> void:
+	if not is_terminal:
+		_following = value
+
+func _finish(reason: int, message: String = "") -> void:
+	if is_terminal:
+		return
+	completion_reason = reason
+	error = message
+	_group = null
+	_following = false
+	ended.emit(reason)
