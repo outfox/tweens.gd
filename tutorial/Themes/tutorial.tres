@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://cd0hlqb768p7e"]
 
-[ext_resource type="FontFile" uid="uid://car3kkhm6a2ig" path="res://Fonts/Figtree.woff2" id="1_figtree"]
+[ext_resource type="FontFile" uid="uid://car3kkhm6a2ig" path="res://Fonts/Figtree.ttf" id="1_figtree"]
 [ext_resource type="FontFile" uid="uid://de7xhfxfeddec" path="res://Fonts/JetBrainsMono-Regular.ttf" id="2_mono"]
 
 [sub_resource type="FontVariation" id="FontVariation_Bold"]
