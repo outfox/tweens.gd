@@ -123,8 +123,13 @@ jobs:
         run: dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release --no-build --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/test-results
       - name: Test playground
         run: dotnet test playground/playground.tests/playground.tests.csproj -c Release --logger 'trx;LogFileName=playground.trx' --results-directory artifacts/test-results
+      # Import separately: the import script retries only Godot's native import crash.
+      - name: Build tutorial tests
+        run: dotnet build tutorial/tutorial.tests/tutorial.tests.csproj -c Release -p:TwoDogAutoImport=false
+      - name: Import tutorial project
+        run: ./scripts/Import-GodotProject.ps1 -Project tutorial/tutorial.tests/tutorial.tests.csproj -Property Configuration=Release
       - name: Test tutorial
-        run: dotnet test tutorial/tutorial.tests/tutorial.tests.csproj -c Release --logger 'trx;LogFileName=tutorial.trx' --results-directory artifacts/test-results
+        run: dotnet test tutorial/tutorial.tests/tutorial.tests.csproj -c Release --no-build --logger 'trx;LogFileName=tutorial.trx' --results-directory artifacts/test-results
       - name: Test library with coverage
         run: dotnet msbuild build/Coverage.proj -p:Configuration=Release -p:NoBuild=true
       # Godot 4.7 projects target net8.0 and roll forward; run the library's net8.0 build on .NET 10 the same way.
@@ -237,10 +242,17 @@ jobs:
           xvfb-run -a -s '-screen 0 1920x1080x24'
           dotnet test playground/playground.tests/playground.tests.csproj -c Release -p:RenderingTests=true --blame-hang-timeout 2m
           --logger 'trx;LogFileName=playground-rendering.trx' --results-directory artifacts/test-results
+      - name: Build tutorial rendering tests
+        run: dotnet build tutorial/tutorial.tests/tutorial.tests.csproj -c Release -p:RenderingTests=true -p:TwoDogAutoImport=false
+      - name: Import tutorial project
+        shell: pwsh
+        run: >-
+          ./scripts/Import-GodotProject.ps1 -Project tutorial/tutorial.tests/tutorial.tests.csproj
+          -Property Configuration=Release, RenderingTests=true
       - name: Test tutorial rendering
         run: >-
           xvfb-run -a -s '-screen 0 1920x1080x24'
-          dotnet test tutorial/tutorial.tests/tutorial.tests.csproj -c Release -p:RenderingTests=true --blame-hang-timeout 2m
+          dotnet test tutorial/tutorial.tests/tutorial.tests.csproj -c Release -p:RenderingTests=true --no-build --blame-hang-timeout 2m
           --logger 'trx;LogFileName=tutorial-rendering.trx' --results-directory artifacts/test-results
       - name: Upload test results
         if: always()
