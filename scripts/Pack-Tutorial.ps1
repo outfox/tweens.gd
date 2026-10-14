@@ -6,6 +6,7 @@ param(
     [switch] $AllowMissingNative
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'ArchiveDirectories.ps1')
 $repository = Split-Path -Parent $PSScriptRoot
 if (!$Version) {
     $project = [xml](Get-Content -LiteralPath (Join-Path $repository 'csharp/tweens.gd.csproj') -Raw)
@@ -24,6 +25,10 @@ $addon = [IO.Compression.ZipFile]::OpenRead($addonPath)
 try {
     $entries = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::Ordinal)
     foreach ($entry in $addon.Entries) {
+        # Directory entries; the tutorial archive writes its own.
+        if ($entry.FullName -match '^addons/(tweens_gd/([^/]+/)*)?$') {
+            continue
+        }
         if ($entry.FullName -notmatch '^addons/tweens_gd/[^\\]+$' -or $entry.FullName.Split('/') -contains '..') {
             throw "Unexpected addon archive entry: $($entry.FullName)"
         }
@@ -91,6 +96,7 @@ try {
     $stream = [IO.File]::Open($destination, [IO.FileMode]::Create)
     $zip = [IO.Compression.ZipArchive]::new($stream, [IO.Compression.ZipArchiveMode]::Create)
     try {
+        Add-ArchiveDirectories $zip (Get-ArchiveDirectories @($entries.Keys))
         foreach ($name in $entries.Keys | Sort-Object) {
             $entry = $zip.CreateEntry($name, [IO.Compression.CompressionLevel]::Optimal)
             $entry.LastWriteTime = [DateTimeOffset]::new(2000, 1, 1, 0, 0, 0, [TimeSpan]::Zero)

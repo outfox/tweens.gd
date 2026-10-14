@@ -6,6 +6,7 @@ param(
     [switch] $AllowMissingNative
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'ArchiveDirectories.ps1')
 $repository = Split-Path -Parent $PSScriptRoot
 if (!$Version) {
     $project = [xml](Get-Content -LiteralPath (Join-Path $repository 'csharp/tweens.gd.csproj') -Raw)
@@ -43,9 +44,13 @@ $missing = @($libraries | Where-Object { !(Test-Path -LiteralPath (Join-Path $so
 if ($missing.Count -and !$AllowMissingNative) {
     throw "Native libraries are missing: $($missing -join ', ')"
 }
+$directories = Get-ArchiveDirectories @($files | ForEach-Object {
+        "addons/tweens_gd/$([IO.Path]::GetRelativePath($source, $_.FullName).Replace('\', '/'))"
+    })
 $stream = [IO.File]::Open($destination, [IO.FileMode]::Create)
 $zip = [IO.Compression.ZipArchive]::new($stream, [IO.Compression.ZipArchiveMode]::Create)
 try {
+    Add-ArchiveDirectories $zip $directories
     foreach ($file in $files) {
         $relative = [IO.Path]::GetRelativePath($source, $file.FullName).Replace('\', '/')
         $native = $relative -in $libraries
@@ -80,8 +85,16 @@ try {
             throw "Package lacks $required"
         }
     }
-    if ($names.Count -ne $files.Count) {
+    if ($names.Count -ne $files.Count + $directories.Count) {
         throw 'Package entry count mismatch.'
+    }
+    $written = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($name in $names) {
+        $parent = $name.Substring(0, $name.TrimEnd('/').LastIndexOf('/') + 1)
+        if ($parent -and !$written.Contains($parent)) {
+            throw "Package entry precedes its directory: $name"
+        }
+        $null = $written.Add($name)
     }
 }
 finally {
