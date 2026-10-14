@@ -127,15 +127,24 @@ jobs:
         run: dotnet restore tweens.gd.slnx -p:Configuration=Release
       - name: Check release failure handling
         run: ./.github/scripts/Test-ReleasePublishing.ps1
+      # Import separately: the import script retries only Godot's native import crash.
       - name: Build
-        run: dotnet build tweens.gd.slnx -c Release --no-restore -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION
+        run: dotnet build tweens.gd.slnx -c Release --no-restore -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION -p:TwoDogAutoImport=false
+      - name: Import Godot projects
+        run: |
+          foreach ($project in 'testbed/testbed.tests/testbed.tests.csproj', 'tests/tweens.gd.tests/tweens.gd.tests.csproj', 'testbed-gdscript/host/gdscript.2dog.csproj') {
+            ./scripts/Import-GodotProject.ps1 -Project $project -Property Configuration=Release
+          }
       - name: Build library lifecycle tests
         run: dotnet build tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release --no-restore -p:TestSuite=Lifecycle -p:ContinuousIntegrationBuild=true -p:Version=$env:PACKAGE_VERSION
       - name: Test
         run: dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release --no-build --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/test-results
+      - name: Build playground tests
+        run: dotnet build playground/playground.tests/playground.tests.csproj -c Release -p:TwoDogAutoImport=false
+      - name: Import playground project
+        run: ./scripts/Import-GodotProject.ps1 -Project playground/playground.tests/playground.tests.csproj -Property Configuration=Release
       - name: Test playground
-        run: dotnet test playground/playground.tests/playground.tests.csproj -c Release --logger 'trx;LogFileName=playground.trx' --results-directory artifacts/test-results
-      # Import separately: the import script retries only Godot's native import crash.
+        run: dotnet test playground/playground.tests/playground.tests.csproj -c Release --no-build --logger 'trx;LogFileName=playground.trx' --results-directory artifacts/test-results
       - name: Build tutorial tests
         run: dotnet build tutorial/tutorial.tests/tutorial.tests.csproj -c Release -p:TwoDogAutoImport=false
       - name: Import tutorial project
@@ -239,20 +248,32 @@ jobs:
           icds=(/usr/share/vulkan/icd.d/lvp_icd*.json)
           if [ ${#icds[@]} -ne 1 ] || [ ! -f "${icds[0]}" ]; then echo "Expected one lavapipe ICD: ${icds[*]}"; exit 1; fi
           echo "VK_DRIVER_FILES=${icds[0]}" >> "$GITHUB_ENV"
+      # Import separately: the import script retries only Godot's native import crash.
+      - name: Build rendering tests
+        run: |
+          dotnet build tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release -p:TestSuite=Rendering -p:TwoDogAutoImport=false
+          dotnet build testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true -p:TwoDogAutoImport=false
+          dotnet build playground/playground.tests/playground.tests.csproj -c Release -p:RenderingTests=true -p:TwoDogAutoImport=false
+      - name: Import Godot projects
+        shell: pwsh
+        run: |
+          ./scripts/Import-GodotProject.ps1 -Project tests/tweens.gd.tests/tweens.gd.tests.csproj -Property Configuration=Release, TestSuite=Rendering
+          ./scripts/Import-GodotProject.ps1 -Project testbed/testbed.tests/testbed.tests.csproj -Property Configuration=Release, RenderingTests=true
+          ./scripts/Import-GodotProject.ps1 -Project playground/playground.tests/playground.tests.csproj -Property Configuration=Release, RenderingTests=true
       - name: Test library rendering
         run: >-
           xvfb-run -a -s '-screen 0 1920x1080x24'
-          dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release -p:TestSuite=Rendering --blame-hang-timeout 2m
+          dotnet test tests/tweens.gd.tests/tweens.gd.tests.csproj -c Release -p:TestSuite=Rendering --no-build --blame-hang-timeout 2m
           --logger 'trx;LogFileName=library-rendering.trx' --results-directory artifacts/test-results
       - name: Test testbed rendering
         run: >-
           xvfb-run -a -s '-screen 0 1920x1080x24'
-          dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true --blame-hang-timeout 2m
+          dotnet test testbed/testbed.tests/testbed.tests.csproj -c Release -p:RenderingTests=true --no-build --blame-hang-timeout 2m
           --logger 'trx;LogFileName=testbed-rendering.trx' --results-directory artifacts/test-results
       - name: Test playground rendering
         run: >-
           xvfb-run -a -s '-screen 0 1920x1080x24'
-          dotnet test playground/playground.tests/playground.tests.csproj -c Release -p:RenderingTests=true --blame-hang-timeout 2m
+          dotnet test playground/playground.tests/playground.tests.csproj -c Release -p:RenderingTests=true --no-build --blame-hang-timeout 2m
           --logger 'trx;LogFileName=playground-rendering.trx' --results-directory artifacts/test-results
       - name: Build tutorial rendering tests
         run: dotnet build tutorial/tutorial.tests/tutorial.tests.csproj -c Release -p:RenderingTests=true -p:TwoDogAutoImport=false
