@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Moritz Voss
 # Godot's zip import creates only directories that have their own entries, so each one precedes its contents.
+# See https://github.com/godotengine/godot/issues/124461.
 
 # Returns every directory of the given entry names, with a trailing slash, parents before children.
 function Get-ArchiveDirectories([string[]] $Names) {
