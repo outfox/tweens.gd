@@ -14,6 +14,7 @@
   <Target Name="Stage">
     <Error Condition="'$(Version)' == ''" Text="Supply -p:Version matching the packages in artifacts/packages." />
     <VerifyPackages Directory="$(PackageDirectory)" Version="$(Version)" />
+    <Exec Command="pwsh -NoProfile -File &quot;$(RepositoryRoot)scripts/Test-AddonGitIgnore.ps1&quot; -Archive &quot;$(PackageDirectory)/tweens.gd-$(Version).zip&quot;" />
     <ItemGroup>
       <AddonFixture Include="../tests/smoke/addon/**/*" />
       <PackageFixture Include="../tests/smoke/package/**/*" />

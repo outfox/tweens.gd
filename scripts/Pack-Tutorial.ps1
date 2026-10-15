@@ -34,7 +34,7 @@ try {
         }
         $entries.Add($entry.FullName, $entry)
     }
-    foreach ($required in 'tweens.gd', 'catalog.gd', 'tweens_gd.gdextension', 'LICENSE', 'csharp/Godot/TweenRunner.cs', 'csharp/Generated/Position2D.g.cs') {
+    foreach ($required in '.gitignore', 'tweens.gd', 'catalog.gd', 'tweens_gd.gdextension', 'LICENSE', 'csharp/Godot/TweenRunner.cs', 'csharp/Generated/Position2D.g.cs') {
         if (!$entries.ContainsKey("addons/tweens_gd/$required")) {
             throw "Addon archive lacks $required"
         }
@@ -108,7 +108,12 @@ try {
                     $content.Write($bytes, 0, $bytes.Length)
                 }
                 else {
-                    $inputStream = if ($source -is [IO.Compression.ZipArchiveEntry]) { $source.Open() } else { $source.OpenRead() }
+                    $inputStream = if ($source -is [IO.Compression.ZipArchiveEntry]) {
+                        $source.Open()
+                    }
+                    else {
+                        $source.OpenRead()
+                    }
                     try {
                         $inputStream.CopyTo($content)
                     }
