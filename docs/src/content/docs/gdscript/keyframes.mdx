@@ -77,7 +77,7 @@ Tweens.play(shader_material, slower, sprite)
 
 Missing zero-percent keys capture the binding's value at activation. Shader bindings preserve their override-restoration and change-detection behavior. A null curve returns null from `through`.
 
-Extend `Tweens.Binding` for custom storage without interpolation. Override `read` and `write`, with optional `prepare`, `restore`, and `release` hooks, then assign it to a definition's `adapter`. The same binding works with ordinary endpoints or `keyframe_curve`. Each playback copies stateful bindings before preparation. Extend `Tweens.Adapter` when custom endpoint interpolation is also needed. Definitions work with the existing scheduler, groups, and chains.
+Extend `Tweens.Binding` for custom storage without interpolation. Override `read` and `write`, with optional `prepare`, `restore`, and `release` hooks, then assign it to a definition's `adapter`. The same binding works with ordinary endpoints or `keyframe_curve`. Each playback copies stateful bindings before preparation. Extend `Tweens.Adapter` when custom endpoint interpolation is also needed. Definitions work with schedulers, groups, and chains.
 
 GDScript keeps timing and color settings on its definition object. C# also provides separate `TweenTiming` and `ColorPolicy` value types, combined by `TweenOptions`; curve-backed C# definitions vary their clock through `Timing`.
 

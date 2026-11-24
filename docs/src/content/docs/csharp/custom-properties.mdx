@@ -53,7 +53,7 @@ For storage independent of interpolation, derive from `TweenBinding<TTarget, TVa
 
 `Tweens.ColorProperty<TTarget>` provides a shorter color definition: getter, setter, destination, and timing, with premultiplied OKLab supplied automatically. Its `Through` extension uses the same storage for several keys; see [keyframes](/csharp/keyframes/#storage-timing-and-sampling).
 
-Deriving from `TweenDefinition<TTarget, TValue>` remains available when one class supplies both storage and custom interpolation. Each start works on a shallow copy, so referenced objects stay shared unless you copy them. Storage-only bindings can override `Copy` for custom mutable configuration.
+Derive from `TweenDefinition<TTarget, TValue>` when one class supplies both storage and custom interpolation. Each start works on a shallow copy, so referenced objects stay shared unless you copy them. Storage-only bindings can override `Copy` for custom mutable configuration.
 
 <Aside type="caution" title="Release only what your copy owns">
 
